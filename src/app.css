@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: black;
+    overflow: hidden;
+}
+* {
+    user-select: none;
+}
+
+@layer components {
+    .menu-panel {
+        @apply bg-menu-gray/80 rounded-xl shadow-lg shadow-black/40 backdrop-blur-2xl;
+    }
+    .flex-center {
+        @apply flex-center flex items-center justify-center;
+    }
+}

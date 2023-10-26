@@ -2,6 +2,8 @@
     import { default as cx } from "classnames";
     import { Motion, useAnimation } from 'svelte-motion';
 
+    import Animate from "../components/Animate.svelte"
+
     import Build from "./icons/build.svg";
     import Edit from "./icons/edit.svg";
     import Delete from "./icons/delete.svg";
@@ -11,8 +13,20 @@
     const shrinkTabAnim = useAnimation();
     const minimizeAnim = useAnimation();
 
+    const test = useAnimation();
+
     $: {
         if (isMinimized) {
+            test.start((e: any) => {
+                console.log(e);
+                return {
+                    "grid-template-rows": "48px 0px",
+                    transition: {
+                        easing: "ease-in-out",
+                        duration: 0.5,
+                    }
+                }
+            });
             shrinkTabAnim.start((_: any) => ({
                 width: 100,
                 transition: {
@@ -20,14 +34,21 @@
                     duration: 0.5,
                 }
             }));
-            minimizeAnim.start((_: any) => ({
-                height: 0,
+            // minimizeAnim.start((_: any) => ({
+            //     height: 0,
+            //     transition: {
+            //         easing: "ease-in-out",
+            //         duration: 0.5,
+            //     }
+            // }))
+        } else {
+            test.start((_: any) => ({
+                "grid-template-rows": "48px 200px",
                 transition: {
                     easing: "ease-in-out",
                     duration: 0.5,
                 }
-            }))
-        } else {
+            }));
             shrinkTabAnim.start((_: any) => ({
                 width: "auto",
                 transition: {
@@ -35,22 +56,23 @@
                     duration: 0.5,
                 }
             }));
-            minimizeAnim.start((_: any) => ({
-                height: "auto",
-                transition: {
-                    easing: "ease-in-out",
-                    duration: 0.5,
-                }
-            }))
+            // minimizeAnim.start((_: any) => ({
+            //     height: "auto",
+            //     transition: {
+            //         easing: "ease-in-out",
+            //         duration: 0.5,
+            //     }
+            // }))
         }
     }
     
 </script>
 
 
-<div class="w-full h-full p-2 flex flex-col justify-end">
-    <div class="container">
-        <div class="minimize menu-panel flex flex-col items-center justify-evenly" >
+<div class="flex flex-col justify-end w-full h-full p-2">
+    <Motion animate={test} let:motion layout>
+    <div class="container" use:motion>
+        <div class="flex flex-col items-center minimize menu-panel justify-evenly" >
             <button on:click={() => {
                 isMinimized = !isMinimized;
             }}>
@@ -62,31 +84,49 @@
         </div>
 
         
-        <Motion animate={shrinkTabAnim} let:motion>
+        <!-- <Motion animate={shrinkTabAnim} let:motion>
             <div class="tabs menu-panel" use:motion>
-                <!--  -->
+             
             </div>
-        </Motion>
+        </Motion> -->
 
-        <Motion animate={minimizeAnim} let:motion>
-            <div class="side-menu menu-panel flex flex-col items-center justify-evenly" use:motion>
-                <Build class="cursor-pointer"></Build>
-                <Edit class="cursor-pointer"></Edit>
-                <Delete class="cursor-pointer"></Delete>
-                <!--  -->
+        <Animate 
+            easing="easeInOut" 
+            duration={0.5}
+            from={{
+                width: "auto",
+            }}
+            to={{
+                isMinimized: {
+                    width: 100,
+                }
+            }}
+            conditions={{
+                isMinimized: isMinimized,
+            }}
+        >
+            <div class="tabs menu-panel">
+             
             </div>
-        </Motion>
-        <Motion animate={minimizeAnim} let:motion>
-            <div class="buttons menu-panel" use:motion>
-                <!--  -->
-            </div>
-        </Motion>
-        <Motion animate={minimizeAnim} let:motion>
-            <div class="place-bttn-place" use:motion>
-                <!--  -->
-            </div>
-        </Motion>
+        </Animate>
+
+        <div class="flex flex-col items-center w-full h-full menu-panel justify-evenly">
+            <Build class="cursor-pointer"></Build>
+            <Edit class="cursor-pointer"></Edit>
+            <Delete class="cursor-pointer"></Delete>
+            <!--  -->
+        </div>
+    
+        <div class="buttons menu-panel">
+            <!--  -->
+        </div>
+    
+        <div class="place-bttn-place">
+            <!--  -->
+        </div>
+        
     </div>
+</Motion>
 </div>
 
 <style>

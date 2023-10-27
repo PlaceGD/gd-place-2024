@@ -7,6 +7,10 @@ export default {
         colors: {
             "menu-gray": "#0A0A0A",
             black: "black",
+            white: "white",
+        },
+        fontFamily: {
+            pusab: "Pusab",
         },
     },
     plugins: [],

@@ -8,18 +8,13 @@ import svelteSVG from "vite-plugin-svelte-svg"
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
-        svelte({
-            // compilerOptions: {
-            //     customElement: true,
-            // },
-            // configFile: "svelte.config.js",
-        }),
+        svelte(),
         // svelteSVG({ svgo: {}, enforce: "pre" }),
         svelteSVG({
             svgoConfig: {}, // See https://github.com/svg/svgo#configuration
             requireSuffix: false, // Set false to accept '.svg' without the '?component'
         }),
-        wasm(),
+        //wasm(),
         topLevelAwait(),
         FullReload(["src/**/*"]),
     ],

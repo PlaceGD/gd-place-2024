@@ -2,19 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    user-select: none;
+    font-family: "Saira", sans-serif;
+    /* overflow: visible; */
+}
 body {
     background-color: black;
     overflow: hidden;
 }
-* {
-    user-select: none;
-}
 
 @layer components {
     .menu-panel {
-        @apply bg-menu-gray/80 rounded-xl shadow-lg shadow-black/40 backdrop-blur-2xl;
+        @apply rounded-xl bg-menu-gray/80 shadow-lg shadow-black/40 backdrop-blur-2xl;
     }
     .flex-center {
-        @apply flex-center flex items-center justify-center;
+        @apply flex items-center justify-center;
     }
+    .pointer-events-all {
+        pointer-events: all;
+    }
+
+    .text-stroke {
+        /* -webkit-text-stroke: 2.5px black; */
+        text-shadow:
+            -2.5px 0 0 black,
+            2.5px 0 0 black,
+            0 -2.5px 0 black,
+            0 2.5px 0 black,
+            -1.76px -1.76px 0 black,
+            1.76px 1.76px 0 black,
+            1.76px -1.76px 0 black,
+            -1.76px 1.76px 0 black;
+    }
+}
+
+@layer utilities {
+    @variants responsive {
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    }
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&display=swap");
+
+@font-face {
+    font-family: "Pusab";
+    src: url("Pusab.otf");
 }

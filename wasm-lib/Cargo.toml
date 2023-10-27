@@ -1,0 +1,45 @@
+[package]
+name = "wasm-lib"
+version = "0.1.0"
+authors = ["@DexterHill0", "@FlowVix"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+
+[features]
+default = ["console_error_panic_hook"]
+
+
+[dependencies]
+wasm-bindgen = "0.2.84"
+web-sys = { version = "0.3", features = [
+    "Document",
+    "Element",
+    "HtmlCanvasElement",
+    "Window",
+] }
+
+env_logger = "0.10.0"
+log = "0.4.20"
+
+console_error_panic_hook = { version = "0.1.7", optional = true }
+# wasm-bindgen-futures = "0.4.30"
+
+# desen = { git = "https://github.com/FlowVix/desen.git", features = [
+#     "html-canvas",
+# ] }
+
+
+desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
+nalgebra = "0.32.3"
+
+[profile.release]
+opt-level = 3
+
+[build]
+target = "wasm32-unknown-unknown"

@@ -1,17 +1,43 @@
 <script lang="ts">
-    import Editor from "./Editor.svelte"
-    import Image from "./components/Image.svelte"
+    import Editor from "./Editor.svelte";
 
-    let bgUrl =
-        "https://cdn.discordapp.com/attachments/1017864804561588246/1166852967908003892/image.png";
+    import init from "../wasm-lib/pkg/wasm_lib.js";
+    import Logo from "./components/Logo.svelte";
 
+    let max = 0;
+    let progress = 0;
 
+    let hasLoaded = false;
 
-	import { flip } from 'svelte/animate';
-	import { quintOut } from 'svelte/easing';
+    const wasm_r = new XMLHttpRequest();
+    wasm_r.responseType = "arraybuffer";
+    wasm_r.addEventListener("progress", p => {
+        max = p.total;
+        progress = p.loaded;
+    });
+    wasm_r.addEventListener("load", () => {
+        console.log("wasm downloaded!");
+
+        init(wasm_r.response)
+            .catch(e => {
+                console.log("error initialising wasm:", e);
+            })
+            .then(() => {
+                hasLoaded = true;
+            });
+    });
+    wasm_r.open("GET", "../wasm-lib/pkg/wasm_lib_bg.wasm");
+
+    wasm_r.send();
 </script>
 
-<div class="w-screen h-screen relative">
-    <Image src={bgUrl} alt="" cls="w-full h-full object-cover absolute" />
-    <Editor />
+<div class="relative w-screen h-screen">
+    {#if hasLoaded}
+        <Editor />
+    {:else}
+        <div class="absolute">
+            <!-- <Logo /> -->
+            <input type="range" min={0} {max} bind:value={progress} />
+        </div>
+    {/if}
 </div>

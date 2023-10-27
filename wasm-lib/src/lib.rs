@@ -5,6 +5,12 @@ use desen::{
 use nalgebra::{vector, Vector2};
 use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
+
 struct State {
     time: f32,
     width: u32,
@@ -12,7 +18,13 @@ struct State {
 
     background: LoadedTexture,
     camera_pos: Vector2<f32>,
-    zoom: f32,
+    zoom: i32,
+}
+
+impl State {
+    pub fn get_zoom_scale(&self) -> f32 {
+        2.0f32.powf(self.zoom as f32 / 12.0)
+    }
 }
 
 impl AppState for State {
@@ -21,6 +33,7 @@ impl AppState for State {
     }
 
     fn view(&self, frame: &mut desen::frame::Frame) {
+        let zoom_scale = self.get_zoom_scale();
         {
             frame.fill(40, 125, 255, 255);
             let dimension = self.width.max(self.height) as f32;
@@ -34,34 +47,47 @@ impl AppState for State {
             );
         }
 
-        frame.translate(-self.camera_pos.x, -self.camera_pos.y);
-
         const LEVEL_SIZE_BLOCKS: Vector2<u32> = vector![80, 80];
         const LEVEL_SIZE_UNITS: Vector2<u32> = vector![80 * 30, 80 * 30];
 
-        frame.stroke_weight(2.0);
-        frame.stroke(0, 0, 0, 255);
-        frame.line(0.0, 0.0, LEVEL_SIZE_UNITS.x as f32, 0.0);
-        frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32);
+        // grid drawing
+        // have to do some shit manually to make sure the lines are pixel aligned
+        {
+            frame.push();
 
-        frame.stroke_weight(1.0);
-        for x in 0..=LEVEL_SIZE_BLOCKS.x {
-            frame.line(
-                x as f32 * 30.0 + 0.5,
-                0.0,
-                x as f32 * 30.0 + 0.5,
-                LEVEL_SIZE_UNITS.y as f32,
-            );
-        }
-        for y in 0..=LEVEL_SIZE_BLOCKS.y {
+            let tx = (-self.camera_pos.x * zoom_scale).floor();
+            let ty = (-self.camera_pos.y * zoom_scale).floor();
+
+            frame.translate(tx, ty);
+
+            frame.stroke_weight(4.0);
             frame.stroke(0, 0, 0, 255);
-            frame.line(
-                0.0,
-                y as f32 * 30.0 + 0.5,
-                LEVEL_SIZE_UNITS.x as f32,
-                y as f32 * 30.0 + 0.5,
-            );
+            frame.line(-2.0, 0.0, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, 0.0);
+            frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
+
+            frame.stroke_weight(1.0);
+            frame.stroke(0, 0, 0, 127);
+            for x in 1..=LEVEL_SIZE_BLOCKS.x {
+                frame.line(
+                    (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                    0.0,
+                    (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                    LEVEL_SIZE_UNITS.y as f32 * zoom_scale,
+                );
+            }
+            for y in 1..=LEVEL_SIZE_BLOCKS.y {
+                frame.line(
+                    0.0,
+                    (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                    LEVEL_SIZE_UNITS.x as f32 * zoom_scale,
+                    (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                );
+            }
+            frame.pop()
         }
+
+        frame.scale(zoom_scale, zoom_scale);
+        frame.translate(-self.camera_pos.x, -self.camera_pos.y);
     }
 }
 
@@ -76,7 +102,7 @@ impl CanvasAppState for State {
             width: 10,
             height: 10,
             camera_pos: vector![0.0, 0.0],
-            zoom: 0.0,
+            zoom: 0,
             background: loader.load_texture_bytes(include_bytes!("../background.png")),
         }
     }
@@ -85,6 +111,7 @@ impl CanvasAppState for State {
 #[wasm_bindgen]
 struct StateWrapper {
     bundle: CanvasAppBundle<State>,
+    // canvas: web_sys::HtmlCanvasElement,
 }
 
 #[wasm_bindgen]
@@ -98,14 +125,33 @@ impl StateWrapper {
         (self.bundle.state.width, self.bundle.state.height) = self.bundle.get_size();
     }
 
-    pub fn get_camera_x(&self) -> f32 {
-        self.bundle.state.camera_pos.x
-    }
-    pub fn get_camera_y(&self) -> f32 {
-        self.bundle.state.camera_pos.y
+    pub fn get_camera_pos(&self) -> Vec<f32> {
+        vec![
+            self.bundle.state.camera_pos.x,
+            self.bundle.state.camera_pos.y,
+        ]
     }
     pub fn set_camera_pos(&mut self, x: f32, y: f32) {
         self.bundle.state.camera_pos = vector![x, y];
+    }
+
+    pub fn get_zoom(&self) -> i32 {
+        self.bundle.state.zoom
+    }
+    pub fn set_zoom(&mut self, v: i32) {
+        self.bundle.state.zoom = v
+    }
+    pub fn get_zoom_scale(&self) -> f32 {
+        self.bundle.state.get_zoom_scale()
+    }
+
+    pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
+        let (cx, cy) = (
+            self.bundle.state.camera_pos.x,
+            self.bundle.state.camera_pos.y,
+        );
+        let s = self.bundle.state.get_zoom_scale();
+        vec![(x + s * cx) / s, (y + s * cy) / s]
     }
 }
 
@@ -114,6 +160,7 @@ impl StateWrapper {
 pub fn create_view(canvas: web_sys::HtmlCanvasElement) -> StateWrapper {
     StateWrapper {
         bundle: desen::new_app_canvas::<State>(canvas),
+        // canvas,
     }
     // State::new(canvas).await
 }

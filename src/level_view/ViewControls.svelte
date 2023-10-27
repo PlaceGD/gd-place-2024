@@ -17,10 +17,14 @@
     }}
     on:pointermove={e => {
         if (dragging != null) {
+            let z = state.get_zoom_scale();
             state.set_camera_pos(
-                dragging.prev_mouse_x - e.pageX + dragging.prev_camera_x,
-                -dragging.prev_mouse_y + e.pageY + dragging.prev_camera_y
+                (1 / z) * (dragging.prev_mouse_x - e.pageX) +
+                    dragging.prev_camera_x,
+                (1 / z) * (-dragging.prev_mouse_y + e.pageY) +
+                    dragging.prev_camera_y
             );
+            // console.log(state.get_camera_x(), state.get_camera_y());
         }
     }}
 />
@@ -28,11 +32,17 @@
 <div
     class="h-full w-full absolute touch-none"
     on:pointerdown={e => {
+        let [x, y] = state.get_camera_pos();
         dragging = {
-            prev_camera_x: state.get_camera_x(),
-            prev_camera_y: state.get_camera_y(),
+            prev_camera_x: x,
+            prev_camera_y: y,
             prev_mouse_x: e.pageX,
             prev_mouse_y: e.pageY,
         };
+    }}
+    on:wheel={e => {
+        // console.log(e.deltaY);
+        state.set_zoom(state.get_zoom() - (e.deltaY / 100) * 6);
+        // console.log(state.get_camera_x() * state.get_zoom_scale());
     }}
 />

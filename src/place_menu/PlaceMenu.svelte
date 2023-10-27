@@ -9,6 +9,7 @@
 
     import LocalSettings from "../utils/LocalSettings";
 
+    import Image from "../components/Image.svelte";
     import Animate from "../components/Animate.svelte";
 
     import Build from "./icons/build.svg";
@@ -29,15 +30,15 @@
     }
 
     enum BuildTab {
-        Blocks = "usiodfnguisfg.png",
-        Outlines = "2",
-        Slopes = "3",
-        Spikes = "4",
-        Utilities = "5",
-        GroundDeco = "6",
-        Deco = "7",
-        Pulsing = "8",
-        Saws = "9",
+        Blocks = "build_tab_icons/blocks.png",
+        Outlines = "build_tab_icons/outlines.png",
+        Slopes = "build_tab_icons/slopes.png",
+        Spikes = "build_tab_icons/spikes.png",
+        Utilities = "build_tab_icons/util.png",
+        GroundDeco = "build_tab_icons/ground_deco.png",
+        Deco = "build_tab_icons/deco.png",
+        Pulsing = "build_tab_icons/pulsing.png",
+        Saws = "build_tab_icons/saws.png",
     }
 
     let menuSettings = new LocalSettings("menuSettings", {
@@ -126,10 +127,13 @@
                         >
                             <ul
                                 class={cx({
-                                    "absolute w-full h-full px-6 py-2 flex text-white gap-12 overflow-y-hidden no-scrollbar": true,
+                                    "absolute w-full h-full p-2 flex justify-evenly text-white overflow-y-hidden no-scrollbar": true,
                                     "overflow-hidden": menuSettings.isMinimized,
                                     "overflow-x-scroll":
                                         !menuSettings.isMinimized,
+                                    // "gap-12":
+                                    //     menuSettings.selectedGroup ==
+                                    //     Group.Edit,
                                 })}
                                 use:motion
                             >
@@ -137,16 +141,21 @@
                                     {#if menuSettings.selectedGroup == Group.Build}
                                         {#each Object.entries(BuildTab) as [key, value]}
                                             <li
-                                                class="relative h-full flex-center cursor-pointer"
+                                                class="relative h-full flex-center cursor-pointer flex-1"
                                             >
                                                 <button
-                                                    class="z-20 text-2xl font-pusab text-stroke px-4"
+                                                    class="z-20 w-full h-full flex-center py-1"
                                                     on:click={() => {
                                                         menuSettings.selectedBuildTab =
                                                             value;
                                                     }}
                                                 >
-                                                    {"img"}
+                                                    <Image
+                                                        src={value}
+                                                        loadAsync
+                                                        alt={key}
+                                                        class="object-contain w-auto h-auto max-w-full max-h-full"
+                                                    ></Image>
                                                 </button>
                                                 {#if menuSettings.selectedBuildTab == value}
                                                     <Motion
@@ -156,7 +165,7 @@
                                                             duration:
                                                                 $shouldReducedMotion
                                                                     ? 0
-                                                                    : 0.3,
+                                                                    : 0.2,
                                                         }}
                                                         animate={{
                                                             opacity: 0.1,
@@ -173,18 +182,18 @@
                                             </li>{/each}
                                     {:else if menuSettings.selectedGroup == Group.Edit}
                                         {#each Object.keys(EditTab) as key}
-                                            <li
-                                                class="relative h-full flex-center px-4 cursor-pointer"
+                                            <button
+                                                class="relative h-full flex-center px-4 cursor-pointer w-full"
+                                                on:click={() => {
+                                                    menuSettings.selectedEditTab =
+                                                        key;
+                                                }}
                                             >
-                                                <button
+                                                <h1
                                                     class="z-20 text-2xl font-pusab text-stroke"
-                                                    on:click={() => {
-                                                        menuSettings.selectedEditTab =
-                                                            key;
-                                                    }}
                                                 >
                                                     {key}
-                                                </button>
+                                                </h1>
                                                 {#if menuSettings.selectedEditTab == key}
                                                     <Motion
                                                         let:motion
@@ -193,7 +202,7 @@
                                                             duration:
                                                                 $shouldReducedMotion
                                                                     ? 0
-                                                                    : 0.3,
+                                                                    : 0.2,
                                                         }}
                                                         animate={{
                                                             opacity: 0.1,
@@ -207,7 +216,7 @@
                                                         </span>
                                                     </Motion>
                                                 {/if}
-                                            </li>
+                                            </button>
                                         {/each}
                                     {/if}
                                 </AnimateSharedLayout>

@@ -1,7 +1,9 @@
 <script lang="ts">
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
+    import { clamp, lerp } from "../util";
 
     export let state: wasm.StateWrapper;
+    export let canvas: HTMLCanvasElement;
 
     let dragging: null | {
         prev_mouse_x: number;
@@ -9,6 +11,39 @@
         prev_camera_x: number;
         prev_camera_y: number;
     } = null;
+
+    import { tweened } from "svelte/motion";
+    import { cubicOut } from "svelte/easing";
+
+    let [mouseX, mouseY] = [0, 0];
+
+    let zoomGoal = state.get_zoom();
+    const zoomTween = tweened(0, {
+        duration: 100,
+        easing: cubicOut,
+    });
+
+    let changeZoom = (z: number) => {
+        let [mx, my] = state.get_world_pos(
+            mouseX - canvas.offsetWidth / 2,
+            -(mouseY - canvas.offsetHeight / 2)
+        );
+        let [cx, cy] = state.get_camera_pos();
+        let prev_zoom_scale = state.get_zoom_scale();
+
+        state.set_zoom(z);
+
+        let zoom_scale_change = state.get_zoom_scale() / prev_zoom_scale;
+
+        state.set_camera_pos(
+            lerp(mx, cx, 1 / zoom_scale_change),
+            lerp(my, cy, 1 / zoom_scale_change)
+        );
+    };
+
+    $: {
+        changeZoom($zoomTween);
+    }
 </script>
 
 <svelte:window
@@ -24,13 +59,17 @@
                 (1 / z) * (-dragging.prev_mouse_y + e.pageY) +
                     dragging.prev_camera_y
             );
-            // console.log(state.get_camera_x(), state.get_camera_y());
         }
     }}
 />
 
 <div
     class="h-full w-full absolute touch-none"
+    on:pointermove={e => {
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+        // console.log(mouseX, mouseY);
+    }}
     on:pointerdown={e => {
         let [x, y] = state.get_camera_pos();
         dragging = {
@@ -39,10 +78,23 @@
             prev_mouse_x: e.pageX,
             prev_mouse_y: e.pageY,
         };
+        // bruh.set(5);
     }}
     on:wheel={e => {
-        // console.log(e.deltaY);
-        state.set_zoom(state.get_zoom() - (e.deltaY / 100) * 6);
-        // console.log(state.get_camera_x() * state.get_zoom_scale());
+        // let [mx, my] = state.get_world_pos(
+        //     e.pageX - canvas.offsetWidth / 2,
+        //     -(e.pageY - canvas.offsetHeight / 2)
+        // );
+        // let [cx, cy] = state.get_camera_pos();
+        // let prev_zoom_scale = state.get_zoom_scale();
+        // state.set_zoom(state.get_zoom() - (e.deltaY / 100) * 3);
+        // let zoom_scale_change = state.get_zoom_scale() / prev_zoom_scale;
+        // state.set_camera_pos(
+        //     lerp(mx, cx, 1 / zoom_scale_change),
+        //     lerp(my, cy, 1 / zoom_scale_change)
+        // );
+        zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
+        zoomTween.set(zoomGoal);
+        // state.set_zoom(state.get_zoom() - (e.deltaY / 100) * 3);
     }}
 />

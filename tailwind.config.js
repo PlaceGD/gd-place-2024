@@ -8,10 +8,11 @@ export default {
             "menu-gray": "#0A0A0A",
             black: "black",
             white: "white",
+            red: "red",
         },
         fontFamily: {
             pusab: "Pusab",
         },
     },
     plugins: [],
-}
+};

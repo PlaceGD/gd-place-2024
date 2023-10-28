@@ -6,6 +6,7 @@
     import ViewControls from "./level_view/ViewControls.svelte";
 
     let state: wasm.StateWrapper | null = null;
+    let canvas: HTMLCanvasElement;
 
     $: {
         console.log(state);
@@ -13,9 +14,9 @@
 </script>
 
 <div class="h-full w-full absolute">
-    <LevelView bind:state />
+    <LevelView bind:state bind:canvas />
     {#if state != null}
-        <ViewControls bind:state />
+        <ViewControls bind:state bind:canvas />
 
         <PlaceMenu />
     {/if}

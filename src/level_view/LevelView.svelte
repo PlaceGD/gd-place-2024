@@ -4,7 +4,7 @@
 
     export let state: wasm.StateWrapper | null;
 
-    let canvas: HTMLCanvasElement;
+    export let canvas: HTMLCanvasElement;
     let view_size = [0, 0];
 
     onMount(() => {

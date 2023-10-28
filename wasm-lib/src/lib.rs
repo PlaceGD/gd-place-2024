@@ -1,3 +1,5 @@
+mod util;
+
 use desen::{
     state::{AppState, CanvasAppState, LoadedTexture},
     CanvasAppBundle,
@@ -11,6 +13,11 @@ extern "C" {
     fn log(s: &str);
 }
 
+const LEVEL_WIDTH_BLOCKS: u32 = 400;
+const LEVEL_HEIGHT_BLOCKS: u32 = 80;
+const LEVEL_WIDTH_UNITS: u32 = LEVEL_WIDTH_BLOCKS * 30;
+const LEVEL_HEIGHT_UNITS: u32 = LEVEL_HEIGHT_BLOCKS * 30;
+
 struct State {
     time: f32,
     width: u32,
@@ -18,12 +25,12 @@ struct State {
 
     background: LoadedTexture,
     camera_pos: Vector2<f32>,
-    zoom: i32,
+    zoom: f32,
 }
 
 impl State {
     pub fn get_zoom_scale(&self) -> f32 {
-        2.0f32.powf(self.zoom as f32 / 12.0)
+        2.0f32.powf(self.zoom / 12.0)
     }
 }
 
@@ -47,9 +54,6 @@ impl AppState for State {
             );
         }
 
-        const LEVEL_SIZE_BLOCKS: Vector2<u32> = vector![80, 80];
-        const LEVEL_SIZE_UNITS: Vector2<u32> = vector![80 * 30, 80 * 30];
-
         // grid drawing
         // have to do some shit manually to make sure the lines are pixel aligned
         {
@@ -62,26 +66,38 @@ impl AppState for State {
 
             frame.stroke_weight(4.0);
             frame.stroke(0, 0, 0, 255);
-            frame.line(-2.0, 0.0, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, 0.0);
-            frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
+            frame.no_fill();
+            frame.rounded_rect(
+                0.0,
+                0.0,
+                LEVEL_WIDTH_UNITS as f32 * zoom_scale,
+                LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
+                4.0,
+            );
+            // frame.line(-2.0, 0.0, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, 0.0);
+            // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
+            // frame.line(-2.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
+            // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
 
             frame.stroke_weight(1.0);
-            frame.stroke(0, 0, 0, 127);
-            for x in 1..=LEVEL_SIZE_BLOCKS.x {
-                frame.line(
-                    (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                    0.0,
-                    (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                    LEVEL_SIZE_UNITS.y as f32 * zoom_scale,
-                );
-            }
-            for y in 1..=LEVEL_SIZE_BLOCKS.y {
-                frame.line(
-                    0.0,
-                    (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                    LEVEL_SIZE_UNITS.x as f32 * zoom_scale,
-                    (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                );
+            frame.stroke(0, 0, 0, map!(self.zoom, -24.0, 24.0, 0.0, 255.0) as u8);
+            if self.zoom >= -24.0 {
+                for x in 1..=LEVEL_WIDTH_BLOCKS {
+                    frame.line(
+                        (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                        0.0,
+                        (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                        LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
+                    );
+                }
+                for y in 1..=LEVEL_HEIGHT_BLOCKS {
+                    frame.line(
+                        0.0,
+                        (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                        LEVEL_WIDTH_UNITS as f32 * zoom_scale,
+                        (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                    );
+                }
             }
             frame.pop()
         }
@@ -102,7 +118,7 @@ impl CanvasAppState for State {
             width: 10,
             height: 10,
             camera_pos: vector![0.0, 0.0],
-            zoom: 0,
+            zoom: 0.0,
             background: loader.load_texture_bytes(include_bytes!("../background.png")),
         }
     }
@@ -132,13 +148,16 @@ impl StateWrapper {
         ]
     }
     pub fn set_camera_pos(&mut self, x: f32, y: f32) {
-        self.bundle.state.camera_pos = vector![x, y];
+        self.bundle.state.camera_pos = vector![
+            x.clamp(0.0, LEVEL_WIDTH_UNITS as f32),
+            y.clamp(0.0, LEVEL_HEIGHT_UNITS as f32)
+        ];
     }
 
-    pub fn get_zoom(&self) -> i32 {
+    pub fn get_zoom(&self) -> f32 {
         self.bundle.state.zoom
     }
-    pub fn set_zoom(&mut self, v: i32) {
+    pub fn set_zoom(&mut self, v: f32) {
         self.bundle.state.zoom = v
     }
     pub fn get_zoom_scale(&self) -> f32 {

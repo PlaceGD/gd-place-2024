@@ -14,8 +14,13 @@ body {
 
 @layer components {
     .menu-panel {
-        @apply rounded-xl bg-menu-gray/80 shadow-lg shadow-black/40 backdrop-blur-2xl;
+        @apply relative overflow-hidden rounded-xl bg-menu-gray/80 shadow-lg shadow-black/40 backdrop-blur-md;
     }
+
+    .sliding-selector {
+        @apply relative overflow-hidden rounded-lg rounded-lg bg-white/20;
+    }
+
     .flex-center {
         @apply flex items-center justify-center;
     }

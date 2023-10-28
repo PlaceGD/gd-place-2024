@@ -1,31 +1,77 @@
 <script lang="ts">
+    import { default as cx } from "classnames";
+
     export let src: string;
     export let alt: string = "";
-    export let lazyLoad: boolean = false;
-    export let loadAsync: boolean = false;
     export let skeleton: boolean = false;
+    export let lazyLoad: boolean = false;
 
-    const preload = async (src: string): Promise<string> => {
-        const resp = await fetch(src);
-        const blob = await resp.blob();
+    let hasLoaded = false;
+    let imgElement: HTMLImageElement | null = null;
 
-        return new Promise(function (resolve, reject) {
-            let reader = new FileReader();
-            reader.onload = () => resolve(reader.result! as string);
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(blob);
-        });
+    const options = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0,
     };
+
+    const useLazyLoad = (image: HTMLImageElement) => {
+        const loaded = () => {
+            hasLoaded = true;
+        };
+
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                image.src = src;
+                if (image.complete) {
+                    loaded();
+                } else {
+                    image.addEventListener("load", loaded);
+                }
+            }
+        }, options);
+        observer.observe(image);
+
+        return {
+            destroy() {
+                image.removeEventListener("load", loaded);
+            },
+        };
+    };
+
+    // ignores the source for the lazy loading otherwise ...$$restProps will
+    // give a src to the image before the lazy loading
+    const { src: _src, ...restProps } = $$restProps;
 </script>
 
-{#if loadAsync}
-    {#await preload(src)}
-        {#if skeleton}{:else}
-
-        {/if}
-    {:then base64}
-        <img src={base64} {alt} {...$$restProps} draggable="false" />
-    {/await}
+{#if lazyLoad}
+    <img
+        use:useLazyLoad
+        {alt}
+        draggable="false"
+        style={cx({
+            hidden: !hasLoaded,
+        })}
+        {...restProps}
+    />
+    {#if skeleton && !hasLoaded}
+        <div class="w-2/3 h-2/3 placeholder" />
+    {/if}
 {:else}
     <img {src} {alt} {...$$restProps} draggable="false" />
 {/if}
+
+<style>
+    .placeholder {
+        border-radius: 4px;
+        /* background: rgb(255, 255, 255); */
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0.3) 33%,
+            rgba(187, 187, 187, 0.3) 33%,
+            rgba(187, 187, 187, 0.3) 66%,
+            rgba(255, 255, 255, 0.3) 66%
+        );
+    }
+</style>

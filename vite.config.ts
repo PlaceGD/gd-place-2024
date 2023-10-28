@@ -6,7 +6,10 @@ import FullReload from "vite-plugin-full-reload";
 import svelteSVG from "vite-plugin-svelte-svg";
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+    define: {
+        __DEBUG: mode == "development",
+    },
     plugins: [
         svelte(),
         // svelteSVG({ svgo: {}, enforce: "pre" }),
@@ -18,4 +21,4 @@ export default defineConfig({
         topLevelAwait(),
         FullReload(["src/**/*"]),
     ],
-});
+}));

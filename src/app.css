@@ -18,7 +18,7 @@ body {
     }
 
     .sliding-selector {
-        @apply relative overflow-hidden rounded-lg rounded-lg bg-white/20;
+        @apply relative overflow-hidden rounded-lg  bg-white/20;
     }
 
     .flex-center {

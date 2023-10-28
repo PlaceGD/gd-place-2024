@@ -9,6 +9,8 @@ export default {
             black: "black",
             white: "white",
             red: "red",
+            "button-light-green": "#b7f782",
+            "button-dark-green": "#407530",
         },
         fontFamily: {
             pusab: "Pusab",

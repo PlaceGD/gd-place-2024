@@ -7,23 +7,6 @@
 
     let state: wasm.StateWrapper | null = null;
     let canvas: HTMLCanvasElement;
-
-    import { GDColor, GDObject } from "../wasm-lib/pkg/wasm_lib";
-
-    let obj = new GDObject(
-        35,
-        0,
-        4.5,
-        69,
-        true,
-        false,
-        -2.0,
-        -420,
-        new GDColor(245, 67, 102, 11, false),
-        new GDColor(245, 67, 102, 11, false)
-    );
-
-    console.log(obj.serialize());
 </script>
 
 <div class="absolute w-full h-full">

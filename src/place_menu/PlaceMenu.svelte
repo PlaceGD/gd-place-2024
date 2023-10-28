@@ -23,7 +23,8 @@
     } from "../gd/object";
     import SlidingSelector from "../components/SlidingSelector.svelte";
     import { isOverflow } from "../util";
-    import { EditTab } from "./edit_tab";
+    import { EDIT_BUTTONS, EditTab } from "./edit_tab";
+    import { __DEBUG } from "../main";
 
     enum Group {
         Build,
@@ -42,7 +43,7 @@
     const minimizeAnimDur = 0.5;
     const shouldReducedMotion = useReducedMotion();
 
-    let tabsPanel: HTMLDivElement;
+    let tabsPanel: HTMLUListElement;
     let isTabsPanelOverflow: boolean = false;
 </script>
 
@@ -304,40 +305,47 @@
 
                     <div class="w-full h-full rounded-lg buttons menu-panel">
                         <ul
-                            class="w-full h-full overflow-x-hidden overflow-y-auto rounded-lg object-grid-container thin-scrollbar"
+                            class={cx({
+                                "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg object-grid-container thin-scrollbar": true,
+                                "gap-4":
+                                    menuSettings.selectedGroup == Group.Edit,
+                            })}
                         >
-                            <AnimateSharedLayout>
-                                {#each OBJECT_SETTINGS as obj, i}
-                                    <!-- {getMainDetailTexRatio(obj.id)} -->
-                                    <li
-                                        class={cx({
-                                            "relative w-16 h-16": true,
-                                            hidden:
-                                                menuSettings.selectedGroup !=
-                                                    Group.Build ||
-                                                menuSettings.selectedBuildTab !=
-                                                    obj.category,
-                                        })}
+                            <!-- BUILD TAB -->
+                            {#each OBJECT_SETTINGS as obj, i}
+                                <li
+                                    class={cx({
+                                        "relative w-16 h-16": true,
+                                        hidden:
+                                            menuSettings.selectedGroup !=
+                                                Group.Build ||
+                                            menuSettings.selectedBuildTab !=
+                                                obj.category,
+                                    })}
+                                >
+                                    <button
+                                        class={"absolute w-full h-full p-3 z-20"}
+                                        on:click={() => {
+                                            menuSettings.selectedObject =
+                                                obj.id;
+                                        }}
                                     >
-                                        <button
-                                            class={cx({
-                                                "absolute w-full h-full p-2 z-20": true,
-                                                hidden: false,
-                                            })}
-                                            on:click={() => {
-                                                menuSettings.selectedObject =
-                                                    obj.id;
-                                            }}
-                                        >
-                                            <div
-                                                class="relative w-full h-full flex-center"
+                                        {#if __DEBUG}
+                                            <span
+                                                class="absolute text-red font-lg bottom-3/4 right-1/2"
                                             >
-                                                <Image
-                                                    class="absolute object-contain "
-                                                    src={`/textures/main/${obj.id}.png`}
-                                                    lazyLoad
-                                                    skeleton
-                                                    style={`
+                                                {obj.id}
+                                            </span>
+                                        {/if}
+                                        <div
+                                            class="relative w-full h-full flex-center"
+                                        >
+                                            <Image
+                                                class="absolute object-contain"
+                                                src={`/textures/main/${obj.id}.png`}
+                                                lazyLoad
+                                                skeleton
+                                                style={`
                                                         max-width: ${
                                                             MAIN_DETAIL_TEX_RATIOS[
                                                                 obj.id
@@ -349,12 +357,12 @@
                                                             ].main * 100
                                                         }%;
                                                     `}
-                                                ></Image>
-                                                <Image
-                                                    class="absolute object-contain"
-                                                    src={`/textures/detail/${obj.id}.png`}
-                                                    lazyLoad
-                                                    style={`
+                                            ></Image>
+                                            <Image
+                                                class="absolute object-contain"
+                                                src={`/textures/detail/${obj.id}.png`}
+                                                lazyLoad
+                                                style={`
                                                         max-width: ${
                                                             MAIN_DETAIL_TEX_RATIOS[
                                                                 obj.id
@@ -367,17 +375,38 @@
                                                         }%;
                                                         filter: sepia(50%) saturate(5000%) hue-rotate(175deg);
                                                     `}
-                                                ></Image>
-                                            </div>
-                                        </button>
-                                        {#if menuSettings.selectedObject == obj.id}
-                                            <SlidingSelector
-                                                layoutId="selected-object"
-                                            ></SlidingSelector>
-                                        {/if}
-                                    </li>
-                                {/each}
-                            </AnimateSharedLayout>
+                                            ></Image>
+                                        </div>
+                                    </button>
+                                    {#if menuSettings.selectedObject == obj.id}
+                                        <span
+                                            class={"absolute w-full h-full sliding-selector"}
+                                        ></span>
+                                    {/if}
+                                </li>
+                            {/each}
+                            <!-- EDIT TAB -->
+                            {#each EDIT_BUTTONS[menuSettings.selectedEditTab].buttons as button, i (Object.keys(EditTab).indexOf(menuSettings.selectedEditTab) * 100 + i)}
+                                <li
+                                    class={cx({
+                                        " w-16 h-16": true,
+                                        hidden:
+                                            menuSettings.selectedGroup !=
+                                            Group.Edit,
+                                    })}
+                                >
+                                    <button
+                                        class={"flex-center w-full h-full p-3 z-20 rounded-md bg-gradient-to-b from-button-light-green to-button-dark-green"}
+                                    >
+                                        <Image
+                                            class={"object-cover max-w-full max-h-full h-auto w-auto"}
+                                            src={`/assets/ui/edit/${button.image}.png`}
+                                            style="transform: scale({button.scale})"
+                                            lazyLoad
+                                        ></Image>
+                                    </button>
+                                </li>
+                            {/each}
                         </ul>
                     </div>
                 </div>
@@ -431,7 +460,6 @@
     .object-grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, 64px);
-        grid-gap: 12px;
         padding: 16px;
         justify-content: space-between;
     }

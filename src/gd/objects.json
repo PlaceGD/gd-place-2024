@@ -520,7 +520,7 @@
         "offsetX": 0,
         "offsetY": 0,
         "tintable": true,
-        "solid": false,
+        "solid": true,
         "category": "Spikes",
         "nonDeco": true,
         "danger": true
@@ -530,7 +530,7 @@
         "offsetX": 15,
         "offsetY": 0,
         "tintable": true,
-        "solid": false,
+        "solid": true,
         "category": "Spikes",
         "nonDeco": true,
         "danger": true
@@ -540,7 +540,7 @@
         "offsetX": 0,
         "offsetY": 0,
         "tintable": true,
-        "solid": false,
+        "solid": true,
         "category": "Spikes",
         "nonDeco": true,
         "danger": true
@@ -550,7 +550,7 @@
         "offsetX": 15,
         "offsetY": 0,
         "tintable": true,
-        "solid": false,
+        "solid": true,
         "category": "Spikes",
         "nonDeco": true,
         "danger": true

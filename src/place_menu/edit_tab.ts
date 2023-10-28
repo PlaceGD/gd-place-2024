@@ -1,14 +1,26 @@
+import type { GDObject } from "../../wasm-lib/pkg/wasm_lib";
+
 export enum EditTab {
     Transform = "Transform",
     Layers = "Layers",
     Colors = "Colors",
 }
 
-type GDObject = any; // temp
+interface Shortcut {
+    key: string;
+    shift: boolean;
+    alt: boolean;
+}
 
-export const EDIT_BUTTONS = [
-    {
-        tabName: EditTab.Transform,
+interface Button {
+    image: string;
+    scale: number;
+    cb: (obj: GDObject) => void;
+    shortcut: Shortcut;
+}
+
+export const EDIT_BUTTONS: { [key: string]: { buttons: Button[] } } = {
+    [EditTab.Transform]: {
         buttons: [
             {
                 image: "left",
@@ -158,7 +170,7 @@ export const EDIT_BUTTONS = [
                 image: "flip_horiz",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.transform(0, true, false, true);
+                    obj.flip_x = !obj.flip_x;
                 },
                 shortcut: {
                     key: "q",
@@ -170,7 +182,7 @@ export const EDIT_BUTTONS = [
                 image: "flip_vert",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.transform(0, false, true, true);
+                    obj.flip_y = !obj.flip_y;
                 },
                 shortcut: {
                     key: "e",
@@ -182,7 +194,7 @@ export const EDIT_BUTTONS = [
                 image: "ccw",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.transform(-90, false, false, true);
+                    obj.rotation -= 90;
                 },
                 shortcut: {
                     key: "q",
@@ -194,7 +206,7 @@ export const EDIT_BUTTONS = [
                 image: "cw",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.transform(90, false, false, true);
+                    obj.rotation += 90;
                 },
                 shortcut: {
                     key: "e",
@@ -206,7 +218,7 @@ export const EDIT_BUTTONS = [
                 image: "ccw_5",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.transform(-5, false, false, false);
+                    obj.rotation -= 5;
                 },
                 shortcut: {
                     key: "q",
@@ -218,7 +230,7 @@ export const EDIT_BUTTONS = [
                 image: "cw_5",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.transform(5, false, false, false);
+                    obj.rotation += 5;
                 },
                 shortcut: {
                     key: "e",
@@ -300,14 +312,13 @@ export const EDIT_BUTTONS = [
             },
         ],
     },
-    {
-        tabName: EditTab.Layers,
+    [EditTab.Layers]: {
         buttons: [
             {
                 image: "z_plus",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.zOrder += 1;
+                    obj.z_order += 1;
                 },
                 shortcut: {
                     key: "z",
@@ -319,7 +330,7 @@ export const EDIT_BUTTONS = [
                 image: "z_minus",
                 scale: 1.0,
                 cb: (obj: GDObject) => {
-                    obj.zOrder -= 1;
+                    obj.z_order -= 1;
                 },
                 shortcut: {
                     key: "z",
@@ -337,8 +348,7 @@ export const EDIT_BUTTONS = [
             // },
         ],
     },
-    {
-        tabName: EditTab.Colors,
+    [EditTab.Colors]: {
         buttons: [],
     },
-];
+};

@@ -1,8 +1,20 @@
 use std::mem;
 
+// use bytemuck::{bytes_of, Pod, Zeroable};
 use wasm_bindgen::prelude::*;
 
-#[derive(Debug, Clone, Copy)]
+use serde::{Deserialize, Serialize};
+
+use crate::log;
+
+use base64::{
+    alphabet,
+    engine::{self, general_purpose},
+    Engine as _,
+};
+
+#[repr(C, packed)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[wasm_bindgen]
 pub struct GDColor {
     r: u8,
@@ -27,7 +39,8 @@ impl GDColor {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[repr(C, packed)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[wasm_bindgen]
 pub struct GDObject {
     pub id: u16,
@@ -73,17 +86,29 @@ impl GDObject {
     }
 
     #[wasm_bindgen]
-    pub fn serialize(&self) -> String {
-        unsafe {
-            let data =
-                mem::transmute::<_, [u8; mem::size_of::<Self>()]>(std::ptr::read(self as *const _));
+    pub fn serialize(&self) -> Option<String> {
+        let encoded: Vec<u8> = bincode::serialize(self).ok()?;
 
-            String::from_utf8_unchecked(data.into())
-        }
+        Some(general_purpose::URL_SAFE.encode(encoded))
     }
+    #[wasm_bindgen]
+    pub fn deserialize(s: String) -> Option<GDObject> {
+        let decoded = general_purpose::URL_SAFE.decode(s).ok()?;
+
+        bincode::deserialize(&decoded).ok()
+    }
+
+    #[wasm_bindgen]
+    pub fn debug(&self) -> String {
+        format!("{:#?}", self)
+    }
+
     // #[wasm_bindgen]
-    // pub fn deserialize(s: &[u8]) -> Self {
-    //     todo!()
-    //     // unsafe { mem::transmute::<_, _>(std::ptr::read(s.as_bytes())) }
+    // pub fn deserialize(s: &[u8]) -> Result<GDObject, i32> {
+    //     let data = general_purpose::URL_SAFE
+    //         .decode(s)
+    //         .map_err(|_| DecodeError)?;
+
+    //     unsafe { Ok(mem::transmute::<_, _>(&data)) }
     // }
 }

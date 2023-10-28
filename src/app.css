@@ -49,10 +49,37 @@ body {
             display: none;
         }
 
-        /* Hide scrollbar for IE, Edge and Firefox */
+        /* Hide scrollbar for Edge and Firefox */
         .no-scrollbar {
-            -ms-overflow-style: none; /* IE and Edge */
+            -ms-overflow-style: none; /* Edge */
             scrollbar-width: none; /* Firefox */
+        }
+
+        /* Custom scrollbar for Firefox */
+        .thin-scrollbar {
+            scrollbar-color: #ffffff55 #00000000;
+            scrollbar-width: thin; /* 8px */
+            scrollbar-gutter: stable;
+        }
+
+        /* Custom scrollbar for Edge, Chrome, Safari */
+        .thin-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-track {
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-track-piece {
+            background-color: #00000000;
+        }
+
+        .thin-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #ffffff55;
+            -webkit-border-radius: 10px;
         }
     }
 }

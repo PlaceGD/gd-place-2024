@@ -1,5 +1,7 @@
 // import { vec } from "../utils/vector"
+import { clamp } from "../util";
 import objectList from "./objects.json";
+import textureSizes from "./texture_sizes.json";
 
 // export class GdColor {
 //     constructor(
@@ -132,7 +134,7 @@ import objectList from "./objects.json";
 //     }
 // }
 
-export const CATEGORY_MAP = {
+export const CATEGORY_ICONS = {
     Blocks: "build_tab_icons/blocks.png",
     Outlines: "build_tab_icons/outlines.png",
     Slopes: "build_tab_icons/slopes.png",
@@ -150,7 +152,7 @@ interface Object {
     offsetY: number;
     tintable: boolean;
     solid: boolean;
-    category: string; // BuildTab key
+    category: string; // CATEGORY_ICONS key
     flipWithoutOffset?: boolean;
     nondeco?: boolean;
     danger?: boolean;
@@ -159,10 +161,33 @@ interface Object {
 export const OBJECT_SETTINGS: Object[] = objectList;
 
 // object id: index
-let idMapping: { [key: number]: number } = {};
-for (let i = 0; i < OBJECT_SETTINGS.length; i++) {
-    idMapping[OBJECT_SETTINGS[i].id] = i;
-}
+// let idMapping: { [key: number]: number } = {};
+// for (let i = 0; i < OBJECT_SETTINGS.length; i++) {
+//     idMapping[OBJECT_SETTINGS[i].id] = i;
+// }
 
-export const getObjSettings = (id: number) =>
-    (id && OBJECT_SETTINGS[idMapping[id]]) || {};
+// export const getObjSettings = (id: number) =>
+//     (id && OBJECT_SETTINGS[idMapping[id]]) || {};
+
+const getMainDetailTexRatio = (id: number) => {
+    let main_max = Math.max(...(textureSizes as any)[id].main);
+    let detail_max = Math.max(...(textureSizes as any)[id].detail);
+
+    let overall_scale = clamp(main_max / 120, 0, 1);
+
+    return {
+        main:
+            (main_max > detail_max ? 1 : main_max / detail_max) * overall_scale,
+        detail:
+            (detail_max > main_max ? 1 : detail_max / main_max) * overall_scale,
+    };
+};
+
+export const MAIN_DETAIL_TEX_RATIOS: Record<
+    number,
+    { main: number; detail: number }
+> = {};
+
+for (let i = 1; i <= 2000; i++) {
+    MAIN_DETAIL_TEX_RATIOS[i] = getMainDetailTexRatio(i);
+}

@@ -16,19 +16,19 @@
     import Edit from "./icons/edit.svg";
     import Delete from "./icons/delete.svg";
     import Minimize from "./icons/caret.svg";
-    import { CATEGORY_MAP, OBJECT_SETTINGS } from "../gd/object";
+    import {
+        CATEGORY_ICONS,
+        OBJECT_SETTINGS,
+        MAIN_DETAIL_TEX_RATIOS,
+    } from "../gd/object";
     import SlidingSelector from "../components/SlidingSelector.svelte";
+    import { isOverflow } from "../util";
+    import { EditTab } from "./edit_tab";
 
     enum Group {
         Build,
         Edit,
         Delete,
-    }
-
-    enum EditTab {
-        Transform = "Transform",
-        Layers = "Layers",
-        Colors = "Colors",
     }
 
     let menuSettings = new LocalSettings("menuSettings", {
@@ -41,7 +41,20 @@
 
     const minimizeAnimDur = 0.5;
     const shouldReducedMotion = useReducedMotion();
+
+    let tabsPanel: HTMLDivElement;
+    let isTabsPanelOverflow: boolean = false;
 </script>
+
+<svelte:window
+    on:resize={() => {
+        if (tabsPanel && isOverflow(tabsPanel)) {
+            isTabsPanelOverflow = true;
+        } else {
+            isTabsPanelOverflow = false;
+        }
+    }}
+/>
 
 <Animate
     easing="easeInOut"
@@ -61,19 +74,24 @@
     let:motion
 >
     <div
-        class="flex flex-col justify-end w-full h-full pb absolute pointer-events-none"
+        class="absolute flex flex-col justify-end w-full h-full pointer-events-none pb"
         use:motion
     >
-        <div class="flex justify-end gap-2 pointer-events-all text-white">
+        <div class="flex justify-end gap-2 text-white pointer-events-all">
             <Animate
                 easing="easeInOut"
                 duration={minimizeAnimDur}
                 initial={{
-                    gridTemplateRows: "48px 200px",
+                    // adds 8px to account for 8px scroll bar if overflowing
+                    gridTemplateRows: `${
+                        isTabsPanelOverflow ? "56px" : "48px"
+                    } 200px`,
                 }}
                 definition={{
                     isMinimized: {
-                        gridTemplateRows: "48px 0px",
+                        gridTemplateRows: `${
+                            isTabsPanelOverflow ? "56px" : "48px"
+                        } 0px`,
                     },
                 }}
                 conditions={{
@@ -135,23 +153,23 @@
                                 let:motion
                             >
                                 <ul
-                                    class={cx({
-                                        "absolute w-full h-full p-2 flex justify-evenly overflow-y-hidden no-scrollbar": true,
-                                        "overflow-hidden":
-                                            menuSettings.isMinimized,
-                                        "overflow-x-scroll":
-                                            !menuSettings.isMinimized,
-                                    })}
+                                    bind:this={tabsPanel}
+                                    class={"absolute w-full h-full p-2 flex justify-evenly overflow-y-hidden overflow-x-auto thin-scrollbar"}
                                     use:motion
+                                    on:wheel={e => {
+                                        if (!e || !e.target) return;
+                                        e.currentTarget.scrollLeft +=
+                                            e.deltaY / 10;
+                                    }}
                                 >
                                     <AnimateSharedLayout>
                                         {#if menuSettings.selectedGroup == Group.Build}
-                                            {#each Object.entries(CATEGORY_MAP) as [key, path]}
+                                            {#each Object.entries(CATEGORY_ICONS) as [key, path]}
                                                 <li
-                                                    class="relative h-full flex-center cursor-pointer flex-1"
+                                                    class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px]"
                                                 >
                                                     <button
-                                                        class="z-20 w-full h-full flex-center py-1"
+                                                        class="z-20 w-full h-full py-1 flex-center"
                                                         on:click={() => {
                                                             menuSettings.selectedBuildTab =
                                                                 key;
@@ -173,10 +191,10 @@
                                         {:else if menuSettings.selectedGroup == Group.Edit}
                                             {#each Object.keys(EditTab) as key}
                                                 <li
-                                                    class="relative h-full flex-center cursor-pointer flex-1"
+                                                    class="relative flex-1 h-full cursor-pointer flex-center"
                                                 >
                                                     <button
-                                                        class="h-full flex-center px-4 cursor-pointer w-full"
+                                                        class="w-full h-full px-4 cursor-pointer flex-center"
                                                         on:click={() => {
                                                             menuSettings.selectedEditTab =
                                                                 key;
@@ -229,10 +247,10 @@
 
                     <!-- class="flex flex-col items-center w-full h-full justify-evenly menu-panel g-8" -->
                     <div
-                        class="w-full h-full flex-center overflow-hidden menu-panel side-menu flex-center"
+                        class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
                     >
                         <ul
-                            class="absolute flex flex-col items-center w-full h-full justify-between px-3 py-4 gap-6"
+                            class="absolute flex flex-col items-center justify-between w-full h-full gap-6 px-3 py-4"
                         >
                             <li class="w-full flex-center grow-0 shrink-0">
                                 <button
@@ -284,56 +302,84 @@
                         </ul>
                     </div>
 
-                    <ul
-                        class="buttons object-grid-container menu-panel w-full h-full overflow-x-hidden overflow-y-scroll no-scrollbar"
-                    >
-                        <AnimateSharedLayout>
-                            {#each OBJECT_SETTINGS as obj, i}
-                                <li
-                                    class={cx({
-                                        "relative w-16 h-16": true,
-                                        hidden:
-                                            menuSettings.selectedGroup !=
-                                                Group.Build ||
-                                            menuSettings.selectedBuildTab !=
-                                                obj.category,
-                                    })}
-                                >
-                                    <button
+                    <div class="w-full h-full rounded-lg buttons menu-panel">
+                        <ul
+                            class="w-full h-full overflow-x-hidden overflow-y-auto rounded-lg object-grid-container thin-scrollbar"
+                        >
+                            <AnimateSharedLayout>
+                                {#each OBJECT_SETTINGS as obj, i}
+                                    <!-- {getMainDetailTexRatio(obj.id)} -->
+                                    <li
                                         class={cx({
-                                            "absolute w-full h-full p-2 z-20": true,
-                                            hidden: false,
+                                            "relative w-16 h-16": true,
+                                            hidden:
+                                                menuSettings.selectedGroup !=
+                                                    Group.Build ||
+                                                menuSettings.selectedBuildTab !=
+                                                    obj.category,
                                         })}
-                                        on:click={() => {
-                                            menuSettings.selectedObject =
-                                                obj.id;
-                                        }}
                                     >
-                                        <div
-                                            class="relative flex-center w-full h-full"
+                                        <button
+                                            class={cx({
+                                                "absolute w-full h-full p-2 z-20": true,
+                                                hidden: false,
+                                            })}
+                                            on:click={() => {
+                                                menuSettings.selectedObject =
+                                                    obj.id;
+                                            }}
                                         >
-                                            <Image
-                                                class="absolute object-contain w-auto h-auto max-w-full max-h-full"
-                                                src={`/textures/main/${obj.id}.png`}
-                                                lazyLoad
-                                                skeleton
-                                            ></Image>
-                                            <Image
-                                                class="absolute object-contain w-auto h-auto max-w-full max-h-full"
-                                                src={`/textures/detail/${obj.id}.png`}
-                                                lazyLoad
-                                            ></Image>
-                                        </div>
-                                    </button>
-                                    {#if menuSettings.selectedObject == obj.id}
-                                        <SlidingSelector
-                                            layoutId="selected-object"
-                                        ></SlidingSelector>
-                                    {/if}
-                                </li>
-                            {/each}
-                        </AnimateSharedLayout>
-                    </ul>
+                                            <div
+                                                class="relative w-full h-full flex-center"
+                                            >
+                                                <Image
+                                                    class="absolute object-contain "
+                                                    src={`/textures/main/${obj.id}.png`}
+                                                    lazyLoad
+                                                    skeleton
+                                                    style={`
+                                                        max-width: ${
+                                                            MAIN_DETAIL_TEX_RATIOS[
+                                                                obj.id
+                                                            ].main * 100
+                                                        }%;
+                                                        max-height: ${
+                                                            MAIN_DETAIL_TEX_RATIOS[
+                                                                obj.id
+                                                            ].main * 100
+                                                        }%;
+                                                    `}
+                                                ></Image>
+                                                <Image
+                                                    class="absolute object-contain"
+                                                    src={`/textures/detail/${obj.id}.png`}
+                                                    lazyLoad
+                                                    style={`
+                                                        max-width: ${
+                                                            MAIN_DETAIL_TEX_RATIOS[
+                                                                obj.id
+                                                            ].detail * 100
+                                                        }%;
+                                                        max-height: ${
+                                                            MAIN_DETAIL_TEX_RATIOS[
+                                                                obj.id
+                                                            ].detail * 100
+                                                        }%;
+                                                        filter: sepia(50%) saturate(5000%) hue-rotate(175deg);
+                                                    `}
+                                                ></Image>
+                                            </div>
+                                        </button>
+                                        {#if menuSettings.selectedObject == obj.id}
+                                            <SlidingSelector
+                                                layoutId="selected-object"
+                                            ></SlidingSelector>
+                                        {/if}
+                                    </li>
+                                {/each}
+                            </AnimateSharedLayout>
+                        </ul>
+                    </div>
                 </div>
             </Animate>
 
@@ -364,7 +410,7 @@
                     })}
                     use:motion
                 >
-                    <div class="w-full h-full overflow-hidden py-4">
+                    <div class="w-full h-full py-4 overflow-hidden">
                         <h1
                             class="w-full h-full overflow-hidden text-5xl font-pusab text-stroke flex-center"
                         >

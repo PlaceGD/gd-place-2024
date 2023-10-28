@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
-    import { clamp, lerp } from "../util";
+    import { clamp, hexToRgb, lerp } from "../util";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -44,6 +44,14 @@
     $: {
         changeZoom($zoomTween);
     }
+
+    const gubuh = (event: any) => {
+        let c = hexToRgb(event.target.value);
+        if (c != null) {
+            let { r, g, b } = c;
+            state.set_bg_color(r, g, b, 255);
+        }
+    };
 </script>
 
 <svelte:window
@@ -68,7 +76,6 @@
     on:pointermove={e => {
         mouseX = e.pageX;
         mouseY = e.pageY;
-        // console.log(mouseX, mouseY);
     }}
     on:pointerdown={e => {
         let [x, y] = state.get_camera_pos();
@@ -78,23 +85,17 @@
             prev_mouse_x: e.pageX,
             prev_mouse_y: e.pageY,
         };
-        // bruh.set(5);
     }}
     on:wheel={e => {
-        // let [mx, my] = state.get_world_pos(
-        //     e.pageX - canvas.offsetWidth / 2,
-        //     -(e.pageY - canvas.offsetHeight / 2)
-        // );
-        // let [cx, cy] = state.get_camera_pos();
-        // let prev_zoom_scale = state.get_zoom_scale();
-        // state.set_zoom(state.get_zoom() - (e.deltaY / 100) * 3);
-        // let zoom_scale_change = state.get_zoom_scale() / prev_zoom_scale;
-        // state.set_camera_pos(
-        //     lerp(mx, cx, 1 / zoom_scale_change),
-        //     lerp(my, cy, 1 / zoom_scale_change)
-        // );
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
         zoomTween.set(zoomGoal);
-        // state.set_zoom(state.get_zoom() - (e.deltaY / 100) * 3);
+    }}
+/>
+
+<input
+    type="color"
+    class="absolute"
+    on:input={e => {
+        gubuh(e);
     }}
 />

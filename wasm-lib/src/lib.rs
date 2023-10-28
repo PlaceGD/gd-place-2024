@@ -1,10 +1,11 @@
+mod object;
 mod util;
 
 use desen::{
     state::{AppState, CanvasAppState, LoadedTexture},
     CanvasAppBundle,
 };
-use nalgebra::{vector, Vector2};
+use nalgebra::{vector, Vector2, Vector4};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -26,6 +27,8 @@ struct State {
     background: LoadedTexture,
     camera_pos: Vector2<f32>,
     zoom: f32,
+
+    bg_color: (u8, u8, u8, u8),
 }
 
 impl State {
@@ -42,7 +45,12 @@ impl AppState for State {
     fn view(&self, frame: &mut desen::frame::Frame) {
         let zoom_scale = self.get_zoom_scale();
         {
-            frame.fill(40, 125, 255, 255);
+            frame.fill(
+                self.bg_color.0,
+                self.bg_color.1,
+                self.bg_color.2,
+                self.bg_color.3,
+            );
             let dimension = self.width.max(self.height) as f32;
             frame.draw_image(
                 self.background,
@@ -119,6 +127,7 @@ impl CanvasAppState for State {
             height: 10,
             camera_pos: vector![0.0, 0.0],
             zoom: 0.0,
+            bg_color: (40, 125, 255, 255),
             background: loader.load_texture_bytes(include_bytes!("../background.png")),
         }
     }
@@ -152,6 +161,13 @@ impl StateWrapper {
             x.clamp(0.0, LEVEL_WIDTH_UNITS as f32),
             y.clamp(0.0, LEVEL_HEIGHT_UNITS as f32)
         ];
+    }
+    pub fn set_bg_color(&mut self, r: u8, g: u8, b: u8, a: u8) {
+        self.bundle.state.bg_color = (r, g, b, a);
+    }
+    pub fn get_bg_color(&mut self) -> Vec<u8> {
+        let (r, g, b, a) = self.bundle.state.bg_color;
+        vec![r, g, b, a]
     }
 
     pub fn get_zoom(&self) -> f32 {

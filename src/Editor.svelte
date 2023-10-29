@@ -7,6 +7,10 @@
 
     let state: wasm.StateWrapper | null = null;
     let canvas: HTMLCanvasElement;
+
+    // FUNCTION TOAST(BEANS) {
+    //     console.log("toast");
+    // }
 </script>
 
 <div class="absolute w-full h-full">

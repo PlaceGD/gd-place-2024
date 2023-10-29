@@ -1,11 +1,16 @@
+mod layer;
+mod level;
 mod object;
 mod util;
 
 use desen::{
+    frame::BlendMode,
     state::{AppState, CanvasAppState, LoadedTexture},
     CanvasAppBundle,
 };
+use level::Level;
 use nalgebra::{vector, Vector2, Vector4};
+use object::GDObject;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -27,6 +32,8 @@ struct State {
     background: LoadedTexture,
     camera_pos: Vector2<f32>,
     zoom: f32,
+
+    level: Level,
 
     bg_color: (u8, u8, u8, u8),
 }
@@ -52,8 +59,8 @@ impl AppState for State {
                 self.bg_color.3,
             );
             let dimension = self.width.max(self.height) as f32;
+            frame.set_current_texture(self.background);
             frame.draw_image(
-                self.background,
                 -dimension / 2.0,
                 -dimension / 2.0,
                 Some(dimension),
@@ -75,12 +82,11 @@ impl AppState for State {
             frame.stroke_weight(4.0);
             frame.stroke(0, 0, 0, 255);
             frame.no_fill();
-            frame.rounded_rect(
+            frame.rect(
                 0.0,
                 0.0,
                 LEVEL_WIDTH_UNITS as f32 * zoom_scale,
                 LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
-                4.0,
             );
             // frame.line(-2.0, 0.0, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, 0.0);
             // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
@@ -112,6 +118,12 @@ impl AppState for State {
 
         frame.scale(zoom_scale, zoom_scale);
         frame.translate(-self.camera_pos.x, -self.camera_pos.y);
+
+        frame.no_stroke();
+        frame.fill(255, 0, 0, 127);
+        frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
+        frame.rect(0.0, 0.0, 100.0, 100.0);
+        frame.rect(50.0, 50.0, 100.0, 100.0);
     }
 }
 
@@ -129,6 +141,7 @@ impl CanvasAppState for State {
             zoom: 0.0,
             bg_color: (40, 125, 255, 255),
             background: loader.load_texture_bytes(include_bytes!("../background.png")),
+            level: Level::default(),
         }
     }
 }
@@ -188,6 +201,8 @@ impl StateWrapper {
         let s = self.bundle.state.get_zoom_scale();
         vec![(x + s * cx) / s, (y + s * cy) / s]
     }
+
+    pub fn add_object(&mut self, obj: GDObject) {}
 }
 
 #[wasm_bindgen]

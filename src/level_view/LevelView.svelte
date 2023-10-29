@@ -2,6 +2,9 @@
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
     import { onMount } from "svelte";
 
+    import { toast } from "@zerodevx/svelte-toast";
+    import { toastErrorTheme } from "../utils/toast";
+
     export let state: wasm.StateWrapper | null;
 
     export let canvas: HTMLCanvasElement;
@@ -13,7 +16,18 @@
 
     const draw = () => {
         if (state != null) {
-            state.pub_render(0.25);
+            try {
+                state.pub_render(0.25);
+            } catch (e) {
+                toast.push(
+                    `An error occured in the editor (WASM). 
+                    Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
+                    Refresh the page and try again.`,
+                    toastErrorTheme
+                );
+                console.error(e);
+                return;
+            }
         }
         requestAnimationFrame(draw);
     };
@@ -37,7 +51,7 @@
 </script>
 
 <div
-    class="h-full w-full absolute"
+    class="absolute w-full h-full"
     bind:offsetHeight={view_size[1]}
     bind:offsetWidth={view_size[0]}
 >

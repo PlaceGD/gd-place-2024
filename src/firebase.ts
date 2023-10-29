@@ -1,6 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getDatabase } from "firebase/database";
+import {
+    getDatabase,
+    ref,
+    onValue,
+    onChildAdded,
+    push,
+} from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB9PSVZzg5WOp26PuCkVrrSTVrWg-XJMgg",
@@ -16,6 +22,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const database = getDatabase(app);
+const db = getDatabase(app);
 
-console.log(database);
+const testRef = ref(db, "/arraytest");
+onChildAdded(testRef, data => {
+    console.log(data.key, data.val());
+});
+
+export const bologna = (v: any) => {
+    push(testRef, v);
+};

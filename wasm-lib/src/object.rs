@@ -3,6 +3,7 @@ use std::mem;
 // use bytemuck::{bytes_of, Pod, Zeroable};
 use wasm_bindgen::prelude::*;
 
+use crate::layer::ZLayer;
 use serde::{Deserialize, Serialize};
 
 use crate::log;
@@ -12,6 +13,22 @@ use base64::{
     engine::{self, general_purpose},
     Engine as _,
 };
+
+// #[wasm_bindgen]
+// impl ZLayer {
+//     #[wasm_bindgen]
+//     pub fn to_gd_str(v: ZLayer) -> i32 {
+//         match v {
+//             ZLayer::B4 => -5,
+//             ZLayer::B3 => -3,
+//             ZLayer::B2 => -1,
+//             ZLayer::B1 => 1,
+//             ZLayer::T1 => 3,
+//             ZLayer::T2 => 5,
+//             ZLayer::T3 => 7,
+//         }
+//     }
+// }
 
 #[repr(C, packed)]
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -50,6 +67,7 @@ pub struct GDObject {
     pub flip_x: bool,
     pub flip_y: bool,
     pub scale: f32,
+    pub z_layer: ZLayer,
     pub z_order: i32,
     pub main_color: GDColor,
     pub detail_color: GDColor,
@@ -67,6 +85,7 @@ impl GDObject {
         flip_x: bool,
         flip_y: bool,
         scale: f32,
+        z_layer: ZLayer,
         z_order: i32,
         main_color: GDColor,
         detail_color: GDColor,
@@ -79,6 +98,7 @@ impl GDObject {
             flip_x,
             flip_y,
             scale,
+            z_layer,
             z_order,
             main_color,
             detail_color,
@@ -88,6 +108,8 @@ impl GDObject {
     #[wasm_bindgen]
     pub fn serialize(&self) -> Option<String> {
         let encoded: Vec<u8> = bincode::serialize(self).ok()?;
+
+        // Vec
 
         Some(general_purpose::URL_SAFE.encode(encoded))
     }

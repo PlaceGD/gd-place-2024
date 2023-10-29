@@ -12,13 +12,27 @@ body {
     overflow: hidden;
 }
 
+:root {
+    --toastContainerTop: auto;
+    --toastContainerRight: auto;
+    --toastContainerBottom: 4rem;
+    --toastContainerLeft: calc(50vw - 8rem);
+}
+
+._toastContainer {
+    font-family: Saira;
+    color: white;
+    font-size: 17px;
+    border-radius: 8px;
+}
+
 @layer components {
     .menu-panel {
-        @apply relative overflow-hidden rounded-xl bg-menu-gray/80 shadow-lg shadow-black/40 backdrop-blur-md;
+        @apply relative overflow-hidden shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
     }
 
     .sliding-selector {
-        @apply relative overflow-hidden rounded-lg  bg-white/20;
+        @apply relative overflow-hidden rounded-lg bg-white/20;
     }
 
     .flex-center {

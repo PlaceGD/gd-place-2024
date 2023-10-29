@@ -14,6 +14,7 @@
 
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import { bologna } from "../firebase";
 
     let [mouseX, mouseY] = [0, 0];
 
@@ -72,7 +73,7 @@
 />
 
 <div
-    class="h-full w-full absolute touch-none"
+    class="absolute w-full h-full touch-none"
     on:pointermove={e => {
         mouseX = e.pageX;
         mouseY = e.pageY;
@@ -92,10 +93,17 @@
     }}
 />
 
-<input
-    type="color"
-    class="absolute"
-    on:input={e => {
-        gubuh(e);
-    }}
-/>
+<div class="absolute">
+    <input
+        type="color"
+        on:input={e => {
+            gubuh(e);
+        }}
+    />
+    <button
+        class="bg-white"
+        on:click={() => {
+            bologna("69");
+        }}>Gaga</button
+    >
+</div>

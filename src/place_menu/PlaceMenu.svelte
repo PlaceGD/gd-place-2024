@@ -11,6 +11,7 @@
 
     import Image from "../components/Image.svelte";
     import Animate from "../components/Animate.svelte";
+    import ToggleSwitch from "../components/ToggleSwitch.svelte";
 
     import Build from "./icons/build.svg";
     import Edit from "./icons/edit.svg";
@@ -190,7 +191,7 @@
                                                 </li>
                                             {/each}
                                         {:else if menuSettings.selectedGroup == Group.Edit}
-                                            {#each Object.keys(EditTab) as key}
+                                            {#each Object.values(EditTab) as value}
                                                 <li
                                                     class="relative flex-1 h-full cursor-pointer flex-center"
                                                 >
@@ -198,16 +199,16 @@
                                                         class="w-full h-full px-4 cursor-pointer flex-center"
                                                         on:click={() => {
                                                             menuSettings.selectedEditTab =
-                                                                key;
+                                                                value;
                                                         }}
                                                     >
                                                         <h1
                                                             class="z-20 text-2xl font-pusab text-stroke"
                                                         >
-                                                            {key}
+                                                            {value}
                                                         </h1>
                                                     </button>
-                                                    {#if menuSettings.selectedEditTab == key}
+                                                    {#if menuSettings.selectedEditTab == value}
                                                         <SlidingSelector
                                                             layoutId="selected-edit-tab"
                                                         ></SlidingSelector>
@@ -304,9 +305,21 @@
                     </div>
 
                     <div class="w-full h-full rounded-lg buttons menu-panel">
+                        <!-- 
+                            the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 
+                            object tab as it has to add all the elements back to the dom
+                            its more efficient to just set them to not be visible, but that means we need conditional grids for this element
+                        -->
                         <ul
                             class={cx({
-                                "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg object-grid-container thin-scrollbar": true,
+                                "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar": true,
+                                "object-grid-container": !(
+                                    menuSettings.selectedGroup == Group.Edit &&
+                                    (menuSettings.selectedEditTab ==
+                                        EditTab.MainColor ||
+                                        menuSettings.selectedEditTab ==
+                                            EditTab.DetailColor)
+                                ),
                                 "gap-4":
                                     menuSettings.selectedGroup == Group.Edit,
                             })}
@@ -385,7 +398,7 @@
                                     {/if}
                                 </li>
                             {/each}
-                            <!-- EDIT TAB -->
+                            <!-- EDIT TAB TRANSFORM + LAYERS -->
                             {#each EDIT_BUTTONS[menuSettings.selectedEditTab].buttons as button, i (Object.keys(EditTab).indexOf(menuSettings.selectedEditTab) * 100 + i)}
                                 <li
                                     class={cx({
@@ -407,6 +420,26 @@
                                     </button>
                                 </li>
                             {/each}
+
+                            <!-- EDIT TAB COLORS -->
+                            {#if menuSettings.selectedEditTab == EditTab.MainColor}
+                                <div
+                                    class="items-center w-full h-full p-4 text-xl items colors-tab-container"
+                                >
+                                    <form class="flex flex-col blending">
+                                        <ToggleSwitch id="blending_cb"
+                                        ></ToggleSwitch>
+                                        <label
+                                            for="blending_cb"
+                                            class="font-pusab text-stroke"
+                                        >
+                                            Blending
+                                        </label>
+                                    </form>
+                                    <div class="opacity">fOACITY</div>
+                                    <ul class="colors">COLOURS</ul>
+                                </div>
+                            {/if}
                         </ul>
                     </div>
                 </div>
@@ -531,12 +564,13 @@
             4px 4px 0px 8px #eb1158 inset;
     }
 
-    /* .side-menu-container {
+    .colors-tab-container {
         display: grid;
-        grid-template-rows: auto auto auto;
+        grid-template-rows: 1fr;
+        grid-template-columns: max-content max-content auto;
         grid-template-areas:
-            "build"
-            "edit"
-            "delete";
-    } */
+            "blending opacity colors"
+            "blending opacity colors"
+            "blending opacity colors";
+    }
 </style>

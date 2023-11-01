@@ -31,14 +31,14 @@ pub(crate) fn make_get_object_info_fn() -> String {
         "
 pub fn get_object_info(id: u32) -> Option<ObjectInfo> {{
     Some(match id {{
-        {}
+        {},
         _ => return None,
     }})
 }}
     ",
         get_available_objects()
             .iter()
-            .map(|(id, info)| { format!("{id} => {info:?}") })
+            .map(|(id, info)| { format!("{id} => {info:#?}") })
             .join(",")
     )
 }

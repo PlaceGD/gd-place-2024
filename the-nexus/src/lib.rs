@@ -1,16 +1,15 @@
-use objects::make_get_object_info_fn;
-use serde_json::json;
-
-use crate::objects::list::get_available_objects;
+#[cfg(test)]
+use packing::SpritesheetData;
 
 mod config;
 pub mod objects;
-#[cfg(test)]
-mod packing;
+pub mod packing;
 
 #[test]
-fn gen_save_spritesheet() {
+fn generate_shid() {
+    use crate::objects::list::get_available_objects;
     use packing::make_spritesheet;
+    use serde_json::json;
     use std::fs;
 
     let (img, data) = make_spritesheet();
@@ -21,30 +20,39 @@ fn gen_save_spritesheet() {
         serde_json::to_string(&json!(data)).unwrap(),
     )
     .unwrap();
-}
 
-#[test]
-fn save_object_info() {
-    use std::fs;
+    let available_objects = get_available_objects();
 
     fs::write(
         "../src/gd/objects.json",
-        serde_json::to_string(&json!(get_available_objects())).unwrap(),
+        serde_json::to_string(&json!(available_objects)).unwrap(),
     )
     .unwrap();
+
+    fs::write("../wasm-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
 }
 
-#[test]
-fn make_wasm_lib_utilgen() {
-    use std::fs;
-    let contents = format!(
+#[cfg(test)]
+fn make_wasm_lib_utilgen(sheet_data: &SpritesheetData) -> String {
+    use crate::{
+        objects::make_get_object_info_fn,
+        packing::{make_get_detail_sprite_fn, make_get_main_sprite_fn},
+    };
+
+    format!(
         "
-use the_nexus::objects::ObjectInfo;
+use the_nexus::objects::{{ObjectCategory::*, ObjectInfo}};
+use the_nexus::packing::SpriteInfo;
+
+{}
+
+{}
 
 {}
 
     ",
-        make_get_object_info_fn()
-    );
-    fs::write("../wasm-lib/src/utilgen.rs", contents).unwrap();
+        make_get_object_info_fn(),
+        make_get_main_sprite_fn(sheet_data),
+        make_get_detail_sprite_fn(sheet_data),
+    )
 }

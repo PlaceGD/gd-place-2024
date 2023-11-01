@@ -1,6 +1,6 @@
 import { clamp } from "../util";
 import objectList from "./objects.json";
-import textureSizes from "./texture_sizes.json";
+// import textureSizes from "./texture_sizes.json";
 
 export const CATEGORY_ICONS = {
     Blocks: "/assets/ui/build_tab_icons/blocks.png",
@@ -15,18 +15,14 @@ export const CATEGORY_ICONS = {
 };
 
 interface Object {
-    id: number;
-    offsetX: number;
-    offsetY: number;
+    placeOffsetX: number;
+    placeOffsetY: number;
     tintable: boolean;
     solid: boolean;
     category: string; // CATEGORY_ICONS key
-    flipWithoutOffset?: boolean;
-    nondeco?: boolean;
-    danger?: boolean;
 }
 
-export const OBJECT_SETTINGS: Object[] = objectList;
+export const OBJECT_SETTINGS: Record<string, Object> = objectList;
 
 // object id: index
 // let idMapping: { [key: number]: number } = {};
@@ -38,16 +34,21 @@ export const OBJECT_SETTINGS: Object[] = objectList;
 //     (id && OBJECT_SETTINGS[idMapping[id]]) || {};
 
 const getMainDetailTexRatio = (id: number) => {
-    let main_max = Math.max(...(textureSizes as any)[id].main);
-    let detail_max = Math.max(...(textureSizes as any)[id].detail);
+    // let main_max = Math.max(...(textureSizes as any)[id].main);
+    // let detail_max = Math.max(...(textureSizes as any)[id].detail);
 
-    let overall_scale = clamp(main_max / 120, 0, 1);
+    // let overall_scale = clamp(main_max / 120, 0, 1);
+
+    // return {
+    //     main:
+    //         (main_max > detail_max ? 1 : main_max / detail_max) * overall_scale,
+    //     detail:
+    //         (detail_max > main_max ? 1 : detail_max / main_max) * overall_scale,
+    // };
 
     return {
-        main:
-            (main_max > detail_max ? 1 : main_max / detail_max) * overall_scale,
-        detail:
-            (detail_max > main_max ? 1 : detail_max / main_max) * overall_scale,
+        main: 1,
+        detail: 1,
     };
 };
 

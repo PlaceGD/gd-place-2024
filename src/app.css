@@ -73,7 +73,7 @@ body {
         .thin-scrollbar {
             scrollbar-color: #ffffff55 #00000000;
             scrollbar-width: thin; /* 8px */
-            scrollbar-gutter: stable;
+            /* scrollbar-gutter: stable; */
         }
 
         /* Custom scrollbar for Edge, Chrome, Safari */

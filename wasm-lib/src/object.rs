@@ -14,22 +14,6 @@ use base64::{
     Engine as _,
 };
 
-// #[wasm_bindgen]
-// impl ZLayer {
-//     #[wasm_bindgen]
-//     pub fn to_gd_str(v: ZLayer) -> i32 {
-//         match v {
-//             ZLayer::B4 => -5,
-//             ZLayer::B3 => -3,
-//             ZLayer::B2 => -1,
-//             ZLayer::B1 => 1,
-//             ZLayer::T1 => 3,
-//             ZLayer::T2 => 5,
-//             ZLayer::T3 => 7,
-//         }
-//     }
-// }
-
 #[repr(C, packed)]
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[wasm_bindgen]
@@ -108,8 +92,6 @@ impl GDObject {
     #[wasm_bindgen]
     pub fn serialize(&self) -> Option<String> {
         let encoded: Vec<u8> = bincode::serialize(self).ok()?;
-
-        // Vec
 
         Some(general_purpose::URL_SAFE.encode(encoded))
     }

@@ -1,12 +1,18 @@
-use crate::object::GDObject;
+use crate::{layer::ZLayerMap, object::GDObject};
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
-pub const CHUNK_SIZE: u32 = 20 * 30;
+pub const CHUNK_SIZE_BLOCKS: u32 = 20;
+pub const CHUNK_SIZE_UNITS: u32 = CHUNK_SIZE_BLOCKS * 30;
+pub type DbKeyType = [u8; 20];
 
-pub type ObjectList = [Vec<GDObject>; 7];
+#[derive(Debug, Default)]
+pub struct ObjectList {
+    // pub blending: HashMap<DbKeyType, GDObject>,
+    pub objects: BTreeMap<DbKeyType, GDObject>,
+}
 
 #[derive(Debug, Default)]
 pub struct Level {
-    chunks: HashMap<(i32, i32), ObjectList>,
+    pub chunks: HashMap<(i32, i32), ZLayerMap<ObjectList>>,
 }

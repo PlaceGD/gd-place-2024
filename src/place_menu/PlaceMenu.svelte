@@ -12,6 +12,7 @@
     import Image from "../components/Image.svelte";
     import Animate from "../components/Animate.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
+    import OpacitySlider from "../components/OpacitySlider.svelte";
 
     import Build from "./icons/build.svg";
     import Edit from "./icons/edit.svg";
@@ -24,8 +25,9 @@
     } from "../gd/object";
     import SlidingSelector from "../components/SlidingSelector.svelte";
     import { isOverflow } from "../util";
-    import { EDIT_BUTTONS, EditTab } from "./edit_tab";
+    import { EDIT_BUTTONS, EditTab, PALETTE } from "./edit_tab";
     import { __DEBUG } from "../main";
+    import SpriteSheet from "../utils/SpriteSheet";
 
     enum Group {
         Build,
@@ -46,6 +48,21 @@
 
     let tabsPanel: HTMLUListElement;
     let isTabsPanelOverflow: boolean = false;
+
+    let selectedMainColor = "ffffff";
+    let selectedDetailColor = "000000";
+
+    import sprites from "../gd/spritesheet.json";
+    import ColorTab from "./ColorTab.svelte";
+
+    // let buttons_spr_sheet = new SpriteSheet({
+    //     src: "/textures/spriteshit.png",
+    //     width: 4093,
+    //     height: 2364,
+
+    //     main_sprites: sprites.main_sprites as any,
+    //     detail_sprites: sprites.detail_sprites as any,
+    // });
 </script>
 
 <svelte:window
@@ -315,17 +332,15 @@
                                 "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar": true,
                                 "object-grid-container": !(
                                     menuSettings.selectedGroup == Group.Edit &&
-                                    (menuSettings.selectedEditTab ==
-                                        EditTab.MainColor ||
-                                        menuSettings.selectedEditTab ==
-                                            EditTab.DetailColor)
+                                    menuSettings.selectedEditTab ==
+                                        EditTab.Colors
                                 ),
                                 "gap-4":
                                     menuSettings.selectedGroup == Group.Edit,
                             })}
                         >
                             <!-- BUILD TAB -->
-                            {#each OBJECT_SETTINGS as obj, i}
+                            {#each Object.entries(OBJECT_SETTINGS) as [id, obj], i}
                                 <li
                                     class={cx({
                                         "relative w-16 h-16": true,
@@ -339,15 +354,14 @@
                                     <button
                                         class={"absolute w-full h-full p-3 z-20"}
                                         on:click={() => {
-                                            menuSettings.selectedObject =
-                                                obj.id;
+                                            menuSettings.selectedObject = id;
                                         }}
                                     >
                                         {#if __DEBUG}
                                             <span
                                                 class="absolute text-red font-lg bottom-3/4 right-1/2"
                                             >
-                                                {obj.id}
+                                                {id}
                                             </span>
                                         {/if}
                                         <div
@@ -355,43 +369,27 @@
                                         >
                                             <Image
                                                 class="absolute object-contain"
-                                                src={`/textures/main/${obj.id}.png`}
+                                                src={`/textures/main/${id}.png`}
                                                 lazyLoad
                                                 skeleton
-                                                style={`
-                                                        max-width: ${
-                                                            MAIN_DETAIL_TEX_RATIOS[
-                                                                obj.id
-                                                            ].main * 100
-                                                        }%;
-                                                        max-height: ${
-                                                            MAIN_DETAIL_TEX_RATIOS[
-                                                                obj.id
-                                                            ].main * 100
-                                                        }%;
-                                                    `}
                                             ></Image>
                                             <Image
                                                 class="absolute object-contain"
-                                                src={`/textures/detail/${obj.id}.png`}
+                                                src={`/textures/detail/${id}.png`}
                                                 lazyLoad
-                                                style={`
-                                                        max-width: ${
-                                                            MAIN_DETAIL_TEX_RATIOS[
-                                                                obj.id
-                                                            ].detail * 100
-                                                        }%;
-                                                        max-height: ${
-                                                            MAIN_DETAIL_TEX_RATIOS[
-                                                                obj.id
-                                                            ].detail * 100
-                                                        }%;
-                                                        filter: sepia(50%) saturate(5000%) hue-rotate(175deg);
-                                                    `}
                                             ></Image>
+
+                                            <!-- <Image
+                                                class="absolute object-contain"
+                                                src={buttons_spr_sheet.mainSpriteFromId(
+                                                    obj.id
+                                                )}
+                                                lazyLoad
+                                                skeleton
+                                            ></Image> -->
                                         </div>
                                     </button>
-                                    {#if menuSettings.selectedObject == obj.id}
+                                    {#if menuSettings.selectedObject == id}
                                         <span
                                             class={"absolute w-full h-full sliding-selector"}
                                         ></span>
@@ -422,23 +420,11 @@
                             {/each}
 
                             <!-- EDIT TAB COLORS -->
-                            {#if menuSettings.selectedEditTab == EditTab.MainColor}
-                                <div
-                                    class="items-center w-full h-full p-4 text-xl items colors-tab-container"
-                                >
-                                    <form class="flex flex-col blending">
-                                        <ToggleSwitch id="blending_cb"
-                                        ></ToggleSwitch>
-                                        <label
-                                            for="blending_cb"
-                                            class="font-pusab text-stroke"
-                                        >
-                                            Blending
-                                        </label>
-                                    </form>
-                                    <div class="opacity">fOACITY</div>
-                                    <ul class="colors">COLOURS</ul>
-                                </div>
+                            {#if menuSettings.selectedGroup == Group.Edit && menuSettings.selectedEditTab == EditTab.Colors}
+                                <ColorTab
+                                    currentMainColor={selectedMainColor}
+                                    currentDetailColor={selectedDetailColor}
+                                ></ColorTab>
                             {/if}
                         </ul>
                     </div>
@@ -562,15 +548,5 @@
             0px 0px 0px 8px #000 inset,
             -4px -4px 0px 8px #6a1617 inset,
             4px 4px 0px 8px #eb1158 inset;
-    }
-
-    .colors-tab-container {
-        display: grid;
-        grid-template-rows: 1fr;
-        grid-template-columns: max-content max-content auto;
-        grid-template-areas:
-            "blending opacity colors"
-            "blending opacity colors"
-            "blending opacity colors";
     }
 </style>

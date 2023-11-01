@@ -5,6 +5,7 @@ import {
     ref,
     onValue,
     onChildAdded,
+    onChildRemoved,
     push,
 } from "firebase/database";
 
@@ -25,7 +26,10 @@ const analytics = getAnalytics(app);
 const db = getDatabase(app);
 
 const testRef = ref(db, "/arraytest");
-onChildAdded(testRef, data => {
+// onChildAdded(testRef, data => {
+//     console.log(data.key, data.val());
+// });
+onChildRemoved(testRef, data => {
     console.log(data.key, data.val());
 });
 

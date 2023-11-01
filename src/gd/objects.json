@@ -1,2912 +1,2410 @@
-[
-    {
-        "id": 1,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+{
+    "1": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Blocks"
+        "tintable": true
     },
-    {
-        "id": 83,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Blocks"
-    },
-    {
-        "id": 2,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Blocks"
-    },
-    {
-        "id": 3,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Blocks"
-    },
-    {
-        "id": 4,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Blocks"
-    },
-    {
-        "id": 5,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "10": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Blocks"
+        "tintable": false
     },
-    {
-        "id": 6,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Blocks"
+    "1001": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 7,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Blocks"
+    "1002": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-
-    {
-        "id": 467,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1003": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 468,
-        "offsetX": 0,
-        "offsetY": 14.25,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1004": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 469,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1005": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 470,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "101": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
     },
-    {
-        "id": 471,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1019": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 472,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1020": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 473,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1021": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 474,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1022": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
     },
-    {
-        "id": 1338,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
+    "1050": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.0,
+        "solid": false,
+        "tintable": true
     },
-    {
-        "id": 1339,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
+    "1051": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1052": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1053": {
+        "category": "Utilities",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1054": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1058": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1059": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "106": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 18.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1060": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "107": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 4.0,
+        "solid": false,
+        "tintable": true
+    },
+    "11": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "110": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "111": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "113": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 1.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1133": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1134": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1135": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1136": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1137": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "114": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "115": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -5.0,
+        "solid": false,
+        "tintable": true
+    },
+    "12": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1202": {
         "category": "Outlines",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 1210,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 13.5,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1202,
-        "offsetX": 0,
-        "offsetY": 13.5,
-        "tintable": true,
+    "1203": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1203,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1204": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1204,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1205": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1209,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1206": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1205,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1207": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1206,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1209": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 1207,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1210": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Outlines"
+        "tintable": true
     },
-    {
-        "id": 143,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Outlines"
-    },
-
-    {
-        "id": 693,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "1247": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 694,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
+    "1266": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
+        "tintable": true
+    },
+    "1267": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1273": {
+        "category": "GroundDeco",
+        "placeOffsetX": 5.0,
+        "placeOffsetY": -5.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1274": {
+        "category": "GroundDeco",
+        "placeOffsetX": 5.0,
+        "placeOffsetY": -5.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1277": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1278": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1279": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1280": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1281": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "13": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "132": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "133": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1330": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1331": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1332": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -12.5,
+        "solid": false,
+        "tintable": false
+    },
+    "1333": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1338": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "1339": {
+        "category": "Outlines",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "135": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -11.0,
+        "solid": false,
+        "tintable": true
+    },
+    "136": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "137": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "138": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "139": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "140": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -13.0,
+        "solid": false,
+        "tintable": false
+    },
+    "141": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "143": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "148": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "149": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "15": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 6.0,
+        "solid": false,
+        "tintable": true
+    },
+    "150": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1519": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "154": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "155": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "156": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "157": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -1.5,
+        "solid": false,
+        "tintable": true
+    },
+    "158": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -1.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1582": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1583": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1584": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1586": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "159": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -1.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1596": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1597": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "16": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -1.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1600": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1601": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1602": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1603": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1604": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1605": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1606": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1607": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1618": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1619": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1620": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1697": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1698": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1699": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "17": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -8.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1700": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1704": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1705": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1706": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1707": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1708": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1709": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1710": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1715": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -12.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1717": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "1718": {
+        "category": "Spikes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "1720": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -11.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1721": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -11.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1722": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -11.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1723": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "1724": {
+        "category": "Spikes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "1725": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -9.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1728": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1729": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1730": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1731": {
+        "category": "Spikes",
+        "placeOffsetX": -11.5,
+        "placeOffsetY": -11.5,
+        "solid": false,
+        "tintable": true
+    },
+    "1734": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1735": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1736": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1740": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1741": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1751": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1753": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1754": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1755": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1756": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1757": {
+        "category": "Deco",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1758": {
+        "category": "GroundDeco",
+        "placeOffsetX": -7.25,
+        "placeOffsetY": 7.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1759": {
+        "category": "GroundDeco",
+        "placeOffsetX": 10.5,
+        "placeOffsetY": 9.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1764": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1765": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1766": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1767": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1768": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "177": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "178": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -8.0,
+        "solid": false,
+        "tintable": true
+    },
+    "179": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -6.0,
+        "solid": false,
+        "tintable": true
+    },
+    "18": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 4.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1813": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "1825": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1829": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "183": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1830": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1831": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1832": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1833": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1834": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1835": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1837": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "184": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1843": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1844": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1845": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1846": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1847": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1848": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "185": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1859": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "186": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1861": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1862": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1863": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1864": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1865": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1866": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1867": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1868": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1869": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "187": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1870": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1871": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1872": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1873": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1874": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1875": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1876": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1877": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1878": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1879": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "188": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1880": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1881": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1882": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1883": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1884": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1885": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1888": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1889": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1890": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -9.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1891": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -6.0,
+        "solid": false,
+        "tintable": true
+    },
+    "1892": {
+        "category": "Spikes",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": -9.75,
+        "solid": false,
+        "tintable": true
+    },
+    "19": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 4.0,
+        "solid": false,
+        "tintable": true
+    },
+    "2": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "20": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "21": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -8.0,
+        "solid": false,
+        "tintable": true
+    },
+    "211": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "216": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "217": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -9.0,
+        "solid": false,
+        "tintable": true
+    },
+    "218": {
+        "category": "Spikes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -6.0,
+        "solid": false,
+        "tintable": true
+    },
+    "222": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "223": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "224": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "227": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -4.0,
+        "solid": false,
+        "tintable": true
+    },
+    "228": {
+        "category": "GroundDeco",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "242": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "259": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "266": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "273": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "3": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "35": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -13.0,
+        "solid": false,
+        "tintable": false
+    },
+    "36": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "394": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "395": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "396": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "4": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "406": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -8.0,
+        "solid": false,
+        "tintable": true
+    },
+    "408": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -12.5,
+        "solid": false,
+        "tintable": true
+    },
+    "409": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "41": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 20.0,
+        "solid": false,
+        "tintable": true
+    },
+    "410": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "411": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "412": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "413": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "414": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -9.0,
+        "solid": false,
+        "tintable": true
+    },
+    "419": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.5,
+        "solid": false,
+        "tintable": true
+    },
+    "420": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.5,
+        "solid": false,
+        "tintable": true
+    },
+    "45": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "458": {
+        "category": "Spikes",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": -9.75,
+        "solid": false,
+        "tintable": true
+    },
+    "46": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "460": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "467": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "468": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 14.25,
+        "solid": true,
+        "tintable": true
+    },
+    "469": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "47": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "470": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "471": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "472": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "473": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "474": {
+        "category": "Outlines",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "476": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "477": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "478": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "479": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "48": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "480": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "481": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "482": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "49": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -2.0,
+        "solid": false,
+        "tintable": true
+    },
+    "494": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "5": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "50": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "503": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -5.0,
+        "solid": false,
+        "tintable": true
+    },
+    "504": {
+        "category": "GroundDeco",
+        "placeOffsetX": 5.0,
+        "placeOffsetY": -5.0,
+        "solid": false,
+        "tintable": true
+    },
+    "505": {
+        "category": "GroundDeco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "51": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "52": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "53": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "54": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "6": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": true,
+        "tintable": true
+    },
+    "60": {
+        "category": "Pulsing",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "641": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "642": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "643": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "644": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "645": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "646": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "647": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "648": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "649": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "650": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "658": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "659": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "660": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "67": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -12.0,
+        "solid": false,
+        "tintable": false
+    },
+    "678": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "679": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "680": {
+        "category": "Saws",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "693": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 695,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 696,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "694": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 697,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 698,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "695": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 699,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 700,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "696": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 701,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 702,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "697": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 877,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 878,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "698": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 888,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 889,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "699": {
         "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-    {
-        "id": 895,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Slopes"
+        "tintable": true
     },
-    {
-        "id": 896,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Slopes",
-        "flipWithoutOffset": true
-    },
-
-    {
-        "id": 216,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 217,
-        "offsetX": 0,
-        "offsetY": -9,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 218,
-        "offsetX": 0,
-        "offsetY": -6,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 458,
-        "offsetX": -7.5,
-        "offsetY": -9.75,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1889,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1890,
-        "offsetX": 0,
-        "offsetY": -9,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1891,
-        "offsetX": 0,
-        "offsetY": -6,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1892,
-        "offsetX": -7.5,
-        "offsetY": -9.75,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 177,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 178,
-        "offsetX": 0,
-        "offsetY": -8,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 179,
-        "offsetX": 0,
-        "offsetY": -6,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1715,
-        "offsetX": 0,
-        "offsetY": -12.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1722,
-        "offsetX": 0,
-        "offsetY": -11,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1720,
-        "offsetX": 0,
-        "offsetY": -11,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1721,
-        "offsetX": 0,
-        "offsetY": -11,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 135,
-        "offsetX": 0,
-        "offsetY": -11,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1717,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "7": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
+        "tintable": true
     },
-    {
-        "id": 1718,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
+    "700": {
+        "category": "Slopes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "701": {
+        "category": "Slopes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "702": {
+        "category": "Slopes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "719": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "721": {
+        "category": "Deco",
+        "placeOffsetX": -11.5,
+        "placeOffsetY": -11.5,
+        "solid": false,
+        "tintable": true
+    },
+    "722": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "734": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "739": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "745": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": false
+    },
+    "83": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": true,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
+        "tintable": true
     },
-    {
-        "id": 1723,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1724,
-        "offsetX": 15,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": true,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1725,
-        "offsetX": 0,
-        "offsetY": -9,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1728,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1729,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1730,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1731,
-        "offsetX": -11.5,
-        "offsetY": -11.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Spikes",
-        "nonDeco": true,
-        "danger": true
-    },
-
-    {
-        "id": 211,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1825,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 259,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 266,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 273,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 658,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 722,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 659,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 734,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-
-    {
-        "id": 476,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 477,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 478,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 479,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 480,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 481,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 482,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 641,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 642,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 739,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 643,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 644,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 645,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 646,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 647,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 648,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 649,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 650,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-
-    {
-        "id": 869,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 870,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 871,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1266,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1267,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 873,
-        "offsetX": 0,
-        "offsetY": 7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 874,
-        "offsetX": -7.5,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 880,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 881,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 882,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 883,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 890,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1247,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1279,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1280,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1281,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1277,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1278,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-
-    {
-        "id": 927,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 928,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 929,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 930,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 931,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 932,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 933,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 934,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 935,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-
-    {
-        "id": 35,
-        "offsetX": 0,
-        "offsetY": -13,
-        "tintable": false,
-        "solid": false,
+    "84": {
         "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 140,
-        "offsetX": 0,
-        "offsetY": -13,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1332,
-        "offsetX": 0,
-        "offsetY": -12.5,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 67,
-        "offsetX": 0,
-        "offsetY": -12,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 36,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 141,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1333,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 84,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1022,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1330,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1704,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1751,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 10,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 11,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 12,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 13,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 47,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-
-    {
-        "id": 111,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 660,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 745,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1331,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 45,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 46,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 99,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 101,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1755,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1813,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1829,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1859,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": false,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true
-    },
-    {
-        "id": 1586,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1700,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 918,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1584,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 919,
-        "offsetX": 0,
-        "offsetY": -10,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1697,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1698,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1699,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1053,
-        "offsetX": -7.5,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1054,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1583,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1582,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1519,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-    {
-        "id": 1618,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Utilities"
-    },
-
-    {
-        "id": 503,
-        "offsetX": 0,
-        "offsetY": -5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 505,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 504,
-        "offsetX": 5,
-        "offsetY": -5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1273,
-        "offsetX": 5,
-        "offsetY": -5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1274,
-        "offsetX": 5,
-        "offsetY": -5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1758,
-        "offsetX": -7.25,
-        "offsetY": 7,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1759,
-        "offsetX": 10.5,
-        "offsetY": 9,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1888,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-
-    {
-        "id": 18,
-        "offsetX": 0,
-        "offsetY": 4,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 19,
-        "offsetX": 0,
-        "offsetY": 4,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 20,
-        "offsetX": 0,
-        "offsetY": -2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 21,
-        "offsetX": 0,
-        "offsetY": -8,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 48,
-        "offsetX": 0,
-        "offsetY": 2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 49,
-        "offsetX": 0,
-        "offsetY": -2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 113,
-        "offsetX": 0,
-        "offsetY": 1,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 114,
-        "offsetX": 0,
-        "offsetY": -2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 115,
-        "offsetX": 0,
-        "offsetY": -5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 157,
-        "offsetX": 0,
-        "offsetY": -1.5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 158,
-        "offsetX": 0,
-        "offsetY": -1.5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 159,
-        "offsetX": 0,
-        "offsetY": -1.5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 227,
-        "offsetX": 0,
-        "offsetY": -4,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 228,
-        "offsetX": -7.5,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 242,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 419,
-        "offsetX": 0,
-        "offsetY": -2.5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 420,
-        "offsetX": 0,
-        "offsetY": -2.5,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1050,
-        "offsetX": 0,
-        "offsetY": -2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1051,
-        "offsetX": 0,
-        "offsetY": -2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-    {
-        "id": 1052,
-        "offsetX": 0,
-        "offsetY": -2,
-        "tintable": true,
-        "solid": false,
-        "category": "GroundDeco"
-    },
-
-    {
-        "id": 41,
-        "offsetX": 0,
-        "offsetY": 20,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 110,
-        "offsetX": 0,
-        "offsetY": 2,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 106,
-        "offsetX": 0,
-        "offsetY": 18,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 107,
-        "offsetX": 0,
-        "offsetY": 4,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1764,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1765,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1766,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1767,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1768,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-
-    {
-        "id": 15,
-        "offsetX": 0,
-        "offsetY": 6,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 16,
-        "offsetX": 0,
-        "offsetY": -1,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 17,
-        "offsetX": 0,
-        "offsetY": -8,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 132,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 460,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 494,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 50,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 51,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 52,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 53,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 54,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 60,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 148,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 149,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 150,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-    {
-        "id": 133,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Pulsing"
+        "tintable": false
     },
-    {
-        "id": 136,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Pulsing"
-    },
-
-    {
-        "id": 1734,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
+    "85": {
         "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1735,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
+        "tintable": true
+    },
+    "86": {
         "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1736,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
+        "tintable": true
+    },
+    "869": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "87": {
         "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 186,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
+        "tintable": true
+    },
+    "870": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "871": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "873": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "874": {
+        "category": "Blocks",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "877": {
+        "category": "Slopes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "878": {
+        "category": "Slopes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "880": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "881": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "882": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "883": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "888": {
+        "category": "Slopes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "889": {
+        "category": "Slopes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "890": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "895": {
+        "category": "Slopes",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "896": {
+        "category": "Slopes",
+        "placeOffsetX": 15.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "907": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -4.5,
+        "solid": false,
+        "tintable": true
+    },
+    "908": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "909": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "914": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "916": {
+        "category": "Deco",
+        "placeOffsetX": -7.5,
+        "placeOffsetY": -7.5,
+        "solid": false,
+        "tintable": true
+    },
+    "917": {
+        "category": "Deco",
+        "placeOffsetX": -11.25,
+        "placeOffsetY": -11.25,
+        "solid": false,
+        "tintable": true
+    },
+    "918": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "919": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -10.0,
+        "solid": false,
+        "tintable": true
+    },
+    "927": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "928": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "929": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "930": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "931": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "932": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "933": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "934": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "935": {
+        "category": "Blocks",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "937": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "938": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
+        "solid": false,
+        "tintable": true
+    },
+    "939": {
+        "category": "Deco",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": -6.0,
+        "solid": false,
+        "tintable": true
+    },
+    "97": {
         "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 187,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 188,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1705,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1706,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1707,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1708,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1709,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1710,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 678,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 679,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 680,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1619,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 1620,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 183,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 184,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 185,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws",
-        "nonDeco": true,
-        "danger": true
-    },
-    {
-        "id": 85,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 86,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 87,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 97,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 137,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 138,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 139,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1019,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1020,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1021,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 394,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 395,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 396,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 154,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 155,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 156,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 222,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 223,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 224,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1831,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1832,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1833,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1834,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1058,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1059,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-    {
-        "id": 1060,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Saws"
-    },
-
-    {
-        "id": 719,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 721,
-        "offsetX": -11.5,
-        "offsetY": -11.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-
-    {
-        "id": 409,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 410,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 411,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 412,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 413,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1756,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1001,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1002,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1003,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1004,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1005,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 916,
-        "offsetX": -7.5,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 917,
-        "offsetX": -11.25,
-        "offsetY": -11.25,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1740,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1741,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-
-    {
-        "id": 937,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 938,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 414,
-        "offsetX": 0,
-        "offsetY": -9,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 406,
-        "offsetX": 0,
-        "offsetY": -8,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 408,
-        "offsetX": 0,
-        "offsetY": -12.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 907,
-        "offsetX": 0,
-        "offsetY": -4.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 908,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 909,
-        "offsetX": 0,
-        "offsetY": -7.5,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 939,
-        "offsetX": 0,
-        "offsetY": -6,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1597,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1596,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1135,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1136,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1137,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1134,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1133,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1844,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1845,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1846,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1847,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1848,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1602,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1603,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1604,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1605,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 914,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1606,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1607,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1601,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1600,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1843,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-
-    {
-        "id": 1837,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1835,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1753,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1754,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1757,
-        "offsetX": -7.5,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-    {
-        "id": 1830,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Deco"
-    },
-
-    {
-        "id": 1861,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-
-    {
-        "id": 1862,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1863,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1864,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1865,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1866,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1867,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1868,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1869,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1870,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1871,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1872,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1873,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1874,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1875,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1876,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1877,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1878,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1879,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1880,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1881,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1882,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1883,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
-        "solid": false,
-        "category": "Blocks"
-    },
-    {
-        "id": 1884,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Blocks"
+        "tintable": true
     },
-    {
-        "id": 1885,
-        "offsetX": 0,
-        "offsetY": 0,
-        "tintable": true,
+    "99": {
+        "category": "Utilities",
+        "placeOffsetX": 0.0,
+        "placeOffsetY": 0.0,
         "solid": false,
-        "category": "Blocks"
+        "tintable": false
     }
-]
+}

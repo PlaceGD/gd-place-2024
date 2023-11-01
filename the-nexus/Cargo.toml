@@ -1,0 +1,21 @@
+[package]
+name = "the-nexus"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[profile.test]
+opt-level = 3
+
+[dependencies]
+serde = { version = "1.0.190", features = ["derive"] }
+serde_json = "1.0.107"
+paste = "1.0.14"
+convert_case = "0.6.0"
+itertools = "0.11.0"
+
+[dev-dependencies]
+image = "0.24.7"
+texture_packer = "0.25.0"

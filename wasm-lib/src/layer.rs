@@ -11,9 +11,6 @@ macro_rules! z_layers {
             )*
         }
         const Z_LAYERS: &[ZLayer] = &[$(ZLayer::$name,)*];
-
-
-
     };
 }
 
@@ -33,9 +30,6 @@ pub struct ZLayerMap<T>([T; Z_LAYERS.len()]);
 impl<T> ZLayerMap<T> {
     pub fn new(arr: [T; Z_LAYERS.len()]) -> Self {
         Self(arr)
-    }
-    pub fn new_clone(v: T) -> Self {
-        Self(vec![v; Z_LAYERS.len()].into())
     }
 
     pub fn get(&self, layer: ZLayer) -> &T {

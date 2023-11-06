@@ -1,34 +1,50 @@
-const LEVEL_WIDTH_BLOCKS: u32 = 400;
-const LEVEL_HEIGHT_BLOCKS: u32 = 80;
-const LEVEL_WIDTH_UNITS: u32 = LEVEL_WIDTH_BLOCKS * 30;
-const LEVEL_HEIGHT_UNITS: u32 = LEVEL_HEIGHT_BLOCKS * 30;
+use std::{collections::HashSet, f32::consts::PI};
 
+use colored::Colorize;
 use desen::{
-    frame::BlendMode,
+    frame::{BlendMode, Frame},
     state::{AppState, CanvasAppState, LoadedTexture},
     CanvasAppBundle,
 };
+use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    level::{DbKeyType, Level, CHUNK_SIZE_UNITS},
-    map,
-    object::GDObject,
+    layer::{ZLayer, Z_LAYERS},
+    level::{
+        ChunkCoord, ChunkInfo, DbKey, Level, CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS,
+        LEVEL_HEIGHT_BLOCKS, LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_BLOCKS,
+        LEVEL_WIDTH_UNITS,
+    },
+    log, map,
+    object::{GDColor, GDObject},
+    util::{get_max_bounding_box, now, Rect},
+    utilgen::{get_detail_sprite, get_main_sprite, get_object_info},
+    ErrorType, RustError,
 };
 
 use nalgebra::{vector, Vector2, Vector4};
 pub struct State {
     time: f32,
+
     width: u32,
     height: u32,
 
     background: LoadedTexture,
+    spritesheet: LoadedTexture,
+
     camera_pos: Vector2<f32>,
     zoom: f32,
 
     level: Level,
 
     bg_color: (u8, u8, u8, u8),
+
+    preview_object: GDObject,
+    show_preview: bool,
+
+    selected_object: Option<DbKey>,
+    select_depth: u32,
 }
 
 impl State {
@@ -40,6 +56,22 @@ impl State {
 impl AppState for State {
     fn update(&mut self, delta: f32) {
         self.time += delta;
+        // self.preview_object.rotation += 1;
+        // let viewable = self.get_viewable_chunks();
+
+        // for w in (0..viewable.len()).step_by(2) {
+        //     let x = viewable[w];
+        //     let y = viewable[w + 1];
+        //     frame.stroke(0, 255, 0, 255);
+        //     frame.stroke_weight(4.0);
+        //     frame.no_fill();
+        //     frame.rect(
+        //         x as f32 * 20.0 * 30.0,
+        //         y as f32 * 20.0 * 30.0,
+        //         20.0 * 30.0,
+        //         20.0 * 30.0,
+        //     );
+        // }
     }
 
     fn view(&self, frame: &mut desen::frame::Frame) {
@@ -109,14 +141,323 @@ impl AppState for State {
             frame.pop()
         }
 
+        frame.set_current_texture(self.spritesheet);
         frame.scale(zoom_scale, zoom_scale);
         frame.translate(-self.camera_pos.x, -self.camera_pos.y);
 
-        frame.no_stroke();
-        frame.fill(255, 0, 0, 127);
-        frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
-        frame.rect(0.0, 0.0, 100.0, 100.0);
-        frame.rect(50.0, 50.0, 100.0, 100.0);
+        {
+            let mut view_rect = self.get_camera_world_rect();
+            view_rect.w /= 2.0;
+            view_rect.h /= 2.0;
+            view_rect.x += view_rect.w / 2.0;
+            view_rect.y += view_rect.h / 2.0;
+
+            frame.fill(255, 0, 0, 127);
+            frame.no_stroke();
+            for (x, y) in view_rect.corners() {
+                frame.circle(x, y, 10.0);
+            }
+        }
+
+        frame.stroke_weight(4.0);
+        frame.no_fill();
+
+        let now = now();
+
+        for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
+            frame.stroke(
+                0,
+                255,
+                0,
+                map!(
+                    now - chunk.last_time_visible,
+                    0.0,
+                    UNLOAD_CHUNK_TIME * 1000.0,
+                    255.0,
+                    0.0
+                ) as u8,
+            );
+            frame.rect(
+                x as f32 * 20.0 * 30.0,
+                y as f32 * 20.0 * 30.0,
+                20.0 * 30.0,
+                20.0 * 30.0,
+            );
+        }
+
+        {
+            let obj_transform = |frame: &mut Frame, obj: &GDObject| {
+                frame.translate(obj.x, obj.y);
+                frame.rotate(-obj.rotation as f32 * PI / 180.0);
+                frame.scale(
+                    if obj.flip_x { -0.25 } else { 0.25 } * obj.scale,
+                    if obj.flip_y { -0.25 } else { 0.25 } * obj.scale,
+                );
+            };
+
+            let draw_sprite = |frame: &mut Frame, sprite: &SpriteInfo, obj: &GDObject| {
+                frame.push();
+                obj_transform(frame, obj);
+                frame.draw_image_cropped(
+                    -(sprite.size.0 as f32) / 2.0 + sprite.offset.0,
+                    -(sprite.size.1 as f32) / 2.0 - sprite.offset.1,
+                    None,
+                    None,
+                    (
+                        sprite.pos.0 as f32,
+                        sprite.pos.1 as f32,
+                        sprite.size.0 as f32,
+                        sprite.size.1 as f32,
+                    ),
+                    true,
+                );
+                frame.pop()
+            };
+            let draw_preview_sprite = |frame: &mut Frame,
+                                       layer: ZLayer,
+                                       z_order: i8,
+                                       draw_detail: bool,
+                                       if_blending: bool| {
+                let (color, sprite_fn): (GDColor, fn(u32) -> Option<SpriteInfo>) = if draw_detail {
+                    (self.preview_object.detail_color, get_detail_sprite)
+                } else {
+                    (self.preview_object.main_color, get_main_sprite)
+                };
+
+                if self.show_preview
+                    && self.preview_object.z_layer == layer
+                    && self.preview_object.z_order == z_order
+                    && color.blending == if_blending
+                {
+                    if let Some(sprite) = sprite_fn(self.preview_object.id as u32) {
+                        frame.fill(color.r, color.g, color.b, color.opacity);
+                        draw_sprite(frame, &sprite, &self.preview_object);
+                    }
+                }
+            };
+
+            for layer in Z_LAYERS {
+                frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
+                for z_order in -50..=50 {
+                    self.level.foreach_obj_in(*layer, z_order, |obj| {
+                        if let Some(sprite) = get_main_sprite(obj.id as u32) {
+                            if obj.main_color.blending {
+                                frame.fill(
+                                    obj.main_color.r,
+                                    obj.main_color.g,
+                                    obj.main_color.b,
+                                    obj.main_color.opacity,
+                                );
+                                draw_sprite(frame, &sprite, obj);
+                            }
+                        }
+                    });
+                    draw_preview_sprite(frame, *layer, z_order, false, true);
+                }
+                frame.set_blend_mode(BlendMode::Normal);
+                for z_order in -50..=50 {
+                    self.level.foreach_obj_in(*layer, z_order, |obj| {
+                        if let Some(sprite) = get_main_sprite(obj.id as u32) {
+                            if !obj.main_color.blending {
+                                frame.fill(
+                                    obj.main_color.r,
+                                    obj.main_color.g,
+                                    obj.main_color.b,
+                                    obj.main_color.opacity,
+                                );
+                                draw_sprite(frame, &sprite, obj);
+                            }
+                        }
+                        if let Some(sprite) = get_detail_sprite(obj.id as u32) {
+                            if !obj.detail_color.blending {
+                                frame.fill(
+                                    obj.detail_color.r,
+                                    obj.detail_color.g,
+                                    obj.detail_color.b,
+                                    obj.detail_color.opacity,
+                                );
+                                draw_sprite(frame, &sprite, obj);
+                            }
+                        }
+                    });
+                    draw_preview_sprite(frame, *layer, z_order, false, false);
+                    draw_preview_sprite(frame, *layer, z_order, true, false);
+                }
+                frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
+                for z_order in -50..=50 {
+                    self.level.foreach_obj_in(*layer, z_order, |obj| {
+                        if let Some(sprite) = get_detail_sprite(obj.id as u32) {
+                            if obj.detail_color.blending {
+                                frame.fill(
+                                    obj.detail_color.r,
+                                    obj.detail_color.g,
+                                    obj.detail_color.b,
+                                    obj.detail_color.opacity,
+                                );
+                                draw_sprite(frame, &sprite, obj);
+                            }
+                        }
+                    });
+                    draw_preview_sprite(frame, *layer, z_order, true, true);
+                }
+            }
+            frame.set_blend_mode(BlendMode::Normal);
+
+            if self.show_preview {
+                let mut rect_size =
+                    get_max_bounding_box(self.preview_object.id as u32).unwrap_or((10.0, 10.0));
+
+                rect_size.0 += 30.0;
+                rect_size.1 += 30.0;
+
+                frame.push();
+                obj_transform(frame, &self.preview_object);
+
+                let rect = Rect::new(
+                    -rect_size.0 / 2.0,
+                    -rect_size.1 / 2.0,
+                    rect_size.0,
+                    rect_size.1,
+                );
+
+                frame.no_fill();
+
+                // frame.stroke(50, 255, 50, 255);
+                // frame.stroke_weight(8.0);
+                const IDEAL_DASH_LEN: f32 = 30.0;
+                let dash_len =
+                    rect.perimeter() / (rect.perimeter() / (IDEAL_DASH_LEN * 2.0)).round() / 2.0;
+
+                let mut offset = self.time * 2.0;
+
+                for ((x0, y0), (x1, y1)) in rect.sides() {
+                    offset = self.dashed_line(
+                        frame,
+                        x0,
+                        y0,
+                        x1,
+                        y1,
+                        dash_len,
+                        offset,
+                        (100, 255, 100),
+                        8.0,
+                    );
+                }
+
+                frame.pop();
+            }
+        }
+    }
+}
+
+fn chunk_rect_blocks(x: i32, y: i32) -> Rect<i32> {
+    Rect::new(
+        x * CHUNK_SIZE_BLOCKS as i32,
+        y * CHUNK_SIZE_BLOCKS as i32,
+        CHUNK_SIZE_BLOCKS as i32,
+        CHUNK_SIZE_BLOCKS as i32,
+    )
+}
+fn chunk_rect_units(x: i32, y: i32) -> Rect<i32> {
+    Rect::new(
+        x * CHUNK_SIZE_UNITS as i32,
+        y * CHUNK_SIZE_UNITS as i32,
+        CHUNK_SIZE_UNITS as i32,
+        CHUNK_SIZE_UNITS as i32,
+    )
+}
+
+impl State {
+    #[allow(clippy::too_many_arguments)]
+    fn dashed_line(
+        &self,
+        frame: &mut Frame,
+        x0: f32,
+        y0: f32,
+        x1: f32,
+        y1: f32,
+        dash_len: f32,
+        offset: f32,
+        (r, g, b): (u8, u8, u8),
+        weight: f32,
+    ) -> f32 {
+        let start = vector![x0, y0];
+        let end = vector![x1, y1];
+        let to = end - start;
+        let dir = to.normalize();
+
+        macro_rules! line {
+            ($a:expr, $l:expr) => {{
+                let pb = start + dir * ($a + $l);
+                let pa = start + dir * $a;
+                frame.no_fill();
+                frame.stroke(r, g, b, 255);
+                frame.stroke_weight(weight);
+                frame.line(pa.x, pa.y, pb.x, pb.y);
+
+                frame.no_stroke();
+                frame.fill(r, g, b, 255);
+                frame.circle(pa.x, pa.y, weight / 2.0);
+                frame.circle(pb.x, pb.y, weight / 2.0);
+            }};
+        }
+
+        let offset = offset.rem_euclid(dash_len * 2.0);
+        if offset > dash_len {
+            let bit = offset - dash_len;
+
+            // frame.stroke(255, 0, 0, 255);
+            line!(0.0, bit);
+        }
+        let (full, rem) = {
+            let d = (to.magnitude() - offset) / (dash_len * 2.0);
+            (d.floor() as i32, d.fract())
+        };
+        for i in 0..full {
+            let i = i as f32;
+            // frame.stroke(0, 255, 0, 255);
+            line!(offset + i * (dash_len * 2.0), dash_len);
+        }
+        let bit = (rem * dash_len * 2.0).min(dash_len);
+        if bit > 0.0 {
+            // frame.stroke(0, 0, 255, 255);
+            line!(offset + (dash_len * 2.0) * full as f32, bit);
+        }
+        (1.0 - rem) * (dash_len * 2.0)
+    }
+
+    fn get_camera_world_rect(&self) -> Rect<f32> {
+        let (cx, cy) = (self.camera_pos.x, self.camera_pos.y);
+        let s = self.get_zoom_scale();
+        Rect::new(
+            cx - self.width as f32 / 2.0 / s,
+            cy - self.height as f32 / 2.0 / s,
+            self.width as f32 / s,
+            self.height as f32 / s,
+        )
+    }
+    fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
+        let mut view_rect = self.get_camera_world_rect();
+        view_rect.w /= 2.0;
+        view_rect.h /= 2.0;
+        view_rect.x += view_rect.w / 2.0;
+        view_rect.y += view_rect.h / 2.0;
+
+        let mut out = vec![];
+
+        for x in ((view_rect.x / CHUNK_SIZE_UNITS as f32).floor() as i32)
+            ..=(((view_rect.x + view_rect.w) / CHUNK_SIZE_UNITS as f32).floor() as i32)
+        {
+            for y in ((view_rect.y / CHUNK_SIZE_UNITS as f32).floor() as i32)
+                ..=(((view_rect.y + view_rect.h) / CHUNK_SIZE_UNITS as f32).floor() as i32)
+            {
+                if LEVEL_RECT_BLOCKS.overlaps_excl(&chunk_rect_blocks(x, y)) {
+                    out.push(ChunkCoord { x, y });
+                }
+            }
+        }
+
+        out
     }
 }
 
@@ -125,7 +466,7 @@ impl CanvasAppState for State {
         // need this so that the atlas is nonzero lol!!!
         // technically not rly cause we are importing other stuff
         // but just in case
-        loader.load_texture_bytes(include_bytes!("../biddledoo.png"));
+        // loader.load_texture_bytes(include_bytes!("../biddledoo.png"));
         Self {
             time: 0.0,
             width: 10,
@@ -134,7 +475,24 @@ impl CanvasAppState for State {
             zoom: 0.0,
             bg_color: (40, 125, 255, 255),
             background: loader.load_texture_bytes(include_bytes!("../background.png")),
+            spritesheet: loader.load_texture_bytes(include_bytes!("../../src/gd/spritesheet.png")),
             level: Level::default(),
+            preview_object: GDObject {
+                id: 1,
+                x: 15.0,
+                y: 15.0,
+                rotation: 0,
+                flip_x: false,
+                flip_y: false,
+                scale: 1.0,
+                z_layer: crate::layer::ZLayer::T1,
+                z_order: 1,
+                main_color: GDColor::white(),
+                detail_color: GDColor::white(),
+            },
+            show_preview: false,
+            select_depth: 0,
+            selected_object: None,
         }
     }
 }
@@ -142,7 +500,6 @@ impl CanvasAppState for State {
 #[wasm_bindgen]
 pub struct StateWrapper {
     bundle: CanvasAppBundle<State>,
-    // canvas: web_sys::HtmlCanvasElement,
 }
 
 impl StateWrapper {
@@ -186,7 +543,7 @@ impl StateWrapper {
         self.bundle.state.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.bundle.state.zoom = v
+        self.bundle.state.zoom = v.clamp(-36.0, 36.0);
     }
     pub fn get_zoom_scale(&self) -> f32 {
         self.bundle.state.get_zoom_scale()
@@ -201,24 +558,104 @@ impl StateWrapper {
         vec![(x + s * cx) / s, (y + s * cy) / s]
     }
 
-    pub fn add_object(&mut self, key: String, obj: GDObject) {
-        if let Ok(key) = key.into_bytes().try_into() {
-            let key: DbKeyType = key;
+    pub fn add_object(&mut self, key: String, obj: GDObject) -> Result<(), RustError> {
+        if get_object_info(obj.id as u32).is_none() {
+            return ErrorType::InvalidObjectId(obj.id).into();
+        }
 
-            let chunk = (
-                (obj.x / CHUNK_SIZE_UNITS as f32).floor() as i32,
-                (obj.y / CHUNK_SIZE_UNITS as f32).floor() as i32,
-            );
+        if let Ok(key) = key.into_bytes().try_into() {
+            let key: DbKey = key;
+
+            let chunk = obj.get_chunk_coord();
 
             self.bundle
                 .state
                 .level
                 .chunks
                 .entry(chunk)
-                .or_default()
+                .or_insert_with(ChunkInfo::new)
+                .objects
                 .get_mut(obj.z_layer)
                 .objects
+                .entry(obj.z_order)
+                .or_default()
                 .insert(key, obj);
         }
+        Ok(())
     }
+    pub fn delete_object(&mut self, key: String) {
+        if let Ok(key) = key.into_bytes().try_into() {
+            let key: DbKey = key;
+
+            for c in self.bundle.state.level.chunks.values_mut() {
+                for (list, _) in c.objects.iter_mut() {
+                    for m in list.objects.values_mut() {
+                        if m.remove(&key).is_some() {
+                            return;
+                        }
+                    }
+                }
+            }
+        } else {
+            log!("{}", "Incorrect object key length".bright_red());
+        }
+    }
+
+    pub fn get_chunks_to_sub(&mut self) -> Vec<ChunkCoord> {
+        let visible = self.bundle.state.get_viewable_chunks();
+
+        let mut out = vec![];
+
+        for v in visible {
+            // check if it is in the hashmap already
+            //if not, set it to subscribe
+            match self.bundle.state.level.chunks.get_mut(&v) {
+                Some(chunk) => chunk.last_time_visible = now(),
+                None => {
+                    self.bundle.state.level.chunks.insert(v, ChunkInfo::new());
+                    out.push(v);
+                }
+            }
+        }
+
+        out
+    }
+    pub fn get_chunks_to_unsub(&mut self) -> Vec<ChunkCoord> {
+        let mut out = vec![];
+        let now = now();
+
+        self.bundle.state.level.chunks.retain(|coord, chunk| {
+            if now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
+                out.push(*coord);
+                false
+            } else {
+                true
+            }
+        });
+
+        out
+    }
+
+    pub fn set_preview_visibility(&mut self, to: bool) {
+        self.bundle.state.show_preview = to;
+    }
+    pub fn get_preview_object(&mut self) -> GDObject {
+        self.bundle.state.preview_object
+    }
+    pub fn set_preview_object(&mut self, to: GDObject) {
+        self.bundle.state.preview_object = to
+    }
+
+    // pub fn try_select_at(&self, x: f32, y: f32) {
+    //     let (cx, cy) = (
+    //         self.bundle.state.camera_pos.x,
+    //         self.bundle.state.camera_pos.y,
+    //     );
+    //     let s = self.bundle.state.get_zoom_scale();
+    //     vec![(x + s * cx) / s, (y + s * cy) / s]
+    // }
+
+    // pub fn move_preview
 }
+
+const UNLOAD_CHUNK_TIME: f64 = 1.0;

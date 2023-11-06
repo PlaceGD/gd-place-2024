@@ -7,62 +7,104 @@
         useAnimation,
         useReducedMotion,
     } from "svelte-motion";
+    import { clamp } from "../util";
+    import { spring, type Spring } from "svelte/motion";
+    import colors from "../gd/colors.json";
 
-    export let hueDivisions: number;
-    let hueSteps = 360 / hueDivisions;
-
-    let colors: string[] = [];
-    for (let i = 0; i < hueDivisions; i++) {
-        colors.push(`hsl(${i * hueSteps}, 100%, 50%)`);
-    }
-
-    let selectedColor = 0;
+    export let currentHue: number;
 
     // "slider"
-    // let sliderContainer: HTMLUListElement;
     let sliderKnob: HTMLDivElement;
 
+    let sliderContainer: HTMLUListElement;
     let sliderContainerWidth: number = 0;
 
-    $: sliderContainerWidth && moveSliderKnob(selectedColor);
+    $: sliderContainerWidth && moveSliderKnob(currentHue);
 
-    const moveSliderKnob = (to: number) => {
-        let colorLen = sliderContainerWidth / hueDivisions;
+    let isPressingSlider = false;
 
-        let base = colorLen * (to + 0.5);
+    const calcKnobOffset = (to: number): number => {
+        let colorLen = sliderContainerWidth / colors.hues;
 
-        base -= sliderKnob.clientWidth / 2;
+        let offset = colorLen * (currentHue + 0.5);
 
-        sliderKnob.style.left = `${base + 0.5}px`;
+        return offset - sliderKnob.offsetWidth / 2;
     };
 
-    //divide-x divide-black
+    let springPos: Spring<number>;
+    onMount(() => {
+        springPos = spring(calcKnobOffset(currentHue), {
+            stiffness: 0.15,
+            damping: 0.4,
+        });
+    });
+
+    const moveSliderKnob = (to: number) => {
+        if (springPos != null) {
+            springPos.set(calcKnobOffset(to));
+        }
+    };
+
+    const handleDrag = (e: any) => {
+        if (isPressingSlider) {
+            let ex = e.pageX - sliderContainer.getBoundingClientRect().left;
+
+            let colorLen = sliderContainerWidth / colors.hues;
+
+            let color = clamp(Math.floor(ex / colorLen), 0, colors.hues - 1);
+
+            currentHue = color;
+        }
+    };
+
+    $: {
+        if (sliderKnob != null) {
+            sliderKnob.style.left = `${$springPos}px`;
+        }
+    }
 </script>
 
-<ul class="relative flex w-full h-full" bind:offsetWidth={sliderContainerWidth}>
-    {#each colors as c, i}
+<svelte:window
+    on:pointermove={handleDrag}
+    on:pointerup={() => {
+        isPressingSlider = false;
+    }}
+/>
+
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<ul
+    class="relative flex w-full h-full divide-x divide-black touch-none"
+    bind:this={sliderContainer}
+    bind:offsetWidth={sliderContainerWidth}
+    on:pointerdown={() => {
+        isPressingSlider = true;
+    }}
+>
+    {#each colors.list as { hue }, i}
         <li
             class={cx({
-                "flex-1 transition-all flex": true,
+                "w-auto h-full flex-1 transition-all flex": true,
                 "rounded-l-lg": i == 0,
-                "rounded-r-lg": i == colors.length - 1,
+                "rounded-r-lg": i == colors.hues - 1,
             })}
-            style={`background: ${c}`}
-            on:drag={e => {
-                console.log(e);
-            }}
+            style={`background: hsl(${hue}, 100%, 50%)`}
         >
             <button
                 class="w-full h-full"
                 on:click={() => {
-                    selectedColor = i;
-                    moveSliderKnob(selectedColor);
+                    currentHue = i;
                 }}
             ></button>
         </li>
     {/each}
     <div
-        class="absolute h-full bg-white rounded-full slider-knob aspect-square"
+        class="absolute bottom-auto w-auto h-full p-2 bg-white !border-2 !border-black rounded-full slider-knob aspect-square -translate-y-2/4 top-1/2"
         bind:this={sliderKnob}
     />
 </ul>
+
+<style>
+    .slider-knob {
+        transition: transform ease-in-out;
+    }
+</style>

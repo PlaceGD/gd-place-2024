@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as wasm from "../../wasm-lib/pkg/wasm_lib";
     import { default as cx } from "classnames";
     import {
         AnimateSharedLayout,
@@ -6,13 +7,13 @@
         useAnimation,
         useReducedMotion,
     } from "svelte-motion";
+    import colors from "../gd/colors.json";
 
     import LocalSettings from "../utils/LocalSettings";
 
     import Image from "../components/Image.svelte";
     import Animate from "../components/Animate.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import OpacitySlider from "../components/OpacitySlider.svelte";
 
     import Build from "./icons/build.svg";
     import Edit from "./icons/edit.svg";
@@ -25,23 +26,18 @@
     } from "../gd/object";
     import SlidingSelector from "../components/SlidingSelector.svelte";
     import { isOverflow } from "../util";
-    import { EDIT_BUTTONS, EditTab, PALETTE } from "./edit_tab";
+    import { EditTab, TRANSFORM_BUTTONS } from "./edit_tab";
     import { __DEBUG } from "../main";
     import SpriteSheet from "../utils/SpriteSheet";
 
-    enum Group {
-        Build,
-        Edit,
-        Delete,
-    }
+    import ColorTab from "./ColorTab.svelte";
+    import { TabGroup, menuSettings } from "../stores";
+    import { addObject } from "../firebase";
+    import LayersTab from "./LayersTab.svelte";
 
-    let menuSettings = new LocalSettings("menuSettings", {
-        isMinimized: false,
-        selectedGroup: Group.Build,
-        selectedEditTab: EditTab.Transform,
-        selectedBuildTab: "Blocks",
-        selectedObject: 1,
-    });
+    export let state: wasm.StateWrapper | null;
+
+    let hasMinimizedAnimFinished = false;
 
     const minimizeAnimDur = 0.5;
     const shouldReducedMotion = useReducedMotion();
@@ -49,20 +45,46 @@
     let tabsPanel: HTMLUListElement;
     let isTabsPanelOverflow: boolean = false;
 
-    let selectedMainColor = "ffffff";
-    let selectedDetailColor = "000000";
+    // let selectedMainColor = { hue: 0, x: 0, y: 0, blending: false };
+    // let selectedDetailColor = { hue: 0, x: 0, y: 0, blending: false };
 
-    import sprites from "../gd/spritesheet.json";
-    import ColorTab from "./ColorTab.svelte";
+    $: {
+        if (state != null) {
+            let [mr, mg, mb] =
+                colors.list[$menuSettings.selectedMainColor.hue].palette[
+                    $menuSettings.selectedMainColor.y
+                ][$menuSettings.selectedMainColor.x];
+            let m_opacity = $menuSettings.selectedMainColor.opacity;
+            let m_blending = $menuSettings.selectedMainColor.blending;
+            let [dr, dg, db] =
+                colors.list[$menuSettings.selectedDetailColor.hue].palette[
+                    $menuSettings.selectedDetailColor.y
+                ][$menuSettings.selectedDetailColor.x];
+            let d_opacity = $menuSettings.selectedDetailColor.opacity;
+            let d_blending = $menuSettings.selectedDetailColor.blending;
 
-    // let buttons_spr_sheet = new SpriteSheet({
-    //     src: "/textures/spriteshit.png",
-    //     width: 4093,
-    //     height: 2364,
+            let obj = state.get_preview_object();
 
-    //     main_sprites: sprites.main_sprites as any,
-    //     detail_sprites: sprites.detail_sprites as any,
-    // });
+            obj.main_color = new wasm.GDColor(
+                mr,
+                mg,
+                mb,
+                m_opacity * 255,
+                m_blending
+            );
+            obj.detail_color = new wasm.GDColor(
+                dr,
+                dg,
+                db,
+                d_opacity * 255,
+                d_blending
+            );
+            obj.id = $menuSettings.selectedObject;
+            obj.z_layer = $menuSettings.zLayer;
+
+            state.set_preview_object(obj);
+        }
+    }
 </script>
 
 <svelte:window
@@ -88,7 +110,7 @@
         },
     }}
     conditions={{
-        isMinimized: menuSettings.isMinimized,
+        isMinimized: $menuSettings.isMinimized,
     }}
     let:motion
 >
@@ -114,7 +136,7 @@
                     },
                 }}
                 conditions={{
-                    isMinimized: menuSettings.isMinimized,
+                    isMinimized: $menuSettings.isMinimized,
                 }}
                 let:motion
             >
@@ -125,14 +147,14 @@
                         <button
                             class="absolute w-full h-full p-4 flex-center"
                             on:click={() => {
-                                menuSettings.isMinimized =
-                                    !menuSettings.isMinimized;
+                                $menuSettings.isMinimized =
+                                    !$menuSettings.isMinimized;
                             }}
                         >
                             <Minimize
                                 class={cx({
                                     "cursor-pointer": true,
-                                    "rotate-180": menuSettings.isMinimized,
+                                    "rotate-180": $menuSettings.isMinimized,
                                 })}
                             ></Minimize>
                         </button>
@@ -150,7 +172,7 @@
                             },
                         }}
                         conditions={{
-                            isMinimized: menuSettings.isMinimized,
+                            isMinimized: $menuSettings.isMinimized,
                         }}
                         let:motion
                     >
@@ -167,7 +189,7 @@
                                     },
                                 }}
                                 conditions={{
-                                    isMinimized: !menuSettings.isMinimized,
+                                    isMinimized: !$menuSettings.isMinimized,
                                 }}
                                 let:motion
                             >
@@ -182,7 +204,7 @@
                                     }}
                                 >
                                     <AnimateSharedLayout>
-                                        {#if menuSettings.selectedGroup == Group.Build}
+                                        {#if $menuSettings.selectedGroup == TabGroup.Build}
                                             {#each Object.entries(CATEGORY_ICONS) as [key, path]}
                                                 <li
                                                     class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px]"
@@ -190,7 +212,7 @@
                                                     <button
                                                         class="z-20 w-full h-full py-1 flex-center"
                                                         on:click={() => {
-                                                            menuSettings.selectedBuildTab =
+                                                            $menuSettings.selectedBuildTab =
                                                                 key;
                                                         }}
                                                     >
@@ -200,14 +222,14 @@
                                                             class="object-contain w-auto h-auto max-w-full max-h-full"
                                                         ></Image>
                                                     </button>
-                                                    {#if menuSettings.selectedBuildTab == key}
+                                                    {#if $menuSettings.selectedBuildTab == key}
                                                         <SlidingSelector
                                                             layoutId="selected-build-tab"
                                                         ></SlidingSelector>
                                                     {/if}
                                                 </li>
                                             {/each}
-                                        {:else if menuSettings.selectedGroup == Group.Edit}
+                                        {:else if $menuSettings.selectedGroup == TabGroup.Edit}
                                             {#each Object.values(EditTab) as value}
                                                 <li
                                                     class="relative flex-1 h-full cursor-pointer flex-center"
@@ -215,7 +237,7 @@
                                                     <button
                                                         class="w-full h-full px-4 cursor-pointer flex-center"
                                                         on:click={() => {
-                                                            menuSettings.selectedEditTab =
+                                                            $menuSettings.selectedEditTab =
                                                                 value;
                                                         }}
                                                     >
@@ -225,7 +247,7 @@
                                                             {value}
                                                         </h1>
                                                     </button>
-                                                    {#if menuSettings.selectedEditTab == value}
+                                                    {#if $menuSettings.selectedEditTab == value}
                                                         <SlidingSelector
                                                             layoutId="selected-edit-tab"
                                                         ></SlidingSelector>
@@ -249,7 +271,7 @@
                                     },
                                 }}
                                 conditions={{
-                                    isMinimized: menuSettings.isMinimized,
+                                    isMinimized: $menuSettings.isMinimized,
                                 }}
                                 let:motion
                             >
@@ -276,12 +298,12 @@
                                     class={cx({
                                         "w-full cursor-pointer ": true,
                                         "opacity-30":
-                                            menuSettings.selectedGroup !=
-                                            Group.Build,
+                                            $menuSettings.selectedGroup !=
+                                            TabGroup.Build,
                                     })}
                                     on:click={() => {
-                                        menuSettings.selectedGroup =
-                                            Group.Build;
+                                        $menuSettings.selectedGroup =
+                                            TabGroup.Build;
                                     }}
                                 >
                                     <Build></Build>
@@ -292,11 +314,12 @@
                                     class={cx({
                                         "w-full cursor-pointer": true,
                                         "opacity-30":
-                                            menuSettings.selectedGroup !=
-                                            Group.Edit,
+                                            $menuSettings.selectedGroup !=
+                                            TabGroup.Edit,
                                     })}
                                     on:click={() => {
-                                        menuSettings.selectedGroup = Group.Edit;
+                                        $menuSettings.selectedGroup =
+                                            TabGroup.Edit;
                                     }}
                                 >
                                     <Edit></Edit>
@@ -307,12 +330,12 @@
                                     class={cx({
                                         "w-full cursor-pointer": true,
                                         "opacity-30":
-                                            menuSettings.selectedGroup !=
-                                            Group.Delete,
+                                            $menuSettings.selectedGroup !=
+                                            TabGroup.Delete,
                                     })}
                                     on:click={() => {
-                                        menuSettings.selectedGroup =
-                                            Group.Delete;
+                                        $menuSettings.selectedGroup =
+                                            TabGroup.Delete;
                                     }}
                                 >
                                     <Delete></Delete>
@@ -329,14 +352,13 @@
                         -->
                         <ul
                             class={cx({
-                                "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar": true,
-                                "object-grid-container": !(
-                                    menuSettings.selectedGroup == Group.Edit &&
-                                    menuSettings.selectedEditTab ==
-                                        EditTab.Colors
-                                ),
-                                "gap-4":
-                                    menuSettings.selectedGroup == Group.Edit,
+                                "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar object-grid-container": true,
+                                "!overflow-hidden":
+                                    $menuSettings.isMinimized &&
+                                    hasMinimizedAnimFinished,
+                                "!hidden":
+                                    $menuSettings.selectedGroup !=
+                                    TabGroup.Build,
                             })}
                         >
                             <!-- BUILD TAB -->
@@ -345,16 +367,14 @@
                                     class={cx({
                                         "relative w-16 h-16": true,
                                         hidden:
-                                            menuSettings.selectedGroup !=
-                                                Group.Build ||
-                                            menuSettings.selectedBuildTab !=
-                                                obj.category,
+                                            $menuSettings.selectedBuildTab !=
+                                            obj.category,
                                     })}
                                 >
                                     <button
                                         class={"absolute w-full h-full p-3 z-20"}
                                         on:click={() => {
-                                            menuSettings.selectedObject = id;
+                                            $menuSettings.selectedObject = id;
                                         }}
                                     >
                                         {#if __DEBUG}
@@ -368,16 +388,16 @@
                                             class="relative w-full h-full flex-center"
                                         >
                                             <Image
-                                                class="absolute object-contain"
+                                                class="absolute object-contain max-w-full max-h-full"
                                                 src={`/textures/main/${id}.png`}
                                                 lazyLoad
                                                 skeleton
                                             ></Image>
-                                            <Image
+                                            <!-- <Image
                                                 class="absolute object-contain"
                                                 src={`/textures/detail/${id}.png`}
                                                 lazyLoad
-                                            ></Image>
+                                            ></Image> -->
 
                                             <!-- <Image
                                                 class="absolute object-contain"
@@ -389,44 +409,61 @@
                                             ></Image> -->
                                         </div>
                                     </button>
-                                    {#if menuSettings.selectedObject == id}
+                                    {#if $menuSettings.selectedObject == id}
                                         <span
                                             class={"absolute w-full h-full sliding-selector"}
                                         ></span>
                                     {/if}
                                 </li>
                             {/each}
-                            <!-- EDIT TAB TRANSFORM + LAYERS -->
-                            {#each EDIT_BUTTONS[menuSettings.selectedEditTab].buttons as button, i (Object.keys(EditTab).indexOf(menuSettings.selectedEditTab) * 100 + i)}
-                                <li
+                        </ul>
+                        <!-- EDIT TAB TRANSFORM + LAYERS -->
+                        {#if $menuSettings.selectedGroup == TabGroup.Edit}
+                            {#if $menuSettings.selectedEditTab == EditTab.Transform}
+                                <ul
                                     class={cx({
-                                        " w-16 h-16": true,
-                                        hidden:
-                                            menuSettings.selectedGroup !=
-                                            Group.Edit,
+                                        "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar object-grid-container gap-4": true,
+                                        "!overflow-hidden":
+                                            $menuSettings.isMinimized &&
+                                            hasMinimizedAnimFinished,
                                     })}
                                 >
-                                    <button
-                                        class={"flex-center w-full h-full p-3 z-20 rounded-md bg-gradient-to-b from-button-light-green to-button-dark-green"}
-                                    >
-                                        <Image
-                                            class={"object-cover max-w-full max-h-full h-auto w-auto"}
-                                            src={`/assets/ui/edit/${button.image}.png`}
-                                            style="transform: scale({button.scale})"
-                                            lazyLoad
-                                        ></Image>
-                                    </button>
-                                </li>
-                            {/each}
-
-                            <!-- EDIT TAB COLORS -->
-                            {#if menuSettings.selectedGroup == Group.Edit && menuSettings.selectedEditTab == EditTab.Colors}
+                                    {#each TRANSFORM_BUTTONS as button, i (i)}
+                                        <li class="w-16 h-16">
+                                            <button
+                                                class={"flex-center w-full h-full p-3 z-20 rounded-md bg-[#75c934]"}
+                                                on:click={() => {
+                                                    if (state == null) return;
+                                                    let obj =
+                                                        state.get_preview_object();
+                                                    button.cb(obj);
+                                                    state.set_preview_object(
+                                                        obj
+                                                    );
+                                                }}
+                                            >
+                                                <Image
+                                                    class={"object-cover max-w-full max-h-full h-auto w-auto"}
+                                                    src={`/assets/ui/edit/${button.image}.png`}
+                                                    style="transform: scale({button.scale})"
+                                                    lazyLoad
+                                                    skeleton
+                                                />
+                                            </button>
+                                        </li>
+                                    {/each}
+                                </ul>
+                            {:else if $menuSettings.selectedEditTab == EditTab.Layers}
+                                <LayersTab
+                                    bind:selectedLayer={$menuSettings.zLayer}
+                                ></LayersTab>
+                            {:else if $menuSettings.selectedEditTab == EditTab.Colors}
                                 <ColorTab
-                                    currentMainColor={selectedMainColor}
-                                    currentDetailColor={selectedDetailColor}
+                                    bind:currentMainColor={$menuSettings.selectedMainColor}
+                                    bind:currentDetailColor={$menuSettings.selectedDetailColor}
                                 ></ColorTab>
                             {/if}
-                        </ul>
+                        {/if}
                     </div>
                 </div>
             </Animate>
@@ -444,7 +481,7 @@
                     },
                 }}
                 conditions={{
-                    isMinimized: menuSettings.isMinimized,
+                    isMinimized: $menuSettings.isMinimized,
                 }}
                 let:motion
             >
@@ -452,17 +489,26 @@
                     class={cx({
                         "self-end overflow-hidden": true,
                         "place-bttn-place":
-                            menuSettings.selectedGroup != Group.Delete,
+                            $menuSettings.selectedGroup != TabGroup.Delete,
                         "place-bttn-delete":
-                            menuSettings.selectedGroup == Group.Delete,
+                            $menuSettings.selectedGroup == TabGroup.Delete,
                     })}
                     use:motion
+                    on:click={() => {
+                        if (
+                            state != null &&
+                            $menuSettings.selectedGroup != TabGroup.Delete
+                        ) {
+                            addObject(state.get_preview_object());
+                            state.set_preview_visibility(false);
+                        }
+                    }}
                 >
                     <div class="w-full h-full py-4 overflow-hidden">
                         <h1
                             class="w-full h-full overflow-hidden text-5xl font-pusab text-stroke flex-center"
                         >
-                            {#if menuSettings.selectedGroup != Group.Delete}
+                            {#if $menuSettings.selectedGroup != TabGroup.Delete}
                                 Place
                             {:else}
                                 Delete

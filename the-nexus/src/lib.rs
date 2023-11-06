@@ -1,6 +1,9 @@
 #[cfg(test)]
 use packing::SpritesheetData;
 
+use crate::colors::get_available_colors;
+
+pub mod colors;
 mod config;
 pub mod objects;
 pub mod packing;
@@ -21,11 +24,14 @@ fn generate_shid() {
     )
     .unwrap();
 
-    let available_objects = get_available_objects();
-
     fs::write(
         "../src/gd/objects.json",
-        serde_json::to_string(&json!(available_objects)).unwrap(),
+        serde_json::to_string(&json!(get_available_objects())).unwrap(),
+    )
+    .unwrap();
+    fs::write(
+        "../src/gd/colors.json",
+        serde_json::to_string(&get_available_colors()).unwrap(),
     )
     .unwrap();
 

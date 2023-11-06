@@ -1,7 +1,7 @@
 <script lang="ts">
     import { default as cx } from "classnames";
 
-    let isToggled = false;
+    export let isToggled: boolean;
 
     let { id, ...rest } = $$restProps;
 </script>

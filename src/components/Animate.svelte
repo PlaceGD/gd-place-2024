@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
     import { Motion, useAnimation, useReducedMotion } from "svelte-motion";
     import type {
         Easing,
         Target,
         TargetAndTransition,
     } from "svelte-motion/types/types";
+
+    const dispatcher = createEventDispatcher();
 
     export let easing: Easing = "linear";
     export let duration: number = 0;
@@ -51,6 +53,13 @@
     }
 </script>
 
-<Motion {...$$restProps} animate={animation} let:motion let:props>
-    <slot {...props} {motion} />
+<Motion
+    {...$$restProps}
+    animate={animation}
+    let:motion
+    let:props
+    onAnimationStart={() => dispatcher("start", {})}
+    onAnimationComplete={() => dispatcher("end", {})}
+>
+    <slot {motion} />
 </Motion>

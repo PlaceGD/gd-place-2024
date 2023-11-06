@@ -7,7 +7,12 @@ import {
     onChildAdded,
     onChildRemoved,
     push,
+    DataSnapshot,
+    type Unsubscribe,
+    set,
 } from "firebase/database";
+import type { GDObject } from "../wasm-lib/pkg/wasm_lib";
+import { toast } from "./utils/toast";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB9PSVZzg5WOp26PuCkVrrSTVrWg-XJMgg",
@@ -22,17 +27,45 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 const db = getDatabase(app);
 
-const testRef = ref(db, "/arraytest");
-// onChildAdded(testRef, data => {
-//     console.log(data.key, data.val());
-// });
-onChildRemoved(testRef, data => {
-    console.log(data.key, data.val());
-});
+// set(ref(db, "/blubble"), "\0");
 
-export const bologna = (v: any) => {
-    push(testRef, v);
+// onValue(ref(db, "/blubble"), data => {
+//     console.log(data.val().length);
+// });
+
+let unsubMap: { [key: string]: { add: Unsubscribe; remove: Unsubscribe } } = {};
+
+export const subChunk = (
+    chunk: [number, number],
+    onAdd: (data: DataSnapshot) => void,
+    onRemove: (data: DataSnapshot) => void
+) => {
+    let chunk_name = chunk.join(",");
+    let chunk_path = "/objects/" + chunk_name;
+    let add = onChildAdded(ref(db, chunk_path), onAdd);
+    let remove = onChildRemoved(ref(db, chunk_path), onRemove);
+    unsubMap[chunk_name] = { add, remove };
+};
+export const unsubChunk = (chunk: [number, number]) => {
+    let unsub = unsubMap[chunk.join(",")];
+    if (unsub != null) {
+        unsub.add();
+        unsub.remove();
+    }
+};
+export const addObject = (obj: GDObject) => {
+    let chunkCoord = obj.get_chunk_coord();
+    const objectsRef = ref(db, `/objects/${chunkCoord.x},${chunkCoord.y}`);
+
+    try {
+        let str = obj.serialize();
+        push(objectsRef, str);
+    } catch (e: any) {
+        toast.showErrorToast(e.display());
+    }
+
+    // const newPostRef = push(postListRef);
 };

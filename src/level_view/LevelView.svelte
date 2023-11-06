@@ -1,9 +1,7 @@
 <script lang="ts">
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
     import { onMount } from "svelte";
-
-    import { toast } from "@zerodevx/svelte-toast";
-    import { toastErrorTheme } from "../utils/toast";
+    import { toast } from "../utils/toast";
 
     export let state: wasm.StateWrapper | null;
 
@@ -19,13 +17,11 @@
             try {
                 state.pub_render(0.25);
             } catch (e) {
-                toast.push(
+                toast.showErrorToast(
                     `An error occured in the editor (WASM). 
                     Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
-                    Refresh the page and try again.`,
-                    toastErrorTheme
+                    Refresh the page and try again.`
                 );
-                console.error(e);
                 return;
             }
         }

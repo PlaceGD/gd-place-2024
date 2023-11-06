@@ -1,10 +1,11 @@
 <script lang="ts">
     import Editor from "./Editor.svelte";
-    import { SvelteToast, toast } from "@zerodevx/svelte-toast";
+    import { SvelteToast } from "@zerodevx/svelte-toast";
 
     import init from "../wasm-lib/pkg/wasm_lib.js";
     import Logo from "./components/Logo.svelte";
-    import { toastErrorTheme } from "./utils/toast";
+    import { __DEBUG } from "./main";
+    import { toast } from "./utils/toast";
 
     let max = 0;
     let progress = 0;
@@ -22,7 +23,7 @@
 
         init(wasm_r.response)
             .catch(e => {
-                console.log("error initialising wasm:", e);
+                toast.showErrorToast("Failed to initialize WASM.");
             })
             .then(() => {
                 hasLoaded = true;
@@ -36,9 +37,8 @@
 <SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />
 
 <div class="relative w-screen h-screen">
-    {#if hasLoaded}
-        <Editor />
-    {:else}
+    <Editor bind:wasmLoaded={hasLoaded} />
+    {#if !hasLoaded}
         <div class="absolute">
             <!-- <Logo /> -->
             <input type="range" min={0} {max} bind:value={progress} />

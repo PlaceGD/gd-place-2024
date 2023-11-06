@@ -2,26 +2,26 @@ use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
 macro_rules! z_layers {
-    ($($name:ident: $snake:ident,)*) => {
-        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+    ($($name:ident,)*) => {
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
         #[wasm_bindgen]
         pub enum ZLayer {
             $(
                 $name,
             )*
         }
-        const Z_LAYERS: &[ZLayer] = &[$(ZLayer::$name,)*];
+        pub const Z_LAYERS: &[ZLayer] = &[$(ZLayer::$name,)*];
     };
 }
 
 z_layers! {
-    B4: b4,
-    B3: b3,
-    B2: b2,
-    B1: b1,
-    T1: t1,
-    T2: t2,
-    T3: t3,
+    B4,
+    B3,
+    B2,
+    B1,
+    T1,
+    T2,
+    T3,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]

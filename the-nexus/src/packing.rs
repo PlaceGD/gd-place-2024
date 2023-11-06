@@ -13,6 +13,16 @@ pub struct SpriteInfo {
     pub rotated: bool,
     pub offset: (f32, f32),
 }
+
+impl SpriteInfo {
+    pub fn offset_rect_size(self) -> (f32, f32) {
+        (
+            self.size.0 as f32 + (self.offset.0 * 2.0).abs(),
+            self.size.1 as f32 + (self.offset.1 * 2.0).abs(),
+        )
+    }
+}
+
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SpritesheetData {

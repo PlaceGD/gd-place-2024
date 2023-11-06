@@ -4,6 +4,7 @@ mod layer;
 mod level;
 mod object;
 mod state;
+mod text;
 mod util;
 mod utilgen;
 

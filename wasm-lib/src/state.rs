@@ -2,7 +2,7 @@ use std::{collections::HashSet, f32::consts::PI};
 
 use colored::Colorize;
 use desen::{
-    frame::{BlendMode, Frame},
+    frame::{BlendMode, Frame, FrameTransform, FrameTransformMatrix},
     state::{AppState, CanvasAppState, LoadedTexture},
     CanvasAppBundle,
 };
@@ -18,7 +18,8 @@ use crate::{
     },
     log, map,
     object::{GDColor, GDObject},
-    util::{get_max_bounding_box, now, Rect},
+    text::TextDraw,
+    util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, Rect},
     utilgen::{get_detail_sprite, get_main_sprite, get_object_info},
     ErrorType, RustError,
 };
@@ -45,12 +46,48 @@ pub struct State {
 
     selected_object: Option<DbKey>,
     select_depth: u32,
+
+    text_draws: Vec<TextDraw>,
 }
 
 impl State {
     pub fn get_zoom_scale(&self) -> f32 {
         2.0f32.powf(self.zoom / 12.0)
     }
+    pub fn view_transform(&self) -> FrameTransformMatrix {
+        let scale = self.get_zoom_scale();
+        FrameTransform::series_mat([
+            FrameTransform::Scale { x: scale, y: scale },
+            FrameTransform::Translate {
+                x: -self.camera_pos.x,
+                y: -self.camera_pos.y,
+            },
+        ])
+    }
+}
+
+fn obj_transform(obj: &GDObject) -> FrameTransformMatrix {
+    FrameTransform::series_mat([
+        FrameTransform::Translate { x: obj.x, y: obj.y },
+        FrameTransform::Rotate(-obj.rotation as f32 * PI / 180.0),
+        FrameTransform::Scale {
+            x: if obj.flip_x { -0.25 } else { 0.25 } * obj.scale,
+            y: if obj.flip_y { -0.25 } else { 0.25 } * obj.scale,
+        },
+    ])
+}
+fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
+    let mut rect_size = get_max_bounding_box(obj.id as u32).unwrap_or((10.0, 10.0));
+
+    rect_size.0 += pad;
+    rect_size.1 += pad;
+
+    Rect::new(
+        -rect_size.0 / 2.0,
+        -rect_size.1 / 2.0,
+        rect_size.0,
+        rect_size.1,
+    )
 }
 
 impl AppState for State {
@@ -74,7 +111,10 @@ impl AppState for State {
         // }
     }
 
-    fn view(&self, frame: &mut desen::frame::Frame) {
+    fn view(&mut self, frame: &mut desen::frame::Frame) {
+        self.draw_text(frame, "bibby", 0.0, 0.0, 10.0);
+        self.draw_text(frame, "Gaga", 100.0, 20.0, 20.0);
+
         let zoom_scale = self.get_zoom_scale();
         {
             frame.fill(
@@ -142,8 +182,7 @@ impl AppState for State {
         }
 
         frame.set_current_texture(self.spritesheet);
-        frame.scale(zoom_scale, zoom_scale);
-        frame.translate(-self.camera_pos.x, -self.camera_pos.y);
+        frame.transform(FrameTransform::Custom(self.view_transform()));
 
         {
             let mut view_rect = self.get_camera_world_rect();
@@ -186,18 +225,9 @@ impl AppState for State {
         }
 
         {
-            let obj_transform = |frame: &mut Frame, obj: &GDObject| {
-                frame.translate(obj.x, obj.y);
-                frame.rotate(-obj.rotation as f32 * PI / 180.0);
-                frame.scale(
-                    if obj.flip_x { -0.25 } else { 0.25 } * obj.scale,
-                    if obj.flip_y { -0.25 } else { 0.25 } * obj.scale,
-                );
-            };
-
-            let draw_sprite = |frame: &mut Frame, sprite: &SpriteInfo, obj: &GDObject| {
+            let draw_obj_sprite = |frame: &mut Frame, sprite: &SpriteInfo, obj: &GDObject| {
                 frame.push();
-                obj_transform(frame, obj);
+                frame.transform(FrameTransform::Custom(obj_transform(obj)));
                 frame.draw_image_cropped(
                     -(sprite.size.0 as f32) / 2.0 + sprite.offset.0,
                     -(sprite.size.1 as f32) / 2.0 - sprite.offset.1,
@@ -231,15 +261,28 @@ impl AppState for State {
                 {
                     if let Some(sprite) = sprite_fn(self.preview_object.id as u32) {
                         frame.fill(color.r, color.g, color.b, color.opacity);
-                        draw_sprite(frame, &sprite, &self.preview_object);
+                        draw_obj_sprite(frame, &sprite, &self.preview_object);
                     }
+                }
+            };
+            let set_fill_if_selected = |frame: &mut Frame, key: DbKey, lighter: bool| {
+                if self.selected_object == Some(key) {
+                    let c = map!(
+                        (self.time / 3.0).sin(),
+                        -1.0,
+                        1.0,
+                        if lighter { 150.0 } else { 100.0 },
+                        if lighter { 255.0 } else { 200.0 }
+                    ) as u8;
+
+                    frame.fill(255, c, c, 255);
                 }
             };
 
             for layer in Z_LAYERS {
                 frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
                 for z_order in -50..=50 {
-                    self.level.foreach_obj_in(*layer, z_order, |obj| {
+                    self.level.foreach_obj_in_z(*layer, z_order, |key, obj| {
                         if let Some(sprite) = get_main_sprite(obj.id as u32) {
                             if obj.main_color.blending {
                                 frame.fill(
@@ -248,7 +291,8 @@ impl AppState for State {
                                     obj.main_color.b,
                                     obj.main_color.opacity,
                                 );
-                                draw_sprite(frame, &sprite, obj);
+                                set_fill_if_selected(frame, key, false);
+                                draw_obj_sprite(frame, &sprite, obj);
                             }
                         }
                     });
@@ -256,7 +300,7 @@ impl AppState for State {
                 }
                 frame.set_blend_mode(BlendMode::Normal);
                 for z_order in -50..=50 {
-                    self.level.foreach_obj_in(*layer, z_order, |obj| {
+                    self.level.foreach_obj_in_z(*layer, z_order, |key, obj| {
                         if let Some(sprite) = get_main_sprite(obj.id as u32) {
                             if !obj.main_color.blending {
                                 frame.fill(
@@ -265,7 +309,8 @@ impl AppState for State {
                                     obj.main_color.b,
                                     obj.main_color.opacity,
                                 );
-                                draw_sprite(frame, &sprite, obj);
+                                set_fill_if_selected(frame, key, false);
+                                draw_obj_sprite(frame, &sprite, obj);
                             }
                         }
                         if let Some(sprite) = get_detail_sprite(obj.id as u32) {
@@ -276,7 +321,8 @@ impl AppState for State {
                                     obj.detail_color.b,
                                     obj.detail_color.opacity,
                                 );
-                                draw_sprite(frame, &sprite, obj);
+                                set_fill_if_selected(frame, key, true);
+                                draw_obj_sprite(frame, &sprite, obj);
                             }
                         }
                     });
@@ -285,7 +331,7 @@ impl AppState for State {
                 }
                 frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
                 for z_order in -50..=50 {
-                    self.level.foreach_obj_in(*layer, z_order, |obj| {
+                    self.level.foreach_obj_in_z(*layer, z_order, |key, obj| {
                         if let Some(sprite) = get_detail_sprite(obj.id as u32) {
                             if obj.detail_color.blending {
                                 frame.fill(
@@ -294,7 +340,8 @@ impl AppState for State {
                                     obj.detail_color.b,
                                     obj.detail_color.opacity,
                                 );
-                                draw_sprite(frame, &sprite, obj);
+                                set_fill_if_selected(frame, key, true);
+                                draw_obj_sprite(frame, &sprite, obj);
                             }
                         }
                     });
@@ -303,27 +350,22 @@ impl AppState for State {
             }
             frame.set_blend_mode(BlendMode::Normal);
 
-            if self.show_preview {
-                let mut rect_size =
-                    get_max_bounding_box(self.preview_object.id as u32).unwrap_or((10.0, 10.0));
+            let highlight_obj = if self.show_preview {
+                Some((&self.preview_object, (100, 255, 100)))
+            } else if let Some(d) = self.selected_object {
+                self.level.get_obj_by_key(d).map(|v| (v, (255, 100, 100)))
+            } else {
+                None
+            };
 
-                rect_size.0 += 30.0;
-                rect_size.1 += 30.0;
-
+            if let Some((obj, color)) = highlight_obj {
                 frame.push();
-                obj_transform(frame, &self.preview_object);
+                frame.transform(FrameTransform::Custom(obj_transform(obj)));
 
-                let rect = Rect::new(
-                    -rect_size.0 / 2.0,
-                    -rect_size.1 / 2.0,
-                    rect_size.0,
-                    rect_size.1,
-                );
+                let rect = padded_obj_rect(obj, 30.0);
 
                 frame.no_fill();
 
-                // frame.stroke(50, 255, 50, 255);
-                // frame.stroke_weight(8.0);
                 const IDEAL_DASH_LEN: f32 = 30.0;
                 let dash_len =
                     rect.perimeter() / (rect.perimeter() / (IDEAL_DASH_LEN * 2.0)).round() / 2.0;
@@ -331,17 +373,7 @@ impl AppState for State {
                 let mut offset = self.time * 2.0;
 
                 for ((x0, y0), (x1, y1)) in rect.sides() {
-                    offset = self.dashed_line(
-                        frame,
-                        x0,
-                        y0,
-                        x1,
-                        y1,
-                        dash_len,
-                        offset,
-                        (100, 255, 100),
-                        8.0,
-                    );
+                    offset = self.dashed_line(frame, x0, y0, x1, y1, dash_len, offset, color, 8.0);
                 }
 
                 frame.pop();
@@ -459,6 +491,20 @@ impl State {
 
         out
     }
+
+    fn draw_text<T>(&mut self, frame: &Frame, text: T, x: f32, y: f32, size: f32)
+    where
+        T: ToString,
+    {
+        let v = frame.get_current_transform() * vector![x, y, 1.0];
+        let (x, y) = (v.x, v.y);
+        self.text_draws.push(TextDraw {
+            text: text.to_string(),
+            size,
+            x,
+            y,
+        })
+    }
 }
 
 impl CanvasAppState for State {
@@ -493,6 +539,7 @@ impl CanvasAppState for State {
             show_preview: false,
             select_depth: 0,
             selected_object: None,
+            text_draws: vec![],
         }
     }
 }
@@ -550,12 +597,11 @@ impl StateWrapper {
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
-        let (cx, cy) = (
-            self.bundle.state.camera_pos.x,
-            self.bundle.state.camera_pos.y,
-        );
-        let s = self.bundle.state.get_zoom_scale();
-        vec![(x + s * cx) / s, (y + s * cy) / s]
+        let inv = self.bundle.state.view_transform().try_inverse().unwrap();
+
+        let p = inv * vector![x, y, 1.0];
+
+        vec![p.x, p.y]
     }
 
     pub fn add_object(&mut self, key: String, obj: GDObject) -> Result<(), RustError> {
@@ -587,6 +633,10 @@ impl StateWrapper {
         if let Ok(key) = key.into_bytes().try_into() {
             let key: DbKey = key;
 
+            if Some(key) == self.bundle.state.selected_object {
+                self.bundle.state.selected_object = None;
+            }
+
             for c in self.bundle.state.level.chunks.values_mut() {
                 for (list, _) in c.objects.iter_mut() {
                     for m in list.objects.values_mut() {
@@ -596,8 +646,6 @@ impl StateWrapper {
                     }
                 }
             }
-        } else {
-            log!("{}", "Incorrect object key length".bright_red());
         }
     }
 
@@ -646,16 +694,76 @@ impl StateWrapper {
         self.bundle.state.preview_object = to
     }
 
-    // pub fn try_select_at(&self, x: f32, y: f32) {
-    //     let (cx, cy) = (
-    //         self.bundle.state.camera_pos.x,
-    //         self.bundle.state.camera_pos.y,
-    //     );
-    //     let s = self.bundle.state.get_zoom_scale();
-    //     vec![(x + s * cx) / s, (y + s * cy) / s]
-    // }
+    pub fn try_select_at(&mut self, x: f32, y: f32) {
+        let chunk = get_chunk_coord(x, y);
 
-    // pub fn move_preview
+        let mut clickable = vec![];
+
+        for i in -1..=1 {
+            for j in -1..=1 {
+                let cx = chunk.x + i;
+                let cy = chunk.y + j;
+                self.bundle.state.level.foreach_obj_in_chunk(
+                    ChunkCoord { x: cx, y: cy },
+                    |key, obj| {
+                        let rect = padded_obj_rect(obj, 20.0);
+
+                        let t = obj_transform(obj);
+
+                        let corners_world = rect.corners().map(|(x, y)| {
+                            let v = t * vector![x, y, 1.0];
+                            (v.x, v.y)
+                        });
+
+                        if point_in_triangle(
+                            (x, y),
+                            corners_world[0],
+                            corners_world[1],
+                            corners_world[2],
+                        ) || point_in_triangle(
+                            (x, y),
+                            corners_world[0],
+                            corners_world[2],
+                            corners_world[3],
+                        ) {
+                            clickable.push(key);
+                        }
+                    },
+                );
+            }
+        }
+
+        self.bundle.state.selected_object = if clickable.is_empty() {
+            None
+        } else {
+            if self.bundle.state.select_depth as usize >= clickable.len() {
+                self.bundle.state.select_depth = 0;
+            }
+            self.bundle.state.select_depth += 1;
+            Some(clickable[self.bundle.state.select_depth as usize - 1])
+        };
+    }
+    pub fn deselect_object(&mut self) {
+        self.bundle.state.selected_object = None;
+    }
+    pub fn get_selected_object_key(&mut self) -> Option<String> {
+        self.bundle
+            .state
+            .selected_object
+            .and_then(|v| String::from_utf8(v.into()).ok())
+    }
+    pub fn get_selected_object_chunk(&mut self) -> Option<ChunkCoord> {
+        self.bundle.state.selected_object.and_then(|k| {
+            self.bundle
+                .state
+                .level
+                .get_obj_by_key(k)
+                .map(|o| o.get_chunk_coord())
+        })
+    }
+    pub fn get_text_draws(&self) -> Vec<TextDraw> {
+        self.bundle.state.text_draws.clone()
+    }
 }
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;

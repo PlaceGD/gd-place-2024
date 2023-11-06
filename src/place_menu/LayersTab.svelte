@@ -2,6 +2,7 @@
     import { default as cx } from "classnames";
     import { ZLayer } from "../../wasm-lib/pkg/wasm_lib";
     import Image from "../components/Image.svelte";
+    import { onMount } from "svelte";
 
     const LAYERS = {
         b: {
@@ -18,20 +19,56 @@
     };
 
     export let selectedLayer: ZLayer;
+    export let zOrder: number;
+
+    const toValidInt = (s: string) => {
+        if (s == "" || s == "-") {
+            return 0;
+        }
+        return parseInt(s);
+    };
+
+    const re = /^(-?)\d*$/;
+
+    const validLayerInput = (s: string) => {
+        if (!re.test(s)) {
+            return false;
+        }
+        let n = toValidInt(s);
+        if (n < -50 || n > 50) {
+            return false;
+        }
+        return true;
+    };
+
+    const enterIfValid = (e: any) => {
+        if (!validLayerInput(e.currentTarget.value)) {
+            e.currentTarget.value = prevValidInputData;
+        } else {
+            prevValidInputData = e.currentTarget.value;
+        }
+    };
+
+    let prevValidInputData: string = "0";
+    onMount(() => {
+        inputElement.value = prevValidInputData;
+    });
+    $: {
+        zOrder = toValidInt(prevValidInputData);
+    }
+    let inputElement: HTMLInputElement;
 </script>
 
-<div class="w-full h-full gap-12 p-4 flex-center">
-    <div class="relative flex justify-end w-16 h-16">
+<!-- "z-20": Object.values(LAYERS.b).indexOf(selectedLayer) > -1, -->
+<div class="w-full h-full gap-8 p-4 flex-center">
+    <div class="w-24 h-24 flex-center">
         <Image
-            src="/assets/default_icon.png"
-            class={cx({
-                "absolute object-contain w-auto h-auto aspect-square max-h-auto max-w-auto translate-x-1/4 translate-y-1/4": true,
-                "z-20": Object.values(LAYERS.b).indexOf(selectedLayer) > -1,
-            })}
-        />
-        <Image
-            src="/textures/main/83.png"
-            class="absolute object-contain w-auto h-auto aspect-square max-h-auto max-w-auto -translate-x-1/4 -translate-y-1/4"
+            src={`/assets/ui/layer_tab/${
+                Object.values(LAYERS.b).indexOf(selectedLayer) > -1
+                    ? "bottom"
+                    : "top"
+            }.png`}
+            class="object-contain w-auto h-auto aspect-square max-h-auto max-w-auto"
         />
     </div>
     <div class="flex flex-col items-center justify-center">
@@ -72,12 +109,45 @@
         </ul>
     </div>
     <div class="flex flex-col items-center justify-center">
-        <button>
-            <Image src="/assets/ui/edit/up_small.png" />
+        <button
+            class="w-full h-full flex-center"
+            on:click={() => {
+                if (zOrder < 50) {
+                    zOrder += 1;
+                    prevValidInputData = zOrder.toString();
+                    inputElement.value = prevValidInputData;
+                }
+            }}
+        >
+            <Image src="/assets/ui/edit/move_small.svg" class="rotate-180" />
         </button>
-        <h1 class="text-3xl font-pusab text-stroke">100</h1>
-        <button>
-            <Image src="/assets/ui/edit/down_small.png" />
+        <input
+            type="text"
+            class="w-20 p-2 text-3xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+            max={100}
+            maxlength={4}
+            on:input={enterIfValid}
+            bind:this={inputElement}
+        />
+        <button
+            class="w-full h-full flex-center"
+            on:click={() => {
+                if (zOrder > -50) {
+                    zOrder -= 1;
+                    prevValidInputData = zOrder.toString();
+                    inputElement.value = prevValidInputData;
+                }
+            }}
+        >
+            <Image src="/assets/ui/edit/move_small.svg" />
         </button>
     </div>
 </div>
+
+<style>
+    .player-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+</style>

@@ -56,6 +56,14 @@
         changeZoom($zoomTween);
     }
 
+    $: {
+        if ($menuSettings.selectedGroup == TabGroup.Delete) {
+            state.set_preview_visibility(false);
+        } else {
+            state.deselect_object();
+        }
+    }
+
     const gubuh = (event: any) => {
         let c = hexToRgb(event.target.value);
         if (c != null) {
@@ -136,8 +144,20 @@
             wasm.GDColor.white(),
             wasm.GDColor.white()
         );
-        $menuSettings.selectedMainColor = $menuSettings.selectedMainColor;
-        $menuSettings.selectedDetailColor = $menuSettings.selectedDetailColor;
+        $menuSettings.selectedMainColor = {
+            hue: 0,
+            x: 0,
+            y: 0,
+            opacity: 1,
+            blending: false,
+        };
+        $menuSettings.selectedDetailColor = {
+            hue: 0,
+            x: 0,
+            y: 0,
+            opacity: 1,
+            blending: false,
+        };
         // $menuSettings.zLayer = wasm.ZLayer.B1;
 
         state.set_preview_object(obj);
@@ -192,6 +212,8 @@
         if (dragging != null) {
             if (!dragging.thresholdReached) {
                 if ($menuSettings.selectedGroup == TabGroup.Delete) {
+                    let [mx, my] = getWorldMousePos();
+                    state.try_select_at(mx, my);
                 } else {
                     placePreview();
                 }

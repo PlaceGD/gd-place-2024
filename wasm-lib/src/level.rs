@@ -59,16 +59,43 @@ pub struct Level {
 }
 
 impl Level {
-    pub fn foreach_obj_in<F>(&self, layer: ZLayer, z_order: i8, mut f: F)
+    pub fn foreach_obj_in_z<F>(&self, layer: ZLayer, z_order: i8, mut f: F)
     where
-        F: FnMut(&GDObject),
+        F: FnMut(DbKey, &GDObject),
     {
         for (&ChunkCoord { x, y }, chunk) in &self.chunks {
             if let Some(v) = chunk.objects.get(layer).objects.get(&z_order) {
                 for (&key, obj) in v {
-                    f(obj)
+                    f(key, obj)
                 }
             }
         }
+    }
+    pub fn foreach_obj_in_chunk<F>(&self, chunk: ChunkCoord, mut f: F)
+    where
+        F: FnMut(DbKey, &GDObject),
+    {
+        if let Some(chunk) = self.chunks.get(&chunk) {
+            for (&key, obj) in chunk
+                .objects
+                .iter()
+                .flat_map(|(list, _)| list.objects.iter())
+                .flat_map(|(_, map)| map.iter())
+            {
+                f(key, obj)
+            }
+        }
+    }
+    pub fn get_obj_by_key(&self, key: DbKey) -> Option<&GDObject> {
+        for c in self.chunks.values() {
+            for (list, _) in c.objects.iter() {
+                for m in list.objects.values() {
+                    if let Some(o) = m.get(&key) {
+                        return Some(o);
+                    }
+                }
+            }
+        }
+        None
     }
 }

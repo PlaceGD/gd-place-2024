@@ -2,6 +2,7 @@
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
     import { onMount } from "svelte";
     import { toast } from "../utils/toast";
+    import { __DEBUG } from "../main";
 
     export let state: wasm.StateWrapper | null;
 
@@ -46,6 +47,28 @@
     }
 </script>
 
+{#if __DEBUG}
+    <button
+        class="absolute font-pusab text-white text-md ml-20 z-50 bg-white/10 rounded-lg p-1"
+        on:click={() => {
+            localStorage.clear();
+            window.location.reload();
+        }}>Clear LS & Refresh</button
+    >
+    <button
+        class="absolute font-pusab text-white text-md ml-72 z-50 bg-white/10 rounded-lg p-1 cummer"
+        on:click={() => {
+            localStorage.clear();
+            window.location.reload();
+        }}
+        >Hammod 😘😘😘😂😂
+        <img
+            src="https://media.tenor.com/-OpJG9GeK3EAAAAC/kanye-west-stare.gif"
+            alt=""
+        /></button
+    >
+{/if}
+
 <div
     class="absolute w-full h-full"
     bind:offsetHeight={view_size[1]}
@@ -53,3 +76,12 @@
 >
     <canvas bind:this={canvas} />
 </div>
+
+<style>
+    .cummer > img {
+        display: none;
+    }
+    .cummer:hover > img {
+        display: block;
+    }
+</style>

@@ -25,5 +25,6 @@ export const menuSettings = writable(
             blending: false,
         },
         zLayer: ZLayer.B1,
+        zOrder: 0,
     })
 );

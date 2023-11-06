@@ -19,7 +19,8 @@ interface Keybind {
 
 interface TransformButton {
     image: string;
-    scale: number;
+    flipped: boolean;
+    angle: number;
     cb: (obj: GDObject) => void;
 }
 
@@ -277,129 +278,153 @@ export const KEYBINDS: Record<string, Keybind> = {
 
 export const TRANSFORM_BUTTONS: TransformButton[] = [
     {
-        image: "up_small",
+        image: "move_small",
         cb: KEYBINDS.move_up_small.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 180,
     },
     {
-        image: "down_small",
+        image: "move_small",
         cb: KEYBINDS.move_down_small.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "left_small",
+        image: "move_small",
         cb: KEYBINDS.move_left_small.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 90,
     },
     {
-        image: "right_small",
+        image: "move_small",
         cb: KEYBINDS.move_right_small.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: -90,
     },
 
     {
-        image: "up",
+        image: "move_normal",
         cb: KEYBINDS.move_up.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 180,
     },
     {
-        image: "down",
+        image: "move_normal",
         cb: KEYBINDS.move_down.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "left",
+        image: "move_normal",
         cb: KEYBINDS.move_left.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 90,
     },
     {
-        image: "right",
+        image: "move_normal",
         cb: KEYBINDS.move_right.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: -90,
     },
 
     {
-        image: "flip_horiz",
+        image: "flip",
         cb: KEYBINDS.flip_horiz.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "flip_vert",
+        image: "flip",
         cb: KEYBINDS.flip_vert.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 90,
     },
 
     {
-        image: "ccw",
+        image: "rotate",
         cb: KEYBINDS.rotate_ccw.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "cw",
+        image: "rotate",
         cb: KEYBINDS.rotate_cw.cb,
-        scale: 1.0,
+        flipped: true,
+        angle: 0,
     },
     {
-        image: "ccw_5",
+        image: "rotate_5_ccw",
         cb: KEYBINDS.rotate_ccw_5.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "cw_5",
+        image: "rotate_5_cw",
         cb: KEYBINDS.rotate_cw_5.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
 
     {
-        image: "up_big",
+        image: "move_big",
         cb: KEYBINDS.move_up_big.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 180,
     },
     {
-        image: "down_big",
+        image: "move_big",
         cb: KEYBINDS.move_down_big.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "left_big",
+        image: "move_big",
         cb: KEYBINDS.move_left_big.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 90,
     },
     {
-        image: "right_big",
+        image: "move_big",
         cb: KEYBINDS.move_right_big.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: -90,
     },
 
     {
-        image: "up_small",
+        image: "move_tiny",
         cb: KEYBINDS.move_up_mini.cb,
-        scale: 0.5,
+        flipped: false,
+        angle: 180,
     },
     {
-        image: "down_small",
+        image: "move_tiny",
         cb: KEYBINDS.move_down_mini.cb,
-        scale: 0.5,
+        flipped: false,
+        angle: 0,
     },
     {
-        image: "left_small",
+        image: "move_tiny",
         cb: KEYBINDS.move_left_mini.cb,
-        scale: 0.5,
+        flipped: false,
+        angle: 90,
     },
     {
-        image: "right_small",
+        image: "move_tiny",
         cb: KEYBINDS.move_right_mini.cb,
-        scale: 0.5,
+        flipped: false,
+        angle: -90,
     },
 
     {
         image: "scale_up",
         cb: KEYBINDS.scale_up.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
     {
         image: "scale_down",
         cb: KEYBINDS.scale_down.cb,
-        scale: 1.0,
+        flipped: false,
+        angle: 0,
     },
 ];

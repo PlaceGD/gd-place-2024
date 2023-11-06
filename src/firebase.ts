@@ -10,6 +10,7 @@ import {
     DataSnapshot,
     type Unsubscribe,
     set,
+    remove,
 } from "firebase/database";
 import type { GDObject } from "../wasm-lib/pkg/wasm_lib";
 import { toast } from "./utils/toast";
@@ -66,6 +67,18 @@ export const addObject = (obj: GDObject) => {
     } catch (e: any) {
         toast.showErrorToast(e.display());
     }
+
+    // const newPostRef = push(postListRef);
+};
+export const deleteObject = (key: string, chunk: [number, number]) => {
+    const objectsRef = ref(db, `/objects/${chunk[0]},${chunk[1]}/${key}`);
+    remove(objectsRef);
+    // try {
+    //     let str = obj.serialize();
+    //     push(objectsRef, str);
+    // } catch (e: any) {
+    //     toast.showErrorToast(e.display());
+    // }
 
     // const newPostRef = push(postListRef);
 };

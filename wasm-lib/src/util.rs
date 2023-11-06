@@ -22,7 +22,10 @@ macro_rules! map {
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
-use crate::utilgen::{get_detail_sprite, get_main_sprite};
+use crate::{
+    level::{ChunkCoord, CHUNK_SIZE_UNITS},
+    utilgen::{get_detail_sprite, get_main_sprite},
+};
 
 #[wasm_bindgen]
 extern "C" {
@@ -125,4 +128,25 @@ pub fn get_max_bounding_box(id: u32) -> Option<(f32, f32)> {
     }
 
     rect_size
+}
+
+type Point = (f32, f32);
+
+fn sign(p1: Point, p2: Point, p3: Point) -> f32 {
+    (p1.0 - p3.0) * (p2.1 - p3.1) - (p2.0 - p3.0) * (p1.1 - p3.1)
+}
+
+pub fn point_in_triangle(pt: Point, v1: Point, v2: Point, v3: Point) -> bool {
+    let (d1, d2, d3) = (sign(pt, v1, v2), sign(pt, v2, v3), sign(pt, v3, v1));
+
+    let has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);
+    let has_pos = (d1 > 0.0) || (d2 > 0.0) || (d3 > 0.0);
+
+    !(has_neg && has_pos)
+}
+pub fn get_chunk_coord(x: f32, y: f32) -> ChunkCoord {
+    ChunkCoord {
+        x: (x / CHUNK_SIZE_UNITS as f32).floor() as i32,
+        y: (y / CHUNK_SIZE_UNITS as f32).floor() as i32,
+    }
 }

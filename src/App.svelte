@@ -40,7 +40,6 @@
     <Editor bind:wasmLoaded={hasLoaded} />
     {#if !hasLoaded}
         <div class="absolute">
-            <!-- <Logo /> -->
             <input type="range" min={0} {max} bind:value={progress} />
         </div>
     {/if}

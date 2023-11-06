@@ -32,8 +32,10 @@
 
     import ColorTab from "./ColorTab.svelte";
     import { TabGroup, menuSettings } from "../stores";
-    import { addObject } from "../firebase";
+    import { addObject, deleteObject } from "../firebase";
     import LayersTab from "./LayersTab.svelte";
+    import { tweened } from "svelte/motion";
+    import { bounceOut } from "svelte/easing";
 
     export let state: wasm.StateWrapper | null;
 
@@ -81,6 +83,7 @@
             );
             obj.id = $menuSettings.selectedObject;
             obj.z_layer = $menuSettings.zLayer;
+            obj.z_order = $menuSettings.zOrder;
 
             state.set_preview_object(obj);
         }
@@ -431,7 +434,7 @@
                                     {#each TRANSFORM_BUTTONS as button, i (i)}
                                         <li class="w-16 h-16">
                                             <button
-                                                class={"flex-center w-full h-full p-3 z-20 rounded-md bg-[#75c934]"}
+                                                class={"flex-center w-full h-full p-3 z-20 rounded-md bg-[#75c934] bounce-active"}
                                                 on:click={() => {
                                                     if (state == null) return;
                                                     let obj =
@@ -443,9 +446,15 @@
                                                 }}
                                             >
                                                 <Image
-                                                    class={"object-cover max-w-full max-h-full h-auto w-auto"}
-                                                    src={`/assets/ui/edit/${button.image}.png`}
-                                                    style="transform: scale({button.scale})"
+                                                    class={"object-cover w-12 h-12"}
+                                                    src={`/assets/ui/edit/${button.image}.svg`}
+                                                    style={`transform: rotate(${
+                                                        button.angle
+                                                    }deg)${
+                                                        button.flipped
+                                                            ? " scaleX(-1)"
+                                                            : ""
+                                                    }`}
                                                     lazyLoad
                                                     skeleton
                                                 />
@@ -456,6 +465,7 @@
                             {:else if $menuSettings.selectedEditTab == EditTab.Layers}
                                 <LayersTab
                                     bind:selectedLayer={$menuSettings.zLayer}
+                                    bind:zOrder={$menuSettings.zOrder}
                                 ></LayersTab>
                             {:else if $menuSettings.selectedEditTab == EditTab.Colors}
                                 <ColorTab
@@ -463,6 +473,14 @@
                                     bind:currentDetailColor={$menuSettings.selectedDetailColor}
                                 ></ColorTab>
                             {/if}
+                        {/if}
+
+                        {#if $menuSettings.selectedGroup == TabGroup.Delete}
+                            <div
+                                class="w-full h-full text-4xl flex-center font-pusab text-stroke"
+                            >
+                                Select an object to delete it 😍
+                            </div>
                         {/if}
                     </div>
                 </div>
@@ -487,7 +505,7 @@
             >
                 <button
                     class={cx({
-                        "self-end overflow-hidden": true,
+                        "self-end overflow-hidden bounce-active": true,
                         "place-bttn-place":
                             $menuSettings.selectedGroup != TabGroup.Delete,
                         "place-bttn-delete":
@@ -495,12 +513,19 @@
                     })}
                     use:motion
                     on:click={() => {
-                        if (
-                            state != null &&
-                            $menuSettings.selectedGroup != TabGroup.Delete
-                        ) {
-                            addObject(state.get_preview_object());
-                            state.set_preview_visibility(false);
+                        if (state != null) {
+                            if (
+                                $menuSettings.selectedGroup != TabGroup.Delete
+                            ) {
+                                addObject(state.get_preview_object());
+                                state.set_preview_visibility(false);
+                            } else {
+                                let k = state.get_selected_object_key();
+                                let coord = state.get_selected_object_chunk();
+                                if (k != null && coord != null) {
+                                    deleteObject(k, [coord.x, coord.y]);
+                                }
+                            }
                         }
                     }}
                 >

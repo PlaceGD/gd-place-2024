@@ -2,8 +2,11 @@
 export default {
     content: ["./src/**/*.{html,js,svelte,ts}"],
     theme: {
-        screens: {},
-        extend: {},
+        screens: {
+            lg: { max: "1500px" },
+            md: { max: "1000px" },
+            sm: { max: "600px" },
+        },
         colors: {
             "menu-gray": "#0A0A0A",
             black: "black",

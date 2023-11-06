@@ -41,7 +41,7 @@
 </script>
 
 <div
-    class="items-center w-full h-full text-xl gap-x-4 items colors-tab-container p-4"
+    class="items-center w-full h-full p-4 text-xl gap-x-4 items colors-tab-container"
 >
     <ul class="flex flex-col h-full buttons">
         <AnimateSharedLayout>
@@ -69,7 +69,7 @@
         </AnimateSharedLayout>
     </ul>
 
-    <div class="flex flex-col justify-center w-full h-full gap-8 sliders">
+    <div class="flex flex-col justify-center h-full gap-8 sliders">
         <div
             class="flex w-full h-3 opacity opacity-slider-container"
             style={`
@@ -117,7 +117,7 @@
         {/if}
     </div>
 
-    <div class="w-full h-full palette">
+    <div class="h-full palette">
         {#if selectedTab == ColorTab.Main}
             <PaletteGrid
                 hue={currentMainColor.hue}
@@ -132,9 +132,9 @@
             />
         {/if}
     </div>
-    <div class="color-preview w-full h-full flex-center">
+    <div class="w-full h-full color-preview flex-center">
         <div
-            class=" w-12 h-12 rounded-full"
+            class="w-12 h-12 rounded-full"
             style={`
                 background: rgba(${currentRgb.join(", ")}, ${
                     currentColor.opacity
@@ -194,11 +194,17 @@
         display: grid;
         grid-auto-columns: 1fr;
         grid-auto-rows: 1fr;
-        grid-template-columns: min-content auto auto min-content;
+        grid-template-columns: min-content 1fr 1fr min-content;
         grid-template-areas:
             "buttons sliders palette color-preview"
             "buttons sliders palette blending";
     }
+
+    /* @media screen(lg) {
+        .opacity-slider-container {
+            background: red;
+        }
+    } */
 
     .palette {
         grid-area: palette;

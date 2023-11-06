@@ -26,6 +26,39 @@ body {
     border-radius: 8px;
 }
 
+@keyframes scale-easeOutBounce {
+	0% {
+        transform: scale3d(1.0, 1.0, 1);
+    }
+    12% {
+        transform: scale3d(1.022, 1.022, 1);
+    }
+    24% {
+        transform: scale3d(1.088, 1.088, 1);
+    }
+    36% {
+        transform: scale3d(1.196, 1.196, 1);
+    }
+    54% {
+        transform: scale3d(1.15, 1.15, 1);
+    }
+    74% {
+        transform: scale3d(1.196, 1.196, 1);
+    }
+    82% {
+        transform: scale3d(1.188, 1.188, 1);
+    }
+    92% {
+        transform: scale3d(1.198, 1.198, 1);
+    }
+    96% {
+        transform: scale3d(1.196, 1.196, 1);
+    }
+    100% {
+        transform: scale3d(1.2, 1.2, 1);
+    }
+} 
+
 @layer components {
     .menu-panel {
         @apply relative overflow-hidden shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
@@ -53,6 +86,11 @@ body {
             1.76px 1.76px 0 black,
             1.76px -1.76px 0 black,
             -1.76px 1.76px 0 black;
+    }
+
+    .bounce-active:active {
+        animation: scale-easeOutBounce forwards linear 0.5s;
+        
     }
 }
 

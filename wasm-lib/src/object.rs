@@ -4,6 +4,7 @@ use wasm_bindgen::prelude::*;
 use crate::{
     layer::ZLayer,
     level::{ChunkCoord, CHUNK_SIZE_UNITS},
+    util::get_chunk_coord,
     ErrorType, RustError,
 };
 use serde::{Deserialize, Serialize};
@@ -145,10 +146,7 @@ impl GDObject {
 
     #[wasm_bindgen]
     pub fn get_chunk_coord(&self) -> ChunkCoord {
-        ChunkCoord {
-            x: (self.x / CHUNK_SIZE_UNITS as f32).floor() as i32,
-            y: (self.y / CHUNK_SIZE_UNITS as f32).floor() as i32,
-        }
+        get_chunk_coord(self.x, self.y)
     }
 
     // #[wasm_bindgen]

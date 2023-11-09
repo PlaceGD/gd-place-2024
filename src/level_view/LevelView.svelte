@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
+
     import { onMount } from "svelte";
     import { toast } from "../utils/toast";
     import { __DEBUG } from "../main";
@@ -8,15 +9,18 @@
 
     export let canvas: HTMLCanvasElement;
     let view_size = [0, 0];
+    let text_draws: wasm.TextDraw[] = [];
 
     onMount(() => {
         state = wasm.create_view(canvas);
     });
-
-    const draw = () => {
+    let prevTime = 0;
+    const draw = (time: number) => {
         if (state != null) {
             try {
-                state.pub_render(0.25);
+                state.pub_render((time - prevTime) / 1000);
+                prevTime = time;
+                text_draws = state.get_text_draws();
             } catch (e) {
                 toast.showErrorToast(
                     `An error occured in the editor (WASM). 
@@ -49,14 +53,14 @@
 
 {#if __DEBUG}
     <button
-        class="absolute font-pusab text-white text-md ml-20 z-50 bg-white/10 rounded-lg p-1"
+        class="absolute z-50 p-1 ml-20 text-white rounded-lg font-pusab text-md bg-white/10"
         on:click={() => {
             localStorage.clear();
             window.location.reload();
         }}>Clear LS & Refresh</button
     >
     <button
-        class="absolute font-pusab text-white text-md ml-72 z-50 bg-white/10 rounded-lg p-1 cummer"
+        class="absolute z-50 p-1 text-white rounded-lg font-pusab text-md ml-72 bg-white/10 cummer"
         on:click={() => {
             localStorage.clear();
             window.location.reload();
@@ -75,6 +79,25 @@
     bind:offsetWidth={view_size[0]}
 >
     <canvas bind:this={canvas} />
+</div>
+<div class="absolute w-full h-full overflow-visible">
+    {#each text_draws as text_draw}
+        <div
+            class="absolute overflow-visible font-semibold text-center whitespace-nowrap"
+            style={`
+            left: ${canvas.offsetWidth / 2}px;
+            top: ${canvas.offsetHeight / 2}px;
+            font-size: ${text_draw.font_size}px;
+            transform: translate(-50%, -50%) ${text_draw.get_css_transform()} scaleY(-1);
+            text-shadow: 0px ${text_draw.font_size / 10}px ${
+                text_draw.font_size / 6
+            }px rgba(0, 0, 0, 1.0);
+            ${text_draw.get_extra_style()}
+        `}
+        >
+            {text_draw.get_text()}
+        </div>
+    {/each}
 </div>
 
 <style>

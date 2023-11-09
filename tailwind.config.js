@@ -5,15 +5,14 @@ export default {
         screens: {
             lg: { max: "1500px" },
             md: { max: "1000px" },
-            sm: { max: "600px" },
+            sm: { max: "750px" },
         },
         colors: {
             "menu-gray": "#0A0A0A",
             black: "black",
             white: "white",
             red: "red",
-            "button-light-green": "#b7f782",
-            "button-dark-green": "#407530",
+            "button-green": "#75c934",
         },
         fontFamily: {
             pusab: "Pusab",

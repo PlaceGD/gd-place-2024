@@ -109,9 +109,8 @@ body {
 
         /* Custom scrollbar for Firefox */
         .thin-scrollbar {
-            scrollbar-color: #ffffff55 #00000000;
+            scrollbar-color: #ffffff55 #00000044;
             scrollbar-width: thin; /* 8px */
-            /* scrollbar-gutter: stable; */
         }
 
         /* Custom scrollbar for Edge, Chrome, Safari */
@@ -126,7 +125,7 @@ body {
         }
 
         .thin-scrollbar::-webkit-scrollbar-track-piece {
-            background-color: #00000000;
+            background-color: #00000044;
         }
 
         .thin-scrollbar::-webkit-scrollbar-thumb {

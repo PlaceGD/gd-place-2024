@@ -41,13 +41,13 @@
 </script>
 
 <div
-    class="items-center w-full h-full p-4 text-xl gap-x-4 items colors-tab-container"
+    class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items colors-tab-container md:text-lg sm:text-md"
 >
     <ul class="flex flex-col h-full buttons">
         <AnimateSharedLayout>
             <li class="relative flex-1 w-full h-full flex-center font-pusab">
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg main text-stroke"
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
                     on:click={() => (selectedTab = ColorTab.Main)}>Main</button
                 >
                 {#if selectedTab == ColorTab.Main}
@@ -57,7 +57,7 @@
             </li>
             <li class="relative flex-1 w-full h-full flex-center font-pusab">
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg detail text-stroke"
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke"
                     on:click={() => (selectedTab = ColorTab.Detail)}
                     >Detail</button
                 >
@@ -69,9 +69,9 @@
         </AnimateSharedLayout>
     </ul>
 
-    <div class="flex flex-col justify-center h-full gap-8 sliders">
+    <div class="flex flex-col justify-center h-full gap-8 options">
         <div
-            class="flex w-full h-3 opacity opacity-slider-container"
+            class="flex w-full h-3 md:h-5 opacity opacity-slider-container"
             style={`
                 --currentColor: rgb(${currentRgb.join(", ")});
                 --currentColorFaded: rgb(${currentRgb.join(", ")}, 0.2);
@@ -107,14 +107,44 @@
         </div>
 
         {#if selectedTab == ColorTab.Main}
-            <div class="flex w-full h-3 hue">
+            <div class="flex w-full h-3 md:h-5 hue">
                 <HueSlider bind:currentHue={currentMainColor.hue}></HueSlider>
             </div>
         {:else}
-            <div class="flex w-full h-3 hue">
+            <div class="flex w-full h-3 md:h-5 hue">
                 <HueSlider bind:currentHue={currentDetailColor.hue}></HueSlider>
             </div>
         {/if}
+
+        <div class="flex flex-center">
+            <div class="flex flex-col items-center">
+                {#if selectedTab == ColorTab.Main}
+                    <ToggleSwitch
+                        id="blending_cb"
+                        bind:isToggled={currentMainColor.blending}
+                    ></ToggleSwitch>
+                {:else}
+                    <ToggleSwitch
+                        id="blending_cb"
+                        bind:isToggled={currentDetailColor.blending}
+                    ></ToggleSwitch>
+                {/if}
+                <label for="blending_cb" class="font-pusab text-stroke">
+                    Blending
+                </label>
+            </div>
+
+            <!-- <div class="color-preview flex-center">
+                <div
+                    class="w-10 h-10 rounded-full"
+                    style={`
+                        background: rgba(${currentRgb.join(", ")}, ${
+                            currentColor.opacity
+                        });
+                    `}
+                />
+            </div> -->
+        </div>
     </div>
 
     <div class="h-full palette">
@@ -132,35 +162,19 @@
             />
         {/if}
     </div>
-    <div class="w-full h-full color-preview flex-center">
+    <!-- <div class="w-full h-full color-preview flex-center">
         <div
-            class="w-12 h-12 rounded-full"
+            class="w-12 h-12 rounded-full md:h-10 md:w-10"
             style={`
                 background: rgba(${currentRgb.join(", ")}, ${
                     currentColor.opacity
                 });
             `}
         />
-    </div>
-    <div class="flex flex-col items-center blending">
-        {#if selectedTab == ColorTab.Main}
-            <ToggleSwitch
-                id="blending_cb"
-                bind:isToggled={currentMainColor.blending}
-            ></ToggleSwitch>
-        {:else}
-            <ToggleSwitch
-                id="blending_cb"
-                bind:isToggled={currentDetailColor.blending}
-            ></ToggleSwitch>
-        {/if}
-        <label for="blending_cb" class="font-pusab text-stroke">
-            Blending
-        </label>
-    </div>
+    </div> -->
 </div>
 
-<style>
+<style lang="postcss">
     .opacity-slider-container {
         background: repeating-conic-gradient(#474747 0% 25%, transparent 0% 50%)
             50% / 20px 20px;
@@ -194,24 +208,23 @@
         display: grid;
         grid-auto-columns: 1fr;
         grid-auto-rows: 1fr;
-        grid-template-columns: min-content 1fr 1fr min-content;
+        grid-template-columns: min-content 1fr 1fr;
         grid-template-areas:
-            "buttons sliders palette color-preview"
-            "buttons sliders palette blending";
+            "buttons options palette"
+            "buttons options palette";
     }
 
-    /* @media screen(lg) {
-        .opacity-slider-container {
-            background: red;
+    @media screen(lg) {
+        .colors-tab-container {
+            grid-template-columns: min-content 1.3fr 0.7fr;
         }
-    } */
+    }
 
     .palette {
         grid-area: palette;
     }
-
-    .sliders {
-        grid-area: sliders;
+    .options {
+        grid-area: options;
     }
     .blending {
         grid-area: blending;

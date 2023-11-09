@@ -59,14 +59,24 @@ pub struct Level {
 }
 
 impl Level {
-    pub fn foreach_obj_in_z<F>(&self, layer: ZLayer, z_order: i8, mut f: F)
-    where
+    pub fn foreach_obj_in_z<F>(
+        &self,
+        layer: ZLayer,
+        z_order: i8,
+        mut f: F,
+        preview: Option<&GDObject>,
+    ) where
         F: FnMut(DbKey, &GDObject),
     {
-        for (&ChunkCoord { x, y }, chunk) in &self.chunks {
+        for (&coord, chunk) in &self.chunks {
             if let Some(v) = chunk.objects.get(layer).objects.get(&z_order) {
                 for (&key, obj) in v {
                     f(key, obj)
+                }
+            }
+            if let Some(o) = preview {
+                if o.z_layer == layer && o.z_order == z_order && o.get_chunk_coord() == coord {
+                    f([0; 20], o)
                 }
             }
         }

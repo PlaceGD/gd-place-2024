@@ -1,6 +1,9 @@
-use std::{collections::HashMap, path::PathBuf};
+use std::{
+    collections::{HashMap, HashSet},
+    path::PathBuf,
+};
 
-use image::{DynamicImage, GenericImageView};
+use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
 use itertools::Itertools;
 use texture_packer::{exporter::ImageExporter, importer::ImageImporter, TexturePacker};
 
@@ -89,6 +92,58 @@ pub(crate) fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
     };
 
     (sheet, data)
+}
+
+pub(crate) fn color_bleed(img: &mut DynamicImage) {
+    let mut fixed = HashSet::new();
+    let mut pass_fixed = HashSet::new();
+
+    for _ in 0..3 {
+        for x in 1..(img.width() - 1) {
+            for y in 1..(img.height() - 1) {
+                if img.get_pixel(x, y).0[3] == 0 {
+                    if fixed.contains(&(x, y)) {
+                        continue;
+                    }
+
+                    let x = x as i32;
+                    let y = y as i32;
+                    let (mut total, mut trgb) = (0usize, (0f32, 0f32, 0f32));
+
+                    for i in -1..=1 {
+                        for j in -1..=1 {
+                            if (i, j) == (0, 0) {
+                                continue;
+                            }
+                            let (cx, cy) = ((x + i) as u32, (y + j) as u32);
+                            let [r, g, b, a] = img.get_pixel(cx, cy).0;
+                            if a != 0 || fixed.contains(&(cx, cy)) {
+                                total += 1;
+                                trgb.0 += r as f32;
+                                trgb.1 += g as f32;
+                                trgb.2 += b as f32;
+                            }
+                        }
+                    }
+
+                    if total > 0 {
+                        img.put_pixel(
+                            x as u32,
+                            y as u32,
+                            Rgba([
+                                (trgb.0 / total as f32) as u8,
+                                (trgb.1 / total as f32) as u8,
+                                (trgb.2 / total as f32) as u8,
+                                0,
+                            ]),
+                        );
+                        pass_fixed.insert((x as u32, y as u32));
+                    }
+                }
+            }
+        }
+        fixed.extend(pass_fixed.drain());
+    }
 }
 
 pub(crate) fn make_get_main_sprite_fn(data: &SpritesheetData) -> String {

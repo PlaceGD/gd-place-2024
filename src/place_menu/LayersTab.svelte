@@ -49,7 +49,7 @@
         }
     };
 
-    let prevValidInputData: string = "0";
+    let prevValidInputData: string = zOrder.toString();
     onMount(() => {
         inputElement.value = prevValidInputData;
     });

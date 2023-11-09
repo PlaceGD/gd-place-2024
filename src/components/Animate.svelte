@@ -1,6 +1,11 @@
 <script lang="ts">
     import { onMount, createEventDispatcher } from "svelte";
-    import { Motion, useAnimation, useReducedMotion } from "svelte-motion";
+    import {
+        Motion,
+        useAnimation,
+        useReducedMotion,
+        type VariantLabels,
+    } from "svelte-motion";
     import type {
         Easing,
         Target,
@@ -9,8 +14,43 @@
 
     const dispatcher = createEventDispatcher();
 
+    // used to convert JS css properties (camel case) to actual css properites (snake with `-`)
+    const camelToSnake = (prop: string): string => {
+        return prop.replace(/[A-Z]/g, a => {
+            return "-" + a.toLowerCase();
+        });
+    };
+
+    let child: HTMLElement;
+
+    const fakeMotion = (motion_og: (node: any) => void) => {
+        return (node: any) => {
+            child = node;
+            motion_og(node);
+        };
+    };
+
     export let easing: Easing = "linear";
     export let duration: number = 0;
+
+    export let initial: boolean | Target | VariantLabels | string[] = {};
+    let motionInitial: any = {};
+
+    onMount(() => {
+        if (Array.isArray(initial)) {
+            let mappedPrts: { [key: string]: any } = {};
+
+            initial.map(prt => {
+                let styles = window.getComputedStyle(child);
+
+                mappedPrts[prt] = styles.getPropertyValue(camelToSnake(prt));
+            });
+
+            motionInitial = mappedPrts;
+        } else {
+            motionInitial = initial;
+        }
+    });
 
     type ConditionalTarget = { [key: string]: TargetAndTransition };
 
@@ -41,7 +81,7 @@
                         reducedMotionTransition
                     );
                 } else {
-                    animation.start($$props.initial, reducedMotionTransition);
+                    animation.start(motionInitial, reducedMotionTransition);
                 }
             } else {
                 animation.start(
@@ -54,6 +94,7 @@
 </script>
 
 <Motion
+    initial={motionInitial}
     {...$$restProps}
     animate={animation}
     let:motion
@@ -61,5 +102,5 @@
     onAnimationStart={() => dispatcher("start", {})}
     onAnimationComplete={() => dispatcher("end", {})}
 >
-    <slot {motion} />
+    <slot motion={fakeMotion(motion)} />
 </Motion>

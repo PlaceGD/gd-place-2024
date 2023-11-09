@@ -24,10 +24,12 @@ pub fn main() {
 }
 
 #[wasm_bindgen]
+#[derive(Debug, Clone, Copy)]
 pub struct RustError {
     typ: ErrorType,
 }
 
+#[derive(Debug, Clone, Copy)]
 pub enum ErrorType {
     InvalidObjectId(u16),
     InvalidObjectString,

@@ -1,7 +1,7 @@
 #[cfg(test)]
 use packing::SpritesheetData;
 
-use crate::colors::get_available_colors;
+use crate::{colors::get_available_colors, packing::color_bleed};
 
 pub mod colors;
 mod config;
@@ -15,7 +15,8 @@ fn generate_shid() {
     use serde_json::json;
     use std::fs;
 
-    let (img, data) = make_spritesheet();
+    let (mut img, data) = make_spritesheet();
+    color_bleed(&mut img);
 
     img.save("../src/gd/spritesheet.png").unwrap();
     fs::write(

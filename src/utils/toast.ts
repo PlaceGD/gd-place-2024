@@ -16,13 +16,13 @@ const toastErrorTheme = {
 };
 
 export const toast = {
-    showErrorToast: (err: string) => {
-        console.error(err);
-        _toast.push(err, toastErrorTheme);
+    showErrorToast: (...message: string[]) => {
+        console.error(message);
+        _toast.push(message.join(" "), toastErrorTheme);
     },
-    showSuccessToast: (message: string) => {
+    showSuccessToast: (...message: string[]) => {
         console.info(message);
-        _toast.push(message, toastSuccessTheme);
+        _toast.push(message.join(" "), toastSuccessTheme);
     },
 };
 

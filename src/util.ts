@@ -57,6 +57,8 @@ export const hsvToRgb = (
 };
 
 export const isOverflow = (element: HTMLElement): boolean => {
+    if (!element) return false;
+
     let curOverflow = element.style.overflow;
 
     if (!curOverflow || curOverflow === "visible")

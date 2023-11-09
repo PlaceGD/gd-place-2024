@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as wasm from "../../wasm-lib/pkg/wasm_lib";
+
     import { default as cx } from "classnames";
     import {
         AnimateSharedLayout,
@@ -38,8 +39,6 @@
     import { bounceOut } from "svelte/easing";
 
     export let state: wasm.StateWrapper | null;
-
-    let hasMinimizedAnimFinished = false;
 
     const minimizeAnimDur = 0.5;
     const shouldReducedMotion = useReducedMotion();
@@ -121,16 +120,19 @@
         class="absolute flex flex-col justify-end w-full h-full pointer-events-none pb"
         use:motion
     >
-        <div class="flex justify-end gap-2 text-white pointer-events-all">
+        <div
+            class="flex justify-end gap-2 text-white sm:flex-col pointer-events-all"
+        >
             <Animate
                 easing="easeInOut"
                 duration={minimizeAnimDur}
-                initial={{
-                    // adds 8px to account for 8px scroll bar if overflowing
-                    gridTemplateRows: `${
-                        isTabsPanelOverflow ? "56px" : "48px"
-                    } 200px`,
-                }}
+                initial={// {
+                //     // adds 8px to account for 8px scroll bar if overflowing
+                //     gridTemplateRows: `${
+                //         isTabsPanelOverflow ? "56px" : "48px"
+                //     } 200px`,
+                // }
+                ["gridTemplateRows"]}
                 definition={{
                     isMinimized: {
                         gridTemplateRows: `${
@@ -143,7 +145,13 @@
                 }}
                 let:motion
             >
-                <div class="flex-1 menu-grid-container" use:motion>
+                <div
+                    class={cx({
+                        "flex-1 menu-grid-container": true,
+                        tabOverflow: isTabsPanelOverflow,
+                    })}
+                    use:motion
+                >
                     <div
                         class="flex flex-col items-center minimize menu-panel justify-evenly"
                     >
@@ -355,10 +363,7 @@
                         -->
                         <ul
                             class={cx({
-                                "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar object-grid-container": true,
-                                "!overflow-hidden":
-                                    $menuSettings.isMinimized &&
-                                    hasMinimizedAnimFinished,
+                                "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
                                 "!hidden":
                                     $menuSettings.selectedGroup !=
                                     TabGroup.Build,
@@ -424,17 +429,12 @@
                         {#if $menuSettings.selectedGroup == TabGroup.Edit}
                             {#if $menuSettings.selectedEditTab == EditTab.Transform}
                                 <ul
-                                    class={cx({
-                                        "w-full h-full overflow-x-hidden overflow-y-auto rounded-lg thin-scrollbar object-grid-container gap-4": true,
-                                        "!overflow-hidden":
-                                            $menuSettings.isMinimized &&
-                                            hasMinimizedAnimFinished,
-                                    })}
+                                    class="w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container gap-4"
                                 >
                                     {#each TRANSFORM_BUTTONS as button, i (i)}
                                         <li class="w-16 h-16">
                                             <button
-                                                class={"flex-center w-full h-full p-3 z-20 rounded-md bg-[#75c934] bounce-active"}
+                                                class={"flex-center w-full h-full p-3 z-20 rounded-md bg-button-green bounce-active"}
                                                 on:click={() => {
                                                     if (state == null) return;
                                                     let obj =
@@ -489,9 +489,7 @@
             <Animate
                 easing="easeInOut"
                 duration={minimizeAnimDur}
-                initial={{
-                    minHeight: "256px",
-                }}
+                initial={["minHeight", "height"]}
                 definition={{
                     isMinimized: {
                         minHeight: 0,
@@ -531,7 +529,7 @@
                 >
                     <div class="w-full h-full py-4 overflow-hidden">
                         <h1
-                            class="w-full h-full overflow-hidden text-5xl font-pusab text-stroke flex-center"
+                            class="w-full h-full overflow-hidden text-5xl md:text-4xl sm:text-4xl font-pusab text-stroke flex-center"
                         >
                             {#if $menuSettings.selectedGroup != TabGroup.Delete}
                                 Place
@@ -546,7 +544,7 @@
     </div>
 </Animate>
 
-<style>
+<style lang="postcss">
     .object-grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, 64px);
@@ -557,11 +555,15 @@
     .menu-grid-container {
         display: grid;
         grid-template-columns: 64px auto;
-        /* grid-template-rows: 48px 200px; */
+        grid-template-rows: 48px 200px;
         gap: 8px 8px;
         grid-template-areas:
             "minimize tabs"
             "side-menu buttons";
+    }
+
+    .menu-grid-container.tabOverflow {
+        grid-template-rows: 56px 200px !important;
     }
 
     .minimize {
@@ -581,6 +583,8 @@
     }
 
     .place-bttn-place {
+        height: 256px;
+        min-height: 256px;
         width: 256px;
         border-radius: 16px;
         background: #7ade2d;
@@ -591,7 +595,6 @@
             4px 4px 0px 8px #c6f249 inset;
     }
     .place-bttn-place:active {
-        width: 256px;
         border-radius: 16px;
         background: #61b91d;
         box-shadow:
@@ -601,6 +604,8 @@
             4px 4px 0px 8px #b2eb11 inset;
     }
     .place-bttn-delete {
+        height: 256px;
+        min-height: 256px;
         width: 256px;
         border-radius: 16px;
         background: #de2d30;
@@ -611,7 +616,6 @@
             4px 4px 0px 8px #f24980 inset;
     }
     .place-bttn-delete:active {
-        width: 256px;
         border-radius: 16px;
         background: #b91d20;
         box-shadow:
@@ -619,5 +623,21 @@
             0px 0px 0px 8px #000 inset,
             -4px -4px 0px 8px #6a1617 inset,
             4px 4px 0px 8px #eb1158 inset;
+    }
+
+    @media screen(md) {
+        .place-bttn-place,
+        .place-bttn-delete {
+            width: 180px;
+        }
+    }
+
+    @media screen(sm) {
+        .place-bttn-place,
+        .place-bttn-delete {
+            height: 64px !important;
+            min-height: 64px !important;
+            width: 100%;
+        }
     }
 </style>

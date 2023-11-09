@@ -64,11 +64,25 @@
         }
     }
 
-    const gubuh = (event: any) => {
+    const changeBgColor = (event: any) => {
         let c = hexToRgb(event.target.value);
         if (c != null) {
             let { r, g, b } = c;
-            state.set_bg_color(r, g, b, 255);
+            state.set_bg_color(r, g, b);
+        }
+    };
+    const changeGround1Color = (event: any) => {
+        let c = hexToRgb(event.target.value);
+        if (c != null) {
+            let { r, g, b } = c;
+            state.set_ground1_color(r, g, b);
+        }
+    };
+    const changeGround2Color = (event: any) => {
+        let c = hexToRgb(event.target.value);
+        if (c != null) {
+            let { r, g, b } = c;
+            state.set_ground2_color(r, g, b);
         }
     };
 
@@ -296,11 +310,23 @@
     }}
 />
 
-<div class="absolute">
+<div class="absolute flex flex-col">
     <input
         type="color"
         on:input={e => {
-            gubuh(e);
+            changeBgColor(e);
+        }}
+    />
+    <input
+        type="color"
+        on:input={e => {
+            changeGround1Color(e);
+        }}
+    />
+    <input
+        type="color"
+        on:input={e => {
+            changeGround2Color(e);
         }}
     />
 </div>

@@ -25,7 +25,7 @@
                 class={cx({
                     "absolute w-6 h-6 transition rounded-full dot left-1 top-1": true,
                     "bg-white": !isToggled,
-                    "bg-button-light-green translate-x-full": isToggled,
+                    "bg-button-green translate-x-full": isToggled,
                 })}
             ></div>
         </div>

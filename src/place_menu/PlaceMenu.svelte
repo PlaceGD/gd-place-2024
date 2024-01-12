@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as wasm from "../../wasm-lib/pkg/wasm_lib";
+    import * as wasm from "wasm-lib";
 
     import { default as cx } from "classnames";
     import {
@@ -28,7 +28,7 @@
     import SlidingSelector from "../components/SlidingSelector.svelte";
     import { isOverflow } from "../util";
     import { EditTab, TRANSFORM_BUTTONS } from "./edit_tab";
-    import { __DEBUG } from "../main";
+    import { DEBUG } from "../main";
     import SpriteSheet from "../utils/SpriteSheet";
 
     import ColorTab from "./ColorTab.svelte";
@@ -385,7 +385,7 @@
                                             $menuSettings.selectedObject = id;
                                         }}
                                     >
-                                        {#if __DEBUG}
+                                        {#if DEBUG}
                                             <span
                                                 class="absolute text-red font-lg bottom-3/4 right-1/2"
                                             >

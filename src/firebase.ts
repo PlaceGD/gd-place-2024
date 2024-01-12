@@ -12,7 +12,7 @@ import {
     set,
     remove,
 } from "firebase/database";
-import type { GDObject } from "../wasm-lib/pkg/wasm_lib";
+import type { GDObject } from "wasm-lib";
 import { toast } from "./utils/toast";
 
 const firebaseConfig = {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as wasm from "../../wasm-lib/pkg/wasm_lib";
+    import * as wasm from "wasm-lib";
     import { clamp, hexToRgb, lerp } from "../util";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
@@ -142,8 +142,6 @@
 
     const placePreview = () => {
         let [mx, my] = getWorldMousePos();
-
-        console.log("hot", $menuSettings.selectedMainColor);
 
         let obj = new wasm.GDObject(
             $menuSettings.selectedObject,

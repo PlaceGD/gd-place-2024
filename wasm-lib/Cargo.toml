@@ -4,16 +4,15 @@ version = "0.1.0"
 authors = ["@DexterHill0", "@FlowVix"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
+[profile.release]
+lto = true
+opt-level = "s"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
-
 [features]
 default = ["console_error_panic_hook"]
-
 
 [dependencies]
 wasm-bindgen = "0.2.84"
@@ -31,12 +30,12 @@ log = "0.4.20"
 console_error_panic_hook = { version = "0.1.7", optional = true }
 # wasm-bindgen-futures = "0.4.30"
 
-# desen = { git = "https://github.com/FlowVix/desen.git", features = [
-#     "html-canvas",
-# ] }
+desen = { git = "https://github.com/FlowVix/desen.git", features = [
+    "html-canvas",
+] }
 
 
-desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
+#desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
 nalgebra = "0.32.3"
 
 base64 = "0.21.5"
@@ -51,9 +50,6 @@ indexmap = "2.1.0"
 # lyon = "1.0.1"
 base85 = "2.0.0"
 ascii85 = "0.2.1"
-
-[profile.release]
-opt-level = 3
 
 [build]
 target = "wasm32-unknown-unknown"

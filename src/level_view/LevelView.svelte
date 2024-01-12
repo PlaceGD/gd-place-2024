@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as wasm from "../../wasm-lib/pkg/wasm_lib";
+    import * as wasm from "wasm-lib";
 
     import { onMount } from "svelte";
     import { toast } from "../utils/toast";
-    import { __DEBUG } from "../main";
+    import { DEBUG } from "../main";
 
     export let state: wasm.StateWrapper | null;
 
@@ -14,18 +14,20 @@
     onMount(() => {
         state = wasm.create_view(canvas);
     });
+
     let prevTime = 0;
+
     const draw = (time: number) => {
         if (state != null) {
             try {
                 state.pub_render((time - prevTime) / 1000);
                 prevTime = time;
                 text_draws = state.get_text_draws();
-            } catch (e) {
+            } catch (e: any) {
                 toast.showErrorToast(
-                    `An error occured in the editor (WASM). 
+                    `An fatal error occured in the WASM. 
                     Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
-                    Refresh the page and try again.`
+                    Refresh the page and try again. (${e})`
                 );
                 return;
             }
@@ -51,7 +53,7 @@
     }
 </script>
 
-{#if __DEBUG}
+{#if DEBUG}
     <button
         class="absolute z-50 p-1 ml-20 text-white rounded-lg font-pusab text-md bg-white/10"
         on:click={() => {

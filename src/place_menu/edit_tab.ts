@@ -1,4 +1,4 @@
-import type { GDObject } from "../../wasm-lib/pkg/wasm_lib";
+import type { GDObject } from "wasm-lib";
 
 export enum EditTab {
     Transform = "Transform",

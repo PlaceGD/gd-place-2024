@@ -10,6 +10,7 @@ mod utilgen;
 
 use colored::control::set_override;
 use wasm_bindgen::prelude::*;
+
 #[wasm_bindgen]
 #[cfg(target_arch = "wasm32")]
 pub fn create_view(canvas: web_sys::HtmlCanvasElement) -> crate::state::StateWrapper {

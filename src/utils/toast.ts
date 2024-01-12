@@ -17,11 +17,11 @@ const toastErrorTheme = {
 
 export const toast = {
     showErrorToast: (...message: string[]) => {
-        console.error(message);
+        console.error(...message);
         _toast.push(message.join(" "), toastErrorTheme);
     },
     showSuccessToast: (...message: string[]) => {
-        console.info(message);
+        console.info(...message);
         _toast.push(message.join(" "), toastSuccessTheme);
     },
 };

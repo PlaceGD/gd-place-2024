@@ -2,22 +2,14 @@
     import Editor from "./Editor.svelte";
     import { SvelteToast } from "@zerodevx/svelte-toast";
 
-    import init from "../wasm-lib/pkg/wasm_lib.js";
+    import initWasm from "wasm-lib";
     import Logo from "./components/Logo.svelte";
-    import { __DEBUG } from "./main";
+    import { DEBUG, HAS_OPT_WASM } from "./main";
     import { toast } from "./utils/toast";
 
-    import WasmLoaderWorker from "./test.ts?worker";
-
-    import { getTest } from "./test2";
-
-    const wasmLoaderWorker: Worker = new WasmLoaderWorker();
-    wasmLoaderWorker.onmessage = e => {
-        if (e.data.event === "loaded") {
-            console.log("out", getTest());
-            //hasLoaded = true;
-        }
-    };
+    const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
+        HAS_OPT_WASM ? "-opt.wasm" : ""
+    }`;
 
     let max = 0;
     let progress = 0;
@@ -25,41 +17,30 @@
     let hasLoaded = false;
 
     const wasm_r = new XMLHttpRequest();
+
     wasm_r.responseType = "arraybuffer";
     wasm_r.addEventListener("progress", p => {
         max = p.total;
         progress = p.loaded;
     });
     wasm_r.addEventListener("load", () => {
-        wasmLoaderWorker.postMessage({
-            event: "load",
-            resp: wasm_r.response,
-        });
-
-        init(wasm_r.response)
+        initWasm(wasm_r.response)
             .catch(e => {
-                toast.showErrorToast("Failed to initialize WASM.");
+                toast.showErrorToast(`Failed to initialize WASM. (${e})`);
             })
             .then(() => {
                 hasLoaded = true;
             });
     });
-    wasm_r.open("GET", "../wasm-lib/pkg/wasm_lib_bg.wasm");
+    wasm_r.addEventListener("error", () => {
+        toast.showErrorToast("Failed to download WASM.");
+    });
+    wasm_r.addEventListener("abort", () => {
+        toast.showErrorToast("Failed to download WASM.");
+    });
 
+    wasm_r.open("GET", WASM_URL);
     wasm_r.send();
-
-    //////////////////
-
-    // import { onMount } from "svelte";
-
-    // let syncWorker: Worker | undefined = undefined;
-
-    // const loadWorker = async () => {
-    //     const SyncWorker = await import("test.ts?worker");
-    //     syncWorker = new SyncWorker.default();
-    // };
-
-    // onMount(loadWorker);
 </script>
 
 <SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />

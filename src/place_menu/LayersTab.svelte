@@ -1,6 +1,6 @@
 <script lang="ts">
     import { default as cx } from "classnames";
-    import { ZLayer } from "../../wasm-lib/pkg/wasm_lib";
+    import { ZLayer } from "wasm-lib";
     import Image from "../components/Image.svelte";
     import { onMount } from "svelte";
 

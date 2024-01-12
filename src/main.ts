@@ -4,7 +4,8 @@ import App from "./App.svelte";
 import "./gd/object";
 import "./firebase";
 
-export const __DEBUG = "__DEBUG"; // replaced by the `__DEBUG` define in vite config
+export const DEBUG = __DEBUG ?? false; // replaced by the `xxxxxx` define in vite config
+export const HAS_OPT_WASM = __HAS_OPT_WASM ?? false;
 
 const app = new App({
     target: document.getElementById("app") as any,

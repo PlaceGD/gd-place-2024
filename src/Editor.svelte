@@ -1,19 +1,15 @@
 <script lang="ts">
     import LevelView from "./level_view/LevelView.svelte";
     import PlaceMenu from "./place_menu/PlaceMenu.svelte";
-    import { __DEBUG } from "./main";
+    import { DEBUG } from "./main";
 
-    import * as wasm from "../wasm-lib/pkg/wasm_lib";
+    import * as wasm from "wasm-lib";
     import ViewControls from "./level_view/ViewControls.svelte";
 
     export let wasmLoaded: boolean;
 
     let state: wasm.StateWrapper | null = null;
     let canvas: HTMLCanvasElement;
-
-    // FUNCTION TOAST(BEANS) {
-    //     console.log("toast");
-    // }
 </script>
 
 <div class="absolute w-full h-full">

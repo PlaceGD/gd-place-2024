@@ -4,10 +4,13 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import FullReload from "vite-plugin-full-reload";
 import svelteSVG from "vite-plugin-svelte-svg";
 
+import { existsSync } from "fs";
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
     define: {
         __DEBUG: mode == "development",
+        __HAS_OPT_WASM: existsSync("wasm-lib/pkg/wasm_lib_bg.wasm-opt.wasm"),
     },
     plugins: [
         svelte(),

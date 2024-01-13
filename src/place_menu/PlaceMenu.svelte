@@ -26,7 +26,7 @@
         MAIN_DETAIL_TEX_RATIOS,
     } from "../gd/object";
     import SlidingSelector from "../components/SlidingSelector.svelte";
-    import { isOverflow } from "../util";
+    import { isOverflow } from "../utils/Document";
     import { EditTab, TRANSFORM_BUTTONS } from "./edit_tab";
     import { DEBUG } from "../main";
     import SpriteSheet from "../utils/SpriteSheet";
@@ -429,7 +429,7 @@
                         {#if $menuSettings.selectedGroup == TabGroup.Edit}
                             {#if $menuSettings.selectedEditTab == EditTab.Transform}
                                 <ul
-                                    class="w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container gap-4"
+                                    class="w-full h-full gap-4 overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container"
                                 >
                                     {#each TRANSFORM_BUTTONS as button, i (i)}
                                         <li class="w-16 h-16">

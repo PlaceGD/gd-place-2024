@@ -5,7 +5,10 @@
     import initWasm from "wasm-lib";
     import Logo from "./components/Logo.svelte";
     import { DEBUG, HAS_OPT_WASM } from "./main";
-    import { toast } from "./utils/toast";
+    import Toast from "./utils/Toast";
+    import { alertHasDarkReader } from "./utils/Document";
+
+    alertHasDarkReader();
 
     const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
         HAS_OPT_WASM ? "-opt.wasm" : ""
@@ -26,17 +29,17 @@
     wasm_r.addEventListener("load", () => {
         initWasm(wasm_r.response)
             .catch(e => {
-                toast.showErrorToast(`Failed to initialize WASM. (${e})`);
+                Toast.showErrorToast(`Failed to initialize WASM. (${e})`);
             })
             .then(() => {
                 hasLoaded = true;
             });
     });
     wasm_r.addEventListener("error", () => {
-        toast.showErrorToast("Failed to download WASM.");
+        Toast.showErrorToast("Failed to download WASM.");
     });
     wasm_r.addEventListener("abort", () => {
-        toast.showErrorToast("Failed to download WASM.");
+        Toast.showErrorToast("Failed to download WASM.");
     });
 
     wasm_r.open("GET", WASM_URL);
@@ -45,7 +48,7 @@
 
 <SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />
 
-<div class="relative w-screen h-screen">
+<div class="relative w-screen h-screen overflow-hidden">
     <Editor bind:wasmLoaded={hasLoaded} />
     {#if !hasLoaded}
         <div class="absolute">

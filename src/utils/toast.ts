@@ -1,29 +1,40 @@
 import { toast as _toast } from "@zerodevx/svelte-toast";
 
-const toastSuccessTheme = {
-    theme: {
-        "--toastColor": "mintcream",
-        "--toastBackground": "rgba(72, 187, 120, 0.9)",
-        "--toastBarBackground": "#2F855A",
+const toastThemes = {
+    SUCCESS: {
+        theme: {
+            "--toastColor": "#FFF",
+            "--toastBackground": "#48BB78",
+            "--toastBarBackground": "#215E40",
+        },
     },
-};
-const toastErrorTheme = {
-    theme: {
-        "--toastColor": "mintcream",
-        "--toastBackground": "rgba(187, 72, 72, 0.9)",
-        "--toastBarBackground": "#852F2F",
+    ERROR: {
+        theme: {
+            "--toastColor": "#FFF",
+            "--toastBackground": "#BB4848",
+            "--toastBarBackground": "#852F2F",
+        },
+    },
+    INFO: {
+        theme: {
+            "--toastColor": "#FFF",
+            "--toastBackground": "#2D597B",
+            "--toastBarBackground": "#234863",
+        },
     },
 };
 
-export const toast = {
-    showErrorToast: (...message: string[]) => {
+export default class Toast {
+    static showErrorToast = (...message: string[]) => {
         console.error(...message);
-        _toast.push(message.join(" "), toastErrorTheme);
-    },
-    showSuccessToast: (...message: string[]) => {
+        _toast.push(message.join(" "), toastThemes.ERROR);
+    };
+    static showSuccessToast = (...message: string[]) => {
+        console.log(...message);
+        _toast.push(message.join(" "), toastThemes.SUCCESS);
+    };
+    static showInfoToast = (...message: string[]) => {
         console.info(...message);
-        _toast.push(message.join(" "), toastSuccessTheme);
-    },
-};
-
-export { toastSuccessTheme, toastErrorTheme };
+        _toast.push(message.join(" "), toastThemes.INFO);
+    };
+}

@@ -55,20 +55,3 @@ export const hsvToRgb = (
 
     return [r1 * 255.0, g1 * 255.0, b1 * 255.0];
 };
-
-export const isOverflow = (element: HTMLElement): boolean => {
-    if (!element) return false;
-
-    let curOverflow = element.style.overflow;
-
-    if (!curOverflow || curOverflow === "visible")
-        element.style.overflow = "hidden";
-
-    let isOverflowing =
-        element.clientWidth < element.scrollWidth ||
-        element.clientHeight < element.scrollHeight;
-
-    element.style.overflow = curOverflow;
-
-    return isOverflowing;
-};

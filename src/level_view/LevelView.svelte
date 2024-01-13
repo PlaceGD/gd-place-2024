@@ -2,7 +2,7 @@
     import * as wasm from "wasm-lib";
 
     import { onMount } from "svelte";
-    import { toast } from "../utils/toast";
+    import Toast from "../utils/Toast";
     import { DEBUG } from "../main";
 
     export let state: wasm.StateWrapper | null;
@@ -24,7 +24,7 @@
                 prevTime = time;
                 text_draws = state.get_text_draws();
             } catch (e: any) {
-                toast.showErrorToast(
+                Toast.showErrorToast(
                     `An fatal error occured in the WASM. 
                     Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
                     Refresh the page and try again. (${e})`

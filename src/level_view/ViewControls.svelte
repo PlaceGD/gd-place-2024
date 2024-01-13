@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as wasm from "wasm-lib";
-    import { clamp, hexToRgb, lerp } from "../util";
+    import { clamp, hexToRgb, lerp } from "../utils/util";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
     import { subChunk, unsubChunk } from "../firebase";
@@ -9,7 +9,7 @@
     import debounce from "lodash.debounce";
     import { onMount } from "svelte";
     import LocalSettings from "../utils/LocalSettings";
-    import { toast } from "../utils/toast";
+    import Toast from "../utils/Toast";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -116,7 +116,7 @@
 
                             state.add_object(key, obj);
                         } catch (e: any) {
-                            toast.showErrorToast(e.display());
+                            Toast.showErrorToast(e.display());
                         }
                     }
                 },

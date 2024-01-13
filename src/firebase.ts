@@ -13,7 +13,7 @@ import {
     remove,
 } from "firebase/database";
 import type { GDObject } from "wasm-lib";
-import { toast } from "./utils/toast";
+import Toast from "./utils/Toast";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB9PSVZzg5WOp26PuCkVrrSTVrWg-XJMgg",
@@ -65,7 +65,7 @@ export const addObject = (obj: GDObject) => {
         let str = obj.serialize();
         push(objectsRef, str);
     } catch (e: any) {
-        toast.showErrorToast(e.display());
+        Toast.showErrorToast(e.display());
     }
 
     // const newPostRef = push(postListRef);
@@ -77,7 +77,7 @@ export const deleteObject = (key: string, chunk: [number, number]) => {
     //     let str = obj.serialize();
     //     push(objectsRef, str);
     // } catch (e: any) {
-    //     toast.showErrorToast(e.display());
+    //     Toast.showErrorToast(e.display());
     // }
 
     // const newPostRef = push(postListRef);

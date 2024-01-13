@@ -15,6 +15,7 @@ macro_rules! z_layers {
 }
 
 z_layers! {
+    B5,
     B4,
     B3,
     B2,
@@ -22,6 +23,7 @@ z_layers! {
     T1,
     T2,
     T3,
+    T4,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]

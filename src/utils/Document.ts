@@ -1,6 +1,7 @@
+import { writable } from "svelte/store";
 import Toast from "./Toast";
 
-export const isOverflow = (element: HTMLElement): boolean => {
+export const isOverflowing = (element: HTMLElement): boolean => {
     if (!element) return false;
 
     let curOverflow = element.style.overflow;
@@ -15,6 +16,26 @@ export const isOverflow = (element: HTMLElement): boolean => {
     element.style.overflow = curOverflow;
 
     return isOverflowing;
+};
+
+export const useIsOverflowing = () => {
+    const { subscribe: isOverflowingSubscribe, update: updateIsOverflowing } =
+        writable(false);
+
+    const updateElement = (element: HTMLElement | null) => {
+        let updateElement = () => {
+            if (element) {
+                updateIsOverflowing(() => isOverflowing(element!));
+            }
+        };
+        window.removeEventListener("resize", updateElement);
+        window.addEventListener("resize", updateElement);
+    };
+
+    return {
+        isOverflowing: { subscribe: isOverflowingSubscribe },
+        element: updateElement,
+    };
 };
 
 export const hasDarkReader = (): boolean => {

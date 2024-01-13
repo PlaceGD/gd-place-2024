@@ -26,7 +26,7 @@
         MAIN_DETAIL_TEX_RATIOS,
     } from "../gd/object";
     import SlidingSelector from "../components/SlidingSelector.svelte";
-    import { isOverflow } from "../utils/Document";
+    import { useIsOverflowing } from "../utils/Document";
     import { EditTab, TRANSFORM_BUTTONS } from "./edit_tab";
     import { DEBUG } from "../main";
     import SpriteSheet from "../utils/SpriteSheet";
@@ -41,10 +41,11 @@
     export let state: wasm.StateWrapper | null;
 
     const minimizeAnimDur = 0.5;
-    const shouldReducedMotion = useReducedMotion();
+    let isMinimizing = false;
 
-    let tabsPanel: HTMLUListElement;
-    let isTabsPanelOverflow: boolean = false;
+    // let tabsPanel: HTMLUListElement | null = null;
+    let { isOverflowing: tabsPanelOverflowing, element: tabsPanel } =
+        useIsOverflowing();
 
     // let selectedMainColor = { hue: 0, x: 0, y: 0, blending: false };
     // let selectedDetailColor = { hue: 0, x: 0, y: 0, blending: false };
@@ -55,12 +56,15 @@
                 colors.list[$menuSettings.selectedMainColor.hue].palette[
                     $menuSettings.selectedMainColor.y
                 ][$menuSettings.selectedMainColor.x];
+
             let m_opacity = $menuSettings.selectedMainColor.opacity;
             let m_blending = $menuSettings.selectedMainColor.blending;
+
             let [dr, dg, db] =
                 colors.list[$menuSettings.selectedDetailColor.hue].palette[
                     $menuSettings.selectedDetailColor.y
                 ][$menuSettings.selectedDetailColor.x];
+
             let d_opacity = $menuSettings.selectedDetailColor.opacity;
             let d_blending = $menuSettings.selectedDetailColor.blending;
 
@@ -89,21 +93,10 @@
     }
 </script>
 
-<svelte:window
-    on:resize={() => {
-        if (tabsPanel && isOverflow(tabsPanel)) {
-            isTabsPanelOverflow = true;
-        } else {
-            isTabsPanelOverflow = false;
-        }
-    }}
-/>
-
 <Animate
     easing="easeInOut"
     duration={minimizeAnimDur}
     initial={{
-        padding: "8px",
         paddingBottom: "8px",
     }}
     definition={{
@@ -117,7 +110,7 @@
     let:motion
 >
     <div
-        class="absolute flex flex-col justify-end w-full h-full pointer-events-none pb"
+        class="absolute flex flex-col justify-end w-full h-full pointer-events-none px-2 pt-2"
         use:motion
     >
         <div
@@ -126,32 +119,21 @@
             <Animate
                 easing="easeInOut"
                 duration={minimizeAnimDur}
-                initial={// {
-                //     // adds 8px to account for 8px scroll bar if overflowing
-                //     gridTemplateRows: `${
-                //         isTabsPanelOverflow ? "56px" : "48px"
-                //     } 200px`,
-                // }
+                initial={// use the value defined by css initially
                 ["gridTemplateRows"]}
                 definition={{
                     isMinimized: {
-                        gridTemplateRows: `${
-                            isTabsPanelOverflow ? "56px" : "48px"
-                        } 0px`,
+                        gridTemplateRows: "48px 0px",
                     },
                 }}
                 conditions={{
                     isMinimized: $menuSettings.isMinimized,
                 }}
+                on:start={() => (isMinimizing = true)}
+                on:end={() => (isMinimizing = false)}
                 let:motion
             >
-                <div
-                    class={cx({
-                        "flex-1 menu-grid-container": true,
-                        tabOverflow: isTabsPanelOverflow,
-                    })}
-                    use:motion
-                >
+                <div class="flex-1 menu-grid-container grid gap-2" use:motion>
                     <div
                         class="flex flex-col items-center minimize menu-panel justify-evenly"
                     >
@@ -205,8 +187,8 @@
                                 let:motion
                             >
                                 <ul
-                                    bind:this={tabsPanel}
-                                    class={"absolute w-full h-full p-2 flex justify-evenly overflow-y-hidden overflow-x-auto thin-scrollbar"}
+                                    use:tabsPanel
+                                    class={"absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar"}
                                     use:motion
                                     on:wheel={e => {
                                         if (!e || !e.target) return;
@@ -218,10 +200,10 @@
                                         {#if $menuSettings.selectedGroup == TabGroup.Build}
                                             {#each Object.entries(CATEGORY_ICONS) as [key, path]}
                                                 <li
-                                                    class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px]"
+                                                    class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px] xs:min-w-[52px]"
                                                 >
                                                     <button
-                                                        class="z-20 w-full h-full py-1 flex-center"
+                                                        class="z-20 w-full p-1 xs:p-1.5 h-full flex-center"
                                                         on:click={() => {
                                                             $menuSettings.selectedBuildTab =
                                                                 key;
@@ -246,14 +228,14 @@
                                                     class="relative flex-1 h-full cursor-pointer flex-center"
                                                 >
                                                     <button
-                                                        class="w-full h-full px-4 cursor-pointer flex-center"
+                                                        class="w-full h-full px-4 xs:px-2 cursor-pointer flex-center"
                                                         on:click={() => {
                                                             $menuSettings.selectedEditTab =
                                                                 value;
                                                         }}
                                                     >
                                                         <h1
-                                                            class="z-20 text-2xl font-pusab text-stroke"
+                                                            class="z-20 text-2xl md:text-xl xs:text-lg font-pusab text-stroke"
                                                         >
                                                             {value}
                                                         </h1>
@@ -373,21 +355,21 @@
                             {#each Object.entries(OBJECT_SETTINGS) as [id, obj], i}
                                 <li
                                     class={cx({
-                                        "relative w-16 h-16": true,
+                                        "relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10": true,
                                         hidden:
                                             $menuSettings.selectedBuildTab !=
                                             obj.category,
                                     })}
                                 >
                                     <button
-                                        class={"absolute w-full h-full p-3 z-20"}
+                                        class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
                                         on:click={() => {
                                             $menuSettings.selectedObject = id;
                                         }}
                                     >
                                         {#if DEBUG}
                                             <span
-                                                class="absolute text-red font-lg bottom-3/4 right-1/2"
+                                                class="absolute text-red opacity-50 font-lg bottom-3/4 right-1/2"
                                             >
                                                 {id}
                                             </span>
@@ -429,12 +411,14 @@
                         {#if $menuSettings.selectedGroup == TabGroup.Edit}
                             {#if $menuSettings.selectedEditTab == EditTab.Transform}
                                 <ul
-                                    class="w-full h-full gap-4 overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container"
+                                    class="w-full h-full gap-4 xs:gap-2 overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container"
                                 >
                                     {#each TRANSFORM_BUTTONS as button, i (i)}
-                                        <li class="w-16 h-16">
+                                        <li
+                                            class="w-16 h-16 md:w-14 md:h-14 xs:w-10 xs:h-10"
+                                        >
                                             <button
-                                                class={"flex-center w-full h-full p-3 z-20 rounded-md bg-button-green bounce-active"}
+                                                class={"flex-center w-full h-full p-2 md:p-1.5 xs:p-1 z-20 rounded-md bg-button-green bounce-active"}
                                                 on:click={() => {
                                                     if (state == null) return;
                                                     let obj =
@@ -446,7 +430,7 @@
                                                 }}
                                             >
                                                 <Image
-                                                    class={"object-cover w-12 h-12"}
+                                                    class="object-contain max-w-full max-h-full"
                                                     src={`/assets/ui/edit/${button.image}.svg`}
                                                     style={`transform: rotate(${
                                                         button.angle
@@ -464,7 +448,7 @@
                                 </ul>
                             {:else if $menuSettings.selectedEditTab == EditTab.Layers}
                                 <LayersTab
-                                    bind:selectedLayer={$menuSettings.zLayer}
+                                    bind:selectedZLayer={$menuSettings.zLayer}
                                     bind:zOrder={$menuSettings.zOrder}
                                 ></LayersTab>
                             {:else if $menuSettings.selectedEditTab == EditTab.Colors}
@@ -546,24 +530,19 @@
 
 <style lang="postcss">
     .object-grid-container {
-        display: grid;
+        @apply grid justify-between p-4 md:p-3 xs:p-2;
         grid-template-columns: repeat(auto-fill, 64px);
-        padding: 16px;
-        justify-content: space-between;
     }
 
     .menu-grid-container {
-        display: grid;
         grid-template-columns: 64px auto;
-        grid-template-rows: 48px 200px;
-        gap: 8px 8px;
         grid-template-areas:
             "minimize tabs"
             "side-menu buttons";
     }
 
-    .menu-grid-container.tabOverflow {
-        grid-template-rows: 56px 200px !important;
+    .menu-grid-container {
+        grid-template-rows: 48px 200px;
     }
 
     .minimize {
@@ -582,10 +561,13 @@
         grid-area: buttons;
     }
 
-    .place-bttn-place {
+    .place-bttn-place,
+    .place-bttn-delete {
         height: 256px;
         min-height: 256px;
         width: 256px;
+    }
+    .place-bttn-place {
         border-radius: 16px;
         background: #7ade2d;
         box-shadow:
@@ -604,9 +586,6 @@
             4px 4px 0px 8px #b2eb11 inset;
     }
     .place-bttn-delete {
-        height: 256px;
-        min-height: 256px;
-        width: 256px;
         border-radius: 16px;
         background: #de2d30;
         box-shadow:
@@ -630,6 +609,10 @@
         .place-bttn-delete {
             width: 180px;
         }
+
+        .menu-grid-container {
+            grid-template-columns: 56px auto;
+        }
     }
 
     @media screen(sm) {
@@ -638,6 +621,16 @@
             height: 64px !important;
             min-height: 64px !important;
             width: 100%;
+        }
+
+        .object-grid-container {
+            grid-template-columns: repeat(auto-fill, 56px);
+        }
+    }
+
+    @media screen(xs) {
+        .object-grid-container {
+            grid-template-columns: repeat(auto-fill, 48px);
         }
     }
 </style>

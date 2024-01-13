@@ -6,6 +6,7 @@ export default {
             lg: { max: "1500px" },
             md: { max: "1000px" },
             sm: { max: "750px" },
+            xs: { max: "500px" },
         },
         colors: {
             "menu-gray": "#0A0A0A",

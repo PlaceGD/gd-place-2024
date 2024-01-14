@@ -22,10 +22,10 @@
             try {
                 state.pub_render((time - prevTime) / 1000);
                 prevTime = time;
-                text_draws = state.get_text_draws();
+                //text_draws = state.get_text_draws();
             } catch (e: any) {
                 Toast.showErrorToast(
-                    `An fatal error occured in the WASM. 
+                    `A fatal error occured in the WASM. 
                     Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
                     Refresh the page and try again. (${e})`
                 );

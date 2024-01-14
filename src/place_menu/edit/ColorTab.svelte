@@ -47,7 +47,7 @@
         <AnimateSharedLayout>
             <li class="relative flex-1 w-full h-full flex-center font-pusab">
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke xs:text-sm"
                     on:click={() => (selectedTab = ColorTab.Main)}>Main</button
                 >
                 {#if selectedTab == ColorTab.Main}
@@ -57,7 +57,7 @@
             </li>
             <li class="relative flex-1 w-full h-full flex-center font-pusab">
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke"
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke xs:text-sm"
                     on:click={() => (selectedTab = ColorTab.Detail)}
                     >Detail</button
                 >
@@ -129,21 +129,13 @@
                         bind:isToggled={currentDetailColor.blending}
                     ></ToggleSwitch>
                 {/if}
-                <label for="blending_cb" class="font-pusab text-stroke">
+                <label
+                    for="blending_cb"
+                    class="font-pusab text-stroke xs:text-sm"
+                >
                     Blending
                 </label>
             </div>
-
-            <!-- <div class="color-preview flex-center">
-                <div
-                    class="w-10 h-10 rounded-full"
-                    style={`
-                        background: rgba(${currentRgb.join(", ")}, ${
-                            currentColor.opacity
-                        });
-                    `}
-                />
-            </div> -->
         </div>
     </div>
 
@@ -162,16 +154,6 @@
             />
         {/if}
     </div>
-    <!-- <div class="w-full h-full color-preview flex-center">
-        <div
-            class="w-12 h-12 rounded-full md:h-10 md:w-10"
-            style={`
-                background: rgba(${currentRgb.join(", ")}, ${
-                    currentColor.opacity
-                });
-            `}
-        />
-    </div> -->
 </div>
 
 <style lang="postcss">

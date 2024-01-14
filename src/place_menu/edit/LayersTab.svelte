@@ -11,6 +11,11 @@
         B,
     }
 
+    const LAYER_NAME = {
+        [Layer.T]: "T",
+        [Layer.B]: "B",
+    };
+
     const LAYER_COUNT = {
         [Layer.T]: 4,
         [Layer.B]: 5,
@@ -99,25 +104,41 @@
 <div
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-md"
 >
-    <ul class="flex flex-col h-full buttons">
+    <ul class="flex flex-col h-full buttons w-min">
         <AnimateSharedLayout>
-            <li class="relative flex-1 w-full h-full flex-center font-pusab">
+            <li
+                class="relative flex-1 w-20 md:w-18 xs:w-12 h-full font-pusab flex-center"
+            >
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
+                    class="z-20 w-full h-full rounded-lg sm:p-1 main text-stroke flex-center p-2"
                     on:click={() => (selectedLayer = Layer.T)}
-                    >Above Player</button
                 >
+                    <Image
+                        src="/assets/ui/layer_tab/bottom.svg"
+                        class="object-contain max-w-full max-h-full w-full"
+                        lazyLoad
+                        skeleton
+                    ></Image>
+                </button>
                 {#if selectedLayer == Layer.T}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
                 {/if}
             </li>
-            <li class="relative flex-1 w-full h-full flex-center font-pusab">
+            <li
+                class="relative flex-1 w-20 md:w-16 xs:w-12 h-full font-pusab flex-center"
+            >
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke"
+                    class="z-20 w-full h-full rounded-lg sm:p-1 detail text-stroke flex-center p-2"
                     on:click={() => (selectedLayer = Layer.B)}
-                    >Below Player</button
                 >
+                    <Image
+                        src="/assets/ui/layer_tab/top.svg"
+                        class="object-contain max-w-full max-h-full w-full"
+                        lazyLoad
+                        skeleton
+                    ></Image>
+                </button>
                 {#if selectedLayer == Layer.B}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
@@ -133,8 +154,14 @@
                 >
                     <button
                         class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
-                        on:click={() => (selectedLayerIdx = i)}>{i + 1}</button
+                        on:click={() => (selectedLayerIdx = i)}
                     >
+                        {i + 1}
+
+                        <span class="font-pusab opacity-50 xs:text-sm"
+                            >({LAYER_NAME[selectedLayer]}{i + 1})</span
+                        >
+                    </button>
                     {#if selectedLayerIdx == i}
                         <SlidingSelector layoutId="button-selector"
                         ></SlidingSelector>
@@ -159,7 +186,7 @@
             </button>
             <input
                 type="text"
-                class="w-20 p-2 text-3xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+                class="w-20 md:w-16 xs:w-14 p-2 text-3xl md:text-2xl sm:text-xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
                 max={100}
                 maxlength={4}
                 on:input={enterIfValid}
@@ -181,7 +208,9 @@
                 />
             </button>
         </div>
-        <h1 class="text-2xl font-pusab text-stroke">Z Index</h1>
+        <h1 class="text-2xl md:text-xl xs:text-lg font-pusab text-stroke">
+            Z Index
+        </h1>
     </div>
     <!-- <div class="w-24 h-24 flex-center">
         <Image

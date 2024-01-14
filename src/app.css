@@ -13,7 +13,7 @@
 * {
     user-select: none;
     font-family: "Saira", sans-serif;
-    /* overflow: visible; */
+    letter-spacing: 1px;
 }
 body {
     background-color: black;

@@ -9,9 +9,9 @@
     $: palette = colors.list[hue].palette;
 </script>
 
-<div class="flex flex-col w-full h-full gap-1">
+<div class="flex flex-col w-full h-full gap-1 xs:gap-0">
     {#each Array(colors.rows).fill(0) as _, r}
-        <div class="flex flex-1 h-auto gap-1">
+        <div class="flex flex-1 h-auto gap-1 xs:gap-0">
             {#each Array(colors.columns).fill(0) as _, c}
                 <button
                     class="flex-1 w-auto h-auto rounded-md"

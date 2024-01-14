@@ -227,7 +227,7 @@
                                                         }}
                                                     >
                                                         <h1
-                                                            class="z-20 text-2xl md:text-xl xs:text-lg font-pusab text-stroke"
+                                                            class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
                                                         >
                                                             {value}
                                                         </h1>

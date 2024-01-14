@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import LocalSettings from "./utils/LocalSettings";
-import { EditTab } from "./place_menu/edit_tab";
+import { EditTab } from "./place_menu/edit/edit_tab";
 import { ZLayer } from "wasm-lib";
 
 export enum TabGroup {

@@ -1,7 +1,6 @@
 <script lang="ts">
     import LevelView from "./level_view/LevelView.svelte";
     import PlaceMenu from "./place_menu/PlaceMenu.svelte";
-    import { DEBUG } from "./main";
 
     import * as wasm from "wasm-lib";
     import ViewControls from "./level_view/ViewControls.svelte";

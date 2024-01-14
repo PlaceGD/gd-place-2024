@@ -1,9 +1,9 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import { ZLayer } from "wasm-lib";
-    import Image from "../components/Image.svelte";
+    import Image from "../../components/Image.svelte";
     import { onMount } from "svelte";
-    import SlidingSelector from "../components/SlidingSelector.svelte";
+    import SlidingSelector from "../../components/SlidingSelector.svelte";
     import { AnimateSharedLayout } from "svelte-motion";
 
     enum Layer {
@@ -42,6 +42,9 @@
     let selectedLayer: Layer = Layer.B;
     let selectedLayerIdx: number = 0;
 
+    export let selectedZLayer: ZLayer;
+    export let zOrder: number;
+
     // clamp layer count
     $: {
         if (
@@ -50,10 +53,9 @@
         ) {
             selectedLayerIdx = LAYER_COUNT[Layer.T] - 1;
         }
-    }
 
-    export let selectedZLayer: ZLayer;
-    export let zOrder: number;
+        selectedZLayer = selectedLayerToZLayer(selectedLayer, selectedLayerIdx);
+    }
 
     const toValidInt = (s: string) => {
         if (s == "" || s == "-") {
@@ -179,7 +181,7 @@
                 />
             </button>
         </div>
-        <h1 class="text-2xl font-pusab text-stroke">Z Index (-50 to 50)</h1>
+        <h1 class="text-2xl font-pusab text-stroke">Z Index</h1>
     </div>
     <!-- <div class="w-24 h-24 flex-center">
         <Image

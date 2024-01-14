@@ -5,7 +5,7 @@
     import { cubicOut } from "svelte/easing";
     import { subChunk, unsubChunk } from "../firebase";
     import { TabGroup, menuSettings } from "../stores";
-    import { KEYBINDS } from "../place_menu/edit_tab";
+    import { KEYBINDS } from "../place_menu/edit/edit_tab";
     import debounce from "lodash.debounce";
     import { onMount } from "svelte";
     import LocalSettings from "../utils/LocalSettings";

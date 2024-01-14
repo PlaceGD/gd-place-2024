@@ -6,12 +6,12 @@
     import { default as cx } from "classnames";
     import RangeSlider from "svelte-range-slider-pips";
 
-    import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import HueSlider from "../components/HueSlider.svelte";
-    import PaletteGrid from "../components/PaletteGrid.svelte";
-    import SlidingSelector from "../components/SlidingSelector.svelte";
+    import ToggleSwitch from "../../components/ToggleSwitch.svelte";
+    import HueSlider from "../../components/HueSlider.svelte";
+    import PaletteGrid from "../../components/PaletteGrid.svelte";
+    import SlidingSelector from "../../components/SlidingSelector.svelte";
     import { AnimateSharedLayout } from "svelte-motion";
-    import colors from "../gd/colors.json";
+    import colors from "../../gd/colors.json";
 
     export let currentMainColor: {
         hue: number;

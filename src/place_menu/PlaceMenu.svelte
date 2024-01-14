@@ -2,46 +2,40 @@
     import * as wasm from "wasm-lib";
 
     import { default as cx } from "classnames";
-    import {
-        AnimateSharedLayout,
-        Motion,
-        useAnimation,
-        useReducedMotion,
-    } from "svelte-motion";
+    import { AnimateSharedLayout } from "svelte-motion";
+
     import colors from "../gd/colors.json";
-
-    import LocalSettings from "../utils/LocalSettings";
-
-    import Image from "../components/Image.svelte";
-    import Animate from "../components/Animate.svelte";
-    import ToggleSwitch from "../components/ToggleSwitch.svelte";
-
-    import Build from "./icons/build.svg";
-    import Edit from "./icons/edit.svg";
-    import Delete from "./icons/delete.svg";
-    import Minimize from "./icons/caret.svg";
     import {
         CATEGORY_ICONS,
         OBJECT_SETTINGS,
         MAIN_DETAIL_TEX_RATIOS,
     } from "../gd/object";
-    import SlidingSelector from "../components/SlidingSelector.svelte";
-    import { useIsOverflowing } from "../utils/Document";
-    import { EditTab, TRANSFORM_BUTTONS } from "./edit_tab";
-    import { DEBUG } from "../main";
-    import SpriteSheet from "../utils/SpriteSheet";
 
-    import ColorTab from "./ColorTab.svelte";
+    import Image from "../components/Image.svelte";
+    import Animate from "../components/Animate.svelte";
+    import ToggleSwitch from "../components/ToggleSwitch.svelte";
+    import SlidingSelector from "../components/SlidingSelector.svelte";
+
+    import Build from "./icons/build.svg";
+    import Edit from "./icons/edit.svg";
+    import Delete from "./icons/delete.svg";
+    import Minimize from "./icons/caret.svg";
+
     import { TabGroup, menuSettings } from "../stores";
     import { addObject, deleteObject } from "../firebase";
-    import LayersTab from "./LayersTab.svelte";
-    import { tweened } from "svelte/motion";
-    import { bounceOut } from "svelte/easing";
+    import { useIsOverflowing } from "../utils/Document";
+    import { DEBUG } from "../utils/Debug";
+    import SpriteSheet from "../utils/SpriteSheet";
+    import LocalSettings from "../utils/LocalSettings";
+
+    import { EditTab, TRANSFORM_BUTTONS } from "./edit/edit_tab";
+    import ColorTab from "./edit/ColorTab.svelte";
+    import LayersTab from "./edit/LayersTab.svelte";
+    import TransformTab from "./edit/TransformTab.svelte";
 
     export let state: wasm.StateWrapper | null;
 
     const minimizeAnimDur = 0.5;
-    let isMinimizing = false;
 
     // let tabsPanel: HTMLUListElement | null = null;
     let { isOverflowing: tabsPanelOverflowing, element: tabsPanel } =
@@ -129,8 +123,6 @@
                 conditions={{
                     isMinimized: $menuSettings.isMinimized,
                 }}
-                on:start={() => (isMinimizing = true)}
-                on:end={() => (isMinimizing = false)}
                 let:motion
             >
                 <div class="flex-1 menu-grid-container grid gap-2" use:motion>
@@ -367,7 +359,7 @@
                                             $menuSettings.selectedObject = id;
                                         }}
                                     >
-                                        {#if DEBUG}
+                                        {#if $DEBUG}
                                             <span
                                                 class="absolute text-red opacity-50 font-lg bottom-3/4 right-1/2"
                                             >
@@ -410,42 +402,7 @@
                         <!-- EDIT TAB TRANSFORM + LAYERS -->
                         {#if $menuSettings.selectedGroup == TabGroup.Edit}
                             {#if $menuSettings.selectedEditTab == EditTab.Transform}
-                                <ul
-                                    class="w-full h-full gap-4 xs:gap-2 overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container"
-                                >
-                                    {#each TRANSFORM_BUTTONS as button, i (i)}
-                                        <li
-                                            class="w-16 h-16 md:w-14 md:h-14 xs:w-10 xs:h-10"
-                                        >
-                                            <button
-                                                class={"flex-center w-full h-full p-2 md:p-1.5 xs:p-1 z-20 rounded-md bg-button-green bounce-active"}
-                                                on:click={() => {
-                                                    if (state == null) return;
-                                                    let obj =
-                                                        state.get_preview_object();
-                                                    button.cb(obj);
-                                                    state.set_preview_object(
-                                                        obj
-                                                    );
-                                                }}
-                                            >
-                                                <Image
-                                                    class="object-contain max-w-full max-h-full"
-                                                    src={`/assets/ui/edit/${button.image}.svg`}
-                                                    style={`transform: rotate(${
-                                                        button.angle
-                                                    }deg)${
-                                                        button.flipped
-                                                            ? " scaleX(-1)"
-                                                            : ""
-                                                    }`}
-                                                    lazyLoad
-                                                    skeleton
-                                                />
-                                            </button>
-                                        </li>
-                                    {/each}
-                                </ul>
+                                <TransformTab bind:state></TransformTab>
                             {:else if $menuSettings.selectedEditTab == EditTab.Layers}
                                 <LayersTab
                                     bind:selectedZLayer={$menuSettings.zLayer}

@@ -3,7 +3,7 @@
 
     import { onMount } from "svelte";
     import Toast from "../utils/Toast";
-    import { DEBUG } from "../main";
+    import { DEBUG } from "../utils/Debug";
 
     export let state: wasm.StateWrapper | null;
 
@@ -53,7 +53,7 @@
     }
 </script>
 
-{#if DEBUG}
+{#if $DEBUG}
     <button
         class="absolute z-50 p-1 ml-20 text-white rounded-lg font-pusab text-md bg-white/10"
         on:click={() => {

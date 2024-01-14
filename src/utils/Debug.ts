@@ -13,18 +13,29 @@ document.addEventListener("keydown", e => {
 
 export let DEBUG = writable(isDebug);
 
+const fpsCanvasWidth = 220;
+const fpsCanvasHeight = 64;
 devtoolsFPS.config({
-    width: 220,
-    height: 64,
+    width: fpsCanvasWidth,
+    height: fpsCanvasHeight,
     bufferSize: 200,
     style: { top: "0" },
 });
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
+const fpsCanvas = devtoolsFPS.canvas;
+fpsCanvas.style.width = `${fpsCanvasWidth}px`;
+fpsCanvas.style.height = `${fpsCanvasHeight}px`;
+const scale = window.devicePixelRatio;
+fpsCanvas.width = Math.floor(fpsCanvasWidth * scale);
+fpsCanvas.height = Math.floor(fpsCanvasHeight * scale);
+fpsCanvas.getContext("2d")?.scale(scale, scale);
+
 DEBUG.subscribe(debug => {
     if (debug) {
-        devtoolsFPS.canvas.style.visibility = "visible";
+        fpsCanvas.style.visibility = "visible";
         devtoolsFPS.start();
     } else {
-        devtoolsFPS.canvas.style.visibility = "hidden";
+        fpsCanvas.style.visibility = "hidden";
         devtoolsFPS.stop();
     }
 });

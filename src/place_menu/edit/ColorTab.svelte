@@ -69,7 +69,7 @@
         </AnimateSharedLayout>
     </ul>
 
-    <div class="flex flex-col justify-center h-full gap-8 options">
+    <div class="flex flex-col justify-center h-full gap-8 xs:gap-6 sliders">
         <div
             class="flex w-full h-3 md:h-5 opacity opacity-slider-container"
             style={`
@@ -115,27 +115,24 @@
                 <HueSlider bind:currentHue={currentDetailColor.hue}></HueSlider>
             </div>
         {/if}
+    </div>
 
-        <div class="flex flex-center">
-            <div class="flex flex-col items-center">
-                {#if selectedTab == ColorTab.Main}
-                    <ToggleSwitch
-                        id="blending_cb"
-                        bind:isToggled={currentMainColor.blending}
-                    ></ToggleSwitch>
-                {:else}
-                    <ToggleSwitch
-                        id="blending_cb"
-                        bind:isToggled={currentDetailColor.blending}
-                    ></ToggleSwitch>
-                {/if}
-                <label
-                    for="blending_cb"
-                    class="font-pusab text-stroke xs:text-sm"
-                >
-                    Blending
-                </label>
-            </div>
+    <div class="flex flex-center blending">
+        <div class="flex flex-col items-center">
+            {#if selectedTab == ColorTab.Main}
+                <ToggleSwitch
+                    id="blending_cb"
+                    bind:isToggled={currentMainColor.blending}
+                ></ToggleSwitch>
+            {:else}
+                <ToggleSwitch
+                    id="blending_cb"
+                    bind:isToggled={currentDetailColor.blending}
+                ></ToggleSwitch>
+            {/if}
+            <label for="blending_cb" class="font-pusab text-stroke xs:text-sm">
+                Blending
+            </label>
         </div>
     </div>
 
@@ -192,8 +189,8 @@
         grid-auto-rows: 1fr;
         grid-template-columns: min-content 1fr 1fr;
         grid-template-areas:
-            "buttons options palette"
-            "buttons options palette";
+            "buttons sliders palette"
+            "buttons blending palette";
     }
 
     @media screen(lg) {
@@ -201,12 +198,23 @@
             grid-template-columns: min-content 1.3fr 0.7fr;
         }
     }
+    @media screen(xs) {
+        .colors-tab-container {
+            grid-template-columns: min-content 1fr min-content;
+            grid-template-areas:
+                "buttons sliders blending"
+                "buttons palette palette";
+        }
+    }
 
     .palette {
         grid-area: palette;
     }
-    .options {
+    /* .options {
         grid-area: options;
+    } */
+    .sliders {
+        grid-area: sliders;
     }
     .blending {
         grid-area: blending;

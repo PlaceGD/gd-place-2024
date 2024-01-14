@@ -46,9 +46,16 @@
                 h += 1;
             }
 
-            state.resize(w, h);
-            canvas.width = w;
-            canvas.height = h;
+            // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
+            const scale = window.devicePixelRatio;
+            const dprWidth = Math.floor(w * scale);
+            const dprHeight = Math.floor(h * scale);
+
+            state.resize(dprWidth, dprHeight);
+            canvas.style.width = `${w}px`;
+            canvas.style.height = `${h}px`;
+            canvas.width = dprWidth;
+            canvas.height = dprHeight;
         }
     }
 </script>

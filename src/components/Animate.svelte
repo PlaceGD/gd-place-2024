@@ -40,7 +40,7 @@
         if (Array.isArray(initial)) {
             let mappedPrts: { [key: string]: any } = {};
 
-            initial.map(prt => {
+            initial.map((prt): void => {
                 let styles = window.getComputedStyle(child);
 
                 mappedPrts[prt] = styles.getPropertyValue(camelToSnake(prt));
@@ -54,7 +54,9 @@
 
     type ConditionalTarget = { [key: string]: TargetAndTransition };
 
-    export let definition: ConditionalTarget | TargetAndTransition = {};
+    export let from: ConditionalTarget | TargetAndTransition | undefined =
+        undefined;
+    export let to: ConditionalTarget | TargetAndTransition = {};
     export let conditions: { [key: string]: boolean } = {};
 
     const animation = useAnimation();
@@ -73,19 +75,22 @@
           };
 
     $: {
-        Object.keys(definition).forEach(k => {
+        Object.keys(to).forEach(k => {
             if (conditions[k] !== undefined) {
                 if (conditions[k]) {
                     animation.start(
-                        (definition as ConditionalTarget)[k],
+                        (to as ConditionalTarget)[k],
                         reducedMotionTransition
                     );
                 } else {
-                    animation.start(motionInitial, reducedMotionTransition);
+                    animation.start(
+                        from || motionInitial,
+                        reducedMotionTransition
+                    );
                 }
             } else {
                 animation.start(
-                    definition as TargetAndTransition,
+                    to as TargetAndTransition,
                     reducedMotionTransition
                 );
             }

@@ -216,7 +216,7 @@
         }
     };
 
-    const handleDrag = (x: number, y: number) => {
+    const startDrag = (x: number, y: number) => {
         let [prevX, prevY] = state.get_camera_pos();
         dragging = {
             prevCameraX: prevX,
@@ -227,8 +227,37 @@
         };
     };
 
-    let pinchVal: number = 0;
-    // let gestureRef: HTMLDivElement | null;
+    const handleDrag = (x: number, y: number) => {
+        mouseX = x;
+        mouseY = y;
+        if (dragging != null) {
+            if (dragging.thresholdReached) {
+                let z = state.get_zoom_scale();
+
+                state.set_camera_pos(
+                    (1 / z) * (dragging.prevMouseX - x) + dragging.prevCameraX,
+                    (1 / z) * (-dragging.prevMouseY + y) + dragging.prevCameraY
+                );
+
+                savePos();
+                handleSub();
+            } else {
+                if (
+                    Math.hypot(
+                        x - dragging.prevMouseX,
+                        y - dragging.prevMouseY
+                    ) > 30.0
+                ) {
+                    dragging.thresholdReached = true;
+                    dragging.prevMouseX = x;
+                    dragging.prevMouseY = y;
+                }
+            }
+        }
+    };
+
+    const dpr = window.devicePixelRatio;
+
     onMount(() => {
         // svelte-gestures is not updated for svelte 4.0
         if (isMobile()) {
@@ -236,61 +265,49 @@
                 document.getElementById("gesture-target")!
             );
 
+            // TODO: make these numbers better on different screens?
             gestures.on("pinch", () => {
-                //pinchVal = gestures.scale;
+                console.log(gestures.scale!);
+                //zoomGoal = clamp(zoomGoal - gestures.scale! / 100, -36, 36);
+
+                zoomTween.set(gestures.scale!);
+                //savePos();
+            });
+
+            gestures.on("panstart", () => {
+                startDrag(
+                    gestures.touchMoveX! * dpr,
+                    gestures.touchMoveY! * dpr
+                );
+            });
+
+            gestures.on("panmove", () => {
+                handleDrag(
+                    gestures.touchMoveX! * dpr,
+                    gestures.touchMoveY! * dpr
+                );
+            });
+
+            gestures.on("tap", () => {
+                if (!dragging) return;
+                mouseX = gestures.touchStartX!;
+                mouseY = gestures.touchStartY!;
+                handleShowObjPreview();
+                dragging = null;
             });
         }
     });
 </script>
 
-<div
-    class="absolute font-pusab text-white text-2xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
->
-    {pinchVal}
-</div>
-
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
-    on:pointerdown={e => {
-        if (e.button == 0) {
-            handleDrag(e.pageX, e.pageY);
-        }
-    }}
-    on:pointerup={() => {
-        // TOOD: does this work on mobile?
+    on:mouseup={() => {
         if (!dragging) return;
         handleShowObjPreview();
         dragging = null;
     }}
     on:mousemove={e => {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
-        if (dragging != null) {
-            if (dragging.thresholdReached) {
-                let z = state.get_zoom_scale();
-                state.set_camera_pos(
-                    (1 / z) * (dragging.prevMouseX - e.pageX) +
-                        dragging.prevCameraX,
-                    (1 / z) * (-dragging.prevMouseY + e.pageY) +
-                        dragging.prevCameraY
-                );
-
-                savePos();
-
-                handleSub();
-            } else {
-                if (
-                    Math.hypot(
-                        e.pageX - dragging.prevMouseX,
-                        e.pageY - dragging.prevMouseY
-                    ) > 30.0
-                ) {
-                    dragging.thresholdReached = true;
-                    dragging.prevMouseX = e.pageX;
-                    dragging.prevMouseY = e.pageY;
-                }
-            }
-        }
+        handleDrag(e.pageX, e.pageY);
     }}
     on:resize={() => {
         handleSub();
@@ -319,22 +336,17 @@
 <!-- only desktop -->
 <!-- role="button"
 aria-grabbed="false" -->
-<!--
 
-  on:mousemove={e => {
+<div
+    class="absolute w-full h-full touch-none"
+    id="gesture-target"
+    on:mousemove={e => {
         mouseX = e.pageX;
         mouseY = e.pageY;
     }}
     on:mousedown={e => {
         if (e.button == 0) {
-            let [x, y] = state.get_camera_pos();
-            dragging = {
-                prevCameraX: x,
-                prevCameraY: y,
-                prevMouseX: e.pageX,
-                prevMouseY: e.pageY,
-                thresholdReached: false,
-            };
+            startDrag(e.pageX, e.pageY);
         }
     }}
     on:wheel={e => {
@@ -342,9 +354,7 @@ aria-grabbed="false" -->
         zoomTween.set(zoomGoal);
         savePos();
     }}
-
--->
-<div class="absolute w-full h-full touch-none" id="gesture-target" />
+/>
 
 <div class="absolute flex flex-col">
     <input

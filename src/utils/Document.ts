@@ -28,8 +28,8 @@ export const useIsOverflowing = () => {
                 updateIsOverflowing(() => isOverflowing(element!));
             }
         };
-        window.removeEventListener("resize", updateElement);
         window.addEventListener("resize", updateElement);
+        window.addEventListener("DOMContentLoaded", updateElement);
     };
 
     return {

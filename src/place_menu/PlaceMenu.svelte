@@ -41,6 +41,9 @@
     // let selectedMainColor = { hue: 0, x: 0, y: 0, blending: false };
     // let selectedDetailColor = { hue: 0, x: 0, y: 0, blending: false };
 
+    const { isOverflowing: isTabsPanelOverflowing, element: tabsPanel } =
+        useIsOverflowing();
+
     $: {
         if (state != null) {
             let [mr, mg, mb] =
@@ -90,7 +93,7 @@
     initial={{
         paddingBottom: "8px",
     }}
-    definition={{
+    to={{
         isMinimized: {
             paddingBottom: 0,
         },
@@ -110,9 +113,12 @@
             <Animate
                 easing="easeInOut"
                 duration={minimizeAnimDur}
-                initial={// use the value defined by css initially
-                ["gridTemplateRows"]}
-                definition={{
+                from={{
+                    gridTemplateRows: `${
+                        $isTabsPanelOverflowing ? "56px" : "48px"
+                    } 200px`,
+                }}
+                to={{
                     isMinimized: {
                         gridTemplateRows: "48px 0px",
                     },
@@ -122,12 +128,17 @@
                 }}
                 let:motion
             >
+                <!-- 
+                    for some reason on mobile devices getting the computed style for `grid-template-rows` returns `none` for... a while?
+                    but if it's set with an inline style tag it will be immediately ready to query.
+                    unfortunately this means all responsive styles now need !important :3
+                -->
                 <div class="grid flex-1 gap-2 menu-grid-container" use:motion>
                     <div
                         class="flex flex-col items-center minimize menu-panel justify-evenly"
                     >
                         <button
-                            class="absolute w-full h-full p-4 flex-center"
+                            class="absolute w-full p-4"
                             on:click={() => {
                                 $menuSettings.isMinimized =
                                     !$menuSettings.isMinimized;
@@ -148,7 +159,7 @@
                         initial={{
                             width: "auto",
                         }}
-                        definition={{
+                        to={{
                             isMinimized: {
                                 width: 96,
                             },
@@ -165,7 +176,7 @@
                                 initial={{
                                     opacity: 0,
                                 }}
-                                definition={{
+                                to={{
                                     isMinimized: {
                                         opacity: 1,
                                     },
@@ -176,7 +187,8 @@
                                 let:motion
                             >
                                 <ul
-                                    class={"absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar"}
+                                    class="absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar"
+                                    use:tabsPanel
                                     use:motion
                                     on:wheel={e => {
                                         if (!e || !e.target) return;
@@ -246,7 +258,7 @@
                                 initial={{
                                     opacity: 0,
                                 }}
-                                definition={{
+                                to={{
                                     isMinimized: {
                                         opacity: 1,
                                     },
@@ -257,7 +269,7 @@
                                 let:motion
                             >
                                 <div
-                                    class="absolute w-24 h-full gap-3 p-3 flex-center"
+                                    class="absolute flex justify-around w-24 h-full gap-3 p-2.5"
                                     use:motion
                                 >
                                     <Build></Build>
@@ -358,7 +370,7 @@
                 easing="easeInOut"
                 duration={minimizeAnimDur}
                 initial={["minHeight", "height"]}
-                definition={{
+                to={{
                     isMinimized: {
                         minHeight: 0,
                         height: 0,
@@ -418,9 +430,6 @@
         grid-template-areas:
             "minimize tabs"
             "side-menu buttons";
-    }
-
-    .menu-grid-container {
         grid-template-rows: 48px 200px;
     }
 

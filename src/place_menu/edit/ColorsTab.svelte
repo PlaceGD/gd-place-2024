@@ -5,37 +5,29 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import RangeSlider from "svelte-range-slider-pips";
+    import { AnimateSharedLayout } from "svelte-motion";
 
     import ToggleSwitch from "../../components/ToggleSwitch.svelte";
     import HueSlider from "../../components/HueSlider.svelte";
     import PaletteGrid from "../../components/PaletteGrid.svelte";
     import SlidingSelector from "../../components/SlidingSelector.svelte";
-    import { AnimateSharedLayout } from "svelte-motion";
+
     import colors from "../../gd/colors.json";
 
-    export let currentMainColor: {
-        hue: number;
-        x: number;
-        y: number;
-        opacity: number;
-        blending: boolean;
-    };
-    export let currentDetailColor: {
-        hue: number;
-        x: number;
-        y: number;
-        opacity: number;
-        blending: boolean;
-    };
+    import { menuSettings } from "../../stores";
 
     enum ColorTab {
         Main,
         Detail,
     }
-    export let selectedTab: ColorTab = ColorTab.Main;
+
+    let selectedTab: ColorTab = ColorTab.Main;
 
     $: currentColor =
-        selectedTab == ColorTab.Main ? currentMainColor : currentDetailColor;
+        selectedTab == ColorTab.Main
+            ? $menuSettings.selectedMainColor
+            : $menuSettings.selectedDetailColor;
+
     $: currentRgb =
         colors.list[currentColor.hue].palette[currentColor.y][currentColor.x];
 </script>
@@ -84,9 +76,10 @@
                     step={0.1}
                     hoverable={false}
                     id={"opacity-slider"}
-                    values={[currentMainColor.opacity]}
+                    values={[$menuSettings.selectedMainColor.opacity]}
                     on:change={e => {
-                        currentMainColor.opacity = e.detail.value;
+                        $menuSettings.selectedMainColor.opacity =
+                            e.detail.value;
                     }}
                     pips
                 />
@@ -97,9 +90,10 @@
                     step={0.1}
                     hoverable={false}
                     id={"opacity-slider"}
-                    values={[currentDetailColor.opacity]}
+                    values={[$menuSettings.selectedDetailColor.opacity]}
                     on:change={e => {
-                        currentDetailColor.opacity = e.detail.value;
+                        $menuSettings.selectedDetailColor.opacity =
+                            e.detail.value;
                     }}
                     pips
                 />
@@ -108,11 +102,14 @@
 
         {#if selectedTab == ColorTab.Main}
             <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider bind:currentHue={currentMainColor.hue}></HueSlider>
+                <HueSlider bind:currentHue={$menuSettings.selectedMainColor.hue}
+                ></HueSlider>
             </div>
         {:else}
             <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider bind:currentHue={currentDetailColor.hue}></HueSlider>
+                <HueSlider
+                    bind:currentHue={$menuSettings.selectedDetailColor.hue}
+                ></HueSlider>
             </div>
         {/if}
     </div>
@@ -122,12 +119,12 @@
             {#if selectedTab == ColorTab.Main}
                 <ToggleSwitch
                     id="blending_cb"
-                    bind:isToggled={currentMainColor.blending}
+                    bind:isToggled={$menuSettings.selectedMainColor.blending}
                 ></ToggleSwitch>
             {:else}
                 <ToggleSwitch
                     id="blending_cb"
-                    bind:isToggled={currentDetailColor.blending}
+                    bind:isToggled={$menuSettings.selectedDetailColor.blending}
                 ></ToggleSwitch>
             {/if}
             <label for="blending_cb" class="font-pusab text-stroke xs:text-sm">
@@ -139,15 +136,15 @@
     <div class="h-full palette">
         {#if selectedTab == ColorTab.Main}
             <PaletteGrid
-                hue={currentMainColor.hue}
-                bind:currentRow={currentMainColor.y}
-                bind:currentColumn={currentMainColor.x}
+                hue={$menuSettings.selectedMainColor.hue}
+                bind:currentRow={$menuSettings.selectedMainColor.y}
+                bind:currentColumn={$menuSettings.selectedMainColor.x}
             />
         {:else}
             <PaletteGrid
-                hue={currentDetailColor.hue}
-                bind:currentRow={currentDetailColor.y}
-                bind:currentColumn={currentDetailColor.x}
+                hue={$menuSettings.selectedDetailColor.hue}
+                bind:currentRow={$menuSettings.selectedDetailColor.y}
+                bind:currentColumn={$menuSettings.selectedDetailColor.x}
             />
         {/if}
     </div>

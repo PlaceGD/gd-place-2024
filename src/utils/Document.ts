@@ -49,3 +49,10 @@ export const alertHasDarkReader = () => {
         );
     }
 };
+
+export const isMobile = (): boolean => {
+    return (
+        navigator.maxTouchPoints > 0 ||
+        "ontouchstart" in document.documentElement
+    );
+};

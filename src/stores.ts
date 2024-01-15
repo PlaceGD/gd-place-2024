@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
-import LocalSettings from "./utils/LocalSettings";
-import { EditTab } from "./place_menu/edit/edit_tab";
+import LocalSettingsFactory from "./utils/LocalSettings";
+import { EditTab, LayerType } from "./place_menu/edit/edit_tab";
 import { ZLayer } from "wasm-lib";
 
 export enum TabGroup {
@@ -10,7 +10,7 @@ export enum TabGroup {
 }
 
 export const menuSettings = writable(
-    new LocalSettings("menuSettings", {
+    LocalSettingsFactory("menuSettings", {
         isMinimized: false,
         selectedGroup: TabGroup.Build,
         selectedEditTab: EditTab.Transform,
@@ -26,5 +26,7 @@ export const menuSettings = writable(
         },
         zLayer: ZLayer.B1,
         zOrder: 0,
+        layerType: LayerType.B,
+        layerIdx: 0,
     })
 );

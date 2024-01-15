@@ -29,17 +29,14 @@
     import LocalSettings from "../utils/LocalSettings";
 
     import { EditTab, TRANSFORM_BUTTONS } from "./edit/edit_tab";
-    import ColorTab from "./edit/ColorTab.svelte";
+    import ColorsTab from "./edit/ColorsTab.svelte";
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";
+    import ObjectsTab from "./objects/ObjectsTab.svelte";
 
     export let state: wasm.StateWrapper | null;
 
     const minimizeAnimDur = 0.5;
-
-    // let tabsPanel: HTMLUListElement | null = null;
-    let { isOverflowing: tabsPanelOverflowing, element: tabsPanel } =
-        useIsOverflowing();
 
     // let selectedMainColor = { hue: 0, x: 0, y: 0, blending: false };
     // let selectedDetailColor = { hue: 0, x: 0, y: 0, blending: false };
@@ -104,7 +101,7 @@
     let:motion
 >
     <div
-        class="absolute flex flex-col justify-end w-full h-full pointer-events-none px-2 pt-2"
+        class="absolute flex flex-col justify-end w-full h-full px-2 pt-2 pointer-events-none"
         use:motion
     >
         <div
@@ -125,7 +122,7 @@
                 }}
                 let:motion
             >
-                <div class="flex-1 menu-grid-container grid gap-2" use:motion>
+                <div class="grid flex-1 gap-2 menu-grid-container" use:motion>
                     <div
                         class="flex flex-col items-center minimize menu-panel justify-evenly"
                     >
@@ -179,7 +176,6 @@
                                 let:motion
                             >
                                 <ul
-                                    use:tabsPanel
                                     class={"absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar"}
                                     use:motion
                                     on:wheel={e => {
@@ -220,7 +216,7 @@
                                                     class="relative flex-1 h-full cursor-pointer flex-center"
                                                 >
                                                     <button
-                                                        class="w-full h-full px-4 xs:px-2 cursor-pointer flex-center"
+                                                        class="w-full h-full px-4 cursor-pointer xs:px-2 flex-center"
                                                         on:click={() => {
                                                             $menuSettings.selectedEditTab =
                                                                 value;
@@ -333,86 +329,17 @@
                         <!-- 
                             the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 
                             object tab as it has to add all the elements back to the dom
-                            its more efficient to just set them to not be visible, but that means we need conditional grids for this element
+                            its more efficient to just set them to not be visible
                         -->
-                        <ul
-                            class={cx({
-                                "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
-                                "!hidden":
-                                    $menuSettings.selectedGroup !=
-                                    TabGroup.Build,
-                            })}
-                        >
-                            <!-- BUILD TAB -->
-                            {#each Object.entries(OBJECT_SETTINGS) as [id, obj], i}
-                                <li
-                                    class={cx({
-                                        "relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10": true,
-                                        hidden:
-                                            $menuSettings.selectedBuildTab !=
-                                            obj.category,
-                                    })}
-                                >
-                                    <button
-                                        class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
-                                        on:click={() => {
-                                            $menuSettings.selectedObject = id;
-                                        }}
-                                    >
-                                        {#if $DEBUG}
-                                            <span
-                                                class="absolute text-red opacity-50 font-lg bottom-3/4 right-1/2"
-                                            >
-                                                {id}
-                                            </span>
-                                        {/if}
-                                        <div
-                                            class="relative w-full h-full flex-center"
-                                        >
-                                            <Image
-                                                class="absolute object-contain max-w-full max-h-full"
-                                                src={`/textures/main/${id}.png`}
-                                                lazyLoad
-                                                skeleton
-                                            ></Image>
-                                            <!-- <Image
-                                                class="absolute object-contain"
-                                                src={`/textures/detail/${id}.png`}
-                                                lazyLoad
-                                            ></Image> -->
-
-                                            <!-- <Image
-                                                class="absolute object-contain"
-                                                src={buttons_spr_sheet.mainSpriteFromId(
-                                                    obj.id
-                                                )}
-                                                lazyLoad
-                                                skeleton
-                                            ></Image> -->
-                                        </div>
-                                    </button>
-                                    {#if $menuSettings.selectedObject == id}
-                                        <span
-                                            class={"absolute w-full h-full sliding-selector"}
-                                        ></span>
-                                    {/if}
-                                </li>
-                            {/each}
-                        </ul>
+                        <ObjectsTab></ObjectsTab>
                         <!-- EDIT TAB TRANSFORM + LAYERS -->
                         {#if $menuSettings.selectedGroup == TabGroup.Edit}
                             {#if $menuSettings.selectedEditTab == EditTab.Transform}
                                 <TransformTab bind:state></TransformTab>
                             {:else if $menuSettings.selectedEditTab == EditTab.Layers}
-                                <LayersTab
-                                    bind:selectedZLayer={$menuSettings.zLayer}
-                                    bind:zOrder={$menuSettings.zOrder}
-                                ></LayersTab>
+                                <LayersTab></LayersTab>
                             {:else if $menuSettings.selectedEditTab == EditTab.Colors}
-                                <ColorTab
-                                    bind:currentMainColor={$menuSettings.selectedMainColor}
-                                    bind:currentDetailColor={$menuSettings.selectedDetailColor}
-                                ></ColorTab>
+                                <ColorsTab></ColorsTab>
                             {/if}
                         {/if}
 
@@ -486,11 +413,6 @@
 </Animate>
 
 <style lang="postcss">
-    .object-grid-container {
-        @apply grid justify-between p-4 md:p-3 xs:p-2;
-        grid-template-columns: repeat(auto-fill, 64px);
-    }
-
     .menu-grid-container {
         grid-template-columns: 64px auto;
         grid-template-areas:
@@ -578,16 +500,6 @@
             height: 64px !important;
             min-height: 64px !important;
             width: 100%;
-        }
-
-        .object-grid-container {
-            grid-template-columns: repeat(auto-fill, 56px);
-        }
-    }
-
-    @media screen(xs) {
-        .object-grid-container {
-            grid-template-columns: repeat(auto-fill, 48px);
         }
     }
 </style>

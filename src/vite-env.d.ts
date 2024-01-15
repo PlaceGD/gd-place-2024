@@ -9,3 +9,4 @@ declare module "*.svg" {
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 /// <reference types="wasm-lib" />
+/// <reference types="svelte-gestures" />

@@ -1,19 +1,10 @@
 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_423_41" fill="white">
-<rect x="11" y="11" width="4" height="4" rx="0.5"/>
-</mask>
-<rect x="11" y="11" width="4" height="4" rx="0.5" fill="white" stroke="white" stroke-width="2" mask="url(#path-1-inside-1_423_41)"/>
-<mask id="path-2-inside-2_423_41" fill="white">
-<rect x="19" y="11" width="4" height="4" rx="0.5"/>
-</mask>
-<rect x="19" y="11" width="4" height="4" rx="0.5" fill="white" stroke="white" stroke-width="2" mask="url(#path-2-inside-2_423_41)"/>
-<mask id="path-3-inside-3_423_41" fill="white">
-<rect x="19" y="18" width="24" height="24" rx="1"/>
-</mask>
-<rect x="19" y="18" width="24" height="24" rx="1" stroke="white" stroke-width="4" mask="url(#path-3-inside-3_423_41)"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M7 28V8H27V15H29V7C29 6.44772 28.5523 6 28 6H6C5.44772 6 5 6.44772 5 7V29C5 29.5523 5.44772 30 6 30H16V28H7Z" fill="white"/>
-<path d="M16 28H16.5C16.7761 28 17 28.2239 17 28.5V29.5C17 29.7761 16.7761 30 16.5 30H16V28Z" fill="white"/>
-<path d="M27 15H29V15.5C29 15.7761 28.7761 16 28.5 16H27.5C27.2239 16 27 15.7761 27 15.5V15Z" fill="white"/>
-<rect x="10" y="18" width="7" height="4" rx="0.5" fill="white"/>
-<path d="M22 23L24 21M22 27L28 21M22 31L32 21M22 35L36 21M22 39L40 21M26 39L40 25M30 39L40 29M34 39L40 33M38 39L40 37" stroke="white"/>
+<rect x="6" y="7" width="22" height="22" rx="2" stroke="white" stroke-width="2"/>
+<rect x="11" y="11" width="4" height="4" rx="0.5" fill="white"/>
+<rect x="10" y="18" width="14" height="4" rx="0.5" fill="white"/>
+<rect x="19" y="11" width="4" height="4" rx="0.5" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M39 20H32V18H39C40.6569 18 42 19.3431 42 21V39C42 40.6569 40.6569 42 39 42H21C19.3431 42 18 40.6569 18 39V33H20V39C20 39.5523 20.4477 40 21 40H39C39.5523 40 40 39.5523 40 39V21C40 20.4477 39.5523 20 39 20Z" fill="white"/>
+<path d="M31 18.5C31 18.2239 31.2239 18 31.5 18H32V20H31.5C31.2239 20 31 19.7761 31 19.5V18.5Z" fill="white"/>
+<path d="M18 32.5C18 32.2239 18.2239 32 18.5 32H19.5C19.7761 32 20 32.2239 20 32.5V33H18V32.5Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M23.293 32L20.6465 34.6465L21.3536 35.3536L24.7072 32H23.293ZM27.293 32L20.6465 38.6465L21.3536 39.3536L28.8209 31.8863C28.56 31.9604 28.2846 32 28 32H27.293ZM30.8863 29.8209C30.9604 29.56 31 29.2846 31 29V28.293L38.6465 20.6465L39.3536 21.3536L30.8863 29.8209ZM31 25.7072V24.293L34.6465 20.6465L35.3536 21.3536L31 25.7072ZM31 21.7072L31.3536 21.3536L31 21V21.7072ZM25.3536 39.3536L39.3536 25.3536L38.6465 24.6465L24.6465 38.6465L25.3536 39.3536ZM29.3536 39.3536L39.3536 29.3536L38.6465 28.6465L28.6465 38.6465L29.3536 39.3536ZM33.3536 39.3536L39.3536 33.3536L38.6465 32.6465L32.6465 38.6465L33.3536 39.3536ZM37.3536 39.3536L39.3536 37.3536L38.6465 36.6465L36.6465 38.6465L37.3536 39.3536Z" fill="white"/>
 </svg>

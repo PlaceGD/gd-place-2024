@@ -1,15 +1,20 @@
 <script lang="ts">
-    import * as wasm from "wasm-lib";
-    import { clamp, hexToRgb, lerp } from "../utils/util";
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
+    import debounce from "lodash.debounce";
+    import { onMount } from "svelte";
+    import TinyGesture from "tinygesture";
+
+    import * as wasm from "wasm-lib";
+
+    import { clamp, hexToRgb, lerp } from "../utils/util";
     import { subChunk, unsubChunk } from "../firebase";
     import { TabGroup, menuSettings } from "../stores";
     import { KEYBINDS } from "../place_menu/edit/edit_tab";
-    import debounce from "lodash.debounce";
-    import { onMount } from "svelte";
-    import LocalSettings from "../utils/LocalSettings";
+
     import Toast from "../utils/Toast";
+    import LocalSettingsFactory from "../utils/LocalSettings";
+    import { isMobile } from "../utils/Document";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -85,22 +90,6 @@
             state.set_ground2_color(r, g, b);
         }
     };
-
-    // console.log(
-    //     new wasm.GDObject(
-    //         1,
-    //         15,
-    //         15,
-    //         30,
-    //         false,
-    //         false,
-    //         2.0,
-    //         wasm.ZLayer.B3,
-    //         0,
-    //         new wasm.GDColor(255, 255, 255, 255, false),
-    //         new wasm.GDColor(255, 255, 255, 255, false)
-    //     ).serialize()
-    // );
 
     const handleSub = () => {
         for (let chunk of state.get_chunks_to_sub()) {
@@ -191,7 +180,7 @@
         editorData.zoom = zoom;
     }, 200);
 
-    const editorData = new LocalSettings("editorData", {
+    const editorData = LocalSettingsFactory("editorData", {
         x: 0,
         y: 0,
         zoom: 0,
@@ -217,23 +206,65 @@
 
         handleSub();
     });
+
+    const handleShowObjPreview = () => {
+        if ($menuSettings.selectedGroup == TabGroup.Delete) {
+            let [mx, my] = getWorldMousePos();
+            state.try_select_at(mx, my);
+        } else {
+            placePreview();
+        }
+    };
+
+    const handleDrag = (x: number, y: number) => {
+        let [prevX, prevY] = state.get_camera_pos();
+        dragging = {
+            prevCameraX: prevX,
+            prevCameraY: prevY,
+            prevMouseX: x,
+            prevMouseY: y,
+            thresholdReached: false,
+        };
+    };
+
+    let pinchVal: number = 0;
+    // let gestureRef: HTMLDivElement | null;
+    onMount(() => {
+        // svelte-gestures is not updated for svelte 4.0
+        if (isMobile()) {
+            const gestures = new TinyGesture(
+                document.getElementById("gesture-target")!
+            );
+
+            gestures.on("pinch", () => {
+                //pinchVal = gestures.scale;
+            });
+        }
+    });
 </script>
 
+<div
+    class="absolute font-pusab text-white text-2xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+>
+    {pinchVal}
+</div>
+
+<!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
-    on:pointerup={e => {
-        if (dragging != null) {
-            if (!dragging.thresholdReached) {
-                if ($menuSettings.selectedGroup == TabGroup.Delete) {
-                    let [mx, my] = getWorldMousePos();
-                    state.try_select_at(mx, my);
-                } else {
-                    placePreview();
-                }
-            }
+    on:pointerdown={e => {
+        if (e.button == 0) {
+            handleDrag(e.pageX, e.pageY);
         }
+    }}
+    on:pointerup={() => {
+        // TOOD: does this work on mobile?
+        if (!dragging) return;
+        handleShowObjPreview();
         dragging = null;
     }}
-    on:pointermove={e => {
+    on:mousemove={e => {
+        mouseX = e.pageX;
+        mouseY = e.pageY;
         if (dragging != null) {
             if (dragging.thresholdReached) {
                 let z = state.get_zoom_scale();
@@ -278,18 +309,23 @@
             }
         }
     }}
+    on:wheel={e => {
+        zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
+        zoomTween.set(zoomGoal);
+        savePos();
+    }}
 />
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div
-    class="absolute w-full h-full touch-none"
-    tabindex="0"
-    on:pointermove={e => {
+<!-- only desktop -->
+<!-- role="button"
+aria-grabbed="false" -->
+<!--
+
+  on:mousemove={e => {
         mouseX = e.pageX;
         mouseY = e.pageY;
     }}
-    on:pointerdown={e => {
+    on:mousedown={e => {
         if (e.button == 0) {
             let [x, y] = state.get_camera_pos();
             dragging = {
@@ -306,7 +342,9 @@
         zoomTween.set(zoomGoal);
         savePos();
     }}
-/>
+
+-->
+<div class="absolute w-full h-full touch-none" id="gesture-target" />
 
 <div class="absolute flex flex-col">
     <input

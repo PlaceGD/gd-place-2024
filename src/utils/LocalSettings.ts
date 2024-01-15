@@ -1,6 +1,4 @@
-export default class LocalSettings<T extends { [key: string]: any }> {
-    // i wish this could depend on `T`
-    [key: string]: any;
+class LocalSettings<T extends Record<string, any>> {
     private readonly id: string;
     private value: T;
 
@@ -32,4 +30,14 @@ export default class LocalSettings<T extends { [key: string]: any }> {
 
         return true;
     }
+}
+
+type ExtendedProperties<T> = { [P in keyof T]: T[P] };
+
+export default function LocalSettingsFactory<T extends Record<string, any>>(
+    id: string,
+    value: T
+): LocalSettings<T> & ExtendedProperties<T> {
+    return new LocalSettings(id, value) as LocalSettings<T> &
+        ExtendedProperties<T>;
 }

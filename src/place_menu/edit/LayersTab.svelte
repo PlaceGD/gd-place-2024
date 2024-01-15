@@ -1,65 +1,45 @@
 <script lang="ts">
-    import { default as cx } from "classnames";
-    import { ZLayer } from "wasm-lib";
-    import Image from "../../components/Image.svelte";
     import { onMount } from "svelte";
-    import SlidingSelector from "../../components/SlidingSelector.svelte";
+    import { ZLayer } from "wasm-lib";
     import { AnimateSharedLayout } from "svelte-motion";
 
-    enum Layer {
-        T,
-        B,
-    }
+    import Image from "../../components/Image.svelte";
+    import SlidingSelector from "../../components/SlidingSelector.svelte";
 
-    const LAYER_NAME = {
-        [Layer.T]: "T",
-        [Layer.B]: "B",
+    import { menuSettings } from "../../stores";
+    import { LayerType } from "./edit_tab";
+
+    const LAYER_NAME: any = {
+        [LayerType.T]: "T",
+        [LayerType.B]: "B",
     };
 
-    const LAYER_COUNT = {
-        [Layer.T]: 4,
-        [Layer.B]: 5,
+    const LAYER_COUNT: any = {
+        [LayerType.T]: 4,
+        [LayerType.B]: 5,
     };
 
-    const selectedLayerToZLayer = (layer: Layer, id: number): ZLayer => {
-        if (layer == Layer.T) {
-            return [ZLayer.B4, ZLayer.B3, ZLayer.B2, ZLayer.B1][id - 1];
+    const selectedLayerToZLayer = (layer: LayerType, id: number): ZLayer => {
+        if (layer == LayerType.T) {
+            return [ZLayer.T1, ZLayer.T2, ZLayer.T3][id - 1];
         } else {
-            return [ZLayer.T3, ZLayer.T2, ZLayer.T1][id - 1];
+            return [ZLayer.B4, ZLayer.B3, ZLayer.B2, ZLayer.B1][id - 1];
         }
     };
-
-    // const LAYERS = {
-    //     b: {
-    //         //B5: ZLayer.B5,
-    //         B4: ZLayer.B4,
-    //         B3: ZLayer.B3,
-    //         B2: ZLayer.B2,
-    //         B1: ZLayer.B1,
-    //     },
-    //     t: {
-    //         T1: ZLayer.T1,
-    //         T2: ZLayer.T2,
-    //         T3: ZLayer.T3,
-    //     },
-    // };
-
-    let selectedLayer: Layer = Layer.B;
-    let selectedLayerIdx: number = 0;
-
-    export let selectedZLayer: ZLayer;
-    export let zOrder: number;
 
     // clamp layer count
     $: {
         if (
-            selectedLayer == Layer.T &&
-            selectedLayerIdx == LAYER_COUNT[Layer.B] - 1
+            $menuSettings.layerType == LayerType.T &&
+            $menuSettings.layerIdx == LAYER_COUNT[LayerType.B] - 1
         ) {
-            selectedLayerIdx = LAYER_COUNT[Layer.T] - 1;
+            $menuSettings.layerIdx = LAYER_COUNT[LayerType.T] - 1;
         }
 
-        selectedZLayer = selectedLayerToZLayer(selectedLayer, selectedLayerIdx);
+        $menuSettings.zLayer = selectedLayerToZLayer(
+            $menuSettings.layerType,
+            $menuSettings.layerIdx
+        );
     }
 
     const toValidInt = (s: string) => {
@@ -90,56 +70,56 @@
         }
     };
 
-    let prevValidInputData: string = zOrder.toString();
+    let prevValidInputData: string = $menuSettings.zOrder.toString();
     onMount(() => {
         inputElement.value = prevValidInputData;
     });
     $: {
-        zOrder = toValidInt(prevValidInputData);
+        $menuSettings.zOrder = toValidInt(prevValidInputData);
     }
     let inputElement: HTMLInputElement;
 </script>
 
-<!-- "z-20": Object.values(LAYERS.b).indexOf(selectedLayer) > -1, -->
+<!-- "z-20": Object.values(LAYERS.b).indexOf($menuSettings.layerType) > -1, -->
 <div
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-md"
 >
     <ul class="flex flex-col h-full buttons w-min">
         <AnimateSharedLayout>
             <li
-                class="relative flex-1 w-20 md:w-18 xs:w-12 h-full font-pusab flex-center"
+                class="relative flex-1 w-20 h-full md:w-18 xs:w-12 font-pusab flex-center"
             >
                 <button
-                    class="z-20 w-full h-full rounded-lg sm:p-1 main text-stroke flex-center p-2"
-                    on:click={() => (selectedLayer = Layer.T)}
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
+                    on:click={() => ($menuSettings.layerType = LayerType.B)}
                 >
                     <Image
                         src="/assets/ui/layer_tab/bottom.svg"
-                        class="object-contain max-w-full max-h-full w-full"
+                        class="object-contain w-full max-w-full max-h-full"
                         lazyLoad
                         skeleton
                     ></Image>
                 </button>
-                {#if selectedLayer == Layer.T}
+                {#if $menuSettings.layerType == LayerType.B}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
                 {/if}
             </li>
             <li
-                class="relative flex-1 w-20 md:w-16 xs:w-12 h-full font-pusab flex-center"
+                class="relative flex-1 w-20 h-full md:w-16 xs:w-12 font-pusab flex-center"
             >
                 <button
-                    class="z-20 w-full h-full rounded-lg sm:p-1 detail text-stroke flex-center p-2"
-                    on:click={() => (selectedLayer = Layer.B)}
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
+                    on:click={() => ($menuSettings.layerType = LayerType.T)}
                 >
                     <Image
                         src="/assets/ui/layer_tab/top.svg"
-                        class="object-contain max-w-full max-h-full w-full"
+                        class="object-contain w-full max-w-full max-h-full"
                         lazyLoad
                         skeleton
                     ></Image>
                 </button>
-                {#if selectedLayer == Layer.B}
+                {#if $menuSettings.layerType == LayerType.T}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
                 {/if}
@@ -148,21 +128,22 @@
     </ul>
     <ul class="flex h-full ids">
         <AnimateSharedLayout>
-            {#each Array(LAYER_COUNT[selectedLayer]).fill(0) as _, i}
+            {#each Array(LAYER_COUNT[$menuSettings.layerType]).fill(0) as _, i}
                 <li
                     class="relative flex-1 w-full h-full flex-center font-pusab"
                 >
                     <button
                         class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
-                        on:click={() => (selectedLayerIdx = i)}
+                        on:click={() => ($menuSettings.layerIdx = i)}
                     >
                         {i + 1}
 
-                        <span class="font-pusab opacity-50 xs:text-sm"
-                            >({LAYER_NAME[selectedLayer]}{i + 1})</span
+                        <span class="opacity-50 font-pusab xs:text-sm"
+                            >({LAYER_NAME[$menuSettings.layerType]}{i +
+                                1})</span
                         >
                     </button>
-                    {#if selectedLayerIdx == i}
+                    {#if $menuSettings.layerIdx == i}
                         <SlidingSelector layoutId="button-selector"
                         ></SlidingSelector>
                     {/if}
@@ -170,14 +151,15 @@
             {/each}
         </AnimateSharedLayout>
     </ul>
-    <div class="flex flex-col items-center justify-center zindex pt-8 g-8">
+
+    <div class="flex flex-col items-center justify-center pt-8 zindex g-8">
         <div class="flex items-center justify-center">
             <button
                 class="h-full flex-center"
                 on:click={() => {
-                    if (zOrder > -50) {
-                        zOrder -= 1;
-                        prevValidInputData = zOrder.toString();
+                    if ($menuSettings.zOrder > -50) {
+                        $menuSettings.zOrder -= 1;
+                        prevValidInputData = $menuSettings.zOrder.toString();
                         inputElement.value = prevValidInputData;
                     }
                 }}
@@ -186,7 +168,7 @@
             </button>
             <input
                 type="text"
-                class="w-20 md:w-16 xs:w-14 p-2 text-3xl md:text-2xl sm:text-xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+                class="w-20 p-2 text-3xl text-center rounded-lg outline-none md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab text-stroke bg-black/40"
                 max={100}
                 maxlength={4}
                 on:input={enterIfValid}
@@ -195,9 +177,9 @@
             <button
                 class="h-full flex-center"
                 on:click={() => {
-                    if (zOrder < 50) {
-                        zOrder += 1;
-                        prevValidInputData = zOrder.toString();
+                    if ($menuSettings.zOrder < 50) {
+                        $menuSettings.zOrder += 1;
+                        prevValidInputData = $menuSettings.zOrder.toString();
                         inputElement.value = prevValidInputData;
                     }
                 }}
@@ -212,96 +194,8 @@
             Z Index
         </h1>
     </div>
-    <!-- <div class="w-24 h-24 flex-center">
-        <Image
-            src={`/assets/ui/layer_tab/${
-                Object.values(LAYERS.b).indexOf(selectedLayer) > -1
-                    ? "bottom"
-                    : "top"
-            }.png`}
-            class="object-contain w-auto h-auto aspect-square max-h-auto max-w-auto"
-        />
-    </div>
-    <div class="flex flex-col items-center justify-center">
-        <ul class="flex">
-       
-            {#each Object.entries(LAYERS.t) as [name, layer]}
-                <li
-                    class={cx({
-                        "w-16 h-16 flex-center rounded-lg": true,
-                        "bg-white/30": layer == selectedLayer,
-                    })}
-                >
-                    <button
-                        class="w-full h-full text-2xl md:text-xl font-pusab text-stroke"
-                        on:click={() => {
-                            selectedLayer = layer;
-                        }}>{name}</button
-                    >
-                </li>
-            {/each}
-        </ul>
-        <ul class="flex">
-            {#each Object.entries(LAYERS.b) as [name, layer]}
-                <li
-                    class={cx({
-                        "w-16 h-16 flex-center rounded-lg": true,
-                        "bg-white/30": layer == selectedLayer,
-                    })}
-                >
-                    <button
-                        class="w-full h-full text-2xl md:text-xl font-pusab text-stroke"
-                        on:click={() => {
-                            selectedLayer = layer;
-                        }}>{name}</button
-                    >
-                </li>
-            {/each}
-        </ul>
-    </div>
-    <div class="flex flex-col items-center justify-center">
-        <button
-            class="w-full h-full flex-center"
-            on:click={() => {
-                if (zOrder < 50) {
-                    zOrder += 1;
-                    prevValidInputData = zOrder.toString();
-                    inputElement.value = prevValidInputData;
-                }
-            }}
-        >
-            <Image src="/assets/ui/edit/move_small.svg" class="rotate-180" />
-        </button>
-        <input
-            type="text"
-            class="w-20 p-2 text-3xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
-            max={100}
-            maxlength={4}
-            on:input={enterIfValid}
-            bind:this={inputElement}
-        />
-        <button
-            class="w-full h-full flex-center"
-            on:click={() => {
-                if (zOrder > -50) {
-                    zOrder -= 1;
-                    prevValidInputData = zOrder.toString();
-                    inputElement.value = prevValidInputData;
-                }
-            }}
-        >
-            <Image src="/assets/ui/edit/move_small.svg" />
-        </button>
-    </div> -->
 </div>
 
-<!-- <style>
-    .player-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
-    }
-</style> -->
 <style>
     .layers-tab-container {
         display: grid;

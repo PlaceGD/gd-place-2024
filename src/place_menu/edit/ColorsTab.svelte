@@ -120,11 +120,17 @@
                 <ToggleSwitch
                     id="blending_cb"
                     bind:isToggled={$menuSettings.selectedMainColor.blending}
+                    disabled={currentRgb[0] == 0 &&
+                        currentRgb[1] == 0 &&
+                        currentRgb[2] == 0}
                 ></ToggleSwitch>
             {:else}
                 <ToggleSwitch
                     id="blending_cb"
                     bind:isToggled={$menuSettings.selectedDetailColor.blending}
+                    disabled={currentRgb[0] == 0 &&
+                        currentRgb[1] == 0 &&
+                        currentRgb[2] == 0}
                 ></ToggleSwitch>
             {/if}
             <label for="blending_cb" class="font-pusab text-stroke xs:text-sm">
@@ -171,10 +177,10 @@
         @apply m-0 h-full w-full;
     }
     :global(#opacity-slider .rangeHandle) {
-        @apply top-1/2 aspect-square h-full w-auto rounded-full border-2 border-black p-2;
+        @apply top-1/2 h-full w-auto rounded-full border-2 border-black p-2;
     }
     :global(#opacity-slider .rangeHandle::before) {
-        @apply aspect-square h-full;
+        @apply h-full;
     }
     :global(#opacity-slider .rangePips .pip.selected) {
         height: 0.4em;

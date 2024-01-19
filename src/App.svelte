@@ -10,6 +10,13 @@
 
     alertHasDarkReader();
 
+    if (localStorage.getItem("didErrorOccur") == "1") {
+        localStorage.setItem("didErrorOccur", "0");
+        Toast.showErrorToast(
+            "An error occured and the page had to be refreshed."
+        );
+    }
+
     const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
         HAS_OPT_WASM ? "-opt.wasm" : ""
     }`;
@@ -56,3 +63,23 @@
         </div>
     {/if}
 </div>
+
+<style lang="postcss">
+    :global(._toastContainer) {
+        font-family: Saira;
+        color: white;
+        border-radius: 8px;
+    }
+
+    @media screen(lg) {
+        :global(._toastContainer) {
+            font-size: 14px;
+        }
+    }
+
+    @media screen(sm) {
+        :global(._toastContainer) {
+            font-size: 12px;
+        }
+    }
+</style>

@@ -80,7 +80,6 @@
     let inputElement: HTMLInputElement;
 </script>
 
-<!-- "z-20": Object.values(LAYERS.b).indexOf($menuSettings.layerType) > -1, -->
 <div
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-md"
 >
@@ -136,12 +135,11 @@
                         class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
                         on:click={() => ($menuSettings.layerIdx = i)}
                     >
-                        {i + 1}
+                        <h1 class="font-pusab">{i + 1}</h1>
 
-                        <span class="opacity-50 font-pusab xs:text-sm"
-                            >({LAYER_NAME[$menuSettings.layerType]}{i +
-                                1})</span
-                        >
+                        <h2 class="opacity-50 font-pusab xs:text-sm">
+                            ({LAYER_NAME[$menuSettings.layerType]}{i + 1})
+                        </h2>
                     </button>
                     {#if $menuSettings.layerIdx == i}
                         <SlidingSelector layoutId="button-selector"

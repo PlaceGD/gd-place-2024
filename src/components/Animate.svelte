@@ -36,7 +36,7 @@
     export let initial: boolean | Target | VariantLabels | string[] = {};
     let motionInitial: any = {};
 
-    onMount(() => {
+    const setIntial = () => {
         if (Array.isArray(initial)) {
             let mappedPrts: { [key: string]: any } = {};
 
@@ -50,6 +50,18 @@
         } else {
             motionInitial = initial;
         }
+    };
+
+    export const resetIntialStyles = () => {
+        console.log(motionInitial);
+        child.removeAttribute("style");
+        setIntial();
+        animation.set(motionInitial);
+        console.log(motionInitial);
+    };
+
+    onMount(() => {
+        setIntial();
     });
 
     type ConditionalTarget = { [key: string]: TargetAndTransition };

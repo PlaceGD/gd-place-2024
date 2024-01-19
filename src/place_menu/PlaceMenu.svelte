@@ -85,6 +85,39 @@
             state.set_preview_object(obj);
         }
     }
+
+    import config from "../../tailwind.config";
+    import { onMount } from "svelte";
+
+    // some bs to fix tiny little responsive anim issue
+    // that honestly no one would see but perfectionism :3
+    let placeDeleteBttnAnim: Animate | null;
+    let hasResetSm = false;
+    let hasResetLg = false;
+    window.addEventListener("resize", () => {
+        let isSm = window.matchMedia(
+            `(max-width: ${
+                (config.theme?.screens as Record<string, any>).sm.max
+            })`
+        );
+        let isNotSm = window.matchMedia(
+            `(min-width: ${
+                (config.theme?.screens as Record<string, any>).sm.max
+            })`
+        );
+
+        if (placeDeleteBttnAnim === null) return;
+
+        if (isSm.matches && !hasResetSm) {
+            placeDeleteBttnAnim?.resetIntialStyles();
+            hasResetSm = true;
+            hasResetLg = false;
+        } else if (isNotSm.matches && !hasResetLg) {
+            placeDeleteBttnAnim?.resetIntialStyles();
+            hasResetLg = true;
+            hasResetSm = false;
+        }
+    });
 </script>
 
 <Animate
@@ -104,7 +137,7 @@
     let:motion
 >
     <div
-        class="absolute flex flex-col justify-end w-full h-full px-2 pt-2 pointer-events-none"
+        class="absolute flex flex-col justify-end w-full px-2 pt-2 pointer-events-none place-menu"
         use:motion
     >
         <div
@@ -283,7 +316,7 @@
                         class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
                     >
                         <ul
-                            class="absolute flex flex-col items-center justify-evenly w-full h-full gap-6 px-2 py-2"
+                            class="absolute flex flex-col items-center w-full h-full gap-6 px-2 py-2 justify-evenly"
                         >
                             <li class="w-full flex-center grow-0 shrink-0">
                                 <button
@@ -356,7 +389,7 @@
 
                         {#if $menuSettings.selectedGroup == TabGroup.Delete}
                             <div
-                                class="w-full h-full text-4xl md:text-3x sm:text-2x xs:text-xl flex-center font-pusab text-stroke text-center p-4"
+                                class="w-full h-full p-4 text-4xl text-center md:text-3x sm:text-2x xs:text-xl flex-center font-pusab text-stroke"
                             >
                                 Select an object to delete it!
                             </div>
@@ -379,6 +412,7 @@
                     isMinimized: $menuSettings.isMinimized,
                 }}
                 let:motion
+                bind:this={placeDeleteBttnAnim}
             >
                 <button
                     class={cx({
@@ -424,6 +458,13 @@
 </Animate>
 
 <style lang="postcss">
+    /* https://www.reddit.com/r/nextjs/comments/11g3znz/comment/janib69/?utm_source=share&utm_medium=web2x&context=3 */
+    .place-menu {
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+    }
+
+    /* this element DOESNT include the place/delete button, thats part of the flex parent */
     .menu-grid-container {
         grid-template-columns: 48px auto;
         grid-template-areas:
@@ -494,6 +535,8 @@
     @media screen(md) {
         .place-bttn-place,
         .place-bttn-delete {
+            height: 256px;
+            min-height: 256px;
             width: 180px;
         }
 
@@ -505,8 +548,8 @@
     @media screen(sm) {
         .place-bttn-place,
         .place-bttn-delete {
-            height: 64px !important;
-            min-height: 64px !important;
+            height: 64px;
+            min-height: 64px;
             width: 100%;
         }
 

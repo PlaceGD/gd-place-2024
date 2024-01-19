@@ -8,7 +8,7 @@
     import * as wasm from "wasm-lib";
 
     import { clamp, hexToRgb, lerp } from "../utils/util";
-    import { subChunk, unsubChunk } from "../firebase";
+    import { subChunk, unsubChunk } from "../firebase/chunks";
     import { TabGroup, menuSettings } from "../stores";
     import { KEYBINDS } from "../place_menu/edit/edit_tab";
 

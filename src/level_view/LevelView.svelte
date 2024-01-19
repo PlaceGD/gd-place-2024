@@ -2,7 +2,7 @@
     import * as wasm from "wasm-lib";
 
     import { onMount } from "svelte";
-    import Toast from "../utils/Toast";
+    import Toast from "../utils/toast";
     import { DEBUG } from "../utils/Debug";
 
     export let state: wasm.StateWrapper | null;

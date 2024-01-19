@@ -22,7 +22,7 @@
     import Minimize from "./icons/caret.svg";
 
     import { TabGroup, menuSettings } from "../stores";
-    import { addObject, deleteObject } from "../firebase";
+    import { addObject, deleteObject } from "../firebase/object";
     import { useIsOverflowing } from "../utils/Document";
     import { DEBUG } from "../utils/Debug";
     import SpriteSheet from "../utils/SpriteSheet";

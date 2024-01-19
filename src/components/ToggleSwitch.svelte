@@ -2,11 +2,18 @@
     import { default as cx } from "classnames";
 
     export let isToggled: boolean;
+    export let disabled: boolean = false;
 
     let { id, ...rest } = $$restProps;
 </script>
 
-<div class="flex items-center justify-center w-full" {...rest}>
+<div
+    class={cx({
+        "flex items-center justify-center w-full": true,
+        "opacity-50 pointer-events-none cursor-not-allowed": disabled,
+    })}
+    {...rest}
+>
     <label
         for={id}
         class="flex items-center rounded-full cursor-pointer bg-black/40"
@@ -16,6 +23,7 @@
                 type="checkbox"
                 {id}
                 class="sr-only"
+                disabled
                 on:click={() => {
                     isToggled = !isToggled;
                 }}

@@ -12,7 +12,15 @@
     let text_draws: wasm.TextDraw[] = [];
 
     onMount(() => {
-        state = wasm.create_view(canvas);
+        try {
+            state = wasm.create_view(canvas);
+        } catch (e: any) {
+            Toast.showErrorToast(
+                `A fatal error occured in the WASM. 
+                    Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
+                    Refresh the page and try again. (${e})`
+            );
+        }
     });
 
     let prevTime = 0;

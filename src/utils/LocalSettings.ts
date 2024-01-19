@@ -25,7 +25,8 @@ class LocalSettings<T extends Record<string, any>> {
             (this.value as any)[prop] = value;
             localStorage.setItem(this.id, JSON.stringify(this.value));
         } else {
-            return false;
+            localStorage.setItem("didErrorOccur", "1");
+            window.location.reload();
         }
 
         return true;

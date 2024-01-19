@@ -98,7 +98,7 @@
         </li>
     {/each}
     <div
-        class="absolute bottom-auto w-auto h-full p-2 bg-white !border-2 !border-black rounded-full slider-knob aspect-square -translate-y-2/4 top-1/2"
+        class="absolute bottom-auto w-auto h-full p-2 bg-white !border-2 !border-black rounded-full slider-knob -translate-y-2/4 top-1/2"
         bind:this={sliderKnob}
     />
 </ul>

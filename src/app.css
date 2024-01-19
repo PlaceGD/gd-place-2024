@@ -27,13 +27,6 @@ body {
     --toastContainerLeft: calc(50vw - 8rem);
 }
 
-._toastContainer {
-    font-family: Saira;
-    color: white;
-    font-size: 17px;
-    border-radius: 8px;
-}
-
 @keyframes scale-easeOutBounce {
 	0% {
         transform: scale3d(1.0, 1.0, 1);

@@ -138,7 +138,7 @@
                         class="flex flex-col items-center minimize menu-panel justify-evenly"
                     >
                         <button
-                            class="absolute w-full p-4"
+                            class="absolute w-full p-3"
                             on:click={() => {
                                 $menuSettings.isMinimized =
                                     !$menuSettings.isMinimized;
@@ -279,12 +279,11 @@
                         </div>
                     </Animate>
 
-                    <!-- class="flex flex-col items-center w-full h-full justify-evenly menu-panel g-8" -->
                     <div
                         class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
                     >
                         <ul
-                            class="absolute flex flex-col items-center justify-between w-full h-full gap-6 px-3 py-4"
+                            class="absolute flex flex-col items-center justify-evenly w-full h-full gap-6 px-2 py-2"
                         >
                             <li class="w-full flex-center grow-0 shrink-0">
                                 <button
@@ -357,9 +356,9 @@
 
                         {#if $menuSettings.selectedGroup == TabGroup.Delete}
                             <div
-                                class="w-full h-full text-4xl flex-center font-pusab text-stroke"
+                                class="w-full h-full text-4xl md:text-3x sm:text-2x xs:text-xl flex-center font-pusab text-stroke text-center p-4"
                             >
-                                Select an object to delete it 😍
+                                Select an object to delete it!
                             </div>
                         {/if}
                     </div>
@@ -426,7 +425,7 @@
 
 <style lang="postcss">
     .menu-grid-container {
-        grid-template-columns: 64px auto;
+        grid-template-columns: 48px auto;
         grid-template-areas:
             "minimize tabs"
             "side-menu buttons";
@@ -509,6 +508,10 @@
             height: 64px !important;
             min-height: 64px !important;
             width: 100%;
+        }
+
+        .menu-grid-container {
+            grid-template-columns: 44px auto;
         }
     }
 </style>

@@ -8,8 +8,6 @@
     import Toast from "./utils/Toast";
     import { alertHasDarkReader } from "./utils/Document";
 
-    import { DEBUG } from "./utils/Debug";
-
     alertHasDarkReader();
 
     const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${

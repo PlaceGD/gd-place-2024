@@ -53,11 +53,9 @@
     };
 
     export const resetIntialStyles = () => {
-        console.log(motionInitial);
         child.removeAttribute("style");
         setIntial();
         animation.set(motionInitial);
-        console.log(motionInitial);
     };
 
     onMount(() => {

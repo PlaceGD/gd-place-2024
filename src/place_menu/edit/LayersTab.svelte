@@ -94,7 +94,7 @@
                 >
                     <Image
                         src="/assets/ui/layer_tab/bottom.svg"
-                        class="object-contain w-full max-w-full max-h-full"
+                        class="object-contain max-w-full max-h-full"
                         lazyLoad
                         skeleton
                     ></Image>
@@ -113,7 +113,7 @@
                 >
                     <Image
                         src="/assets/ui/layer_tab/top.svg"
-                        class="object-contain w-full max-w-full max-h-full"
+                        class="object-contain max-w-full max-h-full"
                         lazyLoad
                         skeleton
                     ></Image>
@@ -125,72 +125,80 @@
             </li>
         </AnimateSharedLayout>
     </ul>
-    <ul class="flex h-full ids">
-        <AnimateSharedLayout>
-            {#each Array(LAYER_COUNT[$menuSettings.layerType]).fill(0) as _, i}
-                <li
-                    class="relative flex-1 w-full h-full flex-center font-pusab"
-                >
-                    <button
-                        class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
-                        on:click={() => ($menuSettings.layerIdx = i)}
+
+    <div class="flex flex-col w-full h-full gap-2 content">
+        <ul class="flex h-full ids">
+            <AnimateSharedLayout>
+                {#each Array(LAYER_COUNT[$menuSettings.layerType]).fill(0) as _, i}
+                    <li
+                        class="relative flex-1 w-full h-full flex-center font-pusab"
                     >
-                        <h1 class="font-pusab">{i + 1}</h1>
+                        <button
+                            class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
+                            on:click={() => ($menuSettings.layerIdx = i)}
+                        >
+                            <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
 
-                        <h2 class="opacity-50 font-pusab xs:text-sm">
-                            ({LAYER_NAME[$menuSettings.layerType]}{i + 1})
-                        </h2>
-                    </button>
-                    {#if $menuSettings.layerIdx == i}
-                        <SlidingSelector layoutId="button-selector"
-                        ></SlidingSelector>
-                    {/if}
-                </li>
-            {/each}
-        </AnimateSharedLayout>
-    </ul>
+                            <h2 class="opacity-50 font-pusab xs:text-sm">
+                                ({LAYER_NAME[$menuSettings.layerType]}{i + 1})
+                            </h2>
+                        </button>
+                        {#if $menuSettings.layerIdx == i}
+                            <SlidingSelector layoutId="button-selector"
+                            ></SlidingSelector>
+                        {/if}
+                    </li>
+                {/each}
+            </AnimateSharedLayout>
+        </ul>
 
-    <div class="flex flex-col items-center justify-center pt-8 zindex g-8">
-        <div class="flex items-center justify-center">
-            <button
-                class="h-full flex-center"
-                on:click={() => {
-                    if ($menuSettings.zOrder > -50) {
-                        $menuSettings.zOrder -= 1;
-                        prevValidInputData = $menuSettings.zOrder.toString();
-                        inputElement.value = prevValidInputData;
-                    }
-                }}
-            >
-                <Image src="/assets/ui/edit/move_small.svg" class="rotate-90" />
-            </button>
-            <input
-                type="text"
-                class="w-20 p-2 text-3xl text-center rounded-lg outline-none md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab text-stroke bg-black/40"
-                max={100}
-                maxlength={4}
-                on:input={enterIfValid}
-                bind:this={inputElement}
-            />
-            <button
-                class="h-full flex-center"
-                on:click={() => {
-                    if ($menuSettings.zOrder < 50) {
-                        $menuSettings.zOrder += 1;
-                        prevValidInputData = $menuSettings.zOrder.toString();
-                        inputElement.value = prevValidInputData;
-                    }
-                }}
-            >
-                <Image
-                    src="/assets/ui/edit/move_small.svg"
-                    class="-rotate-90"
+        <div class="flex flex-col items-center justify-center zindex g-8">
+            <div class="flex items-center justify-center">
+                <button
+                    class="h-full flex-center"
+                    on:click={() => {
+                        if ($menuSettings.zOrder > -50) {
+                            $menuSettings.zOrder -= 1;
+                            prevValidInputData =
+                                $menuSettings.zOrder.toString();
+                            inputElement.value = prevValidInputData;
+                        }
+                    }}
+                >
+                    <Image
+                        src="/assets/ui/edit/move_small.svg"
+                        class="rotate-90"
+                    />
+                </button>
+                <input
+                    type="text"
+                    class="w-20 p-2 text-3xl text-center rounded-lg outline-none md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab text-stroke bg-black/40"
+                    max={100}
+                    maxlength={4}
+                    on:input={enterIfValid}
+                    bind:this={inputElement}
                 />
-            </button>
+                <button
+                    class="h-full flex-center"
+                    on:click={() => {
+                        if ($menuSettings.zOrder < 50) {
+                            $menuSettings.zOrder += 1;
+                            prevValidInputData =
+                                $menuSettings.zOrder.toString();
+                            inputElement.value = prevValidInputData;
+                        }
+                    }}
+                >
+                    <Image
+                        src="/assets/ui/edit/move_small.svg"
+                        class="-rotate-90"
+                    />
+                </button>
+            </div>
+            <h1 class="text-2xl md:text-xl xs:text-lg font-pusab text-stroke">
+                Z Index
+            </h1>
         </div>
-        <h1 class="text-2xl md:text-xl xs:text-lg font-pusab text-stroke">
-            Z Index
-        </h1>
     </div>
 </div>
 
@@ -201,19 +209,19 @@
         grid-auto-rows: 1fr;
         grid-template-columns: min-content 1fr;
         grid-template-areas:
-            "buttons ids"
-            "buttons zindex";
+            "buttons content"
+            "buttons content";
     }
 
     .buttons {
         grid-area: buttons;
     }
 
-    .ids {
-        grid-area: ids;
+    .content {
+        grid-area: content;
     }
-
+    /* 
     .zindex {
         grid-area: zindex;
-    }
+    } */
 </style>

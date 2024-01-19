@@ -5,7 +5,7 @@
     import initWasm from "wasm-lib";
     import Logo from "./components/Logo.svelte";
     import { HAS_OPT_WASM } from "./main";
-    import Toast from "./utils/Toast";
+    import Toast from "./utils/toast";
     import { alertHasDarkReader } from "./utils/Document";
 
     alertHasDarkReader();

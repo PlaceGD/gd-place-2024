@@ -7,11 +7,13 @@
         useAnimation,
         useReducedMotion,
     } from "svelte-motion";
-    import { clamp } from "../utils/util";
+    import { clamp } from "../utils/Util";
     import { spring, type Spring } from "svelte/motion";
     import colors from "../gd/colors.json";
 
     export let currentHue: number;
+
+    export let tabIndex: number = 0;
 
     // "slider"
     let sliderKnob: HTMLDivElement;
@@ -94,6 +96,8 @@
                 on:click={() => {
                     currentHue = i;
                 }}
+                tabindex={tabIndex}
+                aria-label={`Color with Hue ${currentHue}`}
             ></button>
         </li>
     {/each}

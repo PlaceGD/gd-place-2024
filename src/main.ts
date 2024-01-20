@@ -7,7 +7,7 @@ const app = new App({
     target: document.getElementById("app") as any,
 });
 
-import { helloWorld } from "./firebase/cloudFunctions";
+import { helloWorld } from "./firebase/CloudFunctions";
 helloWorld().then(result => {
     const data = result.data;
     console.log(data);

@@ -7,10 +7,10 @@
 
     import * as wasm from "wasm-lib";
 
-    import { clamp, hexToRgb, lerp } from "../utils/util";
-    import { subChunk, unsubChunk } from "../firebase/chunks";
+    import { clamp, hexToRgb, lerp } from "../utils/Util";
+    import { subChunk, unsubChunk } from "../firebase/Chunks";
     import { TabGroup, menuSettings } from "../stores";
-    import { KEYBINDS } from "../place_menu/edit/edit_tab";
+    import { KEYBINDS } from "../place_menu/edit/EditTab";
 
     import Toast from "../utils/Toast";
     import LocalSettingsFactory from "../utils/LocalSettings";
@@ -359,18 +359,21 @@ aria-grabbed="false" -->
 <div class="absolute flex flex-col">
     <input
         type="color"
+        tabindex="-1"
         on:input={e => {
             changeBgColor(e);
         }}
     />
     <input
         type="color"
+        tabindex="-1"
         on:input={e => {
             changeGround1Color(e);
         }}
     />
     <input
         type="color"
+        tabindex="-1"
         on:input={e => {
             changeGround2Color(e);
         }}

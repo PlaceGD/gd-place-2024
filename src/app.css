@@ -62,7 +62,7 @@ body {
 
 @layer components {
     .menu-panel {
-        @apply relative overflow-hidden shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
+        @apply relative shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
     }
 
     .sliding-selector {

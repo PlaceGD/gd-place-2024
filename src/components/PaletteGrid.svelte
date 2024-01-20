@@ -6,6 +6,8 @@
     export let currentRow: number;
     export let currentColumn: number;
 
+    export let tabIndex: number = 0;
+
     $: palette = colors.list[hue].palette;
 </script>
 
@@ -27,6 +29,8 @@
                         currentRow = r;
                         currentColumn = c;
                     }}
+                    tabindex={tabIndex}
+                    aria-label={`Color with Red: ${palette[r][c][0]}, Green: ${palette[r][c][1]}, Blue: ${palette[r][c][2]}`}
                 />
             {/each}
         </div>

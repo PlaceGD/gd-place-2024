@@ -7,7 +7,7 @@
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { menuSettings } from "../../stores";
-    import { LayerType } from "./edit_tab";
+    import { LayerType } from "./EditTab";
 
     const LAYER_NAME: any = {
         [LayerType.T]: "T",
@@ -78,6 +78,8 @@
         $menuSettings.zOrder = toValidInt(prevValidInputData);
     }
     let inputElement: HTMLInputElement;
+
+    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
 
 <div
@@ -91,6 +93,8 @@
                 <button
                     class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
                     on:click={() => ($menuSettings.layerType = LayerType.B)}
+                    tabindex={canSelectByTab}
+                    aria-label="Layer Below Player"
                 >
                     <Image
                         src="/assets/ui/layer_tab/bottom.svg"
@@ -110,6 +114,8 @@
                 <button
                     class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
                     on:click={() => ($menuSettings.layerType = LayerType.T)}
+                    tabindex={canSelectByTab}
+                    aria-label="Layer Above Player"
                 >
                     <Image
                         src="/assets/ui/layer_tab/top.svg"
@@ -136,6 +142,8 @@
                         <button
                             class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
                             on:click={() => ($menuSettings.layerIdx = i)}
+                            tabindex={canSelectByTab}
+                            aria-label={`${LAYER_NAME[$menuSettings.layerType]}${i + 1}`}
                         >
                             <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
 
@@ -164,6 +172,8 @@
                             inputElement.value = prevValidInputData;
                         }
                     }}
+                    tabindex={canSelectByTab}
+                    aria-label="Decrease Z-Index"
                 >
                     <Image
                         src="/assets/ui/edit/move_small.svg"
@@ -173,10 +183,13 @@
                 <input
                     type="text"
                     class="w-20 p-2 text-3xl text-center rounded-lg outline-none md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab text-stroke bg-black/40"
-                    max={100}
+                    max={50}
+                    min={-50}
                     maxlength={4}
                     on:input={enterIfValid}
                     bind:this={inputElement}
+                    tabindex={canSelectByTab}
+                    aria-label="Z-Index"
                 />
                 <button
                     class="h-full flex-center"
@@ -188,6 +201,8 @@
                             inputElement.value = prevValidInputData;
                         }
                     }}
+                    tabindex={canSelectByTab}
+                    aria-label="Increase Z-Index"
                 >
                     <Image
                         src="/assets/ui/edit/move_small.svg"

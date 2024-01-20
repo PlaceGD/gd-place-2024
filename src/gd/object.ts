@@ -1,4 +1,4 @@
-import { clamp } from "../utils/util";
+import { clamp } from "../utils/Util";
 import objectList from "./objects.json";
 // import textureSizes from "./texture_sizes.json";
 

@@ -9,7 +9,7 @@
         CATEGORY_ICONS,
         OBJECT_SETTINGS,
         MAIN_DETAIL_TEX_RATIOS,
-    } from "../gd/object";
+    } from "../gd/Object";
 
     import Image from "../components/Image.svelte";
     import Animate from "../components/Animate.svelte";
@@ -22,13 +22,13 @@
     import Minimize from "./icons/caret.svg";
 
     import { TabGroup, menuSettings } from "../stores";
-    import { addObject, deleteObject } from "../firebase/object";
+    import { addObject, deleteObject } from "../firebase/Object";
     import { useIsOverflowing } from "../utils/Document";
     import { DEBUG } from "../utils/Debug";
     import SpriteSheet from "../utils/SpriteSheet";
     import LocalSettings from "../utils/LocalSettings";
 
-    import { EditTab, TRANSFORM_BUTTONS } from "./edit/edit_tab";
+    import { EditTab, TRANSFORM_BUTTONS } from "./edit/EditTab";
     import ColorsTab from "./edit/ColorsTab.svelte";
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";
@@ -37,9 +37,6 @@
     export let state: wasm.StateWrapper | null;
 
     const minimizeAnimDur = 0.5;
-
-    // let selectedMainColor = { hue: 0, x: 0, y: 0, blending: false };
-    // let selectedDetailColor = { hue: 0, x: 0, y: 0, blending: false };
 
     const { isOverflowing: isTabsPanelOverflowing, element: tabsPanel } =
         useIsOverflowing();
@@ -87,7 +84,6 @@
     }
 
     import config from "../../tailwind.config";
-    import { onMount } from "svelte";
 
     // some bs to fix tiny little responsive anim issue
     // that honestly no one would see but perfectionism :3
@@ -168,7 +164,7 @@
                 -->
                 <div class="grid flex-1 gap-2 menu-grid-container" use:motion>
                     <div
-                        class="flex flex-col items-center minimize menu-panel justify-evenly"
+                        class="flex flex-col items-center minimize menu-panel justify-evenly focus:outline focus:outline-1 focus:outline-offset-1"
                     >
                         <button
                             class="absolute w-full p-3"
@@ -176,6 +172,7 @@
                                 $menuSettings.isMinimized =
                                     !$menuSettings.isMinimized;
                             }}
+                            aria-label="Minimize Menu"
                         >
                             <Minimize
                                 class={cx({
@@ -202,7 +199,10 @@
                         }}
                         let:motion
                     >
-                        <div class="relative tabs menu-panel" use:motion>
+                        <div
+                            class="relative tabs menu-panel overflow-hidden"
+                            use:motion
+                        >
                             <Animate
                                 easing="easeInOut"
                                 duration={minimizeAnimDur}
@@ -221,6 +221,7 @@
                             >
                                 <ul
                                     class="absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar"
+                                    tabindex="-1"
                                     use:tabsPanel
                                     use:motion
                                     on:wheel={e => {
@@ -241,6 +242,10 @@
                                                             $menuSettings.selectedBuildTab =
                                                                 key;
                                                         }}
+                                                        tabindex={$menuSettings.isMinimized
+                                                            ? -1
+                                                            : 0}
+                                                        aria-label={key}
                                                     >
                                                         <Image
                                                             src={path}
@@ -266,6 +271,10 @@
                                                             $menuSettings.selectedEditTab =
                                                                 value;
                                                         }}
+                                                        tabindex={$menuSettings.isMinimized
+                                                            ? -1
+                                                            : 0}
+                                                        aria-label={value}
                                                     >
                                                         <h1
                                                             class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
@@ -313,63 +322,80 @@
                     </Animate>
 
                     <div
-                        class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
+                        class="w-full h-full overflow-hidden flex-center menu-panel overflow-hidden side-menu"
                     >
                         <ul
                             class="absolute flex flex-col items-center w-full h-full gap-6 px-2 py-2 justify-evenly"
                         >
                             <li class="w-full flex-center grow-0 shrink-0">
                                 <button
-                                    class={cx({
-                                        "w-full cursor-pointer ": true,
-                                        "opacity-30":
-                                            $menuSettings.selectedGroup !=
-                                            TabGroup.Build,
-                                    })}
+                                    class="w-full cursor-pointer"
                                     on:click={() => {
                                         $menuSettings.selectedGroup =
                                             TabGroup.Build;
                                     }}
+                                    tabindex={$menuSettings.isMinimized
+                                        ? -1
+                                        : 0}
+                                    aria-label="Build Tab"
                                 >
-                                    <Build></Build>
+                                    <Build
+                                        style={cx({
+                                            "color: #444":
+                                                $menuSettings.selectedGroup !=
+                                                TabGroup.Build,
+                                        })}
+                                    ></Build>
                                 </button>
                             </li>
                             <li class="w-full flex-center grow-0 shrink-0">
                                 <button
-                                    class={cx({
-                                        "w-full cursor-pointer": true,
-                                        "opacity-30":
-                                            $menuSettings.selectedGroup !=
-                                            TabGroup.Edit,
-                                    })}
+                                    class="w-full cursor-pointer"
                                     on:click={() => {
                                         $menuSettings.selectedGroup =
                                             TabGroup.Edit;
                                     }}
+                                    tabindex={$menuSettings.isMinimized
+                                        ? -1
+                                        : 0}
+                                    aria-label="Edit Tab"
                                 >
-                                    <Edit></Edit>
+                                    <Edit
+                                        style={cx({
+                                            "color: #444":
+                                                $menuSettings.selectedGroup !=
+                                                TabGroup.Edit,
+                                        })}
+                                    ></Edit>
                                 </button>
                             </li>
                             <li class="w-full flex-center grow-0 shrink-0">
                                 <button
-                                    class={cx({
-                                        "w-full cursor-pointer": true,
-                                        "opacity-30":
-                                            $menuSettings.selectedGroup !=
-                                            TabGroup.Delete,
-                                    })}
+                                    class="w-full cursor-pointer"
                                     on:click={() => {
                                         $menuSettings.selectedGroup =
                                             TabGroup.Delete;
                                     }}
+                                    tabindex={$menuSettings.isMinimized
+                                        ? -1
+                                        : 0}
+                                    aria-label="Delete Tab"
                                 >
-                                    <Delete></Delete>
+                                    <Delete
+                                        style={cx({
+                                            "color: #444":
+                                                $menuSettings.selectedGroup !=
+                                                TabGroup.Delete,
+                                        })}
+                                    ></Delete>
                                 </button>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="w-full h-full rounded-lg buttons menu-panel">
+                    <div
+                        class="w-full h-full rounded-lg buttons menu-panel overflow-hidden"
+                    >
                         <!-- 
                             the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 
                             object tab as it has to add all the elements back to the dom
@@ -422,6 +448,8 @@
                         "place-bttn-delete":
                             $menuSettings.selectedGroup == TabGroup.Delete,
                     })}
+                    tabindex={$menuSettings.isMinimized ? -1 : 0}
+                    aria-label={`${$menuSettings.selectedGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
                     use:motion
                     on:click={() => {
                         if (state != null) {

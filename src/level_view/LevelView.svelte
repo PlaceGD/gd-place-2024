@@ -2,7 +2,7 @@
     import * as wasm from "wasm-lib";
 
     import { onMount } from "svelte";
-    import Toast from "../utils/toast";
+    import Toast from "../utils/Toast";
     import { DEBUG } from "../utils/Debug";
 
     export let state: wasm.StateWrapper | null;
@@ -15,10 +15,9 @@
         try {
             state = wasm.create_view(canvas);
         } catch (e: any) {
+            console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(
-                `A fatal error occured in the WASM. 
-                    Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
-                    Refresh the page and try again. (${e})`
+                `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`
             );
         }
     });
@@ -32,10 +31,9 @@
                 prevTime = time;
                 //text_draws = state.get_text_draws();
             } catch (e: any) {
+                console.error(e, "(Failed in `state.pub_render`)");
                 Toast.showErrorToast(
-                    `A fatal error occured in the WASM. 
-                    Please report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.
-                    Refresh the page and try again. (${e})`
+                    `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`
                 );
                 return;
             }
@@ -68,35 +66,15 @@
     }
 </script>
 
-{#if $DEBUG}
-    <button
-        class="absolute z-50 p-1 ml-20 text-white rounded-lg font-pusab text-md bg-white/10"
-        on:click={() => {
-            localStorage.clear();
-            window.location.reload();
-        }}>Clear LS & Refresh</button
-    >
-    <button
-        class="absolute z-50 p-1 text-white rounded-lg font-pusab text-md ml-72 bg-white/10 cummer"
-        on:click={() => {
-            localStorage.clear();
-            window.location.reload();
-        }}
-        >Hammod 😘😘😘😂😂
-        <img
-            src="https://media.tenor.com/-OpJG9GeK3EAAAAC/kanye-west-stare.gif"
-            alt=""
-        /></button
-    >
-{/if}
-
 <div
     class="absolute w-full h-full"
     bind:offsetHeight={view_size[1]}
     bind:offsetWidth={view_size[0]}
+    aria-label="Level Canvas"
 >
     <canvas bind:this={canvas} />
 </div>
+
 <div class="absolute w-full h-full overflow-visible">
     {#each text_draws as text_draw}
         <div
@@ -116,12 +94,3 @@
         </div>
     {/each}
 </div>
-
-<style>
-    .cummer > img {
-        display: none;
-    }
-    .cummer:hover > img {
-        display: block;
-    }
-</style>

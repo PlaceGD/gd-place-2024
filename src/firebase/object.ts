@@ -1,7 +1,7 @@
 import { push, ref, remove } from "firebase/database";
 import type { GDObject } from "wasm-lib";
-import { db } from "./firebase";
-import Toast from "../utils/toast";
+import { db } from "./Firebase";
+import Toast from "../utils/Toast";
 
 export const addObject = (obj: GDObject) => {
     let chunkCoord = obj.get_chunk_coord();

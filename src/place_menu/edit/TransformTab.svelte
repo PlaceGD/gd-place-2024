@@ -1,13 +1,17 @@
 <script lang="ts">
-    import { TRANSFORM_BUTTONS } from "./edit_tab";
+    import { TRANSFORM_BUTTONS } from "./EditTab";
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
+    import { menuSettings } from "../../stores";
 
     export let state: wasm.StateWrapper | null;
+
+    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
 
 <ul
     class="w-full h-full gap-4 xs:gap-2 overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar transform-grid-container"
+    tabindex="-1"
 >
     {#each TRANSFORM_BUTTONS as button, i (i)}
         <li class="w-16 h-16 md:w-14 md:h-14 xs:w-10 xs:h-10">
@@ -19,6 +23,8 @@
                     button.cb(obj);
                     state.set_preview_object(obj);
                 }}
+                tabindex={canSelectByTab}
+                aria-label={button.name}
             >
                 <Image
                     class="object-contain max-w-full max-h-full"

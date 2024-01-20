@@ -30,6 +30,19 @@
 
     $: currentRgb =
         colors.list[currentColor.hue].palette[currentColor.y][currentColor.x];
+
+    $: isBlack = currentRgb[0] == 0 && currentRgb[1] == 0 && currentRgb[2] == 0;
+
+    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
+
+    $: {
+        if (isBlack)
+            // if we use `currentColor` here svelte complains of a cyclic dependency ¯\_(ツ)_/¯
+            (selectedTab == ColorTab.Main
+                ? $menuSettings.selectedMainColor
+                : $menuSettings.selectedDetailColor
+            ).blending = false;
+    }
 </script>
 
 <div
@@ -40,8 +53,12 @@
             <li class="relative flex-1 w-full h-full flex-center font-pusab">
                 <button
                     class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke xs:text-sm"
-                    on:click={() => (selectedTab = ColorTab.Main)}>Main</button
+                    on:click={() => (selectedTab = ColorTab.Main)}
+                    tabindex={canSelectByTab}
+                    aria-label="Main Color Channel"
                 >
+                    Main
+                </button>
                 {#if selectedTab == ColorTab.Main}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
@@ -51,8 +68,11 @@
                 <button
                     class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke xs:text-sm"
                     on:click={() => (selectedTab = ColorTab.Detail)}
-                    >Detail</button
+                    tabindex={canSelectByTab}
+                    aria-label="Detail Color Channel"
                 >
+                    Detail
+                </button>
                 {#if selectedTab == ColorTab.Detail}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
@@ -82,6 +102,8 @@
                             e.detail.value;
                     }}
                     pips
+                    disabled={$menuSettings.isMinimized}
+                    ariaLabels={["Main Channel Opacity"]}
                 />
             {:else}
                 <RangeSlider
@@ -96,19 +118,24 @@
                             e.detail.value;
                     }}
                     pips
+                    disabled={$menuSettings.isMinimized}
+                    ariaLabels={["Detail Channel Opacity"]}
                 />
             {/if}
         </div>
 
         {#if selectedTab == ColorTab.Main}
             <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider bind:currentHue={$menuSettings.selectedMainColor.hue}
+                <HueSlider
+                    bind:currentHue={$menuSettings.selectedMainColor.hue}
+                    tabIndex={canSelectByTab}
                 ></HueSlider>
             </div>
         {:else}
             <div class="flex w-full h-3 md:h-5 hue">
                 <HueSlider
                     bind:currentHue={$menuSettings.selectedDetailColor.hue}
+                    tabIndex={canSelectByTab}
                 ></HueSlider>
             </div>
         {/if}
@@ -120,22 +147,18 @@
                 <ToggleSwitch
                     id="blending_cb"
                     bind:isToggled={$menuSettings.selectedMainColor.blending}
-                    disabled={currentRgb[0] == 0 &&
-                        currentRgb[1] == 0 &&
-                        currentRgb[2] == 0}
+                    disabled={isBlack}
+                    tabIndex={canSelectByTab}
                 ></ToggleSwitch>
             {:else}
                 <ToggleSwitch
                     id="blending_cb"
                     bind:isToggled={$menuSettings.selectedDetailColor.blending}
-                    disabled={currentRgb[0] == 0 &&
-                        currentRgb[1] == 0 &&
-                        currentRgb[2] == 0}
+                    disabled={isBlack}
+                    tabIndex={canSelectByTab}
                 ></ToggleSwitch>
             {/if}
-            <label for="blending_cb" class="font-pusab text-stroke xs:text-sm">
-                Blending
-            </label>
+            <h2 class="font-pusab text-stroke xs:text-sm">Blending</h2>
         </div>
     </div>
 
@@ -145,12 +168,14 @@
                 hue={$menuSettings.selectedMainColor.hue}
                 bind:currentRow={$menuSettings.selectedMainColor.y}
                 bind:currentColumn={$menuSettings.selectedMainColor.x}
+                tabIndex={canSelectByTab}
             />
         {:else}
             <PaletteGrid
                 hue={$menuSettings.selectedDetailColor.hue}
                 bind:currentRow={$menuSettings.selectedDetailColor.y}
                 bind:currentColumn={$menuSettings.selectedDetailColor.x}
+                tabIndex={canSelectByTab}
             />
         {/if}
     </div>

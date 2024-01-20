@@ -2,11 +2,19 @@
     import Editor from "./Editor.svelte";
     import { SvelteToast } from "@zerodevx/svelte-toast";
 
-    import initWasm from "wasm-lib";
     import Logo from "./components/Logo.svelte";
-    import { HAS_OPT_WASM } from "./main";
-    import Toast from "./utils/toast";
+    import Toast from "./utils/Toast";
     import { alertHasDarkReader } from "./utils/Document";
+    import Login from "./login/Login.svelte";
+    import LoginButton from "./login/LoginButton.svelte";
+    import type { LoginData } from "./login/Login";
+
+    import { wasmProgress, initWasm } from "./LoadWasm";
+
+    let loginData: LoginData = {
+        isLoggedIn: false,
+        showLoginUI: false,
+    };
 
     alertHasDarkReader();
 
@@ -17,49 +25,28 @@
         );
     }
 
-    const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
-        HAS_OPT_WASM ? "-opt.wasm" : ""
-    }`;
-
-    let max = 0;
-    let progress = 0;
-
-    let hasLoaded = false;
-
-    const wasm_r = new XMLHttpRequest();
-
-    wasm_r.responseType = "arraybuffer";
-    wasm_r.addEventListener("progress", p => {
-        max = p.total;
-        progress = p.loaded;
-    });
-    wasm_r.addEventListener("load", () => {
-        initWasm(wasm_r.response)
-            .catch(e => {
-                Toast.showErrorToast(`Failed to initialize WASM. (${e})`);
-            })
-            .then(() => {
-                hasLoaded = true;
-            });
-    });
-    wasm_r.addEventListener("error", () => {
-        Toast.showErrorToast("Failed to download WASM.");
-    });
-    wasm_r.addEventListener("abort", () => {
-        Toast.showErrorToast("Failed to download WASM.");
-    });
-
-    wasm_r.open("GET", WASM_URL);
-    wasm_r.send();
+    initWasm();
 </script>
 
 <SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />
 
 <div class="relative w-screen h-screen overflow-hidden">
-    <Editor bind:wasmLoaded={hasLoaded} />
-    {#if !hasLoaded}
+    <div class="absolute top-0 right-0 flex gap-4 p-2 w-max h-max">
+        <LoginButton bind:loginData></LoginButton>
+    </div>
+    <Login bind:loginData></Login>
+    <Editor bind:wasmLoaded={$wasmProgress.hasLoaded} />
+    {#if !$wasmProgress.hasLoaded}
         <div class="absolute">
-            <input type="range" min={0} {max} bind:value={progress} />
+            <input
+                type="range"
+                min={0}
+                max={$wasmProgress.max}
+                bind:value={$wasmProgress.progress}
+                aria-label="WASM download progress"
+                aria-valuetext={`${($wasmProgress.progress / $wasmProgress.max) * 100}%`}
+                tabindex="-1"
+            />
         </div>
     {/if}
 </div>

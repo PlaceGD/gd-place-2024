@@ -23,6 +23,7 @@ interface Keybind {
 }
 
 interface TransformButton {
+    name: string;
     image: string;
     flipped: boolean;
     angle: number;
@@ -283,24 +284,28 @@ export const KEYBINDS: Record<string, Keybind> = {
 
 export const TRANSFORM_BUTTONS: TransformButton[] = [
     {
+        name: "Move Up 2 Units",
         image: "move_small",
         cb: KEYBINDS.move_up_small.cb,
         flipped: false,
         angle: 180,
     },
     {
+        name: "Move Down 2 Units",
         image: "move_small",
         cb: KEYBINDS.move_down_small.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Move Left 2 Units",
         image: "move_small",
         cb: KEYBINDS.move_left_small.cb,
         flipped: false,
         angle: 90,
     },
     {
+        name: "Move Right 2 Units",
         image: "move_small",
         cb: KEYBINDS.move_right_small.cb,
         flipped: false,
@@ -308,24 +313,28 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
     },
 
     {
+        name: "Move Up 1 Block",
         image: "move_normal",
         cb: KEYBINDS.move_up.cb,
         flipped: false,
         angle: 180,
     },
     {
+        name: "Move Down 1 Block",
         image: "move_normal",
         cb: KEYBINDS.move_down.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Move Left 1 Block",
         image: "move_normal",
         cb: KEYBINDS.move_left.cb,
         flipped: false,
         angle: 90,
     },
     {
+        name: "Move Right 1 Block",
         image: "move_normal",
         cb: KEYBINDS.move_right.cb,
         flipped: false,
@@ -333,12 +342,14 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
     },
 
     {
+        name: "Flip Horizontally",
         image: "flip",
         cb: KEYBINDS.flip_horiz.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Flip Vertically",
         image: "flip",
         cb: KEYBINDS.flip_vert.cb,
         flipped: false,
@@ -346,24 +357,28 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
     },
 
     {
+        name: "Rotate Counter-Clockwise",
         image: "rotate",
         cb: KEYBINDS.rotate_ccw.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Rotate Clockwise",
         image: "rotate",
         cb: KEYBINDS.rotate_cw.cb,
         flipped: true,
         angle: 0,
     },
     {
+        name: "Rotate 5 Degrees Counter-Clockwise",
         image: "rotate_5_ccw",
         cb: KEYBINDS.rotate_ccw_5.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Rotate 5 Degrees Clockwise",
         image: "rotate_5_cw",
         cb: KEYBINDS.rotate_cw_5.cb,
         flipped: false,
@@ -371,24 +386,28 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
     },
 
     {
+        name: "Move Up 5 Blocks",
         image: "move_big",
         cb: KEYBINDS.move_up_big.cb,
         flipped: false,
         angle: 180,
     },
     {
+        name: "Move Down 5 Blocks",
         image: "move_big",
         cb: KEYBINDS.move_down_big.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Move Left 5 Blocks",
         image: "move_big",
         cb: KEYBINDS.move_left_big.cb,
         flipped: false,
         angle: 90,
     },
     {
+        name: "Move Right 5 Blocks",
         image: "move_big",
         cb: KEYBINDS.move_right_big.cb,
         flipped: false,
@@ -396,24 +415,28 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
     },
 
     {
+        name: "Move Up 0.5 Units",
         image: "move_tiny",
         cb: KEYBINDS.move_up_mini.cb,
         flipped: false,
         angle: 180,
     },
     {
+        name: "Move Down 0.5 Units",
         image: "move_tiny",
         cb: KEYBINDS.move_down_mini.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Move Left 0.5 Units",
         image: "move_tiny",
         cb: KEYBINDS.move_left_mini.cb,
         flipped: false,
         angle: 90,
     },
     {
+        name: "Move Right 0.5 Units",
         image: "move_tiny",
         cb: KEYBINDS.move_right_mini.cb,
         flipped: false,
@@ -421,12 +444,14 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
     },
 
     {
+        name: "Scale Up",
         image: "scale_up",
         cb: KEYBINDS.scale_up.cb,
         flipped: false,
         angle: 0,
     },
     {
+        name: "Scale Down",
         image: "scale_down",
         cb: KEYBINDS.scale_down.cb,
         flipped: false,

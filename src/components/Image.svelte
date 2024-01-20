@@ -7,7 +7,6 @@
     export let lazyLoad: boolean = false;
 
     let hasLoaded = false;
-    let imgElement: HTMLImageElement | null = null;
 
     const options = {
         root: null,

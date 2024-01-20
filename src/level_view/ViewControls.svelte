@@ -8,7 +8,7 @@
     import * as wasm from "wasm-lib";
 
     import { clamp, hexToRgb, lerp } from "../utils/Util";
-    import { subChunk, unsubChunk } from "../firebase/Chunks";
+    import { subChunk, unsubChunk } from "../firebase/chunks";
     import { TabGroup, menuSettings } from "../stores";
     import { KEYBINDS } from "../place_menu/edit/EditTab";
 
@@ -105,6 +105,7 @@
 
                             state.add_object(key, obj);
                         } catch (e: any) {
+                            console.error("(Failed in `GDObject.deserialize`)");
                             Toast.showErrorToast(e.display());
                         }
                     }

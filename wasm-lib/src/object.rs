@@ -17,6 +17,8 @@ use base64::{
     Engine as _,
 };
 
+use std::{num::ParseIntError, str::FromStr};
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[wasm_bindgen]
 pub struct GDColor {
@@ -25,6 +27,35 @@ pub struct GDColor {
     pub b: u8,
     pub opacity: u8,
     pub blending: bool,
+}
+
+impl ToString for GDColor {
+    fn to_string(&self) -> String {
+        format!(
+            "{}|{}|{}|{}|{}",
+            self.r, self.g, self.b, self.opacity, self.blending as u8
+        )
+    }
+}
+
+impl FromStr for GDColor {
+    type Err = ErrorType;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut split = s
+            .split('|')
+            .map(|s| s.parse::<u8>())
+            .collect::<Result<Vec<u8>, ParseIntError>>()
+            .map_err(|_| ErrorType::InvalidObjectString("color"))?;
+
+        Ok(Self {
+            r: split[0],
+            g: split[1],
+            b: split[2],
+            opacity: split[3],
+            blending: split[4] != 0,
+        })
+    }
 }
 
 #[wasm_bindgen]
@@ -52,111 +83,70 @@ impl GDColor {
     }
 }
 
-struct Gaga(u64);
+macro_rules! gd_object {
+    ($($prop:ident : $type:ty),*) => {
+        #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+        #[wasm_bindgen]
+        pub struct GDObject {
+           $(pub $prop: $type),*
+        }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-#[wasm_bindgen]
-pub struct GDObject {
-    pub id: u16,
-    pub x: f32,
-    pub y: f32,
-    pub rotation: i32,
-    pub flip_x: bool,
-    pub flip_y: bool,
-    pub scale: f32,
-    pub z_layer: ZLayer,
-    pub z_order: i8,
-    pub main_color: GDColor,
-    pub detail_color: GDColor,
+        #[wasm_bindgen]
+        impl GDObject {
+            #[allow(clippy::too_many_arguments)]
+            #[wasm_bindgen(constructor)]
+            pub fn new(
+                $($prop: $type),*
+            ) -> Self {
+                Self {
+                    $($prop),*
+                }
+            }
+            #[wasm_bindgen]
+            pub fn serialize(&self) -> Result<String, RustError> {
+                let mut out = String::new();
+                $(
+                    out.push_str(&self.$prop.to_string());
+                    out.push(',');
+                )*
+                out.pop();
+                Ok(out)
+            }
+
+            #[wasm_bindgen]
+            pub fn deserialize(s: &str) -> Result<GDObject, RustError> {
+                let mut split = s.split(',');
+                Ok(Self {
+                    $($prop: split.next().ok_or(ErrorType::InvalidObjectString("prop number of props :)"))?.parse().map_err(|_| ErrorType::InvalidObjectString("parse error"))?),*
+                })
+            }
+
+            #[wasm_bindgen]
+            pub fn debug(&self) -> String {
+                format!("{:#?}", self)
+            }
+
+            #[wasm_bindgen]
+            pub fn get_chunk_coord(&self) -> ChunkCoord {
+                get_chunk_coord(self.x, self.y)
+            }
+
+        }
+    };
 }
 
-#[wasm_bindgen]
-impl GDObject {
-    #[allow(clippy::too_many_arguments)]
-    #[wasm_bindgen(constructor)]
-    pub fn new(
-        id: u16,
-        x: f32,
-        y: f32,
-        rotation: i32,
-        flip_x: bool,
-        flip_y: bool,
-        scale: f32,
-        z_layer: ZLayer,
-        z_order: i8,
-        main_color: GDColor,
-        detail_color: GDColor,
-    ) -> Self {
-        Self {
-            id,
-            x,
-            y,
-            rotation,
-            flip_x,
-            flip_y,
-            scale,
-            z_layer,
-            z_order,
-            main_color,
-            detail_color,
-        }
-    }
-
-    #[wasm_bindgen]
-    pub fn serialize(&self) -> Result<String, RustError> {
-        the_crazy_base::encode(unsafe { std::mem::transmute(std::ptr::read(self as *const _)) })
-            .ok_or(ErrorType::ObjectSerialization.into())
-
-        // let encoded: Vec<u8> = bincode::serialize(self).ok()?;
-
-        // Some(general_purpose::URL_SAFE.encode(encoded))
-    }
-    #[wasm_bindgen]
-    pub fn deserialize(s: String) -> Result<GDObject, RustError> {
-        let decoded: [u8; 32] =
-            the_crazy_base::decode(&s).ok_or::<RustError>(ErrorType::InvalidObjectString.into())?;
-
-        Ok(unsafe { std::mem::transmute(decoded) })
-
-        // let decoded = general_purpose::URL_SAFE.decode(&s).ok()?;
-
-        // let b85 = base85::encode(&decoded);
-        // let a85 = ascii85::encode(&decoded);
-        // let diming = dremig::fuck(&decoded);
-
-        // let out = bincode::deserialize(&decoded).ok()?;
-
-        // let mine = halal::encode(unsafe { std::mem::transmute::<_, _>(out) });
-        // log!(
-        //     "current: {}, base85: {}, ascii85: {}, mine: {}, diming: {}",
-        //     s.len(),
-        //     b85.len(),
-        //     a85.len(),
-        //     mine.len(),
-        //     diming.len()
-        // );
-
-        // Some(out)
-    }
-
-    #[wasm_bindgen]
-    pub fn debug(&self) -> String {
-        format!("{:#?}", self)
-    }
-
-    #[wasm_bindgen]
-    pub fn get_chunk_coord(&self) -> ChunkCoord {
-        get_chunk_coord(self.x, self.y)
-    }
-
-    // #[wasm_bindgen]
-    // pub fn deserialize(s: &[u8]) -> Result<GDObject, i32> {
-    //     let data = general_purpose::URL_SAFE
-    //         .decode(s)
-    //         .map_err(|_| DecodeError)?;
-
-    //     unsafe { Ok(mem::transmute::<_, _>(&data)) }
-    // }
+gd_object! {
+    id: u16,
+    x: f32,
+    y: f32,
+    rotation: f32,
+    flip_x: bool,
+    flip_y: bool,
+    scale: f32,
+    z_layer: ZLayer,
+    z_order: i8,
+    main_color: GDColor,
+    detail_color: GDColor
 }
 
 mod the_crazy_base {

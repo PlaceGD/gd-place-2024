@@ -22,7 +22,7 @@
     import Minimize from "./icons/caret.svg";
 
     import { TabGroup, menuSettings } from "../stores";
-    import { addObject, deleteObject } from "../firebase/Object";
+    import { addObject, removeObject } from "../firebase/Object";
     import { useIsOverflowing } from "../utils/Document";
     import { DEBUG } from "../utils/Debug";
     import SpriteSheet from "../utils/SpriteSheet";
@@ -78,6 +78,8 @@
             obj.id = $menuSettings.selectedObject;
             obj.z_layer = $menuSettings.zLayer;
             obj.z_order = $menuSettings.zOrder;
+
+            // console.log($menuSettings.selectedMainColor == $menuSettings.selectedDetailColor);
 
             state.set_preview_object(obj);
         }
@@ -462,7 +464,7 @@
                                 let k = state.get_selected_object_key();
                                 let coord = state.get_selected_object_chunk();
                                 if (k != null && coord != null) {
-                                    deleteObject(k, [coord.x, coord.y]);
+                                    removeObject(k, [coord.x, coord.y]);
                                 }
                             }
                         }

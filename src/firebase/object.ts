@@ -3,28 +3,18 @@ import type { GDObject } from "wasm-lib";
 import { db } from "./Firebase";
 import Toast from "../utils/Toast";
 
+import { placeObject, deleteObject } from "./cloudFunctions";
+
 export const addObject = (obj: GDObject) => {
-    let chunkCoord = obj.get_chunk_coord();
-    const objectsRef = ref(db, `/objects/${chunkCoord.x},${chunkCoord.y}`);
-
-    try {
-        let str = obj.serialize();
-        push(objectsRef, str);
-    } catch (e: any) {
-        Toast.showErrorToast(e.display());
-    }
-
-    // const newPostRef = push(postListRef);
+    placeObject({ object: obj.serialize() }).catch(e => {
+        Toast.showErrorToast(e);
+    });
 };
-export const deleteObject = (key: string, chunk: [number, number]) => {
-    const objectsRef = ref(db, `/objects/${chunk[0]},${chunk[1]}/${key}`);
-    remove(objectsRef);
-    // try {
-    //     let str = obj.serialize();
-    //     push(objectsRef, str);
-    // } catch (e: any) {
-    //     Toast.showErrorToast(e.display());
-    // }
-
-    // const newPostRef = push(postListRef);
+export const removeObject = (key: string, chunk: [number, number]) => {
+    console.log("removing object", key, chunk);
+    deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key }).catch(
+        e => {
+            Toast.showErrorToast(e);
+        }
+    );
 };

@@ -6,7 +6,7 @@
 </script>
 
 <button
-    class="top-0 right-0 z-50 w-16 h-16"
+    class="top-0 right-0 z-30 w-16 h-16"
     on:click={() => {
         if (loginData.isLoggedIn) {
             handleLogout();

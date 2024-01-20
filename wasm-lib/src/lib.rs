@@ -14,7 +14,10 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 #[cfg(target_arch = "wasm32")]
 pub fn create_view(canvas: web_sys::HtmlCanvasElement) -> crate::state::StateWrapper {
-    crate::state::StateWrapper::new(desen::new_app_canvas::<crate::state::State>(canvas))
+    crate::state::StateWrapper::new(desen::new_app_canvas::<
+        crate::state::AppInfo,
+        crate::state::State,
+    >(canvas))
     // State::new(canvas).await
 }
 
@@ -33,7 +36,7 @@ pub struct RustError {
 #[derive(Debug, Clone, Copy)]
 pub enum ErrorType {
     InvalidObjectId(u16),
-    InvalidObjectString,
+    InvalidObjectString(&'static str),
     ObjectSerialization,
 }
 
@@ -54,7 +57,9 @@ impl RustError {
     pub fn display(&self) -> String {
         match self.typ {
             ErrorType::InvalidObjectId(id) => format!("Invalid object ID: {id}."),
-            ErrorType::InvalidObjectString => "Invalid object string deserialization.".to_string(),
+            ErrorType::InvalidObjectString(e) => {
+                format!("Invalid object string deserialization. ({e})")
+            }
             ErrorType::ObjectSerialization => {
                 "Failed to serialize object. Please report this issue.".to_string()
             }

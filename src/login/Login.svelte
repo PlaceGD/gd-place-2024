@@ -6,15 +6,20 @@
 </script>
 
 {#if loginData.showLoginUI}
-    <section class="absolute z-40 w-full h-full" aria-label="Login or Sign Up">
-        <button
-            class="text-white bg-red"
-            on:click={() => {
-                loginData.showLoginUI = false;
-            }}
-        >
-            CLOSE !!!!!!!!
-        </button>
+    <section
+        class="absolute z-40 w-full h-full flex-center"
+        aria-label="Login or Sign Up"
+    >
+        <div class="w-96 h-96 menu-panel rounded-lg">
+            <button
+                class="text-white bg-red"
+                on:click={() => {
+                    loginData.showLoginUI = false;
+                }}
+            >
+                CLOSE !!!!!!!!
+            </button>
+        </div>
     </section>
 
     <div

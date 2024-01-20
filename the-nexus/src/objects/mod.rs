@@ -8,12 +8,10 @@ pub mod list;
 pub enum ObjectCategory {
     Blocks,
     Outlines,
-    Slopes,
     Spikes,
-    Utilities,
-    GroundDeco,
+    OrbsAndGlorbs,
+    Pixel,
     Deco,
-    Pulsing,
     Saws,
 }
 #[derive(Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize)]
@@ -23,6 +21,7 @@ pub struct ObjectInfo {
     pub place_offset_y: f32,
     pub tintable: bool,
     pub solid: bool,
+    pub builtin_scale: f32,
     pub category: ObjectCategory,
 }
 

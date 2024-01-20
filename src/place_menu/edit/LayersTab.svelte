@@ -21,9 +21,9 @@
 
     const selectedLayerToZLayer = (layer: LayerType, id: number): ZLayer => {
         if (layer == LayerType.T) {
-            return [ZLayer.T1, ZLayer.T2, ZLayer.T3][id - 1];
+            return [ZLayer.T1, ZLayer.T2, ZLayer.T3, ZLayer.T4][id];
         } else {
-            return [ZLayer.B4, ZLayer.B3, ZLayer.B2, ZLayer.B1][id - 1];
+            return [ZLayer.B5, ZLayer.B4, ZLayer.B3, ZLayer.B2, ZLayer.B1][id];
         }
     };
 

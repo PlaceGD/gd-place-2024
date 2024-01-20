@@ -165,14 +165,14 @@
     <div class="h-full palette">
         {#if selectedTab == ColorTab.Main}
             <PaletteGrid
-                hue={$menuSettings.selectedMainColor.hue}
+                bind:hue={$menuSettings.selectedMainColor.hue}
                 bind:currentRow={$menuSettings.selectedMainColor.y}
                 bind:currentColumn={$menuSettings.selectedMainColor.x}
                 tabIndex={canSelectByTab}
             />
         {:else}
             <PaletteGrid
-                hue={$menuSettings.selectedDetailColor.hue}
+                bind:hue={$menuSettings.selectedDetailColor.hue}
                 bind:currentRow={$menuSettings.selectedDetailColor.y}
                 bind:currentColumn={$menuSettings.selectedDetailColor.x}
                 tabIndex={canSelectByTab}

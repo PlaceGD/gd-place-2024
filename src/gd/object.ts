@@ -1,16 +1,14 @@
-import { clamp } from "../utils/Util";
+import { clamp } from "../utils/util";
 import objectList from "./objects.json";
 // import textureSizes from "./texture_sizes.json";
 
 export const CATEGORY_ICONS = {
     Blocks: "/assets/ui/build_tab_icons/blocks.png",
     Outlines: "/assets/ui/build_tab_icons/outlines.png",
-    Slopes: "/assets/ui/build_tab_icons/slopes.png",
     Spikes: "/assets/ui/build_tab_icons/spikes.png",
-    Utilities: "/assets/ui/build_tab_icons/util.png",
-    GroundDeco: "/assets/ui/build_tab_icons/ground_deco.png",
+    OrbsAndGlorbs: "/assets/ui/build_tab_icons/orbs.png",
+    Pixel: "/assets/ui/build_tab_icons/pixel.png",
     Deco: "/assets/ui/build_tab_icons/deco.png",
-    Pulsing: "/assets/ui/build_tab_icons/pulsing.png",
     Saws: "/assets/ui/build_tab_icons/saws.png",
 };
 

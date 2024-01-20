@@ -1,5 +1,9 @@
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
+
+use crate::ErrorType;
 
 macro_rules! z_layers {
     ($($name:ident,)*) => {
@@ -12,6 +16,31 @@ macro_rules! z_layers {
         }
         pub const Z_LAYERS: &[ZLayer] = &[$(ZLayer::$name,)*];
     };
+}
+
+impl ToString for ZLayer {
+    fn to_string(&self) -> String {
+        Z_LAYERS
+            .iter()
+            .position(|x| x == self)
+            .unwrap_or(0) // should never fail but just in case
+            .to_string()
+    }
+}
+
+impl FromStr for ZLayer {
+    type Err = ErrorType;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let id = s
+            .parse::<usize>()
+            .map_err(|_| ErrorType::InvalidObjectString("leayer2"))?;
+
+        if id >= Z_LAYERS.len() {
+            return Err(ErrorType::InvalidObjectString("leayer"));
+        }
+        Ok(Z_LAYERS[id])
+    }
 }
 
 z_layers! {

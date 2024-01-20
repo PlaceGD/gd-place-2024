@@ -25,12 +25,10 @@ class LocalSettings<T extends Record<string, any>> {
             (this.value as any)[prop] = value;
             localStorage.setItem(this.id, JSON.stringify(this.value));
         } else {
-            console.warn(
-                `"${prop}" wanted from "${this.value}". Could not get.`
-            );
+            console.warn(`"${prop}" wanted from "${this.id}". Could not get.`);
             localStorage.clear();
             localStorage.setItem("didErrorOccur", "1");
-            //window.location.reload();
+            window.location.reload();
         }
 
         return true;

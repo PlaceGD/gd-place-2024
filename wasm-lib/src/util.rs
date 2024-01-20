@@ -19,6 +19,7 @@ macro_rules! map {
     }};
 }
 
+use image::DynamicImage;
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
@@ -149,4 +150,15 @@ pub fn get_chunk_coord(x: f32, y: f32) -> ChunkCoord {
         x: (x / CHUNK_SIZE_UNITS as f32).floor() as i32,
         y: (y / CHUNK_SIZE_UNITS as f32).floor() as i32,
     }
+}
+
+pub fn quick_image_load(bytes: &[u8]) -> DynamicImage {
+    use image::io::Reader as ImageReader;
+    use std::io::Cursor;
+
+    ImageReader::new(Cursor::new(bytes))
+        .with_guessed_format()
+        .unwrap()
+        .decode()
+        .unwrap()
 }

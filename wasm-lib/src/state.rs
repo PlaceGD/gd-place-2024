@@ -2,9 +2,11 @@ use std::{collections::HashSet, f32::consts::PI};
 
 use colored::Colorize;
 use desen::{
+    color::Color,
     frame::{BlendMode, Frame, FrameTransform, FrameTransformMatrix},
-    state::{AppState, CanvasAppState, LoadedTexture},
-    CanvasAppBundle,
+    state::{AppState, CanvasAppInfo, CanvasAppState},
+    texture::LoadedTexture,
+    App, CanvasAppBundle,
 };
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
@@ -19,13 +21,20 @@ use crate::{
     log, map,
     object::{GDColor, GDObject},
     text::TextDraw,
-    util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, Rect},
+    util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
     utilgen::{get_detail_sprite, get_main_sprite, get_object_info},
     ErrorType, RustError,
 };
 
 use nalgebra::{vector, Vector2, Vector4};
+
+pub struct AppInfo {
+    app: App,
+}
+
 pub struct State {
+    info: AppInfo,
+
     time: f32,
 
     width: u32,
@@ -98,7 +107,7 @@ fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
 }
 
 impl AppState for State {
-    fn update(&mut self, delta: f32) {
+    fn view(&mut self, frame: &mut desen::frame::Frame, delta: f32) {
         self.time += delta;
 
         for (_, _, _, lifetime) in &mut self.delete_texts {
@@ -122,9 +131,7 @@ impl AppState for State {
         //         20.0 * 30.0,
         //     );
         // }
-    }
 
-    fn view(&mut self, frame: &mut desen::frame::Frame) {
         self.text_draws.clear();
 
         // self.draw_text(frame, self.time, 0.0, 0.0, 50.0, "");
@@ -142,16 +149,15 @@ impl AppState for State {
 
         let zoom_scale = self.get_zoom_scale();
         {
-            frame.fill(self.bg_color.0, self.bg_color.1, self.bg_color.2, 255);
+            frame.fill(Color::Rgb8(
+                self.bg_color.0,
+                self.bg_color.1,
+                self.bg_color.2,
+            ));
             let dimension = self.width.max(self.height) as f32;
             frame.set_current_texture(self.background);
-            frame.draw_image(
-                -dimension / 2.0,
-                -dimension / 2.0,
-                Some(dimension),
-                Some(dimension),
-                true,
-            );
+
+            frame.texture().wh(dimension, dimension).centered().tinted();
         }
 
         // grid drawing
@@ -165,37 +171,43 @@ impl AppState for State {
             frame.translate(tx, ty);
 
             frame.stroke_weight(4.0);
-            frame.stroke(0, 0, 0, 255);
+            frame.stroke(Color::Rgb8(0, 0, 0));
             frame.no_fill();
-            frame.rect(
-                0.0,
-                0.0,
+            frame.rect().wh(
                 LEVEL_WIDTH_UNITS as f32 * zoom_scale,
                 LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
             );
+
             // frame.line(-2.0, 0.0, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, 0.0);
             // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
             // frame.line(-2.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
             // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
 
             frame.stroke_weight(1.0);
-            frame.stroke(0, 0, 0, map!(self.zoom, -24.0, 24.0, 0.0, 255.0) as u8);
+            frame.stroke(Color::Rgba(
+                0.0,
+                0.0,
+                0.0,
+                map!(self.zoom, -24.0, 24.0, 0.0, 1.0),
+            ));
             if self.zoom >= -24.0 {
                 for x in 1..=LEVEL_WIDTH_BLOCKS {
-                    frame.line(
-                        (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                        0.0,
-                        (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                        LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
-                    );
+                    frame
+                        .line()
+                        .xy0((x as f32 * 30.0 * zoom_scale).floor() + 0.5, 0.0)
+                        .xy1(
+                            (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                            LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
+                        );
                 }
                 for y in 1..=LEVEL_HEIGHT_BLOCKS {
-                    frame.line(
-                        0.0,
-                        (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                        LEVEL_WIDTH_UNITS as f32 * zoom_scale,
-                        (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                    );
+                    frame
+                        .line()
+                        .xy0(0.0, (y as f32 * 30.0 * zoom_scale).floor() + 0.5)
+                        .xy1(
+                            LEVEL_WIDTH_UNITS as f32 * zoom_scale,
+                            (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
+                        );
                 }
             }
             frame.pop()
@@ -225,10 +237,10 @@ impl AppState for State {
             view_rect.x += view_rect.w / 2.0;
             view_rect.y += view_rect.h / 2.0;
 
-            frame.fill(255, 0, 0, 127);
+            frame.fill(Color::Rgba8(255, 0, 0, 127));
             frame.no_stroke();
             for (x, y) in view_rect.corners() {
-                frame.circle(x, y, 10.0);
+                frame.circle().xy(x, y).radius(10.0);
             }
         }
 
@@ -238,43 +250,41 @@ impl AppState for State {
         let now = now();
 
         for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
-            frame.stroke(
-                0,
-                255,
-                0,
+            frame.stroke(Color::Rgba(
+                0.0,
+                1.0,
+                0.0,
                 map!(
                     now - chunk.last_time_visible,
                     0.0,
                     UNLOAD_CHUNK_TIME * 1000.0,
                     255.0,
                     0.0
-                ) as u8,
-            );
-            frame.rect(
-                x as f32 * 20.0 * 30.0,
-                y as f32 * 20.0 * 30.0,
-                20.0 * 30.0,
-                20.0 * 30.0,
-            );
+                ) as f32,
+            ));
+            frame
+                .rect()
+                .xy(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0)
+                .wh(20.0 * 30.0, 20.0 * 30.0);
         }
 
         {
             let draw_obj_sprite = |frame: &mut Frame, sprite: &SpriteInfo, obj: &GDObject| {
                 frame.push();
                 frame.transform(FrameTransform::Custom(obj_transform(obj)));
-                frame.draw_image_cropped(
-                    -(sprite.size.0 as f32) / 2.0 + sprite.offset.0,
-                    -(sprite.size.1 as f32) / 2.0 - sprite.offset.1,
-                    None,
-                    None,
-                    (
+                frame
+                    .texture()
+                    .xy(
+                        -(sprite.size.0 as f32) / 2.0 + sprite.offset.0,
+                        -(sprite.size.1 as f32) / 2.0 - sprite.offset.1,
+                    )
+                    .cropped((
                         sprite.pos.0 as f32,
                         sprite.pos.1 as f32,
                         sprite.size.0 as f32,
                         sprite.size.1 as f32,
-                    ),
-                    true,
-                );
+                    ))
+                    .tinted();
                 frame.pop()
             };
 
@@ -288,7 +298,7 @@ impl AppState for State {
                         if lighter { 255.0 } else { 200.0 }
                     ) as u8;
 
-                    frame.fill(255, c, c, 255);
+                    frame.fill(Color::Rgba8(255, c, c, 255));
                 }
             };
 
@@ -301,12 +311,12 @@ impl AppState for State {
                         |key, obj| {
                             if let Some(sprite) = get_main_sprite(obj.id as u32) {
                                 if obj.main_color.blending {
-                                    frame.fill(
+                                    frame.fill(Color::Rgba8(
                                         obj.main_color.r,
                                         obj.main_color.g,
                                         obj.main_color.b,
                                         obj.main_color.opacity,
-                                    );
+                                    ));
                                     set_fill_if_selected(frame, key, false);
                                     draw_obj_sprite(frame, &sprite, obj);
                                 }
@@ -318,7 +328,6 @@ impl AppState for State {
                             None
                         },
                     );
-                    // draw_preview_sprite(frame, *layer, z_order, false, true);
                 }
                 frame.set_blend_mode(BlendMode::Normal);
                 for z_order in -50..=50 {
@@ -328,24 +337,24 @@ impl AppState for State {
                         |key, obj| {
                             if let Some(sprite) = get_main_sprite(obj.id as u32) {
                                 if !obj.main_color.blending {
-                                    frame.fill(
+                                    frame.fill(Color::Rgba8(
                                         obj.main_color.r,
                                         obj.main_color.g,
                                         obj.main_color.b,
                                         obj.main_color.opacity,
-                                    );
+                                    ));
                                     set_fill_if_selected(frame, key, false);
                                     draw_obj_sprite(frame, &sprite, obj);
                                 }
                             }
                             if let Some(sprite) = get_detail_sprite(obj.id as u32) {
                                 if !obj.detail_color.blending {
-                                    frame.fill(
+                                    frame.fill(Color::Rgba8(
                                         obj.detail_color.r,
                                         obj.detail_color.g,
                                         obj.detail_color.b,
                                         obj.detail_color.opacity,
-                                    );
+                                    ));
                                     set_fill_if_selected(frame, key, true);
                                     draw_obj_sprite(frame, &sprite, obj);
                                 }
@@ -357,8 +366,6 @@ impl AppState for State {
                             None
                         },
                     );
-                    // draw_preview_sprite(frame, *layer, z_order, false, false);
-                    // draw_preview_sprite(frame, *layer, z_order, true, false);
                 }
                 frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
                 for z_order in -50..=50 {
@@ -368,12 +375,12 @@ impl AppState for State {
                         |key, obj| {
                             if let Some(sprite) = get_detail_sprite(obj.id as u32) {
                                 if obj.detail_color.blending {
-                                    frame.fill(
+                                    frame.fill(Color::Rgba8(
                                         obj.detail_color.r,
                                         obj.detail_color.g,
                                         obj.detail_color.b,
                                         obj.detail_color.opacity,
-                                    );
+                                    ));
                                     set_fill_if_selected(frame, key, true);
                                     draw_obj_sprite(frame, &sprite, obj);
                                 }
@@ -385,7 +392,6 @@ impl AppState for State {
                             None
                         },
                     );
-                    // draw_preview_sprite(frame, *layer, z_order, true, true);
                 }
             }
             frame.set_blend_mode(BlendMode::Normal);
@@ -439,40 +445,36 @@ impl AppState for State {
             let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
 
             frame.set_current_texture(self.ground1);
-            frame.fill(
+            frame.fill(Color::Rgba8(
                 self.ground1_color.0,
                 self.ground1_color.1,
                 self.ground1_color.2,
                 255,
-            );
+            ));
             for i in min_x..=max_x {
                 let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
 
-                frame.draw_image(
-                    x,
-                    -GROUND_SIZE_UNITS,
-                    Some(GROUND_SIZE_UNITS),
-                    Some(GROUND_SIZE_UNITS),
-                    true,
-                );
+                frame
+                    .texture()
+                    .xy(x, -GROUND_SIZE_UNITS)
+                    .wh(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS)
+                    .tinted();
             }
             frame.set_current_texture(self.ground2);
-            frame.fill(
+            frame.fill(Color::Rgba8(
                 self.ground2_color.0,
                 self.ground2_color.1,
                 self.ground2_color.2,
                 255,
-            );
+            ));
             for i in min_x..=max_x {
                 let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
 
-                frame.draw_image(
-                    x,
-                    -GROUND_SIZE_UNITS,
-                    Some(GROUND_SIZE_UNITS),
-                    Some(GROUND_SIZE_UNITS),
-                    true,
-                );
+                frame
+                    .texture()
+                    .xy(x, -GROUND_SIZE_UNITS)
+                    .wh(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS)
+                    .tinted();
             }
         }
     }
@@ -519,14 +521,14 @@ impl State {
                 let pb = start + dir * ($a + $l);
                 let pa = start + dir * $a;
                 frame.no_fill();
-                frame.stroke(r, g, b, 255);
+                frame.stroke(Color::Rgba8(r, g, b, 255));
                 frame.stroke_weight(weight);
-                frame.line(pa.x, pa.y, pb.x, pb.y);
+                frame.line().xy0(pa.x, pa.y).xy1(pb.x, pb.y);
 
                 frame.no_stroke();
-                frame.fill(r, g, b, 255);
-                frame.circle(pa.x, pa.y, weight / 2.0);
-                frame.circle(pb.x, pb.y, weight / 2.0);
+                frame.fill(Color::Rgba8(r, g, b, 255));
+                frame.circle().xy(pa.x, pa.y).radius(weight / 2.0);
+                frame.circle().xy(pb.x, pb.y).radius(weight / 2.0);
             }};
         }
 
@@ -600,7 +602,7 @@ impl State {
         T: ToString,
         U: ToString,
     {
-        let t = frame.get_current_transform() * FrameTransform::Translate { x, y }.mat();
+        let t = frame.get_transform().mat() * FrameTransform::Translate { x, y }.mat();
 
         self.text_draws.push(TextDraw {
             text: text.to_string(),
@@ -611,8 +613,8 @@ impl State {
     }
 }
 
-impl CanvasAppState for State {
-    fn init(loader: &mut desen::state::ResourceLoader) -> Self {
+impl CanvasAppState<AppInfo> for State {
+    fn init(mut info: AppInfo) -> Self {
         // need this so that the atlas is nonzero lol!!!
         // technically not rly cause we are importing other stuff
         // but just in case
@@ -626,16 +628,24 @@ impl CanvasAppState for State {
             bg_color: (40, 125, 255),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),
-            ground1: loader.load_texture_bytes(include_bytes!("../ground1.png")),
-            ground2: loader.load_texture_bytes(include_bytes!("../ground2.png")),
-            background: loader.load_texture_bytes(include_bytes!("../background.png")),
-            spritesheet: loader.load_texture_bytes(include_bytes!("../../src/gd/spritesheet.png")),
+            ground1: info
+                .app
+                .load_texture(&quick_image_load(include_bytes!("../ground1.png"))),
+            ground2: info
+                .app
+                .load_texture(&quick_image_load(include_bytes!("../ground2.png"))),
+            background: info
+                .app
+                .load_texture(&quick_image_load(include_bytes!("../background.png"))),
+            spritesheet: info.app.load_texture(&quick_image_load(include_bytes!(
+                "../../src/gd/spritesheet.png"
+            ))),
             level: Level::default(),
             preview_object: GDObject {
                 id: 1,
                 x: 15.0,
                 y: 15.0,
-                rotation: 0,
+                rotation: 0.0,
                 flip_x: false,
                 flip_y: false,
                 scale: 1.0,
@@ -649,17 +659,32 @@ impl CanvasAppState for State {
             selected_object: None,
             text_draws: vec![],
             delete_texts: vec![],
+            info,
         }
+    }
+
+    fn get_info(&mut self) -> &mut AppInfo {
+        &mut self.info
+    }
+}
+
+impl CanvasAppInfo for AppInfo {
+    fn init(app: App) -> Self {
+        Self { app }
+    }
+
+    fn get_app(&mut self) -> &mut App {
+        &mut self.app
     }
 }
 
 #[wasm_bindgen]
 pub struct StateWrapper {
-    bundle: CanvasAppBundle<State>,
+    bundle: CanvasAppBundle<State, AppInfo>,
 }
 
 impl StateWrapper {
-    pub fn new(bundle: CanvasAppBundle<State>) -> Self {
+    pub fn new(bundle: CanvasAppBundle<State, AppInfo>) -> Self {
         Self { bundle }
     }
 }
@@ -671,8 +696,9 @@ impl StateWrapper {
     }
 
     pub fn resize(&mut self, width: u32, height: u32) {
-        self.bundle.resize(width, height);
-        (self.bundle.state.width, self.bundle.state.height) = self.bundle.get_size();
+        self.bundle.state.info.app.resize((width, height).into());
+
+        (self.bundle.state.width, self.bundle.state.height) = (width, height);
     }
 
     pub fn get_camera_pos(&self) -> Vec<f32> {

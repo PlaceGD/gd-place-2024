@@ -32,7 +32,7 @@ console_error_panic_hook = { version = "0.1.7", optional = true }
 
 desen = { git = "https://github.com/FlowVix/desen.git", features = [
     "html-canvas",
-], rev = "86e651e" }
+] }
 
 
 #desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
@@ -50,6 +50,7 @@ indexmap = "2.1.0"
 # lyon = "1.0.1"
 base85 = "2.0.0"
 ascii85 = "0.2.1"
+image = "0.24.7"
 
 [build]
 target = "wasm32-unknown-unknown"

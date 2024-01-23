@@ -7,6 +7,7 @@ use desen::{
     texture::LoadedTexture,
     App, CanvasAppBundle,
 };
+use image::ImageBuffer;
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
@@ -65,7 +66,8 @@ pub struct State {
 }
 
 impl State {
-    pub fn init(mut app: App, spritesheet_data: js_sys::Uint8Array) -> Self {
+    pub fn init(mut app: App, spritesheet_data: &[u8]) -> Self {
+        crate::log!("DATA: {}", spritesheet_data.len());
         Self {
             time: 0.0,
             width: 10,
@@ -104,7 +106,7 @@ impl State {
                     &quick_image_load(include_bytes!("../background.png")),
                     false,
                 ),
-                spritesheet: app.load_texture(&quick_image_load(&spritesheet_data.to_vec()), true),
+                spritesheet: app.load_texture(&quick_image_load(spritesheet_data), true),
                 app,
             },
         }

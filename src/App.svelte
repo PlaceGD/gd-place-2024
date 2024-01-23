@@ -14,7 +14,7 @@
         initWasm,
         loadSpritesheet,
         spritesheetProgress,
-    } from "./load_wasm";
+    } from "./loadWasm";
 
     let loginData: LoginData = {
         isLoggedIn: false,

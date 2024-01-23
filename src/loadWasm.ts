@@ -54,7 +54,7 @@ export const initWasm = () => {
 export const spritesheetProgress = writable<{
     progress: number;
     max: number;
-    arrayBuffer: Uint8Array | null;
+    arrayBuffer: Uint8ClampedArray | null;
 }>({
     progress: -1,
     max: 0,
@@ -78,7 +78,7 @@ export const loadSpritesheet = () => {
     spritesheetReq.addEventListener("load", () => {
         spritesheetProgress.update(v => ({
             ...v,
-            arrayBuffer: new Uint8Array(spritesheetReq.response),
+            arrayBuffer: new Uint8ClampedArray(spritesheetReq.response),
         }));
     });
     spritesheetReq.addEventListener("error", () => {

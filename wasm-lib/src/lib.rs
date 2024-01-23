@@ -17,7 +17,7 @@ use wasm_bindgen::prelude::*;
 #[cfg(target_arch = "wasm32")]
 pub fn create_view(
     canvas: web_sys::HtmlCanvasElement,
-    spritesheet_data: js_sys::Uint8Array,
+    spritesheet_data: &[u8],
 ) -> crate::state::StateWrapper {
     crate::state::StateWrapper::new(desen::new_app_canvas(canvas, |app| {
         crate::state::State::init(app, spritesheet_data)

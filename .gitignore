@@ -7,8 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-shared-lib/esm
-shared-lib/cjs
+shared-lib/esm/*
+shared-lib/cjs/*
+!shared-lib/esm/package.json
+!shared-lib/cjs/package.json
 
 node_modules
 dist

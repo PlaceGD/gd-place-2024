@@ -1,0 +1,15 @@
+{
+    "name": "shared-lib",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "types": "esm/index.d.ts",
+    "type": "module",
+    "exports": {
+        "require": "./cjs/index.js",
+        "import": "./esm/index.js"
+    },
+    "scripts": {
+        "build": "tsc --module commonjs --outDir cjs/ && tsc --module esnext --outDir esm/"
+    }
+}

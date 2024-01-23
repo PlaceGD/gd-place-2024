@@ -5,11 +5,7 @@
     import { AnimateSharedLayout } from "svelte-motion";
 
     import colors from "../gd/colors.json";
-    import {
-        CATEGORY_ICONS,
-        OBJECT_SETTINGS,
-        MAIN_DETAIL_TEX_RATIOS,
-    } from "../gd/Object";
+    import { CATEGORY_ICONS } from "../gd/object";
 
     import Image from "../components/Image.svelte";
     import Animate from "../components/Animate.svelte";
@@ -22,7 +18,7 @@
     import Minimize from "./icons/caret.svg";
 
     import { TabGroup, menuSettings } from "../stores";
-    import { addObject, removeObject } from "../firebase/Object";
+    import { addObject, removeObject } from "../firebase/object";
     import { useIsOverflowing } from "../utils/Document";
     import { DEBUG } from "../utils/Debug";
     import SpriteSheet from "../utils/SpriteSheet";
@@ -324,7 +320,7 @@
                     </Animate>
 
                     <div
-                        class="w-full h-full overflow-hidden flex-center menu-panel overflow-hidden side-menu"
+                        class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
                     >
                         <ul
                             class="absolute flex flex-col items-center w-full h-full gap-6 px-2 py-2 justify-evenly"

@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+
+use itertools::Itertools;
 #[cfg(test)]
 use packing::SpritesheetData;
 
@@ -26,8 +29,21 @@ fn generate_shid() {
     .unwrap();
 
     fs::write(
-        "../src/gd/objects.json",
-        serde_json::to_string(&json!(get_available_objects())).unwrap(),
+        "../shared-lib/src/gd/objects.json",
+        serde_json::to_string(&json!(get_available_objects()
+            .iter()
+            .copied()
+            .collect::<HashMap<_, _>>()))
+        .unwrap(),
+    )
+    .unwrap();
+    fs::write(
+        "../shared-lib/src/gd/object_order.json",
+        serde_json::to_string(&json!(get_available_objects()
+            .iter()
+            .map(|v| v.0)
+            .collect_vec()))
+        .unwrap(),
     )
     .unwrap();
     fs::write(

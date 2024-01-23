@@ -1,13 +1,13 @@
 use std::str::FromStr;
 
-use serde::{Deserialize, Serialize};
+// use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
 use crate::ErrorType;
 
 macro_rules! z_layers {
     ($($name:ident,)*) => {
-        #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
         #[wasm_bindgen]
         pub enum ZLayer {
             $(

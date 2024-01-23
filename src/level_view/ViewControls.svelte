@@ -15,6 +15,8 @@
     import Toast from "../utils/Toast";
     import LocalSettingsFactory from "../utils/LocalSettings";
     import { isMobile } from "../utils/Document";
+    import { addObject } from "../firebase/object";
+    import { decodeString } from "shared-lib";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -99,13 +101,13 @@
                     let key = data.key;
                     if (key != null) {
                         try {
-                            let obj = wasm.GDObject.deserialize(
-                                `${data.val()}`
+                            let obj = wasm.GDObject.from_bytes(
+                                decodeString(data.val(), 126)
                             );
 
                             state.add_object(key, obj);
                         } catch (e: any) {
-                            console.error("(Failed in `GDObject.deserialize`)");
+                            console.error("(Failed in `GDObject.from_bytes`)");
                             Toast.showErrorToast(e.display());
                         }
                     }
@@ -137,10 +139,10 @@
             $menuSettings.selectedObject,
             Math.floor(mx / 30) * 30 + 15,
             Math.floor(my / 30) * 30 + 15,
+            1,
             0,
-            false,
-            false,
-            1.0,
+            0,
+            1,
             wasm.ZLayer.B1,
             0,
             wasm.GDColor.white(),
@@ -160,6 +162,8 @@
             opacity: 1,
             blending: false,
         };
+        $menuSettings.zLayer = wasm.ZLayer.B1;
+        $menuSettings.zOrder = 0;
         // $menuSettings.zLayer = wasm.ZLayer.B1;
 
         state.set_preview_object(obj);
@@ -379,4 +383,27 @@ aria-grabbed="false" -->
             changeGround2Color(e);
         }}
     />
+    <!-- <button
+        on:click={() => {
+            for (let x = 0; x < 200; x++) {
+                for (let y = 0; y < 50; y++) {
+                    addObject(
+                        new wasm.GDObject(
+                            1,
+                            15 + x * 30,
+                            15 + y * 30,
+                            0,
+                            false,
+                            false,
+                            1,
+                            wasm.ZLayer.T1,
+                            0,
+                            new wasm.GDColor(255, 0, 0, 255, false),
+                            new wasm.GDColor(255, 0, 0, 255, false)
+                        )
+                    );
+                }
+            }
+        }}>Ongy</button
+    > -->
 </div>

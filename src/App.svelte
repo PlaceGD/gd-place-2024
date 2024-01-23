@@ -9,7 +9,12 @@
     import LoginButton from "./login/LoginButton.svelte";
     import type { LoginData } from "./login/Login";
 
-    import { wasmProgress, initWasm } from "./LoadWasm";
+    import {
+        wasmProgress,
+        initWasm,
+        loadSpritesheet,
+        spritesheetProgress,
+    } from "./LoadWasm";
 
     let loginData: LoginData = {
         isLoggedIn: false,
@@ -26,6 +31,13 @@
     }
 
     initWasm();
+    loadSpritesheet();
+
+    $: loaded =
+        $wasmProgress.hasLoaded && $spritesheetProgress.arrayBuffer !== null;
+
+    $: max = $wasmProgress.max + $spritesheetProgress.max;
+    $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
 </script>
 
 <SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />
@@ -35,16 +47,16 @@
         <LoginButton bind:loginData></LoginButton>
     </div>
     <Login bind:loginData></Login>
-    <Editor bind:wasmLoaded={$wasmProgress.hasLoaded} />
-    {#if !$wasmProgress.hasLoaded}
+    <Editor bind:wasmLoaded={loaded} />
+    {#if !loaded}
         <div class="absolute">
             <input
                 type="range"
                 min={0}
-                max={$wasmProgress.max}
-                bind:value={$wasmProgress.progress}
-                aria-label="WASM download progress"
-                aria-valuetext={`${($wasmProgress.progress / $wasmProgress.max) * 100}%`}
+                {max}
+                value={progress}
+                aria-label="Download progress of data required for GD Place"
+                aria-valuetext={`${(progress / max) * 100}%`}
                 tabindex="-1"
             />
         </div>

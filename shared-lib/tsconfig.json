@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es2022",
+        "moduleResolution": "node",
+        "declaration": true,
+        "strict": true,
+        "incremental": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "rootDir": "./src",
+        "composite": true,
+        "noImplicitAny": true,
+        "baseUrl": "./",
+        "resolveJsonModule": true,
+    },
+    "include": ["./src/**/*.ts", "./src/**/*.json"],
+}

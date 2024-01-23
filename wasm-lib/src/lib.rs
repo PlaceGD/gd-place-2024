@@ -8,23 +8,31 @@ mod text;
 mod util;
 mod utilgen;
 
-use colored::control::set_override;
+// use colored::control::set_override;
 use wasm_bindgen::prelude::*;
+
+// pub fn create_view_aux(canvas: web_sys::HtmlCanvasElement) -> crate::state::StateWrapper {}
 
 #[wasm_bindgen]
 #[cfg(target_arch = "wasm32")]
-pub fn create_view(canvas: web_sys::HtmlCanvasElement) -> crate::state::StateWrapper {
-    crate::state::StateWrapper::new(desen::new_app_canvas::<
-        crate::state::AppInfo,
-        crate::state::State,
-    >(canvas))
-    // State::new(canvas).await
+pub fn create_view(
+    canvas: web_sys::HtmlCanvasElement,
+    spritesheet_data: js_sys::Uint8Array,
+) -> crate::state::StateWrapper {
+    crate::state::StateWrapper::new(desen::new_app_canvas(canvas, |app| {
+        crate::state::State::init(app, spritesheet_data)
+    }))
+}
+
+#[wasm_bindgen]
+pub fn funtest() -> String {
+    unsafe { String::from_utf8_unchecked(vec![97, 98, 99, 200]) }
 }
 
 #[wasm_bindgen(start)]
 pub fn main() {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
-    set_override(true);
+    //set_override(true);
 }
 
 #[wasm_bindgen]
@@ -38,6 +46,7 @@ pub enum ErrorType {
     InvalidObjectId(u16),
     InvalidObjectString(&'static str),
     ObjectSerialization,
+    ObjectDeserialization,
 }
 
 impl From<ErrorType> for RustError {
@@ -62,6 +71,9 @@ impl RustError {
             }
             ErrorType::ObjectSerialization => {
                 "Failed to serialize object. Please report this issue.".to_string()
+            }
+            ErrorType::ObjectDeserialization => {
+                "Failed to deserialize object. Please report this issue.".to_string()
             }
         }
     }

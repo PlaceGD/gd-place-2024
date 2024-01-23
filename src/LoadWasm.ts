@@ -1,13 +1,8 @@
 import { writable } from "svelte/store";
 import initWasmInner, { type InitOutput } from "wasm-lib";
 import * as wasm from "wasm-lib";
-import Toast from "./utils/Toast";
+import Toast from "./utils/toast";
 import { HAS_OPT_WASM } from "./main";
-
-const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
-    //HAS_OPT_WASM ? "-opt.wasm" : "" // TODO: Fix? (an't access lexical declaration 'HAS_OPT_WASM' before initialization)
-    ""
-}`;
 
 export const wasmProgress = writable({
     progress: -1,
@@ -16,6 +11,10 @@ export const wasmProgress = writable({
 });
 
 export const initWasm = () => {
+    const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
+        HAS_OPT_WASM ? "-opt.wasm" : ""
+    }`;
+
     const wasmReq = new XMLHttpRequest();
 
     wasmReq.responseType = "arraybuffer";
@@ -30,9 +29,9 @@ export const initWasm = () => {
     wasmReq.addEventListener("load", () => {
         initWasmInner(wasmReq.response)
             .then(() => {
-                wasmProgress.update(v => (v = { ...v, hasLoaded: true }));
+                wasmProgress.update(v => ({ ...v, hasLoaded: true }));
             })
-            .catch(e => {
+            .catch((e: any) => {
                 console.error(e, "(failed in initWasmInner)");
                 Toast.showErrorToast(`Failed to initialize WASM. (${e})`);
             });
@@ -47,12 +46,52 @@ export const initWasm = () => {
             "WASM download timed out. This is usually a network related issue. Please refresh and try again."
         );
     });
-    wasmReq.addEventListener("abort", () => {
-        Toast.showErrorToast(
-            "Failed to download WASM. Please refresh and try again."
-        );
-    });
 
     wasmReq.open("GET", WASM_URL);
     wasmReq.send();
+};
+
+export const spritesheetProgress = writable<{
+    progress: number;
+    max: number;
+    arrayBuffer: Uint8Array | null;
+}>({
+    progress: -1,
+    max: 0,
+    arrayBuffer: null,
+});
+
+export const loadSpritesheet = () => {
+    const SPRITESHEET_URL = "textures/spritesheet.png";
+
+    const spritesheetReq = new XMLHttpRequest();
+
+    spritesheetReq.responseType = "arraybuffer";
+    spritesheetReq.addEventListener("progress", p => {
+        console.info(`downloading spritesheet: ${p.loaded}/${p.total}`);
+        spritesheetProgress.set({
+            max: p.total,
+            progress: p.loaded,
+            arrayBuffer: null,
+        });
+    });
+    spritesheetReq.addEventListener("load", () => {
+        spritesheetProgress.update(v => ({
+            ...v,
+            arrayBuffer: new Uint8Array(spritesheetReq.response),
+        }));
+    });
+    spritesheetReq.addEventListener("error", () => {
+        Toast.showErrorToast(
+            "Failed to download spritesheet. This is usually a network related issue. Please refresh and try again."
+        );
+    });
+    spritesheetReq.addEventListener("timeout", () => {
+        Toast.showErrorToast(
+            "Spritesheet download timed out. This is usually a network related issue. Please refresh and try again."
+        );
+    });
+
+    spritesheetReq.open("GET", SPRITESHEET_URL);
+    spritesheetReq.send();
 };

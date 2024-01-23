@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
     import Toast from "../utils/Toast";
     import { DEBUG } from "../utils/Debug";
+    import { spritesheetProgress } from "../LoadWasm";
 
     export let state: wasm.StateWrapper | null;
 
@@ -13,7 +14,7 @@
 
     onMount(() => {
         try {
-            state = wasm.create_view(canvas);
+            state = wasm.create_view(canvas, $spritesheetProgress.arrayBuffer!);
         } catch (e: any) {
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(

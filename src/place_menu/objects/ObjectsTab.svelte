@@ -3,7 +3,7 @@
 
     import Image from "../../components/Image.svelte";
 
-    import { OBJECT_SETTINGS } from "../../gd/Object";
+    import { getObjsInOrder } from "../../gd/Object";
     import { DEBUG } from "../../utils/Debug";
 
     import { TabGroup, menuSettings } from "../../stores";
@@ -18,7 +18,7 @@
 >
     <!-- BUILD TAB -->
     <!-- TODO: remove parseInt's -->
-    {#each Object.entries(OBJECT_SETTINGS) as [id, obj], i}
+    {#each getObjsInOrder() as [id, obj], i}
         <li
             class={cx({
                 "relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10": true,
@@ -29,7 +29,7 @@
                 class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
                 tabindex={$menuSettings.isMinimized ? -1 : 0}
                 on:click={() => {
-                    $menuSettings.selectedObject = parseInt(id);
+                    $menuSettings.selectedObject = id;
                 }}
             >
                 {#if $DEBUG}
@@ -62,7 +62,7 @@
                                             ></Image> -->
                 </div>
             </button>
-            {#if $menuSettings.selectedObject == parseInt(id)}
+            {#if $menuSettings.selectedObject == id}
                 <span class="absolute w-full h-full sliding-selector"></span>
             {/if}
         </li>

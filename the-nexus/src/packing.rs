@@ -48,7 +48,7 @@ pub(crate) fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
     let mut packer: TexturePacker<'_, image::DynamicImage, (u32, bool)> =
         TexturePacker::new_skyline(PACKER_CONFIG);
 
-    for (i, _) in get_available_objects() {
+    for &(i, _) in get_available_objects() {
         let main =
             ImageImporter::import_from_file(&PathBuf::from(format!("textures/main/{}.png", i)))
                 .unwrap();

@@ -30,6 +30,18 @@ interface TransformButton {
     cb: (obj: GDObject) => void;
 }
 
+const rotateObj = (obj: GDObject, angle: number) => {
+    let c = Math.cos(-(angle * Math.PI) / 180);
+    let s = Math.sin(-(angle * Math.PI) / 180);
+
+    [obj.ix, obj.iy, obj.jx, obj.jy] = [
+        obj.ix * c - obj.iy * s,
+        obj.ix * s + obj.iy * c,
+        obj.jx * c - obj.jy * s,
+        obj.jx * s + obj.jy * c,
+    ];
+};
+
 export const KEYBINDS: Record<string, Keybind> = {
     move_up_small: {
         cb: (obj: GDObject) => {
@@ -115,9 +127,8 @@ export const KEYBINDS: Record<string, Keybind> = {
 
     flip_vert: {
         cb: (obj: GDObject) => {
-            obj.flip_y = !obj.flip_y;
-            // obj.rotation = obj.rotation - 180;
-            obj.rotation = -obj.rotation;
+            obj.iy *= -1;
+            obj.jy *= -1;
         },
         shortcut: {
             key: "e",
@@ -127,8 +138,8 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
     flip_horiz: {
         cb: (obj: GDObject) => {
-            obj.flip_x = !obj.flip_x;
-            obj.rotation = -obj.rotation;
+            obj.ix *= -1;
+            obj.jx *= -1;
         },
         shortcut: {
             key: "q",
@@ -139,7 +150,7 @@ export const KEYBINDS: Record<string, Keybind> = {
 
     rotate_ccw: {
         cb: (obj: GDObject) => {
-            obj.rotation -= 90;
+            rotateObj(obj, -90);
         },
         shortcut: {
             key: "q",
@@ -149,7 +160,7 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
     rotate_cw: {
         cb: (obj: GDObject) => {
-            obj.rotation += 90;
+            rotateObj(obj, 90);
         },
         shortcut: {
             key: "e",
@@ -159,7 +170,7 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
     rotate_ccw_5: {
         cb: (obj: GDObject) => {
-            obj.rotation -= 5;
+            rotateObj(obj, -5);
         },
         shortcut: {
             key: "q",
@@ -169,7 +180,7 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
     rotate_cw_5: {
         cb: (obj: GDObject) => {
-            obj.rotation += 5;
+            rotateObj(obj, 5);
         },
         shortcut: {
             key: "e",
@@ -262,7 +273,10 @@ export const KEYBINDS: Record<string, Keybind> = {
 
     scale_up: {
         cb: (obj: GDObject) => {
-            obj.scale += 0.1;
+            obj.ix *= 2 ** (1 / 12);
+            obj.iy *= 2 ** (1 / 12);
+            obj.jx *= 2 ** (1 / 12);
+            obj.jy *= 2 ** (1 / 12);
         },
         shortcut: {
             key: "e",
@@ -272,12 +286,25 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
     scale_down: {
         cb: (obj: GDObject) => {
-            obj.scale -= 0.1;
+            obj.ix /= 2 ** (1 / 12);
+            obj.iy /= 2 ** (1 / 12);
+            obj.jx /= 2 ** (1 / 12);
+            obj.jy /= 2 ** (1 / 12);
         },
         shortcut: {
             key: "q",
             shift: true,
             alt: true,
+        },
+    },
+    ebonky: {
+        cb: (obj: GDObject) => {
+            obj.jx += 0.1;
+        },
+        shortcut: {
+            key: "f",
+            shift: false,
+            alt: false,
         },
     },
 };

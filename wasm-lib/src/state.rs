@@ -1,6 +1,5 @@
-use std::{collections::HashSet, f32::consts::PI};
+use std::f32::consts::PI;
 
-use colored::Colorize;
 use desen::{
     color::Color,
     frame::{BlendMode, Frame, FrameTransform, FrameTransformMatrix},
@@ -12,13 +11,13 @@ use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    layer::{ZLayer, Z_LAYERS},
+    layer::Z_LAYERS,
     level::{
         ChunkCoord, ChunkInfo, DbKey, Level, CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS,
         LEVEL_HEIGHT_BLOCKS, LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_BLOCKS,
         LEVEL_WIDTH_UNITS,
     },
-    log, map,
+    map,
     object::{GDColor, GDObject},
     text::TextDraw,
     util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
@@ -26,7 +25,7 @@ use crate::{
     ErrorType, RustError,
 };
 
-use nalgebra::{vector, Vector2, Vector4};
+use nalgebra::{vector, Matrix2, Matrix3, Vector2};
 
 pub struct AppInfo {
     app: App,
@@ -67,6 +66,45 @@ pub struct State {
 }
 
 impl State {
+    pub fn init(mut app: App, spritesheet_data: js_sys::Uint8Array) -> Self {
+        Self {
+            time: 0.0,
+            width: 10,
+            height: 10,
+            camera_pos: vector![0.0, 0.0],
+            zoom: 0.0,
+            bg_color: (40, 125, 255),
+            ground1_color: (40, 125, 255),
+            ground2_color: (127, 178, 255),
+            ground1: app.load_texture(&quick_image_load(include_bytes!("../ground1.png")), false),
+            ground2: app.load_texture(&quick_image_load(include_bytes!("../ground2.png")), false),
+            background: app.load_texture(
+                &quick_image_load(include_bytes!("../background.png")),
+                false,
+            ),
+            spritesheet: app.load_texture(&quick_image_load(&spritesheet_data.to_vec()), true),
+            level: Level::default(),
+            preview_object: GDObject {
+                id: 1,
+                x: 15.0,
+                y: 15.0,
+                ix: 1.0,
+                iy: 0.0,
+                jx: 0.0,
+                jy: 1.0,
+                z_layer: crate::layer::ZLayer::T1,
+                z_order: 1,
+                main_color: GDColor::white(),
+                detail_color: GDColor::white(),
+            },
+            show_preview: false,
+            select_depth: 0,
+            selected_object: None,
+            text_draws: vec![],
+            delete_texts: vec![],
+            info: AppInfo { app },
+        }
+    }
     pub fn get_zoom_scale(&self) -> f32 {
         2.0f32.powf(self.zoom / 12.0)
     }
@@ -82,15 +120,16 @@ impl State {
     }
 }
 
+#[rustfmt::skip]
 fn obj_transform(obj: &GDObject) -> FrameTransformMatrix {
-    FrameTransform::series_mat([
-        FrameTransform::Translate { x: obj.x, y: obj.y },
-        FrameTransform::Rotate(-obj.rotation as f32 * PI / 180.0),
-        FrameTransform::Scale {
-            x: if obj.flip_x { -0.25 } else { 0.25 } * obj.scale,
-            y: if obj.flip_y { -0.25 } else { 0.25 } * obj.scale,
-        },
-    ])
+    let scale = get_object_info(obj.id as u32)
+        .map(|v| v.builtin_scale)
+        .unwrap_or(1.0) / 4.0;
+    Matrix3::new(
+        obj.ix * scale, obj.jx * scale, obj.x,
+        obj.iy * scale, obj.jy * scale, obj.y,
+        0.0, 0.0, 1.0
+    )
 }
 fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
     let mut rect_size = get_max_bounding_box(obj.id as u32).unwrap_or((10.0, 10.0));
@@ -258,7 +297,7 @@ impl AppState for State {
                     now - chunk.last_time_visible,
                     0.0,
                     UNLOAD_CHUNK_TIME * 1000.0,
-                    255.0,
+                    1.0,
                     0.0
                 ) as f32,
             ));
@@ -614,65 +653,12 @@ impl State {
 }
 
 impl CanvasAppState<AppInfo> for State {
-    fn init(mut info: AppInfo) -> Self {
-        // need this so that the atlas is nonzero lol!!!
-        // technically not rly cause we are importing other stuff
-        // but just in case
-        // loader.load_texture_bytes(include_bytes!("../biddledoo.png"));
-        Self {
-            time: 0.0,
-            width: 10,
-            height: 10,
-            camera_pos: vector![0.0, 0.0],
-            zoom: 0.0,
-            bg_color: (40, 125, 255),
-            ground1_color: (40, 125, 255),
-            ground2_color: (127, 178, 255),
-            ground1: info
-                .app
-                .load_texture(&quick_image_load(include_bytes!("../ground1.png"))),
-            ground2: info
-                .app
-                .load_texture(&quick_image_load(include_bytes!("../ground2.png"))),
-            background: info
-                .app
-                .load_texture(&quick_image_load(include_bytes!("../background.png"))),
-            spritesheet: info.app.load_texture(&quick_image_load(include_bytes!(
-                "../../src/gd/spritesheet.png"
-            ))),
-            level: Level::default(),
-            preview_object: GDObject {
-                id: 1,
-                x: 15.0,
-                y: 15.0,
-                rotation: 0.0,
-                flip_x: false,
-                flip_y: false,
-                scale: 1.0,
-                z_layer: crate::layer::ZLayer::T1,
-                z_order: 1,
-                main_color: GDColor::white(),
-                detail_color: GDColor::white(),
-            },
-            show_preview: false,
-            select_depth: 0,
-            selected_object: None,
-            text_draws: vec![],
-            delete_texts: vec![],
-            info,
-        }
-    }
-
     fn get_info(&mut self) -> &mut AppInfo {
         &mut self.info
     }
 }
 
 impl CanvasAppInfo for AppInfo {
-    fn init(app: App) -> Self {
-        Self { app }
-    }
-
     fn get_app(&mut self) -> &mut App {
         &mut self.app
     }

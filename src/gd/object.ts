@@ -1,6 +1,4 @@
-import { clamp } from "../utils/util";
-import objectList from "./objects.json";
-// import textureSizes from "./texture_sizes.json";
+import { objectOrder, objects } from "shared-lib";
 
 export const CATEGORY_ICONS = {
     Blocks: "/assets/ui/build_tab_icons/blocks.png",
@@ -20,7 +18,11 @@ interface Object {
     category: string; // CATEGORY_ICONS key
 }
 
-export const OBJECT_SETTINGS: Record<string, Object> = objectList;
+export const OBJECT_SETTINGS: Record<string, Object> = objects;
+export const OBJECT_ORDER: number[] = objectOrder;
+
+export const getObjsInOrder = (): [number, Object][] =>
+    OBJECT_ORDER.map(id => [id, OBJECT_SETTINGS[id]]);
 
 // object id: index
 // let idMapping: { [key: number]: number } = {};
@@ -31,30 +33,30 @@ export const OBJECT_SETTINGS: Record<string, Object> = objectList;
 // export const getObjSettings = (id: number) =>
 //     (id && OBJECT_SETTINGS[idMapping[id]]) || {};
 
-const getMainDetailTexRatio = (id: number) => {
-    // let main_max = Math.max(...(textureSizes as any)[id].main);
-    // let detail_max = Math.max(...(textureSizes as any)[id].detail);
+// const getMainDetailTexRatio = (id: number) => {
+//     // let main_max = Math.max(...(textureSizes as any)[id].main);
+//     // let detail_max = Math.max(...(textureSizes as any)[id].detail);
 
-    // let overall_scale = clamp(main_max / 120, 0, 1);
+//     // let overall_scale = clamp(main_max / 120, 0, 1);
 
-    // return {
-    //     main:
-    //         (main_max > detail_max ? 1 : main_max / detail_max) * overall_scale,
-    //     detail:
-    //         (detail_max > main_max ? 1 : detail_max / main_max) * overall_scale,
-    // };
+//     // return {
+//     //     main:
+//     //         (main_max > detail_max ? 1 : main_max / detail_max) * overall_scale,
+//     //     detail:
+//     //         (detail_max > main_max ? 1 : detail_max / main_max) * overall_scale,
+//     // };
 
-    return {
-        main: 1,
-        detail: 1,
-    };
-};
+//     return {
+//         main: 1,
+//         detail: 1,
+//     };
+// };
 
-export const MAIN_DETAIL_TEX_RATIOS: Record<
-    number,
-    { main: number; detail: number }
-> = {};
+// export const MAIN_DETAIL_TEX_RATIOS: Record<
+//     number,
+//     { main: number; detail: number }
+// > = {};
 
-for (let i = 1; i <= 2000; i++) {
-    MAIN_DETAIL_TEX_RATIOS[i] = getMainDetailTexRatio(i);
-}
+// for (let i = 1; i <= 2000; i++) {
+//     MAIN_DETAIL_TEX_RATIOS[i] = getMainDetailTexRatio(i);
+// }

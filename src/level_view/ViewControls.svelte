@@ -10,11 +10,11 @@
     import { clamp, hexToRgb, lerp } from "../utils/Util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
     import { TabGroup, menuSettings } from "../stores";
-    import { KEYBINDS } from "../place_menu/edit/EditTab";
+    import { KEYBINDS } from "../place_menu/edit/edit_tab";
 
     import Toast from "../utils/Toast";
-    import LocalSettingsFactory from "../utils/LocalSettings";
-    import { isMobile } from "../utils/Document";
+    import LocalSettingsFactory from "../utils/local_settings";
+    import { isMobile } from "../utils/document";
     import { addObject } from "../firebase/object";
     import { decodeString } from "shared-lib";
 

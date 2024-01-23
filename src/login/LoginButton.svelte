@@ -1,6 +1,6 @@
 <script lang="ts">
     import Image from "../components/Image.svelte";
-    import { handleLogout, type LoginData } from "./Login";
+    import { handleLogout, type LoginData } from "./login";
 
     export let loginData: LoginData;
 </script>

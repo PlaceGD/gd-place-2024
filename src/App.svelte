@@ -4,10 +4,10 @@
 
     import Logo from "./components/Logo.svelte";
     import Toast from "./utils/Toast";
-    import { alertHasDarkReader } from "./utils/Document";
+    import { alertHasDarkReader } from "./utils/document";
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
-    import type { LoginData } from "./login/Login";
+    import type { LoginData } from "./login/login";
 
     import {
         wasmProgress,

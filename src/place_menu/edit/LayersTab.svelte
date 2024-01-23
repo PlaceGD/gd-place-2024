@@ -7,7 +7,7 @@
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { menuSettings } from "../../stores";
-    import { LayerType } from "./EditTab";
+    import { LayerType } from "./edit_tab";
 
     const LAYER_NAME: any = {
         [LayerType.T]: "T",

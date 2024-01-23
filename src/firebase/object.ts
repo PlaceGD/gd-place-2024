@@ -2,9 +2,9 @@ import { push, ref, remove } from "firebase/database";
 import { GDObject, GDColor } from "wasm-lib";
 import * as wasm from "wasm-lib";
 import { db } from "./firebase";
-import Toast from "../utils/Toast";
+import Toast from "../utils/toast";
 
-import { placeObject, deleteObject } from "./cloudFunctions";
+import { placeObject, deleteObject } from "./cloud_functions";
 import { decode, decodeString, encode, encodeString } from "shared-lib";
 
 export const addObject = (obj: GDObject) => {

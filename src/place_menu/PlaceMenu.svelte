@@ -19,12 +19,12 @@
 
     import { TabGroup, menuSettings } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
-    import { useIsOverflowing } from "../utils/Document";
-    import { DEBUG } from "../utils/Debug";
-    import SpriteSheet from "../utils/SpriteSheet";
-    import LocalSettings from "../utils/LocalSettings";
+    import { useIsOverflowing } from "../utils/document";
+    import { DEBUG } from "../utils/debug";
+    import SpriteSheet from "../utils/spritesheet";
+    import LocalSettings from "../utils/local_settings";
 
-    import { EditTab, TRANSFORM_BUTTONS } from "./edit/EditTab";
+    import { EditTab, TRANSFORM_BUTTONS } from "./edit/edit_tab";
     import ColorsTab from "./edit/ColorsTab.svelte";
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";

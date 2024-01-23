@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TRANSFORM_BUTTONS } from "./EditTab";
+    import { TRANSFORM_BUTTONS } from "./edit_tab";
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import { menuSettings } from "../../stores";

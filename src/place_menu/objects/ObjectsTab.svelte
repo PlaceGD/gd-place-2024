@@ -3,8 +3,8 @@
 
     import Image from "../../components/Image.svelte";
 
-    import { getObjsInOrder } from "../../gd/Object";
-    import { DEBUG } from "../../utils/Debug";
+    import { getObjsInOrder } from "../../gd/object";
+    import { DEBUG } from "../../utils/debug";
 
     import { TabGroup, menuSettings } from "../../stores";
 </script>

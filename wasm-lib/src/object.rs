@@ -1,5 +1,6 @@
 use std::{mem, ptr};
 
+use nalgebra::{matrix, vector};
 // use bytemuck::{bytes_of, Pod, Zeroable};
 use wasm_bindgen::prelude::*;
 
@@ -126,66 +127,35 @@ impl GDObject {
     pub fn get_chunk_coord(&self) -> ChunkCoord {
         get_chunk_coord(self.x, self.y)
     }
+
+    #[wasm_bindgen]
+    pub fn apply_matrix(&mut self, a: f32, b: f32, c: f32, d: f32) {
+        let mat = matrix![a, b; c, d];
+        let i = mat * vector![self.ix, self.iy];
+        let j = mat * vector![self.jx, self.jy];
+        (self.ix, self.iy) = (i.x, i.y);
+        (self.jx, self.jy) = (j.x, j.y);
+    }
+
+    #[wasm_bindgen]
+    pub fn translate(&mut self, x: f32, y: f32) {
+        self.x += x;
+        self.y += y;
+    }
+    #[wasm_bindgen]
+    pub fn scale(&mut self, factor: f32) {
+        self.apply_matrix(factor, 0.0, 0.0, factor);
+    }
+    #[wasm_bindgen]
+    pub fn skew(&mut self, x: f32, y: f32) {
+        self.apply_matrix(1.0, x, y, 1.0);
+    }
+
+    #[wasm_bindgen]
+    pub fn rotate(&mut self, angle: f32) {
+        let angle = -angle.to_radians();
+        let c = angle.cos();
+        let s = angle.sin();
+        self.apply_matrix(c, -s, s, c);
+    }
 }
-
-// mod the_crazy_base {
-//     use crate::log;
-
-//     const BASE: u128 = 126;
-
-//     pub fn convert_to_base(mut num: u128) -> Vec<u8> {
-//         let mut result = Vec::new();
-
-//         if num == 0 {
-//             return vec![0];
-//         }
-
-//         while num > 0 {
-//             let digit = (num % BASE) as u8;
-//             result.insert(0, digit);
-//             num /= BASE;
-//         }
-
-//         result
-//     }
-//     pub fn convert_from_base(num: &[u8]) -> u128 {
-//         if num.is_empty() {
-//             return 0;
-//         }
-
-//         num.iter()
-//             .rev()
-//             .enumerate()
-//             .map(|(i, &d)| (d as u128) * BASE.pow(i as u32))
-//             .sum()
-//     }
-
-//     pub fn encode(b: [u8; 32]) -> Option<String> {
-//         let b = unsafe { std::mem::transmute::<_, [u128; 2]>(b) };
-
-//         let mut out = vec![];
-//         for b in b {
-//             let s = convert_to_base(b);
-
-//             out.extend(&s);
-//             if s.len() < convert_to_base(u128::MAX).len() {
-//                 out.push(126)
-//             }
-//         }
-//         log!("baga: {:?}", out);
-//         String::from_utf8(out).ok()
-//     }
-
-//     pub fn decode(s: &str) -> Option<[u8; 32]> {
-//         let mut ns = vec![];
-//         let max = convert_to_base(u128::MAX).len();
-
-//         for i in s.split('~') {
-//             for i in i.as_bytes().chunks(max) {
-//                 ns.push(convert_from_base(i));
-//             }
-//         }
-//         let lol: [u128; 2] = ns.try_into().ok()?;
-//         Some(unsafe { std::mem::transmute(lol) })
-//     }
-// }

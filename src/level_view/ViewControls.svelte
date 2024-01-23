@@ -7,15 +7,14 @@
 
     import * as wasm from "wasm-lib";
 
-    import { clamp, hexToRgb, lerp } from "../utils/Util";
+    import { clamp, hexToRgb, lerp } from "shared-lib";
     import { subChunk, unsubChunk } from "../firebase/chunks";
     import { TabGroup, menuSettings } from "../stores";
     import { KEYBINDS } from "../place_menu/edit/edit_tab";
 
-    import Toast from "../utils/Toast";
+    import Toast from "../utils/toast";
     import LocalSettingsFactory from "../utils/local_settings";
     import { isMobile } from "../utils/document";
-    import { addObject } from "../firebase/object";
     import { decodeString } from "shared-lib";
 
     export let state: wasm.StateWrapper;

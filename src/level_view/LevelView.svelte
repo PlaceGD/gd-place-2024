@@ -4,7 +4,7 @@
     import { onMount } from "svelte";
     import Toast from "../utils/toast";
     import { DEBUG } from "../utils/debug";
-    import { spritesheetProgress } from "../LoadWasm";
+    import { spritesheetProgress } from "../load_wasm";
 
     export let state: wasm.StateWrapper | null;
 

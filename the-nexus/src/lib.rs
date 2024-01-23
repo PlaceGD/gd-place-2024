@@ -23,7 +23,7 @@ fn generate_shid() {
 
     img.save("../src/gd/spritesheet.png").unwrap();
     fs::write(
-        "../src/gd/spritesheet.json",
+        "../shared-lib/src/gd/spritesheet.json",
         serde_json::to_string(&json!(data)).unwrap(),
     )
     .unwrap();

@@ -3,7 +3,7 @@
     import { SvelteToast } from "@zerodevx/svelte-toast";
 
     import Logo from "./components/Logo.svelte";
-    import Toast from "./utils/Toast";
+    import Toast from "./utils/toast";
     import { alertHasDarkReader } from "./utils/document";
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
@@ -14,7 +14,7 @@
         initWasm,
         loadSpritesheet,
         spritesheetProgress,
-    } from "./LoadWasm";
+    } from "./load_wasm";
 
     let loginData: LoginData = {
         isLoggedIn: false,

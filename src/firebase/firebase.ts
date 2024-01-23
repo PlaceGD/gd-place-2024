@@ -13,7 +13,7 @@ import {
     remove,
 } from "firebase/database";
 import type { GDObject } from "wasm-lib";
-import Toast from "../utils/Toast";
+import Toast from "../utils/toast";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB9PSVZzg5WOp26PuCkVrrSTVrWg-XJMgg",

@@ -7,7 +7,7 @@
         useAnimation,
         useReducedMotion,
     } from "svelte-motion";
-    import { clamp } from "../utils/Util";
+    import { clamp } from "shared-lib";
     import { spring, type Spring } from "svelte/motion";
     import colors from "../gd/colors.json";
 

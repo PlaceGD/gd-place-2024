@@ -455,6 +455,7 @@
                                 $menuSettings.selectedGroup != TabGroup.Delete
                             ) {
                                 addObject(state.get_preview_object());
+                                // state.add_object(key, obj);
                                 state.set_preview_visibility(false);
                             } else {
                                 let k = state.get_selected_object_key();

@@ -29,6 +29,10 @@ use nalgebra::{vector, Matrix2, Matrix3, Vector2};
 
 pub struct AppInfo {
     app: App,
+    background: LoadedTexture,
+    ground1: LoadedTexture,
+    ground2: LoadedTexture,
+    spritesheet: LoadedTexture,
 }
 
 pub struct State {
@@ -38,11 +42,6 @@ pub struct State {
 
     width: u32,
     height: u32,
-
-    background: LoadedTexture,
-    ground1: LoadedTexture,
-    ground2: LoadedTexture,
-    spritesheet: LoadedTexture,
 
     camera_pos: Vector2<f32>,
     zoom: f32,
@@ -76,13 +75,7 @@ impl State {
             bg_color: (40, 125, 255),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),
-            ground1: app.load_texture(&quick_image_load(include_bytes!("../ground1.png")), false),
-            ground2: app.load_texture(&quick_image_load(include_bytes!("../ground2.png")), false),
-            background: app.load_texture(
-                &quick_image_load(include_bytes!("../background.png")),
-                false,
-            ),
-            spritesheet: app.load_texture(&quick_image_load(&spritesheet_data.to_vec()), true),
+
             level: Level::default(),
             preview_object: GDObject {
                 id: 1,
@@ -102,7 +95,18 @@ impl State {
             selected_object: None,
             text_draws: vec![],
             delete_texts: vec![],
-            info: AppInfo { app },
+            info: AppInfo {
+                ground1: app
+                    .load_texture(&quick_image_load(include_bytes!("../ground1.png")), false),
+                ground2: app
+                    .load_texture(&quick_image_load(include_bytes!("../ground2.png")), false),
+                background: app.load_texture(
+                    &quick_image_load(include_bytes!("../background.png")),
+                    false,
+                ),
+                spritesheet: app.load_texture(&quick_image_load(&spritesheet_data.to_vec()), true),
+                app,
+            },
         }
     }
     pub fn get_zoom_scale(&self) -> f32 {
@@ -194,7 +198,7 @@ impl AppState for State {
                 self.bg_color.2,
             ));
             let dimension = self.width.max(self.height) as f32;
-            frame.set_current_texture(self.background);
+            frame.set_current_texture(self.info.background);
 
             frame.texture().wh(dimension, dimension).centered().tinted();
         }
@@ -252,7 +256,7 @@ impl AppState for State {
             frame.pop()
         }
 
-        frame.set_current_texture(self.spritesheet);
+        frame.set_current_texture(self.info.spritesheet);
         frame.transform(FrameTransform::Custom(self.view_transform()));
 
         for i in 0..self.delete_texts.len() {
@@ -483,7 +487,7 @@ impl AppState for State {
             let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
             let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
 
-            frame.set_current_texture(self.ground1);
+            frame.set_current_texture(self.info.ground1);
             frame.fill(Color::Rgba8(
                 self.ground1_color.0,
                 self.ground1_color.1,
@@ -499,7 +503,7 @@ impl AppState for State {
                     .wh(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS)
                     .tinted();
             }
-            frame.set_current_texture(self.ground2);
+            frame.set_current_texture(self.info.ground2);
             frame.fill(Color::Rgba8(
                 self.ground2_color.0,
                 self.ground2_color.1,

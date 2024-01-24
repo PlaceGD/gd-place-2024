@@ -12,6 +12,7 @@ export enum TabGroup {
 export const menuSettings = writable(
     LocalSettingsFactory("menuSettings", {
         isMinimized: false,
+
         selectedGroup: TabGroup.Build,
         selectedEditTab: EditTab.Transform,
         selectedBuildTab: "Blocks",
@@ -30,3 +31,15 @@ export const menuSettings = writable(
         layerIdx: 0,
     })
 );
+
+export const widgetData = writable({
+    maxScaleLen: 5,
+
+    scale: 1,
+    prevScale: 1,
+
+    scaleX: 1,
+    prevScaleX: 1,
+    scaleY: 1,
+    prevScaleY: 1,
+});

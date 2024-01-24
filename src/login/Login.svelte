@@ -2,7 +2,13 @@
     import type { SvelteComponent } from "svelte";
     import { default as cx } from "classnames";
     import Image from "../components/Image.svelte";
-    import type { LoginData } from "./login";
+    import LoginMethodComp from "./slides/LoginMethod.svelte";
+    import {
+        type LoginData,
+        type SliderMethods,
+        LoginMethod,
+        type ComponentWithProps,
+    } from "./login";
 
     import TOS from "./slides/TOS.svelte";
 
@@ -11,8 +17,6 @@
     import { tweened } from "svelte/motion";
 
     export let loginData: LoginData;
-
-    type Component = new (...args: any[]) => SvelteComponent;
 
     let twitter = false;
     document.addEventListener("keydown", e => {
@@ -32,8 +36,8 @@
         easing: cubicInOut,
     });
 
-    let slides: Component[] = [];
-    const addSlideAndMove = (slide: Component) => {
+    let slides: ComponentWithProps[] = [];
+    const addSlideAndMove = (slide: ComponentWithProps) => {
         canInteract = false;
         slides = [...slides, slide];
 
@@ -48,26 +52,35 @@
         $slideTween -= slideParent.clientWidth;
     };
 
-    export let previousSlide = () => {
+    let previousSlide = () => {
         canInteract = false;
-        slides.pop();
 
         let oldVal: number = $slideTween;
         let unsub = slideTween.subscribe(v => {
-            if (v == oldVal - slideParent.clientWidth) {
+            if (v == oldVal + slideParent.clientWidth) {
                 canInteract = true;
+                slides.pop();
                 unsub();
             }
         });
 
         $slideTween += slideParent.clientWidth;
     };
+
+    const sliderMethods: SliderMethods = {
+        previous: previousSlide,
+        addSlideAndMove: addSlideAndMove,
+    };
 </script>
 
-<!-- preloads the twitter svg for the secret :3 -->
-<Image tabindex="-1" src="assets/ui/login/twitter.svg" class="hidden" alt="" />
-
 {#if loginData.showLoginUI}
+    <!-- preloads the twitter svg for the secret :3 -->
+    <Image
+        tabindex="-1"
+        src="assets/ui/login/twitter.svg"
+        class="hidden"
+        alt=""
+    />
     <section
         class={cx({
             "absolute z-40 flex-col w-full h-full gap-2 text-white flex-center": true,
@@ -76,7 +89,7 @@
         aria-label="Login or Sign Up"
     >
         <div
-            class="rounded-lg shadow-lg w-96 h-96 rounded-xl bg-menu-gray/90 shadow-black/40 backdrop-blur-md overflow-hidden flex"
+            class="rounded-lg shadow-lg w-96 h-96 bg-menu-gray/90 shadow-black/40 backdrop-blur-md overflow-hidden flex"
             bind:this={slideParent}
         >
             <div
@@ -87,10 +100,15 @@
                     Login or Sign Up
                 </h1>
                 <ul class="w-full h-24 gap-4 flex-center">
-                    <li class="h-full aspect-square">
+                    <li class="h-full aspect-square max-w-max">
                         <button
                             class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
                             aria-label="Login with Twitter"
+                            on:click={() =>
+                                addSlideAndMove({
+                                    component: LoginMethodComp,
+                                    props: { method: LoginMethod.Google },
+                                })}
                         >
                             <Image
                                 src="assets/ui/login/google.svg"
@@ -100,7 +118,7 @@
                             <p>Google</p>
                         </button>
                     </li>
-                    <li class="h-full shadow-lg aspect-square">
+                    <li class="h-full shadow-lg aspect-square max-w-max">
                         <button
                             class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
                             aria-label="Login with GitHub"
@@ -113,7 +131,7 @@
                             <p>GitHub</p>
                         </button>
                     </li>
-                    <li class="h-full aspect-square">
+                    <li class="h-full aspect-square max-w-max">
                         <button
                             class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
                             aria-label="Login with X (Twitter)"
@@ -137,7 +155,7 @@
                     <button
                         class="underline hover:decoration-dashed"
                         aria-label="Terms of Service"
-                        on:click={() => addSlideAndMove(TOS)}
+                        on:click={() => addSlideAndMove({ component: TOS })}
                     >
                         TOS
                     </button>
@@ -149,7 +167,11 @@
                     class="w-full h-full shrink-0"
                     style:transform="translateX({$slideTween}px)"
                 >
-                    <svelte:component this={slide}></svelte:component>
+                    <svelte:component
+                        this={slide.component}
+                        {...slide.props}
+                        slider={sliderMethods}
+                    />
                 </div>
             {/each}
         </div>

@@ -30,7 +30,7 @@
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
 
-    export let state: wasm.StateWrapper | null;
+    export let state: wasm.StateWrapper;
 
     const minimizeAnimDur = 0.5;
 
@@ -38,50 +38,49 @@
         useIsOverflowing();
 
     $: {
-        if (state != null) {
-            let [mr, mg, mb] =
-                colors.list[$menuSettings.selectedMainColor.hue].palette[
-                    $menuSettings.selectedMainColor.y
-                ][$menuSettings.selectedMainColor.x];
+        let [mr, mg, mb] =
+            colors.list[$menuSettings.selectedMainColor.hue].palette[
+                $menuSettings.selectedMainColor.y
+            ][$menuSettings.selectedMainColor.x];
 
-            let m_opacity = $menuSettings.selectedMainColor.opacity;
-            let m_blending = $menuSettings.selectedMainColor.blending;
+        let m_opacity = $menuSettings.selectedMainColor.opacity;
+        let m_blending = $menuSettings.selectedMainColor.blending;
 
-            let [dr, dg, db] =
-                colors.list[$menuSettings.selectedDetailColor.hue].palette[
-                    $menuSettings.selectedDetailColor.y
-                ][$menuSettings.selectedDetailColor.x];
+        let [dr, dg, db] =
+            colors.list[$menuSettings.selectedDetailColor.hue].palette[
+                $menuSettings.selectedDetailColor.y
+            ][$menuSettings.selectedDetailColor.x];
 
-            let d_opacity = $menuSettings.selectedDetailColor.opacity;
-            let d_blending = $menuSettings.selectedDetailColor.blending;
+        let d_opacity = $menuSettings.selectedDetailColor.opacity;
+        let d_blending = $menuSettings.selectedDetailColor.blending;
 
-            let obj = state.get_preview_object();
+        let obj = state.get_preview_object();
 
-            obj.main_color = new wasm.GDColor(
-                mr,
-                mg,
-                mb,
-                m_opacity * 255,
-                m_blending
-            );
-            obj.detail_color = new wasm.GDColor(
-                dr,
-                dg,
-                db,
-                d_opacity * 255,
-                d_blending
-            );
-            obj.id = $menuSettings.selectedObject;
-            obj.z_layer = $menuSettings.zLayer;
-            obj.z_order = $menuSettings.zOrder;
+        obj.main_color = new wasm.GDColor(
+            mr,
+            mg,
+            mb,
+            m_opacity * 255,
+            m_blending
+        );
+        obj.detail_color = new wasm.GDColor(
+            dr,
+            dg,
+            db,
+            d_opacity * 255,
+            d_blending
+        );
+        obj.id = $menuSettings.selectedObject;
+        obj.z_layer = $menuSettings.zLayer;
+        obj.z_order = $menuSettings.zOrder;
 
-            // console.log($menuSettings.selectedMainColor == $menuSettings.selectedDetailColor);
+        // console.log($menuSettings.selectedMainColor == $menuSettings.selectedDetailColor);
 
-            state.set_preview_object(obj);
-        }
+        setPreviewObject(obj);
     }
 
     import config from "../../tailwind.config";
+    import { setPreviewObject } from "../state";
 
     // some bs to fix tiny little responsive anim issue
     // that honestly no one would see but perfectionism :3
@@ -450,19 +449,15 @@
                     aria-label={`${$menuSettings.selectedGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
                     use:motion
                     on:click={() => {
-                        if (state != null) {
-                            if (
-                                $menuSettings.selectedGroup != TabGroup.Delete
-                            ) {
-                                addObject(state.get_preview_object());
-                                // state.add_object(key, obj);
-                                state.set_preview_visibility(false);
-                            } else {
-                                let k = state.get_selected_object_key();
-                                let coord = state.get_selected_object_chunk();
-                                if (k != null && coord != null) {
-                                    removeObject(k, [coord.x, coord.y]);
-                                }
+                        if ($menuSettings.selectedGroup != TabGroup.Delete) {
+                            addObject(state.get_preview_object());
+                            // state.add_object(key, obj);
+                            state.set_preview_visibility(false);
+                        } else {
+                            let k = state.get_selected_object_key();
+                            let coord = state.get_selected_object_chunk();
+                            if (k != null && coord != null) {
+                                removeObject(k, [coord.x, coord.y]);
                             }
                         }
                     }}

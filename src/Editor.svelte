@@ -8,6 +8,7 @@
     export let wasmLoaded: boolean;
 
     let state: wasm.StateWrapper | null = null;
+
     let canvas: HTMLCanvasElement;
 </script>
 
@@ -17,6 +18,6 @@
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas />
+        <PlaceMenu bind:state />
     {/if}
-    <PlaceMenu bind:state />
 </div>

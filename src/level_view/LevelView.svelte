@@ -6,7 +6,7 @@
     import { DEBUG } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
     import Widget from "../widgets/Widget.svelte";
-    import { runCallbacks } from "../state";
+    import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.StateWrapper | null;
 
@@ -17,6 +17,7 @@
     onMount(() => {
         try {
             state = wasm.create_view(canvas, $spritesheetProgress.arrayBuffer!);
+            loadState(state);
         } catch (e: any) {
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(
@@ -32,7 +33,10 @@
             try {
                 state.pub_render((time - prevTime) / 1000);
                 prevTime = time;
-                runCallbacks(state);
+
+                let preview = state.get_preview_object();
+
+                runCallbacks();
                 // text_draws = state.get_text_draws();
             } catch (e: any) {
                 console.error(e, "(Failed in `state.pub_render`)");

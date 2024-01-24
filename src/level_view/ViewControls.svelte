@@ -17,6 +17,7 @@
     import { isMobile } from "../utils/document";
     import { decodeString } from "shared-lib";
     import Widget from "../widgets/Widget.svelte";
+    import { setPreviewObject } from "../state";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -166,7 +167,7 @@
         $menuSettings.zOrder = 0;
         // $menuSettings.zLayer = wasm.ZLayer.B1;
 
-        state.set_preview_object(obj);
+        setPreviewObject(obj);
         state.set_preview_visibility(true);
     };
 
@@ -327,7 +328,7 @@
                 e.preventDefault();
                 let obj = state.get_preview_object();
                 v.cb(obj);
-                state.set_preview_object(obj);
+                setPreviewObject(obj);
             }
         }
     }}
@@ -391,5 +392,5 @@ aria-grabbed="false" -->
 </div>
 
 <div class="absolute overflow-visible w-full h-full pointer-events-none">
-    <Widget bind:state />
+    <Widget />
 </div>

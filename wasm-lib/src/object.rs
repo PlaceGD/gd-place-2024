@@ -167,4 +167,17 @@ impl GDObject {
     pub fn y_basis_len(&self) -> f32 {
         vector![self.jx, self.jy].magnitude()
     }
+
+    #[wasm_bindgen]
+    pub fn set_x_scale(&mut self, v: f32) {
+        let v = vector![self.ix, self.iy].normalize() * v;
+        self.ix = v.x;
+        self.iy = v.y;
+    }
+    #[wasm_bindgen]
+    pub fn set_y_scale(&mut self, v: f32) {
+        let v = vector![self.jx, self.jy].normalize() * v;
+        self.jx = v.x;
+        self.jy = v.y;
+    }
 }

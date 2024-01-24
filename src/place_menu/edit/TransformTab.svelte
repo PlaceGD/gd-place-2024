@@ -3,8 +3,9 @@
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import { menuSettings } from "../../stores";
+    import { setPreviewObject } from "../../state";
 
-    export let state: wasm.StateWrapper | null;
+    export let state: wasm.StateWrapper;
 
     $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
@@ -18,10 +19,9 @@
             <button
                 class={"flex-center w-full h-full p-2 md:p-1.5 xs:p-1 z-20 rounded-md bg-button-green bounce-active"}
                 on:click={() => {
-                    if (state == null) return;
                     let obj = state.get_preview_object();
                     button.cb(obj);
-                    state.set_preview_object(obj);
+                    setPreviewObject(obj);
                 }}
                 tabindex={canSelectByTab}
                 aria-label={button.name}

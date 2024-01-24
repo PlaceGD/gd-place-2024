@@ -1,25 +1,20 @@
 <script lang="ts">
-    import * as wasm from "wasm-lib";
-
-    export let state: wasm.StateWrapper;
-
-    import { addCallback } from "../state";
-
     import Scale from "./Scale.svelte";
+    import { withState, addCallback } from "../state";
+    import { onDestroy } from "svelte";
 
     let widgetPos = [0, 0];
     let widgetScale = 1;
-
     let isVisible = false;
 
-    addCallback(state => {
+    let cb = addCallback(state => {
+        let obj = state.get_preview_object();
+        widgetPos = [...state.get_screen_pos(obj.x, obj.y)];
+        widgetScale = state.get_zoom_scale() / 2;
         isVisible = state.is_preview_visible();
-        if (isVisible) {
-            const obj = state.get_preview_object();
-            widgetPos = [...state.get_screen_pos(obj.x, obj.y)];
-            widgetScale = state.get_zoom_scale() / 2;
-        }
     });
+
+    onDestroy(() => cb.remove());
 </script>
 
 <div
@@ -31,6 +26,6 @@
     `}
 >
     {#if isVisible}
-        <Scale bind:state></Scale>
+        <Scale isXY={true} />
     {/if}
 </div>

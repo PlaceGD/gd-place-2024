@@ -51,13 +51,14 @@
         style={cx({
             hidden: !hasLoaded,
         })}
+        aria-label={alt}
         {...restProps}
     />
     {#if skeleton && !hasLoaded}
         <div class="w-2/3 h-2/3 placeholder" />
     {/if}
 {:else}
-    <img {src} {alt} {...$$restProps} draggable="false" />
+    <img {src} {alt} aria-label={alt} {...$$restProps} draggable="false" />
 {/if}
 
 <style>

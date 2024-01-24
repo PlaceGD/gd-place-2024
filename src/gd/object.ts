@@ -1,4 +1,4 @@
-import { objectOrder, objects } from "shared-lib";
+import { objectOrder, objects, type ObjectData } from "shared-lib";
 
 export const CATEGORY_ICONS = {
     Blocks: "/assets/ui/build_tab_icons/blocks.png",
@@ -10,19 +10,8 @@ export const CATEGORY_ICONS = {
     Saws: "/assets/ui/build_tab_icons/saws.png",
 };
 
-interface Object {
-    placeOffsetX: number;
-    placeOffsetY: number;
-    tintable: boolean;
-    solid: boolean;
-    category: string; // CATEGORY_ICONS key
-}
-
-export const OBJECT_SETTINGS: Record<string, Object> = objects;
-export const OBJECT_ORDER: number[] = objectOrder;
-
-export const getObjsInOrder = (): [number, Object][] =>
-    OBJECT_ORDER.map(id => [id, OBJECT_SETTINGS[id]]);
+export const getObjsInOrder = (): [number, ObjectData][] =>
+    objectOrder.map(id => [id, objects[id]]);
 
 // object id: index
 // let idMapping: { [key: number]: number } = {};

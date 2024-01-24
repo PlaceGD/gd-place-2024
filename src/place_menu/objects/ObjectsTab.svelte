@@ -8,17 +8,35 @@
     import { DEBUG } from "../../utils/debug";
 
     import { TabGroup, menuSettings } from "../../stores";
-    import { spritesheet } from "shared-lib";
+    import { objects, spritesheet } from "shared-lib";
+    import { spritesheetProgress } from "../../load_wasm";
 
     let objButtonSize = 0;
-    $: console.log(objButtonSize);
+
+    const getImgStyle = (id: number, objButtonSize: number) => {
+        let mainSprite = spritesheet.mainSprites[id];
+        let builtinScale = objects[id].builtinScale;
+        let maxDisplaySize = 120 / builtinScale;
+        let scale =
+            objButtonSize /
+            1.45 /
+            Math.max(mainSprite.size[0], mainSprite.size[1], maxDisplaySize);
+        return `
+            width: ${mainSprite.size[0]}px;
+            height: ${mainSprite.size[1]}px;
+            max-height: none;
+            max-width: none;
+            object-position: ${-mainSprite.pos[0]}px ${-mainSprite.pos[1]}px;
+            transform: scale(${Math.round(scale * 100) / 100});          
+        `;
+    };
 </script>
 
 <div
     class="absolute opacity-0 w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10"
+    style="position: absolute;"
     bind:offsetWidth={objButtonSize}
 />
-
 <ul
     class={cx({
         "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
@@ -26,8 +44,6 @@
     })}
     tabindex="-1"
 >
-    <!-- BUILD TAB -->
-    <!-- TODO: remove parseInt's -->
     {#each getObjsInOrder() as [id, obj], i}
         <li
             class={cx({
@@ -53,15 +69,8 @@
                     <img
                         draggable="false"
                         class="absolute object-none"
-                        src={`/textures/spritesheet.png`}
-                        style={`
-                            width: ${spritesheet.mainSprites[id].size[0]}px;
-                            height: ${spritesheet.mainSprites[id].size[1]}px;
-                            max-height: none;
-                            max-width: none;
-                            object-position: ${-spritesheet.mainSprites[id].pos[0]}px ${-spritesheet.mainSprites[id].pos[1]}px;
-                            transform: scale(${objButtonSize / 1.5 / Math.max(spritesheet.mainSprites[id].size[0], spritesheet.mainSprites[id].size[1])});
-                        `}
+                        src={$spritesheetProgress.blobURL}
+                        style={getImgStyle(id, objButtonSize)}
                         alt=""
                     />
                     <!-- <Image

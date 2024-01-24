@@ -18,7 +18,7 @@ use crate::{
         LEVEL_HEIGHT_BLOCKS, LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_BLOCKS,
         LEVEL_WIDTH_UNITS,
     },
-    map,
+    log, map,
     object::{GDColor, GDObject},
     text::TextDraw,
     util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
@@ -58,11 +58,10 @@ pub struct State {
 
     selected_object: Option<DbKey>,
     select_depth: u32,
+    // // (text, x, y, lifetime)
+    // delete_texts: Vec<(String, f32, f32, f32)>,
 
-    // (text, x, y, lifetime)
-    delete_texts: Vec<(String, f32, f32, f32)>,
-
-    text_draws: Vec<TextDraw>,
+    // text_draws: Vec<TextDraw>,
 }
 
 impl State {
@@ -95,8 +94,8 @@ impl State {
             show_preview: false,
             select_depth: 0,
             selected_object: None,
-            text_draws: vec![],
-            delete_texts: vec![],
+            // text_draws: vec![],
+            // delete_texts: vec![],
             info: AppInfo {
                 ground1: app
                     .load_texture(&quick_image_load(include_bytes!("../ground1.png")), false),
@@ -155,10 +154,10 @@ impl AppState for State {
     fn view(&mut self, frame: &mut desen::frame::Frame, delta: f32) {
         self.time += delta;
 
-        for (_, _, _, lifetime) in &mut self.delete_texts {
-            *lifetime -= delta / 1.5;
-        }
-        self.delete_texts.retain(|(_, _, _, l)| *l > 0.0);
+        // for (_, _, _, lifetime) in &mut self.delete_texts {
+        //     *lifetime -= delta / 1.5;
+        // }
+        // self.delete_texts.retain(|(_, _, _, l)| *l > 0.0);
 
         // self.preview_object.rotation += 1;
         // let viewable = self.get_viewable_chunks();
@@ -177,20 +176,20 @@ impl AppState for State {
         //     );
         // }
 
-        self.text_draws.clear();
+        // self.text_draws.clear();
 
         // self.draw_text(frame, self.time, 0.0, 0.0, 50.0, "");
 
         // let mut view_rect = self.get_camera_world_rect();
 
-        self.draw_text(
-            frame,
-            format!("{:?}", self.get_camera_world_rect()),
-            0.0,
-            0.0,
-            50.0,
-            "color: white;",
-        );
+        // self.draw_text(
+        //     frame,
+        //     format!("{:?}", self.get_camera_world_rect()),
+        //     0.0,
+        //     0.0,
+        //     50.0,
+        //     "color: white;",
+        // );
 
         let zoom_scale = self.get_zoom_scale();
         {
@@ -261,19 +260,19 @@ impl AppState for State {
         frame.set_current_texture(self.info.spritesheet);
         frame.transform(FrameTransform::Custom(self.view_transform()));
 
-        for i in 0..self.delete_texts.len() {
-            let (text, x, y, lifetime) = self.delete_texts[i].clone();
-            let factor = (1.0 - lifetime).powf(1.5);
-            let offset = factor * 15.0;
-            self.draw_text(
-                frame,
-                text,
-                x,
-                y + offset,
-                10.0,
-                format!("color: rgb(255, 255, 255); opacity: {};", 1.0 - factor),
-            );
-        }
+        // for i in 0..self.delete_texts.len() {
+        //     let (text, x, y, lifetime) = self.delete_texts[i].clone();
+        //     let factor = (1.0 - lifetime).powf(1.5);
+        //     let offset = factor * 15.0;
+        //     self.draw_text(
+        //         frame,
+        //         text,
+        //         x,
+        //         y + offset,
+        //         10.0,
+        //         format!("color: rgb(255, 255, 255); opacity: {};", 1.0 - factor),
+        //     );
+        // }
 
         {
             let mut view_rect = self.get_camera_world_rect();
@@ -635,27 +634,27 @@ impl State {
         out
     }
 
-    fn draw_text<T, U>(
-        &mut self,
-        frame: &Frame,
-        text: T,
-        x: f32,
-        y: f32,
-        font_size: f32,
-        extra_style: U,
-    ) where
-        T: ToString,
-        U: ToString,
-    {
-        let t = frame.get_transform().mat() * FrameTransform::Translate { x, y }.mat();
+    // fn draw_text<T, U>(
+    //     &mut self,
+    //     frame: &Frame,
+    //     text: T,
+    //     x: f32,
+    //     y: f32,
+    //     font_size: f32,
+    //     extra_style: U,
+    // ) where
+    //     T: ToString,
+    //     U: ToString,
+    // {
+    //     let t = frame.get_transform().mat() * FrameTransform::Translate { x, y }.mat();
 
-        self.text_draws.push(TextDraw {
-            text: text.to_string(),
-            font_size,
-            transform: t,
-            extra_style: extra_style.to_string(),
-        })
-    }
+    //     self.text_draws.push(TextDraw {
+    //         text: text.to_string(),
+    //         font_size,
+    //         transform: t,
+    //         extra_style: extra_style.to_string(),
+    //     })
+    // }
 }
 
 impl CanvasAppState<AppInfo> for State {
@@ -744,6 +743,11 @@ impl StateWrapper {
 
         vec![p.x, p.y]
     }
+    pub fn get_screen_pos(&self, x: f32, y: f32) -> Vec<f32> {
+        let p = self.bundle.state.view_transform() * vector![x, y, 1.0];
+
+        vec![p.x, p.y]
+    }
 
     pub fn add_object(&mut self, key: String, obj: GDObject) -> Result<(), RustError> {
         if get_object_info(obj.id as u32).is_none() {
@@ -781,13 +785,13 @@ impl StateWrapper {
             for c in self.bundle.state.level.chunks.values_mut() {
                 for (list, _) in c.objects.iter_mut() {
                     for m in list.objects.values_mut() {
-                        if let Some(obj) = m.shift_remove(&key) {
-                            self.bundle.state.delete_texts.push((
-                                "Deleted by Richard".into(),
-                                obj.x,
-                                obj.y,
-                                1.0,
-                            ));
+                        if m.shift_remove(&key).is_some() {
+                            // self.bundle.state.delete_texts.push((
+                            //     "Deleted by Richard".into(),
+                            //     obj.x,
+                            //     obj.y,
+                            //     1.0,
+                            // ));
                             return;
                         }
                     }
@@ -839,6 +843,9 @@ impl StateWrapper {
     }
     pub fn set_preview_object(&mut self, to: GDObject) {
         self.bundle.state.preview_object = to
+    }
+    pub fn is_preview_visible(&self) -> bool {
+        self.bundle.state.show_preview
     }
 
     pub fn try_select_at(&mut self, x: f32, y: f32) {
@@ -908,9 +915,9 @@ impl StateWrapper {
                 .map(|o| o.get_chunk_coord())
         })
     }
-    pub fn get_text_draws(&self) -> Vec<TextDraw> {
-        self.bundle.state.text_draws.clone()
-    }
+    // pub fn get_text_draws(&self) -> Vec<TextDraw> {
+    //     self.bundle.state.text_draws.clone()
+    // }
 }
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;

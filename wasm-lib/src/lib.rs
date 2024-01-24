@@ -11,16 +11,16 @@ mod utilgen;
 // use colored::control::set_override;
 use wasm_bindgen::prelude::*;
 
-// pub fn create_view_aux(canvas: web_sys::HtmlCanvasElement) -> crate::state::StateWrapper {}
+#[cfg(target_arch = "wasm32")]
+use state::{State, StateWrapper};
+#[cfg(target_arch = "wasm32")]
+use web_sys::HtmlCanvasElement;
 
 #[wasm_bindgen]
 #[cfg(target_arch = "wasm32")]
-pub fn create_view(
-    canvas: web_sys::HtmlCanvasElement,
-    spritesheet_data: &[u8],
-) -> crate::state::StateWrapper {
-    crate::state::StateWrapper::new(desen::new_app_canvas(canvas, |app| {
-        crate::state::State::init(app, spritesheet_data)
+pub fn create_view(canvas: HtmlCanvasElement, spritesheet_data: &[u8]) -> StateWrapper {
+    StateWrapper::new(desen::new_app_canvas(canvas, |app| {
+        State::init(app, spritesheet_data)
     }))
 }
 

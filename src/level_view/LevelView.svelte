@@ -4,13 +4,15 @@
     import { onMount } from "svelte";
     import Toast from "../utils/toast";
     import { DEBUG } from "../utils/debug";
-    import { spritesheetProgress } from "../loadWasm";
+    import { spritesheetProgress } from "../load_wasm";
+    import Widget from "../widgets/Widget.svelte";
+    import { runCallbacks } from "../state";
 
     export let state: wasm.StateWrapper | null;
 
     export let canvas: HTMLCanvasElement;
     let view_size = [0, 0];
-    let text_draws: wasm.TextDraw[] = [];
+    // let text_draws: wasm.TextDraw[] = [];
 
     onMount(() => {
         try {
@@ -30,7 +32,8 @@
             try {
                 state.pub_render((time - prevTime) / 1000);
                 prevTime = time;
-                //text_draws = state.get_text_draws();
+                runCallbacks(state);
+                // text_draws = state.get_text_draws();
             } catch (e: any) {
                 console.error(e, "(Failed in `state.pub_render`)");
                 Toast.showErrorToast(
@@ -74,24 +77,4 @@
     aria-label="Level Canvas"
 >
     <canvas bind:this={canvas} />
-</div>
-
-<div class="absolute w-full h-full overflow-visible">
-    {#each text_draws as text_draw}
-        <div
-            class="absolute overflow-visible font-semibold text-center whitespace-nowrap"
-            style={`
-            left: ${canvas.offsetWidth / 2}px;
-            top: ${canvas.offsetHeight / 2}px;
-            font-size: ${text_draw.font_size}px;
-            transform: translate(-50%, -50%) ${text_draw.get_css_transform()} scaleY(-1);
-            text-shadow: 0px ${text_draw.font_size / 10}px ${
-                text_draw.font_size / 6
-            }px rgba(0, 0, 0, 1.0);
-            ${text_draw.get_extra_style()}
-        `}
-        >
-            {text_draw.get_text()}
-        </div>
-    {/each}
 </div>

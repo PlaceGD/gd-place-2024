@@ -6195,1820 +6195,28 @@ pub fn get_object_info(id: u32) -> Option<ObjectInfo> {
 
 pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     Some(match id {
-        273 => SpriteInfo {
+        4087 => SpriteInfo {
     pos: (
-        2983,
-        1524,
+        366,
+        1572,
     ),
     size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3455 => SpriteInfo {
-    pos: (
-        880,
-        1260,
-    ),
-    size: (
-        52,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4171 => SpriteInfo {
-    pos: (
-        1897,
-        1429,
-    ),
-    size: (
-        56,
-        72,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3946 => SpriteInfo {
-    pos: (
-        764,
-        2554,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3988 => SpriteInfo {
-    pos: (
-        3887,
-        2579,
-    ),
-    size: (
-        122,
-        122,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2480 => SpriteInfo {
-    pos: (
-        697,
-        890,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2516 => SpriteInfo {
-    pos: (
-        3268,
-        950,
-    ),
-    size: (
-        96,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -26.0,
-    ),
-},2154 => SpriteInfo {
-    pos: (
-        3438,
-        740,
-    ),
-    size: (
-        68,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3360 => SpriteInfo {
-    pos: (
-        1984,
-        1217,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2686 => SpriteInfo {
-    pos: (
-        2646,
-        1052,
-    ),
-    size: (
-        4,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        0.0,
-    ),
-},3151 => SpriteInfo {
-    pos: (
-        1536,
-        1146,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        12.0,
-    ),
-},2948 => SpriteInfo {
-    pos: (
-        0,
-        1753,
-    ),
-    size: (
-        118,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        -1.0,
-        -1.0,
-    ),
-},2012 => SpriteInfo {
-    pos: (
-        3864,
-        138,
-    ),
-    size: (
-        141,
-        137,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        -3.5,
-    ),
-},2651 => SpriteInfo {
-    pos: (
-        1716,
-        1066,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4006 => SpriteInfo {
-    pos: (
-        420,
-        1384,
-    ),
-    size: (
-        64,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -18.0,
-    ),
-},3858 => SpriteInfo {
-    pos: (
-        2917,
-        1494,
-    ),
-    size: (
-        62,
-        57,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},4371 => SpriteInfo {
-    pos: (
-        3578,
-        808,
-    ),
-    size: (
-        24,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -16.0,
-        -2.0,
-    ),
-},47 => SpriteInfo {
-    pos: (
-        2312,
-        0,
-    ),
-    size: (
-        132,
-        339,
-    ),
-    rotated: false,
-    offset: (
-        23.0,
-        1.5,
-    ),
-},3897 => SpriteInfo {
-    pos: (
-        2763,
-        2542,
-    ),
-    size: (
-        62,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3135 => SpriteInfo {
-    pos: (
-        3656,
-        1097,
-    ),
-    size: (
-        48,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2603 => SpriteInfo {
-    pos: (
-        2268,
-        1037,
-    ),
-    size: (
-        44,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        18.0,
-    ),
-},1834 => SpriteInfo {
-    pos: (
-        1396,
-        2877,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -30.0,
-        -30.0,
-    ),
-},474 => SpriteInfo {
-    pos: (
-        2252,
-        1781,
-    ),
-    size: (
-        14,
-        7,
-    ),
-    rotated: false,
-    offset: (
-        -53.0,
-        -56.5,
-    ),
-},695 => SpriteInfo {
-    pos: (
-        2566,
-        1797,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3621 => SpriteInfo {
-    pos: (
-        1213,
-        2315,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3331 => SpriteInfo {
-    pos: (
-        3321,
-        1216,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1463 => SpriteInfo {
-    pos: (
-        848,
-        1544,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3632 => SpriteInfo {
-    pos: (
-        3039,
-        2277,
-    ),
-    size: (
-        88,
-        176,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},131 => SpriteInfo {
-    pos: (
-        1837,
-        2076,
-    ),
-    size: (
-        152,
-        72,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4493 => SpriteInfo {
-    pos: (
-        2003,
-        659,
-    ),
-    size: (
-        98,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3848 => SpriteInfo {
-    pos: (
-        1575,
-        2485,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2894 => SpriteInfo {
-    pos: (
-        1471,
-        456,
-    ),
-    size: (
-        243,
-        42,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        3.0,
-    ),
-},2645 => SpriteInfo {
-    pos: (
-        3257,
-        1000,
-    ),
-    size: (
-        4,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        -2.0,
-    ),
-},2562 => SpriteInfo {
-    pos: (
-        3400,
-        992,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1722 => SpriteInfo {
-    pos: (
-        2365,
-        2004,
-    ),
-    size: (
-        121,
-        37,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.5,
-    ),
-},4373 => SpriteInfo {
-    pos: (
-        1567,
-        865,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        -2.0,
-    ),
-},4353 => SpriteInfo {
-    pos: (
-        348,
-        1476,
-    ),
-    size: (
-        108,
-        108,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3636 => SpriteInfo {
-    pos: (
-        2259,
-        2433,
-    ),
-    size: (
-        200,
-        200,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2678 => SpriteInfo {
-    pos: (
-        2630,
-        1052,
-    ),
-    size: (
-        12,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        24.0,
-        24.0,
-    ),
-},2584 => SpriteInfo {
-    pos: (
-        3683,
-        1029,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2682 => SpriteInfo {
-    pos: (
-        2324,
-        1093,
-    ),
-    size: (
-        52,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -16.0,
-    ),
-},1339 => SpriteInfo {
-    pos: (
-        1588,
-        1896,
-    ),
-    size: (
-        248,
-        126,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        1.0,
-    ),
-},4150 => SpriteInfo {
-    pos: (
-        3925,
-        1422,
-    ),
-    size: (
-        48,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1598 => SpriteInfo {
-    pos: (
-        2906,
-        467,
-    ),
-    size: (
-        104,
-        108,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},928 => SpriteInfo {
-    pos: (
-        1519,
-        1550,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3945 => SpriteInfo {
-    pos: (
-        696,
-        2554,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2588 => SpriteInfo {
-    pos: (
-        124,
-        1033,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -6.0,
-    ),
-},3862 => SpriteInfo {
-    pos: (
-        2013,
-        1499,
-    ),
-    size: (
-        60,
-        50,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2476 => SpriteInfo {
-    pos: (
-        1413,
-        889,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},1763 => SpriteInfo {
-    pos: (
-        3522,
-        2318,
-    ),
-    size: (
-        293,
-        225,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.5,
-    ),
-},4070 => SpriteInfo {
-    pos: (
-        2304,
-        1393,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3226 => SpriteInfo {
-    pos: (
-        2813,
-        1150,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4492 => SpriteInfo {
-    pos: (
-        2229,
-        659,
-    ),
-    size: (
-        112,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1837 => SpriteInfo {
-    pos: (
-        1209,
-        2439,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1604 => SpriteInfo {
-    pos: (
-        3338,
-        2135,
-    ),
-    size: (
-        77,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3332 => SpriteInfo {
-    pos: (
-        224,
-        1217,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2566 => SpriteInfo {
-    pos: (
-        1308,
-        1019,
-    ),
-    size: (
-        128,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4357 => SpriteInfo {
-    pos: (
-        2833,
-        1453,
-    ),
-    size: (
-        28,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4500 => SpriteInfo {
-    pos: (
-        3648,
-        714,
-    ),
-    size: (
-        90,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3501 => SpriteInfo {
-    pos: (
-        1740,
-        1294,
-    ),
-    size: (
-        156,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1884 => SpriteInfo {
-    pos: (
-        1468,
-        1674,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2639 => SpriteInfo {
-    pos: (
-        1077,
-        964,
-    ),
-    size: (
-        4,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        4.0,
-    ),
-},2866 => SpriteInfo {
-    pos: (
-        124,
-        124,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2654 => SpriteInfo {
-    pos: (
-        1440,
-        1069,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1845 => SpriteInfo {
-    pos: (
-        1239,
-        2197,
-    ),
-    size: (
-        154,
-        114,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2699 => SpriteInfo {
-    pos: (
-        64,
-        838,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4149 => SpriteInfo {
-    pos: (
-        1024,
-        1418,
-    ),
-    size: (
-        76,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2311 => SpriteInfo {
-    pos: (
-        1726,
-        704,
-    ),
-    size: (
-        12,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -2.0,
-    ),
-},3979 => SpriteInfo {
-    pos: (
-        3087,
-        2594,
-    ),
-    size: (
-        121,
-        121,
-    ),
-    rotated: false,
-    offset: (
-        -1.5,
-        -2.5,
-    ),
-},2689 => SpriteInfo {
-    pos: (
-        2524,
-        1108,
-    ),
-    size: (
-        112,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},67 => SpriteInfo {
-    pos: (
-        759,
-        0,
-    ),
-    size: (
-        99,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.0,
-    ),
-},2647 => SpriteInfo {
-    pos: (
-        444,
-        1060,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4415 => SpriteInfo {
-    pos: (
-        3110,
-        497,
-    ),
-    size: (
-        98,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2225 => SpriteInfo {
-    pos: (
-        2065,
-        761,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2867 => SpriteInfo {
-    pos: (
-        2349,
-        343,
-    ),
-    size: (
-        146,
-        95,
-    ),
-    rotated: false,
-    offset: (
-        7.0,
-        15.5,
-    ),
-},3450 => SpriteInfo {
-    pos: (
-        3605,
-        1257,
-    ),
-    size: (
-        32,
         36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3122 => SpriteInfo {
-    pos: (
-        3460,
-        1116,
-    ),
-    size: (
-        64,
-        64,
+        32,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},3368 => SpriteInfo {
+},2943 => SpriteInfo {
     pos: (
-        3900,
-        1238,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3796 => SpriteInfo {
-    pos: (
-        1508,
-        1453,
-    ),
-    size: (
-        28,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},141 => SpriteInfo {
-    pos: (
-        124,
-        0,
-    ),
-    size: (
-        121,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3325 => SpriteInfo {
-    pos: (
-        3704,
-        1211,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3372 => SpriteInfo {
-    pos: (
-        428,
-        1248,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3544 => SpriteInfo {
-    pos: (
-        1548,
-        1354,
-    ),
-    size: (
-        80,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        12.0,
-    ),
-},3130 => SpriteInfo {
-    pos: (
-        1221,
-        1113,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},4172 => SpriteInfo {
-    pos: (
-        3761,
-        1430,
-    ),
-    size: (
-        92,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2685 => SpriteInfo {
-    pos: (
-        2737,
-        1094,
-    ),
-    size: (
-        52,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},2642 => SpriteInfo {
-    pos: (
-        1157,
-        1054,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1220 => SpriteInfo {
-    pos: (
-        2519,
-        1921,
-    ),
-    size: (
-        120,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1726 => SpriteInfo {
-    pos: (
-        0,
-        2064,
-    ),
-    size: (
-        121,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        6.0,
-    ),
-},3850 => SpriteInfo {
-    pos: (
-        1401,
-        2495,
-    ),
-    size: (
-        64,
-        63,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},2666 => SpriteInfo {
-    pos: (
-        2396,
-        1084,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3804 => SpriteInfo {
-    pos: (
-        1961,
-        2445,
-    ),
-    size: (
-        64,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},1862 => SpriteInfo {
-    pos: (
-        972,
-        1634,
+        258,
+        1892,
     ),
     size: (
         120,
         120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},918 => SpriteInfo {
-    pos: (
-        1260,
-        142,
-    ),
-    size: (
-        286,
-        249,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        0.5,
-    ),
-},3373 => SpriteInfo {
-    pos: (
-        496,
-        1252,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1333 => SpriteInfo {
-    pos: (
-        249,
-        0,
-    ),
-    size: (
-        126,
-        126,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2361 => SpriteInfo {
-    pos: (
-        3806,
-        819,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3322 => SpriteInfo {
-    pos: (
-        884,
-        1192,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2657 => SpriteInfo {
-    pos: (
-        1841,
-        1077,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2987 => SpriteInfo {
-    pos: (
-        1080,
-        1758,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3634 => SpriteInfo {
-    pos: (
-        556,
-        2414,
-    ),
-    size: (
-        136,
-        188,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},106 => SpriteInfo {
-    pos: (
-        2643,
-        2055,
-    ),
-    size: (
-        108,
-        262,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3365 => SpriteInfo {
-    pos: (
-        1900,
-        1229,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2674 => SpriteInfo {
-    pos: (
-        2753,
-        1086,
-    ),
-    size: (
-        60,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        24.0,
-    ),
-},1009 => SpriteInfo {
-    pos: (
-        2594,
-        2185,
-    ),
-    size: (
-        39,
-        39,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.5,
-    ),
-},3902 => SpriteInfo {
-    pos: (
-        3699,
-        2547,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3654 => SpriteInfo {
-    pos: (
-        4023,
-        2528,
-    ),
-    size: (
-        57,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        -1.0,
-    ),
-},3476 => SpriteInfo {
-    pos: (
-        1489,
-        1261,
-    ),
-    size: (
-        28,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3055 => SpriteInfo {
-    pos: (
-        621,
-        1708,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3863 => SpriteInfo {
-    pos: (
-        3193,
-        1502,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3425 => SpriteInfo {
-    pos: (
-        1144,
-        1250,
-    ),
-    size: (
-        40,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4190 => SpriteInfo {
-    pos: (
-        2548,
-        1432,
-    ),
-    size: (
-        16,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        12.0,
-    ),
-},3849 => SpriteInfo {
-    pos: (
-        1333,
-        2489,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2583 => SpriteInfo {
-    pos: (
-        888,
-        1028,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        0.0,
-    ),
-},2511 => SpriteInfo {
-    pos: (
-        1308,
-        935,
-    ),
-    size: (
-        100,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},2251 => SpriteInfo {
-    pos: (
-        2269,
-        775,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3554 => SpriteInfo {
-    pos: (
-        3989,
-        1350,
-    ),
-    size: (
-        80,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        8.0,
-    ),
-},1210 => SpriteInfo {
-    pos: (
-        1452,
-        1922,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3152 => SpriteInfo {
-    pos: (
-        1780,
-        1146,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},85 => SpriteInfo {
-    pos: (
-        274,
-        2850,
-    ),
-    size: (
-        280,
-        280,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2577 => SpriteInfo {
-    pos: (
-        2280,
-        1025,
-    ),
-    size: (
-        44,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -24.0,
-    ),
-},2556 => SpriteInfo {
-    pos: (
-        1992,
-        973,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2249 => SpriteInfo {
-    pos: (
-        2553,
-        776,
-    ),
-    size: (
-        60,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4164 => SpriteInfo {
-    pos: (
-        936,
-        1444,
-    ),
-    size: (
-        68,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        -50.0,
-        0.0,
-    ),
-},1752 => SpriteInfo {
-    pos: (
-        669,
-        2910,
-    ),
-    size: (
-        168,
-        146,
-    ),
-    rotated: false,
-    offset: (
-        19.0,
-        16.0,
-    ),
-},1591 => SpriteInfo {
-    pos: (
-        219,
-        278,
-    ),
-    size: (
-        120,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},3477 => SpriteInfo {
-    pos: (
-        100,
-        1273,
-    ),
-    size: (
-        28,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2465 => SpriteInfo {
-    pos: (
-        3926,
-        863,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3814 => SpriteInfo {
-    pos: (
-        2831,
-        2484,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4503 => SpriteInfo {
-    pos: (
-        1478,
-        735,
-    ),
-    size: (
-        90,
-        90,
     ),
     rotated: false,
     offset: (
@@ -8017,8 +6225,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },2470 => SpriteInfo {
     pos: (
-        324,
-        871,
+        1830,
+        957,
     ),
     size: (
         60,
@@ -8029,38 +6237,38 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         -2.0,
         0.0,
     ),
-},1602 => SpriteInfo {
+},2574 => SpriteInfo {
     pos: (
-        3201,
-        2138,
+        89,
+        1124,
     ),
     size: (
-        62,
-        62,
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},3854 => SpriteInfo {
+    pos: (
+        3325,
+        1686,
+    ),
+    size: (
+        64,
+        64,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},3478 => SpriteInfo {
+},877 => SpriteInfo {
     pos: (
-        1416,
-        1273,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},505 => SpriteInfo {
-    pos: (
-        1089,
-        2219,
+        1289,
+        2047,
     ),
     size: (
         120,
@@ -8071,108 +6279,10 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},3941 => SpriteInfo {
+},3376 => SpriteInfo {
     pos: (
-        340,
-        2552,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},39 => SpriteInfo {
-    pos: (
-        2643,
-        1997,
-    ),
-    size: (
-        120,
-        54,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3369 => SpriteInfo {
-    pos: (
-        2451,
-        1240,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1705 => SpriteInfo {
-    pos: (
-        2463,
-        2611,
-    ),
-    size: (
-        334,
-        328,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1698 => SpriteInfo {
-    pos: (
-        4009,
-        138,
-    ),
-    size: (
-        76,
-        72,
-    ),
-    rotated: false,
-    offset: (
-        22.0,
-        24.0,
-    ),
-},395 => SpriteInfo {
-    pos: (
-        2801,
-        2876,
-    ),
-    size: (
-        194,
-        168,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3058 => SpriteInfo {
-    pos: (
-        2144,
-        1765,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3530 => SpriteInfo {
-    pos: (
-        632,
-        1318,
+        759,
+        1404,
     ),
     size: (
         64,
@@ -8185,8 +6295,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },3294 => SpriteInfo {
     pos: (
-        2149,
-        1171,
+        1819,
+        1306,
     ),
     size: (
         60,
@@ -8197,1998 +6307,24 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},3984 => SpriteInfo {
+},4504 => SpriteInfo {
     pos: (
-        3502,
-        2547,
-    ),
-    size: (
-        125,
-        124,
-    ),
-    rotated: false,
-    offset: (
-        1.5,
-        2.0,
-    ),
-},3628 => SpriteInfo {
-    pos: (
-        124,
-        2377,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},910 => SpriteInfo {
-    pos: (
-        1993,
-        2076,
-    ),
-    size: (
-        58,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4376 => SpriteInfo {
-    pos: (
-        1808,
-        885,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2944 => SpriteInfo {
-    pos: (
-        3509,
-        1637,
-    ),
-    size: (
-        61,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -29.5,
-        0.0,
-    ),
-},661 => SpriteInfo {
-    pos: (
-        1774,
-        1829,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2581 => SpriteInfo {
-    pos: (
-        820,
-        1027,
-    ),
-    size: (
-        64,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},2565 => SpriteInfo {
-    pos: (
-        2378,
-        941,
-    ),
-    size: (
-        12,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        -26.0,
-        -28.0,
-    ),
-},2543 => SpriteInfo {
-    pos: (
-        1992,
-        957,
-    ),
-    size: (
-        60,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -22.0,
-    ),
-},4421 => SpriteInfo {
-    pos: (
-        3212,
-        555,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3448 => SpriteInfo {
-    pos: (
-        132,
-        1257,
-    ),
-    size: (
-        28,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1222 => SpriteInfo {
-    pos: (
-        743,
-        1952,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1 => SpriteInfo {
-    pos: (
-        2456,
-        1508,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4426 => SpriteInfo {
-    pos: (
-        1094,
-        553,
-    ),
-    size: (
-        90,
-        82,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3314 => SpriteInfo {
-    pos: (
-        96,
-        1213,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2673 => SpriteInfo {
-    pos: (
-        2051,
-        1085,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2503 => SpriteInfo {
-    pos: (
-        4062,
-        866,
-    ),
-    size: (
-        28,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        18.0,
-        -10.0,
-    ),
-},4001 => SpriteInfo {
-    pos: (
-        556,
-        1376,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3983 => SpriteInfo {
-    pos: (
-        964,
-        2577,
-    ),
-    size: (
-        116,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        -1.0,
-        1.0,
-    ),
-},3536 => SpriteInfo {
-    pos: (
-        3693,
-        1327,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1275 => SpriteInfo {
-    pos: (
-        3530,
-        423,
-    ),
-    size: (
-        120,
-        84,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4499 => SpriteInfo {
-    pos: (
-        166,
-        741,
-    ),
-    size: (
-        98,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2226 => SpriteInfo {
-    pos: (
-        3297,
-        766,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3402 => SpriteInfo {
-    pos: (
-        2784,
-        1158,
-    ),
-    size: (
-        20,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2032 => SpriteInfo {
-    pos: (
-        3931,
-        310,
-    ),
-    size: (
-        92,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        0.0,
-    ),
-},2538 => SpriteInfo {
-    pos: (
-        2601,
-        952,
-    ),
-    size: (
-        60,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},151 => SpriteInfo {
-    pos: (
-        867,
-        2004,
-    ),
-    size: (
-        48,
-        159,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},2551 => SpriteInfo {
-    pos: (
-        2212,
-        963,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2862 => SpriteInfo {
-    pos: (
-        4084,
-        1518,
-    ),
-    size: (
-        8,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        26.0,
-        -26.0,
-    ),
-},130 => SpriteInfo {
-    pos: (
-        3526,
-        2138,
-    ),
-    size: (
-        458,
-        176,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1836 => SpriteInfo {
-    pos: (
-        3434,
-        2371,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3439 => SpriteInfo {
-    pos: (
-        1672,
-        1262,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3056 => SpriteInfo {
-    pos: (
-        749,
-        1764,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},99 => SpriteInfo {
-    pos: (
-        2856,
-        0,
-    ),
-    size: (
-        127,
-        356,
-    ),
-    rotated: false,
-    offset: (
-        24.5,
-        1.0,
-    ),
-},3361 => SpriteInfo {
-    pos: (
-        1604,
-        1218,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},216 => SpriteInfo {
-    pos: (
-        1168,
-        1965,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},203 => SpriteInfo {
-    pos: (
-        3600,
-        0,
-    ),
-    size: (
-        260,
-        226,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3137 => SpriteInfo {
-    pos: (
-        704,
-        1082,
-    ),
-    size: (
-        36,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1768 => SpriteInfo {
-    pos: (
-        2052,
-        2267,
-    ),
-    size: (
-        22,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2996 => SpriteInfo {
-    pos: (
-        924,
-        1882,
-    ),
-    size: (
-        240,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4173 => SpriteInfo {
-    pos: (
-        0,
-        1433,
-    ),
-    size: (
-        48,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2279 => SpriteInfo {
-    pos: (
-        2812,
-        790,
-    ),
-    size: (
-        36,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        -18.0,
-        6.0,
-    ),
-},4511 => SpriteInfo {
-    pos: (
-        499,
-        695,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},410 => SpriteInfo {
-    pos: (
-        0,
-        2108,
-    ),
-    size: (
-        86,
-        86,
-    ),
-    rotated: false,
-    offset: (
-        17.0,
-        17.0,
-    ),
-},4178 => SpriteInfo {
-    pos: (
-        2472,
-        1396,
-    ),
-    size: (
-        8,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        0.0,
-    ),
-},2513 => SpriteInfo {
-    pos: (
-        0,
-        943,
-    ),
-    size: (
-        80,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4175 => SpriteInfo {
-    pos: (
-        892,
-        1428,
-    ),
-    size: (
-        40,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -36.0,
-    ),
-},2558 => SpriteInfo {
-    pos: (
-        1240,
-        977,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3555 => SpriteInfo {
-    pos: (
-        2236,
-        1285,
-    ),
-    size: (
-        8,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -36.0,
-        12.0,
-    ),
-},3965 => SpriteInfo {
-    pos: (
-        1333,
-        2562,
-    ),
-    size: (
-        128,
-        128,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3812 => SpriteInfo {
-    pos: (
-        2763,
-        2484,
-    ),
-    size: (
-        64,
-        54,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3529 => SpriteInfo {
-    pos: (
-        68,
-        1317,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2027 => SpriteInfo {
-    pos: (
-        3841,
-        303,
-    ),
-    size: (
-        86,
         220,
-    ),
-    rotated: false,
-    offset: (
-        -1.0,
-        -8.0,
-    ),
-},3086 => SpriteInfo {
-    pos: (
-        746,
-        2145,
-    ),
-    size: (
-        111,
-        95,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        2.5,
-    ),
-},3652 => SpriteInfo {
-    pos: (
-        3887,
-        2525,
-    ),
-    size: (
-        64,
-        50,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4438 => SpriteInfo {
-    pos: (
-        1644,
-        580,
-    ),
-    size: (
-        105,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},103 => SpriteInfo {
-    pos: (
-        2101,
-        1984,
-    ),
-    size: (
-        80,
-        76,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2587 => SpriteInfo {
-    pos: (
-        56,
-        1033,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},2417 => SpriteInfo {
-    pos: (
-        1036,
-        844,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1866 => SpriteInfo {
-    pos: (
-        3712,
-        1642,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},930 => SpriteInfo {
-    pos: (
-        3588,
-        1557,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2665 => SpriteInfo {
-    pos: (
-        508,
-        1084,
-    ),
-    size: (
-        60,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -16.0,
-    ),
-},4097 => SpriteInfo {
-    pos: (
-        688,
-        1412,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2659 => SpriteInfo {
-    pos: (
-        2396,
-        1027,
-    ),
-    size: (
-        4,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        -4.0,
-    ),
-},2991 => SpriteInfo {
-    pos: (
-        3479,
-        1761,
-    ),
-    size: (
-        99,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -1.5,
-        8.0,
-    ),
-},2961 => SpriteInfo {
-    pos: (
-        432,
-        1772,
-    ),
-    size: (
-        120,
-        107,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.5,
-    ),
-},2301 => SpriteInfo {
-    pos: (
-        3167,
-        788,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2598 => SpriteInfo {
-    pos: (
-        948,
-        1036,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3376 => SpriteInfo {
-    pos: (
-        2273,
-        1253,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3330 => SpriteInfo {
-    pos: (
-        2383,
-        1216,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3371 => SpriteInfo {
-    pos: (
-        2656,
-        1245,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3528 => SpriteInfo {
-    pos: (
-        420,
-        1316,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4439 => SpriteInfo {
-    pos: (
-        2929,
-        583,
+        792,
     ),
     size: (
         90,
-        120,
+        90,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},4168 => SpriteInfo {
+},3323 => SpriteInfo {
     pos: (
-        3605,
-        1425,
-    ),
-    size: (
-        68,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4423 => SpriteInfo {
-    pos: (
-        2349,
-        563,
-    ),
-    size: (
-        112,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3631 => SpriteInfo {
-    pos: (
-        438,
-        2414,
-    ),
-    size: (
-        114,
-        176,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4068 => SpriteInfo {
-    pos: (
-        1320,
-        1391,
-    ),
-    size: (
-        64,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},4188 => SpriteInfo {
-    pos: (
-        824,
-        1448,
-    ),
-    size: (
-        40,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2575 => SpriteInfo {
-    pos: (
-        516,
-        1024,
-    ),
-    size: (
-        52,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        -24.0,
-    ),
-},1762 => SpriteInfo {
-    pos: (
-        3819,
-        2318,
-    ),
-    size: (
-        203,
-        203,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.5,
-    ),
-},3147 => SpriteInfo {
-    pos: (
-        2592,
-        1116,
-    ),
-    size: (
-        44,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        0.0,
-    ),
-},3320 => SpriteInfo {
-    pos: (
-        1353,
-        1187,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},503 => SpriteInfo {
-    pos: (
-        0,
-        2260,
-    ),
-    size: (
-        120,
-        78,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},2578 => SpriteInfo {
-    pos: (
-        2328,
-        1025,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2550 => SpriteInfo {
-    pos: (
-        3689,
-        961,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2546 => SpriteInfo {
-    pos: (
-        821,
-        959,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1332 => SpriteInfo {
-    pos: (
-        980,
-        0,
-    ),
-    size: (
-        115,
-        26,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3329 => SpriteInfo {
-    pos: (
-        3999,
-        1214,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1203 => SpriteInfo {
-    pos: (
-        3556,
-        1929,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},41 => SpriteInfo {
-    pos: (
-        1756,
-        2026,
-    ),
-    size: (
-        77,
-        278,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.0,
-    ),
-},906 => SpriteInfo {
-    pos: (
-        2490,
-        2073,
-    ),
-    size: (
-        99,
-        81,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.5,
-    ),
-},3550 => SpriteInfo {
-    pos: (
-        2376,
-        1332,
-    ),
-    size: (
-        44,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -10.0,
-    ),
-},4002 => SpriteInfo {
-    pos: (
-        824,
-        1380,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},473 => SpriteInfo {
-    pos: (
-        4080,
-        1758,
-    ),
-    size: (
-        9,
-        9,
-    ),
-    rotated: false,
-    offset: (
-        -55.5,
-        -55.5,
-    ),
-},1720 => SpriteInfo {
-    pos: (
-        921,
-        2006,
-    ),
-    size: (
-        121,
-        69,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        17.5,
-    ),
-},2660 => SpriteInfo {
-    pos: (
-        1600,
-        1082,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4420 => SpriteInfo {
-    pos: (
-        788,
-        540,
-    ),
-    size: (
-        120,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3146 => SpriteInfo {
-    pos: (
-        2247,
-        1129,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1758 => SpriteInfo {
-    pos: (
-        1837,
-        2267,
-    ),
-    size: (
-        175,
-        174,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        1.0,
-    ),
-},1708 => SpriteInfo {
-    pos: (
-        1465,
-        2649,
-    ),
-    size: (
-        338,
-        340,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2696 => SpriteInfo {
-    pos: (
-        0,
-        831,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3087 => SpriteInfo {
-    pos: (
-        1952,
-        2156,
-    ),
-    size: (
-        123,
-        107,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        2.5,
-    ),
-},3296 => SpriteInfo {
-    pos: (
-        1672,
-        1150,
-    ),
-    size: (
-        24,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2393 => SpriteInfo {
-    pos: (
-        1375,
-        799,
-    ),
-    size: (
-        64,
-        72,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4072 => SpriteInfo {
-    pos: (
-        1388,
-        1393,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2557 => SpriteInfo {
-    pos: (
-        1065,
-        952,
-    ),
-    size: (
-        28,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        18.0,
-        -24.0,
-    ),
-},7 => SpriteInfo {
-    pos: (
-        3813,
-        1518,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1852 => SpriteInfo {
-    pos: (
-        1550,
-        265,
-    ),
-    size: (
-        80,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        -30.0,
-    ),
-},1865 => SpriteInfo {
-    pos: (
-        2084,
-        1641,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1833 => SpriteInfo {
-    pos: (
-        2999,
-        2989,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -60.0,
-        -60.0,
-    ),
-},2501 => SpriteInfo {
-    pos: (
-        2869,
-        920,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1730 => SpriteInfo {
-    pos: (
-        3549,
-        2053,
-    ),
-    size: (
-        121,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3502 => SpriteInfo {
-    pos: (
-        1968,
-        1299,
-    ),
-    size: (
-        168,
-        124,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1721 => SpriteInfo {
-    pos: (
-        2922,
-        2008,
-    ),
-    size: (
-        121,
-        66,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        19.0,
-    ),
-},2605 => SpriteInfo {
-    pos: (
-        4027,
-        310,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},504 => SpriteInfo {
-    pos: (
-        2515,
-        2268,
-    ),
-    size: (
-        79,
-        79,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.5,
-    ),
-},1223 => SpriteInfo {
-    pos: (
-        1840,
-        1845,
-    ),
-    size: (
-        24,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -48.0,
-        -48.0,
-    ),
-},1209 => SpriteInfo {
-    pos: (
-        1292,
-        1948,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},201 => SpriteInfo {
-    pos: (
-        3259,
-        0,
-    ),
-    size: (
-        131,
-        226,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},4382 => SpriteInfo {
-    pos: (
-        1240,
-        913,
-    ),
-    size: (
-        60,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -22.0,
-    ),
-},2510 => SpriteInfo {
-    pos: (
-        388,
-        927,
-    ),
-    size: (
-        64,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2576 => SpriteInfo {
-    pos: (
-        3532,
-        1025,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},1344 => SpriteInfo {
-    pos: (
-        3830,
-        1958,
-    ),
-    size: (
-        114,
-        114,
-    ),
-    rotated: false,
-    offset: (
-        -3.0,
-        11.0,
-    ),
-},3370 => SpriteInfo {
-    pos: (
-        2588,
-        1245,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3532 => SpriteInfo {
-    pos: (
-        488,
-        1320,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4076 => SpriteInfo {
-    pos: (
-        1236,
-        1395,
-    ),
-    size: (
-        76,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1712 => SpriteInfo {
-    pos: (
-        1576,
-        2026,
-    ),
-    size: (
-        176,
-        221,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        -58.5,
-    ),
-},2475 => SpriteInfo {
-    pos: (
-        825,
-        887,
-    ),
-    size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        16.0,
-    ),
-},2679 => SpriteInfo {
-    pos: (
-        1364,
-        1087,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3551 => SpriteInfo {
-    pos: (
-        1900,
-        1345,
-    ),
-    size: (
-        36,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},2926 => SpriteInfo {
-    pos: (
-        1942,
-        0,
-    ),
-    size: (
-        94,
-        301,
-    ),
-    rotated: false,
-    offset: (
-        21.0,
-        4.5,
-    ),
-},2521 => SpriteInfo {
-    pos: (
-        3779,
-        955,
-    ),
-    size: (
-        96,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -10.0,
-    ),
-},2055 => SpriteInfo {
-    pos: (
-        3116,
-        331,
-    ),
-    size: (
-        139,
-        114,
-    ),
-    rotated: false,
-    offset: (
-        -1.5,
-        -8.0,
-    ),
-},2419 => SpriteInfo {
-    pos: (
-        4053,
-        826,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3625 => SpriteInfo {
-    pos: (
-        1337,
-        2371,
-    ),
-    size: (
-        120,
-        114,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},413 => SpriteInfo {
-    pos: (
-        614,
-        2115,
-    ),
-    size: (
-        52,
-        86,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        17.0,
-    ),
-},2889 => SpriteInfo {
-    pos: (
-        1251,
-        395,
-    ),
-    size: (
-        238,
-        57,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        15.5,
-    ),
-},3042 => SpriteInfo {
-    pos: (
-        3208,
-        1763,
-    ),
-    size: (
-        96,
-        96,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},471 => SpriteInfo {
-    pos: (
-        366,
-        1893,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3319 => SpriteInfo {
-    pos: (
-        3253,
-        1186,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1605 => SpriteInfo {
-    pos: (
-        3419,
-        2135,
-    ),
-    size: (
-        78,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2227 => SpriteInfo {
-    pos: (
-        2417,
-        767,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3855 => SpriteInfo {
-    pos: (
-        3677,
-        1487,
+        3714,
+        1338,
     ),
     size: (
         64,
@@ -10201,8 +6337,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },259 => SpriteInfo {
     pos: (
-        3937,
-        1522,
+        3195,
+        1713,
     ),
     size: (
         120,
@@ -10211,4715 +6347,11 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     rotated: false,
     offset: (
         0.0,
-        0.0,
-    ),
-},2568 => SpriteInfo {
-    pos: (
-        3615,
-        1000,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3535 => SpriteInfo {
-    pos: (
-        1320,
-        1323,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},702 => SpriteInfo {
-    pos: (
-        122,
-        1873,
-    ),
-    size: (
-        240,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3447 => SpriteInfo {
-    pos: (
-        100,
-        1257,
-    ),
-    size: (
-        28,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4069 => SpriteInfo {
-    pos: (
-        2236,
-        1393,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},2505 => SpriteInfo {
-    pos: (
-        2060,
-        893,
-    ),
-    size: (
-        32,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        16.0,
-        8.0,
-    ),
-},2946 => SpriteInfo {
-    pos: (
-        3355,
-        1695,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3312 => SpriteInfo {
-    pos: (
-        572,
-        1184,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1867 => SpriteInfo {
-    pos: (
-        3836,
-        1646,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1863 => SpriteInfo {
-    pos: (
-        124,
-        1637,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3576 => SpriteInfo {
-    pos: (
-        2581,
-        1381,
-    ),
-    size: (
-        128,
-        96,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4507 => SpriteInfo {
-    pos: (
-        2827,
-        681,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},696 => SpriteInfo {
-    pos: (
-        1892,
-        1829,
-    ),
-    size: (
-        240,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},934 => SpriteInfo {
-    pos: (
-        584,
-        1584,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2693 => SpriteInfo {
-    pos: (
-        640,
-        1050,
-    ),
-    size: (
-        108,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4440 => SpriteInfo {
-    pos: (
-        1847,
-        584,
-    ),
-    size: (
-        105,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},2416 => SpriteInfo {
-    pos: (
-        2337,
-        841,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3533 => SpriteInfo {
-    pos: (
-        2501,
-        1320,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3633 => SpriteInfo {
-    pos: (
-        4026,
-        2206,
-    ),
-    size: (
-        56,
-        186,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1765 => SpriteInfo {
-    pos: (
-        2016,
-        2303,
-    ),
-    size: (
-        32,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3295 => SpriteInfo {
-    pos: (
-        704,
-        1150,
-    ),
-    size: (
-        40,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},877 => SpriteInfo {
-    pos: (
-        3308,
-        1819,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3518 => SpriteInfo {
-    pos: (
-        3561,
-        1297,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4418 => SpriteInfo {
-    pos: (
-        1192,
-        522,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},2024 => SpriteInfo {
-    pos: (
-        709,
-        331,
-    ),
-    size: (
-        169,
-        156,
-    ),
-    rotated: false,
-    offset: (
-        -4.5,
-        -9.0,
-    ),
-},3522 => SpriteInfo {
-    pos: (
-        2852,
-        1306,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2886 => SpriteInfo {
-    pos: (
-        420,
-        350,
-    ),
-    size: (
-        241,
-        39,
-    ),
-    rotated: false,
-    offset: (
-        1.5,
-        12.5,
-    ),
-},3520 => SpriteInfo {
-    pos: (
-        2944,
-        1298,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3810 => SpriteInfo {
-    pos: (
-        2029,
-        2339,
-    ),
-    size: (
-        26,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},234 => SpriteInfo {
-    pos: (
-        3338,
-        2071,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2547 => SpriteInfo {
-    pos: (
-        3073,
-        958,
-    ),
-    size: (
-        52,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        -24.0,
-    ),
-},2688 => SpriteInfo {
-    pos: (
-        2941,
-        1106,
-    ),
-    size: (
-        136,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3229 => SpriteInfo {
-    pos: (
-        816,
-        1160,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3318 => SpriteInfo {
-    pos: (
-        2315,
-        1185,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2555 => SpriteInfo {
-    pos: (
-        3368,
-        946,
-    ),
-    size: (
-        28,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        18.0,
-        -24.0,
-    ),
-},3323 => SpriteInfo {
-    pos: (
-        0,
-        1197,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3806 => SpriteInfo {
-    pos: (
-        3034,
-        2457,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2498 => SpriteInfo {
-    pos: (
-        264,
-        917,
-    ),
-    size: (
-        56,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        8.0,
-    ),
-},2631 => SpriteInfo {
-    pos: (
-        3005,
-        970,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},3975 => SpriteInfo {
-    pos: (
-        832,
-        2577,
-    ),
-    size: (
-        128,
-        115,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.5,
-    ),
-},3440 => SpriteInfo {
-    pos: (
-        632,
-        1270,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},12 => SpriteInfo {
-    pos: (
-        2040,
-        0,
-    ),
-    size: (
-        132,
-        339,
-    ),
-    rotated: false,
-    offset: (
-        23.0,
-        1.5,
-    ),
-},4356 => SpriteInfo {
-    pos: (
-        868,
-        1448,
-    ),
-    size: (
-        20,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},11 => SpriteInfo {
-    pos: (
-        1843,
-        0,
-    ),
-    size: (
-        95,
-        300,
-    ),
-    rotated: false,
-    offset: (
-        21.5,
-        4.0,
-    ),
-},2467 => SpriteInfo {
-    pos: (
-        3497,
-        864,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},86 => SpriteInfo {
-    pos: (
-        862,
-        2847,
-    ),
-    size: (
-        214,
-        217,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},4502 => SpriteInfo {
-    pos: (
-        3517,
-        729,
-    ),
-    size: (
-        90,
-        75,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},2672 => SpriteInfo {
-    pos: (
-        2737,
-        1045,
-    ),
-    size: (
-        12,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        24.0,
-        -16.0,
-    ),
-},3939 => SpriteInfo {
-    pos: (
-        2897,
-        2552,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2559 => SpriteInfo {
-    pos: (
-        1847,
-        985,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3227 => SpriteInfo {
-    pos: (
-        1285,
-        1151,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1461 => SpriteInfo {
-    pos: (
-        1708,
-        1526,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2515 => SpriteInfo {
-    pos: (
-        3979,
-        946,
-    ),
-    size: (
-        96,
-        96,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},929 => SpriteInfo {
-    pos: (
-        2836,
-        1555,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3375 => SpriteInfo {
-    pos: (
-        3389,
-        1252,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1340 => SpriteInfo {
-    pos: (
-        0,
-        1903,
-    ),
-    size: (
-        106,
-        6,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        0.0,
-    ),
-},2964 => SpriteInfo {
-    pos: (
-        1344,
-        1773,
-    ),
-    size: (
-        116,
-        107,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.5,
-    ),
-},2479 => SpriteInfo {
-    pos: (
-        1992,
-        893,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4151 => SpriteInfo {
-    pos: (
-        1968,
-        1427,
-    ),
-    size: (
-        84,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4065 => SpriteInfo {
-    pos: (
-        488,
-        1388,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},4375 => SpriteInfo {
-    pos: (
-        1353,
-        875,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        0.0,
-    ),
-},4378 => SpriteInfo {
-    pos: (
-        2477,
-        892,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        2.0,
-    ),
-},2482 => SpriteInfo {
-    pos: (
-        889,
-        896,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1830 => SpriteInfo {
-    pos: (
-        3434,
-        2269,
-    ),
-    size: (
-        62,
-        62,
-    ),
-    rotated: false,
-    offset: (
-        29.0,
-        29.0,
-    ),
-},409 => SpriteInfo {
-    pos: (
-        4036,
-        2082,
-    ),
-    size: (
-        52,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2569 => SpriteInfo {
-    pos: (
-        2378,
-        953,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        -30.0,
-        -26.0,
-    ),
-},3546 => SpriteInfo {
-    pos: (
-        3605,
-        1365,
-    ),
-    size: (
-        76,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        12.0,
-    ),
-},3994 => SpriteInfo {
-    pos: (
-        3295,
-        2499,
-    ),
-    size: (
-        54,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4374 => SpriteInfo {
-    pos: (
-        3994,
-        870,
-    ),
-    size: (
-        64,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        24.0,
-    ),
-},2993 => SpriteInfo {
-    pos: (
-        2273,
-        1641,
-    ),
-    size: (
-        28,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -7.0,
-    ),
-},2586 => SpriteInfo {
-    pos: (
-        3821,
-        1031,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        -4.0,
-    ),
-},4469 => SpriteInfo {
-    pos: (
-        1290,
-        631,
-    ),
-    size: (
-        105,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3811 => SpriteInfo {
-    pos: (
-        2029,
-        2407,
-    ),
-    size: (
-        41,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3089 => SpriteInfo {
-    pos: (
-        2213,
-        2190,
-    ),
-    size: (
-        128,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3803 => SpriteInfo {
-    pos: (
-        1893,
-        2445,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3630 => SpriteInfo {
-    pos: (
-        248,
-        2414,
-    ),
-    size: (
-        186,
-        134,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2857 => SpriteInfo {
-    pos: (
-        3520,
-        1561,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},940 => SpriteInfo {
-    pos: (
-        1292,
-        2072,
-    ),
-    size: (
-        98,
-        121,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.5,
-    ),
-},1224 => SpriteInfo {
-    pos: (
-        1840,
-        1873,
-    ),
-    size: (
-        24,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -48.0,
-        -48.0,
-    ),
-},2418 => SpriteInfo {
-    pos: (
-        1249,
-        849,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1831 => SpriteInfo {
-    pos: (
-        1807,
-        2954,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -60.0,
-        -60.0,
-    ),
-},2653 => SpriteInfo {
-    pos: (
-        4087,
-        1010,
-    ),
-    size: (
-        4,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        4.0,
-    ),
-},891 => SpriteInfo {
-    pos: (
-        3832,
-        1770,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3851 => SpriteInfo {
-    pos: (
-        3434,
-        2495,
-    ),
-    size: (
-        64,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2632 => SpriteInfo {
-    pos: (
-        2809,
-        986,
-    ),
-    size: (
-        52,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        -14.0,
-    ),
-},1859 => SpriteInfo {
-    pos: (
-        0,
-        124,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3531 => SpriteInfo {
-    pos: (
-        3385,
-        1320,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2300 => SpriteInfo {
-    pos: (
-        3015,
-        786,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2994 => SpriteInfo {
-    pos: (
-        2690,
-        1873,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2414 => SpriteInfo {
-    pos: (
-        1503,
-        829,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1607 => SpriteInfo {
-    pos: (
-        2593,
-        2119,
-    ),
-    size: (
-        42,
-        62,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1701 => SpriteInfo {
-    pos: (
-        3023,
-        2719,
-    ),
-    size: (
-        156,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2312 => SpriteInfo {
-    pos: (
-        4081,
-        635,
-    ),
-    size: (
-        8,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -2.0,
-    ),
-},3637 => SpriteInfo {
-    pos: (
-        1689,
-        2445,
-    ),
-    size: (
-        200,
-        200,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3443 => SpriteInfo {
-    pos: (
-        400,
-        1255,
-    ),
-    size: (
-        24,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2646 => SpriteInfo {
-    pos: (
-        1716,
-        1058,
-    ),
-    size: (
-        52,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        24.0,
-    ),
-},2522 => SpriteInfo {
-    pos: (
-        544,
-        936,
-    ),
-    size: (
-        40,
-        84,
-    ),
-    rotated: false,
-    offset: (
-        24.0,
-        6.0,
-    ),
-},3004 => SpriteInfo {
-    pos: (
-        1584,
-        0,
-    ),
-    size: (
-        156,
-        156,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2502 => SpriteInfo {
-    pos: (
-        1549,
-        929,
-    ),
-    size: (
-        64,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -20.0,
-    ),
-},1702 => SpriteInfo {
-    pos: (
-        2074,
-        2774,
-    ),
-    size: (
-        114,
-        114,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},412 => SpriteInfo {
-    pos: (
-        2350,
-        2120,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3362 => SpriteInfo {
-    pos: (
-        1832,
-        1224,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},138 => SpriteInfo {
-    pos: (
-        3177,
-        2851,
-    ),
-    size: (
-        204,
-        202,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},1596 => SpriteInfo {
-    pos: (
-        90,
-        2191,
-    ),
-    size: (
-        78,
-        65,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3995 => SpriteInfo {
-    pos: (
-        3353,
-        2499,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1754 => SpriteInfo {
-    pos: (
-        696,
-        2422,
-    ),
-    size: (
-        120,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1059 => SpriteInfo {
-    pos: (
-        558,
-        2910,
-    ),
-    size: (
-        107,
-        110,
-    ),
-    rotated: false,
-    offset: (
-        6.5,
-        -5.0,
-    ),
-},2949 => SpriteInfo {
-    pos: (
-        956,
-        1758,
-    ),
-    size: (
-        120,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},20 => SpriteInfo {
-    pos: (
-        1397,
-        2251,
-    ),
-    size: (
-        292,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2652 => SpriteInfo {
-    pos: (
-        3528,
-        1069,
-    ),
-    size: (
-        52,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},1753 => SpriteInfo {
-    pos: (
-        696,
-        2414,
-    ),
-    size: (
-        120,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1584 => SpriteInfo {
-    pos: (
-        503,
-        134,
-    ),
-    size: (
-        202,
-        212,
-    ),
-    rotated: false,
-    offset: (
-        17.0,
-        -36.0,
-    ),
-},3638 => SpriteInfo {
-    pos: (
-        3131,
-        2430,
-    ),
-    size: (
-        160,
-        160,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2488 => SpriteInfo {
-    pos: (
-        1627,
-        902,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},1844 => SpriteInfo {
-    pos: (
-        861,
-        2219,
-    ),
-    size: (
-        224,
-        114,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3523 => SpriteInfo {
-    pos: (
-        3012,
-        1308,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2354 => SpriteInfo {
-    pos: (
-        460,
-        804,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -2.0,
-    ),
-},1462 => SpriteInfo {
-    pos: (
-        1296,
-        1529,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3367 => SpriteInfo {
-    pos: (
-        2876,
-        1238,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2700 => SpriteInfo {
-    pos: (
-        2158,
-        839,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2887 => SpriteInfo {
-    pos: (
-        3395,
-        359,
-    ),
-    size: (
-        230,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -5.0,
-        3.0,
-    ),
-},1338 => SpriteInfo {
-    pos: (
-        490,
-        1894,
-    ),
-    size: (
-        125,
-        125,
-    ),
-    rotated: false,
-    offset: (
-        1.5,
-        1.5,
-    ),
-},4380 => SpriteInfo {
-    pos: (
-        1695,
-        902,
-    ),
-    size: (
-        52,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -22.0,
-    ),
-},2413 => SpriteInfo {
-    pos: (
-        2034,
-        829,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2963 => SpriteInfo {
-    pos: (
-        556,
-        1773,
-    ),
-    size: (
-        120,
-        117,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.5,
-    ),
-},3860 => SpriteInfo {
-    pos: (
-        3745,
-        1498,
-    ),
-    size: (
-        64,
-        59,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.5,
-    ),
-},1861 => SpriteInfo {
-    pos: (
-        308,
-        1588,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3534 => SpriteInfo {
-    pos: (
-        2140,
-        1321,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4098 => SpriteInfo {
-    pos: (
-        756,
-        1412,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2491 => SpriteInfo {
-    pos: (
-        2964,
-        914,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2469 => SpriteInfo {
-    pos: (
-        508,
-        868,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2229 => SpriteInfo {
-    pos: (
-        2345,
-        773,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3309 => SpriteInfo {
-    pos: (
-        2708,
-        1177,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2362 => SpriteInfo {
-    pos: (
-        1930,
-        824,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},152 => SpriteInfo {
-    pos: (
-        3272,
-        2067,
-    ),
-    size: (
-        62,
-        119,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},3795 => SpriteInfo {
-    pos: (
-        3125,
-        1480,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3000 => SpriteInfo {
-    pos: (
-        3116,
-        178,
-    ),
-    size: (
-        120,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -5.0,
-    ),
-},2943 => SpriteInfo {
-    pos: (
-        2828,
-        1679,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4510 => SpriteInfo {
-    pos: (
-        1753,
-        689,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},4323 => SpriteInfo {
-    pos: (
-        184,
-        1465,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4003 => SpriteInfo {
-    pos: (
-        68,
-        1385,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3801 => SpriteInfo {
-    pos: (
-        3434,
-        2435,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},188 => SpriteInfo {
-    pos: (
-        0,
-        2701,
-    ),
-    size: (
-        168,
-        168,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},693 => SpriteInfo {
-    pos: (
-        1204,
-        1777,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2891 => SpriteInfo {
-    pos: (
-        1228,
-        456,
-    ),
-    size: (
-        239,
-        62,
-    ),
-    rotated: false,
-    offset: (
-        -1.5,
-        0.0,
-    ),
-},2 => SpriteInfo {
-    pos: (
-        184,
-        1513,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4231 => SpriteInfo {
-    pos: (
-        1384,
-        1461,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3525 => SpriteInfo {
-    pos: (
-        1649,
-        1310,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3639 => SpriteInfo {
-    pos: (
-        2463,
-        2445,
-    ),
-    size: (
-        160,
-        160,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2504 => SpriteInfo {
-    pos: (
-        1240,
-        929,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        10.0,
-    ),
-},4489 => SpriteInfo {
-    pos: (
-        2105,
-        659,
-    ),
-    size: (
-        120,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4508 => SpriteInfo {
-    pos: (
-        327,
-        682,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3310 => SpriteInfo {
-    pos: (
-        504,
-        1184,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2552 => SpriteInfo {
-    pos: (
-        3821,
-        963,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3808 => SpriteInfo {
-    pos: (
-        1085,
-        2467,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2656 => SpriteInfo {
-    pos: (
-        1077,
-        1020,
-    ),
-    size: (
-        4,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        4.0,
-    ),
-},3131 => SpriteInfo {
-    pos: (
-        184,
-        1109,
-    ),
-    size: (
-        40,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        0.0,
-    ),
-},3993 => SpriteInfo {
-    pos: (
-        1469,
-        2495,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1054 => SpriteInfo {
-    pos: (
-        709,
-        171,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2228 => SpriteInfo {
-    pos: (
-        912,
-        772,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2514 => SpriteInfo {
-    pos: (
-        324,
-        939,
-    ),
-    size: (
-        56,
-        96,
-    ),
-    rotated: false,
-    offset: (
-        -20.0,
-        0.0,
-    ),
-},4071 => SpriteInfo {
-    pos: (
-        892,
-        1392,
-    ),
-    size: (
-        40,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2662 => SpriteInfo {
-    pos: (
-        640,
-        1082,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2650 => SpriteInfo {
-    pos: (
-        4079,
-        1010,
-    ),
-    size: (
-        4,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        0.0,
-    ),
-},1847 => SpriteInfo {
-    pos: (
-        3144,
-        2204,
-    ),
-    size: (
-        162,
-        222,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},35 => SpriteInfo {
-    pos: (
-        1099,
-        0,
-    ),
-    size: (
-        99,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.0,
-    ),
-},19 => SpriteInfo {
-    pos: (
-        2095,
-        2284,
-    ),
-    size: (
-        416,
-        145,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},3582 => SpriteInfo {
-    pos: (
-        2723,
-        1377,
-    ),
-    size: (
-        156,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},1846 => SpriteInfo {
-    pos: (
-        172,
-        2201,
-    ),
-    size: (
-        154,
-        172,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3228 => SpriteInfo {
-    pos: (
-        1848,
-        1156,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2694 => SpriteInfo {
-    pos: (
-        3259,
-        331,
-    ),
-    size: (
-        132,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        8.0,
-    ),
-},4177 => SpriteInfo {
-    pos: (
-        2869,
-        1442,
-    ),
-    size: (
-        44,
-        84,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4505 => SpriteInfo {
-    pos: (
-        0,
-        674,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3148 => SpriteInfo {
-    pos: (
-        2881,
-        1130,
-    ),
-    size: (
-        44,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2648 => SpriteInfo {
-    pos: (
-        1440,
-        1061,
-    ),
-    size: (
-        60,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        24.0,
-    ),
-},4495 => SpriteInfo {
-    pos: (
-        2465,
-        665,
-    ),
-    size: (
-        120,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1589 => SpriteInfo {
-    pos: (
-        1094,
-        457,
-    ),
-    size: (
-        94,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2250 => SpriteInfo {
-    pos: (
-        2617,
-        776,
-    ),
-    size: (
-        112,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2367 => SpriteInfo {
-    pos: (
-        3643,
-        808,
-    ),
-    size: (
-        64,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},84 => SpriteInfo {
-    pos: (
-        379,
-        0,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4370 => SpriteInfo {
-    pos: (
-        3866,
-        863,
-    ),
-    size: (
-        56,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},4148 => SpriteInfo {
-    pos: (
-        1813,
-        1418,
-    ),
-    size: (
-        80,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3955 => SpriteInfo {
-    pos: (
-        3421,
-        2557,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4134 => SpriteInfo {
-    pos: (
-        1104,
-        1418,
-    ),
-    size: (
-        40,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2545 => SpriteInfo {
-    pos: (
-        3005,
-        958,
-    ),
-    size: (
-        64,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},2411 => SpriteInfo {
-    pos: (
-        697,
-        826,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1728 => SpriteInfo {
-    pos: (
-        2365,
-        2045,
-    ),
-    size: (
-        121,
-        71,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},235 => SpriteInfo {
-    pos: (
-        3462,
-        2071,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4369 => SpriteInfo {
-    pos: (
-        324,
-        859,
-    ),
-    size: (
-        60,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -24.0,
-    ),
-},3650 => SpriteInfo {
-    pos: (
-        3819,
-        2525,
-    ),
-    size: (
-        64,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2661 => SpriteInfo {
-    pos: (
-        2404,
-        1027,
-    ),
-    size: (
-        4,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        -26.0,
-    ),
-},2663 => SpriteInfo {
-    pos: (
-        2412,
-        1027,
-    ),
-    size: (
-        8,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        -26.0,
-        24.0,
-    ),
-},1597 => SpriteInfo {
-    pos: (
-        670,
-        2145,
-    ),
-    size: (
-        72,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.5,
-    ),
-},2670 => SpriteInfo {
-    pos: (
-        3528,
-        1085,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3601 => SpriteInfo {
-    pos: (
-        565,
-        478,
-    ),
-    size: (
-        104,
-        104,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},407 => SpriteInfo {
-    pos: (
-        3988,
-        2082,
-    ),
-    size: (
-        44,
-        34,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},140 => SpriteInfo {
-    pos: (
-        1202,
-        0,
-    ),
-    size: (
-        100,
-        19,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},137 => SpriteInfo {
-    pos: (
-        2054,
-        2893,
-    ),
-    size: (
-        320,
-        318,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},2580 => SpriteInfo {
-    pos: (
-        2765,
-        1026,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        4.0,
-    ),
-},4004 => SpriteInfo {
-    pos: (
-        2424,
-        1372,
-    ),
-    size: (
-        60,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -18.0,
-    ),
-},3222 => SpriteInfo {
-    pos: (
-        2021,
-        1149,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4442 => SpriteInfo {
-    pos: (
-        1459,
-        611,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3809 => SpriteInfo {
-    pos: (
-        2695,
-        2484,
-    ),
-    size: (
-        64,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},2668 => SpriteInfo {
-    pos: (
-        3396,
-        1084,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1832 => SpriteInfo {
-    pos: (
-        1396,
-        2813,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -30.0,
-        -30.0,
-    ),
-},3998 => SpriteInfo {
-    pos: (
-        1961,
-        2510,
-    ),
-    size: (
-        64,
-        54,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3802 => SpriteInfo {
-    pos: (
-        2627,
-        2445,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2466 => SpriteInfo {
-    pos: (
-        3429,
-        864,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2463 => SpriteInfo {
-    pos: (
-        3711,
-        857,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1766 => SpriteInfo {
-    pos: (
-        3434,
-        2335,
-    ),
-    size: (
-        32,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1221 => SpriteInfo {
-    pos: (
-        619,
-        1952,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4422 => SpriteInfo {
-    pos: (
-        2617,
-        558,
-    ),
-    size: (
-        112,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2224 => SpriteInfo {
-    pos: (
-        672,
-        758,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3138 => SpriteInfo {
-    pos: (
-        704,
-        1114,
-    ),
-    size: (
-        44,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4509 => SpriteInfo {
-    pos: (
-        413,
-        682,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},4381 => SpriteInfo {
-    pos: (
-        2226,
-        907,
-    ),
-    size: (
-        56,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -22.0,
-    ),
-},4189 => SpriteInfo {
-    pos: (
-        2713,
-        1453,
-    ),
-    size: (
-        40,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -10.0,
-    ),
-},4513 => SpriteInfo {
-    pos: (
-        2913,
-        707,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3646 => SpriteInfo {
-    pos: (
-        2627,
-        2513,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3524 => SpriteInfo {
-    pos: (
-        564,
-        1308,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4446 => SpriteInfo {
-    pos: (
-        211,
-        617,
-    ),
-    size: (
-        112,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},469 => SpriteInfo {
-    pos: (
-        3432,
-        1885,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1207 => SpriteInfo {
-    pos: (
-        1840,
-        1829,
-    ),
-    size: (
-        24,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -48.0,
-        -54.0,
-    ),
-},2553 => SpriteInfo {
-    pos: (
-        84,
-        965,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3526 => SpriteInfo {
-    pos: (
-        2587,
-        1313,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3817 => SpriteInfo {
-    pos: (
-        2891,
-        2484,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2988 => SpriteInfo {
-    pos: (
-        122,
-        1761,
-    ),
-    size: (
-        120,
-        108,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.0,
-    ),
-},2564 => SpriteInfo {
-    pos: (
-        3268,
-        998,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3233 => SpriteInfo {
-    pos: (
-        3871,
-        1170,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3247 => SpriteInfo {
-    pos: (
-        3931,
-        1170,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2023 => SpriteInfo {
-    pos: (
-        3219,
-        266,
-    ),
-    size: (
-        209,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        -1.5,
-        2.5,
-    ),
-},2520 => SpriteInfo {
-    pos: (
-        1009,
-        952,
-    ),
-    size: (
-        52,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        22.0,
-        18.0,
-    ),
-},3879 => SpriteInfo {
-    pos: (
-        1085,
-        2535,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4143 => SpriteInfo {
-    pos: (
-        1737,
-        1418,
-    ),
-    size: (
-        72,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1011 => SpriteInfo {
-    pos: (
-        3310,
-        2269,
-    ),
-    size: (
-        120,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},1012 => SpriteInfo {
-    pos: (
-        1693,
-        2308,
-    ),
-    size: (
-        118,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        1.0,
-    ),
-},1206 => SpriteInfo {
-    pos: (
-        4080,
-        1787,
-    ),
-    size: (
-        12,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -54.0,
-        -54.0,
-    ),
-},2681 => SpriteInfo {
-    pos: (
-        1905,
-        1092,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},87 => SpriteInfo {
-    pos: (
-        3023,
-        2835,
-    ),
-    size: (
-        150,
-        150,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3480 => SpriteInfo {
-    pos: (
-        3697,
-        1279,
-    ),
-    size: (
-        60,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2353 => SpriteInfo {
-    pos: (
-        3079,
-        802,
-    ),
-    size: (
-        60,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},2507 => SpriteInfo {
-    pos: (
-        3621,
-        932,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3054 => SpriteInfo {
-    pos: (
-        368,
-        1712,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4007 => SpriteInfo {
-    pos: (
-        624,
-        1386,
-    ),
-    size: (
-        60,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -18.0,
-    ),
-},663 => SpriteInfo {
-    pos: (
-        1168,
-        1901,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3861 => SpriteInfo {
-    pos: (
-        2648,
-        1481,
-    ),
-    size: (
-        60,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.0,
-    ),
-},2509 => SpriteInfo {
-    pos: (
-        2226,
-        923,
-    ),
-    size: (
-        64,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4142 => SpriteInfo {
-    pos: (
-        936,
-        1416,
-    ),
-    size: (
-        84,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4431 => SpriteInfo {
-    pos: (
-        102,
-        572,
-    ),
-    size: (
-        105,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3444 => SpriteInfo {
-    pos: (
-        4067,
-        1190,
-    ),
-    size: (
-        24,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2561 => SpriteInfo {
-    pos: (
-        1737,
-        990,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3856 => SpriteInfo {
-    pos: (
-        1228,
-        1491,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1227 => SpriteInfo {
-    pos: (
-        2519,
-        1949,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4066 => SpriteInfo {
-    pos: (
-        2140,
-        1389,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3001 => SpriteInfo {
-    pos: (
-        3240,
-        230,
-    ),
-    size: (
-        120,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},107 => SpriteInfo {
-    pos: (
-        2101,
-        2064,
-    ),
-    size: (
-        108,
-        152,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},662 => SpriteInfo {
-    pos: (
-        1328,
-        1884,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},878 => SpriteInfo {
-    pos: (
-        2275,
-        1880,
-    ),
-    size: (
-        240,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1864 => SpriteInfo {
-    pos: (
-        2320,
-        1640,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1342 => SpriteInfo {
-    pos: (
-        1868,
-        1953,
-    ),
-    size: (
-        229,
-        119,
-    ),
-    rotated: false,
-    offset: (
-        2.5,
-        2.5,
-    ),
-},4191 => SpriteInfo {
-    pos: (
-        1456,
-        1453,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3537 => SpriteInfo {
-    pos: (
-        3453,
-        1333,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1716 => SpriteInfo {
-    pos: (
-        3424,
-        2009,
-    ),
-    size: (
-        121,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -24.0,
-    ),
-},3577 => SpriteInfo {
-    pos: (
-        3080,
-        1360,
-    ),
-    size: (
-        48,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2541 => SpriteInfo {
-    pos: (
-        1924,
-        956,
-    ),
-    size: (
-        64,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},939 => SpriteInfo {
-    pos: (
-        614,
-        2076,
-    ),
-    size: (
-        66,
-        35,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        17.5,
-    ),
-},2570 => SpriteInfo {
-    pos: (
-        2601,
-        1008,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},101 => SpriteInfo {
-    pos: (
-        2987,
-        0,
-    ),
-    size: (
-        125,
-        356,
-    ),
-    rotated: false,
-    offset: (
-        24.5,
-        1.0,
-    ),
-},2474 => SpriteInfo {
-    pos: (
-        3561,
-        872,
-    ),
-    size: (
-        40,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        -22.0,
-    ),
-},3545 => SpriteInfo {
-    pos: (
-        1256,
-        1335,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        10.0,
-        12.0,
-    ),
-},2360 => SpriteInfo {
-    pos: (
-        1862,
-        817,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2026 => SpriteInfo {
-    pos: (
-        319,
-        303,
-    ),
-    size: (
-        97,
-        136,
-    ),
-    rotated: false,
-    offset: (
-        6.5,
-        -15.0,
-    ),
-},1714 => SpriteInfo {
-    pos: (
-        2767,
-        2038,
-    ),
-    size: (
-        148,
-        160,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        -28.0,
-    ),
-},1759 => SpriteInfo {
-    pos: (
-        2755,
-        2291,
-    ),
-    size: (
-        275,
-        189,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.5,
-    ),
-},4506 => SpriteInfo {
-    pos: (
-        3211,
-        679,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},2462 => SpriteInfo {
-    pos: (
-        3152,
-        852,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3123 => SpriteInfo {
-    pos: (
-        2524,
-        1116,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},8 => SpriteInfo {
-    pos: (
-        3948,
-        1958,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2669 => SpriteInfo {
-    pos: (
-        244,
-        1085,
-    ),
-    size: (
-        60,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        24.0,
-    ),
-},2519 => SpriteInfo {
-    pos: (
-        580,
-        816,
-    ),
-    size: (
-        8,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3136 => SpriteInfo {
-    pos: (
-        104,
-        1093,
-    ),
-    size: (
-        16,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3403 => SpriteInfo {
-    pos: (
-        68,
-        1257,
-    ),
-    size: (
-        28,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1053 => SpriteInfo {
-    pos: (
-        883,
-        47,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3996 => SpriteInfo {
-    pos: (
-        68,
-        2501,
-    ),
-    size: (
-        64,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3308 => SpriteInfo {
-    pos: (
-        2640,
-        1177,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2481 => SpriteInfo {
-    pos: (
-        0,
-        895,
-    ),
-    size: (
-        60,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -6.0,
-    ),
-},3464 => SpriteInfo {
-    pos: (
-        3641,
-        1257,
-    ),
-    size: (
-        32,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3 => SpriteInfo {
-    pos: (
-        724,
-        1516,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3527 => SpriteInfo {
-    pos: (
-        2655,
-        1313,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2676 => SpriteInfo {
-    pos: (
-        2817,
-        1086,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3933 => SpriteInfo {
-    pos: (
-        2959,
-        2548,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3626 => SpriteInfo {
-    pos: (
-        1461,
-        2371,
-    ),
-    size: (
-        110,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        0.0,
-    ),
-},6 => SpriteInfo {
-    pos: (
-        0,
-        1517,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2506 => SpriteInfo {
-    pos: (
-        3200,
-        932,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2643 => SpriteInfo {
-    pos: (
-        1085,
-        964,
-    ),
-    size: (
-        4,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        0.0,
-    ),
-},4187 => SpriteInfo {
-    pos: (
-        488,
-        1448,
-    ),
-    size: (
-        40,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3516 => SpriteInfo {
-    pos: (
-        3317,
-        1284,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4087 => SpriteInfo {
-    pos: (
-        1632,
-        1394,
-    ),
-    size: (
-        36,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},134 => SpriteInfo {
-    pos: (
-        125,
-        2064,
-    ),
-    size: (
-        56,
-        123,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},3232 => SpriteInfo {
-    pos: (
-        3528,
-        1149,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},694 => SpriteInfo {
-    pos: (
-        680,
-        1828,
-    ),
-    size: (
-        240,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3999 => SpriteInfo {
-    pos: (
-        1893,
-        2513,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3424 => SpriteInfo {
-    pos: (
-        4077,
-        1082,
-    ),
-    size: (
-        12,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},211 => SpriteInfo {
-    pos: (
-        460,
-        1524,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4325 => SpriteInfo {
-    pos: (
-        3857,
-        1470,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2490 => SpriteInfo {
-    pos: (
-        1032,
-        908,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2310 => SpriteInfo {
-    pos: (
-        1048,
-        772,
-    ),
-    size: (
-        36,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2464 => SpriteInfo {
-    pos: (
-        388,
-        859,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1601 => SpriteInfo {
-    pos: (
-        3988,
-        2120,
-    ),
-    size: (
-        32,
-        160,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1606 => SpriteInfo {
-    pos: (
-        90,
-        2108,
-    ),
-    size: (
-        28,
-        62,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3794 => SpriteInfo {
-    pos: (
-        3292,
-        1472,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4300 => SpriteInfo {
-    pos: (
-        219,
-        294,
-    ),
-    size: (
-        96,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3627 => SpriteInfo {
-    pos: (
-        1575,
-        2371,
-    ),
-    size: (
-        110,
-        110,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3635 => SpriteInfo {
-    pos: (
-        2079,
-        2433,
-    ),
-    size: (
-        176,
-        176,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3962 => SpriteInfo {
-    pos: (
-        1153,
-        2563,
-    ),
-    size: (
-        92,
-        128,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4417 => SpriteInfo {
-    pos: (
-        283,
-        508,
-    ),
-    size: (
-        105,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},3859 => SpriteInfo {
-    pos: (
-        3600,
-        1497,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3807 => SpriteInfo {
-    pos: (
-        4026,
-        2460,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2472 => SpriteInfo {
-    pos: (
-        128,
-        838,
-    ),
-    size: (
-        24,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -20.0,
-        -20.0,
-    ),
-},153 => SpriteInfo {
-    pos: (
-        312,
-        2049,
-    ),
-    size: (
-        36,
-        76,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},3364 => SpriteInfo {
-    pos: (
-        4087,
-        1066,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3857 => SpriteInfo {
-    pos: (
-        3520,
-        1493,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2542 => SpriteInfo {
-    pos: (
-        1468,
-        957,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2518 => SpriteInfo {
-    pos: (
-        188,
-        949,
-    ),
-    size: (
-        56,
-        96,
-    ),
-    rotated: false,
-    offset: (
-        20.0,
-        0.0,
-    ),
-},2489 => SpriteInfo {
-    pos: (
-        2158,
-        907,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},3427 => SpriteInfo {
-    pos: (
-        1336,
-        1255,
-    ),
-    size: (
-        44,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1341 => SpriteInfo {
-    pos: (
-        0,
-        1913,
-    ),
-    size: (
-        113,
-        113,
-    ),
-    rotated: false,
-    offset: (
-        1.5,
-        1.5,
-    ),
-},1706 => SpriteInfo {
-    pos: (
-        408,
-        2606,
-    ),
-    size: (
-        240,
-        240,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3653 => SpriteInfo {
-    pos: (
-        3955,
-        2525,
-    ),
-    size: (
-        64,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2278 => SpriteInfo {
-    pos: (
-        593,
-        789,
-    ),
-    size: (
-        56,
-        128,
-    ),
-    rotated: false,
-    offset: (
-        -28.0,
-        0.0,
-    ),
-},414 => SpriteInfo {
-    pos: (
-        804,
-        2076,
-    ),
-    size: (
-        54,
-        53,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},1587 => SpriteInfo {
-    pos: (
-        3931,
-        446,
-    ),
-    size: (
-        94,
-        94,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3144 => SpriteInfo {
-    pos: (
-        3081,
-        1120,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1736 => SpriteInfo {
-    pos: (
-        3212,
-        2692,
-    ),
-    size: (
-        155,
-        155,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        0.5,
-    ),
-},472 => SpriteInfo {
-    pos: (
-        4084,
-        1530,
-    ),
-    size: (
-        6,
-        6,
-    ),
-    rotated: false,
-    offset: (
-        -57.0,
-        -57.0,
-    ),
-},2690 => SpriteInfo {
-    pos: (
-        2654,
-        1052,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        -58.0,
         0.0,
     ),
 },1751 => SpriteInfo {
     pos: (
-        1445,
+        1505,
         0,
     ),
     size: (
@@ -14931,290 +6363,24 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         9.5,
         0.0,
     ),
-},3145 => SpriteInfo {
+},3634 => SpriteInfo {
     pos: (
-        368,
-        1123,
+        1277,
+        2673,
     ),
     size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},392 => SpriteInfo {
-    pos: (
-        867,
-        1952,
-    ),
-    size: (
-        50,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2560 => SpriteInfo {
-    pos: (
-        3121,
-        988,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},187 => SpriteInfo {
-    pos: (
-        1807,
-        2708,
-    ),
-    size: (
-        243,
-        242,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3901 => SpriteInfo {
-    pos: (
-        3631,
-        2547,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3997 => SpriteInfo {
-    pos: (
         136,
-        2501,
-    ),
-    size: (
-        64,
-        64,
+        188,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},2644 => SpriteInfo {
-    pos: (
-        3109,
-        1056,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2063 => SpriteInfo {
-    pos: (
-        3864,
-        0,
-    ),
-    size: (
-        78,
-        126,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4064 => SpriteInfo {
-    pos: (
-        3384,
-        1388,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},458 => SpriteInfo {
-    pos: (
-        311,
-        1997,
-    ),
-    size: (
-        50,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4324 => SpriteInfo {
-    pos: (
-        2388,
-        1468,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3648 => SpriteInfo {
-    pos: (
-        3023,
-        2517,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1699 => SpriteInfo {
-    pos: (
-        1674,
-        160,
-    ),
-    size: (
-        39,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        3.5,
-        28.0,
-    ),
-},3624 => SpriteInfo {
-    pos: (
-        1085,
-        2343,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3366 => SpriteInfo {
-    pos: (
-        2116,
-        1231,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},468 => SpriteInfo {
-    pos: (
-        366,
-        1883,
-    ),
-    size: (
-        120,
-        6,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1764 => SpriteInfo {
-    pos: (
-        2016,
-        2267,
-    ),
-    size: (
-        32,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3423 => SpriteInfo {
-    pos: (
-        1489,
-        1205,
-    ),
-    size: (
-        36,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3647 => SpriteInfo {
+},1885 => SpriteInfo {
     pos: (
         0,
-        2514,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2590 => SpriteInfo {
-    pos: (
-        3877,
-        1039,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},467 => SpriteInfo {
-    pos: (
-        2924,
-        1884,
+        1886,
     ),
     size: (
         120,
@@ -15225,420 +6391,14 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},1327 => SpriteInfo {
+},4415 => SpriteInfo {
     pos: (
-        1550,
-        160,
+        3544,
+        543,
     ),
     size: (
-        120,
-        101,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},3374 => SpriteInfo {
-    pos: (
-        2519,
-        1252,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3548 => SpriteInfo {
-    pos: (
-        1152,
-        1369,
-    ),
-    size: (
-        80,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3969 => SpriteInfo {
-    pos: (
-        68,
-        2569,
-    ),
-    size: (
-        128,
-        128,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},200 => SpriteInfo {
-    pos: (
-        3116,
-        0,
-    ),
-    size: (
-        139,
-        174,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},932 => SpriteInfo {
-    pos: (
-        3107,
-        1570,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1334 => SpriteInfo {
-    pos: (
-        980,
-        30,
-    ),
-    size: (
-        276,
-        226,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2421 => SpriteInfo {
-    pos: (
-        3231,
-        844,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1204 => SpriteInfo {
-    pos: (
-        3300,
-        1943,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2468 => SpriteInfo {
-    pos: (
-        3643,
-        864,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2640 => SpriteInfo {
-    pos: (
-        752,
-        1052,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3088 => SpriteInfo {
-    pos: (
-        2474,
-        2185,
-    ),
-    size: (
-        116,
-        79,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},1849 => SpriteInfo {
-    pos: (
-        957,
-        260,
-    ),
-    size: (
-        143,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -18.5,
-        -8.0,
-    ),
-},3910 => SpriteInfo {
-    pos: (
-        2829,
-        2552,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3578 => SpriteInfo {
-    pos: (
-        1717,
-        1338,
-    ),
-    size: (
-        16,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2477 => SpriteInfo {
-    pos: (
-        3072,
-        890,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1583 => SpriteInfo {
-    pos: (
-        797,
-        239,
-    ),
-    size: (
-        117,
-        88,
-    ),
-    rotated: false,
-    offset: (
-        -21.5,
-        -1.0,
-    ),
-},1464 => SpriteInfo {
-    pos: (
-        2580,
-        1549,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},186 => SpriteInfo {
-    pos: (
-        3744,
-        2705,
-    ),
-    size: (
-        336,
-        338,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1729 => SpriteInfo {
-    pos: (
-        1046,
-        2006,
-    ),
-    size: (
-        101,
-        71,
-    ),
-    rotated: false,
-    offset: (
-        -10.5,
-        -0.5,
-    ),
-},2574 => SpriteInfo {
-    pos: (
-        2909,
-        1022,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2554 => SpriteInfo {
-    pos: (
-        1924,
-        968,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3852 => SpriteInfo {
-    pos: (
-        2580,
-        1481,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},218 => SpriteInfo {
-    pos: (
-        2185,
-        1984,
-    ),
-    size: (
-        80,
-        76,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4377 => SpriteInfo {
-    pos: (
-        580,
-        804,
-    ),
-    size: (
-        8,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        -28.0,
-        -28.0,
-    ),
-},2368 => SpriteInfo {
-    pos: (
-        324,
-        791,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4165 => SpriteInfo {
-    pos: (
-        52,
-        1453,
-    ),
-    size: (
-        128,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        20.0,
-        0.0,
-    ),
-},2471 => SpriteInfo {
-    pos: (
-        3271,
-        882,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},217 => SpriteInfo {
-    pos: (
-        187,
-        1997,
-    ),
-    size: (
-        120,
-        54,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4185 => SpriteInfo {
-    pos: (
-        2236,
-        1457,
-    ),
-    size: (
-        84,
-        56,
+        98,
+        98,
     ),
     rotated: false,
     offset: (
@@ -15647,8 +6407,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },4512 => SpriteInfo {
     pos: (
-        1583,
-        704,
+        675,
+        761,
     ),
     size: (
         75,
@@ -15659,528 +6419,80 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         -0.5,
         -0.5,
     ),
-},3547 => SpriteInfo {
+},1867 => SpriteInfo {
     pos: (
-        1456,
-        1369,
-    ),
-    size: (
-        80,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},700 => SpriteInfo {
-    pos: (
-        3076,
-        1863,
-    ),
-    size: (
-        220,
-        110,
-    ),
-    rotated: false,
-    offset: (
-        10.0,
-        5.0,
-    ),
-},3519 => SpriteInfo {
-    pos: (
-        0,
-        1297,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2687 => SpriteInfo {
-    pos: (
-        880,
-        1100,
-    ),
-    size: (
-        128,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4085 => SpriteInfo {
-    pos: (
-        2372,
-        1396,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2572 => SpriteInfo {
-    pos: (
-        448,
-        1016,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},1757 => SpriteInfo {
-    pos: (
-        3458,
-        2230,
-    ),
-    size: (
-        60,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2531 => SpriteInfo {
-    pos: (
-        2060,
-        945,
-    ),
-    size: (
-        80,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2591 => SpriteInfo {
-    pos: (
-        1983,
-        1041,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3002 => SpriteInfo {
-    pos: (
-        3488,
-        230,
+        3599,
+        1845,
     ),
     size: (
         120,
-        33,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -3.5,
-    ),
-},3943 => SpriteInfo {
-    pos: (
-        1605,
-        2553,
-    ),
-    size: (
-        56,
-        64,
+        120,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},2691 => SpriteInfo {
+},4438 => SpriteInfo {
     pos: (
-        3875,
-        1110,
+        3091,
+        635,
     ),
     size: (
-        128,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4514 => SpriteInfo {
-    pos: (
-        1839,
-        708,
-    ),
-    size: (
-        90,
         105,
+        120,
     ),
     rotated: false,
     offset: (
-        0.0,
         -0.5,
-    ),
-},3503 => SpriteInfo {
-    pos: (
-        1260,
-        1283,
-    ),
-    size: (
-        56,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
         0.0,
     ),
-},3149 => SpriteInfo {
+},2945 => SpriteInfo {
     pos: (
-        1428,
-        1133,
-    ),
-    size: (
-        52,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        0.0,
-    ),
-},411 => SpriteInfo {
-    pos: (
-        185,
-        2111,
+        387,
+        1895,
     ),
     size: (
         120,
-        86,
+        120,
     ),
     rotated: false,
     offset: (
         0.0,
-        17.0,
-    ),
-},1600 => SpriteInfo {
-    pos: (
-        2919,
-        2192,
-    ),
-    size: (
-        116,
-        95,
-    ),
-    rotated: false,
-    offset: (
         0.0,
-        0.5,
     ),
-},2363 => SpriteInfo {
+},2648 => SpriteInfo {
     pos: (
-        1982,
-        825,
+        2362,
+        1183,
     ),
     size: (
-        48,
         60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2677 => SpriteInfo {
-    pos: (
-        2203,
-        1047,
-    ),
-    size: (
         4,
-        60,
     ),
     rotated: false,
     offset: (
-        -24.0,
         0.0,
+        24.0,
     ),
-},266 => SpriteInfo {
+},3476 => SpriteInfo {
     pos: (
-        1836,
-        1523,
+        1690,
+        1418,
     ),
     size: (
-        120,
-        120,
+        28,
+        52,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},1697 => SpriteInfo {
+},3946 => SpriteInfo {
     pos: (
-        374,
-        248,
-    ),
-    size: (
-        120,
-        51,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        3.5,
-    ),
-},111 => SpriteInfo {
-    pos: (
-        2448,
-        0,
-    ),
-    size: (
-        132,
-        339,
-    ),
-    rotated: false,
-    offset: (
-        23.0,
-        1.5,
-    ),
-},4487 => SpriteInfo {
-    pos: (
-        3929,
-        638,
-    ),
-    size: (
-        112,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2420 => SpriteInfo {
-    pos: (
-        1810,
-        841,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2962 => SpriteInfo {
-    pos: (
-        1650,
-        1772,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2579 => SpriteInfo {
-    pos: (
-        1500,
-        1025,
-    ),
-    size: (
-        48,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -22.0,
-    ),
-},1330 => SpriteInfo {
-    pos: (
-        625,
-        0,
-    ),
-    size: (
-        130,
-        130,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1835 => SpriteInfo {
-    pos: (
-        696,
-        2430,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2523 => SpriteInfo {
-    pos: (
-        4079,
-        914,
-    ),
-    size: (
-        8,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        40.0,
-        2.0,
-    ),
-},1709 => SpriteInfo {
-    pos: (
-        2237,
-        2637,
-    ),
-    size: (
-        218,
-        252,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1829 => SpriteInfo {
-    pos: (
-        379,
-        124,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4000 => SpriteInfo {
-    pos: (
-        0,
-        1365,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},5 => SpriteInfo {
-    pos: (
-        2196,
-        1517,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4228 => SpriteInfo {
-    pos: (
-        1776,
-        1458,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1838 => SpriteInfo {
-    pos: (
-        4026,
-        2396,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1888 => SpriteInfo {
-    pos: (
-        845,
-        2337,
-    ),
-    size: (
-        236,
-        236,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1519 => SpriteInfo {
-    pos: (
-        3660,
-        266,
-    ),
-    size: (
-        36,
-        37,
-    ),
-    rotated: false,
-    offset: (
-        -1.0,
-        -1.5,
-    ),
-},3805 => SpriteInfo {
-    pos: (
-        0,
-        2446,
+        3787,
+        2841,
     ),
     size: (
         64,
@@ -16193,8 +6505,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },4226 => SpriteInfo {
     pos: (
-        2128,
-        1457,
+        626,
+        1646,
     ),
     size: (
         64,
@@ -16205,38 +6517,10 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2512 => SpriteInfo {
+},3901 => SpriteInfo {
     pos: (
-        2294,
-        941,
-    ),
-    size: (
-        80,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3552 => SpriteInfo {
-    pos: (
-        3316,
-        1352,
-    ),
-    size: (
-        36,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -10.0,
-    ),
-},4096 => SpriteInfo {
-    pos: (
-        420,
-        1408,
+        386,
+        2824,
     ),
     size: (
         64,
@@ -16247,374 +6531,24 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},3517 => SpriteInfo {
+},2520 => SpriteInfo {
     pos: (
-        1581,
-        1286,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2563 => SpriteInfo {
-    pos: (
-        3468,
-        992,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},1058 => SpriteInfo {
-    pos: (
-        0,
-        2873,
-    ),
-    size: (
-        150,
-        144,
-    ),
-    rotated: false,
-    offset: (
-        -5.0,
-        -8.0,
-    ),
-},927 => SpriteInfo {
-    pos: (
-        1960,
-        1553,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3129 => SpriteInfo {
-    pos: (
-        4007,
-        1110,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},2680 => SpriteInfo {
-    pos: (
-        3815,
-        1091,
-    ),
-    size: (
-        56,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -16.0,
-    ),
-},1713 => SpriteInfo {
-    pos: (
-        1416,
-        2046,
-    ),
-    size: (
-        154,
-        198,
-    ),
-    rotated: false,
-    offset: (
-        -7.0,
-        -47.0,
-    ),
-},1331 => SpriteInfo {
-    pos: (
-        2720,
-        0,
-    ),
-    size: (
-        132,
-        337,
-    ),
-    rotated: false,
-    offset: (
-        23.0,
-        0.5,
-    ),
-},4441 => SpriteInfo {
-    pos: (
-        3524,
-        605,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2683 => SpriteInfo {
-    pos: (
-        1068,
-        1052,
-    ),
-    size: (
-        4,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        0.0,
-    ),
-},3321 => SpriteInfo {
-    pos: (
-        1536,
-        1190,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4170 => SpriteInfo {
-    pos: (
-        3196,
-        1430,
-    ),
-    size: (
-        92,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},907 => SpriteInfo {
-    pos: (
-        2919,
-        2098,
-    ),
-    size: (
-        278,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4169 => SpriteInfo {
-    pos: (
-        2056,
-        1427,
-    ),
-    size: (
-        68,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4095 => SpriteInfo {
-    pos: (
-        3452,
-        1401,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3313 => SpriteInfo {
-    pos: (
-        3588,
-        1213,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2671 => SpriteInfo {
-    pos: (
-        3245,
-        1032,
-    ),
-    size: (
-        4,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        0.0,
-    ),
-},4532 => SpriteInfo {
-    pos: (
-        392,
-        566,
-    ),
-    size: (
-        112,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3549 => SpriteInfo {
-    pos: (
-        3196,
-        1320,
-    ),
-    size: (
-        44,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},3931 => SpriteInfo {
-    pos: (
-        272,
-        2552,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},110 => SpriteInfo {
-    pos: (
-        2269,
-        2050,
-    ),
-    size: (
-        77,
-        136,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},4229 => SpriteInfo {
-    pos: (
-        2324,
-        1460,
-    ),
-    size: (
-        56,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1813 => SpriteInfo {
-    pos: (
-        759,
-        47,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2655 => SpriteInfo {
-    pos: (
-        1008,
-        1076,
+        2691,
+        1043,
     ),
     size: (
         52,
-        20,
+        60,
     ),
     rotated: false,
     offset: (
-        0.0,
-        -16.0,
+        22.0,
+        18.0,
     ),
-},699 => SpriteInfo {
+},3859 => SpriteInfo {
     pos: (
-        2820,
-        1803,
-    ),
-    size: (
-        100,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        10.0,
-        10.0,
-    ),
-},4539 => SpriteInfo {
-    pos: (
-        3900,
-        754,
-    ),
-    size: (
-        105,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},2385 => SpriteInfo {
-    pos: (
-        1742,
-        798,
+        1955,
+        1693,
     ),
     size: (
         64,
@@ -16623,68 +6557,26 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     rotated: false,
     offset: (
         0.0,
-        -4.0,
+        0.0,
     ),
-},4230 => SpriteInfo {
+},939 => SpriteInfo {
     pos: (
-        1836,
-        1458,
+        757,
+        2289,
     ),
     size: (
-        56,
-        60,
+        66,
+        35,
     ),
     rotated: false,
     offset: (
         0.0,
-        -2.0,
-    ),
-},3230 => SpriteInfo {
-    pos: (
-        952,
-        1160,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3057 => SpriteInfo {
-    pos: (
-        2080,
-        1765,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3907 => SpriteInfo {
-    pos: (
-        2695,
-        2549,
-    ),
-    size: (
-        64,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
+        17.5,
     ),
 },2373 => SpriteInfo {
     pos: (
-        3742,
-        793,
+        319,
+        871,
     ),
     size: (
         60,
@@ -16695,1186 +6587,178 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},4498 => SpriteInfo {
+},2603 => SpriteInfo {
     pos: (
-        1933,
-        708,
-    ),
-    size: (
-        60,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3446 => SpriteInfo {
-    pos: (
-        4067,
-        1222,
-    ),
-    size: (
-        24,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3231 => SpriteInfo {
-    pos: (
-        1020,
-        1160,
-    ),
-    size: (
-        72,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3465 => SpriteInfo {
-    pos: (
-        1529,
-        1258,
-    ),
-    size: (
-        48,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},394 => SpriteInfo {
-    pos: (
-        2459,
-        2943,
-    ),
-    size: (
-        321,
-        280,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},1582 => SpriteInfo {
-    pos: (
-        3736,
-        230,
-    ),
-    size: (
-        101,
-        97,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        1.5,
-    ),
-},3046 => SpriteInfo {
-    pos: (
-        2305,
-        1764,
-    ),
-    size: (
-        112,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},2483 => SpriteInfo {
-    pos: (
-        2401,
-        899,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},1328 => SpriteInfo {
-    pos: (
-        248,
-        130,
-    ),
-    size: (
-        122,
-        144,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4 => SpriteInfo {
-    pos: (
-        2324,
-        1516,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2649 => SpriteInfo {
-    pos: (
-        3265,
-        1066,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},190 => SpriteInfo {
-    pos: (
-        554,
-        2023,
-    ),
-    size: (
-        56,
-        196,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4504 => SpriteInfo {
-    pos: (
-        1187,
-        740,
-    ),
-    size: (
-        90,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2697 => SpriteInfo {
-    pos: (
-        1185,
-        834,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2945 => SpriteInfo {
-    pos: (
-        3584,
-        1681,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3942 => SpriteInfo {
-    pos: (
-        1537,
-        2553,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2500 => SpriteInfo {
-    pos: (
-        3140,
-        920,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2544 => SpriteInfo {
-    pos: (
-        1536,
-        957,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},10 => SpriteInfo {
-    pos: (
-        1744,
-        0,
-    ),
-    size: (
-        95,
-        300,
-    ),
-    rotated: false,
-    offset: (
-        21.5,
-        4.0,
-    ),
-},3521 => SpriteInfo {
-    pos: (
-        1188,
-        1301,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1614 => SpriteInfo {
-    pos: (
-        397,
-        478,
-    ),
-    size: (
-        84,
-        84,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3150 => SpriteInfo {
-    pos: (
-        3708,
-        1143,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2667 => SpriteInfo {
-    pos: (
-        1085,
-        1028,
-    ),
-    size: (
-        4,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        0.0,
-    ),
-},1343 => SpriteInfo {
-    pos: (
-        2814,
-        1907,
-    ),
-    size: (
-        98,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        0.0,
-    ),
-},1225 => SpriteInfo {
-    pos: (
-        0,
-        1875,
-    ),
-    size: (
-        48,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -36.0,
-        -48.0,
-    ),
-},4174 => SpriteInfo {
-    pos: (
-        1316,
-        1447,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4005 => SpriteInfo {
-    pos: (
-        196,
-        1377,
-    ),
-    size: (
-        64,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -18.0,
-    ),
-},129 => SpriteInfo {
-    pos: (
-        919,
-        2089,
-    ),
-    size: (
-        316,
-        126,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2028 => SpriteInfo {
-    pos: (
-        1917,
-        305,
-    ),
-    size: (
-        85,
-        189,
-    ),
-    rotated: false,
-    offset: (
-        4.5,
-        -1.5,
-    ),
-},942 => SpriteInfo {
-    pos: (
-        2593,
-        2073,
-    ),
-    size: (
-        31,
-        42,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        1.0,
-    ),
-},3324 => SpriteInfo {
-    pos: (
-        1421,
-        1205,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2540 => SpriteInfo {
-    pos: (
-        1617,
-        954,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1725 => SpriteInfo {
-    pos: (
-        187,
-        2055,
-    ),
-    size: (
-        121,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},4416 => SpriteInfo {
-    pos: (
-        1471,
-        502,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},4419 => SpriteInfo {
-    pos: (
-        1365,
-        522,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},1732 => SpriteInfo {
-    pos: (
-        3680,
-        2014,
-    ),
-    size: (
-        121,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},4227 => SpriteInfo {
-    pos: (
-        2472,
-        1412,
-    ),
-    size: (
-        4,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2355 => SpriteInfo {
-    pos: (
-        2912,
-        816,
-    ),
-    size: (
-        48,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2313 => SpriteInfo {
-    pos: (
-        1173,
-        710,
-    ),
-    size: (
-        8,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -2.0,
-    ),
-},2990 => SpriteInfo {
-    pos: (
-        2952,
-        1762,
-    ),
-    size: (
-        120,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.0,
-    ),
-},3005 => SpriteInfo {
-    pos: (
-        862,
-        0,
-    ),
-    size: (
-        114,
-        43,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.5,
-    ),
-},2684 => SpriteInfo {
-    pos: (
-        40,
-        1093,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3220 => SpriteInfo {
-    pos: (
-        3149,
-        1148,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2508 => SpriteInfo {
-    pos: (
-        592,
-        921,
-    ),
-    size: (
-        64,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},1711 => SpriteInfo {
-    pos: (
-        365,
-        2023,
-    ),
-    size: (
-        185,
-        198,
-    ),
-    rotated: false,
-    offset: (
-        -6.5,
-        -47.0,
-    ),
-},1022 => SpriteInfo {
-    pos: (
-        503,
-        0,
-    ),
-    size: (
-        118,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2573 => SpriteInfo {
-    pos: (
-        889,
-        1016,
-    ),
-    size: (
-        64,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},1345 => SpriteInfo {
-    pos: (
-        3048,
-        1977,
-    ),
-    size: (
-        220,
-        117,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        10.5,
-    ),
-},745 => SpriteInfo {
-    pos: (
-        2584,
-        0,
-    ),
-    size: (
-        132,
-        339,
-    ),
-    rotated: false,
-    offset: (
-        23.0,
-        1.5,
-    ),
-},2675 => SpriteInfo {
-    pos: (
-        372,
-        1039,
-    ),
-    size: (
-        4,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -24.0,
-        -24.0,
-    ),
-},3221 => SpriteInfo {
-    pos: (
-        228,
+        2309,
         1149,
     ),
     size: (
-        64,
-        64,
+        44,
+        28,
     ),
     rotated: false,
     offset: (
-        0.0,
-        0.0,
+        -10.0,
+        18.0,
     ),
-},3629 => SpriteInfo {
+},1766 => SpriteInfo {
     pos: (
-        3310,
-        2391,
+        2782,
+        2613,
     ),
     size: (
-        120,
-        104,
+        32,
+        32,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},2582 => SpriteInfo {
+},3969 => SpriteInfo {
     pos: (
         0,
-        1027,
+        2857,
     ),
     size: (
+        128,
+        128,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2501 => SpriteInfo {
+    pos: (
+        2163,
+        1010,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4507 => SpriteInfo {
+    pos: (
+        3735,
+        729,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},3525 => SpriteInfo {
+    pos: (
+        583,
+        1468,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2490 => SpriteInfo {
+    pos: (
+        2287,
+        995,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},3362 => SpriteInfo {
+    pos: (
+        479,
+        1365,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2656 => SpriteInfo {
+    pos: (
+        1354,
+        1141,
+    ),
+    size: (
+        4,
         52,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        4.0,
+    ),
+},1605 => SpriteInfo {
+    pos: (
+        1822,
+        2386,
+    ),
+    size: (
+        78,
         48,
     ),
     rotated: false,
     offset: (
-        -6.0,
-        8.0,
-    ),
-},2627 => SpriteInfo {
-    pos: (
-        3365,
-        830,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
         0.0,
         0.0,
     ),
-},3854 => SpriteInfo {
+},2576 => SpriteInfo {
     pos: (
-        1540,
-        1482,
+        1208,
+        1129,
     ),
     size: (
         64,
-        64,
+        40,
     ),
     rotated: false,
     offset: (
         0.0,
-        0.0,
+        -12.0,
     ),
-},1205 => SpriteInfo {
+},3004 => SpriteInfo {
     pos: (
-        4080,
-        1771,
-    ),
-    size: (
-        12,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -54.0,
-        -54.0,
-    ),
-},1704 => SpriteInfo {
-    pos: (
-        1306,
+        1649,
         0,
     ),
     size: (
-        135,
-        138,
-    ),
-    rotated: false,
-    offset: (
-        9.5,
-        0.0,
-    ),
-},2571 => SpriteInfo {
-    pos: (
-        2909,
-        1010,
-    ),
-    size: (
-        56,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        -24.0,
-    ),
-},3311 => SpriteInfo {
-    pos: (
-        3437,
-        1184,
-    ),
-    size: (
-        64,
-        64,
+        156,
+        156,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},3977 => SpriteInfo {
-    pos: (
-        1893,
-        2577,
-    ),
-    size: (
-        126,
-        127,
-    ),
-    rotated: false,
-    offset: (
-        -1.0,
-        -0.5,
-    ),
-},2704 => SpriteInfo {
-    pos: (
-        432,
-        1648,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4086 => SpriteInfo {
-    pos: (
-        1672,
-        1394,
-    ),
-    size: (
-        36,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3935 => SpriteInfo {
-    pos: (
-        204,
-        2552,
-    ),
-    size: (
-        64,
-        54,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -5.0,
-    ),
-},1767 => SpriteInfo {
-    pos: (
-        3470,
-        2335,
-    ),
-    size: (
-        32,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},202 => SpriteInfo {
-    pos: (
-        3394,
-        0,
-    ),
-    size: (
-        202,
-        226,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},83 => SpriteInfo {
-    pos: (
-        1076,
-        1510,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3623 => SpriteInfo {
-    pos: (
-        0,
-        2342,
-    ),
-    size: (
-        120,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3125 => SpriteInfo {
-    pos: (
-        3815,
-        1115,
-    ),
-    size: (
-        52,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        0.0,
-    ),
-},3124 => SpriteInfo {
-    pos: (
-        576,
-        1116,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},2585 => SpriteInfo {
-    pos: (
-        384,
-        1031,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        0.0,
-    ),
-},2412 => SpriteInfo {
-    pos: (
-        2553,
-        828,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3847 => SpriteInfo {
-    pos: (
-        2959,
-        2484,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2592 => SpriteInfo {
-    pos: (
-        2669,
-        1045,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2478 => SpriteInfo {
-    pos: (
-        1481,
-        893,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2567 => SpriteInfo {
-    pos: (
-        1604,
-        1022,
-    ),
-    size: (
-        108,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        10.0,
-        0.0,
-    ),
-},4208 => SpriteInfo {
-    pos: (
-        3384,
-        1456,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2422 => SpriteInfo {
-    pos: (
-        3072,
-        850,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2692 => SpriteInfo {
-    pos: (
-        2640,
-        1113,
-    ),
-    size: (
-        136,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2641 => SpriteInfo {
-    pos: (
-        1845,
-        1053,
-    ),
-    size: (
-        60,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -16.0,
-    ),
-},3651 => SpriteInfo {
-    pos: (
-        3452,
-        1505,
-    ),
-    size: (
-        64,
-        62,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2589 => SpriteInfo {
-    pos: (
-        2977,
-        1038,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2549 => SpriteInfo {
+},694 => SpriteInfo {
     pos: (
         256,
-        885,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1292 => SpriteInfo {
-    pos: (
-        3458,
-        2187,
-    ),
-    size: (
-        60,
-        39,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
-    ),
-},3363 => SpriteInfo {
-    pos: (
-        952,
-        1228,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},698 => SpriteInfo {
-    pos: (
-        3832,
-        1834,
+        2024,
     ),
     size: (
         240,
@@ -17885,41 +6769,181 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},908 => SpriteInfo {
+},3145 => SpriteInfo {
     pos: (
-        684,
-        2076,
+        783,
+        1262,
     ),
     size: (
-        116,
-        65,
+        64,
+        60,
     ),
     rotated: false,
     offset: (
         0.0,
-        0.5,
+        -2.0,
     ),
-},13 => SpriteInfo {
+},235 => SpriteInfo {
     pos: (
-        2176,
-        0,
+        3836,
+        2288,
     ),
     size: (
-        132,
-        339,
+        60,
+        60,
     ),
     rotated: false,
     offset: (
-        23.0,
-        1.5,
+        0.0,
+        0.0,
     ),
-},3426 => SpriteInfo {
+},2586 => SpriteInfo {
     pos: (
-        760,
-        1252,
+        3015,
+        1142,
     ),
     size: (
-        48,
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        -4.0,
+    ),
+},4085 => SpriteInfo {
+    pos: (
+        3001,
+        1577,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4440 => SpriteInfo {
+    pos: (
+        3841,
+        651,
+    ),
+    size: (
+        105,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},2420 => SpriteInfo {
+    pos: (
+        3663,
+        902,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2961 => SpriteInfo {
+    pos: (
+        2645,
+        1987,
+    ),
+    size: (
+        120,
+        107,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.5,
+    ),
+},99 => SpriteInfo {
+    pos: (
+        2971,
+        0,
+    ),
+    size: (
+        127,
+        356,
+    ),
+    rotated: false,
+    offset: (
+        24.5,
+        1.0,
+    ),
+},3626 => SpriteInfo {
+    pos: (
+        396,
+        2632,
+    ),
+    size: (
+        110,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -10.0,
+        0.0,
+    ),
+},4065 => SpriteInfo {
+    pos: (
+        1199,
+        1563,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},2646 => SpriteInfo {
+    pos: (
+        73,
+        1173,
+    ),
+    size: (
+        52,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        24.0,
+    ),
+},2278 => SpriteInfo {
+    pos: (
+        759,
+        860,
+    ),
+    size: (
+        56,
+        128,
+    ),
+    rotated: false,
+    offset: (
+        -28.0,
+        0.0,
+    ),
+},3526 => SpriteInfo {
+    pos: (
+        1796,
+        1469,
+    ),
+    size: (
+        64,
         64,
     ),
     rotated: false,
@@ -17927,27 +6951,111 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},18 => SpriteInfo {
+},1591 => SpriteInfo {
     pos: (
-        330,
-        2244,
+        388,
+        299,
     ),
     size: (
-        511,
-        166,
+        120,
+        12,
     ),
     rotated: false,
     offset: (
-        -0.5,
         0.0,
+        1.0,
     ),
-},4403 => SpriteInfo {
+},3137 => SpriteInfo {
     pos: (
-        694,
-        491,
+        1145,
+        1199,
     ),
     size: (
-        90,
+        36,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3633 => SpriteInfo {
+    pos: (
+        2427,
+        2656,
+    ),
+    size: (
+        56,
+        186,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3321 => SpriteInfo {
+    pos: (
+        3890,
+        1334,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3632 => SpriteInfo {
+    pos: (
+        515,
+        2632,
+    ),
+    size: (
+        88,
+        176,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2471 => SpriteInfo {
+    pos: (
+        579,
+        963,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3424 => SpriteInfo {
+    pos: (
+        1703,
+        1320,
+    ),
+    size: (
+        12,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},273 => SpriteInfo {
+    pos: (
+        2388,
+        1721,
+    ),
+    size: (
+        120,
         120,
     ),
     rotated: false,
@@ -17955,10 +7063,346 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2499 => SpriteInfo {
+},2475 => SpriteInfo {
     pos: (
-        2809,
-        918,
+        206,
+        964,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        16.0,
+    ),
+},1768 => SpriteInfo {
+    pos: (
+        2782,
+        2675,
+    ),
+    size: (
+        22,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2413 => SpriteInfo {
+    pos: (
+        2861,
+        898,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3528 => SpriteInfo {
+    pos: (
+        4016,
+        1472,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3811 => SpriteInfo {
+    pos: (
+        1816,
+        2684,
+    ),
+    size: (
+        41,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},2692 => SpriteInfo {
+    pos: (
+        3213,
+        1250,
+    ),
+    size: (
+        136,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2227 => SpriteInfo {
+    pos: (
+        434,
+        825,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4190 => SpriteInfo {
+    pos: (
+        2188,
+        1628,
+    ),
+    size: (
+        16,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        12.0,
+    ),
+},3962 => SpriteInfo {
+    pos: (
+        3028,
+        2854,
+    ),
+    size: (
+        92,
+        128,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2557 => SpriteInfo {
+    pos: (
+        1299,
+        1056,
+    ),
+    size: (
+        28,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        18.0,
+        -24.0,
+    ),
+},3375 => SpriteInfo {
+    pos: (
+        3421,
+        1404,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4095 => SpriteInfo {
+    pos: (
+        1837,
+        1579,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3576 => SpriteInfo {
+    pos: (
+        3689,
+        1542,
+    ),
+    size: (
+        128,
+        96,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2946 => SpriteInfo {
+    pos: (
+        927,
+        1899,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1697 => SpriteInfo {
+    pos: (
+        1117,
+        270,
+    ),
+    size: (
+        120,
+        51,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        3.5,
+    ),
+},3054 => SpriteInfo {
+    pos: (
+        2904,
+        1946,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2502 => SpriteInfo {
+    pos: (
+        496,
+        1023,
+    ),
+    size: (
+        64,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -20.0,
+    ),
+},2467 => SpriteInfo {
+    pos: (
+        958,
+        945,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},3804 => SpriteInfo {
+    pos: (
+        2711,
+        2729,
+    ),
+    size: (
+        64,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},1709 => SpriteInfo {
+    pos: (
+        1801,
+        2912,
+    ),
+    size: (
+        218,
+        252,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3481 => SpriteInfo {
+    pos: (
+        1225,
+        1429,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3601 => SpriteInfo {
+    pos: (
+        3846,
+        538,
+    ),
+    size: (
+        104,
+        104,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4502 => SpriteInfo {
+    pos: (
+        335,
+        787,
+    ),
+    size: (
+        90,
+        75,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},1022 => SpriteInfo {
+    pos: (
+        523,
+        0,
+    ),
+    size: (
+        118,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2585 => SpriteInfo {
+    pos: (
+        723,
+        1139,
     ),
     size: (
         56,
@@ -17966,13 +7410,13 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
     rotated: false,
     offset: (
-        0.0,
+        -4.0,
         0.0,
     ),
-},2548 => SpriteInfo {
+},2561 => SpriteInfo {
     pos: (
-        588,
-        961,
+        1482,
+        1095,
     ),
     size: (
         64,
@@ -17983,27 +7427,111 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2858 => SpriteInfo {
+},3147 => SpriteInfo {
     pos: (
-        3509,
-        1625,
+        548,
+        1259,
+    ),
+    size: (
+        44,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -10.0,
+        0.0,
+    ),
+},2510 => SpriteInfo {
+    pos: (
+        1410,
+        1018,
+    ),
+    size: (
+        64,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},4173 => SpriteInfo {
+    pos: (
+        0,
+        1624,
+    ),
+    size: (
+        48,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2546 => SpriteInfo {
+    pos: (
+        2021,
+        1057,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3860 => SpriteInfo {
+    pos: (
+        3811,
+        1694,
+    ),
+    size: (
+        64,
+        59,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.5,
+    ),
+},3863 => SpriteInfo {
+    pos: (
+        1042,
+        1697,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3994 => SpriteInfo {
+    pos: (
+        2492,
+        2794,
+    ),
+    size: (
+        54,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3648 => SpriteInfo {
+    pos: (
+        2813,
+        2815,
     ),
     size: (
         60,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -26.0,
-    ),
-},3853 => SpriteInfo {
-    pos: (
-        1008,
-        1482,
-    ),
-    size: (
-        64,
         64,
     ),
     rotated: false,
@@ -18011,13 +7539,83 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},3404 => SpriteInfo {
+},190 => SpriteInfo {
     pos: (
-        3565,
-        1257,
+        635,
+        2283,
     ),
     size: (
-        36,
+        56,
+        196,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4513 => SpriteInfo {
+    pos: (
+        3054,
+        764,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},20 => SpriteInfo {
+    pos: (
+        2197,
+        2531,
+    ),
+    size: (
+        292,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},211 => SpriteInfo {
+    pos: (
+        2028,
+        1721,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2682 => SpriteInfo {
+    pos: (
+        3076,
+        1207,
+    ),
+    size: (
+        52,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -16.0,
+    ),
+},4142 => SpriteInfo {
+    pos: (
+        973,
+        1595,
+    ),
+    size: (
+        84,
         24,
     ),
     rotated: false,
@@ -18025,41 +7623,13 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2698 => SpriteInfo {
+},4422 => SpriteInfo {
     pos: (
-        2413,
-        835,
+        2849,
+        597,
     ),
     size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4501 => SpriteInfo {
-    pos: (
-        672,
-        724,
-    ),
-    size: (
-        90,
-        30,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1885 => SpriteInfo {
-    pos: (
-        832,
-        1668,
-    ),
-    size: (
-        120,
+        112,
         120,
     ),
     rotated: false,
@@ -18067,27 +7637,69 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},1703 => SpriteInfo {
+},4143 => SpriteInfo {
     pos: (
-        172,
-        2822,
-    ),
-    size: (
-        98,
-        85,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.5,
-    ),
-},3234 => SpriteInfo {
-    pos: (
-        2929,
-        1170,
+        2139,
+        1595,
     ),
     size: (
         72,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1847 => SpriteInfo {
+    pos: (
+        3107,
+        2469,
+    ),
+    size: (
+        162,
+        222,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2991 => SpriteInfo {
+    pos: (
+        1181,
+        1965,
+    ),
+    size: (
+        99,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -1.5,
+        8.0,
+    ),
+},4511 => SpriteInfo {
+    pos: (
+        2151,
+        750,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},3366 => SpriteInfo {
+    pos: (
+        3557,
+        1373,
+    ),
+    size: (
+        64,
         64,
     ),
     rotated: false,
@@ -18095,14 +7707,980 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},701 => SpriteInfo {
+},266 => SpriteInfo {
     pos: (
-        3582,
-        1805,
+        3608,
+        1716,
     ),
     size: (
         120,
         120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2477 => SpriteInfo {
+    pos: (
+        3462,
+        973,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4068 => SpriteInfo {
+    pos: (
+        1921,
+        1567,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},4492 => SpriteInfo {
+    pos: (
+        554,
+        704,
+    ),
+    size: (
+        112,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2511 => SpriteInfo {
+    pos: (
+        2921,
+        1032,
+    ),
+    size: (
+        100,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2032 => SpriteInfo {
+    pos: (
+        1600,
+        340,
+    ),
+    size: (
+        92,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        0.0,
+    ),
+},2565 => SpriteInfo {
+    pos: (
+        2341,
+        1048,
+    ),
+    size: (
+        12,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        -26.0,
+        -28.0,
+    ),
+},2674 => SpriteInfo {
+    pos: (
+        2017,
+        1208,
+    ),
+    size: (
+        60,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        24.0,
+    ),
+},3310 => SpriteInfo {
+    pos: (
+        3283,
+        1319,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3439 => SpriteInfo {
+    pos: (
+        1798,
+        1416,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4508 => SpriteInfo {
+    pos: (
+        2060,
+        736,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},1730 => SpriteInfo {
+    pos: (
+        505,
+        2283,
+    ),
+    size: (
+        121,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},470 => SpriteInfo {
+    pos: (
+        3152,
+        2133,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},934 => SpriteInfo {
+    pos: (
+        937,
+        1770,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1767 => SpriteInfo {
+    pos: (
+        2782,
+        2654,
+    ),
+    size: (
+        32,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1833 => SpriteInfo {
+    pos: (
+        2139,
+        3243,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -60.0,
+        -60.0,
+    ),
+},3555 => SpriteInfo {
+    pos: (
+        958,
+        1473,
+    ),
+    size: (
+        8,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -36.0,
+        12.0,
+    ),
+},4097 => SpriteInfo {
+    pos: (
+        1585,
+        1587,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2649 => SpriteInfo {
+    pos: (
+        73,
+        1186,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3979 => SpriteInfo {
+    pos: (
+        3260,
+        2871,
+    ),
+    size: (
+        121,
+        121,
+    ),
+    rotated: false,
+    offset: (
+        -1.5,
+        -2.5,
+    ),
+},2676 => SpriteInfo {
+    pos: (
+        0,
+        1208,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2571 => SpriteInfo {
+    pos: (
+        2686,
+        1112,
+    ),
+    size: (
+        56,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        -24.0,
+    ),
+},695 => SpriteInfo {
+    pos: (
+        3714,
+        2020,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2519 => SpriteInfo {
+    pos: (
+        2360,
+        947,
+    ),
+    size: (
+        8,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2653 => SpriteInfo {
+    pos: (
+        478,
+        1134,
+    ),
+    size: (
+        4,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        4.0,
+    ),
+},2473 => SpriteInfo {
+    pos: (
+        69,
+        964,
+    ),
+    size: (
+        128,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1224 => SpriteInfo {
+    pos: (
+        1418,
+        2059,
+    ),
+    size: (
+        24,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -48.0,
+        -48.0,
+    ),
+},4500 => SpriteInfo {
+    pos: (
+        3826,
+        780,
+    ),
+    size: (
+        90,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2580 => SpriteInfo {
+    pos: (
+        231,
+        1131,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        4.0,
+    ),
+},4229 => SpriteInfo {
+    pos: (
+        2327,
+        1648,
+    ),
+    size: (
+        56,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2657 => SpriteInfo {
+    pos: (
+        2552,
+        1194,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3637 => SpriteInfo {
+    pos: (
+        612,
+        2698,
+    ),
+    size: (
+        200,
+        200,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4168 => SpriteInfo {
+    pos: (
+        325,
+        1613,
+    ),
+    size: (
+        68,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1702 => SpriteInfo {
+    pos: (
+        816,
+        2991,
+    ),
+    size: (
+        114,
+        114,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3796 => SpriteInfo {
+    pos: (
+        287,
+        1629,
+    ),
+    size: (
+        28,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3151 => SpriteInfo {
+    pos: (
+        1044,
+        1268,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        12.0,
+    ),
+},2226 => SpriteInfo {
+    pos: (
+        3229,
+        819,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3447 => SpriteInfo {
+    pos: (
+        3889,
+        1407,
+    ),
+    size: (
+        28,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3122 => SpriteInfo {
+    pos: (
+        1432,
+        1237,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1713 => SpriteInfo {
+    pos: (
+        2198,
+        2271,
+    ),
+    size: (
+        154,
+        198,
+    ),
+    rotated: false,
+    offset: (
+        -7.0,
+        -47.0,
+    ),
+},1519 => SpriteInfo {
+    pos: (
+        523,
+        179,
+    ),
+    size: (
+        36,
+        37,
+    ),
+    rotated: false,
+    offset: (
+        -1.0,
+        -1.5,
+    ),
+},2963 => SpriteInfo {
+    pos: (
+        0,
+        2015,
+    ),
+    size: (
+        120,
+        117,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.5,
+    ),
+},3149 => SpriteInfo {
+    pos: (
+        2881,
+        1264,
+    ),
+    size: (
+        52,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        0.0,
+    ),
+},3523 => SpriteInfo {
+    pos: (
+        3288,
+        1465,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2632 => SpriteInfo {
+    pos: (
+        3778,
+        1086,
+    ),
+    size: (
+        52,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        -14.0,
+    ),
+},3639 => SpriteInfo {
+    pos: (
+        821,
+        2698,
+    ),
+    size: (
+        160,
+        160,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3444 => SpriteInfo {
+    pos: (
+        3926,
+        1407,
+    ),
+    size: (
+        24,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2472 => SpriteInfo {
+    pos: (
+        2752,
+        901,
+    ),
+    size: (
+        24,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -20.0,
+        -20.0,
+    ),
+},2355 => SpriteInfo {
+    pos: (
+        0,
+        883,
+    ),
+    size: (
+        48,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3653 => SpriteInfo {
+    pos: (
+        461,
+        2817,
+    ),
+    size: (
+        64,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3130 => SpriteInfo {
+    pos: (
+        613,
+        1226,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},4505 => SpriteInfo {
+    pos: (
+        447,
+        711,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2578 => SpriteInfo {
+    pos: (
+        1952,
+        1130,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},186 => SpriteInfo {
+    pos: (
+        1173,
+        2999,
+    ),
+    size: (
+        336,
+        338,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},699 => SpriteInfo {
+    pos: (
+        645,
+        2035,
+    ),
+    size: (
+        100,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        10.0,
+        10.0,
+    ),
+},4377 => SpriteInfo {
+    pos: (
+        2466,
+        911,
+    ),
+    size: (
+        8,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        -28.0,
+        -28.0,
+    ),
+},3862 => SpriteInfo {
+    pos: (
+        973,
+        1697,
+    ),
+    size: (
+        60,
+        50,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3847 => SpriteInfo {
+    pos: (
+        2173,
+        2769,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4403 => SpriteInfo {
+    pos: (
+        3445,
+        543,
+    ),
+    size: (
+        90,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},663 => SpriteInfo {
+    pos: (
+        762,
+        2148,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2993 => SpriteInfo {
+    pos: (
+        1453,
+        1857,
+    ),
+    size: (
+        28,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -7.0,
+    ),
+},3150 => SpriteInfo {
+    pos: (
+        2348,
+        1265,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3861 => SpriteInfo {
+    pos: (
+        57,
+        1696,
+    ),
+    size: (
+        60,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.0,
+    ),
+},3855 => SpriteInfo {
+    pos: (
+        2789,
+        1688,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2679 => SpriteInfo {
+    pos: (
+        2743,
+        1210,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3858 => SpriteInfo {
+    pos: (
+        540,
+        1693,
+    ),
+    size: (
+        62,
+        57,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},1714 => SpriteInfo {
+    pos: (
+        3679,
+        2281,
+    ),
+    size: (
+        148,
+        160,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        -28.0,
+    ),
+},131 => SpriteInfo {
+    pos: (
+        3905,
+        2297,
+    ),
+    size: (
+        152,
+        72,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3125 => SpriteInfo {
+    pos: (
+        349,
+        1239,
+    ),
+    size: (
+        52,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        0.0,
+    ),
+},4149 => SpriteInfo {
+    pos: (
+        1658,
+        1595,
+    ),
+    size: (
+        76,
+        60,
     ),
     rotated: false,
     offset: (
@@ -18111,8 +8689,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },4233 => SpriteInfo {
     pos: (
-        2997,
-        1464,
+        2514,
+        1649,
     ),
     size: (
         64,
@@ -18123,23 +8701,723 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         -4.0,
     ),
-},1707 => SpriteInfo {
+},1343 => SpriteInfo {
     pos: (
-        2078,
-        2613,
+        392,
+        2153,
     ),
     size: (
-        155,
-        157,
+        98,
+        12,
     ),
     rotated: false,
     offset: (
-        1.5,
-        0.5,
+        -12.0,
+        0.0,
     ),
-},4067 => SpriteInfo {
+},3124 => SpriteInfo {
     pos: (
-        3989,
+        69,
+        1255,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},3805 => SpriteInfo {
+    pos: (
+        2957,
+        2744,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3423 => SpriteInfo {
+    pos: (
+        4036,
+        1313,
+    ),
+    size: (
+        36,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2665 => SpriteInfo {
+    pos: (
+        3977,
+        1199,
+    ),
+    size: (
+        60,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -16.0,
+    ),
+},2522 => SpriteInfo {
+    pos: (
+        1712,
+        1031,
+    ),
+    size: (
+        40,
+        84,
+    ),
+    rotated: false,
+    offset: (
+        24.0,
+        6.0,
+    ),
+},3549 => SpriteInfo {
+    pos: (
+        3361,
+        1503,
+    ),
+    size: (
+        44,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2513 => SpriteInfo {
+    pos: (
+        0,
+        1037,
+    ),
+    size: (
+        80,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1884 => SpriteInfo {
+    pos: (
+        3249,
+        1888,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3144 => SpriteInfo {
+    pos: (
+        3495,
+        1258,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2660 => SpriteInfo {
+    pos: (
+        3763,
+        1196,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3479 => SpriteInfo {
+    pos: (
+        2837,
+        1435,
+    ),
+    size: (
+        52,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},412 => SpriteInfo {
+    pos: (
+        2891,
+        2363,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2661 => SpriteInfo {
+    pos: (
+        3645,
+        1145,
+    ),
+    size: (
+        4,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        -26.0,
+    ),
+},2666 => SpriteInfo {
+    pos: (
+        1076,
+        1199,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3231 => SpriteInfo {
+    pos: (
+        601,
+        1299,
+    ),
+    size: (
+        72,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2662 => SpriteInfo {
+    pos: (
+        2309,
+        1196,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2558 => SpriteInfo {
+    pos: (
+        1013,
+        1082,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},107 => SpriteInfo {
+    pos: (
+        1580,
+        2286,
+    ),
+    size: (
+        108,
+        152,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1011 => SpriteInfo {
+    pos: (
+        3914,
+        2522,
+    ),
+    size: (
+        120,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},2028 => SpriteInfo {
+    pos: (
+        1983,
+        339,
+    ),
+    size: (
+        85,
+        189,
+    ),
+    rotated: false,
+    offset: (
+        4.5,
+        -1.5,
+    ),
+},1699 => SpriteInfo {
+    pos: (
+        1750,
+        165,
+    ),
+    size: (
+        39,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        3.5,
+        28.0,
+    ),
+},3000 => SpriteInfo {
+    pos: (
+        3499,
+        235,
+    ),
+    size: (
+        120,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -5.0,
+    ),
+},3232 => SpriteInfo {
+    pos: (
+        0,
+        1277,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},472 => SpriteInfo {
+    pos: (
+        4072,
+        1928,
+    ),
+    size: (
+        6,
+        6,
+    ),
+    rotated: false,
+    offset: (
+        -57.0,
+        -57.0,
+    ),
+},2887 => SpriteInfo {
+    pos: (
+        1701,
+        406,
+    ),
+    size: (
+        230,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -5.0,
+        3.0,
+    ),
+},2659 => SpriteInfo {
+    pos: (
+        3750,
+        1141,
+    ),
+    size: (
+        4,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        -4.0,
+    ),
+},471 => SpriteInfo {
+    pos: (
+        3281,
+        2133,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3296 => SpriteInfo {
+    pos: (
+        2767,
+        1279,
+    ),
+    size: (
+        24,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2312 => SpriteInfo {
+    pos: (
+        2271,
+        750,
+    ),
+    size: (
+        8,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -2.0,
+    ),
+},2225 => SpriteInfo {
+    pos: (
+        1879,
+        811,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1720 => SpriteInfo {
+    pos: (
+        2501,
+        2247,
+    ),
+    size: (
+        121,
+        69,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        17.5,
+    ),
+},2367 => SpriteInfo {
+    pos: (
+        3787,
+        879,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4416 => SpriteInfo {
+    pos: (
+        3959,
+        548,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2569 => SpriteInfo {
+    pos: (
+        3434,
+        1057,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        -30.0,
+        -26.0,
+    ),
+},1866 => SpriteInfo {
+    pos: (
+        1890,
+        1842,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4228 => SpriteInfo {
+    pos: (
+        3001,
+        1646,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3057 => SpriteInfo {
+    pos: (
+        3926,
+        1971,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2962 => SpriteInfo {
+    pos: (
+        2774,
+        2001,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3332 => SpriteInfo {
+    pos: (
+        3630,
+        1356,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3853 => SpriteInfo {
+    pos: (
+        2907,
+        1674,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1209 => SpriteInfo {
+    pos: (
+        1020,
+        2158,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2866 => SpriteInfo {
+    pos: (
+        129,
+        129,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4325 => SpriteInfo {
+    pos: (
+        1568,
+        1660,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1333 => SpriteInfo {
+    pos: (
+        259,
+        0,
+    ),
+    size: (
+        126,
+        126,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1596 => SpriteInfo {
+    pos: (
+        1235,
+        2440,
+    ),
+    size: (
+        78,
+        65,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},3553 => SpriteInfo {
+    pos: (
+        1670,
+        1513,
+    ),
+    size: (
+        72,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        8.0,
+    ),
+},2422 => SpriteInfo {
+    pos: (
+        3096,
+        923,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2523 => SpriteInfo {
+    pos: (
+        3344,
+        1014,
+    ),
+    size: (
+        8,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        40.0,
+        2.0,
+    ),
+},2411 => SpriteInfo {
+    pos: (
+        889,
+        892,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3931 => SpriteInfo {
+    pos: (
+        2201,
+        2838,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3370 => SpriteInfo {
+    pos: (
+        2616,
         1390,
     ),
     size: (
@@ -18151,13 +9429,13 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2473 => SpriteInfo {
+},4187 => SpriteInfo {
     pos: (
-        3779,
-        887,
+        1244,
+        1628,
     ),
     size: (
-        128,
+        40,
         64,
     ),
     rotated: false,
@@ -18165,41 +9443,13 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2517 => SpriteInfo {
+},4421 => SpriteInfo {
     pos: (
-        2060,
-        953,
+        969,
+        591,
     ),
     size: (
-        96,
-        96,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4135 => SpriteInfo {
-    pos: (
-        2789,
-        1421,
-    ),
-    size: (
-        40,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2947 => SpriteInfo {
-    pos: (
-        248,
-        1712,
-    ),
-    size: (
-        116,
+        120,
         120,
     ),
     rotated: false,
@@ -18207,108 +9457,234 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2638 => SpriteInfo {
+},4423 => SpriteInfo {
     pos: (
-        1008,
-        1052,
+        2970,
+        597,
     ),
     size: (
+        112,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4227 => SpriteInfo {
+    pos: (
+        4080,
+        1571,
+    ),
+    size: (
+        4,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2512 => SpriteInfo {
+    pos: (
+        2825,
+        1036,
+    ),
+    size: (
+        80,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},13 => SpriteInfo {
+    pos: (
+        2266,
+        0,
+    ),
+    size: (
+        132,
+        339,
+    ),
+    rotated: false,
+    offset: (
+        23.0,
+        1.5,
+    ),
+},3852 => SpriteInfo {
+    pos: (
+        2716,
+        1673,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2362 => SpriteInfo {
+    pos: (
+        179,
+        891,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3806 => SpriteInfo {
+    pos: (
+        2823,
+        2750,
+    ),
+    size: (
+        64,
         56,
-        20,
     ),
     rotated: false,
     offset: (
-        2.0,
-        -16.0,
+        0.0,
+        0.0,
     ),
-},1868 => SpriteInfo {
+},2589 => SpriteInfo {
     pos: (
-        1832,
-        1647,
+        857,
+        1148,
     ),
     size: (
-        120,
-        120,
+        64,
+        64,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
     ),
-},2664 => SpriteInfo {
+},2627 => SpriteInfo {
     pos: (
-        816,
-        1083,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3553 => SpriteInfo {
-    pos: (
-        812,
-        1340,
-    ),
-    size: (
-        72,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        8.0,
-    ),
-},4368 => SpriteInfo {
-    pos: (
-        516,
-        856,
+        3594,
+        902,
     ),
     size: (
         60,
-        8,
+        60,
     ),
     rotated: false,
     offset: (
-        2.0,
-        -24.0,
+        0.0,
+        0.0,
     ),
-},2658 => SpriteInfo {
+},1705 => SpriteInfo {
     pos: (
-        3528,
-        1077,
+        2555,
+        2888,
     ),
     size: (
-        52,
+        334,
+        328,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},940 => SpriteInfo {
+    pos: (
+        1931,
+        2306,
+    ),
+    size: (
+        98,
+        121,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.5,
+    ),
+},2506 => SpriteInfo {
+    pos: (
+        3198,
+        1030,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1341 => SpriteInfo {
+    pos: (
+        1580,
+        2164,
+    ),
+    size: (
+        113,
+        113,
+    ),
+    rotated: false,
+    offset: (
+        1.5,
+        1.5,
+    ),
+},3518 => SpriteInfo {
+    pos: (
+        2253,
+        1456,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1764 => SpriteInfo {
+    pos: (
+        2782,
+        2531,
+    ),
+    size: (
+        32,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2521 => SpriteInfo {
+    pos: (
+        2564,
+        1047,
+    ),
+    size: (
+        96,
         4,
     ),
     rotated: false,
     offset: (
         0.0,
-        24.0,
+        -10.0,
     ),
-},3622 => SpriteInfo {
+},3578 => SpriteInfo {
     pos: (
-        2598,
-        2321,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4372 => SpriteInfo {
-    pos: (
-        1164,
-        804,
+        2141,
+        1519,
     ),
     size: (
         16,
@@ -18316,28 +9692,42 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
     rotated: false,
     offset: (
-        16.0,
-        -2.0,
+        0.0,
+        0.0,
     ),
-},3481 => SpriteInfo {
+},1859 => SpriteInfo {
     pos: (
-        3493,
-        1277,
+        0,
+        129,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4324 => SpriteInfo {
+    pos: (
+        3891,
+        1655,
     ),
     size: (
         64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1813 => SpriteInfo {
+    pos: (
+        884,
         52,
     ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},697 => SpriteInfo {
-    pos: (
-        1464,
-        1798,
-    ),
     size: (
         120,
         120,
@@ -18347,42 +9737,28 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},933 => SpriteInfo {
+},2504 => SpriteInfo {
     pos: (
-        3385,
-        1571,
+        867,
+        1026,
     ),
     size: (
-        120,
-        120,
+        64,
+        44,
     ),
     rotated: false,
     offset: (
         0.0,
-        0.0,
+        10.0,
     ),
-},1734 => SpriteInfo {
+},2228 => SpriteInfo {
     pos: (
-        3420,
-        2675,
+        2889,
+        825,
     ),
     size: (
-        320,
-        320,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},143 => SpriteInfo {
-    pos: (
-        3708,
-        1766,
-    ),
-    size: (
-        120,
-        120,
+        64,
+        64,
     ),
     rotated: false,
     offset: (
@@ -18403,10 +9779,374 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},470 => SpriteInfo {
+},1607 => SpriteInfo {
     pos: (
-        3706,
-        1890,
+        423,
+        2380,
+    ),
+    size: (
+        42,
+        62,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3522 => SpriteInfo {
+    pos: (
+        3215,
+        1465,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2642 => SpriteInfo {
+    pos: (
+        296,
+        1170,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},392 => SpriteInfo {
+    pos: (
+        2080,
+        2225,
+    ),
+    size: (
+        50,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},202 => SpriteInfo {
+    pos: (
+        3529,
+        0,
+    ),
+    size: (
+        202,
+        226,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3879 => SpriteInfo {
+    pos: (
+        3714,
+        2818,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},413 => SpriteInfo {
+    pos: (
+        3881,
+        2378,
+    ),
+    size: (
+        52,
+        86,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        17.0,
+    ),
+},2949 => SpriteInfo {
+    pos: (
+        1760,
+        1959,
+    ),
+    size: (
+        120,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},3319 => SpriteInfo {
+    pos: (
+        3484,
+        1331,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2592 => SpriteInfo {
+    pos: (
+        1003,
+        1155,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2547 => SpriteInfo {
+    pos: (
+        3271,
+        1059,
+    ),
+    size: (
+        52,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        -24.0,
+    ),
+},4419 => SpriteInfo {
+    pos: (
+        1778,
+        568,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},1206 => SpriteInfo {
+    pos: (
+        1418,
+        1984,
+    ),
+    size: (
+        12,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -54.0,
+        -54.0,
+    ),
+},200 => SpriteInfo {
+    pos: (
+        3241,
+        0,
+    ),
+    size: (
+        139,
+        174,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3480 => SpriteInfo {
+    pos: (
+        2099,
+        1433,
+    ),
+    size: (
+        60,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1058 => SpriteInfo {
+    pos: (
+        2898,
+        3155,
+    ),
+    size: (
+        150,
+        144,
+    ),
+    rotated: false,
+    offset: (
+        -5.0,
+        -8.0,
+    ),
+},2581 => SpriteInfo {
+    pos: (
+        930,
+        1132,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},4189 => SpriteInfo {
+    pos: (
+        3361,
+        1633,
+    ),
+    size: (
+        40,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -10.0,
+    ),
+},3220 => SpriteInfo {
+    pos: (
+        3817,
+        1274,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3997 => SpriteInfo {
+    pos: (
+        3395,
+        2798,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2668 => SpriteInfo {
+    pos: (
+        1948,
+        1203,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},85 => SpriteInfo {
+    pos: (
+        1518,
+        3173,
+    ),
+    size: (
+        280,
+        280,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1598 => SpriteInfo {
+    pos: (
+        3231,
+        534,
+    ),
+    size: (
+        104,
+        108,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3446 => SpriteInfo {
+    pos: (
+        1917,
+        1410,
+    ),
+    size: (
+        24,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4169 => SpriteInfo {
+    pos: (
+        3074,
+        1623,
+    ),
+    size: (
+        68,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3221 => SpriteInfo {
+    pos: (
+        1354,
+        1278,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},8 => SpriteInfo {
+    pos: (
+        1278,
+        2176,
     ),
     size: (
         120,
@@ -18417,10 +10157,626 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},664 => SpriteInfo {
+},932 => SpriteInfo {
     pos: (
-        2136,
-        1920,
+        409,
+        1766,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2503 => SpriteInfo {
+    pos: (
+        3535,
+        973,
+    ),
+    size: (
+        28,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        18.0,
+        -10.0,
+    ),
+},3222 => SpriteInfo {
+    pos: (
+        2694,
+        1279,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2572 => SpriteInfo {
+    pos: (
+        340,
+        1121,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},1344 => SpriteInfo {
+    pos: (
+        3969,
+        2174,
+    ),
+    size: (
+        114,
+        114,
+    ),
+    rotated: false,
+    offset: (
+        -3.0,
+        11.0,
+    ),
+},2889 => SpriteInfo {
+    pos: (
+        3769,
+        472,
+    ),
+    size: (
+        238,
+        57,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        15.5,
+    ),
+},3533 => SpriteInfo {
+    pos: (
+        256,
+        1483,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},458 => SpriteInfo {
+    pos: (
+        2139,
+        2225,
+    ),
+    size: (
+        50,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1762 => SpriteInfo {
+    pos: (
+        184,
+        2541,
+    ),
+    size: (
+        203,
+        203,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.5,
+    ),
+},4446 => SpriteInfo {
+    pos: (
+        3443,
+        672,
+    ),
+    size: (
+        112,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1728 => SpriteInfo {
+    pos: (
+        2891,
+        2283,
+    ),
+    size: (
+        121,
+        71,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},130 => SpriteInfo {
+    pos: (
+        2361,
+        2346,
+    ),
+    size: (
+        458,
+        176,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3627 => SpriteInfo {
+    pos: (
+        3841,
+        2649,
+    ),
+    size: (
+        110,
+        110,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4188 => SpriteInfo {
+    pos: (
+        1519,
+        1632,
+    ),
+    size: (
+        40,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2579 => SpriteInfo {
+    pos: (
+        1830,
+        1131,
+    ),
+    size: (
+        48,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -22.0,
+    ),
+},1861 => SpriteInfo {
+    pos: (
+        669,
+        1777,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3058 => SpriteInfo {
+    pos: (
+        3582,
+        1974,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2516 => SpriteInfo {
+    pos: (
+        2459,
+        1042,
+    ),
+    size: (
+        96,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -26.0,
+    ),
+},2703 => SpriteInfo {
+    pos: (
+        2646,
+        1858,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3803 => SpriteInfo {
+    pos: (
+        2638,
+        2729,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4380 => SpriteInfo {
+    pos: (
+        2999,
+        992,
+    ),
+    size: (
+        52,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -22.0,
+    ),
+},3516 => SpriteInfo {
+    pos: (
+        3885,
+        1444,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},473 => SpriteInfo {
+    pos: (
+        4072,
+        1943,
+    ),
+    size: (
+        9,
+        9,
+    ),
+    rotated: false,
+    offset: (
+        -55.5,
+        -55.5,
+    ),
+},1462 => SpriteInfo {
+    pos: (
+        1373,
+        1728,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},467 => SpriteInfo {
+    pos: (
+        2544,
+        2118,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1837 => SpriteInfo {
+    pos: (
+        990,
+        2711,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},203 => SpriteInfo {
+    pos: (
+        3740,
+        0,
+    ),
+    size: (
+        260,
+        226,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3547 => SpriteInfo {
+    pos: (
+        0,
+        1535,
+    ),
+    size: (
+        80,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2677 => SpriteInfo {
+    pos: (
+        3202,
+        1172,
+    ),
+    size: (
+        4,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},3311 => SpriteInfo {
+    pos: (
+        2543,
+        1328,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2691 => SpriteInfo {
+    pos: (
+        3076,
+        1241,
+    ),
+    size: (
+        128,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},702 => SpriteInfo {
+    pos: (
+        1702,
+        2086,
+    ),
+    size: (
+        240,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2563 => SpriteInfo {
+    pos: (
+        3176,
+        1103,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3426 => SpriteInfo {
+    pos: (
+        920,
+        1400,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2012 => SpriteInfo {
+    pos: (
+        1600,
+        165,
+    ),
+    size: (
+        141,
+        137,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        -3.5,
+    ),
+},468 => SpriteInfo {
+    pos: (
+        2544,
+        2103,
+    ),
+    size: (
+        120,
+        6,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3088 => SpriteInfo {
+    pos: (
+        828,
+        2432,
+    ),
+    size: (
+        116,
+        79,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},1614 => SpriteInfo {
+    pos: (
+        1976,
+        537,
+    ),
+    size: (
+        84,
+        84,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4426 => SpriteInfo {
+    pos: (
+        1212,
+        591,
+    ),
+    size: (
+        90,
+        82,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},18 => SpriteInfo {
+    pos: (
+        628,
+        2523,
+    ),
+    size: (
+        511,
+        166,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},2650 => SpriteInfo {
+    pos: (
+        4071,
+        1134,
+    ),
+    size: (
+        4,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},2481 => SpriteInfo {
+    pos: (
+        1696,
+        978,
+    ),
+    size: (
+        60,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -6.0,
+    ),
+},505 => SpriteInfo {
+    pos: (
+        2869,
+        2492,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3524 => SpriteInfo {
+    pos: (
+        1871,
+        1467,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1054 => SpriteInfo {
+    pos: (
+        3241,
+        183,
     ),
     size: (
         120,
@@ -18431,41 +10787,13 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2703 => SpriteInfo {
+},3146 => SpriteInfo {
     pos: (
-        1220,
-        1653,
+        3358,
+        1263,
     ),
     size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4379 => SpriteInfo {
-    pos: (
-        825,
-        860,
-    ),
-    size: (
-        20,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -22.0,
-        -26.0,
-    ),
-},3944 => SpriteInfo {
-    pos: (
-        1153,
-        2467,
-    ),
-    size: (
-        52,
+        64,
         64,
     ),
     rotated: false,
@@ -18473,14 +10801,1862 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},1735 => SpriteInfo {
+},4064 => SpriteInfo {
     pos: (
-        652,
-        2696,
+        3597,
+        1559,
     ),
     size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1763 => SpriteInfo {
+    pos: (
+        3278,
+        2564,
+    ),
+    size: (
+        293,
+        225,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.5,
+    ),
+},3324 => SpriteInfo {
+    pos: (
+        2325,
+        1338,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},693 => SpriteInfo {
+    pos: (
+        516,
+        2017,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2554 => SpriteInfo {
+    pos: (
+        3271,
+        1076,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1334 => SpriteInfo {
+    pos: (
+        1020,
+        35,
+    ),
+    size: (
+        276,
+        226,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4096 => SpriteInfo {
+    pos: (
+        3928,
+        1582,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1846 => SpriteInfo {
+    pos: (
+        398,
+        2451,
+    ),
+    size: (
+        154,
+        172,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},469 => SpriteInfo {
+    pos: (
+        2673,
+        2130,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2862 => SpriteInfo {
+    pos: (
+        3453,
+        1746,
+    ),
+    size: (
+        8,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        26.0,
+        -26.0,
+    ),
+},4417 => SpriteInfo {
+    pos: (
+        855,
+        548,
+    ),
+    size: (
+        105,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},1757 => SpriteInfo {
+    pos: (
+        2067,
+        2682,
+    ),
+    size: (
+        60,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1221 => SpriteInfo {
+    pos: (
+        3840,
+        2159,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3309 => SpriteInfo {
+    pos: (
+        2942,
+        1317,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4000 => SpriteInfo {
+    pos: (
+        1512,
+        1538,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3402 => SpriteInfo {
+    pos: (
+        3860,
+        1347,
+    ),
+    size: (
+        20,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4002 => SpriteInfo {
+    pos: (
+        713,
+        1550,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3554 => SpriteInfo {
+    pos: (
+        2237,
+        1529,
+    ),
+    size: (
+        80,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        8.0,
+    ),
+},12 => SpriteInfo {
+    pos: (
+        2125,
+        0,
+    ),
+    size: (
+        132,
+        339,
+    ),
+    rotated: false,
+    offset: (
+        23.0,
+        1.5,
+    ),
+},933 => SpriteInfo {
+    pos: (
+        2517,
+        1769,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2463 => SpriteInfo {
+    pos: (
+        2181,
+        937,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4499 => SpriteInfo {
+    pos: (
+        2290,
+        797,
+    ),
+    size: (
+        98,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2552 => SpriteInfo {
+    pos: (
+        1409,
+        1063,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},701 => SpriteInfo {
+    pos: (
+        3582,
+        2043,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2683 => SpriteInfo {
+    pos: (
+        142,
+        1173,
+    ),
+    size: (
+        4,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},662 => SpriteInfo {
+    pos: (
+        1951,
+        2108,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2590 => SpriteInfo {
+    pos: (
+        2236,
+        1149,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},67 => SpriteInfo {
+    pos: (
+        789,
+        0,
+    ),
+    size: (
+        99,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.0,
+    ),
+},3529 => SpriteInfo {
+    pos: (
+        2758,
+        1474,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3534 => SpriteInfo {
+    pos: (
+        106,
+        1484,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3851 => SpriteInfo {
+    pos: (
+        3103,
+        2782,
+    ),
+    size: (
+        64,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1829 => SpriteInfo {
+    pos: (
+        394,
+        129,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2354 => SpriteInfo {
+    pos: (
+        1493,
+        878,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -2.0,
+    ),
+},1712 => SpriteInfo {
+    pos: (
+        0,
+        2275,
+    ),
+    size: (
+        176,
+        221,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        -58.5,
+    ),
+},2667 => SpriteInfo {
+    pos: (
+        3409,
+        1147,
+    ),
+    size: (
+        4,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},1461 => SpriteInfo {
+    pos: (
+        808,
+        1725,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3331 => SpriteInfo {
+    pos: (
+        2691,
+        1352,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3233 => SpriteInfo {
+    pos: (
+        479,
+        1292,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2690 => SpriteInfo {
+    pos: (
+        3215,
+        1185,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        -58.0,
+        0.0,
+    ),
+},2279 => SpriteInfo {
+    pos: (
+        4039,
+        829,
+    ),
+    size: (
+        36,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        -18.0,
+        6.0,
+    ),
+},2482 => SpriteInfo {
+    pos: (
+        3381,
+        984,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1340 => SpriteInfo {
+    pos: (
+        3969,
+        2159,
+    ),
+    size: (
+        106,
+        6,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},2947 => SpriteInfo {
+    pos: (
+        667,
+        1906,
+    ),
+    size: (
+        116,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4503 => SpriteInfo {
+    pos: (
+        121,
+        792,
+    ),
+    size: (
+        90,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3975 => SpriteInfo {
+    pos: (
+        821,
+        2867,
+    ),
+    size: (
+        128,
+        115,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.5,
+    ),
+},2638 => SpriteInfo {
+    pos: (
+        788,
+        1164,
+    ),
+    size: (
+        56,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -16.0,
+    ),
+},3465 => SpriteInfo {
+    pos: (
+        3703,
+        1411,
+    ),
+    size: (
+        48,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4370 => SpriteInfo {
+    pos: (
+        1068,
+        939,
+    ),
+    size: (
+        56,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},2508 => SpriteInfo {
+    pos: (
+        794,
+        1013,
+    ),
+    size: (
+        64,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},1845 => SpriteInfo {
+    pos: (
+        3663,
+        2450,
+    ),
+    size: (
+        154,
+        114,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3628 => SpriteInfo {
+    pos: (
+        3960,
+        2649,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2469 => SpriteInfo {
+    pos: (
+        3926,
+        956,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4086 => SpriteInfo {
+    pos: (
+        1792,
+        1579,
+    ),
+    size: (
+        36,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1600 => SpriteInfo {
+    pos: (
+        1322,
+        2440,
+    ),
+    size: (
+        116,
+        95,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3086 => SpriteInfo {
+    pos: (
+        1697,
+        2415,
+    ),
+    size: (
+        111,
+        95,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        2.5,
+    ),
+},1834 => SpriteInfo {
+    pos: (
+        159,
+        3174,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -30.0,
+        -30.0,
+    ),
+},2026 => SpriteInfo {
+    pos: (
+        1117,
+        330,
+    ),
+    size: (
+        97,
+        136,
+    ),
+    rotated: false,
+    offset: (
+        6.5,
+        -15.0,
+    ),
+},2964 => SpriteInfo {
+    pos: (
+        3247,
+        2017,
+    ),
+    size: (
+        116,
+        107,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.5,
+    ),
+},2491 => SpriteInfo {
+    pos: (
+        1337,
+        1002,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},84 => SpriteInfo {
+    pos: (
+        394,
+        0,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1831 => SpriteInfo {
+    pos: (
+        2010,
+        3243,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -60.0,
+        -60.0,
+    ),
+},4372 => SpriteInfo {
+    pos: (
+        731,
+        875,
+    ),
+    size: (
+        16,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        16.0,
+        -2.0,
+    ),
+},2417 => SpriteInfo {
+    pos: (
+        1554,
+        920,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1835 => SpriteInfo {
+    pos: (
+        1119,
+        2710,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1275 => SpriteInfo {
+    pos: (
+        1778,
+        475,
+    ),
+    size: (
+        120,
+        84,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4382 => SpriteInfo {
+    pos: (
+        2094,
+        997,
+    ),
+    size: (
+        60,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -22.0,
+    ),
+},3582 => SpriteInfo {
+    pos: (
+        2166,
+        1546,
+    ),
+    size: (
+        156,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},2560 => SpriteInfo {
+    pos: (
+        1086,
+        1089,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4418 => SpriteInfo {
+    pos: (
+        348,
+        566,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2655 => SpriteInfo {
+    pos: (
+        491,
+        1194,
+    ),
+    size: (
+        52,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -16.0,
+    ),
+},1863 => SpriteInfo {
+    pos: (
+        2991,
+        1833,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2251 => SpriteInfo {
+    pos: (
+        2665,
+        836,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2499 => SpriteInfo {
+    pos: (
         206,
-        210,
+        1005,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3810 => SpriteInfo {
+    pos: (
+        2138,
+        2682,
+    ),
+    size: (
+        26,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},188 => SpriteInfo {
+    pos: (
+        2357,
+        3003,
+    ),
+    size: (
+        168,
+        168,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3002 => SpriteInfo {
+    pos: (
+        3241,
+        252,
+    ),
+    size: (
+        120,
+        33,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -3.5,
+    ),
+},3230 => SpriteInfo {
+    pos: (
+        3963,
+        1297,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2562 => SpriteInfo {
+    pos: (
+        2450,
+        1095,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3941 => SpriteInfo {
+    pos: (
+        1119,
+        2839,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3227 => SpriteInfo {
+    pos: (
+        1964,
+        1290,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3325 => SpriteInfo {
+    pos: (
+        1630,
+        1339,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1222 => SpriteInfo {
+    pos: (
+        1451,
+        2164,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},101 => SpriteInfo {
+    pos: (
+        3107,
+        0,
+    ),
+    size: (
+        125,
+        356,
+    ),
+    rotated: false,
+    offset: (
+        24.5,
+        1.0,
+    ),
+},4170 => SpriteInfo {
+    pos: (
+        3151,
+        1627,
+    ),
+    size: (
+        92,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3629 => SpriteInfo {
+    pos: (
+        2175,
+        2656,
+    ),
+    size: (
+        120,
+        104,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3427 => SpriteInfo {
+    pos: (
+        832,
+        1404,
+    ),
+    size: (
+        44,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2555 => SpriteInfo {
+    pos: (
+        4058,
+        1048,
+    ),
+    size: (
+        28,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        18.0,
+        -24.0,
+    ),
+},503 => SpriteInfo {
+    pos: (
+        1148,
+        2514,
+    ),
+    size: (
+        120,
+        78,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},1852 => SpriteInfo {
+    pos: (
+        787,
+        291,
+    ),
+    size: (
+        80,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        -30.0,
+    ),
+},2577 => SpriteInfo {
+    pos: (
+        3519,
+        1115,
+    ),
+    size: (
+        44,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -24.0,
+    ),
+},3123 => SpriteInfo {
+    pos: (
+        2621,
+        1244,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3849 => SpriteInfo {
+    pos: (
+        3987,
+        2778,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4007 => SpriteInfo {
+    pos: (
+        1585,
+        1558,
+    ),
+    size: (
+        60,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -18.0,
+    ),
+},110 => SpriteInfo {
+    pos: (
+        884,
+        2287,
+    ),
+    size: (
+        77,
+        136,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},2551 => SpriteInfo {
+    pos: (
+        421,
+        1061,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1836 => SpriteInfo {
+    pos: (
+        3086,
+        2713,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4208 => SpriteInfo {
+    pos: (
+        4001,
+        1640,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2416 => SpriteInfo {
+    pos: (
+        2021,
+        919,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},891 => SpriteInfo {
+    pos: (
+        792,
+        1983,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4376 => SpriteInfo {
+    pos: (
+        354,
+        963,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3502 => SpriteInfo {
+    pos: (
+        977,
+        1462,
+    ),
+    size: (
+        168,
+        124,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2515 => SpriteInfo {
+    pos: (
+        3572,
+        1040,
+    ),
+    size: (
+        96,
+        96,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3005 => SpriteInfo {
+    pos: (
+        897,
+        0,
+    ),
+    size: (
+        114,
+        43,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.5,
+    ),
+},3631 => SpriteInfo {
+    pos: (
+        2304,
+        2656,
+    ),
+    size: (
+        114,
+        176,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4510 => SpriteInfo {
+    pos: (
+        1960,
+        744,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},1205 => SpriteInfo {
+    pos: (
+        4072,
+        1977,
+    ),
+    size: (
+        12,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -54.0,
+        -54.0,
+    ),
+},2548 => SpriteInfo {
+    pos: (
+        940,
+        1059,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},700 => SpriteInfo {
+    pos: (
+        3843,
+        2040,
+    ),
+    size: (
+        220,
+        110,
+    ),
+    rotated: false,
+    offset: (
+        10.0,
+        5.0,
+    ),
+},2587 => SpriteInfo {
+    pos: (
+        0,
+        1143,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},1210 => SpriteInfo {
+    pos: (
+        263,
+        2153,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2363 => SpriteInfo {
+    pos: (
+        3218,
+        892,
+    ),
+    size: (
+        48,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},1332 => SpriteInfo {
+    pos: (
+        1020,
+        0,
+    ),
+    size: (
+        115,
+        26,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3848 => SpriteInfo {
+    pos: (
+        3914,
+        2778,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1207 => SpriteInfo {
+    pos: (
+        1418,
+        2005,
+    ),
+    size: (
+        24,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -48.0,
+        -54.0,
+    ),
+},1716 => SpriteInfo {
+    pos: (
+        2761,
+        2259,
+    ),
+    size: (
+        121,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -24.0,
+    ),
+},3945 => SpriteInfo {
+    pos: (
+        2274,
+        2841,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3814 => SpriteInfo {
+    pos: (
+        2067,
+        2766,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1725 => SpriteInfo {
+    pos: (
+        2361,
+        2285,
+    ),
+    size: (
+        121,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},4374 => SpriteInfo {
+    pos: (
+        3507,
+        956,
+    ),
+    size: (
+        64,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        24.0,
+    ),
+},3621 => SpriteInfo {
+    pos: (
+        1277,
+        2544,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2605 => SpriteInfo {
+    pos: (
+        4016,
+        402,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1464 => SpriteInfo {
+    pos: (
+        0,
+        1757,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2988 => SpriteInfo {
+    pos: (
+        3453,
+        1964,
+    ),
+    size: (
+        120,
+        108,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.0,
+    ),
+},1 => SpriteInfo {
+    pos: (
+        151,
+        1700,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1601 => SpriteInfo {
+    pos: (
+        2828,
+        2388,
+    ),
+    size: (
+        32,
+        160,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2 => SpriteInfo {
+    pos: (
+        3066,
+        1704,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2685 => SpriteInfo {
+    pos: (
+        2484,
+        1218,
+    ),
+    size: (
+        52,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},3361 => SpriteInfo {
+    pos: (
+        1953,
+        1363,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2631 => SpriteInfo {
+    pos: (
+        162,
+        1078,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},3318 => SpriteInfo {
+    pos: (
+        847,
+        1331,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2566 => SpriteInfo {
+    pos: (
+        1617,
+        1124,
+    ),
+    size: (
+        128,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2498 => SpriteInfo {
+    pos: (
+        275,
+        1005,
+    ),
+    size: (
+        56,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        8.0,
+    ),
+},2556 => SpriteInfo {
+    pos: (
+        3912,
+        1078,
+    ),
+    size: (
+        64,
+        64,
     ),
     rotated: false,
     offset: (
@@ -18489,8 +12665,8 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },2366 => SpriteInfo {
     pos: (
-        3433,
-        812,
+        1806,
+        880,
     ),
     size: (
         56,
@@ -18501,13 +12677,2743 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},3479 => SpriteInfo {
+},1754 => SpriteInfo {
     pos: (
-        3992,
-        1282,
+        3086,
+        2700,
+    ),
+    size: (
+        120,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3984 => SpriteInfo {
+    pos: (
+        3580,
+        2818,
+    ),
+    size: (
+        125,
+        124,
+    ),
+    rotated: false,
+    offset: (
+        1.5,
+        2.0,
+    ),
+},2669 => SpriteInfo {
+    pos: (
+        2431,
+        1205,
+    ),
+    size: (
+        60,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        24.0,
+    ),
+},2464 => SpriteInfo {
+    pos: (
+        3780,
+        940,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2894 => SpriteInfo {
+    pos: (
+        3416,
+        492,
+    ),
+    size: (
+        243,
+        42,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        3.0,
+    ),
+},3636 => SpriteInfo {
+    pos: (
+        1607,
+        2684,
+    ),
+    size: (
+        200,
+        200,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2500 => SpriteInfo {
+    pos: (
+        3133,
+        1006,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1292 => SpriteInfo {
+    pos: (
+        1148,
+        2451,
+    ),
+    size: (
+        60,
+        39,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},2549 => SpriteInfo {
+    pos: (
+        4072,
+        1023,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3425 => SpriteInfo {
+    pos: (
+        3307,
+        1392,
+    ),
+    size: (
+        40,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3055 => SpriteInfo {
+    pos: (
+        3378,
+        1888,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3651 => SpriteInfo {
+    pos: (
+        2587,
+        1698,
+    ),
+    size: (
+        64,
+        62,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},39 => SpriteInfo {
+    pos: (
+        3679,
+        2218,
+    ),
+    size: (
+        120,
+        54,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2645 => SpriteInfo {
+    pos: (
+        4058,
+        1126,
+    ),
+    size: (
+        4,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        -2.0,
+    ),
+},3450 => SpriteInfo {
+    pos: (
+        2256,
+        1407,
+    ),
+    size: (
+        32,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2598 => SpriteInfo {
+    pos: (
+        2163,
+        1157,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},918 => SpriteInfo {
+    pos: (
+        1305,
+        147,
+    ),
+    size: (
+        286,
+        249,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        0.5,
+    ),
+},4175 => SpriteInfo {
+    pos: (
+        924,
+        1604,
+    ),
+    size: (
+        40,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -36.0,
+    ),
+},1331 => SpriteInfo {
+    pos: (
+        2830,
+        0,
+    ),
+    size: (
+        132,
+        337,
+    ),
+    rotated: false,
+    offset: (
+        23.0,
+        0.5,
+    ),
+},1722 => SpriteInfo {
+    pos: (
+        2198,
+        2225,
+    ),
+    size: (
+        121,
+        37,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.5,
+    ),
+},1758 => SpriteInfo {
+    pos: (
+        0,
+        2505,
+    ),
+    size: (
+        175,
+        174,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        1.0,
+    ),
+},3646 => SpriteInfo {
+    pos: (
+        2555,
+        2802,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},906 => SpriteInfo {
+    pos: (
+        315,
+        2335,
+    ),
+    size: (
+        99,
+        81,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.5,
+    ),
+},3369 => SpriteInfo {
+    pos: (
+        3161,
+        1388,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4539 => SpriteInfo {
+    pos: (
+        3411,
+        801,
+    ),
+    size: (
+        105,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},942 => SpriteInfo {
+    pos: (
+        2038,
+        2306,
+    ),
+    size: (
+        31,
+        42,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        1.0,
+    ),
+},2698 => SpriteInfo {
+    pos: (
+        2397,
+        911,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},411 => SpriteInfo {
+    pos: (
+        1106,
+        2356,
+    ),
+    size: (
+        120,
+        86,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        17.0,
+    ),
+},87 => SpriteInfo {
+    pos: (
+        0,
+        3147,
+    ),
+    size: (
+        150,
+        150,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2990 => SpriteInfo {
+    pos: (
+        2286,
+        1969,
+    ),
+    size: (
+        120,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.0,
+    ),
+},3531 => SpriteInfo {
+    pos: (
+        3418,
+        1477,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2465 => SpriteInfo {
+    pos: (
+        3853,
+        940,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2688 => SpriteInfo {
+    pos: (
+        3901,
+        1228,
+    ),
+    size: (
+        136,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4501 => SpriteInfo {
+    pos: (
+        3229,
+        780,
+    ),
+    size: (
+        90,
+        30,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3295 => SpriteInfo {
+    pos: (
+        2494,
+        1272,
+    ),
+    size: (
+        40,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1587 => SpriteInfo {
+    pos: (
+        2677,
+        513,
+    ),
+    size: (
+        94,
+        94,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3933 => SpriteInfo {
+    pos: (
+        2132,
+        2838,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3944 => SpriteInfo {
+    pos: (
+        1055,
+        2840,
     ),
     size: (
         52,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2540 => SpriteInfo {
+    pos: (
+        3985,
+        1048,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2564 => SpriteInfo {
+    pos: (
+        2752,
+        1108,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4369 => SpriteInfo {
+    pos: (
+        3507,
+        939,
+    ),
+    size: (
+        60,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -24.0,
+    ),
+},1753 => SpriteInfo {
+    pos: (
+        990,
+        2698,
+    ),
+    size: (
+        120,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2987 => SpriteInfo {
+    pos: (
+        2974,
+        1962,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},134 => SpriteInfo {
+    pos: (
+        970,
+        2287,
+    ),
+    size: (
+        56,
+        123,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3795 => SpriteInfo {
+    pos: (
+        3252,
+        1664,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1597 => SpriteInfo {
+    pos: (
+        185,
+        2411,
+    ),
+    size: (
+        72,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.5,
+    ),
+},3808 => SpriteInfo {
+    pos: (
+        242,
+        2753,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2545 => SpriteInfo {
+    pos: (
+        3361,
+        1057,
+    ),
+    size: (
+        64,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},3897 => SpriteInfo {
+    pos: (
+        315,
+        2823,
+    ),
+    size: (
+        62,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2640 => SpriteInfo {
+    pos: (
+        1437,
+        1168,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3935 => SpriteInfo {
+    pos: (
+        242,
+        2826,
+    ),
+    size: (
+        64,
+        54,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -5.0,
+    ),
+},2509 => SpriteInfo {
+    pos: (
+        423,
+        1016,
+    ),
+    size: (
+        64,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},1698 => SpriteInfo {
+    pos: (
+        3628,
+        275,
+    ),
+    size: (
+        76,
+        72,
+    ),
+    rotated: false,
+    offset: (
+        22.0,
+        24.0,
+    ),
+},4178 => SpriteInfo {
+    pos: (
+        3670,
+        1559,
+    ),
+    size: (
+        8,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        0.0,
+    ),
+},2996 => SpriteInfo {
+    pos: (
+        2123,
+        2096,
+    ),
+    size: (
+        240,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2704 => SpriteInfo {
+    pos: (
+        798,
+        1854,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3234 => SpriteInfo {
+    pos: (
+        1738,
+        1306,
+    ),
+    size: (
+        72,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3226 => SpriteInfo {
+    pos: (
+        3641,
+        1283,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2644 => SpriteInfo {
+    pos: (
+        1754,
+        1172,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1582 => SpriteInfo {
+    pos: (
+        0,
+        258,
+    ),
+    size: (
+        101,
+        97,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        1.5,
+    ),
+},3247 => SpriteInfo {
+    pos: (
+        1427,
+        1310,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2858 => SpriteInfo {
+    pos: (
+        4013,
+        1782,
+    ),
+    size: (
+        60,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -26.0,
+    ),
+},4076 => SpriteInfo {
+    pos: (
+        411,
+        1572,
+    ),
+    size: (
+        76,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2670 => SpriteInfo {
+    pos: (
+        3832,
+        1205,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},217 => SpriteInfo {
+    pos: (
+        2891,
+        2220,
+    ),
+    size: (
+        120,
+        54,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1606 => SpriteInfo {
+    pos: (
+        591,
+        2352,
+    ),
+    size: (
+        28,
+        62,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2414 => SpriteInfo {
+    pos: (
+        3711,
+        900,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1830 => SpriteInfo {
+    pos: (
+        2067,
+        2695,
+    ),
+    size: (
+        62,
+        62,
+    ),
+    rotated: false,
+    offset: (
+        29.0,
+        29.0,
+    ),
+},2944 => SpriteInfo {
+    pos: (
+        4013,
+        1799,
+    ),
+    size: (
+        61,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -29.5,
+        0.0,
+    ),
+},3152 => SpriteInfo {
+    pos: (
+        1891,
+        1272,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1759 => SpriteInfo {
+    pos: (
+        2498,
+        2531,
+    ),
+    size: (
+        275,
+        189,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.5,
+    ),
+},4368 => SpriteInfo {
+    pos: (
+        1765,
+        937,
+    ),
+    size: (
+        60,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -24.0,
+    ),
+},4185 => SpriteInfo {
+    pos: (
+        2623,
+        1633,
+    ),
+    size: (
+        84,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3647 => SpriteInfo {
+    pos: (
+        2628,
+        2802,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3857 => SpriteInfo {
+    pos: (
+        467,
+        1693,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2412 => SpriteInfo {
+    pos: (
+        593,
+        894,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1838 => SpriteInfo {
+    pos: (
+        3155,
+        2713,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1864 => SpriteInfo {
+    pos: (
+        1502,
+        1842,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3046 => SpriteInfo {
+    pos: (
+        2148,
+        1971,
+    ),
+    size: (
+        112,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},3965 => SpriteInfo {
+    pos: (
+        3860,
+        2851,
+    ),
+    size: (
+        128,
+        128,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1703 => SpriteInfo {
+    pos: (
+        816,
+        3114,
+    ),
+    size: (
+        98,
+        85,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.5,
+    ),
+},1342 => SpriteInfo {
+    pos: (
+        3441,
+        2210,
+    ),
+    size: (
+        229,
+        119,
+    ),
+    rotated: false,
+    offset: (
+        2.5,
+        2.5,
+    ),
+},2637 => SpriteInfo {
+    pos: (
+        623,
+        1157,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1721 => SpriteInfo {
+    pos: (
+        2631,
+        2259,
+    ),
+    size: (
+        121,
+        66,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        19.0,
+    ),
+},3530 => SpriteInfo {
+    pos: (
+        2383,
+        1474,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2024 => SpriteInfo {
+    pos: (
+        2677,
+        348,
+    ),
+    size: (
+        169,
+        156,
+    ),
+    rotated: false,
+    offset: (
+        -4.5,
+        -9.0,
+    ),
+},4379 => SpriteInfo {
+    pos: (
+        2357,
+        926,
+    ),
+    size: (
+        20,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -22.0,
+        -26.0,
+    ),
+},664 => SpriteInfo {
+    pos: (
+        3711,
+        2149,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2582 => SpriteInfo {
+    pos: (
+        1555,
+        1132,
+    ),
+    size: (
+        52,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        8.0,
+    ),
+},3228 => SpriteInfo {
+    pos: (
+        2110,
+        1291,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2675 => SpriteInfo {
+    pos: (
+        705,
+        1157,
+    ),
+    size: (
+        4,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        -24.0,
+    ),
+},2886 => SpriteInfo {
+    pos: (
+        3151,
+        374,
+    ),
+    size: (
+        241,
+        39,
+    ),
+    rotated: false,
+    offset: (
+        1.5,
+        12.5,
+    ),
+},1589 => SpriteInfo {
+    pos: (
+        3128,
+        534,
+    ),
+    size: (
+        94,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3535 => SpriteInfo {
+    pos: (
+        3616,
+        1486,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2570 => SpriteInfo {
+    pos: (
+        3985,
+        1121,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},3624 => SpriteInfo {
+    pos: (
+        2828,
+        2621,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},395 => SpriteInfo {
+    pos: (
+        1807,
+        3173,
+    ),
+    size: (
+        194,
+        168,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2673 => SpriteInfo {
+    pos: (
+        410,
+        1207,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},152 => SpriteInfo {
+    pos: (
+        1035,
+        2287,
+    ),
+    size: (
+        62,
+        119,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3630 => SpriteInfo {
+    pos: (
+        1872,
+        2682,
+    ),
+    size: (
+        186,
+        134,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3801 => SpriteInfo {
+    pos: (
+        2492,
+        2729,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2518 => SpriteInfo {
+    pos: (
+        3454,
+        1046,
+    ),
+    size: (
+        56,
+        96,
+    ),
+    rotated: false,
+    offset: (
+        20.0,
+        0.0,
+    ),
+},2697 => SpriteInfo {
+    pos: (
+        2683,
+        909,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},410 => SpriteInfo {
+    pos: (
+        496,
+        2352,
+    ),
+    size: (
+        86,
+        86,
+    ),
+    rotated: false,
+    offset: (
+        17.0,
+        17.0,
+    ),
+},10 => SpriteInfo {
+    pos: (
+        1814,
+        0,
+    ),
+    size: (
+        95,
+        300,
+    ),
+    rotated: false,
+    offset: (
+        21.5,
+        4.0,
+    ),
+},4135 => SpriteInfo {
+    pos: (
+        1743,
+        1595,
+    ),
+    size: (
+        40,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2301 => SpriteInfo {
+    pos: (
+        1952,
+        858,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1707 => SpriteInfo {
+    pos: (
+        3390,
+        2871,
+    ),
+    size: (
+        155,
+        157,
+    ),
+    rotated: false,
+    offset: (
+        1.5,
+        0.5,
+    ),
+},4509 => SpriteInfo {
+    pos: (
+        2574,
+        736,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},697 => SpriteInfo {
+    pos: (
+        2415,
+        2027,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3455 => SpriteInfo {
+    pos: (
+        1629,
+        1412,
+    ),
+    size: (
+        52,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3229 => SpriteInfo {
+    pos: (
+        138,
+        1293,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3374 => SpriteInfo {
+    pos: (
+        2764,
+        1401,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4381 => SpriteInfo {
+    pos: (
+        824,
+        992,
+    ),
+    size: (
+        56,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -22.0,
+    ),
+},4171 => SpriteInfo {
+    pos: (
+        496,
+        1612,
+    ),
+    size: (
+        56,
+        72,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},910 => SpriteInfo {
+    pos: (
+        757,
+        2333,
+    ),
+    size: (
+        58,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},414 => SpriteInfo {
+    pos: (
+        2828,
+        2326,
+    ),
+    size: (
+        54,
+        53,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3807 => SpriteInfo {
+    pos: (
+        169,
+        2753,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1463 => SpriteInfo {
+    pos: (
+        2862,
+        1747,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3993 => SpriteInfo {
+    pos: (
+        3176,
+        2782,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3056 => SpriteInfo {
+    pos: (
+        3857,
+        1971,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3330 => SpriteInfo {
+    pos: (
+        1324,
+        1351,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2488 => SpriteInfo {
+    pos: (
+        652,
+        989,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},2462 => SpriteInfo {
+    pos: (
+        1264,
+        930,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2686 => SpriteInfo {
+    pos: (
+        705,
+        1178,
+    ),
+    size: (
+        4,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},1604 => SpriteInfo {
+    pos: (
+        3987,
+        2378,
+    ),
+    size: (
+        77,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3503 => SpriteInfo {
+    pos: (
+        191,
+        1440,
+    ),
+    size: (
+        56,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1012 => SpriteInfo {
+    pos: (
+        1872,
+        2535,
+    ),
+    size: (
+        118,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        1.0,
+    ),
+},1752 => SpriteInfo {
+    pos: (
+        3871,
+        3195,
+    ),
+    size: (
+        168,
+        146,
+    ),
+    rotated: false,
+    offset: (
+        19.0,
+        16.0,
+    ),
+},2559 => SpriteInfo {
+    pos: (
+        2094,
+        1083,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3809 => SpriteInfo {
+    pos: (
+        315,
+        2753,
+    ),
+    size: (
+        64,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3943 => SpriteInfo {
+    pos: (
+        990,
+        2840,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2063 => SpriteInfo {
+    pos: (
+        4009,
+        0,
+    ),
+    size: (
+        78,
+        126,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3001 => SpriteInfo {
+    pos: (
+        3757,
+        235,
+    ),
+    size: (
+        120,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},41 => SpriteInfo {
+    pos: (
+        3021,
+        2271,
+    ),
+    size: (
+        77,
+        278,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.0,
+    ),
+},2474 => SpriteInfo {
+    pos: (
+        824,
+        963,
+    ),
+    size: (
+        40,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        -22.0,
+    ),
+},2479 => SpriteInfo {
+    pos: (
+        2386,
+        980,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},103 => SpriteInfo {
+    pos: (
+        2802,
+        2163,
+    ),
+    size: (
+        80,
+        76,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},19 => SpriteInfo {
+    pos: (
+        1447,
+        2530,
+    ),
+    size: (
+        416,
+        145,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},1708 => SpriteInfo {
+    pos: (
+        242,
+        2897,
+    ),
+    size: (
+        338,
+        340,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1711 => SpriteInfo {
+    pos: (
+        3121,
+        2262,
+    ),
+    size: (
+        185,
+        198,
+    ),
+    rotated: false,
+    offset: (
+        -6.5,
+        -47.0,
+    ),
+},2300 => SpriteInfo {
+    pos: (
+        2051,
+        850,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1345 => SpriteInfo {
+    pos: (
+        1702,
+        2215,
+    ),
+    size: (
+        220,
+        117,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        10.5,
+    ),
+},3995 => SpriteInfo {
+    pos: (
+        3249,
+        2798,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2055 => SpriteInfo {
+    pos: (
+        3813,
+        349,
+    ),
+    size: (
+        139,
+        114,
+    ),
+    rotated: false,
+    offset: (
+        -1.5,
+        -8.0,
+    ),
+},3521 => SpriteInfo {
+    pos: (
+        2597,
+        1463,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2651 => SpriteInfo {
+    pos: (
+        1506,
+        1189,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3902 => SpriteInfo {
+    pos: (
+        1866,
+        2825,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2553 => SpriteInfo {
+    pos: (
+        3361,
+        1074,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3129 => SpriteInfo {
+    pos: (
+        479,
+        1223,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},1704 => SpriteInfo {
+    pos: (
+        1361,
+        0,
+    ),
+    size: (
+        135,
+        138,
+    ),
+    rotated: false,
+    offset: (
+        9.5,
+        0.0,
+    ),
+},137 => SpriteInfo {
+    pos: (
+        589,
+        3208,
+    ),
+    size: (
+        320,
+        318,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},4439 => SpriteInfo {
+    pos: (
+        3344,
+        644,
+    ),
+    size: (
+        90,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4506 => SpriteInfo {
+    pos: (
+        2798,
+        726,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2643 => SpriteInfo {
+    pos: (
+        4071,
+        1065,
+    ),
+    size: (
+        4,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},3625 => SpriteInfo {
+    pos: (
+        2957,
+        2621,
+    ),
+    size: (
+        120,
+        114,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2507 => SpriteInfo {
+    pos: (
+        1765,
+        1030,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2568 => SpriteInfo {
+    pos: (
+        2362,
+        1110,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},696 => SpriteInfo {
+    pos: (
+        921,
+        2029,
+    ),
+    size: (
+        240,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4532 => SpriteInfo {
+    pos: (
+        2677,
+        616,
+    ),
+    size: (
+        112,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},129 => SpriteInfo {
+    pos: (
+        1235,
+        2305,
+    ),
+    size: (
+        316,
+        126,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1009 => SpriteInfo {
+    pos: (
+        3548,
+        2441,
+    ),
+    size: (
+        39,
+        39,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.5,
+    ),
+},3552 => SpriteInfo {
+    pos: (
+        1467,
+        1534,
+    ),
+    size: (
+        36,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -10.0,
+    ),
+},3988 => SpriteInfo {
+    pos: (
+        3129,
+        2871,
+    ),
+    size: (
+        122,
+        122,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3996 => SpriteInfo {
+    pos: (
+        3322,
+        2798,
+    ),
+    size: (
+        64,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4172 => SpriteInfo {
+    pos: (
+        1143,
+        1628,
+    ),
+    size: (
+        92,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3131 => SpriteInfo {
+    pos: (
+        2942,
+        1227,
+    ),
+    size: (
+        40,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},927 => SpriteInfo {
+    pos: (
+        540,
+        1759,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3983 => SpriteInfo {
+    pos: (
+        1265,
+        2870,
+    ),
+    size: (
+        116,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        -1.0,
+        1.0,
+    ),
+},3942 => SpriteInfo {
+    pos: (
+        1192,
+        2839,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3364 => SpriteInfo {
+    pos: (
+        1703,
+        1307,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2489 => SpriteInfo {
+    pos: (
+        3060,
+        992,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},4469 => SpriteInfo {
+    pos: (
+        1846,
+        682,
+    ),
+    size: (
+        105,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},930 => SpriteInfo {
+    pos: (
+        280,
+        1763,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4441 => SpriteInfo {
+    pos: (
+        3205,
+        651,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3312 => SpriteInfo {
+    pos: (
+        2800,
+        1328,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4357 => SpriteInfo {
+    pos: (
+        1758,
+        1661,
+    ),
+    size: (
+        28,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2360 => SpriteInfo {
+    pos: (
+        1871,
+        884,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3545 => SpriteInfo {
+    pos: (
+        2521,
+        1515,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        10.0,
+        12.0,
+    ),
+},2542 => SpriteInfo {
+    pos: (
+        1336,
+        1051,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},11 => SpriteInfo {
+    pos: (
+        1918,
+        0,
+    ),
+    size: (
+        95,
+        300,
+    ),
+    rotated: false,
+    offset: (
+        21.5,
+        4.0,
+    ),
+},394 => SpriteInfo {
+    pos: (
+        2534,
+        3225,
+    ),
+    size: (
+        321,
+        280,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},4431 => SpriteInfo {
+    pos: (
+        2176,
+        629,
+    ),
+    size: (
+        105,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},153 => SpriteInfo {
+    pos: (
+        837,
+        2263,
+    ),
+    size: (
+        36,
+        76,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},4323 => SpriteInfo {
+    pos: (
+        2051,
+        1653,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1868 => SpriteInfo {
+    pos: (
+        2019,
+        1850,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},216 => SpriteInfo {
+    pos: (
+        1951,
+        2177,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1227 => SpriteInfo {
+    pos: (
+        1149,
+        2158,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3478 => SpriteInfo {
+    pos: (
+        2689,
+        1425,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3794 => SpriteInfo {
+    pos: (
+        1366,
+        1663,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},698 => SpriteInfo {
+    pos: (
+        1453,
+        2035,
+    ),
+    size: (
+        240,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2514 => SpriteInfo {
+    pos: (
+        1956,
+        1025,
+    ),
+    size: (
+        56,
+        96,
+    ),
+    rotated: false,
+    offset: (
+        -20.0,
+        0.0,
+    ),
+},4001 => SpriteInfo {
+    pos: (
+        2756,
+        1547,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2891 => SpriteInfo {
+    pos: (
+        771,
+        477,
+    ),
+    size: (
+        239,
+        62,
+    ),
+    rotated: false,
+    offset: (
+        -1.5,
+        0.0,
+    ),
+},4378 => SpriteInfo {
+    pos: (
+        2483,
+        973,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        2.0,
+    ),
+},1765 => SpriteInfo {
+    pos: (
+        2782,
+        2572,
+    ),
+    size: (
+        32,
         32,
     ),
     rotated: false,
@@ -18515,14 +15421,3108 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},2637 => SpriteInfo {
+},3329 => SpriteInfo {
     pos: (
-        4013,
-        1046,
+        2398,
+        1348,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4495 => SpriteInfo {
+    pos: (
+        958,
+        720,
+    ),
+    size: (
+        120,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1583 => SpriteInfo {
+    pos: (
+        110,
+        258,
+    ),
+    size: (
+        117,
+        88,
+    ),
+    rotated: false,
+    offset: (
+        -21.5,
+        -1.0,
+    ),
+},2583 => SpriteInfo {
+    pos: (
+        413,
+        1134,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        0.0,
+    ),
+},4514 => SpriteInfo {
+    pos: (
+        828,
+        776,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2663 => SpriteInfo {
+    pos: (
+        3658,
+        1145,
+    ),
+    size: (
+        8,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        -26.0,
+        24.0,
+    ),
+},2681 => SpriteInfo {
+    pos: (
+        3675,
+        1214,
     ),
     size: (
         60,
         60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3622 => SpriteInfo {
+    pos: (
+        2046,
+        2553,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1223 => SpriteInfo {
+    pos: (
+        1418,
+        2026,
+    ),
+    size: (
+        24,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -48.0,
+        -48.0,
+    ),
+},2672 => SpriteInfo {
+    pos: (
+        3645,
+        1162,
+    ),
+    size: (
+        12,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        24.0,
+        -16.0,
+    ),
+},4164 => SpriteInfo {
+    pos: (
+        843,
+        1628,
+    ),
+    size: (
+        68,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        -50.0,
+        0.0,
+    ),
+},4174 => SpriteInfo {
+    pos: (
+        3616,
+        1632,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},409 => SpriteInfo {
+    pos: (
+        3602,
+        2338,
+    ),
+    size: (
+        52,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4371 => SpriteInfo {
+    pos: (
+        2254,
+        861,
+    ),
+    size: (
+        24,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -16.0,
+        -2.0,
+    ),
+},3136 => SpriteInfo {
+    pos: (
+        1575,
+        1189,
+    ),
+    size: (
+        16,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3910 => SpriteInfo {
+    pos: (
+        169,
+        2826,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4442 => SpriteInfo {
+    pos: (
+        1311,
+        664,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2684 => SpriteInfo {
+    pos: (
+        1262,
+        1214,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4493 => SpriteInfo {
+    pos: (
+        121,
+        685,
+    ),
+    size: (
+        98,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},140 => SpriteInfo {
+    pos: (
+        1252,
+        0,
+    ),
+    size: (
+        100,
+        19,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},1865 => SpriteInfo {
+    pos: (
+        2157,
+        1842,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3527 => SpriteInfo {
+    pos: (
+        3768,
+        1469,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2023 => SpriteInfo {
+    pos: (
+        3241,
+        304,
+    ),
+    size: (
+        209,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        -1.5,
+        2.5,
+    ),
+},2664 => SpriteInfo {
+    pos: (
+        1616,
+        1197,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2541 => SpriteInfo {
+    pos: (
+        89,
+        1050,
+    ),
+    size: (
+        64,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},106 => SpriteInfo {
+    pos: (
+        2080,
+        2282,
+    ),
+    size: (
+        108,
+        262,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1339 => SpriteInfo {
+    pos: (
+        505,
+        2148,
+    ),
+    size: (
+        248,
+        126,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        1.0,
+    ),
+},3322 => SpriteInfo {
+    pos: (
+        2183,
+        1336,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3368 => SpriteInfo {
+    pos: (
+        1397,
+        1383,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1732 => SpriteInfo {
+    pos: (
+        185,
+        2282,
+    ),
+    size: (
+        121,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},111 => SpriteInfo {
+    pos: (
+        2548,
+        0,
+    ),
+    size: (
+        132,
+        339,
+    ),
+    rotated: false,
+    offset: (
+        23.0,
+        1.5,
+    ),
+},3477 => SpriteInfo {
+    pos: (
+        4036,
+        1423,
+    ),
+    size: (
+        28,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3464 => SpriteInfo {
+    pos: (
+        2183,
+        1409,
+    ),
+    size: (
+        32,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1729 => SpriteInfo {
+    pos: (
+        3315,
+        2262,
+    ),
+    size: (
+        101,
+        71,
+    ),
+    rotated: false,
+    offset: (
+        -10.5,
+        -0.5,
+    ),
+},143 => SpriteInfo {
+    pos: (
+        1994,
+        1979,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4150 => SpriteInfo {
+    pos: (
+        786,
+        1603,
+    ),
+    size: (
+        48,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2480 => SpriteInfo {
+    pos: (
+        3709,
+        969,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3320 => SpriteInfo {
+    pos: (
+        2037,
+        1331,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2249 => SpriteInfo {
+    pos: (
+        3718,
+        843,
+    ),
+    size: (
+        60,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1203 => SpriteInfo {
+    pos: (
+        2372,
+        2156,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2476 => SpriteInfo {
+    pos: (
+        2848,
+        967,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3802 => SpriteInfo {
+    pos: (
+        2565,
+        2729,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3371 => SpriteInfo {
+    pos: (
+        3234,
+        1392,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},187 => SpriteInfo {
+    pos: (
+        3062,
+        3002,
+    ),
+    size: (
+        243,
+        242,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},2544 => SpriteInfo {
+    pos: (
+        1226,
+        1056,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2466 => SpriteInfo {
+    pos: (
+        1440,
+        945,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2531 => SpriteInfo {
+    pos: (
+        89,
+        1037,
+    ),
+    size: (
+        80,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2588 => SpriteInfo {
+    pos: (
+        3843,
+        1144,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -6.0,
+    ),
+},3850 => SpriteInfo {
+    pos: (
+        3030,
+        2782,
+    ),
+    size: (
+        64,
+        63,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3536 => SpriteInfo {
+    pos: (
+        1223,
+        1490,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2680 => SpriteInfo {
+    pos: (
+        1823,
+        1212,
+    ),
+    size: (
+        56,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -16.0,
+    ),
+},3089 => SpriteInfo {
+    pos: (
+        1909,
+        2436,
+    ),
+    size: (
+        128,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4098 => SpriteInfo {
+    pos: (
+        1365,
+        1590,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1220 => SpriteInfo {
+    pos: (
+        134,
+        2153,
+    ),
+    size: (
+        120,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3138 => SpriteInfo {
+    pos: (
+        991,
+        1228,
+    ),
+    size: (
+        44,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2641 => SpriteInfo {
+    pos: (
+        3977,
+        1170,
+    ),
+    size: (
+        60,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -16.0,
+    ),
+},1735 => SpriteInfo {
+    pos: (
+        958,
+        2913,
+    ),
+    size: (
+        206,
+        210,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2926 => SpriteInfo {
+    pos: (
+        2022,
+        0,
+    ),
+    size: (
+        94,
+        301,
+    ),
+    rotated: false,
+    offset: (
+        21.0,
+        4.5,
+    ),
+},3638 => SpriteInfo {
+    pos: (
+        0,
+        2688,
+    ),
+    size: (
+        160,
+        160,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},141 => SpriteInfo {
+    pos: (
+        129,
+        0,
+    ),
+    size: (
+        121,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3448 => SpriteInfo {
+    pos: (
+        2346,
+        1411,
+    ),
+    size: (
+        28,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3546 => SpriteInfo {
+    pos: (
+        3930,
+        1517,
+    ),
+    size: (
+        76,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        12.0,
+    ),
+},2418 => SpriteInfo {
+    pos: (
+        0,
+        924,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2421 => SpriteInfo {
+    pos: (
+        69,
+        912,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4375 => SpriteInfo {
+    pos: (
+        889,
+        961,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        0.0,
+    ),
+},47 => SpriteInfo {
+    pos: (
+        2407,
+        0,
+    ),
+    size: (
+        132,
+        339,
+    ),
+    rotated: false,
+    offset: (
+        23.0,
+        1.5,
+    ),
+},4300 => SpriteInfo {
+    pos: (
+        1600,
+        311,
+    ),
+    size: (
+        96,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3939 => SpriteInfo {
+    pos: (
+        2012,
+        2839,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2694 => SpriteInfo {
+    pos: (
+        3459,
+        365,
+    ),
+    size: (
+        132,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        8.0,
+    ),
+},138 => SpriteInfo {
+    pos: (
+        3314,
+        3158,
+    ),
+    size: (
+        204,
+        202,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},6 => SpriteInfo {
+    pos: (
+        1503,
+        1713,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3519 => SpriteInfo {
+    pos: (
+        3142,
+        1461,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3907 => SpriteInfo {
+    pos: (
+        1939,
+        2825,
+    ),
+    size: (
+        64,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2687 => SpriteInfo {
+    pos: (
+        2017,
+        1225,
+    ),
+    size: (
+        128,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},1602 => SpriteInfo {
+    pos: (
+        757,
+        2394,
+    ),
+    size: (
+        62,
+        62,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3548 => SpriteInfo {
+    pos: (
+        3178,
+        1538,
+    ),
+    size: (
+        80,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2517 => SpriteInfo {
+    pos: (
+        2236,
+        1044,
+    ),
+    size: (
+        96,
+        96,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2313 => SpriteInfo {
+    pos: (
+        2250,
+        799,
+    ),
+    size: (
+        8,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -2.0,
+    ),
+},4420 => SpriteInfo {
+    pos: (
+        1496,
+        584,
+    ),
+    size: (
+        120,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},3817 => SpriteInfo {
+    pos: (
+        3841,
+        2768,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3363 => SpriteInfo {
+    pos: (
+        203,
+        1367,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},218 => SpriteInfo {
+    pos: (
+        134,
+        2186,
+    ),
+    size: (
+        80,
+        76,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3360 => SpriteInfo {
+    pos: (
+        1235,
+        1356,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3148 => SpriteInfo {
+    pos: (
+        1685,
+        1262,
+    ),
+    size: (
+        44,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2652 => SpriteInfo {
+    pos: (
+        2881,
+        1190,
+    ),
+    size: (
+        52,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},2857 => SpriteInfo {
+    pos: (
+        4013,
+        1713,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},35 => SpriteInfo {
+    pos: (
+        1144,
+        0,
+    ),
+    size: (
+        99,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.0,
+    ),
+},1736 => SpriteInfo {
+    pos: (
+        2898,
+        2991,
+    ),
+    size: (
+        155,
+        155,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.5,
+    ),
+},3501 => SpriteInfo {
+    pos: (
+        345,
+        1443,
+    ),
+    size: (
+        156,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2419 => SpriteInfo {
+    pos: (
+        453,
+        898,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1734 => SpriteInfo {
+    pos: (
+        2028,
+        2914,
+    ),
+    size: (
+        320,
+        320,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},7 => SpriteInfo {
+    pos: (
+        2188,
+        1713,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3998 => SpriteInfo {
+    pos: (
+        3468,
+        2798,
+    ),
+    size: (
+        64,
+        54,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3856 => SpriteInfo {
+    pos: (
+        324,
+        1690,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2591 => SpriteInfo {
+    pos: (
+        3434,
+        1151,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4067 => SpriteInfo {
+    pos: (
+        2829,
+        1566,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3652 => SpriteInfo {
+    pos: (
+        2955,
+        2817,
+    ),
+    size: (
+        64,
+        50,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1330 => SpriteInfo {
+    pos: (
+        650,
+        0,
+    ),
+    size: (
+        130,
+        130,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3372 => SpriteInfo {
+    pos: (
+        621,
+        1395,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},5 => SpriteInfo {
+    pos: (
+        3884,
+        1713,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4148 => SpriteInfo {
+    pos: (
+        2220,
+        1595,
+    ),
+    size: (
+        80,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3135 => SpriteInfo {
+    pos: (
+        1891,
+        1212,
+    ),
+    size: (
+        48,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2478 => SpriteInfo {
+    pos: (
+        2752,
+        978,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},1862 => SpriteInfo {
+    pos: (
+        129,
+        1829,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2693 => SpriteInfo {
+    pos: (
+        1076,
+        1162,
+    ),
+    size: (
+        108,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4231 => SpriteInfo {
+    pos: (
+        2392,
+        1648,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},201 => SpriteInfo {
+    pos: (
+        3389,
+        0,
+    ),
+    size: (
+        131,
+        226,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},4353 => SpriteInfo {
+    pos: (
+        1641,
+        1664,
+    ),
+    size: (
+        108,
+        108,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3532 => SpriteInfo {
+    pos: (
+        729,
+        1477,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1844 => SpriteInfo {
+    pos: (
+        3315,
+        2441,
+    ),
+    size: (
+        224,
+        114,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2654 => SpriteInfo {
+    pos: (
+        788,
+        1193,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3087 => SpriteInfo {
+    pos: (
+        266,
+        2425,
+    ),
+    size: (
+        123,
+        107,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        2.5,
+    ),
+},2368 => SpriteInfo {
+    pos: (
+        2181,
+        864,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3404 => SpriteInfo {
+    pos: (
+        1584,
+        1404,
+    ),
+    size: (
+        36,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4003 => SpriteInfo {
+    pos: (
+        252,
+        1556,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3537 => SpriteInfo {
+    pos: (
+        179,
+        1497,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1888 => SpriteInfo {
+    pos: (
+        3596,
+        2573,
+    ),
+    size: (
+        236,
+        236,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3517 => SpriteInfo {
+    pos: (
+        510,
+        1445,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2671 => SpriteInfo {
+    pos: (
+        692,
+        1157,
+    ),
+    size: (
+        4,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        0.0,
+    ),
+},929 => SpriteInfo {
+    pos: (
+        3737,
+        1762,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},504 => SpriteInfo {
+    pos: (
+        3826,
+        2473,
+    ),
+    size: (
+        79,
+        79,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        0.5,
+    ),
+},3314 => SpriteInfo {
+    pos: (
+        3787,
+        1347,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4 => SpriteInfo {
+    pos: (
+        1795,
+        1713,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1327 => SpriteInfo {
+    pos: (
+        787,
+        181,
+    ),
+    size: (
+        120,
+        101,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},2550 => SpriteInfo {
+    pos: (
+        2564,
+        1060,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4151 => SpriteInfo {
+    pos: (
+        2729,
+        1620,
+    ),
+    size: (
+        84,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2224 => SpriteInfo {
+    pos: (
+        1493,
+        805,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},745 => SpriteInfo {
+    pos: (
+        2689,
+        0,
+    ),
+    size: (
+        132,
+        339,
+    ),
+    rotated: false,
+    offset: (
+        23.0,
+        1.5,
+    ),
+},2310 => SpriteInfo {
+    pos: (
+        619,
+        825,
+    ),
+    size: (
+        36,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4373 => SpriteInfo {
+    pos: (
+        1765,
+        954,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        -2.0,
+    ),
+},878 => SpriteInfo {
+    pos: (
+        2903,
+        2091,
+    ),
+    size: (
+        240,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3308 => SpriteInfo {
+    pos: (
+        2618,
+        1317,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3042 => SpriteInfo {
+    pos: (
+        1889,
+        1971,
+    ),
+    size: (
+        96,
+        96,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},1059 => SpriteInfo {
+    pos: (
+        2357,
+        3180,
+    ),
+    size: (
+        107,
+        110,
+    ),
+    rotated: false,
+    offset: (
+        6.5,
+        -5.0,
+    ),
+},4006 => SpriteInfo {
+    pos: (
+        2066,
+        1555,
+    ),
+    size: (
+        64,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -18.0,
+    ),
+},3577 => SpriteInfo {
+    pos: (
+        656,
+        1537,
+    ),
+    size: (
+        48,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3551 => SpriteInfo {
+    pos: (
+        1154,
+        1527,
+    ),
+    size: (
+        36,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},1832 => SpriteInfo {
+    pos: (
+        159,
+        3105,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -30.0,
+        -30.0,
+    ),
+},1328 => SpriteInfo {
+    pos: (
+        258,
+        135,
+    ),
+    size: (
+        122,
+        144,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4165 => SpriteInfo {
+    pos: (
+        3479,
+        1637,
+    ),
+    size: (
+        128,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        20.0,
+        0.0,
+    ),
+},4134 => SpriteInfo {
+    pos: (
+        3361,
+        1592,
+    ),
+    size: (
+        40,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4070 => SpriteInfo {
+    pos: (
+        158,
+        1570,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},1706 => SpriteInfo {
+    pos: (
+        1552,
+        2893,
+    ),
+    size: (
+        240,
+        240,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4066 => SpriteInfo {
+    pos: (
+        3487,
+        1564,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1204 => SpriteInfo {
+    pos: (
+        891,
+        2158,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2483 => SpriteInfo {
+    pos: (
+        2021,
+        988,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},4069 => SpriteInfo {
+    pos: (
+        2656,
+        1568,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},2689 => SpriteInfo {
+    pos: (
+        3383,
+        1224,
+    ),
+    size: (
+        112,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4072 => SpriteInfo {
+    pos: (
+        563,
+        1570,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4487 => SpriteInfo {
+    pos: (
+        0,
+        685,
+    ),
+    size: (
+        112,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4230 => SpriteInfo {
+    pos: (
+        3689,
+        1647,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2361 => SpriteInfo {
+    pos: (
+        2962,
+        890,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},907 => SpriteInfo {
+    pos: (
+        3315,
+        2342,
+    ),
+    size: (
+        278,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},661 => SpriteInfo {
+    pos: (
+        3372,
+        2035,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2647 => SpriteInfo {
+    pos: (
+        1193,
+        1178,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2658 => SpriteInfo {
+    pos: (
+        2025,
+        1195,
+    ),
+    size: (
+        52,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        24.0,
+    ),
+},2696 => SpriteInfo {
+    pos: (
+        2488,
+        904,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3403 => SpriteInfo {
+    pos: (
+        2874,
+        1406,
+    ),
+    size: (
+        28,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2393 => SpriteInfo {
+    pos: (
+        3942,
+        875,
+    ),
+    size: (
+        64,
+        72,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2678 => SpriteInfo {
+    pos: (
+        3215,
+        1172,
+    ),
+    size: (
+        12,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        24.0,
+        24.0,
+    ),
+},4191 => SpriteInfo {
+    pos: (
+        2213,
+        1640,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3977 => SpriteInfo {
+    pos: (
+        2420,
+        2867,
+    ),
+    size: (
+        126,
+        127,
+    ),
+    rotated: false,
+    offset: (
+        -1.0,
+        -0.5,
+    ),
+},2700 => SpriteInfo {
+    pos: (
+        3393,
+        915,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2867 => SpriteInfo {
+    pos: (
+        2996,
+        365,
+    ),
+    size: (
+        146,
+        95,
+    ),
+    rotated: false,
+    offset: (
+        7.0,
+        15.5,
+    ),
+},1053 => SpriteInfo {
+    pos: (
+        4009,
+        135,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3313 => SpriteInfo {
+    pos: (
+        682,
+        1346,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2584 => SpriteInfo {
+    pos: (
+        1281,
+        1141,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2250 => SpriteInfo {
+    pos: (
+        1164,
+        857,
+    ),
+    size: (
+        112,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2575 => SpriteInfo {
+    pos: (
+        0,
+        1126,
+    ),
+    size: (
+        52,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        -24.0,
+    ),
+},3635 => SpriteInfo {
+    pos: (
+        1422,
+        2684,
+    ),
+    size: (
+        176,
+        176,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2229 => SpriteInfo {
+    pos: (
+        1000,
+        827,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2353 => SpriteInfo {
+    pos: (
+        1306,
+        877,
+    ),
+    size: (
+        60,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},3650 => SpriteInfo {
+    pos: (
+        2882,
+        2815,
+    ),
+    size: (
+        64,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3365 => SpriteInfo {
+    pos: (
+        3963,
+        1370,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3550 => SpriteInfo {
+    pos: (
+        510,
+        1518,
+    ),
+    size: (
+        44,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -10.0,
+    ),
+},2639 => SpriteInfo {
+    pos: (
+        4058,
+        1065,
+    ),
+    size: (
+        4,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -24.0,
+        4.0,
+    ),
+},4005 => SpriteInfo {
+    pos: (
+        3414,
+        1550,
+    ),
+    size: (
+        64,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -18.0,
+    ),
+},3367 => SpriteInfo {
+    pos: (
+        3015,
+        1379,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2311 => SpriteInfo {
+    pos: (
+        2250,
+        750,
+    ),
+    size: (
+        12,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -2.0,
+    ),
+},4004 => SpriteInfo {
+    pos: (
+        563,
+        1541,
+    ),
+    size: (
+        60,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -18.0,
+    ),
+},3520 => SpriteInfo {
+    pos: (
+        33,
+        1462,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},908 => SpriteInfo {
+    pos: (
+        1697,
+        2341,
+    ),
+    size: (
+        116,
+        65,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3812 => SpriteInfo {
+    pos: (
+        388,
+        2761,
+    ),
+    size: (
+        64,
+        54,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3373 => SpriteInfo {
+    pos: (
+        3787,
+        1396,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2505 => SpriteInfo {
+    pos: (
+        1578,
+        989,
+    ),
+    size: (
+        32,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        16.0,
+        8.0,
+    ),
+},3999 => SpriteInfo {
+    pos: (
+        2711,
+        2799,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2699 => SpriteInfo {
+    pos: (
+        1134,
+        914,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2994 => SpriteInfo {
+    pos: (
+        3450,
+        2081,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},86 => SpriteInfo {
+    pos: (
+        923,
+        3132,
+    ),
+    size: (
+        214,
+        217,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},3440 => SpriteInfo {
+    pos: (
+        2383,
+        1421,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2385 => SpriteInfo {
+    pos: (
+        1627,
+        874,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},2027 => SpriteInfo {
+    pos: (
+        388,
+        337,
+    ),
+    size: (
+        86,
+        220,
+    ),
+    rotated: false,
+    offset: (
+        -1.0,
+        -8.0,
+    ),
+},407 => SpriteInfo {
+    pos: (
+        423,
+        2337,
+    ),
+    size: (
+        44,
+        34,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},83 => SpriteInfo {
+    pos: (
+        1115,
+        1701,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1338 => SpriteInfo {
+    pos: (
+        0,
+        2141,
+    ),
+    size: (
+        125,
+        125,
+    ),
+    rotated: false,
+    offset: (
+        1.5,
+        1.5,
+    ),
+},3443 => SpriteInfo {
+    pos: (
+        0,
+        1415,
+    ),
+    size: (
+        24,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},474 => SpriteInfo {
+    pos: (
+        4072,
+        1961,
+    ),
+    size: (
+        14,
+        7,
+    ),
+    rotated: false,
+    offset: (
+        -53.0,
+        -56.5,
+    ),
+},928 => SpriteInfo {
+    pos: (
+        3324,
+        1759,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1726 => SpriteInfo {
+    pos: (
+        315,
+        2286,
+    ),
+    size: (
+        121,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        6.0,
+    ),
+},2543 => SpriteInfo {
+    pos: (
+        3843,
+        1054,
+    ),
+    size: (
+        60,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -22.0,
+    ),
+},1701 => SpriteInfo {
+    pos: (
+        3314,
+        3037,
+    ),
+    size: (
+        156,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2468 => SpriteInfo {
+    pos: (
+        506,
+        950,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2567 => SpriteInfo {
+    pos: (
+        2825,
+        1125,
+    ),
+    size: (
+        108,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        10.0,
+        0.0,
+    ),
+},2948 => SpriteInfo {
+    pos: (
+        3120,
+        1956,
+    ),
+    size: (
+        118,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        -1.0,
+        -1.0,
+    ),
+},3623 => SpriteInfo {
+    pos: (
+        1148,
+        2601,
+    ),
+    size: (
+        120,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4489 => SpriteInfo {
+    pos: (
+        1440,
+        698,
+    ),
+    size: (
+        120,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1584 => SpriteInfo {
+    pos: (
+        576,
+        139,
+    ),
+    size: (
+        202,
+        212,
+    ),
+    rotated: false,
+    offset: (
+        17.0,
+        -36.0,
+    ),
+},3 => SpriteInfo {
+    pos: (
+        3479,
+        1706,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3955 => SpriteInfo {
+    pos: (
+        2347,
+        2841,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4071 => SpriteInfo {
+    pos: (
+        924,
+        1563,
+    ),
+    size: (
+        40,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3654 => SpriteInfo {
+    pos: (
+        534,
+        2817,
+    ),
+    size: (
+        57,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        -1.0,
+    ),
+},3544 => SpriteInfo {
+    pos: (
+        1670,
+        1530,
+    ),
+    size: (
+        80,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        12.0,
+    ),
+},151 => SpriteInfo {
+    pos: (
+        700,
+        2283,
+    ),
+    size: (
+        48,
+        159,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},4356 => SpriteInfo {
+    pos: (
+        3964,
+        1655,
+    ),
+    size: (
+        20,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2573 => SpriteInfo {
+    pos: (
+        1299,
+        1124,
+    ),
+    size: (
+        64,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},4498 => SpriteInfo {
+    pos: (
+        1737,
+        796,
+    ),
+    size: (
+        60,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},234 => SpriteInfo {
+    pos: (
+        1106,
+        2287,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1225 => SpriteInfo {
+    pos: (
+        2802,
+        2130,
+    ),
+    size: (
+        48,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -36.0,
+        -48.0,
+    ),
+},2538 => SpriteInfo {
+    pos: (
+        2752,
+        1047,
+    ),
+    size: (
+        60,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4177 => SpriteInfo {
+    pos: (
+        2135,
+        1628,
+    ),
+    size: (
+        44,
+        84,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1849 => SpriteInfo {
+    pos: (
+        3813,
+        276,
+    ),
+    size: (
+        143,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -18.5,
+        -8.0,
+    ),
+},2154 => SpriteInfo {
+    pos: (
+        1087,
+        805,
+    ),
+    size: (
+        68,
+        68,
     ),
     rotated: false,
     offset: (
@@ -18538,864 +18538,24 @@ pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {
 
 pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     Some(match id {
-        218 => SpriteInfo {
+        4076 => SpriteInfo {
     pos: (
-        117,
-        1997,
+        2920,
+        1577,
     ),
     size: (
-        66,
-        63,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.5,
-    ),
-},2627 => SpriteInfo {
-    pos: (
-        2485,
-        831,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},2473 => SpriteInfo {
-    pos: (
-        2685,
-        885,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        2.0,
-    ),
-},3552 => SpriteInfo {
-    pos: (
-        3356,
-        1352,
-    ),
-    size: (
-        24,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -28.0,
-        -10.0,
-    ),
-},1702 => SpriteInfo {
-    pos: (
-        1010,
-        2699,
-    ),
-    size: (
-        58,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1464 => SpriteInfo {
-    pos: (
-        1452,
-        1521,
-    ),
-    size: (
-        63,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        11.5,
-        15.0,
-    ),
-},2564 => SpriteInfo {
-    pos: (
-        152,
-        965,
-    ),
-    size: (
-        32,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        -16.0,
-        -16.0,
-    ),
-},4168 => SpriteInfo {
-    pos: (
-        2208,
-        1405,
-    ),
-    size: (
-        24,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        0.0,
-    ),
-},4511 => SpriteInfo {
-    pos: (
-        593,
-        695,
-    ),
-    size: (
-        75,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},2506 => SpriteInfo {
-    pos: (
-        3407,
-        932,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3519 => SpriteInfo {
-    pos: (
-        1900,
-        1297,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},2224 => SpriteInfo {
-    pos: (
-        1997,
-        761,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2544 => SpriteInfo {
-    pos: (
-        2937,
-        958,
-    ),
-    size: (
-        64,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},2556 => SpriteInfo {
-    pos: (
-        3889,
-        975,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2366 => SpriteInfo {
-    pos: (
-        1572,
-        813,
-    ),
-    size: (
-        52,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},413 => SpriteInfo {
-    pos: (
-        2055,
-        2116,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3478 => SpriteInfo {
-    pos: (
-        3132,
-        1276,
-    ),
-    size: (
-        60,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},2662 => SpriteInfo {
-    pos: (
-        1560,
-        1077,
-    ),
-    size: (
-        36,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        18.0,
-    ),
-},3364 => SpriteInfo {
-    pos: (
-        4077,
-        1074,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2063 => SpriteInfo {
-    pos: (
-        3946,
-        0,
-    ),
-    size: (
-        86,
-        134,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3545 => SpriteInfo {
-    pos: (
-        3521,
-        1365,
-    ),
-    size: (
-        80,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2301 => SpriteInfo {
-    pos: (
-        3231,
-        788,
-    ),
-    size: (
-        52,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3402 => SpriteInfo {
-    pos: (
-        4079,
-        1142,
-    ),
-    size: (
-        12,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3310 => SpriteInfo {
-    pos: (
-        748,
-        1184,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2949 => SpriteInfo {
-    pos: (
-        3960,
-        1758,
-    ),
-    size: (
-        116,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -29.5,
-    ),
-},3530 => SpriteInfo {
-    pos: (
-        1084,
-        1318,
-    ),
-    size: (
-        64,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},3320 => SpriteInfo {
-    pos: (
-        3073,
-        1188,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4419 => SpriteInfo {
-    pos: (
-        3835,
-        527,
-    ),
-    size: (
-        75,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},1601 => SpriteInfo {
-    pos: (
-        352,
-        2049,
-    ),
-    size: (
-        7,
-        150,
-    ),
-    rotated: false,
-    offset: (
-        -8.5,
-        0.0,
-    ),
-},3371 => SpriteInfo {
-    pos: (
-        2724,
-        1245,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4097 => SpriteInfo {
-    pos: (
-        3132,
-        1412,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},2668 => SpriteInfo {
-    pos: (
-        2460,
-        1084,
-    ),
-    size: (
-        60,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        18.0,
-    ),
-},4005 => SpriteInfo {
-    pos: (
-        1632,
-        1378,
-    ),
-    size: (
-        64,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -26.0,
-    ),
-},2517 => SpriteInfo {
-    pos: (
-        660,
-        954,
-    ),
-    size: (
-        92,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},2562 => SpriteInfo {
-    pos: (
-        756,
-        988,
-    ),
-    size: (
-        60,
-        60,
+        72,
+        88,
     ),
     rotated: false,
     offset: (
         2.0,
         2.0,
-    ),
-},2483 => SpriteInfo {
-    pos: (
-        3561,
-        901,
-    ),
-    size: (
-        56,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},2229 => SpriteInfo {
-    pos: (
-        2201,
-        775,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2479 => SpriteInfo {
-    pos: (
-        3339,
-        894,
-    ),
-    size: (
-        64,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},1867 => SpriteInfo {
-    pos: (
-        3960,
-        1646,
-    ),
-    size: (
-        120,
-        108,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -3.0,
-    ),
-},2586 => SpriteInfo {
-    pos: (
-        3189,
-        1032,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        -4.0,
-    ),
-},3531 => SpriteInfo {
-    pos: (
-        2792,
-        1314,
-    ),
-    size: (
-        48,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        -8.0,
-    ),
-},2660 => SpriteInfo {
-    pos: (
-        2163,
-        1047,
-    ),
-    size: (
-        36,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        -2.0,
-    ),
-},216 => SpriteInfo {
-    pos: (
-        2814,
-        1923,
-    ),
-    size: (
-        104,
-        103,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        3.5,
-    ),
-},3151 => SpriteInfo {
-    pos: (
-        3301,
-        1146,
-    ),
-    size: (
-        64,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        14.0,
-    ),
-},3319 => SpriteInfo {
-    pos: (
-        368,
-        1187,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4440 => SpriteInfo {
-    pos: (
-        508,
-        586,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},4417 => SpriteInfo {
-    pos: (
-        3530,
-        511,
-    ),
-    size: (
-        90,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4508 => SpriteInfo {
-    pos: (
-        2661,
-        682,
-    ),
-    size: (
-        68,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4487 => SpriteInfo {
-    pos: (
-        782,
-        649,
-    ),
-    size: (
-        98,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1884 => SpriteInfo {
-    pos: (
-        1956,
-        1677,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3424 => SpriteInfo {
-    pos: (
-        4071,
-        1142,
-    ),
-    size: (
-        4,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},1736 => SpriteInfo {
-    pos: (
-        862,
-        2699,
-    ),
-    size: (
-        144,
-        144,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4514 => SpriteInfo {
-    pos: (
-        1094,
-        710,
-    ),
-    size: (
-        75,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},2946 => SpriteInfo {
-    pos: (
-        556,
-        1708,
-    ),
-    size: (
-        61,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        29.5,
-        -29.5,
-    ),
-},2226 => SpriteInfo {
-    pos: (
-        3365,
-        766,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2373 => SpriteInfo {
-    pos: (
-        2852,
-        790,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},3503 => SpriteInfo {
-    pos: (
-        2381,
-        1284,
-    ),
-    size: (
-        48,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3149 => SpriteInfo {
-    pos: (
-        1484,
-        1137,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        0.0,
-    ),
-},3578 => SpriteInfo {
-    pos: (
-        2569,
-        1320,
-    ),
-    size: (
-        8,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        8.0,
-    ),
-},4177 => SpriteInfo {
-    pos: (
-        556,
-        1444,
-    ),
-    size: (
-        36,
-        76,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2681 => SpriteInfo {
-    pos: (
-        3173,
-        1092,
-    ),
-    size: (
-        52,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
     ),
 },2475 => SpriteInfo {
     pos: (
-        2286,
-        879,
+        1337,
+        965,
     ),
     size: (
         44,
@@ -19406,10 +18566,52 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         -10.0,
         14.0,
     ),
-},4095 => SpriteInfo {
+},2367 => SpriteInfo {
     pos: (
-        196,
-        1401,
+        3860,
+        879,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3325 => SpriteInfo {
+    pos: (
+        1888,
+        1345,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1867 => SpriteInfo {
+    pos: (
+        1195,
+        1848,
+    ),
+    size: (
+        120,
+        108,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -3.0,
+    ),
+},3323 => SpriteInfo {
+    pos: (
+        2256,
+        1338,
     ),
     size: (
         60,
@@ -19418,26 +18620,110 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     rotated: false,
     offset: (
         2.0,
-        2.0,
+        -2.0,
     ),
-},2515 => SpriteInfo {
+},1735 => SpriteInfo {
     pos: (
-        2669,
-        949,
+        3871,
+        2988,
     ),
     size: (
-        92,
-        92,
+        195,
+        198,
     ),
     rotated: false,
     offset: (
-        2.0,
-        2.0,
+        -0.5,
+        0.0,
     ),
-},2605 => SpriteInfo {
+},2228 => SpriteInfo {
     pos: (
-        4027,
-        378,
+        927,
+        827,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4489 => SpriteInfo {
+    pos: (
+        1212,
+        682,
+    ),
+    size: (
+        89,
+        67,
+    ),
+    rotated: false,
+    offset: (
+        7.5,
+        -7.5,
+    ),
+},2583 => SpriteInfo {
+    pos: (
+        1372,
+        1136,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        0.0,
+    ),
+},4227 => SpriteInfo {
+    pos: (
+        2907,
+        1607,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        26.0,
+    ),
+},4509 => SpriteInfo {
+    pos: (
+        2665,
+        737,
+    ),
+    size: (
+        68,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1463 => SpriteInfo {
+    pos: (
+        397,
+        1710,
+    ),
+    size: (
+        38,
+        42,
+    ),
+    rotated: false,
+    offset: (
+        31.0,
+        4.0,
+    ),
+},2251 => SpriteInfo {
+    pos: (
+        2796,
+        840,
     ),
     size: (
         56,
@@ -19448,24 +18734,1004 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},217 => SpriteInfo {
+},2544 => SpriteInfo {
     pos: (
-        2269,
-        2004,
+        496,
+        1056,
     ),
     size: (
-        92,
-        42,
+        64,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},4446 => SpriteInfo {
+    pos: (
+        1739,
+        682,
+    ),
+    size: (
+        98,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},1885 => SpriteInfo {
+    pos: (
+        538,
+        1888,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2505 => SpriteInfo {
+    pos: (
+        1084,
+        1009,
+    ),
+    size: (
+        28,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        18.0,
+        10.0,
+    ),
+},2471 => SpriteInfo {
+    pos: (
+        2930,
+        963,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3530 => SpriteInfo {
+    pos: (
+        2831,
+        1476,
+    ),
+    size: (
+        64,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},4511 => SpriteInfo {
+    pos: (
+        1197,
+        758,
+    ),
+    size: (
+        75,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3295 => SpriteInfo {
+    pos: (
+        856,
+        1278,
+    ),
+    size: (
+        40,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},3364 => SpriteInfo {
+    pos: (
+        1716,
+        1307,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2028 => SpriteInfo {
+    pos: (
+        2497,
+        348,
+    ),
+    size: (
+        171,
+        379,
+    ),
+    rotated: false,
+    offset: (
+        8.5,
+        -3.5,
+    ),
+},3366 => SpriteInfo {
+    pos: (
+        1729,
+        1379,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -4.0,
+    ),
+},2512 => SpriteInfo {
+    pos: (
+        340,
+        1032,
+    ),
+    size: (
+        72,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4096 => SpriteInfo {
+    pos: (
+        2066,
+        1584,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},2353 => SpriteInfo {
+    pos: (
+        3039,
+        878,
+    ),
+    size: (
+        60,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},1701 => SpriteInfo {
+    pos: (
+        153,
+        2976,
+    ),
+    size: (
+        58,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3535 => SpriteInfo {
+    pos: (
+        2076,
+        1486,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3521 => SpriteInfo {
+    pos: (
+        1467,
+        1465,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2511 => SpriteInfo {
+    pos: (
+        1619,
+        1033,
+    ),
+    size: (
+        84,
+        76,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        -2.0,
+    ),
+},3423 => SpriteInfo {
+    pos: (
+        4036,
+        1374,
+    ),
+    size: (
+        28,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2700 => SpriteInfo {
+    pos: (
+        1700,
+        917,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},4514 => SpriteInfo {
+    pos: (
+        3955,
+        776,
+    ),
+    size: (
+        75,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},2603 => SpriteInfo {
+    pos: (
+        2702,
+        1129,
+    ),
+    size: (
+        36,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -10.0,
+        20.0,
+    ),
+},3480 => SpriteInfo {
+    pos: (
+        130,
+        1435,
+    ),
+    size: (
+        52,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3796 => SpriteInfo {
+    pos: (
+        1865,
+        1652,
+    ),
+    size: (
+        20,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3294 => SpriteInfo {
+    pos: (
+        276,
+        1312,
+    ),
+    size: (
+        60,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4356 => SpriteInfo {
+    pos: (
+        2465,
+        1637,
+    ),
+    size: (
+        8,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},3088 => SpriteInfo {
+    pos: (
+        3942,
+        2435,
+    ),
+    size: (
+        116,
+        78,
     ),
     rotated: false,
     offset: (
         0.0,
         1.0,
     ),
-},3363 => SpriteInfo {
+},2945 => SpriteInfo {
     pos: (
-        1020,
-        1228,
+        2516,
+        1898,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2412 => SpriteInfo {
+    pos: (
+        3525,
+        894,
+    ),
+    size: (
+        60,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},4233 => SpriteInfo {
+    pos: (
+        1800,
+        1652,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.0,
+    ),
+},3314 => SpriteInfo {
+    pos: (
+        3557,
+        1348,
+    ),
+    size: (
+        64,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},3534 => SpriteInfo {
+    pos: (
+        1605,
+        1485,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2668 => SpriteInfo {
+    pos: (
+        3314,
+        1204,
+    ),
+    size: (
+        60,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        18.0,
+    ),
+},4426 => SpriteInfo {
+    pos: (
+        661,
+        597,
+    ),
+    size: (
+        75,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},412 => SpriteInfo {
+    pos: (
+        3836,
+        2357,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4087 => SpriteInfo {
+    pos: (
+        1994,
+        1567,
+    ),
+    size: (
+        28,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2509 => SpriteInfo {
+    pos: (
+        954,
+        1018,
+    ),
+    size: (
+        64,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3318 => SpriteInfo {
+    pos: (
+        345,
+        1312,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2421 => SpriteInfo {
+    pos: (
+        3462,
+        915,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3402 => SpriteInfo {
+    pos: (
+        4073,
+        1374,
+    ),
+    size: (
+        12,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3309 => SpriteInfo {
+    pos: (
+        3210,
+        1319,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3403 => SpriteInfo {
+    pos: (
+        3860,
+        1380,
+    ),
+    size: (
+        20,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2576 => SpriteInfo {
+    pos: (
+        2637,
+        1129,
+    ),
+    size: (
+        56,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},2481 => SpriteInfo {
+    pos: (
+        2254,
+        930,
+    ),
+    size: (
+        24,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -22.0,
+    ),
+},2469 => SpriteInfo {
+    pos: (
+        1027,
+        956,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},2689 => SpriteInfo {
+    pos: (
+        2621,
+        1231,
+    ),
+    size: (
+        112,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3137 => SpriteInfo {
+    pos: (
+        4046,
+        1203,
+    ),
+    size: (
+        36,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2574 => SpriteInfo {
+    pos: (
+        788,
+        1123,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -12.0,
+    ),
+},3122 => SpriteInfo {
+    pos: (
+        276,
+        1239,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1868 => SpriteInfo {
+    pos: (
+        2317,
+        1850,
+    ),
+    size: (
+        120,
+        110,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        3.0,
+    ),
+},3518 => SpriteInfo {
+    pos: (
+        3089,
+        1444,
+    ),
+    size: (
+        44,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        0.0,
+    ),
+},2360 => SpriteInfo {
+    pos: (
+        824,
+        890,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1861 => SpriteInfo {
+    pos: (
+        1632,
+        1781,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3123 => SpriteInfo {
+    pos: (
+        1145,
+        1247,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2366 => SpriteInfo {
+    pos: (
+        1073,
+        882,
+    ),
+    size: (
+        52,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},3322 => SpriteInfo {
+    pos: (
+        2873,
+        1337,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2949 => SpriteInfo {
+    pos: (
+        1056,
+        1959,
+    ),
+    size: (
+        116,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -29.5,
+    ),
+},3233 => SpriteInfo {
+    pos: (
+        987,
+        1269,
+    ),
+    size: (
+        32,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4495 => SpriteInfo {
+    pos: (
+        1098,
+        705,
+    ),
+    size: (
+        90,
+        67,
+    ),
+    rotated: false,
+    offset: (
+        7.0,
+        -7.5,
+    ),
+},2548 => SpriteInfo {
+    pos: (
+        3519,
+        1046,
+    ),
+    size: (
+        40,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        2.0,
+    ),
+},2698 => SpriteInfo {
+    pos: (
+        2787,
+        913,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2474 => SpriteInfo {
+    pos: (
+        1513,
+        943,
+    ),
+    size: (
+        32,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        -16.0,
+        -24.0,
+    ),
+},2632 => SpriteInfo {
+    pos: (
+        1159,
+        1089,
+    ),
+    size: (
+        40,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        12.0,
+        -16.0,
+    ),
+},3426 => SpriteInfo {
+    pos: (
+        3494,
+        1404,
+    ),
+    size: (
+        40,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},4003 => SpriteInfo {
+    pos: (
+        89,
+        1557,
+    ),
+    size: (
+        60,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -6.0,
+    ),
+},4002 => SpriteInfo {
+    pos: (
+        786,
+        1550,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.0,
+    ),
+},3313 => SpriteInfo {
+    pos: (
+        410,
+        1345,
+    ),
+    size: (
+        60,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -8.0,
+    ),
+},4135 => SpriteInfo {
+    pos: (
+        2448,
+        1600,
+    ),
+    size: (
+        32,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2491 => SpriteInfo {
+    pos: (
+        1206,
+        1003,
+    ),
+    size: (
+        64,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},4178 => SpriteInfo {
+    pos: (
+        636,
+        1562,
+    ),
+    size: (
+        4,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},3367 => SpriteInfo {
+    pos: (
+        3088,
+        1379,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},3312 => SpriteInfo {
+    pos: (
+        778,
+        1331,
     ),
     size: (
         60,
@@ -19478,8 +19744,8 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },2514 => SpriteInfo {
     pos: (
-        957,
-        940,
+        1838,
+        1030,
     ),
     size: (
         48,
@@ -19490,2796 +19756,38 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         -20.0,
         2.0,
     ),
-},4185 => SpriteInfo {
+},2498 => SpriteInfo {
     pos: (
-        3520,
-        1449,
+        1279,
+        1003,
     ),
     size: (
-        76,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},4188 => SpriteInfo {
-    pos: (
-        2917,
-        1426,
-    ),
-    size: (
-        16,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        0.0,
-    ),
-},2228 => SpriteInfo {
-    pos: (
-        980,
-        772,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2697 => SpriteInfo {
-    pos: (
-        3287,
-        834,
-    ),
-    size: (
-        52,
+        48,
         44,
     ),
     rotated: false,
     offset: (
         0.0,
-        -4.0,
-    ),
-},2688 => SpriteInfo {
-    pos: (
-        300,
-        1107,
-    ),
-    size: (
-        128,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -24.0,
-    ),
-},4001 => SpriteInfo {
-    pos: (
-        3004,
-        1376,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.0,
-    ),
-},3369 => SpriteInfo {
-    pos: (
-        3008,
-        1238,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3423 => SpriteInfo {
-    pos: (
-        3656,
-        1213,
-    ),
-    size: (
-        28,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2576 => SpriteInfo {
-    pos: (
-        1440,
-        1025,
-    ),
-    size: (
-        56,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2578 => SpriteInfo {
-    pos: (
-        248,
-        1025,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4172 => SpriteInfo {
-    pos: (
-        3857,
-        1430,
-    ),
-    size: (
-        60,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
         10.0,
     ),
-},2948 => SpriteInfo {
+},4300 => SpriteInfo {
     pos: (
-        2444,
-        1756,
+        388,
+        320,
     ),
     size: (
-        118,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        1.0,
-    ),
-},1861 => SpriteInfo {
-    pos: (
-        2448,
-        1632,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4441 => SpriteInfo {
-    pos: (
-        3102,
-        599,
-    ),
-    size: (
-        105,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},3124 => SpriteInfo {
-    pos: (
-        752,
-        1116,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},3295 => SpriteInfo {
-    pos: (
-        1096,
-        1160,
-    ),
-    size: (
-        40,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},2032 => SpriteInfo {
-    pos: (
-        1104,
-        327,
-    ),
-    size: (
-        120,
-        126,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        0.0,
-    ),
-},4357 => SpriteInfo {
-    pos: (
-        1008,
-        1444,
-    ),
-    size: (
-        12,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -2.0,
-    ),
-},3138 => SpriteInfo {
-    pos: (
-        1664,
-        1114,
-    ),
-    size: (
-        44,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2679 => SpriteInfo {
-    pos: (
-        124,
-        1089,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},3227 => SpriteInfo {
-    pos: (
-        1353,
-        1151,
-    ),
-    size: (
-        64,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -16.0,
-    ),
-},3444 => SpriteInfo {
-    pos: (
-        1672,
-        1194,
-    ),
-    size: (
-        16,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2554 => SpriteInfo {
-    pos: (
-        248,
-        969,
-    ),
-    size: (
-        48,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        -6.0,
-    ),
-},2385 => SpriteInfo {
-    pos: (
-        1662,
-        798,
-    ),
-    size: (
-        56,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},3228 => SpriteInfo {
-    pos: (
-        0,
-        1157,
-    ),
-    size: (
-        64,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -14.0,
-    ),
-},4191 => SpriteInfo {
-    pos: (
-        596,
-        1444,
-    ),
-    size: (
-        20,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        0.0,
-    ),
-},2886 => SpriteInfo {
-    pos: (
-        420,
-        393,
-    ),
-    size: (
-        270,
-        81,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        12.5,
-    ),
-},2889 => SpriteInfo {
-    pos: (
-        3259,
-        451,
-    ),
-    size: (
-        267,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        16.0,
-    ),
-},1600 => SpriteInfo {
-    pos: (
-        3039,
-        2192,
-    ),
-    size: (
-        101,
-        81,
-    ),
-    rotated: false,
-    offset: (
-        -3.5,
-        -3.5,
-    ),
-},3577 => SpriteInfo {
-    pos: (
-        280,
-        1363,
-    ),
-    size: (
-        24,
         88,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        6.0,
-    ),
-},3296 => SpriteInfo {
-    pos: (
-        68,
-        1157,
-    ),
-    size: (
-        24,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4000 => SpriteInfo {
-    pos: (
-        1084,
-        1370,
-    ),
-    size: (
-        60,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -6.0,
-    ),
-},3135 => SpriteInfo {
-    pos: (
-        1969,
-        1109,
-    ),
-    size: (
-        48,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3448 => SpriteInfo {
-    pos: (
-        3968,
-        1238,
-    ),
-    size: (
-        20,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2477 => SpriteInfo {
-    pos: (
-        1924,
-        892,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4353 => SpriteInfo {
-    pos: (
-        620,
-        1480,
-    ),
-    size: (
-        100,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2894 => SpriteInfo {
-    pos: (
-        2617,
-        467,
-    ),
-    size: (
-        285,
-        87,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        4.5,
-    ),
-},2692 => SpriteInfo {
-    pos: (
-        300,
-        1115,
-    ),
-    size: (
-        128,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},3368 => SpriteInfo {
-    pos: (
-        2944,
-        1238,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -4.0,
-    ),
-},2664 => SpriteInfo {
-    pos: (
-        3751,
-        1083,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2026 => SpriteInfo {
-    pos: (
-        1718,
-        304,
-    ),
-    size: (
-        195,
-        272,
-    ),
-    rotated: false,
-    offset: (
-        12.5,
-        -30.0,
-    ),
-},2023 => SpriteInfo {
-    pos: (
-        3432,
-        267,
-    ),
-    size: (
-        224,
-        88,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        2.0,
-    ),
-},3136 => SpriteInfo {
-    pos: (
-        2793,
-        1094,
-    ),
-    size: (
-        16,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2469 => SpriteInfo {
-    pos: (
-        2617,
-        868,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},3479 => SpriteInfo {
-    pos: (
-        2804,
-        1282,
-    ),
-    size: (
-        44,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3518 => SpriteInfo {
-    pos: (
-        4048,
-        1282,
-    ),
-    size: (
-        44,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        0.0,
-    ),
-},4422 => SpriteInfo {
-    pos: (
-        2733,
-        558,
-    ),
-    size: (
-        98,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3000 => SpriteInfo {
-    pos: (
-        3116,
-        210,
-    ),
-    size: (
-        120,
-        31,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.5,
-    ),
-},4004 => SpriteInfo {
-    pos: (
-        3244,
-        1374,
-    ),
-    size: (
-        60,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -26.0,
-    ),
-},2548 => SpriteInfo {
-    pos: (
-        2765,
-        949,
-    ),
-    size: (
-        40,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        2.0,
-    ),
-},4171 => SpriteInfo {
-    pos: (
-        1604,
-        1430,
-    ),
-    size: (
-        48,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},1863 => SpriteInfo {
-    pos: (
-        3231,
-        1639,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4072 => SpriteInfo {
-    pos: (
-        136,
-        1389,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3147 => SpriteInfo {
-    pos: (
-        3592,
-        1128,
-    ),
-    size: (
-        40,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        0.0,
-    ),
-},3137 => SpriteInfo {
-    pos: (
-        1664,
-        1082,
-    ),
-    size: (
-        36,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2552 => SpriteInfo {
-    pos: (
-        889,
-        964,
-    ),
-    size: (
-        64,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},4174 => SpriteInfo {
-    pos: (
-        2484,
-        1448,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2227 => SpriteInfo {
-    pos: (
-        2485,
-        767,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3324 => SpriteInfo {
-    pos: (
-        640,
-        1210,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},918 => SpriteInfo {
-    pos: (
-        4036,
-        0,
-    ),
-    size: (
-        44,
-        43,
-    ),
-    rotated: false,
-    offset: (
-        -23.0,
-        -77.5,
-    ),
-},2464 => SpriteInfo {
-    pos: (
-        761,
-        860,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},2251 => SpriteInfo {
-    pos: (
-        852,
-        751,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4532 => SpriteInfo {
-    pos: (
-        0,
-        572,
-    ),
-    size: (
-        98,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2945 => SpriteInfo {
-    pos: (
-        3084,
-        1694,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3247 => SpriteInfo {
-    pos: (
-        2089,
-        1171,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2591 => SpriteInfo {
-    pos: (
-        1240,
-        1045,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},4426 => SpriteInfo {
-    pos: (
-        3445,
-        555,
-    ),
-    size: (
-        75,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},2513 => SpriteInfo {
-    pos: (
-        1100,
-        944,
-    ),
-    size: (
-        72,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2546 => SpriteInfo {
-    pos: (
-        1176,
-        958,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},3544 => SpriteInfo {
-    pos: (
-        3989,
-        1362,
-    ),
-    size: (
-        80,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -28.0,
-    ),
-},2476 => SpriteInfo {
-    pos: (
-        1872,
-        885,
-    ),
-    size: (
-        48,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        -18.0,
-    ),
-},2684 => SpriteInfo {
-    pos: (
-        244,
-        1093,
-    ),
-    size: (
-        52,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4489 => SpriteInfo {
-    pos: (
-        1094,
-        639,
-    ),
-    size: (
-        89,
-        67,
-    ),
-    rotated: false,
-    offset: (
-        7.5,
-        -7.5,
-    ),
-},2649 => SpriteInfo {
-    pos: (
-        2885,
-        1066,
-    ),
-    size: (
-        52,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2584 => SpriteInfo {
-    pos: (
-        572,
-        1029,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4170 => SpriteInfo {
-    pos: (
-        2869,
-        1426,
-    ),
-    size: (
-        44,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        0.0,
-    ),
-},2300 => SpriteInfo {
-    pos: (
-        108,
-        782,
-    ),
-    size: (
-        52,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3152 => SpriteInfo {
-    pos: (
-        2392,
-        1148,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2700 => SpriteInfo {
-    pos: (
-        912,
-        840,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},1463 => SpriteInfo {
-    pos: (
-        1608,
-        1478,
-    ),
-    size: (
-        38,
-        42,
-    ),
-    rotated: false,
-    offset: (
-        31.0,
-        4.0,
-    ),
-},3321 => SpriteInfo {
-    pos: (
-        296,
-        1191,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4086 => SpriteInfo {
-    pos: (
-        2440,
-        1396,
-    ),
-    size: (
-        28,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4510 => SpriteInfo {
-    pos: (
-        3023,
-        692,
-    ),
-    size: (
-        68,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3796 => SpriteInfo {
-    pos: (
-        532,
-        1448,
-    ),
-    size: (
-        20,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4149 => SpriteInfo {
-    pos: (
-        3312,
-        1416,
-    ),
-    size: (
-        68,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3226 => SpriteInfo {
-    pos: (
-        1604,
-        1150,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3373 => SpriteInfo {
-    pos: (
-        700,
-        1252,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},2502 => SpriteInfo {
-    pos: (
-        188,
-        929,
-    ),
-    size: (
-        64,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -20.0,
-    ),
-},4431 => SpriteInfo {
-    pos: (
-        2835,
-        579,
-    ),
-    size: (
-        90,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},878 => SpriteInfo {
-    pos: (
-        2136,
-        1829,
-    ),
-    size: (
-        112,
-        87,
-    ),
-    rotated: false,
-    offset: (
-        60.0,
-        14.5,
-    ),
-},4002 => SpriteInfo {
-    pos: (
-        3244,
-        1382,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.0,
-    ),
-},2947 => SpriteInfo {
-    pos: (
-        2696,
-        1753,
-    ),
-    size: (
-        120,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3330 => SpriteInfo {
-    pos: (
-        3133,
-        1216,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3554 => SpriteInfo {
-    pos: (
-        812,
-        1352,
-    ),
-    size: (
-        80,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},3447 => SpriteInfo {
-    pos: (
-        2784,
-        1186,
-    ),
-    size: (
-        20,
         8,
     ),
     rotated: false,
     offset: (
         0.0,
-        -2.0,
-    ),
-},3123 => SpriteInfo {
-    pos: (
-        2324,
-        1117,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1698 => SpriteInfo {
-    pos: (
-        124,
-        248,
-    ),
-    size: (
-        91,
-        88,
-    ),
-    rotated: false,
-    offset: (
-        14.5,
-        16.0,
-    ),
-},4066 => SpriteInfo {
-    pos: (
-        4073,
-        1350,
-    ),
-    size: (
-        16,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -20.0,
         2.0,
-    ),
-},2474 => SpriteInfo {
-    pos: (
-        228,
-        865,
-    ),
-    size: (
-        32,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        -16.0,
-        -24.0,
-    ),
-},3122 => SpriteInfo {
-    pos: (
-        508,
-        1116,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2651 => SpriteInfo {
-    pos: (
-        3600,
-        1068,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2603 => SpriteInfo {
-    pos: (
-        1805,
-        990,
-    ),
-    size: (
-        36,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        20.0,
-    ),
-},3311 => SpriteInfo {
-    pos: (
-        436,
-        1184,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2572 => SpriteInfo {
-    pos: (
-        1009,
-        1016,
-    ),
-    size: (
-        64,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2313 => SpriteInfo {
-    pos: (
-        3611,
-        729,
-    ),
-    size: (
-        8,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2279 => SpriteInfo {
-    pos: (
-        3611,
-        781,
-    ),
-    size: (
-        28,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        -18.0,
-        6.0,
-    ),
-},4416 => SpriteInfo {
-    pos: (
-        1565,
-        502,
-    ),
-    size: (
-        75,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3233 => SpriteInfo {
-    pos: (
-        3217,
-        1148,
-    ),
-    size: (
-        32,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3524 => SpriteInfo {
-    pos: (
-        2724,
-        1309,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4504 => SpriteInfo {
-    pos: (
-        3821,
-        740,
-    ),
-    size: (
-        75,
-        75,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},1864 => SpriteInfo {
-    pos: (
-        708,
-        1640,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2568 => SpriteInfo {
-    pos: (
-        3189,
-        1000,
-    ),
-    size: (
-        64,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -18.0,
-    ),
-},1591 => SpriteInfo {
-    pos: (
-        3841,
-        279,
-    ),
-    size: (
-        120,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        12.0,
-    ),
-},4507 => SpriteInfo {
-    pos: (
-        2589,
-        682,
-    ),
-    size: (
-        68,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4164 => SpriteInfo {
-    pos: (
-        1712,
-        1446,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -50.0,
-        0.0,
-    ),
-},3222 => SpriteInfo {
-    pos: (
-        640,
-        1146,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -2.0,
-    ),
-},2631 => SpriteInfo {
-    pos: (
-        3069,
-        970,
-    ),
-    size: (
-        48,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        -6.0,
-    ),
-},2278 => SpriteInfo {
-    pos: (
-        268,
-        789,
-    ),
-    size: (
-        52,
-        124,
-    ),
-    rotated: false,
-    offset: (
-        -26.0,
-        2.0,
-    ),
-},2504 => SpriteInfo {
-    pos: (
-        3911,
-        931,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        12.0,
-    ),
-},1598 => SpriteInfo {
-    pos: (
-        3014,
-        467,
-    ),
-    size: (
-        57,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        6.0,
-    ),
-},3220 => SpriteInfo {
-    pos: (
-        3369,
-        1148,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4150 => SpriteInfo {
-    pos: (
-        264,
-        1393,
-    ),
-    size: (
-        8,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        2.0,
-    ),
-},1885 => SpriteInfo {
-    pos: (
-        2572,
-        1673,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3553 => SpriteInfo {
-    pos: (
-        196,
-        1349,
-    ),
-    size: (
-        80,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},1708 => SpriteInfo {
-    pos: (
-        3767,
-        2587,
-    ),
-    size: (
-        86,
-        86,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2704 => SpriteInfo {
-    pos: (
-        1650,
-        1650,
-    ),
-    size: (
-        120,
-        118,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.0,
-    ),
-},3516 => SpriteInfo {
-    pos: (
-        224,
-        1285,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},3366 => SpriteInfo {
-    pos: (
-        1764,
-        1234,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -4.0,
-    ),
-},2361 => SpriteInfo {
-    pos: (
-        852,
-        819,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2488 => SpriteInfo {
-    pos: (
-        64,
-        902,
-    ),
-    size: (
-        56,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2500 => SpriteInfo {
-    pos: (
-        1695,
-        918,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2891 => SpriteInfo {
-    pos: (
-        2349,
-        457,
-    ),
-    size: (
-        264,
-        102,
-    ),
-    rotated: false,
-    offset: (
-        -1.0,
-        0.0,
-    ),
-},3313 => SpriteInfo {
-    pos: (
-        2149,
-        1211,
-    ),
-    size: (
-        60,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -8.0,
-    ),
-},1589 => SpriteInfo {
-    pos: (
-        4029,
-        446,
-    ),
-    size: (
-        60,
-        83,
-    ),
-    rotated: false,
-    offset: (
-        -11.0,
-        1.5,
-    ),
-},2508 => SpriteInfo {
-    pos: (
-        821,
-        923,
-    ),
-    size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},3465 => SpriteInfo {
-    pos: (
-        292,
-        1259,
-    ),
-    size: (
-        40,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2581 => SpriteInfo {
-    pos: (
-        3757,
-        1027,
-    ),
-    size: (
-        60,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        6.0,
-    ),
-},1701 => SpriteInfo {
-    pos: (
-        1396,
-        2694,
-    ),
-    size: (
-        58,
-        58,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3088 => SpriteInfo {
-    pos: (
-        3338,
-        2187,
-    ),
-    size: (
-        116,
-        78,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},2538 => SpriteInfo {
-    pos: (
-        1412,
-        953,
-    ),
-    size: (
-        52,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        18.0,
-    ),
-},4492 => SpriteInfo {
-    pos: (
-        3336,
-        664,
-    ),
-    size: (
-        98,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3367 => SpriteInfo {
-    pos: (
-        3832,
-        1238,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},3086 => SpriteInfo {
-    pos: (
-        1837,
-        2152,
-    ),
-    size: (
-        111,
-        95,
-    ),
-    rotated: false,
-    offset: (
-        0.5,
-        2.5,
-    ),
-},4421 => SpriteInfo {
-    pos: (
-        3336,
-        555,
-    ),
-    size: (
-        105,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},2666 => SpriteInfo {
-    pos: (
-        0,
-        1079,
-    ),
-    size: (
-        36,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        0.0,
-    ),
-},3537 => SpriteInfo {
-    pos: (
-        1388,
-        1333,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3058 => SpriteInfo {
-    pos: (
-        1592,
-        1726,
-    ),
-    size: (
-        54,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        0.0,
-    ),
-},2468 => SpriteInfo {
-    pos: (
-        164,
-        865,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -2.0,
-    ),
-},3332 => SpriteInfo {
-    pos: (
-        3505,
-        1217,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3001 => SpriteInfo {
-    pos: (
-        3364,
-        230,
-    ),
-    size: (
-        120,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},4403 => SpriteInfo {
-    pos: (
-        788,
-        491,
-    ),
-    size: (
-        60,
-        45,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        22.5,
-    ),
-},3150 => SpriteInfo {
-    pos: (
-        104,
-        1145,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3795 => SpriteInfo {
-    pos: (
-        724,
-        1480,
-    ),
-    size: (
-        56,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4500 => SpriteInfo {
-    pos: (
-        3742,
-        714,
-    ),
-    size: (
-        75,
-        75,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},2542 => SpriteInfo {
-    pos: (
-        2537,
-        956,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2420 => SpriteInfo {
-    pos: (
-        2286,
-        843,
-    ),
-    size: (
-        36,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3325 => SpriteInfo {
-    pos: (
-        3772,
-        1211,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4165 => SpriteInfo {
-    pos: (
-        1104,
-        1454,
-    ),
-    size: (
-        120,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        20.0,
-        0.0,
-    ),
-},4178 => SpriteInfo {
-    pos: (
-        3072,
-        1376,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        0.0,
-    ),
-},2482 => SpriteInfo {
-    pos: (
-        1184,
-        898,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        0.0,
-    ),
-},2417 => SpriteInfo {
-    pos: (
-        1100,
-        844,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4064 => SpriteInfo {
-    pos: (
-        2488,
-        1388,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3055 => SpriteInfo {
-    pos: (
-        1774,
-        1650,
-    ),
-    size: (
-        54,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        0.0,
-    ),
-},2367 => SpriteInfo {
-    pos: (
-        3510,
-        808,
-    ),
-    size: (
-        64,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2673 => SpriteInfo {
-    pos: (
-        3329,
-        1086,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2588 => SpriteInfo {
-    pos: (
-        3336,
-        1034,
-    ),
-    size: (
-        56,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -8.0,
-    ),
-},2312 => SpriteInfo {
-    pos: (
-        4081,
-        695,
-    ),
-    size: (
-        8,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2419 => SpriteInfo {
-    pos: (
-        2681,
-        828,
-    ),
-    size: (
-        36,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2696 => SpriteInfo {
-    pos: (
-        980,
-        832,
-    ),
-    size: (
-        52,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3480 => SpriteInfo {
-    pos: (
-        3196,
-        1276,
-    ),
-    size: (
-        52,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4325 => SpriteInfo {
-    pos: (
-        280,
-        1471,
-    ),
-    size: (
-        64,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2470 => SpriteInfo {
-    pos: (
-        2098,
-        869,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -4.0,
-        -2.0,
-    ),
-},4226 => SpriteInfo {
-    pos: (
-        3977,
-        1458,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -2.0,
-    ),
-},3144 => SpriteInfo {
-    pos: (
-        300,
-        1123,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2592 => SpriteInfo {
-    pos: (
-        3945,
-        1046,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4187 => SpriteInfo {
-    pos: (
-        260,
-        1409,
-    ),
-    size: (
-        16,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        0.0,
-    ),
-},4438 => SpriteInfo {
-    pos: (
-        1753,
-        580,
-    ),
-    size: (
-        90,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3376 => SpriteInfo {
-    pos: (
-        3253,
-        1254,
-    ),
-    size: (
-        60,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -2.0,
-    ),
-},2589 => SpriteInfo {
-    pos: (
-        3045,
-        1038,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},4501 => SpriteInfo {
-    pos: (
-        3438,
-        721,
-    ),
-    size: (
-        75,
-        15,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},4228 => SpriteInfo {
-    pos: (
-        1656,
-        1458,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2693 => SpriteInfo {
-    pos: (
-        2051,
-        1053,
-    ),
-    size: (
-        108,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3529 => SpriteInfo {
-    pos: (
-        700,
-        1312,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        0.0,
-    ),
-},891 => SpriteInfo {
-    pos: (
-        1774,
-        1771,
-    ),
-    size: (
-        114,
-        54,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2422 => SpriteInfo {
-    pos: (
-        3112,
-        850,
-    ),
-    size: (
-        36,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2027 => SpriteInfo {
-    pos: (
-        918,
-        328,
-    ),
-    size: (
-        172,
-        440,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -16.0,
-    ),
-},409 => SpriteInfo {
-    pos: (
-        2055,
-        2076,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3546 => SpriteInfo {
-    pos: (
-        2920,
-        1366,
-    ),
-    size: (
-        80,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -28.0,
-    ),
-},3440 => SpriteInfo {
-    pos: (
-        3772,
-        1271,
-    ),
-    size: (
-        56,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},2472 => SpriteInfo {
-    pos: (
-        3779,
-        857,
-    ),
-    size: (
-        20,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        -22.0,
-        -22.0,
-    ),
-},2499 => SpriteInfo {
-    pos: (
-        1872,
-        917,
-    ),
-    size: (
-        48,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2471 => SpriteInfo {
-    pos: (
-        3994,
-        882,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},4509 => SpriteInfo {
-    pos: (
-        94,
-        688,
-    ),
-    size: (
-        68,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3535 => SpriteInfo {
-    pos: (
-        136,
-        1325,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2363 => SpriteInfo {
-    pos: (
-        653,
-        826,
-    ),
-    size: (
-        40,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3425 => SpriteInfo {
-    pos: (
-        3457,
-        1252,
-    ),
-    size: (
-        32,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4076 => SpriteInfo {
-    pos: (
-        3685,
-        1395,
-    ),
-    size: (
-        72,
-        88,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},3312 => SpriteInfo {
-    pos: (
-        2524,
-        1184,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},1614 => SpriteInfo {
-    pos: (
-        485,
-        478,
-    ),
-    size: (
-        76,
-        75,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.5,
     ),
 },4169 => SpriteInfo {
     pos: (
-        2548,
-        1420,
+        1994,
+        1604,
     ),
     size: (
         28,
@@ -22290,962 +19798,38 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         -4.0,
         26.0,
     ),
-},4442 => SpriteInfo {
+},3227 => SpriteInfo {
     pos: (
-        673,
-        615,
-    ),
-    size: (
-        105,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},3370 => SpriteInfo {
-    pos: (
-        1200,
-        1245,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3365 => SpriteInfo {
-    pos: (
-        2052,
-        1231,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},2867 => SpriteInfo {
-    pos: (
-        2499,
-        343,
-    ),
-    size: (
-        160,
-        110,
-    ),
-    rotated: false,
-    offset: (
-        7.0,
-        22.0,
-    ),
-},4513 => SpriteInfo {
-    pos: (
-        3095,
-        708,
-    ),
-    size: (
-        68,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3308 => SpriteInfo {
-    pos: (
-        2460,
-        1176,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},3329 => SpriteInfo {
-    pos: (
-        164,
-        1213,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3148 => SpriteInfo {
-    pos: (
-        3253,
-        1130,
-    ),
-    size: (
-        44,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2585 => SpriteInfo {
-    pos: (
-        2212,
-        1031,
-    ),
-    size: (
-        52,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        0.0,
-    ),
-},2511 => SpriteInfo {
-    pos: (
-        456,
-        936,
-    ),
-    size: (
-        84,
-        76,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        -2.0,
-    ),
-},2566 => SpriteInfo {
-    pos: (
-        2442,
-        1020,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        2.0,
-    ),
-},4229 => SpriteInfo {
-    pos: (
-        2384,
-        1460,
-    ),
-    size: (
-        48,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3361 => SpriteInfo {
-    pos: (
-        1268,
-        1219,
+        2037,
+        1290,
     ),
     size: (
         64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},1866 => SpriteInfo {
-    pos: (
-        2704,
-        1644,
-    ),
-    size: (
-        120,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.5,
-    ),
-},2570 => SpriteInfo {
-    pos: (
-        3336,
-        998,
-    ),
-    size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -12.0,
-    ),
-},1582 => SpriteInfo {
-    pos: (
-        709,
-        235,
-    ),
-    size: (
-        84,
-        83,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},2507 => SpriteInfo {
-    pos: (
-        3475,
-        932,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},3502 => SpriteInfo {
-    pos: (
-        3761,
-        1306,
-    ),
-    size: (
-        160,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3323 => SpriteInfo {
-    pos: (
-        1700,
-        1198,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -2.0,
-    ),
-},2689 => SpriteInfo {
-    pos: (
-        508,
-        1108,
-    ),
-    size: (
-        112,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4499 => SpriteInfo {
-    pos: (
-        766,
-        751,
-    ),
-    size: (
-        82,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3582 => SpriteInfo {
-    pos: (
-        700,
-        1380,
-    ),
-    size: (
-        120,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -18.0,
-    ),
-},3056 => SpriteInfo {
-    pos: (
-        1592,
-        1674,
-    ),
-    size: (
-        54,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        0.0,
-    ),
-},2647 => SpriteInfo {
-    pos: (
-        3396,
-        1060,
-    ),
-    size: (
-        60,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        16.0,
-    ),
-},4439 => SpriteInfo {
-    pos: (
-        3023,
-        583,
-    ),
-    size: (
-        75,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        -0.5,
-    ),
-},4512 => SpriteInfo {
-    pos: (
-        1662,
-        704,
-    ),
-    size: (
-        60,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4498 => SpriteInfo {
-    pos: (
-        4045,
-        533,
-    ),
-    size: (
-        45,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3146 => SpriteInfo {
-    pos: (
-        1712,
-        1130,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},877 => SpriteInfo {
-    pos: (
-        2208,
-        1765,
-    ),
-    size: (
-        63,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        24.5,
-        12.0,
-    ),
-},2501 => SpriteInfo {
-    pos: (
-        761,
-        920,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4065 => SpriteInfo {
-    pos: (
-        3132,
-        1388,
-    ),
-    size: (
-        56,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        22.0,
-    ),
-},2249 => SpriteInfo {
-    pos: (
-        268,
-        741,
-    ),
-    size: (
-        48,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},4231 => SpriteInfo {
-    pos: (
-        2757,
-        1461,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3477 => SpriteInfo {
-    pos: (
-        1740,
-        1262,
-    ),
-    size: (
-        20,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -10.0,
-    ),
-},1054 => SpriteInfo {
-    pos: (
-        833,
-        175,
-    ),
-    size: (
-        120,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3481 => SpriteInfo {
-    pos: (
-        164,
-        1273,
-    ),
-    size: (
-        56,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3550 => SpriteInfo {
-    pos: (
-        896,
-        1328,
-    ),
-    size: (
-        24,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -28.0,
-        -10.0,
-    ),
-},1462 => SpriteInfo {
-    pos: (
-        3261,
-        1532,
-    ),
-    size: (
-        120,
-        103,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        8.5,
-    ),
-},4420 => SpriteInfo {
-    pos: (
-        3914,
-        544,
-    ),
-    size: (
-        105,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3145 => SpriteInfo {
-    pos: (
-        436,
-        1124,
-    ),
-    size: (
-        64,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},4233 => SpriteInfo {
-    pos: (
-        3065,
-        1464,
-    ),
-    size: (
-        56,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.0,
-    ),
-},2505 => SpriteInfo {
-    pos: (
-        660,
-        894,
-    ),
-    size: (
-        28,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        18.0,
-        10.0,
-    ),
-},3520 => SpriteInfo {
-    pos: (
-        288,
-        1299,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -2.0,
-    ),
-},2414 => SpriteInfo {
-    pos: (
-        2098,
-        829,
-    ),
-    size: (
-        56,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -8.0,
-    ),
-},2028 => SpriteInfo {
-    pos: (
-        3660,
-        331,
-    ),
-    size: (
-        171,
-        379,
-    ),
-    rotated: false,
-    offset: (
-        8.5,
-        -3.5,
-    ),
-},1053 => SpriteInfo {
-    pos: (
-        883,
-        111,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},458 => SpriteInfo {
-    pos: (
-        2767,
-        1997,
-    ),
-    size: (
-        38,
-        37,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.5,
-    ),
-},1735 => SpriteInfo {
-    pos: (
-        200,
-        2620,
-    ),
-    size: (
-        195,
-        198,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},2311 => SpriteInfo {
-    pos: (
-        2999,
-        707,
-    ),
-    size: (
-        12,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        0.0,
-    ),
-},3517 => SpriteInfo {
-    pos: (
-        812,
-        1292,
-    ),
-    size: (
-        64,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.0,
-    ),
-},1703 => SpriteInfo {
-    pos: (
-        1396,
-        2756,
-    ),
-    size: (
-        62,
-        53,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -1.5,
-    ),
-},3309 => SpriteInfo {
-    pos: (
-        1200,
-        1181,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2512 => SpriteInfo {
-    pos: (
-        3539,
-        941,
-    ),
-    size: (
-        72,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4071 => SpriteInfo {
-    pos: (
-        2903,
-        1394,
-    ),
-    size: (
-        32,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3450 => SpriteInfo {
-    pos: (
-        2784,
-        1198,
-    ),
-    size: (
-        24,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2418 => SpriteInfo {
-    pos: (
-        3008,
-        850,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2703 => SpriteInfo {
-    pos: (
-        1344,
-        1653,
-    ),
-    size: (
-        120,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3464 => SpriteInfo {
-    pos: (
-        1672,
-        1222,
-    ),
-    size: (
-        24,
         32,
     ),
     rotated: false,
     offset: (
         0.0,
-        0.0,
+        -16.0,
     ),
-},2362 => SpriteInfo {
+},4440 => SpriteInfo {
     pos: (
-        2964,
-        816,
+        745,
+        647,
     ),
     size: (
-        40,
-        64,
+        90,
+        105,
     ),
     rotated: false,
     offset: (
         0.0,
-        0.0,
-    ),
-},4148 => SpriteInfo {
-    pos: (
-        2713,
-        1421,
-    ),
-    size: (
-        72,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3294 => SpriteInfo {
-    pos: (
-        3999,
-        1174,
-    ),
-    size: (
-        60,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3455 => SpriteInfo {
-    pos: (
-        2184,
-        1261,
-    ),
-    size: (
-        44,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4503 => SpriteInfo {
-    pos: (
-        2733,
-        738,
-    ),
-    size: (
-        75,
-        75,
-    ),
-    rotated: false,
-    offset: (
         -0.5,
-        -0.5,
-    ),
-},2583 => SpriteInfo {
-    pos: (
-        1097,
-        1028,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        0.0,
-    ),
-},4098 => SpriteInfo {
-    pos: (
-        1540,
-        1414,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},2480 => SpriteInfo {
-    pos: (
-        3220,
-        884,
-    ),
-    size: (
-        36,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        6.0,
-        -6.0,
-    ),
-},1709 => SpriteInfo {
-    pos: (
-        4013,
-        2592,
-    ),
-    size: (
-        68,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4068 => SpriteInfo {
-    pos: (
-        1236,
-        1369,
-    ),
-    size: (
-        16,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        -20.0,
-        22.0,
     ),
 },2676 => SpriteInfo {
     pos: (
-        1304,
-        1087,
+        1367,
+        1209,
     ),
     size: (
         56,
@@ -23255,347 +19839,11 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     offset: (
         2.0,
         0.0,
-    ),
-},2421 => SpriteInfo {
-    pos: (
-        1313,
-        849,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2416 => SpriteInfo {
-    pos: (
-        2222,
-        843,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3446 => SpriteInfo {
-    pos: (
-        2784,
-        1230,
-    ),
-    size: (
-        16,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2490 => SpriteInfo {
-    pos: (
-        1100,
-        908,
-    ),
-    size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -12.0,
-    ),
-},2687 => SpriteInfo {
-    pos: (
-        1012,
-        1100,
-    ),
-    size: (
-        128,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},1697 => SpriteInfo {
-    pos: (
-        0,
-        248,
-    ),
-    size: (
-        120,
-        84,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        3.0,
-    ),
-},2531 => SpriteInfo {
-    pos: (
-        1617,
-        946,
-    ),
-    size: (
-        72,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2481 => SpriteInfo {
-    pos: (
-        128,
-        866,
-    ),
-    size: (
-        24,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -22.0,
-    ),
-},3551 => SpriteInfo {
-    pos: (
-        1940,
-        1345,
-    ),
-    size: (
-        24,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        -28.0,
-        0.0,
-    ),
-},4418 => SpriteInfo {
-    pos: (
-        1286,
-        522,
-    ),
-    size: (
-        75,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},1852 => SpriteInfo {
-    pos: (
-        1634,
-        265,
-    ),
-    size: (
-        80,
-        100,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        -30.0,
-    ),
-},3601 => SpriteInfo {
-    pos: (
-        3014,
-        487,
-    ),
-    size: (
-        92,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2024 => SpriteInfo {
-    pos: (
-        2006,
-        343,
-    ),
-    size: (
-        339,
-        312,
-    ),
-    rotated: false,
-    offset: (
-        -9.5,
-        -18.0,
-    ),
-},3129 => SpriteInfo {
-    pos: (
-        2460,
-        1112,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},3054 => SpriteInfo {
-    pos: (
-        685,
-        1764,
-    ),
-    size: (
-        60,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3549 => SpriteInfo {
-    pos: (
-        2208,
-        1321,
-    ),
-    size: (
-        24,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        -28.0,
-        0.0,
-    ),
-},4003 => SpriteInfo {
-    pos: (
-        3925,
-        1374,
-    ),
-    size: (
-        60,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -6.0,
-    ),
-},3521 => SpriteInfo {
-    pos: (
-        3629,
-        1301,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},4505 => SpriteInfo {
-    pos: (
-        3445,
-        627,
-    ),
-    size: (
-        75,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        -0.5,
-        0.0,
-    ),
-},3439 => SpriteInfo {
-    pos: (
-        0,
-        1265,
-    ),
-    size: (
-        56,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        4.0,
-    ),
-},2699 => SpriteInfo {
-    pos: (
-        1684,
-        838,
-    ),
-    size: (
-        52,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3234 => SpriteInfo {
-    pos: (
-        3005,
-        1170,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3230 => SpriteInfo {
-    pos: (
-        2780,
-        1126,
-    ),
-    size: (
-        28,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        -18.0,
-        -18.0,
-    ),
-},2580 => SpriteInfo {
-    pos: (
-        2825,
-        1026,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        4.0,
-        4.0,
     ),
 },4175 => SpriteInfo {
     pos: (
-        2208,
-        1421,
+        2590,
+        1605,
     ),
     size: (
         24,
@@ -23606,304 +19854,164 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         -32.0,
     ),
-},4323 => SpriteInfo {
+},4442 => SpriteInfo {
     pos: (
-        2324,
+        844,
+        662,
+    ),
+    size: (
+        105,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},3135 => SpriteInfo {
+    pos: (
+        857,
+        1221,
+    ),
+    size: (
+        48,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1862 => SpriteInfo {
+    pos: (
+        1066,
+        1830,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3230 => SpriteInfo {
+    pos: (
+        224,
+        1265,
+    ),
+    size: (
+        28,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        -18.0,
+        -18.0,
+    ),
+},2887 => SpriteInfo {
+    pos: (
+        3151,
+        422,
+    ),
+    size: (
+        256,
+        103,
+    ),
+    rotated: false,
+    offset: (
+        -5.0,
+        2.5,
+    ),
+},2500 => SpriteInfo {
+    pos: (
+        1027,
+        1009,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2488 => SpriteInfo {
+    pos: (
+        1513,
+        989,
+    ),
+    size: (
+        56,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},4357 => SpriteInfo {
+    pos: (
+        4074,
+        1644,
+    ),
+    size: (
+        12,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -2.0,
+    ),
+},3365 => SpriteInfo {
+    pos: (
+        552,
+        1372,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},2313 => SpriteInfo {
+    pos: (
+        77,
+        806,
+    ),
+    size: (
+        8,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3525 => SpriteInfo {
+    pos: (
+        656,
         1468,
     ),
     size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -2.0,
-    ),
-},2355 => SpriteInfo {
-    pos: (
-        1810,
-        817,
-    ),
-    size: (
-        48,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2518 => SpriteInfo {
-    pos: (
-        2160,
-        951,
-    ),
-    size: (
-        48,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        20.0,
-        2.0,
-    ),
-},3229 => SpriteInfo {
-    pos: (
-        884,
-        1160,
-    ),
-    size: (
-        64,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -18.0,
-    ),
-},2558 => SpriteInfo {
-    pos: (
-        1412,
-        973,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        14.0,
-        10.0,
-    ),
-},3057 => SpriteInfo {
-    pos: (
-        1774,
-        1702,
-    ),
-    size: (
-        54,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        3.0,
-        0.0,
-    ),
-},4135 => SpriteInfo {
-    pos: (
-        2833,
-        1421,
-    ),
-    size: (
-        32,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3794 => SpriteInfo {
-    pos: (
-        1957,
-        1475,
-    ),
-    size: (
-        52,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},412 => SpriteInfo {
-    pos: (
-        2213,
-        2110,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3522 => SpriteInfo {
-    pos: (
-        2433,
-        1308,
-    ),
-    size: (
         64,
         60,
     ),
     rotated: false,
     offset: (
         0.0,
-        2.0,
-    ),
-},3476 => SpriteInfo {
-    pos: (
-        2232,
-        1261,
-    ),
-    size: (
-        20,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -16.0,
-    ),
-},4506 => SpriteInfo {
-    pos: (
-        2345,
-        679,
-    ),
-    size: (
-        68,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},410 => SpriteInfo {
-    pos: (
-        1239,
-        2089,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2694 => SpriteInfo {
-    pos: (
-        2720,
-        341,
-    ),
-    size: (
-        132,
-        112,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        6.0,
-    ),
-},4423 => SpriteInfo {
-    pos: (
-        2465,
-        563,
-    ),
-    size: (
-        98,
-        98,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},939 => SpriteInfo {
-    pos: (
-        2213,
-        2064,
-    ),
-    size: (
-        42,
-        42,
-    ),
-    rotated: false,
-    offset: (
-        1.0,
-        -14.0,
-    ),
-},1583 => SpriteInfo {
-    pos: (
-        3116,
-        245,
-    ),
-    size: (
-        99,
-        81,
-    ),
-    rotated: false,
-    offset: (
-        -16.5,
-        -1.5,
-    ),
-},4087 => SpriteInfo {
-    pos: (
-        2548,
-        1388,
-    ),
-    size: (
-        28,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
         -2.0,
     ),
-},4070 => SpriteInfo {
+},2588 => SpriteInfo {
     pos: (
-        2883,
-        1374,
-    ),
-    size: (
-        16,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        20.0,
-        22.0,
-    ),
-},3501 => SpriteInfo {
-    pos: (
-        936,
-        1296,
-    ),
-    size: (
-        144,
-        116,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},3523 => SpriteInfo {
-    pos: (
-        3925,
-        1306,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},2478 => SpriteInfo {
-    pos: (
-        972,
-        888,
+        3344,
+        1147,
     ),
     size: (
         56,
@@ -23911,13 +20019,125 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     ),
     rotated: false,
     offset: (
-        4.0,
+        -4.0,
+        -8.0,
+    ),
+},2691 => SpriteInfo {
+    pos: (
+        1754,
+        1241,
+    ),
+    size: (
+        128,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2584 => SpriteInfo {
+    pos: (
+        3677,
+        1141,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4001 => SpriteInfo {
+    pos: (
+        2448,
+        1547,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.0,
+    ),
+},2587 => SpriteInfo {
+    pos: (
+        3572,
+        1145,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.0,
+    ),
+},3373 => SpriteInfo {
+    pos: (
+        65,
+        1397,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
         -4.0,
     ),
-},3360 => SpriteInfo {
+},2693 => SpriteInfo {
     pos: (
-        2812,
-        1218,
+        2435,
+        1168,
+    ),
+    size: (
+        108,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2605 => SpriteInfo {
+    pos: (
+        4016,
+        475,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2483 => SpriteInfo {
+    pos: (
+        1623,
+        988,
+    ),
+    size: (
+        56,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},3308 => SpriteInfo {
+    pos: (
+        1028,
+        1317,
     ),
     size: (
         60,
@@ -23930,8 +20150,8 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },4502 => SpriteInfo {
     pos: (
-        1399,
-        735,
+        1569,
+        790,
     ),
     size: (
         75,
@@ -23942,1018 +20162,108 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         -0.5,
         0.0,
     ),
-},3375 => SpriteInfo {
+},1863 => SpriteInfo {
     pos: (
-        564,
-        1252,
+        3470,
+        1835,
     ),
     size: (
-        64,
-        52,
+        120,
+        120,
     ),
     rotated: false,
     offset: (
         0.0,
-        -2.0,
+        0.0,
     ),
-},4134 => SpriteInfo {
+},4068 => SpriteInfo {
     pos: (
-        4057,
-        1414,
+        3899,
+        1550,
     ),
     size: (
-        32,
-        28,
+        16,
+        20,
     ),
     rotated: false,
     offset: (
-        0.0,
-        2.0,
+        -20.0,
+        22.0,
     ),
-},3318 => SpriteInfo {
+},3794 => SpriteInfo {
     pos: (
-        1140,
-        1186,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},3533 => SpriteInfo {
-    pos: (
-        2256,
-        1321,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4300 => SpriteInfo {
-    pos: (
-        3965,
-        298,
-    ),
-    size: (
-        88,
-        8,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2654 => SpriteInfo {
-    pos: (
-        2268,
-        1069,
+        2327,
+        1661,
     ),
     size: (
         52,
-        56,
+        44,
     ),
     rotated: false,
     offset: (
         0.0,
-        2.0,
-    ),
-},2644 => SpriteInfo {
-    pos: (
-        3468,
-        1056,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
         -2.0,
     ),
-},3331 => SpriteInfo {
+},3226 => SpriteInfo {
     pos: (
-        3193,
-        1216,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2154 => SpriteInfo {
-    pos: (
-        4009,
-        754,
-    ),
-    size: (
-        68,
-        68,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4324 => SpriteInfo {
-    pos: (
-        3452,
-        1469,
+        1218,
+        1283,
     ),
     size: (
         64,
-        32,
+        64,
     ),
     rotated: false,
     offset: (
         0.0,
-        -2.0,
+        0.0,
     ),
-},1587 => SpriteInfo {
+},1697 => SpriteInfo {
     pos: (
-        3116,
-        449,
+        3499,
+        272,
     ),
     size: (
+        120,
         84,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -20.0,
-    ),
-},3221 => SpriteInfo {
-    pos: (
-        3636,
-        1149,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3527 => SpriteInfo {
-    pos: (
-        3080,
-        1308,
-    ),
-    size: (
-        48,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        8.0,
-    ),
-},1734 => SpriteInfo {
-    pos: (
-        1084,
-        2695,
-    ),
-    size: (
-        308,
-        310,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2587 => SpriteInfo {
-    pos: (
-        1915,
-        1036,
-    ),
-    size: (
-        64,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.0,
-    ),
-},2637 => SpriteInfo {
-    pos: (
-        184,
-        1049,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2598 => SpriteInfo {
-    pos: (
-        516,
-        1036,
-    ),
-    size: (
-        48,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        10.0,
-    ),
-},3314 => SpriteInfo {
-    pos: (
-        1764,
-        1214,
-    ),
-    size: (
-        64,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},2503 => SpriteInfo {
-    pos: (
-        1313,
-        889,
-    ),
-    size: (
-        24,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        20.0,
-        -20.0,
-    ),
-},3555 => SpriteInfo {
-    pos: (
-        1717,
-        1310,
-    ),
-    size: (
-        12,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -34.0,
-        -28.0,
-    ),
-},4189 => SpriteInfo {
-    pos: (
-        3292,
-        1430,
-    ),
-    size: (
-        16,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        -8.0,
-        -14.0,
-    ),
-},2463 => SpriteInfo {
-    pos: (
-        1740,
-        858,
-    ),
-    size: (
-        64,
-        40,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},2498 => SpriteInfo {
-    pos: (
-        1751,
-        902,
-    ),
-    size: (
-        48,
-        44,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        10.0,
-    ),
-},4415 => SpriteInfo {
-    pos: (
-        1917,
-        498,
-    ),
-    size: (
-        82,
-        82,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2698 => SpriteInfo {
-    pos: (
-        1628,
-        838,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2491 => SpriteInfo {
-    pos: (
-        2601,
-        916,
-    ),
-    size: (
-        64,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},2944 => SpriteInfo {
-    pos: (
-        2208,
-        1641,
-    ),
-    size: (
-        61,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        29.5,
-        0.0,
-    ),
-},3443 => SpriteInfo {
-    pos: (
-        3677,
-        1257,
-    ),
-    size: (
-        16,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2559 => SpriteInfo {
-    pos: (
-        1693,
-        986,
-    ),
-    size: (
-        40,
-        24,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        20.0,
-    ),
-},1865 => SpriteInfo {
-    pos: (
-        0,
-        1641,
-    ),
-    size: (
-        120,
-        108,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        1.0,
-    ),
-},2550 => SpriteInfo {
-    pos: (
-        2398,
-        963,
-    ),
-    size: (
-        40,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        8.0,
-        -2.0,
-    ),
-},3404 => SpriteInfo {
-    pos: (
-        1384,
-        1255,
-    ),
-    size: (
-        28,
-        20,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2225 => SpriteInfo {
-    pos: (
-        2133,
-        761,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3525 => SpriteInfo {
-    pos: (
-        352,
-        1311,
-    ),
-    size: (
-        64,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2540 => SpriteInfo {
-    pos: (
-        2469,
-        956,
-    ),
-    size: (
-        64,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3374 => SpriteInfo {
-    pos: (
-        3068,
-        1252,
-    ),
-    size: (
-        60,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -2.0,
-    ),
-},4493 => SpriteInfo {
-    pos: (
-        602,
-        586,
-    ),
-    size: (
-        67,
-        67,
-    ),
-    rotated: false,
-    offset: (
-        7.5,
-        -7.5,
-    ),
-},2310 => SpriteInfo {
-    pos: (
-        3611,
-        749,
-    ),
-    size: (
-        24,
-        28,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},4007 => SpriteInfo {
-    pos: (
-        1632,
-        1386,
-    ),
-    size: (
-        60,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -26.0,
-    ),
-},2582 => SpriteInfo {
-    pos: (
-        1552,
-        1025,
-    ),
-    size: (
-        44,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        8.0,
-    ),
-},2670 => SpriteInfo {
-    pos: (
-        1780,
-        1082,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},2887 => SpriteInfo {
-    pos: (
-        2856,
-        360,
-    ),
-    size: (
-        256,
-        103,
-    ),
-    rotated: false,
-    offset: (
-        -5.0,
-        2.5,
-    ),
-},2632 => SpriteInfo {
-    pos: (
-        2865,
-        988,
-    ),
-    size: (
-        40,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        12.0,
-        -16.0,
-    ),
-},2412 => SpriteInfo {
-    pos: (
-        2617,
-        828,
-    ),
-    size: (
-        60,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -8.0,
-    ),
-},4096 => SpriteInfo {
-    pos: (
-        624,
-        1410,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},4143 => SpriteInfo {
-    pos: (
-        3196,
-        1404,
-    ),
-    size: (
-        32,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        0.0,
-    ),
-},2691 => SpriteInfo {
-    pos: (
-        2115,
-        1111,
-    ),
-    size: (
-        128,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},3536 => SpriteInfo {
-    pos: (
-        3132,
-        1328,
-    ),
-    size: (
-        60,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},2360 => SpriteInfo {
-    pos: (
-        2733,
-        817,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3528 => SpriteInfo {
-    pos: (
-        1480,
-        1317,
-    ),
-    size: (
-        64,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        8.0,
-    ),
-},2642 => SpriteInfo {
-    pos: (
-        1805,
-        1018,
-    ),
-    size: (
-        32,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        0.0,
-    ),
-},2413 => SpriteInfo {
-    pos: (
-        1443,
-        829,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},4142 => SpriteInfo {
-    pos: (
-        264,
-        1377,
-    ),
-    size: (
-        12,
-        12,
-    ),
-    rotated: false,
-    offset: (
-        -12.0,
-        -2.0,
-    ),
-},1849 => SpriteInfo {
-    pos: (
-        1104,
-        260,
-    ),
-    size: (
-        143,
-        63,
-    ),
-    rotated: false,
-    offset: (
-        -18.5,
-        -8.5,
-    ),
-},2055 => SpriteInfo {
-    pos: (
-        0,
-        340,
-    ),
-    size: (
-        279,
-        228,
-    ),
-    rotated: false,
-    offset: (
-        -3.5,
-        -16.0,
-    ),
-},2516 => SpriteInfo {
-    pos: (
-        1747,
-        950,
-    ),
-    size: (
-        96,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -26.0,
-    ),
-},3232 => SpriteInfo {
-    pos: (
-        3776,
-        1143,
-    ),
-    size: (
-        32,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3532 => SpriteInfo {
-    pos: (
-        752,
-        1320,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},4495 => SpriteInfo {
-    pos: (
-        2733,
-        667,
-    ),
-    size: (
-        90,
-        67,
-    ),
-    rotated: false,
-    offset: (
-        7.0,
-        -7.5,
-    ),
-},3322 => SpriteInfo {
-    pos: (
-        2213,
-        1197,
-    ),
-    size: (
-        56,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},2590 => SpriteInfo {
-    pos: (
-        308,
-        1039,
-    ),
-    size: (
-        60,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        0.0,
-    ),
-},1461 => SpriteInfo {
-    pos: (
-        2712,
-        1529,
-    ),
-    size: (
-        120,
-        111,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        3.5,
-    ),
-},2551 => SpriteInfo {
-    pos: (
-        3757,
-        963,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        -2.0,
-    ),
-},4230 => SpriteInfo {
-    pos: (
-        4041,
-        1458,
-    ),
-    size: (
-        48,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -4.0,
-    ),
-},3231 => SpriteInfo {
-    pos: (
-        1916,
-        1161,
-    ),
-    size: (
-        64,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},3362 => SpriteInfo {
-    pos: (
-        816,
-        1228,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        2.0,
-    ),
-},2489 => SpriteInfo {
-    pos: (
-        2334,
-        905,
-    ),
-    size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -12.0,
-    ),
-},2353 => SpriteInfo {
-    pos: (
-        1088,
-        804,
-    ),
-    size: (
-        60,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -12.0,
-    ),
-},4085 => SpriteInfo {
-    pos: (
-        2939,
-        1394,
-    ),
-    size: (
-        56,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
-    ),
-},4539 => SpriteInfo {
-    pos: (
-        1281,
-        755,
-    ),
-    size: (
-        90,
-        90,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},1868 => SpriteInfo {
-    pos: (
-        2960,
-        1648,
-    ),
-    size: (
-        120,
-        110,
     ),
     rotated: false,
     offset: (
         0.0,
         3.0,
     ),
-},3372 => SpriteInfo {
+},2249 => SpriteInfo {
     pos: (
-        1084,
-        1250,
+        4039,
+        776,
+    ),
+    size: (
+        48,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},3795 => SpriteInfo {
+    pos: (
+        402,
+        1673,
     ),
     size: (
         56,
-        64,
+        28,
     ),
     rotated: false,
     offset: (
         0.0,
-        0.0,
+        -2.0,
     ),
-},2574 => SpriteInfo {
+},2490 => SpriteInfo {
     pos: (
-        1176,
-        1018,
+        725,
+        997,
     ),
     size: (
         60,
@@ -24961,44 +20271,30 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     ),
     rotated: false,
     offset: (
-        -2.0,
+        2.0,
         -12.0,
     ),
-},4151 => SpriteInfo {
+},3481 => SpriteInfo {
     pos: (
-        2999,
-        1424,
+        3630,
+        1429,
     ),
     size: (
-        60,
-        36,
+        56,
+        48,
     ),
     rotated: false,
     offset: (
-        -8.0,
         0.0,
+        2.0,
     ),
-},2553 => SpriteInfo {
+},3331 => SpriteInfo {
     pos: (
-        384,
-        967,
+        1819,
+        1351,
     ),
     size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        -2.0,
-    ),
-},3427 => SpriteInfo {
-    pos: (
-        2341,
-        1253,
-    ),
-    size: (
-        36,
+        56,
         56,
     ),
     rotated: false,
@@ -25006,10 +20302,52 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
+},3232 => SpriteInfo {
+    pos: (
+        1639,
+        1266,
+    ),
+    size: (
+        32,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3519 => SpriteInfo {
+    pos: (
+        2524,
+        1462,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},218 => SpriteInfo {
+    pos: (
+        762,
+        2217,
+    ),
+    size: (
+        66,
+        63,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.5,
+    ),
 },2368 => SpriteInfo {
     pos: (
-        392,
-        791,
+        3145,
+        864,
     ),
     size: (
         64,
@@ -25020,70 +20358,112 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         0.0,
     ),
-},4356 => SpriteInfo {
+},2385 => SpriteInfo {
     pos: (
-        2568,
-        1432,
+        664,
+        875,
     ),
     size: (
-        8,
-        24,
+        56,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},2419 => SpriteInfo {
+    pos: (
+        1023,
+        900,
+    ),
+    size: (
+        36,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3148 => SpriteInfo {
+    pos: (
+        3431,
+        1263,
+    ),
+    size: (
+        44,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4508 => SpriteInfo {
+    pos: (
+        2497,
+        736,
+    ),
+    size: (
+        68,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1614 => SpriteInfo {
+    pos: (
+        3761,
+        538,
+    ),
+    size: (
+        76,
+        75,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.5,
+    ),
+},2414 => SpriteInfo {
+    pos: (
+        958,
+        900,
+    ),
+    size: (
+        56,
+        36,
     ),
     rotated: false,
     offset: (
         -2.0,
-        2.0,
+        -8.0,
     ),
-},4446 => SpriteInfo {
+},3124 => SpriteInfo {
     pos: (
-        1188,
-        631,
+        2812,
+        1255,
     ),
     size: (
-        98,
-        105,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -0.5,
-    ),
-},3403 => SpriteInfo {
-    pos: (
-        1672,
-        1174,
-    ),
-    size: (
-        20,
-        16,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},2467 => SpriteInfo {
-    pos: (
-        2916,
-        852,
-    ),
-    size: (
-        44,
+        60,
         64,
     ),
     rotated: false,
     offset: (
-        2.0,
+        -2.0,
         0.0,
     ),
-},2640 => SpriteInfo {
+},409 => SpriteInfo {
     pos: (
-        2566,
-        1052,
+        1822,
+        2341,
     ),
     size: (
-        60,
-        52,
+        36,
+        36,
     ),
     rotated: false,
     offset: (
@@ -25092,8 +20472,8 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
     ),
 },3526 => SpriteInfo {
     pos: (
-        3252,
-        1310,
+        1536,
+        1469,
     ),
     size: (
         60,
@@ -25104,262 +20484,80 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         -2.0,
         -2.0,
     ),
-},3576 => SpriteInfo {
+},2554 => SpriteInfo {
     pos: (
-        308,
-        1375,
-    ),
-    size: (
-        108,
-        92,
-    ),
-    rotated: false,
-    offset: (
-        -6.0,
-        -2.0,
-    ),
-},1275 => SpriteInfo {
-    pos: (
-        283,
-        443,
-    ),
-    size: (
-        110,
-        61,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -6.5,
-    ),
-},4006 => SpriteInfo {
-    pos: (
-        2248,
-        1385,
-    ),
-    size: (
-        64,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -26.0,
-    ),
-},4208 => SpriteInfo {
-    pos: (
-        2937,
-        1454,
-    ),
-    size: (
-        56,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -10.0,
-    ),
-},3534 => SpriteInfo {
-    pos: (
-        2316,
-        1321,
-    ),
-    size: (
-        56,
-        64,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},411 => SpriteInfo {
-    pos: (
-        3201,
-        2098,
-    ),
-    size: (
-        36,
-        36,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2354 => SpriteInfo {
-    pos: (
-        516,
-        804,
-    ),
-    size: (
-        40,
-        48,
-    ),
-    rotated: false,
-    offset: (
-        -10.0,
-        -6.0,
-    ),
-},2462 => SpriteInfo {
-    pos: (
-        2852,
-        854,
-    ),
-    size: (
-        60,
-        60,
-    ),
-    rotated: false,
-    offset: (
-        2.0,
-        2.0,
-    ),
-},2510 => SpriteInfo {
-    pos: (
-        124,
-        929,
-    ),
-    size: (
-        60,
-        32,
-    ),
-    rotated: false,
-    offset: (
-        -2.0,
-        0.0,
-    ),
-},1699 => SpriteInfo {
-    pos: (
-        4009,
-        214,
-    ),
-    size: (
-        69,
-        80,
-    ),
-    rotated: false,
-    offset: (
-        3.5,
-        20.0,
-    ),
-},2465 => SpriteInfo {
-    pos: (
-        456,
-        864,
+        1556,
+        1071,
     ),
     size: (
         48,
-        64,
+        52,
     ),
     rotated: false,
     offset: (
-        -4.0,
-        0.0,
+        8.0,
+        -6.0,
     ),
-},2250 => SpriteInfo {
+},3247 => SpriteInfo {
     pos: (
-        0,
-        783,
+        211,
+        1302,
     ),
     size: (
-        104,
-        44,
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3371 => SpriteInfo {
+    pos: (
+        1054,
+        1393,
+    ),
+    size: (
+        56,
+        60,
     ),
     rotated: false,
     offset: (
         0.0,
         2.0,
     ),
-},4469 => SpriteInfo {
+},4510 => SpriteInfo {
     pos: (
-        3835,
-        638,
+        3641,
+        750,
     ),
     size: (
+        68,
         90,
-        98,
     ),
     rotated: false,
     offset: (
         0.0,
-        -4.0,
+        0.0,
     ),
-},2509 => SpriteInfo {
+},4148 => SpriteInfo {
     pos: (
-        3711,
-        925,
+        1438,
+        1611,
     ),
     size: (
-        64,
-        32,
+        72,
+        28,
     ),
     rotated: false,
     offset: (
         0.0,
         0.0,
-    ),
-},3426 => SpriteInfo {
-    pos: (
-        356,
-        1255,
-    ),
-    size: (
-        40,
-        52,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        2.0,
-    ),
-},4227 => SpriteInfo {
-    pos: (
-        3072,
-        1420,
-    ),
-    size: (
-        4,
-        4,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        26.0,
-    ),
-},1862 => SpriteInfo {
-    pos: (
-        1096,
-        1634,
-    ),
-    size: (
-        120,
-        120,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        0.0,
-    ),
-},2657 => SpriteInfo {
-    pos: (
-        1504,
-        1077,
-    ),
-    size: (
-        52,
-        56,
-    ),
-    rotated: false,
-    offset: (
-        0.0,
-        -2.0,
     ),
 },4190 => SpriteInfo {
     pos: (
-        3072,
-        1384,
+        2907,
+        1566,
     ),
     size: (
         4,
@@ -25370,10 +20568,1970 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         -2.0,
         16.0,
     ),
-},3002 => SpriteInfo {
+},2570 => SpriteInfo {
     pos: (
-        3612,
-        230,
+        2167,
+        1116,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -12.0,
+    ),
+},2479 => SpriteInfo {
+    pos: (
+        1133,
+        983,
+    ),
+    size: (
+        64,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},2891 => SpriteInfo {
+    pos: (
+        2855,
+        486,
+    ),
+    size: (
+        264,
+        102,
+    ),
+    rotated: false,
+    offset: (
+        -1.0,
+        0.0,
+    ),
+},2660 => SpriteInfo {
+    pos: (
+        365,
+        1170,
+    ),
+    size: (
+        36,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        -2.0,
+    ),
+},2250 => SpriteInfo {
+    pos: (
+        3598,
+        849,
+    ),
+    size: (
+        104,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2559 => SpriteInfo {
+    pos: (
+        2167,
+        1083,
+    ),
+    size: (
+        40,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        20.0,
+    ),
+},4071 => SpriteInfo {
+    pos: (
+        325,
+        1572,
+    ),
+    size: (
+        32,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3374 => SpriteInfo {
+    pos: (
+        2536,
+        1401,
+    ),
+    size: (
+        60,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -2.0,
+    ),
+},2542 => SpriteInfo {
+    pos: (
+        650,
+        1051,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3450 => SpriteInfo {
+    pos: (
+        3356,
+        1409,
+    ),
+    size: (
+        24,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3522 => SpriteInfo {
+    pos: (
+        2003,
+        1465,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},4501 => SpriteInfo {
+    pos: (
+        1087,
+        781,
+    ),
+    size: (
+        75,
+        15,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},2411 => SpriteInfo {
+    pos: (
+        544,
+        894,
+    ),
+    size: (
+        40,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        10.0,
+        -10.0,
+    ),
+},2657 => SpriteInfo {
+    pos: (
+        552,
+        1194,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},1852 => SpriteInfo {
+    pos: (
+        3965,
+        293,
+    ),
+    size: (
+        80,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        -30.0,
+    ),
+},413 => SpriteInfo {
+    pos: (
+        3942,
+        2378,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3478 => SpriteInfo {
+    pos: (
+        276,
+        1426,
+    ),
+    size: (
+        60,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},2552 => SpriteInfo {
+    pos: (
+        89,
+        1067,
+    ),
+    size: (
+        64,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},4229 => SpriteInfo {
+    pos: (
+        1743,
+        1648,
+    ),
+    size: (
+        48,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4086 => SpriteInfo {
+    pos: (
+        3891,
+        1579,
+    ),
+    size: (
+        28,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2480 => SpriteInfo {
+    pos: (
+        3275,
+        965,
+    ),
+    size: (
+        36,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        -6.0,
+    ),
+},4064 => SpriteInfo {
+    pos: (
+        859,
+        1563,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},939 => SpriteInfo {
+    pos: (
+        445,
+        2286,
+    ),
+    size: (
+        42,
+        42,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        -14.0,
+    ),
+},3000 => SpriteInfo {
+    pos: (
+        3628,
+        235,
+    ),
+    size: (
+        120,
+        31,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.5,
+    ),
+},1703 => SpriteInfo {
+    pos: (
+        153,
+        3043,
+    ),
+    size: (
+        62,
+        53,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.5,
+    ),
+},4439 => SpriteInfo {
+    pos: (
+        3651,
+        636,
+    ),
+    size: (
+        75,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},2946 => SpriteInfo {
+    pos: (
+        2904,
+        1876,
+    ),
+    size: (
+        61,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        29.5,
+        -29.5,
+    ),
+},2654 => SpriteInfo {
+    pos: (
+        930,
+        1193,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2489 => SpriteInfo {
+    pos: (
+        0,
+        993,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -12.0,
+    ),
+},3220 => SpriteInfo {
+    pos: (
+        3568,
+        1275,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2467 => SpriteInfo {
+    pos: (
+        453,
+        943,
+    ),
+    size: (
+        44,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},3136 => SpriteInfo {
+    pos: (
+        3645,
+        1191,
+    ),
+    size: (
+        16,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4072 => SpriteInfo {
+    pos: (
+        4015,
+        1571,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3549 => SpriteInfo {
+    pos: (
+        3564,
+        1499,
+    ),
+    size: (
+        24,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        -28.0,
+        0.0,
+    ),
+},3555 => SpriteInfo {
+    pos: (
+        2141,
+        1486,
+    ),
+    size: (
+        12,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -34.0,
+        -28.0,
+    ),
+},2470 => SpriteInfo {
+    pos: (
+        3210,
+        961,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        -2.0,
+    ),
+},4170 => SpriteInfo {
+    pos: (
+        1519,
+        1611,
+    ),
+    size: (
+        44,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},2513 => SpriteInfo {
+    pos: (
+        569,
+        1036,
+    ),
+    size: (
+        72,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2566 => SpriteInfo {
+    pos: (
+        494,
+        1125,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        2.0,
+    ),
+},2476 => SpriteInfo {
+    pos: (
+        1899,
+        968,
+    ),
+    size: (
+        48,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        -18.0,
+    ),
+},2627 => SpriteInfo {
+    pos: (
+        1375,
+        904,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},2363 => SpriteInfo {
+    pos: (
+        3275,
+        892,
+    ),
+    size: (
+        40,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3533 => SpriteInfo {
+    pos: (
+        2456,
+        1478,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2670 => SpriteInfo {
+    pos: (
+        3568,
+        1206,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2473 => SpriteInfo {
+    pos: (
+        3580,
+        971,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        2.0,
+    ),
+},4171 => SpriteInfo {
+    pos: (
+        1994,
+        1623,
+    ),
+    size: (
+        48,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},3544 => SpriteInfo {
+    pos: (
+        2831,
+        1533,
+    ),
+    size: (
+        80,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -28.0,
+    ),
+},4403 => SpriteInfo {
+    pos: (
+        2780,
+        513,
+    ),
+    size: (
+        60,
+        45,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        22.5,
+    ),
+},3149 => SpriteInfo {
+    pos: (
+        2291,
+        1265,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        8.0,
+        0.0,
+    ),
+},2501 => SpriteInfo {
+    pos: (
+        3778,
+        1013,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2465 => SpriteInfo {
+    pos: (
+        3324,
+        941,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        0.0,
+    ),
+},2867 => SpriteInfo {
+    pos: (
+        3600,
+        373,
+    ),
+    size: (
+        160,
+        110,
+    ),
+    rotated: false,
+    offset: (
+        7.0,
+        22.0,
+    ),
+},4000 => SpriteInfo {
+    pos: (
+        3267,
+        1538,
+    ),
+    size: (
+        60,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -6.0,
+    ),
+},3229 => SpriteInfo {
+    pos: (
+        3890,
+        1297,
+    ),
+    size: (
+        64,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -18.0,
+    ),
+},2024 => SpriteInfo {
+    pos: (
+        0,
+        364,
+    ),
+    size: (
+        339,
+        312,
+    ),
+    rotated: false,
+    offset: (
+        -9.5,
+        -18.0,
+    ),
+},3448 => SpriteInfo {
+    pos: (
+        2224,
+        1409,
+    ),
+    size: (
+        20,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3427 => SpriteInfo {
+    pos: (
+        1539,
+        1404,
+    ),
+    size: (
+        36,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2647 => SpriteInfo {
+    pos: (
+        2751,
+        1181,
+    ),
+    size: (
+        60,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        16.0,
+    ),
+},2300 => SpriteInfo {
+    pos: (
+        2561,
+        850,
+    ),
+    size: (
+        52,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1462 => SpriteInfo {
+    pos: (
+        2660,
+        1746,
+    ),
+    size: (
+        120,
+        103,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        8.5,
+    ),
+},4134 => SpriteInfo {
+    pos: (
+        3826,
+        1592,
+    ),
+    size: (
+        32,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2664 => SpriteInfo {
+    pos: (
+        1685,
+        1197,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3501 => SpriteInfo {
+    pos: (
+        2936,
+        1452,
+    ),
+    size: (
+        144,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3376 => SpriteInfo {
+    pos: (
+        1470,
+        1404,
+    ),
+    size: (
+        60,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -2.0,
+    ),
+},2696 => SpriteInfo {
+    pos: (
+        2622,
+        909,
+    ),
+    size: (
+        52,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2463 => SpriteInfo {
+    pos: (
+        1623,
+        939,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},1601 => SpriteInfo {
+    pos: (
+        1560,
+        2293,
+    ),
+    size: (
+        7,
+        150,
+    ),
+    rotated: false,
+    offset: (
+        -8.5,
+        0.0,
+    ),
+},2886 => SpriteInfo {
+    pos: (
+        1223,
+        405,
+    ),
+    size: (
+        270,
+        81,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        12.5,
+    ),
+},4323 => SpriteInfo {
+    pos: (
+        82,
+        1655,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -2.0,
+    ),
+},4168 => SpriteInfo {
+    pos: (
+        3560,
+        1588,
+    ),
+    size: (
+        24,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        0.0,
+    ),
+},1708 => SpriteInfo {
+    pos: (
+        3997,
+        2851,
+    ),
+    size: (
+        86,
+        86,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2692 => SpriteInfo {
+    pos: (
+        3358,
+        1250,
+    ),
+    size: (
+        128,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},4419 => SpriteInfo {
+    pos: (
+        1877,
+        568,
+    ),
+    size: (
+        75,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},1600 => SpriteInfo {
+    pos: (
+        1447,
+        2440,
+    ),
+    size: (
+        101,
+        81,
+    ),
+    rotated: false,
+    offset: (
+        -3.5,
+        -3.5,
+    ),
+},3145 => SpriteInfo {
+    pos: (
+        2545,
+        1263,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},4532 => SpriteInfo {
+    pos: (
+        2069,
+        629,
+    ),
+    size: (
+        98,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2558 => SpriteInfo {
+    pos: (
+        3131,
+        1079,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        14.0,
+        10.0,
+    ),
+},1864 => SpriteInfo {
+    pos: (
+        3866,
+        1842,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4499 => SpriteInfo {
+    pos: (
+        2397,
+        797,
+    ),
+    size: (
+        82,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},4504 => SpriteInfo {
+    pos: (
+        1310,
+        793,
+    ),
+    size: (
+        75,
+        75,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},1598 => SpriteInfo {
+    pos: (
+        1432,
+        495,
+    ),
+    size: (
+        57,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        6.0,
+    ),
+},4177 => SpriteInfo {
+    pos: (
+        1910,
+        1628,
+    ),
+    size: (
+        36,
+        76,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4150 => SpriteInfo {
+    pos: (
+        636,
+        1541,
+    ),
+    size: (
+        8,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        8.0,
+        2.0,
+    ),
+},2556 => SpriteInfo {
+    pos: (
+        857,
+        1079,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},4231 => SpriteInfo {
+    pos: (
+        1438,
+        1648,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4492 => SpriteInfo {
+    pos: (
+        228,
+        685,
+    ),
+    size: (
+        98,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2361 => SpriteInfo {
+    pos: (
+        114,
+        891,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2418 => SpriteInfo {
+    pos: (
+        2288,
+        926,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3310 => SpriteInfo {
+    pos: (
+        1097,
+        1320,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3503 => SpriteInfo {
+    pos: (
+        3959,
+        1443,
+    ),
+    size: (
+        48,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3086 => SpriteInfo {
+    pos: (
+        970,
+        2419,
+    ),
+    size: (
+        111,
+        95,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        2.5,
+    ),
+},2301 => SpriteInfo {
+    pos: (
+        1566,
+        859,
+    ),
+    size: (
+        52,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3553 => SpriteInfo {
+    pos: (
+        3841,
+        1517,
+    ),
+    size: (
+        80,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},4004 => SpriteInfo {
+    pos: (
+        4015,
+        1545,
+    ),
+    size: (
+        60,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -26.0,
+    ),
+},3368 => SpriteInfo {
+    pos: (
+        985,
+        1386,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -4.0,
+    ),
+},1464 => SpriteInfo {
+    pos: (
+        3398,
+        1713,
+    ),
+    size: (
+        63,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        11.5,
+        15.0,
+    ),
+},4417 => SpriteInfo {
+    pos: (
+        1313,
+        565,
+    ),
+    size: (
+        90,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2354 => SpriteInfo {
+    pos: (
+        2738,
+        844,
+    ),
+    size: (
+        40,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -10.0,
+        -6.0,
+    ),
+},2631 => SpriteInfo {
+    pos: (
+        1895,
+        1078,
+    ),
+    size: (
+        48,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        8.0,
+        -6.0,
+    ),
+},877 => SpriteInfo {
+    pos: (
+        3378,
+        2014,
+    ),
+    size: (
+        63,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        24.5,
+        12.0,
+    ),
+},3576 => SpriteInfo {
+    pos: (
+        2331,
+        1547,
+    ),
+    size: (
+        108,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        -2.0,
+    ),
+},3228 => SpriteInfo {
+    pos: (
+        2183,
+        1291,
+    ),
+    size: (
+        64,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -14.0,
+    ),
+},4500 => SpriteInfo {
+    pos: (
+        3145,
+        780,
+    ),
+    size: (
+        75,
+        75,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},2699 => SpriteInfo {
+    pos: (
+        1203,
+        914,
+    ),
+    size: (
+        52,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},891 => SpriteInfo {
+    pos: (
+        1289,
+        1984,
+    ),
+    size: (
+        114,
+        54,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3524 => SpriteInfo {
+    pos: (
+        3695,
+        1468,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2507 => SpriteInfo {
+    pos: (
+        2094,
+        1018,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2373 => SpriteInfo {
+    pos: (
+        3328,
+        872,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2582 => SpriteInfo {
+    pos: (
+        3519,
+        1132,
+    ),
+    size: (
+        44,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        8.0,
+    ),
+},2697 => SpriteInfo {
+    pos: (
+        2557,
+        911,
+    ),
+    size: (
+        52,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},3138 => SpriteInfo {
+    pos: (
+        2484,
+        1231,
+    ),
+    size: (
+        44,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4324 => SpriteInfo {
+    pos: (
+        1042,
+        1656,
+    ),
+    size: (
+        64,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2948 => SpriteInfo {
+    pos: (
+        129,
+        1958,
+    ),
+    size: (
+        118,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        1.0,
+    ),
+},4422 => SpriteInfo {
+    pos: (
+        447,
+        597,
+    ),
+    size: (
+        98,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2226 => SpriteInfo {
+    pos: (
+        546,
+        825,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},4142 => SpriteInfo {
+    pos: (
+        1272,
+        1563,
+    ),
+    size: (
+        12,
+        12,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        -2.0,
+    ),
+},4187 => SpriteInfo {
+    pos: (
+        2489,
+        1600,
+    ),
+    size: (
+        16,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},3552 => SpriteInfo {
+    pos: (
+        2590,
+        1536,
+    ),
+    size: (
+        24,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -28.0,
+        -10.0,
+    ),
+},3439 => SpriteInfo {
+    pos: (
+        1160,
+        1421,
+    ),
+    size: (
+        56,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},217 => SpriteInfo {
+    pos: (
+        3020,
+        2220,
+    ),
+    size: (
+        92,
+        42,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},2562 => SpriteInfo {
+    pos: (
+        1761,
+        1103,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3465 => SpriteInfo {
+    pos: (
+        2297,
+        1411,
+    ),
+    size: (
+        40,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},4421 => SpriteInfo {
+    pos: (
+        1098,
+        591,
+    ),
+    size: (
+        105,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},2592 => SpriteInfo {
+    pos: (
+        2090,
+        1156,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},4070 => SpriteInfo {
+    pos: (
+        2729,
+        1555,
+    ),
+    size: (
+        16,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        20.0,
+        22.0,
+    ),
+},2679 => SpriteInfo {
+    pos: (
+        718,
+        1212,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2586 => SpriteInfo {
+    pos: (
+        3076,
+        1142,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        -4.0,
+    ),
+},2531 => SpriteInfo {
+    pos: (
+        650,
+        1038,
+    ),
+    size: (
+        72,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3582 => SpriteInfo {
+    pos: (
+        1792,
+        1542,
+    ),
+    size: (
+        120,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -18.0,
+    ),
+},1702 => SpriteInfo {
+    pos: (
+        3479,
+        3037,
+    ),
+    size: (
+        58,
+        58,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2472 => SpriteInfo {
+    pos: (
+        2090,
+        919,
+    ),
+    size: (
+        20,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        -22.0,
+        -22.0,
+    ),
+},4503 => SpriteInfo {
+    pos: (
+        1653,
+        790,
+    ),
+    size: (
+        75,
+        75,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},2517 => SpriteInfo {
+    pos: (
+        3030,
+        1041,
+    ),
+    size: (
+        92,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},2687 => SpriteInfo {
+    pos: (
+        2154,
+        1226,
+    ),
+    size: (
+        128,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3444 => SpriteInfo {
+    pos: (
+        1703,
+        1385,
+    ),
+    size: (
+        16,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},4507 => SpriteInfo {
+    pos: (
+        2889,
+        726,
+    ),
+    size: (
+        68,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3363 => SpriteInfo {
+    pos: (
+        410,
+        1370,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},1849 => SpriteInfo {
+    pos: (
+        236,
+        288,
+    ),
+    size: (
+        143,
+        63,
+    ),
+    rotated: false,
+    offset: (
+        -18.5,
+        -8.5,
+    ),
+},1699 => SpriteInfo {
+    pos: (
+        4015,
+        204,
+    ),
+    size: (
+        69,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        3.5,
+        20.0,
+    ),
+},410 => SpriteInfo {
+    pos: (
+        1867,
+        2341,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3001 => SpriteInfo {
+    pos: (
+        3886,
+        235,
     ),
     size: (
         120,
@@ -25384,10 +22542,2502 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         0.0,
         4.0,
     ),
+},2546 => SpriteInfo {
+    pos: (
+        788,
+        1058,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},2651 => SpriteInfo {
+    pos: (
+        2820,
+        1190,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2413 => SpriteInfo {
+    pos: (
+        388,
+        898,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},4098 => SpriteInfo {
+    pos: (
+        3267,
+        1591,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},2506 => SpriteInfo {
+    pos: (
+        1483,
+        1030,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4505 => SpriteInfo {
+    pos: (
+        2970,
+        718,
+    ),
+    size: (
+        75,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},4005 => SpriteInfo {
+    pos: (
+        3826,
+        1550,
+    ),
+    size: (
+        64,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -26.0,
+    ),
+},3537 => SpriteInfo {
+    pos: (
+        3491,
+        1499,
+    ),
+    size: (
+        64,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4487 => SpriteInfo {
+    pos: (
+        1625,
+        683,
+    ),
+    size: (
+        98,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4469 => SpriteInfo {
+    pos: (
+        348,
+        680,
+    ),
+    size: (
+        90,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},3502 => SpriteInfo {
+    pos: (
+        1298,
+        1461,
+    ),
+    size: (
+        160,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3144 => SpriteInfo {
+    pos: (
+        914,
+        1258,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1587 => SpriteInfo {
+    pos: (
+        3668,
+        492,
+    ),
+    size: (
+        84,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -20.0,
+    ),
+},3296 => SpriteInfo {
+    pos: (
+        1291,
+        1283,
+    ),
+    size: (
+        24,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2673 => SpriteInfo {
+    pos: (
+        3007,
+        1207,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},4230 => SpriteInfo {
+    pos: (
+        3754,
+        1647,
+    ),
+    size: (
+        48,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},3221 => SpriteInfo {
+    pos: (
+        2421,
+        1279,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2312 => SpriteInfo {
+    pos: (
+        3925,
+        780,
+    ),
+    size: (
+        8,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3520 => SpriteInfo {
+    pos: (
+        1154,
+        1458,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -2.0,
+    ),
+},2581 => SpriteInfo {
+    pos: (
+        2564,
+        1133,
+    ),
+    size: (
+        60,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        6.0,
+    ),
+},3362 => SpriteInfo {
+    pos: (
+        134,
+        1366,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},3517 => SpriteInfo {
+    pos: (
+        3543,
+        1446,
+    ),
+    size: (
+        64,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.0,
+    ),
+},4188 => SpriteInfo {
+    pos: (
+        3336,
+        1607,
+    ),
+    size: (
+        16,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},2591 => SpriteInfo {
+    pos: (
+        162,
+        1151,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},3146 => SpriteInfo {
+    pos: (
+        3744,
+        1265,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2684 => SpriteInfo {
+    pos: (
+        2423,
+        1218,
+    ),
+    size: (
+        52,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4185 => SpriteInfo {
+    pos: (
+        2822,
+        1639,
+    ),
+    size: (
+        76,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -4.0,
+    ),
+},4226 => SpriteInfo {
+    pos: (
+        3410,
+        1644,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -2.0,
+    ),
+},3360 => SpriteInfo {
+    pos: (
+        276,
+        1357,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2422 => SpriteInfo {
+    pos: (
+        1944,
+        927,
+    ),
+    size: (
+        36,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2224 => SpriteInfo {
+    pos: (
+        1806,
+        811,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3054 => SpriteInfo {
+    pos: (
+        3378,
+        1957,
+    ),
+    size: (
+        60,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2644 => SpriteInfo {
+    pos: (
+        3137,
+        1172,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -2.0,
+    ),
+},3147 => SpriteInfo {
+    pos: (
+        4046,
+        1240,
+    ),
+    size: (
+        40,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        0.0,
+    ),
+},216 => SpriteInfo {
+    pos: (
+        392,
+        2174,
+    ),
+    size: (
+        104,
+        103,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        3.5,
+    ),
+},2649 => SpriteInfo {
+    pos: (
+        3507,
+        1189,
+    ),
+    size: (
+        52,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1053 => SpriteInfo {
+    pos: (
+        916,
+        181,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3424 => SpriteInfo {
+    pos: (
+        1308,
+        1308,
+    ),
+    size: (
+        4,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2023 => SpriteInfo {
+    pos: (
+        1750,
+        309,
+    ),
+    size: (
+        224,
+        88,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        2.0,
+    ),
+},2637 => SpriteInfo {
+    pos: (
+        2942,
+        1162,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2694 => SpriteInfo {
+    pos: (
+        2855,
+        365,
+    ),
+    size: (
+        132,
+        112,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        6.0,
+    ),
+},3361 => SpriteInfo {
+    pos: (
+        2110,
+        1364,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3057 => SpriteInfo {
+    pos: (
+        1553,
+        1971,
+    ),
+    size: (
+        54,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        0.0,
+    ),
+},1865 => SpriteInfo {
+    pos: (
+        1761,
+        1842,
+    ),
+    size: (
+        120,
+        108,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        1.0,
+    ),
+},4513 => SpriteInfo {
+    pos: (
+        3334,
+        773,
+    ),
+    size: (
+        68,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2279 => SpriteInfo {
+    pos: (
+        507,
+        825,
+    ),
+    size: (
+        28,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        -18.0,
+        6.0,
+    ),
+},4512 => SpriteInfo {
+    pos: (
+        759,
+        761,
+    ),
+    size: (
+        60,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2666 => SpriteInfo {
+    pos: (
+        231,
+        1196,
+    ),
+    size: (
+        36,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        0.0,
+    ),
+},3332 => SpriteInfo {
+    pos: (
+        1170,
+        1356,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3446 => SpriteInfo {
+    pos: (
+        3860,
+        1405,
+    ),
+    size: (
+        16,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2026 => SpriteInfo {
+    pos: (
+        2112,
+        348,
+    ),
+    size: (
+        195,
+        272,
+    ),
+    rotated: false,
+    offset: (
+        12.5,
+        -30.0,
+    ),
+},4097 => SpriteInfo {
+    pos: (
+        1296,
+        1590,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2662 => SpriteInfo {
+    pos: (
+        2378,
+        1196,
+    ),
+    size: (
+        36,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        18.0,
+    ),
+},2416 => SpriteInfo {
+    pos: (
+        662,
+        920,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2502 => SpriteInfo {
+    pos: (
+        3999,
+        1023,
+    ),
+    size: (
+        64,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -20.0,
+    ),
+},4416 => SpriteInfo {
+    pos: (
+        771,
+        548,
+    ),
+    size: (
+        75,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},1582 => SpriteInfo {
+    pos: (
+        916,
+        250,
+    ),
+    size: (
+        84,
+        83,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},3531 => SpriteInfo {
+    pos: (
+        1944,
+        1473,
+    ),
+    size: (
+        48,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        -8.0,
+    ),
+},3320 => SpriteInfo {
+    pos: (
+        920,
+        1331,
+    ),
+    size: (
+        56,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},1589 => SpriteInfo {
+    pos: (
+        1907,
+        475,
+    ),
+    size: (
+        60,
+        83,
+    ),
+    rotated: false,
+    offset: (
+        -11.0,
+        1.5,
+    ),
+},3546 => SpriteInfo {
+    pos: (
+        1944,
+        1534,
+    ),
+    size: (
+        80,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -28.0,
+    ),
+},2417 => SpriteInfo {
+    pos: (
+        3027,
+        923,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3554 => SpriteInfo {
+    pos: (
+        867,
+        1530,
+    ),
+    size: (
+        80,
+        24,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -8.0,
+    ),
+},3330 => SpriteInfo {
+    pos: (
+        0,
+        1350,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4208 => SpriteInfo {
+    pos: (
+        561,
+        1643,
+    ),
+    size: (
+        56,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -10.0,
+    ),
+},4065 => SpriteInfo {
+    pos: (
+        3826,
+        1563,
+    ),
+    size: (
+        56,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        22.0,
+    ),
+},2504 => SpriteInfo {
+    pos: (
+        3912,
+        1029,
+    ),
+    size: (
+        64,
+        40,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        12.0,
+    ),
+},4172 => SpriteInfo {
+    pos: (
+        713,
+        1623,
+    ),
+    size: (
+        60,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        10.0,
+    ),
+},2462 => SpriteInfo {
+    pos: (
+        3141,
+        937,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2477 => SpriteInfo {
+    pos: (
+        2618,
+        978,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3375 => SpriteInfo {
+    pos: (
+        2026,
+        1404,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2578 => SpriteInfo {
+    pos: (
+        2025,
+        1130,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2564 => SpriteInfo {
+    pos: (
+        2523,
+        1095,
+    ),
+    size: (
+        32,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        -16.0,
+        -16.0,
+    ),
+},2478 => SpriteInfo {
+    pos: (
+        1956,
+        968,
+    ),
+    size: (
+        56,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        -4.0,
+    ),
+},3311 => SpriteInfo {
+    pos: (
+        65,
+        1328,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2516 => SpriteInfo {
+    pos: (
+        1121,
+        1044,
+    ),
+    size: (
+        96,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -26.0,
+    ),
+},3532 => SpriteInfo {
+    pos: (
+        802,
+        1477,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2598 => SpriteInfo {
+    pos: (
+        1830,
+        1152,
+    ),
+    size: (
+        48,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        10.0,
+    ),
+},3528 => SpriteInfo {
+    pos: (
+        885,
+        1473,
+    ),
+    size: (
+        64,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        8.0,
+    ),
+},3369 => SpriteInfo {
+    pos: (
+        345,
+        1381,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3479 => SpriteInfo {
+    pos: (
+        1950,
+        1436,
+    ),
+    size: (
+        44,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3058 => SpriteInfo {
+    pos: (
+        3651,
+        1974,
+    ),
+    size: (
+        54,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        0.0,
+    ),
+},1054 => SpriteInfo {
+    pos: (
+        3370,
+        235,
+    ),
+    size: (
+        120,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4325 => SpriteInfo {
+    pos: (
+        1293,
+        1663,
+    ),
+    size: (
+        64,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2420 => SpriteInfo {
+    pos: (
+        1440,
+        904,
+    ),
+    size: (
+        36,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3464 => SpriteInfo {
+    pos: (
+        1884,
+        1410,
+    ),
+    size: (
+        24,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2229 => SpriteInfo {
+    pos: (
+        2488,
+        835,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3324 => SpriteInfo {
+    pos: (
+        1565,
+        1339,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3529 => SpriteInfo {
+    pos: (
+        2326,
+        1468,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        8.0,
+        0.0,
+    ),
+},4095 => SpriteInfo {
+    pos: (
+        2521,
+        1580,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2362 => SpriteInfo {
+    pos: (
+        236,
+        891,
+    ),
+    size: (
+        40,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3545 => SpriteInfo {
+    pos: (
+        3089,
+        1534,
+    ),
+    size: (
+        80,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4438 => SpriteInfo {
+    pos: (
+        1961,
+        630,
+    ),
+    size: (
+        90,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -0.5,
+    ),
+},2310 => SpriteInfo {
+    pos: (
+        2250,
+        824,
+    ),
+    size: (
+        24,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},3477 => SpriteInfo {
+    pos: (
+        33,
+        1415,
+    ),
+    size: (
+        20,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -10.0,
+    ),
+},4066 => SpriteInfo {
+    pos: (
+        3336,
+        1538,
+    ),
+    size: (
+        16,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -20.0,
+        2.0,
+    ),
+},2482 => SpriteInfo {
+    pos: (
+        2691,
+        978,
+    ),
+    size: (
+        52,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        6.0,
+        0.0,
+    ),
+},2572 => SpriteInfo {
+    pos: (
+        2942,
+        1121,
+    ),
+    size: (
+        64,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -12.0,
+    ),
+},2889 => SpriteInfo {
+    pos: (
+        1502,
+        475,
+    ),
+    size: (
+        267,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        16.0,
+    ),
+},4498 => SpriteInfo {
+    pos: (
+        2742,
+        737,
+    ),
+    size: (
+        45,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3527 => SpriteInfo {
+    pos: (
+        3361,
+        1446,
+    ),
+    size: (
+        48,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        8.0,
+        8.0,
+    ),
+},2499 => SpriteInfo {
+    pos: (
+        1899,
+        1005,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3002 => SpriteInfo {
+    pos: (
+        389,
+        258,
+    ),
+    size: (
+        120,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},2585 => SpriteInfo {
+    pos: (
+        1887,
+        1139,
+    ),
+    size: (
+        52,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -6.0,
+        0.0,
+    ),
+},3329 => SpriteInfo {
+    pos: (
+        2471,
+        1348,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4493 => SpriteInfo {
+    pos: (
+        3564,
+        650,
+    ),
+    size: (
+        67,
+        67,
+    ),
+    rotated: false,
+    offset: (
+        7.5,
+        -7.5,
+    ),
+},1866 => SpriteInfo {
+    pos: (
+        3120,
+        1842,
+    ),
+    size: (
+        120,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.5,
+    ),
+},4143 => SpriteInfo {
+    pos: (
+        496,
+        1587,
+    ),
+    size: (
+        32,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        -12.0,
+        0.0,
+    ),
+},2227 => SpriteInfo {
+    pos: (
+        3525,
+        825,
+    ),
+    size: (
+        64,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},2550 => SpriteInfo {
+    pos: (
+        2637,
+        1060,
+    ),
+    size: (
+        40,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        8.0,
+        -2.0,
+    ),
+},4353 => SpriteInfo {
+    pos: (
+        699,
+        1668,
+    ),
+    size: (
+        100,
+        100,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4441 => SpriteInfo {
+    pos: (
+        3955,
+        662,
+    ),
+    size: (
+        105,
+        105,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        -0.5,
+    ),
+},3601 => SpriteInfo {
+    pos: (
+        3344,
+        543,
+    ),
+    size: (
+        92,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2055 => SpriteInfo {
+    pos: (
+        483,
+        360,
+    ),
+    size: (
+        279,
+        228,
+    ),
+    rotated: false,
+    offset: (
+        -3.5,
+        -16.0,
+    ),
+},2688 => SpriteInfo {
+    pos: (
+        3236,
+        1237,
+    ),
+    size: (
+        128,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -24.0,
+    ),
+},2464 => SpriteInfo {
+    pos: (
+        285,
+        940,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},4415 => SpriteInfo {
+    pos: (
+        3651,
+        545,
+    ),
+    size: (
+        82,
+        82,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1583 => SpriteInfo {
+    pos: (
+        1009,
+        270,
+    ),
+    size: (
+        99,
+        81,
+    ),
+    rotated: false,
+    offset: (
+        -16.5,
+        -1.5,
+    ),
+},3129 => SpriteInfo {
+    pos: (
+        155,
+        1224,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        2.0,
+    ),
+},3577 => SpriteInfo {
+    pos: (
+        2623,
+        1536,
+    ),
+    size: (
+        24,
+        88,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        6.0,
+    ),
+},2540 => SpriteInfo {
+    pos: (
+        2377,
+        1049,
+    ),
+    size: (
+        64,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3536 => SpriteInfo {
+    pos: (
+        2670,
+        1490,
+    ),
+    size: (
+        60,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2551 => SpriteInfo {
+    pos: (
+        271,
+        1062,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -2.0,
+    ),
+},4007 => SpriteInfo {
+    pos: (
+        4015,
+        1558,
+    ),
+    size: (
+        60,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -26.0,
+    ),
+},1884 => SpriteInfo {
+    pos: (
+        3728,
+        1891,
+    ),
+    size: (
+        120,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2032 => SpriteInfo {
+    pos: (
+        876,
+        342,
+    ),
+    size: (
+        120,
+        126,
+    ),
+    rotated: false,
+    offset: (
+        1.0,
+        0.0,
+    ),
+},1734 => SpriteInfo {
+    pos: (
+        3554,
+        2988,
+    ),
+    size: (
+        308,
+        310,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3055 => SpriteInfo {
+    pos: (
+        3995,
+        1928,
+    ),
+    size: (
+        54,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        0.0,
+    ),
+},2589 => SpriteInfo {
+    pos: (
+        3245,
+        1149,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},2944 => SpriteInfo {
+    pos: (
+        2446,
+        1850,
+    ),
+    size: (
+        61,
+        120,
+    ),
+    rotated: false,
+    offset: (
+        29.5,
+        0.0,
+    ),
+},3222 => SpriteInfo {
+    pos: (
+        410,
+        1276,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -2.0,
+    ),
+},4191 => SpriteInfo {
+    pos: (
+        1955,
+        1628,
+    ),
+    size: (
+        20,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        -10.0,
+        0.0,
+    ),
+},3578 => SpriteInfo {
+    pos: (
+        2739,
+        1490,
+    ),
+    size: (
+        8,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        -4.0,
+        8.0,
+    ),
+},3231 => SpriteInfo {
+    pos: (
+        3064,
+        1306,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3056 => SpriteInfo {
+    pos: (
+        1490,
+        1971,
+    ),
+    size: (
+        54,
+        48,
+    ),
+    rotated: false,
+    offset: (
+        3.0,
+        0.0,
+    ),
+},4151 => SpriteInfo {
+    pos: (
+        89,
+        1610,
+    ),
+    size: (
+        60,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        0.0,
+    ),
+},2225 => SpriteInfo {
+    pos: (
+        2966,
+        817,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1591 => SpriteInfo {
+    pos: (
+        1983,
+        310,
+    ),
+    size: (
+        120,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        12.0,
+    ),
+},1275 => SpriteInfo {
+    pos: (
+        1313,
+        495,
+    ),
+    size: (
+        110,
+        61,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -6.5,
+    ),
+},2510 => SpriteInfo {
+    pos: (
+        3275,
+        1018,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        0.0,
+    ),
+},2538 => SpriteInfo {
+    pos: (
+        1556,
+        1046,
+    ),
+    size: (
+        52,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        18.0,
+    ),
+},3447 => SpriteInfo {
+    pos: (
+        885,
+        1404,
+    ),
+    size: (
+        20,
+        8,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},4006 => SpriteInfo {
+    pos: (
+        2656,
+        1555,
+    ),
+    size: (
+        64,
+        4,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -26.0,
+    ),
+},2515 => SpriteInfo {
+    pos: (
+        3677,
+        1040,
+    ),
+    size: (
+        92,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},2355 => SpriteInfo {
+    pos: (
+        57,
+        883,
+    ),
+    size: (
+        48,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3425 => SpriteInfo {
+    pos: (
+        1119,
+        1393,
+    ),
+    size: (
+        32,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2590 => SpriteInfo {
+    pos: (
+        3908,
+        1151,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},3523 => SpriteInfo {
+    pos: (
+        2168,
+        1466,
+    ),
+    size: (
+        60,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},2508 => SpriteInfo {
+    pos: (
+        3843,
+        1013,
+    ),
+    size: (
+        60,
+        32,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        0.0,
+    ),
+},1698 => SpriteInfo {
+    pos: (
+        3713,
+        276,
+    ),
+    size: (
+        91,
+        88,
+    ),
+    rotated: false,
+    offset: (
+        14.5,
+        16.0,
+    ),
+},2553 => SpriteInfo {
+    pos: (
+        3843,
+        1075,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -2.0,
+    ),
+},458 => SpriteInfo {
+    pos: (
+        837,
+        2217,
+    ),
+    size: (
+        38,
+        37,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.5,
+    ),
+},2704 => SpriteInfo {
+    pos: (
+        1324,
+        1857,
+    ),
+    size: (
+        120,
+        118,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -1.0,
+    ),
+},1461 => SpriteInfo {
+    pos: (
+        1244,
+        1728,
+    ),
+    size: (
+        120,
+        111,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        3.5,
+    ),
+},4423 => SpriteInfo {
+    pos: (
+        554,
+        597,
+    ),
+    size: (
+        98,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2503 => SpriteInfo {
+    pos: (
+        2254,
+        951,
+    ),
+    size: (
+        24,
+        16,
+    ),
+    rotated: false,
+    offset: (
+        20.0,
+        -20.0,
+    ),
+},3372 => SpriteInfo {
+    pos: (
+        694,
+        1395,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4418 => SpriteInfo {
+    pos: (
+        1412,
+        565,
+    ),
+    size: (
+        75,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},4085 => SpriteInfo {
+    pos: (
+        3414,
+        1579,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},918 => SpriteInfo {
+    pos: (
+        523,
+        127,
+    ),
+    size: (
+        44,
+        43,
+    ),
+    rotated: false,
+    offset: (
+        -23.0,
+        -77.5,
+    ),
+},2640 => SpriteInfo {
+    pos: (
+        2633,
+        1170,
+    ),
+    size: (
+        60,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},1736 => SpriteInfo {
+    pos: (
+        0,
+        2994,
+    ),
+    size: (
+        144,
+        144,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4539 => SpriteInfo {
+    pos: (
+        1394,
+        805,
+    ),
+    size: (
+        90,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4174 => SpriteInfo {
+    pos: (
+        3826,
+        1629,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2568 => SpriteInfo {
+    pos: (
+        650,
+        1120,
+    ),
+    size: (
+        64,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -18.0,
+    ),
+},4165 => SpriteInfo {
+    pos: (
+        158,
+        1639,
+    ),
+    size: (
+        120,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        20.0,
+        0.0,
+    ),
+},1709 => SpriteInfo {
+    pos: (
+        137,
+        2899,
+    ),
+    size: (
+        68,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3440 => SpriteInfo {
+    pos: (
+        1321,
+        1424,
+    ),
+    size: (
+        56,
+        28,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        4.0,
+    ),
+},2027 => SpriteInfo {
+    pos: (
+        2316,
+        348,
+    ),
+    size: (
+        172,
+        440,
+    ),
+    rotated: false,
+    offset: (
+        -2.0,
+        -16.0,
+    ),
+},2311 => SpriteInfo {
+    pos: (
+        1285,
+        758,
+    ),
+    size: (
+        12,
+        44,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        0.0,
+    ),
+},2278 => SpriteInfo {
+    pos: (
+        2120,
+        864,
+    ),
+    size: (
+        52,
+        124,
+    ),
+    rotated: false,
+    offset: (
+        -26.0,
+        2.0,
+    ),
+},2642 => SpriteInfo {
+    pos: (
+        2702,
+        1162,
+    ),
+    size: (
+        32,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -10.0,
+        0.0,
+    ),
+},2947 => SpriteInfo {
+    pos: (
+        1631,
+        1910,
+    ),
+    size: (
+        120,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},878 => SpriteInfo {
+    pos: (
+        754,
+        2052,
+    ),
+    size: (
+        112,
+        87,
+    ),
+    rotated: false,
+    offset: (
+        60.0,
+        14.5,
+    ),
+},3150 => SpriteInfo {
+    pos: (
+        1566,
+        1266,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2703 => SpriteInfo {
+    pos: (
+        2775,
+        1876,
+    ),
+    size: (
+        120,
+        116,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},2063 => SpriteInfo {
+    pos: (
+        789,
+        33,
+    ),
+    size: (
+        86,
+        134,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},411 => SpriteInfo {
+    pos: (
+        832,
+        2348,
+    ),
+    size: (
+        36,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
 },3125 => SpriteInfo {
     pos: (
-        1144,
-        1118,
+        1505,
+        1258,
     ),
     size: (
         52,
@@ -25398,18 +25048,368 @@ pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {
         6.0,
         0.0,
     ),
-},2411 => SpriteInfo {
+},3319 => SpriteInfo {
     pos: (
-        4009,
-        826,
+        1500,
+        1331,
     ),
     size: (
-        40,
-        40,
+        56,
+        64,
     ),
     rotated: false,
     offset: (
-        10.0,
+        0.0,
+        0.0,
+    ),
+},3370 => SpriteInfo {
+    pos: (
+        2938,
+        1390,
+    ),
+    size: (
+        56,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -2.0,
+    ),
+},3321 => SpriteInfo {
+    pos: (
+        3356,
+        1336,
+    ),
+    size: (
+        56,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4420 => SpriteInfo {
+    pos: (
+        1625,
+        584,
+    ),
+    size: (
+        105,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        -0.5,
+        0.0,
+    ),
+},3551 => SpriteInfo {
+    pos: (
+        2033,
+        1534,
+    ),
+    size: (
+        24,
+        80,
+    ),
+    rotated: false,
+    offset: (
+        -28.0,
+        0.0,
+    ),
+},3455 => SpriteInfo {
+    pos: (
+        2471,
+        1413,
+    ),
+    size: (
+        44,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3516 => SpriteInfo {
+    pos: (
+        1727,
+        1444,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        2.0,
+    ),
+},3443 => SpriteInfo {
+    pos: (
+        2911,
+        1406,
+    ),
+    size: (
+        16,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4431 => SpriteInfo {
+    pos: (
+        3742,
+        622,
+    ),
+    size: (
+        90,
+        98,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2468 => SpriteInfo {
+    pos: (
+        4015,
+        954,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        2.0,
+        -2.0,
+    ),
+},3404 => SpriteInfo {
+    pos: (
+        2837,
+        1406,
+    ),
+    size: (
+        28,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        2.0,
+    ),
+},3234 => SpriteInfo {
+    pos: (
+        3137,
+        1306,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2681 => SpriteInfo {
+    pos: (
+        2881,
+        1203,
+    ),
+    size: (
+        52,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},4164 => SpriteInfo {
+    pos: (
+        973,
+        1628,
+    ),
+    size: (
+        60,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -50.0,
+        0.0,
+    ),
+},4189 => SpriteInfo {
+    pos: (
+        57,
+        1624,
+    ),
+    size: (
+        16,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        -8.0,
+        -14.0,
+    ),
+},4149 => SpriteInfo {
+    pos: (
+        1066,
+        1595,
+    ),
+    size: (
+        68,
+        52,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3151 => SpriteInfo {
+    pos: (
+        2991,
+        1272,
+    ),
+    size: (
+        64,
+        36,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        14.0,
+    ),
+},4506 => SpriteInfo {
+    pos: (
+        3564,
+        726,
+    ),
+    size: (
+        68,
+        90,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2154 => SpriteInfo {
+    pos: (
+        0,
+        806,
+    ),
+    size: (
+        68,
+        68,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2894 => SpriteInfo {
+    pos: (
+        1019,
+        495,
+    ),
+    size: (
+        285,
+        87,
+    ),
+    rotated: false,
+    offset: (
+        0.5,
+        4.5,
+    ),
+},4228 => SpriteInfo {
+    pos: (
+        2270,
+        1640,
+    ),
+    size: (
+        48,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},2580 => SpriteInfo {
+    pos: (
+        3778,
+        1131,
+    ),
+    size: (
+        56,
+        56,
+    ),
+    rotated: false,
+    offset: (
+        4.0,
+        4.0,
+    ),
+},2518 => SpriteInfo {
+    pos: (
+        731,
+        1038,
+    ),
+    size: (
+        48,
+        92,
+    ),
+    rotated: false,
+    offset: (
+        20.0,
+        2.0,
+    ),
+},3476 => SpriteInfo {
+    pos: (
+        3389,
+        1409,
+    ),
+    size: (
+        20,
+        20,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        -16.0,
+    ),
+},3152 => SpriteInfo {
+    pos: (
+        705,
+        1273,
+    ),
+    size: (
+        64,
+        64,
+    ),
+    rotated: false,
+    offset: (
+        0.0,
+        0.0,
+    ),
+},3550 => SpriteInfo {
+    pos: (
+        1759,
+        1513,
+    ),
+    size: (
+        24,
+        60,
+    ),
+    rotated: false,
+    offset: (
+        -28.0,
         -10.0,
     ),
 },

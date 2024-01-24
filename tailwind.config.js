@@ -14,6 +14,8 @@ export default {
             white: "white",
             red: "red",
             "button-green": "#75c934",
+            "button-cyan-press": "#35CECE",
+            transparent: "transparent",
         },
         fontFamily: {
             pusab: "Pusab",

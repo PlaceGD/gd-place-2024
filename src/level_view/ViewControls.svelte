@@ -16,6 +16,7 @@
     import LocalSettingsFactory from "../utils/local_settings";
     import { isMobile } from "../utils/document";
     import { decodeString } from "shared-lib";
+    import Widget from "../widgets/Widget.svelte";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -382,27 +383,13 @@ aria-grabbed="false" -->
             changeGround2Color(e);
         }}
     />
-    <!-- <button
+    <button
         on:click={() => {
-            for (let x = 0; x < 200; x++) {
-                for (let y = 0; y < 50; y++) {
-                    addObject(
-                        new wasm.GDObject(
-                            1,
-                            15 + x * 30,
-                            15 + y * 30,
-                            0,
-                            false,
-                            false,
-                            1,
-                            wasm.ZLayer.T1,
-                            0,
-                            new wasm.GDColor(255, 0, 0, 255, false),
-                            new wasm.GDColor(255, 0, 0, 255, false)
-                        )
-                    );
-                }
-            }
-        }}>Ongy</button
-    > -->
+            console.log(`${state.get_screen_pos(0, 0)}`);
+        }}>Ombaba</button
+    >
+</div>
+
+<div class="absolute overflow-visible w-full h-full pointer-events-none">
+    <Widget bind:state />
 </div>

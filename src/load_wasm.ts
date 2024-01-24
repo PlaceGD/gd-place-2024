@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import initWasmInner, { type InitOutput } from "wasm-lib";
+import initWasmInner from "wasm-lib";
 import * as wasm from "wasm-lib";
 import Toast from "./utils/toast";
 import { HAS_OPT_WASM } from "./main";
@@ -54,11 +54,13 @@ export const initWasm = () => {
 export const spritesheetProgress = writable<{
     progress: number;
     max: number;
-    arrayBuffer: Uint8ClampedArray | null;
+    arrayBuffer: Uint8Array | null;
+    blobURL: string | null;
 }>({
     progress: -1,
     max: 0,
     arrayBuffer: null,
+    blobURL: null,
 });
 
 export const loadSpritesheet = () => {
@@ -66,20 +68,31 @@ export const loadSpritesheet = () => {
 
     const spritesheetReq = new XMLHttpRequest();
 
-    spritesheetReq.responseType = "arraybuffer";
+    spritesheetReq.responseType = "blob";
     spritesheetReq.addEventListener("progress", p => {
         console.info(`downloading spritesheet: ${p.loaded}/${p.total}`);
         spritesheetProgress.set({
             max: p.total,
             progress: p.loaded,
             arrayBuffer: null,
+            blobURL: null,
         });
     });
     spritesheetReq.addEventListener("load", () => {
-        spritesheetProgress.update(v => ({
-            ...v,
-            arrayBuffer: new Uint8ClampedArray(spritesheetReq.response),
-        }));
+        const blob = spritesheetReq.response;
+
+        blob.arrayBuffer()
+            .then((ab: ArrayBuffer) => {
+                spritesheetProgress.update(v => ({
+                    ...v,
+                    arrayBuffer: new Uint8Array(ab),
+                    blobURL: URL.createObjectURL(blob),
+                }));
+            })
+            .catch((e: any) => {
+                console.error(e, "(failed in `blob.arrayBuffer`)");
+                Toast.showErrorToast(`Failed to get spritesheet. (${e})`);
+            });
     });
     spritesheetReq.addEventListener("error", () => {
         Toast.showErrorToast(

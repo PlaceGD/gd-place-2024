@@ -176,5 +176,6 @@ export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
     }
 
     const ref = db.ref(`/objects/${data.chunkId}/${data.objId}`);
-    ref.remove();
+    const username = "test"; // TODO: get username from auth
+    ref.set(username).then(() => ref.remove());
 });

@@ -158,4 +158,13 @@ impl GDObject {
         let s = angle.sin();
         self.apply_matrix(c, -s, s, c);
     }
+
+    #[wasm_bindgen]
+    pub fn x_basis_len(&self) -> f32 {
+        vector![self.ix, self.iy].magnitude()
+    }
+    #[wasm_bindgen]
+    pub fn y_basis_len(&self) -> f32 {
+        vector![self.jx, self.jy].magnitude()
+    }
 }

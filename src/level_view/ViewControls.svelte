@@ -384,11 +384,6 @@ aria-grabbed="false" -->
             changeGround2Color(e);
         }}
     />
-    <button
-        on:click={() => {
-            console.log(`${state.get_screen_pos(0, 0)}`);
-        }}>Ombaba</button
-    >
 </div>
 
 <div class="absolute overflow-visible w-full h-full pointer-events-none">

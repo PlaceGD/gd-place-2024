@@ -22,10 +22,10 @@
         return min <= f && f <= max;
     };
 
-    const MIN = 0.25;
-    const MAX = 4;
+    const MIN = 0.4999;
+    const MAX = 2.0001;
 
-    let singleMin = 0.25;
+    let singleMin = 0.5;
 
     let cb = addUpdateCallback(state => {
         let obj = state.get_preview_object();
@@ -45,10 +45,16 @@
             let larger = Math.max(xLen, yLen);
             let smaller = Math.min(xLen, yLen);
 
-            singleMin = (0.25 * larger) / smaller;
+            singleMin = (0.5 * larger) / smaller;
 
             if ($widgetData.scale != $widgetData.prevScale) {
                 obj.scale($widgetData.scale / larger);
+                if (xLen >= yLen) {
+                    obj.set_x_scale($widgetData.scale);
+                } else {
+                    obj.set_y_scale($widgetData.scale);
+                }
+                console.log(obj.x_basis_len());
                 setPreviewObject(obj);
             }
         }
@@ -80,7 +86,7 @@
                 style:width="500px"
                 max={MAX}
                 min={MIN}
-                step={0.001}
+                step={0.05}
                 bind:value={$widgetData.scaleX}
                 aria-label="Scale slider"
             />
@@ -106,7 +112,7 @@
                 style:width="500px"
                 max={MAX}
                 min={MIN}
-                step={0.001}
+                step={0.05}
                 bind:value={$widgetData.scaleY}
                 aria-label="Scale slider"
             />
@@ -133,7 +139,7 @@
                 style:width="500px"
                 max={MAX}
                 min={singleMin}
-                step={0.001}
+                step={0.05}
                 bind:value={$widgetData.scale}
                 aria-label="Scale slider"
             />

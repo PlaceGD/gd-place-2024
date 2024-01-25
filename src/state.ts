@@ -40,6 +40,7 @@ export const withState = <T>(f: (state: wasm.StateWrapper) => T): T => {
 
 export const setPreviewObject = (obj: wasm.GDObject) => {
     widgetData.update(data => {
+        // console.log("bimby", obj.x_basis_len());
         let s = parseFloat(
             `${Math.max(obj.x_basis_len(), obj.y_basis_len())}`.slice(
                 0,
@@ -48,6 +49,7 @@ export const setPreviewObject = (obj: wasm.GDObject) => {
         );
         let sx = parseFloat(`${obj.x_basis_len()}`.slice(0, data.maxScaleLen));
         let sy = parseFloat(`${obj.y_basis_len()}`.slice(0, data.maxScaleLen));
+        let rot = obj.x_basis_angle();
         return {
             ...data,
             scale: s,
@@ -56,6 +58,12 @@ export const setPreviewObject = (obj: wasm.GDObject) => {
             prevScaleX: sx,
             scaleY: sy,
             prevScaleY: sy,
+            angle: rot,
+            prevAngle: rot,
+            // ix: obj.ix,
+            // iy: obj.iy,
+            // jx: obj.jx,
+            // jy: obj.jy,
         };
     });
     state?.set_preview_object(obj);

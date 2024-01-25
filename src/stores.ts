@@ -33,7 +33,7 @@ export const menuSettings = writable(
 );
 
 export const widgetData = writable({
-    maxScaleLen: 5,
+    maxScaleLen: 4,
 
     scale: 1,
     prevScale: 1,
@@ -42,4 +42,12 @@ export const widgetData = writable({
     prevScaleX: 1,
     scaleY: 1,
     prevScaleY: 1,
+
+    angle: 0,
+    prevAngle: 0,
+
+    // ix: 1,
+    // iy: 0,
+    // jx: 0,
+    // jy: 1,
 });

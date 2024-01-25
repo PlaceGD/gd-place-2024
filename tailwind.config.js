@@ -12,6 +12,7 @@ export default {
             "menu-gray": "#0A0A0A",
             black: "black",
             white: "white",
+            "disabled-white": "#444",
             red: "red",
             "button-green": "#75c934",
             "button-cyan-press": "#35CECE",

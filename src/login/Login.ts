@@ -6,17 +6,23 @@ export type LoginData = {
 };
 
 export enum LoginMethod {
-    Google,
-    GitHub,
-    X,
+    Google = "Google",
+    GitHub = "GitHub",
+    X = "X",
 }
 
 export const handleLogout = () => {};
 
 export type Component = new (...args: any[]) => SvelteComponent;
-export type ComponentWithProps = { component: Component; props?: any };
+export type ComponentWithProps = {
+    component: Component;
+    props?: any;
+    showBackButton?: boolean;
+    showCloseButton?: boolean;
+};
 
 export type SliderMethods = {
     previous: () => void;
     addSlideAndMove: (slide: ComponentWithProps) => void;
+    setInteractability: (interact: boolean) => void;
 };

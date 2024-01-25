@@ -30,6 +30,14 @@
         );
     }
 
+    // import { onMount } from "svelte";
+    // import { SITE_KEY } from "./grecaptcha";
+    // onMount(() => {
+    //     grecaptcha.execute(SITE_KEY, { action: "page_load" }).then(t => {
+    //         console.log(t);
+    //     });
+    // });
+
     initWasm();
     loadSpritesheet();
 

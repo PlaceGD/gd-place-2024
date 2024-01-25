@@ -111,6 +111,8 @@
             hasResetSm = false;
         }
     });
+
+    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
 
 <Animate
@@ -239,9 +241,7 @@
                                                             $menuSettings.selectedBuildTab =
                                                                 key;
                                                         }}
-                                                        tabindex={$menuSettings.isMinimized
-                                                            ? -1
-                                                            : 0}
+                                                        tabindex={canSelectByTab}
                                                         aria-label={key}
                                                     >
                                                         <Image
@@ -268,9 +268,7 @@
                                                             $menuSettings.selectedEditTab =
                                                                 value;
                                                         }}
-                                                        tabindex={$menuSettings.isMinimized
-                                                            ? -1
-                                                            : 0}
+                                                        tabindex={canSelectByTab}
                                                         aria-label={value}
                                                     >
                                                         <h1
@@ -331,14 +329,12 @@
                                         $menuSettings.selectedGroup =
                                             TabGroup.Build;
                                     }}
-                                    tabindex={$menuSettings.isMinimized
-                                        ? -1
-                                        : 0}
+                                    tabindex={canSelectByTab}
                                     aria-label="Build Tab"
                                 >
                                     <Build
-                                        style={cx({
-                                            "color: #444":
+                                        class={cx({
+                                            "text-disabled-white":
                                                 $menuSettings.selectedGroup !=
                                                 TabGroup.Build,
                                         })}
@@ -352,14 +348,12 @@
                                         $menuSettings.selectedGroup =
                                             TabGroup.Edit;
                                     }}
-                                    tabindex={$menuSettings.isMinimized
-                                        ? -1
-                                        : 0}
+                                    tabindex={canSelectByTab}
                                     aria-label="Edit Tab"
                                 >
                                     <Edit
-                                        style={cx({
-                                            "color: #444":
+                                        class={cx({
+                                            "text-disabled-white":
                                                 $menuSettings.selectedGroup !=
                                                 TabGroup.Edit,
                                         })}
@@ -373,14 +367,12 @@
                                         $menuSettings.selectedGroup =
                                             TabGroup.Delete;
                                     }}
-                                    tabindex={$menuSettings.isMinimized
-                                        ? -1
-                                        : 0}
+                                    tabindex={canSelectByTab}
                                     aria-label="Delete Tab"
                                 >
                                     <Delete
-                                        style={cx({
-                                            "color: #444":
+                                        class={cx({
+                                            "text-disabled-white":
                                                 $menuSettings.selectedGroup !=
                                                 TabGroup.Delete,
                                         })}
@@ -445,7 +437,7 @@
                         "place-bttn-delete":
                             $menuSettings.selectedGroup == TabGroup.Delete,
                     })}
-                    tabindex={$menuSettings.isMinimized ? -1 : 0}
+                    tabindex={canSelectByTab}
                     aria-label={`${$menuSettings.selectedGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
                     use:motion
                     on:click={() => {

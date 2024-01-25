@@ -1,6 +1,17 @@
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-export const clamp = (a: number, min: number, max: number) =>
-    Math.max(Math.min(a, max), min);
+export const clamp = (v: number, min: number, max: number) =>
+    Math.max(Math.min(v, max), min);
+
+export const signedClamp = (v: number, min: number, max: number) => {
+    let neg = v < 0;
+    return clamp(Math.abs(v), min, max) * (neg ? -1 : 1);
+};
+export const round = (v: number, decimals: number = 0) => {
+    let m = 10 ** decimals;
+    return Math.round(v * m) / m;
+};
+
+export const snap = (v: number, snap: number) => Math.round(v / snap) * snap;
 
 export const map = (v: number, a: number, b: number, c: number, d: number) =>
     ((v - a) / (b - a)) * (d - c) + c;
@@ -54,4 +65,9 @@ export const hsvToRgb = (
     let [r1, g1, b1] = [r + m, g + m, b + m];
 
     return [r1 * 255.0, g1 * 255.0, b1 * 255.0];
+};
+
+export const getCenterPos = (element: HTMLElement): [number, number] => {
+    let rect = element.getBoundingClientRect();
+    return [rect.left + rect.width / 2, rect.top + rect.height / 2];
 };

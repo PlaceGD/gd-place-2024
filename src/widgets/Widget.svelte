@@ -2,6 +2,8 @@
     import Scale from "./Scale.svelte";
     import { withState, addCallback } from "../state";
     import { onDestroy } from "svelte";
+    import Rotate from "./Rotate.svelte";
+    import Warp from "./Warp.svelte";
 
     let widgetPos = [0, 0];
     let widgetScale = 1;
@@ -10,7 +12,8 @@
     let cb = addCallback(state => {
         let obj = state.get_preview_object();
         widgetPos = [...state.get_screen_pos(obj.x, obj.y)];
-        widgetScale = state.get_zoom_scale() / 2;
+        widgetScale = 1 + state.get_zoom() / 80;
+        // console.log(widgetScale);
         isVisible = state.is_preview_visible();
     });
 
@@ -26,6 +29,7 @@
     `}
 >
     {#if isVisible}
-        <Scale isXY={true} />
+        <!-- <Scale isXY={false} /> -->
+        <Warp {widgetScale} />
     {/if}
 </div>

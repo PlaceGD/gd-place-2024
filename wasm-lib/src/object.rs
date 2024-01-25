@@ -167,6 +167,14 @@ impl GDObject {
     pub fn y_basis_len(&self) -> f32 {
         vector![self.jx, self.jy].magnitude()
     }
+    #[wasm_bindgen]
+    pub fn x_basis_angle(&self) -> f32 {
+        self.iy.atan2(self.ix).to_degrees()
+    }
+    #[wasm_bindgen]
+    pub fn y_basis_angle(&self) -> f32 {
+        self.jy.atan2(self.jx).to_degrees()
+    }
 
     #[wasm_bindgen]
     pub fn set_x_scale(&mut self, v: f32) {
@@ -179,5 +187,17 @@ impl GDObject {
         let v = vector![self.jx, self.jy].normalize() * v;
         self.jx = v.x;
         self.jy = v.y;
+    }
+    #[wasm_bindgen]
+    pub fn set_x_angle(&mut self, angle: f32) {
+        let l = vector![self.ix, self.iy].magnitude();
+        self.ix = angle.to_radians().cos() * l;
+        self.iy = angle.to_radians().sin() * l;
+    }
+    #[wasm_bindgen]
+    pub fn set_y_angle(&mut self, angle: f32) {
+        let l = vector![self.jx, self.jy].magnitude();
+        self.jx = angle.to_radians().cos() * l;
+        self.jy = angle.to_radians().sin() * l;
     }
 }

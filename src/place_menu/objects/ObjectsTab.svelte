@@ -8,7 +8,7 @@
     import { DEBUG } from "../../utils/debug";
 
     import { TabGroup, menuSettings } from "../../stores";
-    import { objects, spritesheet } from "shared-lib";
+    import { objects, round, spritesheet } from "shared-lib";
     import { spritesheetProgress } from "../../load_wasm";
 
     let objButtonSize = 0;
@@ -27,7 +27,7 @@
             max-height: none;
             max-width: none;
             object-position: ${-mainSprite.pos[0]}px ${-mainSprite.pos[1]}px;
-            transform: scale(${Math.round(scale * 100) / 100});          
+            transform: scale(${round(scale, 2)});          
         `;
     };
 </script>

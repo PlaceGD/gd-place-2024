@@ -2,7 +2,7 @@ import { database } from "firebase-admin";
 // import { initializeApp } from "firebase-admin/app";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-import { clamp, decodeString, objects } from "shared-lib";
+import { clamp, decodeString, objects, signedClamp } from "shared-lib";
 
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Reader } from "./reader";
@@ -31,11 +31,6 @@ interface GDObject {
 }
 const GD_OBJECT_SIZE = 38;
 
-const vecClamp = (v: number) => {
-    let neg = v < 0;
-    return clamp(Math.abs(v), 0.25, 4.0) * (neg ? -1 : 1);
-};
-
 const deserializeObject = (data: string, logger: LogGroup): GDObject | null => {
     let bytes: Uint8Array = decodeString(data, 126); // crazy base
 
@@ -60,13 +55,13 @@ const deserializeObject = (data: string, logger: LogGroup): GDObject | null => {
     logger.debug("Object y:", y);
     if (y < 0 || y > LEVEL_HEIGHT_UNITS) return null;
 
-    const ix = vecClamp(reader.readF32());
+    const ix = signedClamp(reader.readF32(), 0.5, 2.0);
     logger.debug("Object ix:", ix);
-    const iy = vecClamp(reader.readF32());
+    const iy = signedClamp(reader.readF32(), 0.5, 2.0);
     logger.debug("Object iy:", iy);
-    const jx = vecClamp(reader.readF32());
+    const jx = signedClamp(reader.readF32(), 0.5, 2.0);
     logger.debug("Object jx:", jx);
-    const jy = vecClamp(reader.readF32());
+    const jy = signedClamp(reader.readF32(), 0.5, 2.0);
     logger.debug("Object jy:", jy);
 
     const zLayer = reader.readU8();

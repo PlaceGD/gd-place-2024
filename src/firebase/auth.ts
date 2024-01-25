@@ -57,9 +57,9 @@ let userDataUnsub: Unsubscribe | null = null;
 
 onAuthStateChanged(auth, async user => {
     if (user != null) {
-        let userDataValue = {
-            user,
-            data: null,
+        let userDataValue: UserData = {
+            userData: user,
+            placeData: null,
         };
 
         currentUserData.set(userDataValue);
@@ -69,10 +69,10 @@ onAuthStateChanged(auth, async user => {
         }
 
         userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
-            userDataValue.data = snapshot.val();
+            userDataValue.placeData = snapshot.val();
             currentUserData.set(userDataValue);
 
-            if (userDataValue.data !== null) {
+            if (userDataValue.placeData !== null) {
                 setPersistence(auth, browserLocalPersistence);
             }
         });

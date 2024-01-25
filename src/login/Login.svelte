@@ -8,6 +8,7 @@
         type SliderMethods,
         LoginMethod,
         type ComponentWithProps,
+        handleSignIn,
     } from "./login";
 
     import TOS from "./slides/TOS.svelte";
@@ -16,6 +17,8 @@
     import Back from "./icons/back.svg";
     import { cubicInOut } from "svelte/easing";
     import { tweened } from "svelte/motion";
+    import { currentUserData } from "../firebase/auth";
+    import Toast from "../utils/toast";
 
     export let loginData: LoginData;
 
@@ -31,7 +34,6 @@
         twitter = e.shiftKey;
     });
 
-    let self: any;
     let slideParent: HTMLDivElement;
 
     let userSetCanInteract = true;
@@ -43,6 +45,8 @@
     });
 
     const closeSlides = () => {
+        userSetCanInteract = true;
+        transitionCanInteract = true;
         $slideTween = 0;
         slides = [];
         loginData.showLoginUI = false;
@@ -92,6 +96,30 @@
     $: showCloseButton = slides[slides.length - 1]?.showCloseButton ?? true;
 
     $: canInteract = userSetCanInteract && transitionCanInteract;
+
+    /////////////////////////
+
+    const signInMaybeSlideNext = (method: LoginMethod) => {
+        userSetCanInteract = false;
+        handleSignIn(LoginMethod.Google).then(isOK => {
+            if (isOK) {
+                if ($currentUserData !== null) {
+                    if ($currentUserData.placeData !== null) {
+                        closeSlides();
+                    } else {
+                        // next slide
+                    }
+                } else {
+                    console.error(
+                        "login OK (isOk == true) but `currentUserData` still null"
+                    );
+                    Toast.showErrorToast(
+                        "There was an issue signing in. Please try again."
+                    );
+                }
+            }
+        });
+    };
 </script>
 
 {#if loginData.showLoginUI}
@@ -109,9 +137,9 @@
         })}
         aria-label="Login or Sign Up"
     >
-        <div class="flex w-auto h-auto flex-col gap-2">
+        <div class="flex flex-col w-auto h-auto gap-2">
             <div
-                class="rounded-lg shadow-lg w-96 h-96 bg-menu-gray/90 shadow-black/40 backdrop-blur-md overflow-hidden flex"
+                class="flex overflow-hidden rounded-lg shadow-lg w-96 h-96 bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
                 bind:this={slideParent}
             >
                 <div
@@ -126,12 +154,9 @@
                             <button
                                 class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
                                 aria-label="Login with Twitter"
-                                on:click={() =>
-                                    addSlideAndMove({
-                                        component: LoginMethodComp,
-                                        props: { method: LoginMethod.Google },
-                                        showBackButton: true,
-                                    })}
+                                on:click={() => {
+                                    signInMaybeSlideNext(LoginMethod.Google);
+                                }}
                             >
                                 <Image
                                     src="assets/ui/login/google.svg"
@@ -221,10 +246,10 @@
                 })}
             >
                 {#if showBackButton}
-                    <div class="back h-full">
+                    <div class="h-full back">
                         <button
                             disabled={!canInteract}
-                            class="flex-col p-1 rounded-lg flex-center menu-panel h-full hover:brightness-150 active:brightness-200 aspect-square"
+                            class="flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200 aspect-square"
                             aria-label="Back"
                             on:click={() => previousSlide()}
                         >
@@ -233,10 +258,10 @@
                     </div>
                 {/if}
                 {#if showCloseButton}
-                    <div class="close h-full">
+                    <div class="h-full close">
                         <button
                             disabled={!canInteract}
-                            class="flex-col p-1 rounded-lg flex-center h-full menu-panel hover:brightness-150 active:brightness-200"
+                            class="flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200"
                             aria-label="Close"
                             on:click={closeSlides}
                         >

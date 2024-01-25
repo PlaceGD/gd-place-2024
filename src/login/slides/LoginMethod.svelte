@@ -7,7 +7,7 @@
         signInGithub,
         signInGoogle,
         signInTwitter,
-        type UserProperties,
+        type PlaceData,
     } from "../../firebase/auth";
     import Back from "../icons/back.svg";
     import { get, ref } from "firebase/database";
@@ -60,9 +60,9 @@
     });
 </script>
 
-<div class="w-full h-full flex-center text-center">
+<div class="w-full h-full text-center flex-center">
     <div
-        class="relative flex flex-col items-center justify-between w-full h-full p-6 shrink-0 text-white"
+        class="relative flex flex-col items-center justify-between w-full h-full p-6 text-white shrink-0"
     >
         <h1 class="text-3xl font-pusab text-stroke">{method}</h1>
 

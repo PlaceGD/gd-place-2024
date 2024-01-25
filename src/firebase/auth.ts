@@ -1,40 +1,20 @@
-import { toast } from "@zerodevx/svelte-toast";
-import type { FirebaseApp } from "firebase/app";
 import {
-    getAuth,
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup,
-    signInWithRedirect,
     type User,
     signOut as logOut,
-    type UserCredential,
     GithubAuthProvider,
-    signInWithEmailAndPassword,
-    signInWithCredential,
-    AuthCredential,
-    signInWithCustomToken,
-    EmailAuthCredential,
-    EmailAuthProvider,
-    type AuthProvider,
     TwitterAuthProvider,
-    createUserWithEmailAndPassword,
     inMemoryPersistence,
     setPersistence,
-    sendSignInLinkToEmail,
     browserLocalPersistence,
-    isSignInWithEmailLink,
-    signInWithEmailLink,
-    onIdTokenChanged,
     type Unsubscribe,
 } from "firebase/auth";
 
-import { get, getDatabase, onValue, ref, set } from "firebase/database";
-import { getFirestore, doc } from "firebase/firestore";
+import { onValue, ref } from "firebase/database";
 import type { HttpsCallableResult } from "firebase/functions";
-
-// import { toastErrorTheme } from "../const";
-import { derived, writable, type Writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 import { auth, db } from "./firebase";
 import { initUserWithUsername } from "./cloud_functions";
 
@@ -44,7 +24,7 @@ const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
-export type UserProperties = {
+export type PlaceData = {
     username: string;
     lastPlaced: number;
     lastDeleted: number;
@@ -53,8 +33,8 @@ export type UserProperties = {
 };
 
 export type UserData = {
-    user: User;
-    data: UserProperties | null; // no user data
+    userData: User;
+    placeData: PlaceData | null; // no user data
 };
 
 export const currentUserData: Writable<UserData | null> = writable(null);
@@ -68,11 +48,11 @@ export const signOut = () => logOut(auth);
 
 export const initUserData = (uid: string, username: string) => {
     return initUserWithUsername({ uid, username }) as Promise<
-        HttpsCallableResult<UserProperties>
+        HttpsCallableResult<PlaceData>
     >;
 };
 
-let userDataListener: Unsubscribe | null = null;
+let userDataUnsub: Unsubscribe | null = null;
 // let userDisplayColorListener: Unsubscribe | null = null;
 
 onAuthStateChanged(auth, async user => {
@@ -84,24 +64,21 @@ onAuthStateChanged(auth, async user => {
 
         currentUserData.set(userDataValue);
 
-        if (userDataListener != null) {
-            userDataListener();
+        if (userDataUnsub != null) {
+            userDataUnsub();
         }
 
-        userDataListener = onValue(
-            ref(db, `userData/${user.uid}`),
-            snapshot => {
-                userDataValue.data = snapshot.val();
-                currentUserData.set(userDataValue);
+        userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
+            userDataValue.data = snapshot.val();
+            currentUserData.set(userDataValue);
 
-                if (userDataValue.data !== null) {
-                    setPersistence(auth, browserLocalPersistence);
-                }
+            if (userDataValue.data !== null) {
+                setPersistence(auth, browserLocalPersistence);
             }
-        );
+        });
     } else {
-        if (userDataListener != null) {
-            userDataListener();
+        if (userDataUnsub != null) {
+            userDataUnsub();
         }
 
         currentUserData.set(null);

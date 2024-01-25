@@ -4,7 +4,7 @@
     export let slider: SliderMethods;
 </script>
 
-<div class="w-full h-full flex-center text-center">
+<div class="w-full h-full text-center flex-center">
     <p>HERE IS THE TOS PLEASE READ</p>
     <button on:click={() => slider.previous()}>Ok</button>
 </div>

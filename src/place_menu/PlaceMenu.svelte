@@ -76,11 +76,10 @@
 
         // console.log($menuSettings.selectedMainColor == $menuSettings.selectedDetailColor);
 
-        setPreviewObject(obj);
+        state.set_preview_object(obj);
     }
 
     import config from "../../tailwind.config";
-    import { setPreviewObject } from "../state";
 
     // some bs to fix tiny little responsive anim issue
     // that honestly no one would see but perfectionism :3
@@ -334,7 +333,7 @@
                                 >
                                     <Build
                                         class={cx({
-                                            "text-disabled-white":
+                                            "opacity-30":
                                                 $menuSettings.selectedGroup !=
                                                 TabGroup.Build,
                                         })}
@@ -353,7 +352,7 @@
                                 >
                                     <Edit
                                         class={cx({
-                                            "text-disabled-white":
+                                            "opacity-30":
                                                 $menuSettings.selectedGroup !=
                                                 TabGroup.Edit,
                                         })}
@@ -372,7 +371,7 @@
                                 >
                                     <Delete
                                         class={cx({
-                                            "text-disabled-white":
+                                            "opacity-30":
                                                 $menuSettings.selectedGroup !=
                                                 TabGroup.Delete,
                                         })}

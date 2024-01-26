@@ -30,6 +30,6 @@
 >
     {#if isVisible}
         <!-- <Scale isXY={false} /> -->
-        <Rotate />
+        <Warp {widgetScale} />
     {/if}
 </div>

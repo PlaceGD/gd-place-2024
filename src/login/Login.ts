@@ -3,6 +3,7 @@ import {
     signInGithub,
     signInGoogle,
     signInTwitter,
+    signOut,
     type UserData,
 } from "../firebase/auth";
 import Toast from "../utils/toast";
@@ -52,7 +53,22 @@ const logInFailed = (err: any): boolean => {
     return false;
 };
 
-export const handleSignOut = () => {};
+export const handleSignOut = () => {
+    if (confirm("Are you sure you want to sign out?")) {
+        signOut()
+            .then(() => {
+                loginData.update(data => {
+                    data.isLoggedIn = false;
+                    return data;
+                });
+                Toast.showSuccessToast("Successfully logged out!");
+            })
+            .catch(err => {
+                console.error(err);
+                Toast.showErrorToast("Failed to log out!");
+            });
+    }
+};
 
 export const handleSignIn = async (method: LoginMethod): Promise<boolean> => {
     switch (method) {

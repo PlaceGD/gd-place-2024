@@ -1,30 +1,24 @@
 <script lang="ts">
-    import {
-        addCallback as addUpdateCallback,
-        setPreviewObject,
-        withState,
-    } from "../state";
+    import { addCallback as addUpdateCallback, withState } from "../state";
     import * as wasm from "wasm-lib";
 
     export let widgetScale: number;
 
-    import { onDestroy } from "svelte";
-    import { widgetData } from "../stores";
+    import { onDestroy, onMount } from "svelte";
     import { clamp, getCenterPos, round, signedClamp, snap } from "shared-lib";
 
     let draggingX: [number, number, number, number] | null = null;
     let draggingY: [number, number, number, number] | null = null;
 
-    let ix = 0;
-    let iy = 0;
-    let jx = 0;
-    let jy = 0;
+    let [ix, iy, jx, jy] = [1, 0, 0, 1];
 
-    const settem = (obj: wasm.GDObject) => {
-        ix = obj.ix;
-        iy = obj.iy;
-        jx = obj.jx;
-        jy = obj.jy;
+    const settem = (obj: wasm.GDObjectOpt) => {
+        [ix, iy, jx, jy] = wasm.convert_opt_transform(
+            obj.x_scale_exp,
+            obj.x_angle,
+            obj.y_scale_exp,
+            obj.y_angle
+        );
     };
 
     let cb = addUpdateCallback(state => {
@@ -49,30 +43,38 @@
             let [dix, diy, dpix, dpiy] = draggingX;
             withState(state => {
                 let obj = state.get_preview_object();
-                obj.ix = dpix + (e.clientX - dix) / 100 / widgetScale;
-                obj.iy = dpiy - (e.clientY - diy) / 100 / widgetScale;
 
-                obj.set_x_scale(
-                    snap(signedClamp(obj.x_basis_len(), 0.5, 2.0), 0.05)
+                let nx = dpix + (e.clientX - dix) / 100 / widgetScale;
+                let ny = dpiy - (e.clientY - diy) / 100 / widgetScale;
+
+                obj.x_scale_exp = clamp(
+                    Math.round(Math.log2(Math.hypot(nx, ny)) * 12),
+                    -12,
+                    12
                 );
-                obj.set_x_angle(snap(obj.x_basis_angle(), 5));
+                obj.x_angle = snap((Math.atan2(ny, nx) * 180) / Math.PI, 5) / 5;
+
                 settem(obj);
-                setPreviewObject(obj);
+                state.set_preview_object(obj);
             });
         }
         if (draggingY != null) {
             let [djx, djy, dpjx, dpjy] = draggingY;
             withState(state => {
                 let obj = state.get_preview_object();
-                obj.jx = dpjx + (e.clientX - djx) / 100 / widgetScale;
-                obj.jy = dpjy - (e.clientY - djy) / 100 / widgetScale;
 
-                obj.set_y_scale(
-                    snap(signedClamp(obj.y_basis_len(), 0.5, 2.0), 0.05)
+                let nx = dpjx + (e.clientX - djx) / 100 / widgetScale;
+                let ny = dpjy - (e.clientY - djy) / 100 / widgetScale;
+
+                obj.y_scale_exp = clamp(
+                    Math.round(Math.log2(Math.hypot(nx, ny)) * 12),
+                    -12,
+                    12
                 );
-                obj.set_y_angle(snap(obj.y_basis_angle(), 5));
+                obj.y_angle = snap((Math.atan2(ny, nx) * 180) / Math.PI, 5) / 5;
+
                 settem(obj);
-                setPreviewObject(obj);
+                state.set_preview_object(obj);
             });
         }
     }}
@@ -115,14 +117,15 @@
             left: ${100 * ix}px;
             top: ${-100 * iy}px;
         `}
+        tabindex="-1"
         bind:this={xElement}
         on:mousedown={e => {
-            let [cX, cY] = getCenterPos(xElement);
             draggingX = [e.clientX, e.clientY, ix, iy];
         }}
     >
         <div
             class="relative flex flex-col items-start gap-5 left-11 top-[-13px]"
+            tabindex="-1"
         >
             <span class="font-pusab text-lg max-h-0 text-stroke"
                 >{round((Math.atan2(iy, ix) * 180) / Math.PI, 2)}°</span
@@ -141,6 +144,7 @@
         left: ${100 * jx}px;
         top: ${-100 * jy}px;
     `}
+        tabindex="-1"
         bind:this={yElement}
         on:mousedown={e => {
             draggingY = [e.clientX, e.clientY, jx, jy];
@@ -148,6 +152,7 @@
     >
         <div
             class="relative flex flex-col items-start gap-5 left-11 top-[-13px]"
+            tabindex="-1"
         >
             <span class="font-pusab text-lg max-h-0 text-stroke"
                 >{round((Math.atan2(jy, jx) * 180) / Math.PI, 2)}°</span
@@ -160,12 +165,4 @@
 </div>
 
 <style>
-    .the_dragger {
-        /* background-image: url("/assets/ui/edit/dot.svg"); */
-        /* background-size: 30px; */
-        box-shadow:
-            0px 0px 0px 3px #fff,
-            0px 2px 8px 6px #0004,
-            inset 0px 0px 0px 3px #000;
-    }
 </style>

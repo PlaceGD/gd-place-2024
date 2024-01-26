@@ -25,7 +25,7 @@ use wasm_bindgen::prelude::*;
 
 use crate::{
     level::{ChunkCoord, CHUNK_SIZE_UNITS},
-    utilgen::{get_detail_sprite, get_main_sprite},
+    utilgen::{DETAIL_SPRITES, MAIN_SPRITES},
 };
 
 #[wasm_bindgen]
@@ -118,9 +118,9 @@ pub fn now() -> f64 {
 }
 
 pub fn get_max_bounding_box(id: u32) -> Option<(f32, f32)> {
-    let mut rect_size = get_main_sprite(id).map(SpriteInfo::offset_rect_size);
+    let mut rect_size = MAIN_SPRITES[id as usize].map(SpriteInfo::offset_rect_size);
 
-    if let Some((w, h)) = get_detail_sprite(id).map(SpriteInfo::offset_rect_size) {
+    if let Some((w, h)) = DETAIL_SPRITES[id as usize].map(SpriteInfo::offset_rect_size) {
         if let Some((rw, rh)) = &mut rect_size {
             *rw = rw.max(w);
             *rh = rh.max(h);

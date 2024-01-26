@@ -16,9 +16,9 @@ use crate::{
         LEVEL_WIDTH_UNITS,
     },
     log, map,
-    object::{GDColor, GDObject},
+    object::{GDColor, GDObject, GDObjectOpt},
     util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
-    utilgen::{get_detail_sprite, get_main_sprite, get_object_info},
+    utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
     ErrorType, RustError,
 };
 
@@ -50,7 +50,7 @@ pub struct State {
     ground1_color: (u8, u8, u8),
     ground2_color: (u8, u8, u8),
 
-    preview_object: GDObject,
+    preview_object: GDObjectOpt,
     show_preview: bool,
 
     selected_object: Option<DbKey>,
@@ -75,14 +75,14 @@ impl State {
             ground2_color: (127, 178, 255),
 
             level: Level::default(),
-            preview_object: GDObject {
+            preview_object: GDObjectOpt {
                 id: 1,
                 x: 15.0,
                 y: 15.0,
-                ix: 1.0,
-                iy: 0.0,
-                jx: 0.0,
-                jy: 1.0,
+                x_scale_exp: 0,
+                x_angle: 0,
+                y_scale_exp: 0,
+                y_angle: 18,
                 z_layer: crate::layer::ZLayer::T1,
                 z_order: 1,
                 main_color: GDColor::white(),
@@ -125,9 +125,7 @@ impl State {
 
 #[rustfmt::skip]
 fn obj_transform(obj: &GDObject) -> FrameTransformMatrix {
-    let scale = get_object_info(obj.id as u32)
-        .map(|v| v.builtin_scale)
-        .unwrap_or(1.0) / 4.0;
+    let scale = OBJECT_INFO[obj.id as usize].builtin_scale / 4.0;
     Matrix3::new(
         obj.ix * scale, obj.jx * scale, obj.x,
         obj.iy * scale, obj.jy * scale, obj.y,
@@ -318,7 +316,7 @@ impl AppState for State {
                 frame.push();
                 frame.transform(FrameTransform::Custom(obj_transform(obj)));
                 frame.set_current_texture_group(
-                    if get_object_info(obj.id as u32).unwrap().builtin_scale == 1.0 {
+                    if OBJECT_INFO[obj.id as usize].builtin_scale == 1.0 {
                         0
                     } else {
                         1
@@ -361,7 +359,7 @@ impl AppState for State {
                         *layer,
                         z_order,
                         |key, obj| {
-                            if let Some(sprite) = get_main_sprite(obj.id as u32) {
+                            if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
                                 if obj.main_color.blending {
                                     frame.fill(Color::Rgba8(
                                         obj.main_color.r,
@@ -375,7 +373,7 @@ impl AppState for State {
                             }
                         },
                         if self.show_preview {
-                            Some(&self.preview_object)
+                            Some(self.preview_object.into_obj())
                         } else {
                             None
                         },
@@ -387,7 +385,7 @@ impl AppState for State {
                         *layer,
                         z_order,
                         |key, obj| {
-                            if let Some(sprite) = get_main_sprite(obj.id as u32) {
+                            if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
                                 if !obj.main_color.blending {
                                     frame.fill(Color::Rgba8(
                                         obj.main_color.r,
@@ -399,7 +397,7 @@ impl AppState for State {
                                     draw_obj_sprite(frame, &sprite, obj);
                                 }
                             }
-                            if let Some(sprite) = get_detail_sprite(obj.id as u32) {
+                            if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
                                 if !obj.detail_color.blending {
                                     frame.fill(Color::Rgba8(
                                         obj.detail_color.r,
@@ -413,7 +411,7 @@ impl AppState for State {
                             }
                         },
                         if self.show_preview {
-                            Some(&self.preview_object)
+                            Some(self.preview_object.into_obj())
                         } else {
                             None
                         },
@@ -425,7 +423,7 @@ impl AppState for State {
                         *layer,
                         z_order,
                         |key, obj| {
-                            if let Some(sprite) = get_detail_sprite(obj.id as u32) {
+                            if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
                                 if obj.detail_color.blending {
                                     frame.fill(Color::Rgba8(
                                         obj.detail_color.r,
@@ -439,7 +437,7 @@ impl AppState for State {
                             }
                         },
                         if self.show_preview {
-                            Some(&self.preview_object)
+                            Some(self.preview_object.into_obj())
                         } else {
                             None
                         },
@@ -449,11 +447,11 @@ impl AppState for State {
             frame.set_blend_mode(BlendMode::Normal);
 
             let highlight_obj = if self.show_preview {
-                Some((&self.preview_object, (100, 255, 100), None))
+                Some((self.preview_object.into_obj(), (100, 255, 100), None))
             } else if let Some(d) = self.selected_object {
                 self.level.get_obj_by_key(d).map(|v| {
                     (
-                        v,
+                        *v,
                         (255, 100, 100),
                         Some(String::from_utf8(d.into()).unwrap()),
                     )
@@ -464,9 +462,9 @@ impl AppState for State {
 
             if let Some((obj, color, key)) = highlight_obj {
                 frame.push();
-                frame.transform(FrameTransform::Custom(obj_transform(obj)));
+                frame.transform(FrameTransform::Custom(obj_transform(&obj)));
 
-                let rect = padded_obj_rect(obj, 30.0);
+                let rect = padded_obj_rect(&obj, 30.0);
 
                 frame.no_fill();
 
@@ -757,10 +755,10 @@ impl StateWrapper {
         vec![p.x, p.y]
     }
 
-    pub fn add_object(&mut self, key: String, obj: GDObject) -> Result<(), RustError> {
-        if get_object_info(obj.id as u32).is_none() {
-            return ErrorType::InvalidObjectId(obj.id).into();
-        }
+    pub fn add_object(&mut self, key: String, obj: GDObjectOpt) -> Result<(), RustError> {
+        // if get_object_info(obj.id as u32).is_none() {
+        //     return ErrorType::InvalidObjectId(obj.id).into();
+        // }
 
         if let Ok(key) = key.into_bytes().try_into() {
             let key: DbKey = key;
@@ -778,7 +776,7 @@ impl StateWrapper {
                 .objects
                 .entry(obj.z_order)
                 .or_default()
-                .insert(key, obj);
+                .insert(key, obj.into_obj());
         }
         Ok(())
     }
@@ -846,10 +844,11 @@ impl StateWrapper {
     pub fn set_preview_visibility(&mut self, to: bool) {
         self.bundle.state.show_preview = to;
     }
-    pub fn get_preview_object(&mut self) -> GDObject {
+    pub fn get_preview_object(&mut self) -> GDObjectOpt {
         self.bundle.state.preview_object
     }
-    pub fn set_preview_object(&mut self, to: GDObject) {
+    pub fn set_preview_object(&mut self, mut to: GDObjectOpt) {
+        to.fix();
         self.bundle.state.preview_object = to
     }
     pub fn is_preview_visible(&self) -> bool {

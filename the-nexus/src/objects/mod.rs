@@ -26,18 +26,21 @@ pub struct ObjectInfo {
 }
 
 pub(crate) fn make_get_object_info_fn() -> String {
+    let mut ongy = [ObjectInfo {
+        place_offset_x: 0.0,
+        place_offset_y: 0.0,
+        tintable: true,
+        solid: false,
+        builtin_scale: 1.0,
+        category: ObjectCategory::Blocks,
+    }; 4600];
+    for &(k, v) in get_available_objects() {
+        ongy[k as usize] = v;
+    }
+
     format!(
         "
-pub fn get_object_info(id: u32) -> Option<ObjectInfo> {{
-    Some(match id {{
-        {},
-        _ => return None,
-    }})
-}}
-    ",
-        get_available_objects()
-            .iter()
-            .map(|(id, info)| { format!("{id} => {info:#?}") })
-            .join(",")
+pub const OBJECT_INFO: [ObjectInfo; 4600] = {ongy:?};
+    "
     )
 }

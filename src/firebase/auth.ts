@@ -75,8 +75,12 @@ onAuthStateChanged(auth, async user => {
 
         userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
             const placeData = snapshot.val();
+
+            console.log(placeData);
+
             loginData.update(data => {
                 if (data.currentUserData !== null) {
+                    data.isLoggedIn = true;
                     data.currentUserData.placeData = placeData;
                 } else {
                     console.error(

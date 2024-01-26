@@ -147,35 +147,57 @@ pub(crate) fn color_bleed(img: &mut DynamicImage) {
 }
 
 pub(crate) fn make_get_main_sprite_fn(data: &SpritesheetData) -> String {
+    let mut ongy = [None; 4600];
+    for (&k, &v) in &data.main_sprites {
+        ongy[k as usize] = Some(v);
+    }
+
     format!(
         "
-pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {{
-    Some(match id {{
-        {},
-        _ => return None,
-    }})
-}}
-    ",
-        data.main_sprites
-            .iter()
-            .map(|(id, info)| { format!("{id} => {info:#?}") })
-            .join(",")
+pub const MAIN_SPRITES: [SpriteInfo; 4600] = {ongy:?};
+    "
     )
+
+    //     format!(
+    //         "
+    // pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {{
+    //     Some(match id {{
+    //         {},
+    //         _ => return None,
+    //     }})
+    // }}
+    //     ",
+    //         data.main_sprites
+    //             .iter()
+    //             .map(|(id, info)| { format!("{id} => {info:#?}") })
+    //             .join(",")
+    //     )
 }
 
 pub(crate) fn make_get_detail_sprite_fn(data: &SpritesheetData) -> String {
+    let mut ongy = [None; 4600];
+    for (&k, &v) in &data.detail_sprites {
+        ongy[k as usize] = Some(v);
+    }
+
     format!(
         "
-pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {{
-    Some(match id {{
-        {},
-        _ => return None,
-    }})
-}}
-    ",
-        data.detail_sprites
-            .iter()
-            .map(|(id, info)| { format!("{id} => {info:#?}") })
-            .join(",")
+pub const DETAIL_SPRITES: [SpriteInfo; 4600] = {ongy:?};
+    "
     )
+
+    //     format!(
+    //         "
+    // pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {{
+    //     Some(match id {{
+    //         {},
+    //         _ => return None,
+    //     }})
+    // }}
+    //     ",
+    //         data.detail_sprites
+    //             .iter()
+    //             .map(|(id, info)| { format!("{id} => {info:#?}") })
+    //             .join(",")
+    //     )
 }

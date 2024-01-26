@@ -12,7 +12,6 @@ import {
     set,
     remove,
 } from "firebase/database";
-import type { GDObject } from "wasm-lib";
 import Toast from "../utils/toast";
 import { getAuth } from "firebase/auth";
 

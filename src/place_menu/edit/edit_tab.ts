@@ -1,4 +1,4 @@
-import type { GDObject } from "wasm-lib";
+import type { GDObjectOpt } from "wasm-lib";
 
 export enum EditTab {
     Transform = "Transform",
@@ -13,7 +13,7 @@ interface Shortcut {
 }
 
 interface Keybind {
-    cb: (obj: GDObject) => void;
+    cb: (obj: GDObjectOpt) => void;
     shortcut: Shortcut;
 }
 
@@ -22,13 +22,13 @@ interface TransformButton {
     image: string;
     flipped: boolean;
     angle: number;
-    cb: (obj: GDObject) => void;
+    cb: (obj: GDObjectOpt) => void;
 }
 
 export const KEYBINDS: Record<string, Keybind> = {
     move_up_small: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, 2);
+        cb: (obj: GDObjectOpt) => {
+            obj.y += 2;
         },
         shortcut: {
             key: "w",
@@ -37,8 +37,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_down_small: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, -2);
+        cb: (obj: GDObjectOpt) => {
+            obj.y += -2;
         },
         shortcut: {
             key: "s",
@@ -47,8 +47,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_left_small: {
-        cb: (obj: GDObject) => {
-            obj.translate(-2, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x -= 2;
         },
         shortcut: {
             key: "a",
@@ -57,8 +57,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_right_small: {
-        cb: (obj: GDObject) => {
-            obj.translate(2, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x += 2;
         },
         shortcut: {
             key: "d",
@@ -68,8 +68,8 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
 
     move_up: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, 30);
+        cb: (obj: GDObjectOpt) => {
+            obj.y += 30;
         },
         shortcut: {
             key: "w",
@@ -78,8 +78,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_down: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, -30);
+        cb: (obj: GDObjectOpt) => {
+            obj.y += -30;
         },
         shortcut: {
             key: "s",
@@ -88,8 +88,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_left: {
-        cb: (obj: GDObject) => {
-            obj.translate(-30, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x -= 30;
         },
         shortcut: {
             key: "a",
@@ -98,8 +98,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_right: {
-        cb: (obj: GDObject) => {
-            obj.translate(30, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x += 30;
         },
         shortcut: {
             key: "d",
@@ -109,8 +109,9 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
 
     flip_vert: {
-        cb: (obj: GDObject) => {
-            obj.apply_matrix(1, 0, 0, -1);
+        cb: (obj: GDObjectOpt) => {
+            obj.x_angle *= -1;
+            obj.y_angle *= -1;
         },
         shortcut: {
             key: "e",
@@ -119,8 +120,13 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     flip_horiz: {
-        cb: (obj: GDObject) => {
-            obj.apply_matrix(-1, 0, 0, 1);
+        cb: (obj: GDObjectOpt) => {
+            obj.x_angle -= 18;
+            obj.y_angle -= 18;
+            obj.x_angle *= -1;
+            obj.y_angle *= -1;
+            obj.x_angle += 18;
+            obj.y_angle += 18;
         },
         shortcut: {
             key: "q",
@@ -130,8 +136,9 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
 
     rotate_ccw: {
-        cb: (obj: GDObject) => {
-            obj.rotate(-90);
+        cb: (obj: GDObjectOpt) => {
+            obj.x_angle += 18;
+            obj.y_angle += 18;
         },
         shortcut: {
             key: "q",
@@ -140,8 +147,9 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     rotate_cw: {
-        cb: (obj: GDObject) => {
-            obj.rotate(90);
+        cb: (obj: GDObjectOpt) => {
+            obj.x_angle -= 18;
+            obj.y_angle -= 18;
         },
         shortcut: {
             key: "e",
@@ -150,8 +158,9 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     rotate_ccw_5: {
-        cb: (obj: GDObject) => {
-            obj.rotate(-5);
+        cb: (obj: GDObjectOpt) => {
+            obj.x_angle += 1;
+            obj.y_angle += 1;
         },
         shortcut: {
             key: "q",
@@ -160,8 +169,9 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     rotate_cw_5: {
-        cb: (obj: GDObject) => {
-            obj.rotate(5);
+        cb: (obj: GDObjectOpt) => {
+            obj.x_angle -= 1;
+            obj.y_angle -= 1;
         },
         shortcut: {
             key: "e",
@@ -171,8 +181,8 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
 
     move_up_big: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, 30 * 5);
+        cb: (obj: GDObjectOpt) => {
+            obj.y += 30 * 5;
         },
         shortcut: {
             key: "w",
@@ -181,8 +191,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_down_big: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, -30 * 5);
+        cb: (obj: GDObjectOpt) => {
+            obj.y -= 30 * 5;
         },
         shortcut: {
             key: "s",
@@ -191,8 +201,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_left_big: {
-        cb: (obj: GDObject) => {
-            obj.translate(-30 * 5, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x -= 30 * 5;
         },
         shortcut: {
             key: "a",
@@ -201,8 +211,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_right_big: {
-        cb: (obj: GDObject) => {
-            obj.translate(30 * 5, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x += 30 * 5;
         },
         shortcut: {
             key: "d",
@@ -212,8 +222,8 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
 
     move_up_mini: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, 0.5);
+        cb: (obj: GDObjectOpt) => {
+            obj.y += 0.5;
         },
         shortcut: {
             key: "w",
@@ -222,8 +232,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_down_mini: {
-        cb: (obj: GDObject) => {
-            obj.translate(0, -0.5);
+        cb: (obj: GDObjectOpt) => {
+            obj.y -= 0.5;
         },
         shortcut: {
             key: "s",
@@ -232,8 +242,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_left_mini: {
-        cb: (obj: GDObject) => {
-            obj.translate(-0.5, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x -= 0.5;
         },
         shortcut: {
             key: "a",
@@ -242,8 +252,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     move_right_mini: {
-        cb: (obj: GDObject) => {
-            obj.translate(0.5, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.x += 0.5;
         },
         shortcut: {
             key: "d",
@@ -253,8 +263,9 @@ export const KEYBINDS: Record<string, Keybind> = {
     },
 
     scale_up: {
-        cb: (obj: GDObject) => {
-            obj.scale(2 ** (1 / 12));
+        cb: (obj: GDObjectOpt) => {
+            obj.x_scale_exp += 1;
+            obj.y_scale_exp += 1;
         },
         shortcut: {
             key: "e",
@@ -263,8 +274,9 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     scale_down: {
-        cb: (obj: GDObject) => {
-            obj.scale(2 ** (-1 / 12));
+        cb: (obj: GDObjectOpt) => {
+            obj.x_scale_exp -= 1;
+            obj.y_scale_exp -= 1;
         },
         shortcut: {
             key: "q",
@@ -273,8 +285,8 @@ export const KEYBINDS: Record<string, Keybind> = {
         },
     },
     ebonky: {
-        cb: (obj: GDObject) => {
-            obj.skew(0.1, 0);
+        cb: (obj: GDObjectOpt) => {
+            obj.y_scale_exp = 12;
         },
         shortcut: {
             key: "f",
@@ -285,63 +297,63 @@ export const KEYBINDS: Record<string, Keybind> = {
 };
 
 export const TRANSFORM_BUTTONS: TransformButton[] = [
-    {
-        name: "Move Up 2 Units",
-        image: "move_small",
-        cb: KEYBINDS.move_up_small.cb,
-        flipped: false,
-        angle: 180,
-    },
-    {
-        name: "Move Down 2 Units",
-        image: "move_small",
-        cb: KEYBINDS.move_down_small.cb,
-        flipped: false,
-        angle: 0,
-    },
-    {
-        name: "Move Left 2 Units",
-        image: "move_small",
-        cb: KEYBINDS.move_left_small.cb,
-        flipped: false,
-        angle: 90,
-    },
-    {
-        name: "Move Right 2 Units",
-        image: "move_small",
-        cb: KEYBINDS.move_right_small.cb,
-        flipped: false,
-        angle: -90,
-    },
+    // {
+    //     name: "Move Up 2 Units",
+    //     image: "move_small",
+    //     cb: KEYBINDS.move_up_small.cb,
+    //     flipped: false,
+    //     angle: 180,
+    // },
+    // {
+    //     name: "Move Down 2 Units",
+    //     image: "move_small",
+    //     cb: KEYBINDS.move_down_small.cb,
+    //     flipped: false,
+    //     angle: 0,
+    // },
+    // {
+    //     name: "Move Left 2 Units",
+    //     image: "move_small",
+    //     cb: KEYBINDS.move_left_small.cb,
+    //     flipped: false,
+    //     angle: 90,
+    // },
+    // {
+    //     name: "Move Right 2 Units",
+    //     image: "move_small",
+    //     cb: KEYBINDS.move_right_small.cb,
+    //     flipped: false,
+    //     angle: -90,
+    // },
 
-    {
-        name: "Move Up 1 Block",
-        image: "move_normal",
-        cb: KEYBINDS.move_up.cb,
-        flipped: false,
-        angle: 180,
-    },
-    {
-        name: "Move Down 1 Block",
-        image: "move_normal",
-        cb: KEYBINDS.move_down.cb,
-        flipped: false,
-        angle: 0,
-    },
-    {
-        name: "Move Left 1 Block",
-        image: "move_normal",
-        cb: KEYBINDS.move_left.cb,
-        flipped: false,
-        angle: 90,
-    },
-    {
-        name: "Move Right 1 Block",
-        image: "move_normal",
-        cb: KEYBINDS.move_right.cb,
-        flipped: false,
-        angle: -90,
-    },
+    // {
+    //     name: "Move Up 1 Block",
+    //     image: "move_normal",
+    //     cb: KEYBINDS.move_up.cb,
+    //     flipped: false,
+    //     angle: 180,
+    // },
+    // {
+    //     name: "Move Down 1 Block",
+    //     image: "move_normal",
+    //     cb: KEYBINDS.move_down.cb,
+    //     flipped: false,
+    //     angle: 0,
+    // },
+    // {
+    //     name: "Move Left 1 Block",
+    //     image: "move_normal",
+    //     cb: KEYBINDS.move_left.cb,
+    //     flipped: false,
+    //     angle: 90,
+    // },
+    // {
+    //     name: "Move Right 1 Block",
+    //     image: "move_normal",
+    //     cb: KEYBINDS.move_right.cb,
+    //     flipped: false,
+    //     angle: -90,
+    // },
 
     {
         name: "Flip Horizontally",
@@ -372,78 +384,78 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
         flipped: true,
         angle: 0,
     },
-    {
-        name: "Rotate 5 Degrees Counter-Clockwise",
-        image: "rotate_5_ccw",
-        cb: KEYBINDS.rotate_ccw_5.cb,
-        flipped: false,
-        angle: 0,
-    },
-    {
-        name: "Rotate 5 Degrees Clockwise",
-        image: "rotate_5_cw",
-        cb: KEYBINDS.rotate_cw_5.cb,
-        flipped: false,
-        angle: 0,
-    },
+    // {
+    //     name: "Rotate 5 Degrees Counter-Clockwise",
+    //     image: "rotate_5_ccw",
+    //     cb: KEYBINDS.rotate_ccw_5.cb,
+    //     flipped: false,
+    //     angle: 0,
+    // },
+    // {
+    //     name: "Rotate 5 Degrees Clockwise",
+    //     image: "rotate_5_cw",
+    //     cb: KEYBINDS.rotate_cw_5.cb,
+    //     flipped: false,
+    //     angle: 0,
+    // },
 
-    {
-        name: "Move Up 5 Blocks",
-        image: "move_big",
-        cb: KEYBINDS.move_up_big.cb,
-        flipped: false,
-        angle: 180,
-    },
-    {
-        name: "Move Down 5 Blocks",
-        image: "move_big",
-        cb: KEYBINDS.move_down_big.cb,
-        flipped: false,
-        angle: 0,
-    },
-    {
-        name: "Move Left 5 Blocks",
-        image: "move_big",
-        cb: KEYBINDS.move_left_big.cb,
-        flipped: false,
-        angle: 90,
-    },
-    {
-        name: "Move Right 5 Blocks",
-        image: "move_big",
-        cb: KEYBINDS.move_right_big.cb,
-        flipped: false,
-        angle: -90,
-    },
+    // {
+    //     name: "Move Up 5 Blocks",
+    //     image: "move_big",
+    //     cb: KEYBINDS.move_up_big.cb,
+    //     flipped: false,
+    //     angle: 180,
+    // },
+    // {
+    //     name: "Move Down 5 Blocks",
+    //     image: "move_big",
+    //     cb: KEYBINDS.move_down_big.cb,
+    //     flipped: false,
+    //     angle: 0,
+    // },
+    // {
+    //     name: "Move Left 5 Blocks",
+    //     image: "move_big",
+    //     cb: KEYBINDS.move_left_big.cb,
+    //     flipped: false,
+    //     angle: 90,
+    // },
+    // {
+    //     name: "Move Right 5 Blocks",
+    //     image: "move_big",
+    //     cb: KEYBINDS.move_right_big.cb,
+    //     flipped: false,
+    //     angle: -90,
+    // },
 
-    {
-        name: "Move Up 0.5 Units",
-        image: "move_tiny",
-        cb: KEYBINDS.move_up_mini.cb,
-        flipped: false,
-        angle: 180,
-    },
-    {
-        name: "Move Down 0.5 Units",
-        image: "move_tiny",
-        cb: KEYBINDS.move_down_mini.cb,
-        flipped: false,
-        angle: 0,
-    },
-    {
-        name: "Move Left 0.5 Units",
-        image: "move_tiny",
-        cb: KEYBINDS.move_left_mini.cb,
-        flipped: false,
-        angle: 90,
-    },
-    {
-        name: "Move Right 0.5 Units",
-        image: "move_tiny",
-        cb: KEYBINDS.move_right_mini.cb,
-        flipped: false,
-        angle: -90,
-    },
+    // {
+    //     name: "Move Up 0.5 Units",
+    //     image: "move_tiny",
+    //     cb: KEYBINDS.move_up_mini.cb,
+    //     flipped: false,
+    //     angle: 180,
+    // },
+    // {
+    //     name: "Move Down 0.5 Units",
+    //     image: "move_tiny",
+    //     cb: KEYBINDS.move_down_mini.cb,
+    //     flipped: false,
+    //     angle: 0,
+    // },
+    // {
+    //     name: "Move Left 0.5 Units",
+    //     image: "move_tiny",
+    //     cb: KEYBINDS.move_left_mini.cb,
+    //     flipped: false,
+    //     angle: 90,
+    // },
+    // {
+    //     name: "Move Right 0.5 Units",
+    //     image: "move_tiny",
+    //     cb: KEYBINDS.move_right_mini.cb,
+    //     flipped: false,
+    //     angle: -90,
+    // },
 
     {
         name: "Scale Up",

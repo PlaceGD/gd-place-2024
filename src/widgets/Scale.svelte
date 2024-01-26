@@ -1,62 +1,37 @@
 <script lang="ts">
-    import { clamp } from "shared-lib";
+    import { clamp, round } from "shared-lib";
     import * as wasm from "wasm-lib";
 
     import Input from "../components/Input.svelte";
-    import {
-        addCallback as addUpdateCallback,
-        setPreviewObject,
-        withState,
-    } from "../state";
+    import { addCallback as addUpdateCallback, withState } from "../state";
     import { onDestroy } from "svelte";
-    import { widgetData } from "../stores";
 
-    export let isXY: boolean;
+    let scale = 1;
+    let prevScale = 1;
 
-    const HARD_VALID_INPUT = /^(|-?\d*(\.\d*)?)$/;
-    const SOFT_VALID_INPUT = (min: number, max: number) => (s: string) => {
-        let f = parseFloat(s);
-        if (isNaN(f)) {
-            return false;
-        }
-        return min <= f && f <= max;
-    };
-
-    const MIN = 0.4999;
-    const MAX = 2.0001;
-
-    let singleMin = 0.5;
+    const MIN = 0.5;
+    const MAX = 2.0;
 
     let cb = addUpdateCallback(state => {
         let obj = state.get_preview_object();
-        let xLen = obj.x_basis_len();
-        let yLen = obj.y_basis_len();
+        let xLen = obj.x_scale_exp;
+        let yLen = obj.y_scale_exp;
 
-        if (isXY) {
-            if ($widgetData.scaleX != $widgetData.prevScaleX) {
-                obj.set_x_scale($widgetData.scaleX);
-                setPreviewObject(obj);
-            }
-            if ($widgetData.scaleY != $widgetData.prevScaleY) {
-                obj.set_y_scale($widgetData.scaleY);
-                setPreviewObject(obj);
-            }
-        } else {
-            let larger = Math.max(xLen, yLen);
-            let smaller = Math.min(xLen, yLen);
+        let larger = Math.max(xLen, yLen);
+        // let smaller = Math.min(xLen, yLen);
 
-            singleMin = (0.5 * larger) / smaller;
+        let scaleExp = Math.round(Math.log2(scale) * 12);
 
-            if ($widgetData.scale != $widgetData.prevScale) {
-                obj.scale($widgetData.scale / larger);
-                if (xLen >= yLen) {
-                    obj.set_x_scale($widgetData.scale);
-                } else {
-                    obj.set_y_scale($widgetData.scale);
-                }
-                console.log(obj.x_basis_len());
-                setPreviewObject(obj);
-            }
+        if (scale != prevScale) {
+            obj.scale(scaleExp - larger);
+            state.set_preview_object(obj);
+            scale = 2 ** (scaleExp / 12);
+            prevScale = scale;
+            return;
+        }
+        if (scaleExp != larger) {
+            scale = 2 ** (larger / 12);
+            prevScale = scale;
         }
     });
 
@@ -64,87 +39,28 @@
 </script>
 
 <div class="absolute text-white">
-    {#if isXY}
-        <div
-            class="abs-centered-rel flex flex-col items-center gap-8 bottom-48"
-        >
-            <div class="flex flex-row items-center gap-4 bottom-12">
-                <span class="font-pusab text-3xl text-stroke">Scale X:</span>
-                <Input
-                    class="w-32 p-2 pointer-events-all backdrop-blur-lg text-3xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
-                    maxLength={$widgetData.maxScaleLen}
-                    hardValidInput={HARD_VALID_INPUT}
-                    softValidInput={SOFT_VALID_INPUT(MIN, MAX)}
-                    aria-label="Scale input"
-                    bind:value={$widgetData.scaleX}
-                />
-            </div>
-
-            <input
-                type="range"
-                class="pointer-events-all scale-slider w-[400px] cursor-pointer appearance-none bg-transparent focus:outline-none"
-                style:width="500px"
-                max={MAX}
-                min={MIN}
-                step={0.05}
-                bind:value={$widgetData.scaleX}
-                aria-label="Scale slider"
-            />
+    <div class="abs-centered-rel flex flex-col items-center gap-8 bottom-12">
+        <div class="flex flex-row items-center gap-4 bottom-12">
+            <span class="font-pusab text-3xl text-stroke">Scale:</span>
+            <span class="font-pusab text-3xl text-stroke w-16 text-center"
+                >{round(scale, 2)}</span
+            >
         </div>
-        <div
-            class="abs-centered-rel flex flex-col items-center gap-8 bottom-12"
-        >
-            <div class="flex flex-row items-center gap-4 bottom-12">
-                <span class="font-pusab text-3xl text-stroke">Scale Y:</span>
-                <Input
-                    class="w-32 p-2 pointer-events-all backdrop-blur-lg text-3xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
-                    maxLength={$widgetData.maxScaleLen}
-                    hardValidInput={HARD_VALID_INPUT}
-                    softValidInput={SOFT_VALID_INPUT(MIN, MAX)}
-                    aria-label="Scale input"
-                    bind:value={$widgetData.scaleY}
-                />
-            </div>
 
-            <input
-                type="range"
-                class="pointer-events-all scale-slider w-[400px] cursor-pointer appearance-none bg-transparent focus:outline-none"
-                style:width="500px"
-                max={MAX}
-                min={MIN}
-                step={0.05}
-                bind:value={$widgetData.scaleY}
-                aria-label="Scale slider"
-            />
-        </div>
-    {:else}
-        <div
-            class="abs-centered-rel flex flex-col items-center gap-8 bottom-12"
-        >
-            <div class="flex flex-row items-center gap-4 bottom-12">
-                <span class="font-pusab text-3xl text-stroke">Scale:</span>
-                <Input
-                    class="w-32 p-2 pointer-events-all backdrop-blur-lg text-3xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
-                    maxLength={$widgetData.maxScaleLen}
-                    hardValidInput={HARD_VALID_INPUT}
-                    softValidInput={SOFT_VALID_INPUT(singleMin, MAX)}
-                    aria-label="Scale input"
-                    bind:value={$widgetData.scale}
-                />
-            </div>
-
-            <input
-                type="range"
-                class="pointer-events-all scale-slider w-[400px] cursor-pointer appearance-none bg-transparent focus:outline-none"
-                style:width="500px"
-                max={MAX}
-                min={singleMin}
-                step={0.05}
-                bind:value={$widgetData.scale}
-                aria-label="Scale slider"
-            />
-        </div>
-    {/if}
+        <input
+            type="range"
+            class="pointer-events-all scale-slider w-[400px] cursor-pointer appearance-none bg-transparent focus:outline-none"
+            style:width="500px"
+            max={MAX}
+            min={MIN}
+            step={0.0001}
+            value={scale}
+            on:input={e => {
+                scale = parseFloat(e.currentTarget.value);
+            }}
+            aria-label="Scale slider"
+        />
+    </div>
 </div>
 
 <style lang="postcss">

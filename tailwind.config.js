@@ -14,7 +14,7 @@ export default {
             white: "white",
             "disabled-white": "#444",
             red: "red",
-            "button-green": "#75c934",
+            "button-green": "#7ADE2D",
             "button-cyan-press": "#35CECE",
             transparent: "transparent",
         },

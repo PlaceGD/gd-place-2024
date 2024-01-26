@@ -2,7 +2,7 @@ import { database } from "firebase-admin";
 // import { initializeApp } from "firebase-admin/app";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-import { decodeString, objects, signedClamp } from "shared-lib";
+import { decodeString, objects } from "shared-lib";
 
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Reader } from "./reader";
@@ -16,22 +16,25 @@ interface GDColor {
     blending: boolean;
 }
 
-interface GDObject {
+interface GDObjectOpt {
     id: number;
     x: number;
     y: number;
-    ix: number;
-    iy: number;
-    jx: number;
-    jy: number;
+    x_scale_exp: number;
+    x_angle: number;
+    y_scale_exp: number;
+    y_angle: number;
     zLayer: number;
     zOrder: number;
     mainColor: GDColor;
     detailColor: GDColor;
 }
-const GD_OBJECT_SIZE = 38;
+const GD_OBJECT_SIZE = 26;
 
-const deserializeObject = (data: string, logger: LogGroup): GDObject | null => {
+const deserializeObject = (
+    data: string,
+    logger: LogGroup
+): GDObjectOpt | null => {
     let bytes: Uint8Array = decodeString(data, 126); // crazy base
 
     logger.debug("Reading bytes:", bytes);
@@ -55,14 +58,14 @@ const deserializeObject = (data: string, logger: LogGroup): GDObject | null => {
     logger.debug("Object y:", y);
     if (y < 0 || y > LEVEL_HEIGHT_UNITS) return null;
 
-    const ix = signedClamp(reader.readF32(), 0.5, 2.0);
-    logger.debug("Object ix:", ix);
-    const iy = signedClamp(reader.readF32(), 0.5, 2.0);
-    logger.debug("Object iy:", iy);
-    const jx = signedClamp(reader.readF32(), 0.5, 2.0);
-    logger.debug("Object jx:", jx);
-    const jy = signedClamp(reader.readF32(), 0.5, 2.0);
-    logger.debug("Object jy:", jy);
+    const x_scale_exp = reader.readI8();
+    logger.debug("Object x_scale_exp:", x_scale_exp);
+    const x_angle = reader.readI8();
+    logger.debug("Object x_angle:", x_angle);
+    const y_scale_exp = reader.readI8();
+    logger.debug("Object y_scale_exp:", y_scale_exp);
+    const y_angle = reader.readI8();
+    logger.debug("Object y_angle:", y_angle);
 
     const zLayer = reader.readU8();
     logger.debug("Object zLayer:", zLayer);
@@ -82,10 +85,10 @@ const deserializeObject = (data: string, logger: LogGroup): GDObject | null => {
         id,
         x,
         y,
-        ix,
-        iy,
-        jx,
-        jy,
+        x_scale_exp,
+        x_angle,
+        y_scale_exp,
+        y_angle,
         zLayer,
         zOrder,
         mainColor,

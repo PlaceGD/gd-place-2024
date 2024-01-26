@@ -1,11 +1,7 @@
 <script lang="ts">
     import Input from "../components/Input.svelte";
-    import {
-        addCallback as addUpdateCallback,
-        setPreviewObject,
-    } from "../state";
+    import { addCallback as addUpdateCallback } from "../state";
     import { onDestroy } from "svelte";
-    import { widgetData } from "../stores";
     import { clamp, getCenterPos, snap } from "shared-lib";
 
     let rotating: number | null = null;
@@ -15,19 +11,22 @@
         return (-Math.atan2(e.clientY - cY, e.clientX - cX) * 180) / Math.PI;
     };
 
-    // $: console.log($widgetData.angle);
+    let angle = 0;
+    let prevAngle = 0;
 
     let cb = addUpdateCallback(state => {
         let obj = state.get_preview_object();
-        let xAngle = obj.x_basis_angle();
+        let xAngle = obj.x_angle;
 
-        // obj.rotate(0.1);
-        // setPreviewObject(obj);
-        if ($widgetData.angle != $widgetData.prevAngle) {
-            // console.log($widgetData.angle);
-            // console.log(xAngle);
-            obj.rotate(-$widgetData.angle + xAngle);
-            setPreviewObject(obj);
+        if (angle != prevAngle) {
+            obj.rotate(angle - xAngle);
+            state.set_preview_object(obj);
+            prevAngle = angle;
+            return;
+        }
+        if (angle != xAngle) {
+            angle = xAngle;
+            prevAngle = angle;
         }
     });
 
@@ -42,7 +41,7 @@
     }}
     on:mousemove={e => {
         if (rotating != null) {
-            $widgetData.angle = snap(getMouseAngle(e) - rotating, 5);
+            angle = snap(getMouseAngle(e) - rotating, 5) / 5;
         }
     }}
 />
@@ -58,10 +57,10 @@
             ? 'bg-button-cyan-press'
             : 'bg-button-green'} rounded-full pointer-events-all cursor-pointer"
         style={`
-            transform: translate(${(Math.cos((-$widgetData.angle * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-$widgetData.angle * Math.PI) / 180) * 284) / 2 - 32}px)
+            transform: translate(${(Math.cos((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px)
         `}
         on:mousedown={e => {
-            rotating = getMouseAngle(e) - $widgetData.angle;
+            rotating = getMouseAngle(e) - angle * 5;
         }}
     />
 </div>

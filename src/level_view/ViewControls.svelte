@@ -17,104 +17,9 @@
     import { isMobile } from "../utils/document";
     import { decodeString } from "shared-lib";
     import Widget from "../widgets/Widget.svelte";
-    import { setPreviewObject } from "../state";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
-
-    // import glibby from "./glibbybom.json";
-
-    // for (let [k, v] of Object.entries(glibby)) {
-    //     let [cX, cY] = k.split(",").map(v => parseInt(v) * 20 * 30);
-    //     for (let [key, _] of Object.entries(v)) {
-    //         // console.log(key);
-    //         state.add_object(
-    //             key,
-    //             new wasm.GDObject(
-    //                 1,
-    //                 cX + Math.random() * 20 * 30,
-    //                 cY + Math.random() * 20 * 30,
-    //                 Math.random() * -4 + 2,
-    //                 Math.random() * -4 + 2,
-    //                 Math.random() * -4 + 2,
-    //                 Math.random() * -4 + 2,
-    //                 wasm.ZLayer.B2,
-    //                 Math.floor(Math.random() * 100) - 50,
-    //                 new wasm.GDColor(
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.random() > 0.5
-    //                 ),
-    //                 new wasm.GDColor(
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.random() > 0.5
-    //                 )
-    //             )
-    //         );
-    //         state.add_object(
-    //             key,
-    //             new wasm.GDObject(
-    //                 1,
-    //                 cX + Math.random() * 20 * 30,
-    //                 cY + Math.random() * 20 * 30,
-    //                 Math.random() * -4 + 2,
-    //                 Math.random() * -4 + 2,
-    //                 Math.random() * -4 + 2,
-    //                 Math.random() * -4 + 2,
-    //                 wasm.ZLayer.B2,
-    //                 Math.floor(Math.random() * 100) - 50,
-    //                 new wasm.GDColor(
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.random() > 0.5
-    //                 ),
-    //                 new wasm.GDColor(
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.floor(Math.random() * 256),
-    //                     Math.random() > 0.5
-    //                 )
-    //             )
-    //         );
-    //         // state.add_object(
-    //         //     key,
-    //         //     new wasm.GDObject(
-    //         //         1,
-    //         //         cX + Math.random() * 20 * 30,
-    //         //         cY + Math.random() * 20 * 30,
-    //         //         Math.random() * -4 + 2,
-    //         //         Math.random() * -4 + 2,
-    //         //         Math.random() * -4 + 2,
-    //         //         Math.random() * -4 + 2,
-    //         //         wasm.ZLayer.B2,
-    //         //         Math.floor(Math.random() * 100) - 50,
-    //         //         new wasm.GDColor(
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.random() > 0.5
-    //         //         ),
-    //         //         new wasm.GDColor(
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.floor(Math.random() * 256),
-    //         //             Math.random() > 0.5
-    //         //         )
-    //         //     )
-    //         // );
-    //     }
-    //     // console.log(cX, cY);
-    // }
 
     let dragging: null | {
         prevMouseX: number;
@@ -196,13 +101,15 @@
                     let key = data.key;
                     if (key != null) {
                         try {
-                            let obj = wasm.GDObject.from_bytes(
+                            let obj = wasm.GDObjectOpt.from_bytes(
                                 decodeString(data.val(), 126)
                             );
 
                             state.add_object(key, obj);
                         } catch (e: any) {
-                            console.error("(Failed in `GDObject.from_bytes`)");
+                            console.error(
+                                "(Failed in `GDObjectOpt.from_bytes`)"
+                            );
                             Toast.showErrorToast(e.display());
                         }
                     }
@@ -230,15 +137,15 @@
     const placePreview = () => {
         let [mx, my] = getWorldMousePos();
 
-        let obj = new wasm.GDObject(
+        let obj = new wasm.GDObjectOpt(
             $menuSettings.selectedObject,
             Math.floor(mx / 30) * 30 + 15,
             Math.floor(my / 30) * 30 + 15,
-            1,
             0,
             0,
-            1,
-            wasm.ZLayer.B1,
+            0,
+            18,
+            wasm.ZLayer.B4,
             0,
             wasm.GDColor.white(),
             wasm.GDColor.white()
@@ -257,11 +164,11 @@
             opacity: 1,
             blending: false,
         };
-        $menuSettings.zLayer = wasm.ZLayer.B1;
+        $menuSettings.zLayer = wasm.ZLayer.B4;
         $menuSettings.zOrder = 0;
         // $menuSettings.zLayer = wasm.ZLayer.B1;
 
-        setPreviewObject(obj);
+        state.set_preview_object(obj);
         state.set_preview_visibility(true);
     };
 
@@ -431,7 +338,8 @@
                 e.preventDefault();
                 let obj = state.get_preview_object();
                 v.cb(obj);
-                setPreviewObject(obj);
+                state.set_preview_object(obj);
+                // console.log(state.get_preview_object().debug());
             }
         }
     }}

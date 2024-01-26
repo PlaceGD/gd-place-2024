@@ -31,26 +31,6 @@ export const menuSettings = writable(
     })
 );
 
-export const widgetData = writable({
-    maxScaleLen: 4,
-
-    scale: 1,
-    prevScale: 1,
-
-    scaleX: 1,
-    prevScaleX: 1,
-    scaleY: 1,
-    prevScaleY: 1,
-
-    angle: 0,
-    prevAngle: 0,
-
-    // ix: 1,
-    // iy: 0,
-    // jx: 0,
-    // jy: 1,
-});
-
 export const loginData = writable<{
     isLoggedIn: boolean;
     showLoginUI: boolean;

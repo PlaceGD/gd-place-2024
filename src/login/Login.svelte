@@ -10,6 +10,8 @@
     import Input from "../components/Input.svelte";
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib";
     import { initUserData } from "../firebase/auth";
+    import { ref, get } from "firebase/database";
+    import { db } from "../firebase/firebase";
 
     let twitter = false;
     document.addEventListener("keydown", e => {
@@ -40,17 +42,28 @@
 
     const signInWith = (method: LoginMethod) => {
         isInProgress = true;
-        handleSignIn(method).then(isOK => {
+        handleSignIn(method).then(async isOK => {
             if (isOK) {
                 if ($loginData.currentUserData !== null) {
-                    isInProgress = false;
-                    if ($loginData.currentUserData.placeData !== null) {
+                    let maybeData = await get(
+                        ref(
+                            db,
+                            `userData/${$loginData.currentUserData.userData.uid}`
+                        )
+                    );
+
+                    let maybePlaceData = maybeData.val();
+
+                    if (maybePlaceData !== null) {
+                        $loginData.currentUserData.placeData = maybePlaceData;
                         $loginData.isLoggedIn = true;
                         $loginData.showLoginUI = false;
                     } else {
                         previousPage = currentPage;
                         currentPage = Page.CREATE_USER;
                     }
+
+                    isInProgress = false;
                 } else {
                     isInProgress = false;
                     console.error(
@@ -230,7 +243,8 @@
                                 >
                                     Usernames can only be 3 to 16 characters in
                                     length, and only contain alphanumeric
-                                    characters, - and _.
+                                    characters, - and _. Usernames are case
+                                    insensitive.
                                 </p>
                             </div>
                             <div class="w-full flex-center gap-2">

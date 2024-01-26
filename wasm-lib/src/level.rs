@@ -74,7 +74,7 @@ impl Level {
         layer: ZLayer,
         z_order: i8,
         mut f: F,
-        preview: Option<&GDObject>,
+        preview: Option<GDObject>,
     ) where
         F: FnMut(DbKey, &GDObject),
     {
@@ -86,7 +86,7 @@ impl Level {
             }
             if let Some(o) = preview {
                 if o.z_layer == layer && o.z_order == z_order && o.get_chunk_coord() == coord {
-                    f([0; 20], o)
+                    f([0; 20], &o)
                 }
             }
         }

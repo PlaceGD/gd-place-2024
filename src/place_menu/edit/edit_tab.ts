@@ -1,10 +1,5 @@
 import type { GDObject } from "wasm-lib";
 
-export enum LayerType {
-    B,
-    T,
-}
-
 export enum EditTab {
     Transform = "Transform",
     Layers = "Layers",

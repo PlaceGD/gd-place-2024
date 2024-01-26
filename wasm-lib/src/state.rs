@@ -1,5 +1,3 @@
-use std::f32::consts::PI;
-
 use desen::{
     color::Color,
     frame::{BlendMode, Frame, FrameTransform, FrameTransformMatrix},
@@ -7,7 +5,6 @@ use desen::{
     texture::LoadedTexture,
     App, CanvasAppBundle,
 };
-use image::ImageBuffer;
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
@@ -20,7 +17,6 @@ use crate::{
     },
     log, map,
     object::{GDColor, GDObject},
-    text::TextDraw,
     util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
     utilgen::{get_detail_sprite, get_main_sprite, get_object_info},
     ErrorType, RustError,
@@ -33,6 +29,7 @@ pub struct AppInfo {
     background: LoadedTexture,
     ground1: LoadedTexture,
     ground2: LoadedTexture,
+    spritesheet_nearest_neighbor: LoadedTexture,
     spritesheet: LoadedTexture,
 }
 
@@ -66,7 +63,7 @@ pub struct State {
 
 impl State {
     pub fn init(mut app: App, spritesheet_data: &[u8]) -> Self {
-        crate::log!("DATA: {}", spritesheet_data.len());
+        let spritesheet = quick_image_load(spritesheet_data);
         Self {
             time: 0.0,
             width: 10,
@@ -105,7 +102,8 @@ impl State {
                     &quick_image_load(include_bytes!("../background.png")),
                     false,
                 ),
-                spritesheet: app.load_texture(&quick_image_load(spritesheet_data), true),
+                spritesheet_nearest_neighbor: app.load_texture(&spritesheet, true),
+                spritesheet: app.load_texture(&spritesheet, false),
                 app,
             },
         }
@@ -257,6 +255,9 @@ impl AppState for State {
             frame.pop()
         }
 
+        frame.set_current_texture_group(1);
+        frame.set_current_texture(self.info.spritesheet_nearest_neighbor);
+        frame.set_current_texture_group(0);
         frame.set_current_texture(self.info.spritesheet);
         frame.transform(FrameTransform::Custom(self.view_transform()));
 
@@ -316,6 +317,13 @@ impl AppState for State {
             let draw_obj_sprite = |frame: &mut Frame, sprite: &SpriteInfo, obj: &GDObject| {
                 frame.push();
                 frame.transform(FrameTransform::Custom(obj_transform(obj)));
+                frame.set_current_texture_group(
+                    if get_object_info(obj.id as u32).unwrap().builtin_scale == 1.0 {
+                        0
+                    } else {
+                        1
+                    },
+                );
                 frame
                     .texture()
                     .xy(

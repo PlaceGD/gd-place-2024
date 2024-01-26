@@ -24,11 +24,6 @@ pub fn create_view(canvas: HtmlCanvasElement, spritesheet_data: &[u8]) -> StateW
     }))
 }
 
-#[wasm_bindgen]
-pub fn funtest() -> String {
-    unsafe { String::from_utf8_unchecked(vec![97, 98, 99, 200]) }
-}
-
 #[wasm_bindgen(start)]
 pub fn main() {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));

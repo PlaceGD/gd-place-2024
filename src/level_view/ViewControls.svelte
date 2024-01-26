@@ -22,6 +22,100 @@
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
 
+    // import glibby from "./glibbybom.json";
+
+    // for (let [k, v] of Object.entries(glibby)) {
+    //     let [cX, cY] = k.split(",").map(v => parseInt(v) * 20 * 30);
+    //     for (let [key, _] of Object.entries(v)) {
+    //         // console.log(key);
+    //         state.add_object(
+    //             key,
+    //             new wasm.GDObject(
+    //                 1,
+    //                 cX + Math.random() * 20 * 30,
+    //                 cY + Math.random() * 20 * 30,
+    //                 Math.random() * -4 + 2,
+    //                 Math.random() * -4 + 2,
+    //                 Math.random() * -4 + 2,
+    //                 Math.random() * -4 + 2,
+    //                 wasm.ZLayer.B2,
+    //                 Math.floor(Math.random() * 100) - 50,
+    //                 new wasm.GDColor(
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.random() > 0.5
+    //                 ),
+    //                 new wasm.GDColor(
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.random() > 0.5
+    //                 )
+    //             )
+    //         );
+    //         state.add_object(
+    //             key,
+    //             new wasm.GDObject(
+    //                 1,
+    //                 cX + Math.random() * 20 * 30,
+    //                 cY + Math.random() * 20 * 30,
+    //                 Math.random() * -4 + 2,
+    //                 Math.random() * -4 + 2,
+    //                 Math.random() * -4 + 2,
+    //                 Math.random() * -4 + 2,
+    //                 wasm.ZLayer.B2,
+    //                 Math.floor(Math.random() * 100) - 50,
+    //                 new wasm.GDColor(
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.random() > 0.5
+    //                 ),
+    //                 new wasm.GDColor(
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.floor(Math.random() * 256),
+    //                     Math.random() > 0.5
+    //                 )
+    //             )
+    //         );
+    //         // state.add_object(
+    //         //     key,
+    //         //     new wasm.GDObject(
+    //         //         1,
+    //         //         cX + Math.random() * 20 * 30,
+    //         //         cY + Math.random() * 20 * 30,
+    //         //         Math.random() * -4 + 2,
+    //         //         Math.random() * -4 + 2,
+    //         //         Math.random() * -4 + 2,
+    //         //         Math.random() * -4 + 2,
+    //         //         wasm.ZLayer.B2,
+    //         //         Math.floor(Math.random() * 100) - 50,
+    //         //         new wasm.GDColor(
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.random() > 0.5
+    //         //         ),
+    //         //         new wasm.GDColor(
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.floor(Math.random() * 256),
+    //         //             Math.random() > 0.5
+    //         //         )
+    //         //     )
+    //         // );
+    //     }
+    //     // console.log(cX, cY);
+    // }
+
     let dragging: null | {
         prevMouseX: number;
         prevMouseY: number;
@@ -214,12 +308,18 @@
     });
 
     const handleShowObjPreview = () => {
-        if ($menuSettings.selectedGroup == TabGroup.Delete) {
-            let [mx, my] = getWorldMousePos();
-            state.try_select_at(mx, my);
-        } else {
-            placePreview();
+        if (!dragging) return;
+
+        if (!dragging.thresholdReached) {
+            if ($menuSettings.selectedGroup == TabGroup.Delete) {
+                let [mx, my] = getWorldMousePos();
+                state.try_select_at(mx, my);
+            } else {
+                placePreview();
+            }
         }
+
+        dragging = null;
     };
 
     const startDrag = (x: number, y: number) => {
@@ -295,11 +395,9 @@
             });
 
             gestures.on("tap", () => {
-                if (!dragging) return;
                 mouseX = gestures.touchStartX!;
                 mouseY = gestures.touchStartY!;
                 handleShowObjPreview();
-                dragging = null;
             });
         }
     });
@@ -308,9 +406,7 @@
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
     on:mouseup={() => {
-        if (!dragging) return;
         handleShowObjPreview();
-        dragging = null;
     }}
     on:mousemove={e => {
         handleDrag(e.pageX, e.pageY);
@@ -318,6 +414,13 @@
     on:resize={() => {
         handleSub();
     }}
+/>
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+    class="absolute w-full h-full touch-none"
+    id="gesture-target"
+    tabindex="-1"
     on:keydown={e => {
         for (let v of Object.values(KEYBINDS)) {
             if (
@@ -332,20 +435,6 @@
             }
         }
     }}
-    on:wheel={e => {
-        zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
-        zoomTween.set(zoomGoal);
-        savePos();
-    }}
-/>
-
-<!-- only desktop -->
-<!-- role="button"
-aria-grabbed="false" -->
-
-<div
-    class="absolute w-full h-full touch-none"
-    id="gesture-target"
     on:mousemove={e => {
         mouseX = e.pageX;
         mouseY = e.pageY;

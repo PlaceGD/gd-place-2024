@@ -1,7 +1,8 @@
 import { writable } from "svelte/store";
 import LocalSettingsFactory from "./utils/local_settings";
-import { EditTab, LayerType } from "./place_menu/edit/edit_tab";
+import { EditTab } from "./place_menu/edit/edit_tab";
 import { ZLayer } from "wasm-lib";
+import type { UserData } from "./firebase/auth";
 
 export enum TabGroup {
     Build,
@@ -27,8 +28,6 @@ export const menuSettings = writable(
         },
         zLayer: ZLayer.B1,
         zOrder: 0,
-        layerType: LayerType.B,
-        layerIdx: 0,
     })
 );
 
@@ -50,4 +49,14 @@ export const widgetData = writable({
     // iy: 0,
     // jx: 0,
     // jy: 1,
+});
+
+export const loginData = writable<{
+    isLoggedIn: boolean;
+    showLoginUI: boolean;
+    currentUserData: UserData | null;
+}>({
+    isLoggedIn: false,
+    showLoginUI: false,
+    currentUserData: null,
 });

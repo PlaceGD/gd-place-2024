@@ -8,11 +8,13 @@ import {
 import Toast from "../utils/toast";
 import { get, ref } from "firebase/database";
 import { db } from "../firebase/firebase";
+import { loginData } from "../stores";
 
-export type LoginData = {
-    isLoggedIn: boolean;
-    showLoginUI: boolean;
-};
+export enum SlideIds {
+    LoginMethod = "LoginMethod",
+    CreateUser = "CreateUser",
+    TOS = "TOS",
+}
 
 export enum LoginMethod {
     Google = "Google",
@@ -20,37 +22,25 @@ export enum LoginMethod {
     X = "X",
 }
 
-export type Component = new (...args: any[]) => SvelteComponent;
-export type ComponentWithProps = {
-    component: Component;
-    props?: any;
-    showBackButton?: boolean;
-    showCloseButton?: boolean;
-};
-
-export type SliderMethods = {
-    previous: () => void;
-    addSlideAndMove: (slide: ComponentWithProps) => void;
-    setInteractability: (interact: boolean) => void;
-};
-
 let currentUser: UserData | null = null;
 
 const logInSuccess = (user: any): boolean => {
-    get(ref(db, `userData/${user.user.uid}`))
-        .then(snapshot => {
-            currentUser = snapshot.val();
+    Toast.showSuccessToast("Signed in successfully!");
+    // get(ref(db, `userData/${user.user.uid}`))
+    //     .then(snapshot => {
+    //         const placeData = snapshot.val();
 
-            Toast.showSuccessToast("Signed in successfully!");
+    //         if(placeData !== null) {
+    //             loginData.update((data) => {
+    //                 data.currentUserData?.placeData = placeData;
+    //                 return data
+    //             })
+    //         }
 
-            if (currentUser === null) {
-            } else {
-                // todo
-            }
-        })
-        .catch(err => {
-            Toast.showErrorToast(`Failed to get user data! (${err})`);
-        });
+    //     })
+    //     .catch(err => {
+    //         Toast.showErrorToast(`Failed to get user data! (${err})`);
+    //     });
 
     return true;
 };

@@ -7,7 +7,6 @@
     import { alertHasDarkReader } from "./utils/document";
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
-    import type { LoginData } from "./login/login";
 
     import {
         wasmProgress,
@@ -15,11 +14,6 @@
         loadSpritesheet,
         spritesheetProgress,
     } from "./load_wasm";
-
-    let loginData: LoginData = {
-        isLoggedIn: false,
-        showLoginUI: false,
-    };
 
     alertHasDarkReader();
 
@@ -52,9 +46,9 @@
 
 <div class="relative w-screen h-screen overflow-hidden">
     <div class="absolute top-0 right-0 flex gap-4 p-2 w-max h-max">
-        <LoginButton bind:loginData></LoginButton>
+        <LoginButton></LoginButton>
     </div>
-    <Login bind:loginData></Login>
+    <Login></Login>
     <Editor bind:wasmLoaded={loaded} />
     {#if !loaded}
         <div class="absolute">

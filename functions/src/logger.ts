@@ -7,22 +7,27 @@ export enum Level {
 }
 
 export class LogGroup {
+    private readonly label: string;
     private logs: { message: any; level: Level }[] = [];
 
-    constructor() {}
+    constructor(label: string = "") {
+        this.label = label;
+    }
+
+    private addNewLog(message: string, level: Level) {
+        this.logs = [...this.logs, { message, level }];
+    }
+
+    info(...messages: any[]) {
+        this.addNewLog(messages.join(" "), Level.INFO);
+    }
 
     debug(...messages: any[]) {
-        this.logs = [
-            ...this.logs,
-            ...messages.map(m => ({ message: m, level: Level.DEBUG })),
-        ];
+        this.addNewLog(messages.join(" "), Level.DEBUG);
     }
 
     error(...messages: any[]) {
-        this.logs = [
-            ...this.logs,
-            ...messages.map(m => ({ message: m, level: Level.ERROR })),
-        ];
+        this.addNewLog(messages.join(" "), Level.ERROR);
     }
 
     finish(level?: Level) {
@@ -32,9 +37,9 @@ export class LogGroup {
             severity: Object.keys(Level)[
                 Object.values(Level).indexOf(l)
             ] as LogSeverity,
-            message: this.logs
+            message: `--- ${this.label} ---\n${this.logs
                 .map(log => `[${log.level}]: ${log.message}`)
-                .join("\n"),
+                .join("\n")}`,
         });
     }
 }

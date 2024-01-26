@@ -1,5 +1,7 @@
 import { database } from "firebase-admin";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { VALID_USERNAME } from "shared-lib";
+import { Level, LogGroup } from "./logger";
 
 type RequestData = {
     username: string;
@@ -7,13 +9,24 @@ type RequestData = {
 };
 
 export const initUserWithUsername = onCall<RequestData>(async request => {
+    const logger = new LogGroup("initUserWithUsername");
+    logger.info(
+        "Is user authed?",
+        request.auth != null,
+        `UID: ${request.auth?.uid}`
+    );
+
     if (!request.auth) {
+        logger.finish(Level.ERROR);
         throw new HttpsError("unauthenticated", "User is not authenticated");
     }
 
     const data = request.data;
 
-    if (!data.username.match(/^[A-Za-z0-9_-]{3,16}$/)) {
+    logger.debug("Username:", data.username);
+
+    if (!data.username.match(VALID_USERNAME)) {
+        logger.finish(Level.ERROR);
         throw new HttpsError("invalid-argument", "Username is invalid");
     }
 
@@ -30,6 +43,8 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
 
     const val = (await usernameExists.get()).val();
     if (val != null) {
+        logger.error("User already exists");
+        logger.finish(Level.ERROR);
         throw new HttpsError("already-exists", "Username already exists");
     }
 
@@ -38,6 +53,8 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
         lastPlaced: 0,
         lastDeleted: 0,
     };
+
+    logger.info("User created sucessfully");
 
     // make new user
     db.ref(`/userData/${data.uid}`).set(user);
@@ -49,6 +66,8 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
     db.ref("/userCount").transaction(count => {
         return count + 1;
     });
+
+    logger.finish();
 
     return user;
 });

@@ -17,6 +17,8 @@ import type { HttpsCallableResult } from "firebase/functions";
 import { writable, type Writable } from "svelte/store";
 import { auth, db } from "./firebase";
 import { initUserWithUsername } from "./cloud_functions";
+import { loginData } from "../stores";
+import Toast from "../utils/toast";
 
 setPersistence(auth, inMemoryPersistence);
 
@@ -37,7 +39,7 @@ export type UserData = {
     placeData: PlaceData | null; // no user data
 };
 
-export const currentUserData: Writable<UserData | null> = writable(null);
+// export const currentUserData: Writable<UserData | null> = writable(null);
 // export const currentUserDisplayColor: Writable<string> = writable(null);
 
 export const signInGoogle = () => signInWithPopup(auth, googleProvider);
@@ -62,17 +64,32 @@ onAuthStateChanged(auth, async user => {
             placeData: null,
         };
 
-        currentUserData.set(userDataValue);
+        loginData.update(data => {
+            data.currentUserData = userDataValue;
+            return data;
+        });
 
         if (userDataUnsub != null) {
             userDataUnsub();
         }
 
         userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
-            userDataValue.placeData = snapshot.val();
-            currentUserData.set(userDataValue);
+            const placeData = snapshot.val();
+            loginData.update(data => {
+                if (data.currentUserData !== null) {
+                    data.currentUserData.placeData = placeData;
+                } else {
+                    console.error(
+                        "User data set before user was created! (`onAuthStateChanged`)"
+                    );
+                    Toast.showErrorToast(
+                        "There was an issue signing in. Please try again."
+                    );
+                }
+                return data;
+            });
 
-            if (userDataValue.placeData !== null) {
+            if (placeData !== null) {
                 setPersistence(auth, browserLocalPersistence);
             }
         });
@@ -81,6 +98,9 @@ onAuthStateChanged(auth, async user => {
             userDataUnsub();
         }
 
-        currentUserData.set(null);
+        loginData.update(data => {
+            data.currentUserData = null;
+            return data;
+        });
     }
 });

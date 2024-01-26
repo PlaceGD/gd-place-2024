@@ -25,6 +25,7 @@ export const spritesheet: {
 export const objectOrder: number[] = _objectOrder;
 
 export * from "./util";
+export * from "./user";
 
 export const baseConvert = (
     digits: number[],

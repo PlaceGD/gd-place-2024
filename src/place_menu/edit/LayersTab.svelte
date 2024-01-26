@@ -4,80 +4,84 @@
     import { AnimateSharedLayout } from "svelte-motion";
 
     import Image from "../../components/Image.svelte";
+    import Input from "../../components/Input.svelte";
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { menuSettings } from "../../stores";
-    import { LayerType } from "./edit_tab";
+    import { clamp } from "shared-lib";
 
-    const LAYER_NAME: any = {
-        [LayerType.T]: "T",
-        [LayerType.B]: "B",
-    };
-
-    const LAYER_COUNT: any = {
-        [LayerType.T]: 4,
-        [LayerType.B]: 5,
-    };
-
-    const selectedLayerToZLayer = (layer: LayerType, id: number): ZLayer => {
-        if (layer == LayerType.T) {
-            return [ZLayer.T1, ZLayer.T2, ZLayer.T3, ZLayer.T4][id];
-        } else {
-            return [ZLayer.B5, ZLayer.B4, ZLayer.B3, ZLayer.B2, ZLayer.B1][id];
+    const layerName = (layer: ZLayer) => {
+        switch (layer) {
+            case ZLayer.B1:
+                return "B1";
+            case ZLayer.B2:
+                return "B2";
+            case ZLayer.B3:
+                return "B3";
+            case ZLayer.B4:
+                return "B4";
+            case ZLayer.B5:
+                return "B5";
+            case ZLayer.T1:
+                return "T1";
+            case ZLayer.T2:
+                return "T2";
+            case ZLayer.T3:
+                return "T3";
+            case ZLayer.T4:
+                return "T4";
         }
     };
+    const equivalentTop = (layer: ZLayer) => {
+        switch (layer) {
+            case ZLayer.B1:
+                return ZLayer.T1;
+            case ZLayer.B2:
+                return ZLayer.T2;
+            case ZLayer.B3:
+                return ZLayer.T3;
+            case ZLayer.B4:
+                return ZLayer.T4;
+            case ZLayer.B5:
+                return ZLayer.T4;
+            default:
+                return layer;
+        }
+    };
+    const equivalentBottom = (layer: ZLayer) => {
+        switch (layer) {
+            case ZLayer.T1:
+                return ZLayer.B1;
+            case ZLayer.T2:
+                return ZLayer.B2;
+            case ZLayer.T3:
+                return ZLayer.B3;
+            case ZLayer.T4:
+                return ZLayer.B4;
+            default:
+                return layer;
+        }
+    };
+    const BOTTOMS = [ZLayer.B1, ZLayer.B2, ZLayer.B3, ZLayer.B4, ZLayer.B5];
+    const isBottom = (layer: ZLayer) => BOTTOMS.includes(layer);
+    const layerCount = (bottom: boolean) => (bottom ? 5 : 4);
+    const layerFrom = (bottom: boolean, idx: number) =>
+        (bottom ? (v: any) => v : equivalentTop)(BOTTOMS[idx]);
+    const layerIdx = (layer: ZLayer) =>
+        isBottom(layer) ? -layer + 5 : layer - 4;
+
+    const HARD_VALID_INPUT = /^-?\d*$/;
+    const SOFT_VALID_INPUT = (s: string) => {
+        let n = parseInt(s);
+        if (isNaN(n)) {
+            return false;
+        }
+        return -50 <= n && n <= 50;
+    };
+
+    $: $menuSettings.zOrder = clamp($menuSettings.zOrder, -50, 50);
 
     // clamp layer count
-    $: {
-        if (
-            $menuSettings.layerType == LayerType.T &&
-            $menuSettings.layerIdx == LAYER_COUNT[LayerType.B] - 1
-        ) {
-            $menuSettings.layerIdx = LAYER_COUNT[LayerType.T] - 1;
-        }
-
-        $menuSettings.zLayer = selectedLayerToZLayer(
-            $menuSettings.layerType,
-            $menuSettings.layerIdx
-        );
-    }
-
-    const toValidInt = (s: string) => {
-        if (s == "" || s == "-") {
-            return 0;
-        }
-        return parseInt(s);
-    };
-
-    const re = /^(-?)\d*$/;
-
-    const validLayerInput = (s: string) => {
-        if (!re.test(s)) {
-            return false;
-        }
-        let n = toValidInt(s);
-        if (n < -50 || n > 50) {
-            return false;
-        }
-        return true;
-    };
-
-    const enterIfValid = (e: any) => {
-        if (!validLayerInput(e.currentTarget.value)) {
-            e.currentTarget.value = prevValidInputData;
-        } else {
-            prevValidInputData = e.currentTarget.value;
-        }
-    };
-
-    let prevValidInputData: string = $menuSettings.zOrder.toString();
-    onMount(() => {
-        inputElement.value = prevValidInputData;
-    });
-    $: {
-        $menuSettings.zOrder = toValidInt(prevValidInputData);
-    }
-    let inputElement: HTMLInputElement;
 
     $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
@@ -92,7 +96,10 @@
             >
                 <button
                     class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
-                    on:click={() => ($menuSettings.layerType = LayerType.B)}
+                    on:click={() =>
+                        ($menuSettings.zLayer = equivalentBottom(
+                            $menuSettings.zLayer
+                        ))}
                     tabindex={canSelectByTab}
                     aria-label="Layer Below Player"
                 >
@@ -103,7 +110,7 @@
                         skeleton
                     ></Image>
                 </button>
-                {#if $menuSettings.layerType == LayerType.B}
+                {#if isBottom($menuSettings.zLayer)}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
                 {/if}
@@ -113,7 +120,10 @@
             >
                 <button
                     class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
-                    on:click={() => ($menuSettings.layerType = LayerType.T)}
+                    on:click={() =>
+                        ($menuSettings.zLayer = equivalentTop(
+                            $menuSettings.zLayer
+                        ))}
                     tabindex={canSelectByTab}
                     aria-label="Layer Above Player"
                 >
@@ -124,7 +134,7 @@
                         skeleton
                     ></Image>
                 </button>
-                {#if $menuSettings.layerType == LayerType.T}
+                {#if !isBottom($menuSettings.zLayer)}
                     <SlidingSelector layoutId="button-selector"
                     ></SlidingSelector>
                 {/if}
@@ -135,23 +145,27 @@
     <div class="flex flex-col w-full h-full gap-2 content">
         <ul class="flex h-full ids">
             <AnimateSharedLayout>
-                {#each Array(LAYER_COUNT[$menuSettings.layerType]).fill(0) as _, i}
+                {#each Array(layerCount(isBottom($menuSettings.zLayer))).fill(0) as _, i}
                     <li
                         class="relative flex-1 w-full h-full flex-center font-pusab"
                     >
                         <button
                             class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
-                            on:click={() => ($menuSettings.layerIdx = i)}
+                            on:click={() =>
+                                ($menuSettings.zLayer = layerFrom(
+                                    isBottom($menuSettings.zLayer),
+                                    i
+                                ))}
                             tabindex={canSelectByTab}
-                            aria-label={`${LAYER_NAME[$menuSettings.layerType]}${i + 1}`}
+                            aria-label={`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
                         >
                             <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
 
-                            <h2 class="opacity-50 font-pusab xs:text-sm">
+                            <!-- <h2 class="opacity-50 font-pusab xs:text-sm">
                                 ({LAYER_NAME[$menuSettings.layerType]}{i + 1})
-                            </h2>
+                            </h2> -->
                         </button>
-                        {#if $menuSettings.layerIdx == i}
+                        {#if layerIdx($menuSettings.zLayer) == i + 1}
                             <SlidingSelector layoutId="button-selector"
                             ></SlidingSelector>
                         {/if}
@@ -165,12 +179,7 @@
                 <button
                     class="h-full flex-center"
                     on:click={() => {
-                        if ($menuSettings.zOrder > -50) {
-                            $menuSettings.zOrder -= 1;
-                            prevValidInputData =
-                                $menuSettings.zOrder.toString();
-                            inputElement.value = prevValidInputData;
-                        }
+                        $menuSettings.zOrder -= 1;
                     }}
                     tabindex={canSelectByTab}
                     aria-label="Decrease Z-Index"
@@ -180,26 +189,20 @@
                         class="rotate-90"
                     />
                 </button>
-                <input
-                    type="text"
+
+                <Input
                     class="w-20 p-2 text-3xl text-center rounded-lg outline-none md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab text-stroke bg-black/40"
-                    max={50}
-                    min={-50}
-                    maxlength={4}
-                    on:input={enterIfValid}
-                    bind:this={inputElement}
-                    tabindex={canSelectByTab}
-                    aria-label="Z-Index"
+                    maxLength={3}
+                    tabIndex={canSelectByTab}
+                    hardValidInput={HARD_VALID_INPUT}
+                    softValidInput={SOFT_VALID_INPUT}
+                    aria-label="Scale input"
+                    bind:value={$menuSettings.zOrder}
                 />
                 <button
                     class="h-full flex-center"
                     on:click={() => {
-                        if ($menuSettings.zOrder < 50) {
-                            $menuSettings.zOrder += 1;
-                            prevValidInputData =
-                                $menuSettings.zOrder.toString();
-                            inputElement.value = prevValidInputData;
-                        }
+                        $menuSettings.zOrder += 1;
                     }}
                     tabindex={canSelectByTab}
                     aria-label="Increase Z-Index"

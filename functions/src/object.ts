@@ -2,7 +2,7 @@ import { database } from "firebase-admin";
 // import { initializeApp } from "firebase-admin/app";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-import { clamp, decodeString, objects, signedClamp } from "shared-lib";
+import { decodeString, objects, signedClamp } from "shared-lib";
 
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Reader } from "./reader";
@@ -132,7 +132,7 @@ export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
     }
     const object_string = request.data.object.toString();
 
-    const objLogger = new LogGroup();
+    const objLogger = new LogGroup("placeObject");
     let object;
     try {
         object = deserializeObject(request.data.object, objLogger);

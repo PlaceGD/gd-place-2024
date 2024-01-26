@@ -2,7 +2,6 @@
     "name": "shared-lib",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/index.js",
     "types": "esm/index.d.ts",
     "type": "module",
     "exports": {

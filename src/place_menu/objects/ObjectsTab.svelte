@@ -8,28 +8,9 @@
     import { DEBUG } from "../../utils/debug";
 
     import { TabGroup, menuSettings } from "../../stores";
-    import { objects, round, spritesheet } from "shared-lib";
-    import { spritesheetProgress } from "../../load_wasm";
+    import ObjectButtonImage from "./ObjectButtonImage.svelte";
 
     let objButtonSize = 0;
-
-    const getImgStyle = (id: number, objButtonSize: number) => {
-        let mainSprite = spritesheet.mainSprites[id];
-        let builtinScale = objects[id].builtinScale;
-        let maxDisplaySize = 120 / builtinScale;
-        let scale =
-            objButtonSize /
-            1.45 /
-            Math.max(mainSprite.size[0], mainSprite.size[1], maxDisplaySize);
-        return `
-            width: ${mainSprite.size[0]}px;
-            height: ${mainSprite.size[1]}px;
-            max-height: none;
-            max-width: none;
-            object-position: ${-mainSprite.pos[0]}px ${-mainSprite.pos[1]}px;
-            transform: scale(${round(scale, 2)});          
-        `;
-    };
 </script>
 
 <div
@@ -44,7 +25,7 @@
     })}
     tabindex="-1"
 >
-    {#each getObjsInOrder() as [id, obj], i}
+    {#each getObjsInOrder() as [id, obj]}
         <li
             class={cx({
                 "relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10": true,
@@ -59,20 +40,21 @@
                 }}
             >
                 {#if $DEBUG}
-                    <span
+                    <!-- <span
                         class="absolute opacity-50 text-red font-lg bottom-3/4 right-1/2"
                     >
                         {id}
-                    </span>
+                    </span> -->
                 {/if}
                 <div class="relative w-full h-full flex-center">
-                    <img
+                    <ObjectButtonImage {id} {objButtonSize} />
+                    <!-- <img
                         draggable="false"
                         class="absolute object-none"
                         src={$spritesheetProgress.blobURL}
                         style={getImgStyle(id, objButtonSize)}
                         alt=""
-                    />
+                    /> -->
                     <!-- <Image
                         class="absolute object-contain max-w-full max-h-full"
                         src={`/textures/main/${id}.png`}

@@ -13,12 +13,10 @@
     export let value: any = defaultValue;
 
     let innerValue = value;
-    // $: console.log("fffa", value);
-    // $: value = `${value}`.slice(0, maxLength);
     $: innerValue = value;
-    let prevValidValue = value;
+    let prevTypeableValue = value;
 
-    let handleChange = (innerValue: any) => {
+    let handleChange = () => {
         if (autoTrim) {
             innerValue = innerValue.trim();
         }
@@ -26,13 +24,16 @@
             if (checkIfValid(innerValue, softValidInput)) {
                 value = innerValue;
             }
-            prevValidValue = innerValue;
+            prevTypeableValue = innerValue;
         } else {
-            innerValue = prevValidValue;
+            innerValue = prevTypeableValue;
         }
     };
 
-    $: handleChange(innerValue);
+    $: {
+        innerValue;
+        handleChange();
+    }
 
     const checkIfValid = (v: string, validator: Validator) => {
         if (validator === null) {

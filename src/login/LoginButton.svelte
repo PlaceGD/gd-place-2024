@@ -6,7 +6,7 @@
 
 <div class="gap-2 flex-center">
     {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.isLoggedIn}
-        <h1 class="font-pusab text-white text-2xl z-30">
+        <h1 class="z-30 text-2xl text-white font-pusab">
             {$loginData.currentUserData.placeData.username}
         </h1>
     {/if}
@@ -21,7 +21,9 @@
         }}
     >
         <Image
-            src={`assets/ui/login/profile_${$loginData.isLoggedIn ? "out" : "in"}.png`}
+            src="/assets/ui/login/profile_{$loginData.isLoggedIn
+                ? 'out'
+                : 'in'}.png"
             class="object-contain aspect-square"
         ></Image>
     </button>

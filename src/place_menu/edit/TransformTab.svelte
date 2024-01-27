@@ -1,151 +1,94 @@
-<!-- <script lang="ts">
-    import { TRANSFORM_BUTTONS } from "./edit_tab";
-    import Image from "../../components/Image.svelte";
-    import * as wasm from "wasm-lib";
-    import { menuSettings } from "../../stores";
-
-    export let state: wasm.StateWrapper;
-
-    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
-</script>
-
-<ul
-    class="w-full h-full gap-4 xs:gap-2 overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar transform-grid-container"
-    tabindex="-1"
->
-    {#each TRANSFORM_BUTTONS as button, i (i)}
-        <li class="w-16 h-16 md:w-14 md:h-14 xs:w-10 xs:h-10">
-            <button
-                class={"flex-center w-full h-full p-2 md:p-1.5 xs:p-1 z-20 rounded-md bg-button-green bounce-active"}
-                on:click={() => {
-                    let obj = state.get_preview_object();
-                    button.cb(obj);
-                    state.set_preview_object(obj);
-                }}
-                tabindex={canSelectByTab}
-                aria-label={button.name}
-            >
-                <Image
-                    class="object-contain max-w-full max-h-full"
-                    src={`/assets/ui/edit/${button.image}.svg`}
-                    style={`transform: rotate(${button.angle}deg)${
-                        button.flipped ? " scaleX(-1)" : ""
-                    }`}
-                    lazyLoad
-                    skeleton
-                />
-            </button>
-        </li>
-    {/each}
-</ul>
-
-<style lang="postcss">
-    .transform-grid-container {
-        @apply grid justify-between p-4 md:p-3 xs:p-2;
-        grid-template-columns: repeat(auto-fill, 64px);
-    }
-
-    @media screen(sm) {
-        .transform-grid-container {
-            grid-template-columns: repeat(auto-fill, 56px);
-        }
-    }
-
-    @media screen(xs) {
-        .transform-grid-container {
-            grid-template-columns: repeat(auto-fill, 48px);
-        }
-    }
-</style> -->
-
 <script lang="ts">
     import { default as cx } from "classnames";
-    import { TRANSFORM_BUTTONS } from "./edit_tab";
+    import {
+        EditTab,
+        MOVE_BUTTONS,
+        TRANSFORM_BUTTONS,
+        Widget,
+    } from "./edit_tab";
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import { menuSettings } from "../../stores";
+    import Scale from "../../widgets/Scale.svelte";
+    import Warp from "../../widgets/Warp.svelte";
+    import { onDestroy, onMount } from "svelte";
 
     export let state: wasm.StateWrapper;
 
-    interface Button {
-        image: string;
-        amount: string;
-        class?: string;
-    }
-    type Buttons = { [key: string]: Button };
+    let selectedWidget = Widget.None;
 
-    const MOVE_BUTTONS: Buttons = {
-        MOVE_TINY: {
-            image: "move_mini",
-            amount: "1/60",
-        },
-        MOVE_SMALL: {
-            image: "move_small",
-            amount: "1/15",
-            class: "hide-small",
-        },
-        MOVE_NORMAL: {
-            image: "move_normal",
-            amount: "1",
-        },
-        MOVE_BIG: {
-            image: "move_big",
-            amount: "5",
-            class: "hide-big",
-        },
+    $: {
+        $menuSettings.selectedWidget = selectedWidget;
+    }
+
+    onDestroy(() => {
+        $menuSettings.selectedWidget = Widget.None;
+    });
+
+    const changeWidget = (widget: Widget) => {
+        if (selectedWidget !== widget) selectedWidget = widget;
+        else selectedWidget = Widget.None;
     };
 
     $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
 
-<div class="w-full h-full transform-container overflow-x-auto">
+<div class="transform-container">
     <div
-        class="grow-1 shrink-0 flex gap-2 md:gap-4 xs:gap-1 move md:flex-center"
+        class="flex items-center gap-2 grow-1 shrink-0 md:gap-4 xs:gap-1 move md:flex-center"
     >
         {#each Object.keys(MOVE_BUTTONS) as button}
             <div
                 class={cx({
-                    "move-button-grid w-auto aspect-square": true,
+                    "move-button-grid": true,
                     [MOVE_BUTTONS[button].class ?? ""]: true,
                 })}
             >
                 <button
-                    class="move-button shrink-0 up flex-center z-20 w-12 aspect-square md:w-9 sm:w-7 rounded-md bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 up flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
                     tabindex={canSelectByTab}
+                    aria-label="{MOVE_BUTTONS[button].name} up"
                 >
                     <Image
-                        src="assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        alt="^"
                         class="rotate-180"
                     />
                 </button>
                 <button
-                    class="move-button shrink-0 down flex-center z-20 w-12 aspect-square md:w-9 sm:w-7 rounded-md bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 down flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
                     tabindex={canSelectByTab}
+                    aria-label="{MOVE_BUTTONS[button].name} down"
                 >
                     <Image
-                        src="assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        alt="V"
                     />
                 </button>
                 <button
-                    class="move-button shrink-0 right flex-center z-20 w-12 aspect-square md:w-9 sm:w-7 rounded-md bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 right flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
                     tabindex={canSelectByTab}
+                    aria-label="{MOVE_BUTTONS[button].name} right"
                 >
                     <Image
-                        src="assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
                         class="-rotate-90"
+                        alt=">"
                     />
                 </button>
                 <button
-                    class="move-button shrink-0 left flex-center z-20 w-12 aspect-square md:w-9 sm:w-7 rounded-md bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 left flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
                     tabindex={canSelectByTab}
+                    aria-label="{MOVE_BUTTONS[button].name} left"
                 >
                     <Image
-                        src="assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
                         class="rotate-90"
+                        alt="<"
                     />
                 </button>
                 <p
-                    class="font-pusab text-stroke text-lg text-white amount md:text-sm"
+                    class="text-lg text-center text-white font-pusab text-stroke amount md:text-sm"
                 >
                     {MOVE_BUTTONS[button].amount}
                 </p>
@@ -153,12 +96,12 @@
         {/each}
     </div>
     <ul
-        class="flex-1 gap-2 transform-grid-container h-full justify-center transforms md:items-center md:justify-center flex items-center flex-wrap"
+        class="flex flex-wrap items-center justify-center flex-1 h-full gap-2 transforms"
     >
         {#each TRANSFORM_BUTTONS as button, i (i)}
-            <li class="aspect-square md:justify-self-center transform-button">
+            <li class="transform-button">
                 <button
-                    class="flex-center w-full h-full p-2 md:p-1.5 sm:p-1 xs:p-0 z-20 rounded-md bg-button-green active:bg-button-cyan-active bounce-active"
+                    class="flex-center w-full h-full p-2 md:p-1.5 sm:p-0 xs:p-0 z-20 rounded-md bg-button-green active:bg-button-green-dark bounce-active"
                     on:click={() => {
                         let obj = state.get_preview_object();
                         button.cb(obj);
@@ -180,42 +123,64 @@
             </li>
         {/each}
     </ul>
-    <div
-        class="flex-1 flex gap-2 widget-button-container widgets md:justify-self-end"
-    >
+    <div class="widget-button-container widgets">
         <button
-            class="flex-1 flex flex-center gap-2 flex-col w-full h-full bg-button-green active:bg-button-cyan-press rounded-md min-w-32 widget-button"
+            class={cx({
+                "widget-button bounce-active": true,
+                "bg-button-green active:bg-button-green-dark":
+                    selectedWidget !== Widget.Rotate,
+                "bg-button-cyan active:bg-button-cyan-dark":
+                    selectedWidget === Widget.Rotate,
+            })}
             tabindex={canSelectByTab}
             aria-label="Rotate Object"
+            on:click={() => changeWidget(Widget.Rotate)}
+            role="checkbox"
+            aria-checked={selectedWidget == Widget.Rotate}
         >
             <p class="font-pusab text-stroke">Rotate</p>
             <Image
-                src="assets/ui/edit/rotate.svg"
-                alt="Rotate Icon"
+                src="/assets/ui/edit/rotate.svg"
                 class="aspect-square md:w-10 xs:hidden"
             />
         </button>
         <button
-            class="flex-1 flex flex-center gap-2 flex-col w-full h-full bg-button-green active:bg-button-cyan-press rounded-md min-w-32 widget-button"
+            class={cx({
+                "widget-button bounce-active": true,
+                "bg-button-green active:bg-button-green-dark":
+                    selectedWidget !== Widget.Scale,
+                "bg-button-cyan active:bg-button-cyan-dark":
+                    selectedWidget === Widget.Scale,
+            })}
             tabindex={canSelectByTab}
             aria-label="Scale Object"
+            on:click={() => changeWidget(Widget.Scale)}
+            role="checkbox"
+            aria-checked={selectedWidget == Widget.Scale}
         >
             <p class="font-pusab text-stroke">Scale</p>
             <Image
-                src="assets/ui/edit/scale.svg"
-                alt="Scale Icon"
+                src="/assets/ui/edit/scale.svg"
                 class="aspect-square md:w-10 xs:hidden"
             />
         </button>
         <button
-            class="flex-1 flex flex-center gap-2 flex-col w-full h-full bg-button-green active:bg-button-cyan-press rounded-md min-w-32 widget-button"
+            class={cx({
+                "widget-button bounce-active": true,
+                "bg-button-green active:bg-button-green-dark":
+                    selectedWidget !== Widget.Warp,
+                "bg-button-cyan active:bg-button-cyan-dark":
+                    selectedWidget === Widget.Warp,
+            })}
             tabindex={canSelectByTab}
             aria-label="Warp Object"
+            on:click={() => changeWidget(Widget.Warp)}
+            role="checkbox"
+            aria-checked={selectedWidget == Widget.Warp}
         >
             <p class="font-pusab text-stroke">Warp</p>
             <Image
-                src="assets/ui/edit/warp.svg"
-                alt="Warp Icon"
+                src="/assets/ui/edit/warp.svg"
                 class="aspect-square md:w-10 xs:hidden"
             />
         </button>
@@ -224,8 +189,12 @@
 
 <style lang="postcss">
     .transform-container {
-        @apply grid gap-6 p-4;
+        @apply grid h-full w-full gap-4 p-4;
         grid-template-areas: "move transforms widgets";
+    }
+
+    .widget-button-container {
+        @apply flex w-full flex-1 gap-2 justify-self-end;
     }
 
     @media not screen(md) {
@@ -246,25 +215,23 @@
     }
 
     .widget-button {
-        @apply flex-col text-2xl;
+        @apply flex h-full w-full flex-1 flex-col flex-col items-center justify-center gap-2 rounded-md text-2xl;
     }
 
     .transform-button {
-        @apply w-16;
+        @apply aspect-square w-16 justify-self-center;
     }
 
     .move-button-grid {
-        display: grid;
+        @apply grid aspect-square w-auto  items-center justify-center gap-1;
         grid-template-columns: min-content min-content min-content;
         grid-template-rows: min-content min-content min-content;
         grid-template-areas:
             ". up ."
             "left amount right"
             ". down .";
-        justify-items: center;
-        align-items: center;
-        gap: 4px;
     }
+
     .amount {
         grid-area: amount;
     }
@@ -307,7 +274,7 @@
         }
 
         .widget-button {
-            @apply min-w-0 flex-row text-xl;
+            @apply flex-row text-xl;
         }
     }
 
@@ -325,10 +292,6 @@
             @apply min-w-44;
         }
 
-        .transform-grid-container {
-            grid-template-columns: repeat(auto-fill, 38px);
-        }
-
         .transform-container {
             grid-template-columns: 1fr min-content;
             grid-template-rows: 1fr 1fr;
@@ -344,7 +307,7 @@
         }
 
         .widget-button-container {
-            @apply min-w-0 items-end;
+            @apply w-auto min-w-min items-end;
         }
 
         .widget-button {
@@ -353,6 +316,10 @@
     }
 
     @media screen(xs) {
+        .transform-container {
+            @apply overflow-x-auto;
+        }
+
         .widget-button {
             @apply w-16 text-xs;
         }

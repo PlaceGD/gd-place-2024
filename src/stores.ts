@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import LocalSettingsFactory from "./utils/local_settings";
-import { EditTab } from "./place_menu/edit/edit_tab";
+import { EditTab, Widget } from "./place_menu/edit/edit_tab";
 import { ZLayer } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
 
@@ -28,6 +28,7 @@ export const menuSettings = writable(
         },
         zLayer: ZLayer.B1,
         zOrder: 0,
+        selectedWidget: Widget.None,
     })
 );
 

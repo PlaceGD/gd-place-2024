@@ -89,7 +89,7 @@
     }
 
     input[type="range"]:active::-webkit-slider-thumb {
-        @apply bg-button-cyan-press;
+        @apply bg-button-cyan;
         box-shadow:
             0px 0px 0px 3px #fff,
             0px 0px 0px 6px #000,
@@ -121,7 +121,7 @@
     }
 
     input[type="range"]:active::-moz-range-thumb {
-        @apply bg-button-cyan-press outline-none;
+        @apply bg-button-cyan outline-none;
         box-shadow:
             0px 0px 0px 3px #fff,
             0px 0px 0px 6px #000,

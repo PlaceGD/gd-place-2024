@@ -54,7 +54,7 @@
     <button
         class="the_dragger bg-center bg-no-repeat abs-centered-rel w-16 h-16 {rotating !=
         null
-            ? 'bg-button-cyan-press'
+            ? 'bg-button-cyan'
             : 'bg-button-green'} rounded-full pointer-events-all cursor-pointer"
         style={`
             transform: translate(${(Math.cos((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px)

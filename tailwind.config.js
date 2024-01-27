@@ -15,7 +15,9 @@ export default {
             "disabled-white": "#444",
             red: "red",
             "button-green": "#7ADE2D",
-            "button-cyan-press": "#35CECE",
+            "button-green-dark": "#61b91d",
+            "button-cyan": "#35CECE",
+            "button-cyan-dark": "#28a7a7",
             transparent: "transparent",
         },
         fontFamily: {

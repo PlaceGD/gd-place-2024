@@ -24,7 +24,7 @@
     import SpriteSheet from "../utils/spritesheet";
     import LocalSettings from "../utils/local_settings";
 
-    import { EditTab, TRANSFORM_BUTTONS } from "./edit/edit_tab";
+    import { EditTab, TRANSFORM_BUTTONS, Widget } from "./edit/edit_tab";
     import ColorsTab from "./edit/ColorsTab.svelte";
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";
@@ -198,7 +198,7 @@
                         let:motion
                     >
                         <div
-                            class="relative tabs menu-panel overflow-hidden"
+                            class="relative overflow-hidden tabs menu-panel"
                             use:motion
                         >
                             <Animate
@@ -382,7 +382,7 @@
                     </div>
 
                     <div
-                        class="w-full h-full rounded-lg buttons menu-panel overflow-hidden"
+                        class="w-full h-full overflow-hidden rounded-lg buttons menu-panel"
                     >
                         <!-- 
                             the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 

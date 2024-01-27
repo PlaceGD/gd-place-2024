@@ -122,7 +122,7 @@
     <button
         class="the_dragger bg-center bg-no-repeat abs-centered-rel w-8 h-8 {draggingX !=
         null
-            ? 'bg-button-cyan-press'
+            ? 'bg-button-cyan'
             : 'bg-button-green'} rounded-md pointer-events-all cursor-pointer"
         style={`
             left: ${100 * ix}px;
@@ -149,7 +149,7 @@
     <button
         class="the_dragger bg-center bg-no-repeat abs-centered-rel w-8 h-8 {draggingY !=
         null
-            ? 'bg-button-cyan-press'
+            ? 'bg-button-cyan'
             : 'bg-button-green'} rounded-md pointer-events-all cursor-pointer"
         style={`
         left: ${100 * jx}px;

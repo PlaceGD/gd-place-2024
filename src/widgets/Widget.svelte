@@ -4,6 +4,8 @@
     import { onDestroy } from "svelte";
     import Rotate from "./Rotate.svelte";
     import Warp from "./Warp.svelte";
+    import { menuSettings } from "../stores";
+    import { Widget } from "../place_menu/edit/edit_tab";
 
     let widgetPos = [0, 0];
     let widgetScale = 1;
@@ -13,7 +15,6 @@
         let obj = state.get_preview_object();
         widgetPos = [...state.get_screen_pos(obj.x, obj.y)];
         widgetScale = 1 + state.get_zoom() / 80;
-        // console.log(widgetScale);
         isVisible = state.is_preview_visible();
     });
 
@@ -21,7 +22,7 @@
 </script>
 
 <div
-    class="absolute overflow-visible w-full h-full flex-center pointer-events-none"
+    class="absolute w-full h-full overflow-visible pointer-events-none flex-center"
     style={`
         left: ${widgetPos[0]}px;
         top: ${-widgetPos[1]}px;
@@ -29,7 +30,14 @@
     `}
 >
     {#if isVisible}
-        <!-- <Scale isXY={false} /> -->
-        <Warp {widgetScale} />
+        {#if $menuSettings.selectedWidget == Widget.Rotate}
+            <Rotate />
+        {/if}
+        {#if $menuSettings.selectedWidget == Widget.Scale}
+            <Scale />
+        {/if}
+        {#if $menuSettings.selectedWidget == Widget.Warp}
+            <Warp {widgetScale} />
+        {/if}
     {/if}
 </div>

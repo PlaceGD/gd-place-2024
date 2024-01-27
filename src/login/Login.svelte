@@ -111,7 +111,7 @@
 {#if $loginData.showLoginUI}
     <Image
         tabindex="-1"
-        src="assets/ui/login/twitter.svg"
+        src="/assets/ui/login/twitter.svg"
         class="hidden"
         alt=""
     />
@@ -141,7 +141,7 @@
                                             signInWith(LoginMethod.Google)}
                                     >
                                         <Image
-                                            src="assets/ui/login/google.svg"
+                                            src="/assets/ui/login/google.svg"
                                             alt="Login with Google"
                                             class="flex-1 object-contain w-max"
                                         />
@@ -158,7 +158,7 @@
                                             signInWith(LoginMethod.GitHub)}
                                     >
                                         <Image
-                                            src="assets/ui/login/github.svg"
+                                            src="/assets/ui/login/github.svg"
                                             alt="Login with GitHub"
                                             class="flex-1 object-contain w-max"
                                         />
@@ -173,7 +173,7 @@
                                             signInWith(LoginMethod.X)}
                                     >
                                         <Image
-                                            src="assets/ui/login/{twitter
+                                            src="/assets/ui/login/{twitter
                                                 ? 'twitter'
                                                 : 'x'}.svg"
                                             alt="Login with X (Twitter)"
@@ -214,13 +214,13 @@
                         </div>
                     {:else if currentPage == Page.CREATE_USER}
                         <div
-                            class="absolute w-full h-full text-center flex flex-col items-center justify-between p-6"
+                            class="absolute flex flex-col items-center justify-between w-full h-full p-6 text-center"
                         >
                             <h1 class="text-3xl font-pusab text-stroke">
                                 Enter a Username
                             </h1>
-                            <div class="flex-center flex-col gap-2">
-                                <div class="w-full flex-center gap-2">
+                            <div class="flex-col gap-2 flex-center">
+                                <div class="w-full gap-2 flex-center">
                                     {#if VALID_USERNAME.test(userName)}
                                         <Check
                                             class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
@@ -239,7 +239,7 @@
                                     />
                                 </div>
                                 <p
-                                    class="text-xs text-disabled-white hover:text-white transition duration-500"
+                                    class="text-xs transition duration-500 text-disabled-white hover:text-white"
                                 >
                                     Usernames can only be 3 to 16 characters in
                                     length, and only contain alphanumeric
@@ -247,7 +247,7 @@
                                     insensitive.
                                 </p>
                             </div>
-                            <div class="w-full flex-center gap-2">
+                            <div class="w-full gap-2 flex-center">
                                 {#if hasAgreedToTOS}
                                     <Check
                                         class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
@@ -291,7 +291,7 @@
                     <Loading />
                 {/if}
             </div>
-            <div class="flex items-center flex-center h-12 text-white">
+            <div class="flex items-center h-12 text-white flex-center">
                 <div class="h-full">
                     <button
                         disabled={!allowClose}

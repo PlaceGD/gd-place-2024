@@ -10,7 +10,7 @@
     import { clamp, hexToRgb, lerp } from "shared-lib";
     import { subChunk, unsubChunk } from "../firebase/chunks";
     import { TabGroup, menuSettings } from "../stores";
-    import { KEYBINDS } from "../place_menu/edit/edit_tab";
+    import { TRANSFORM_KEYBINDS } from "../place_menu/edit/edit_tab";
 
     import Toast from "../utils/toast";
     import LocalSettingsFactory from "../utils/local_settings";
@@ -324,7 +324,7 @@
     on:keydown={e => {
         if (document.activeElement?.tagName == "INPUT") return;
 
-        for (let v of Object.values(KEYBINDS)) {
+        for (let v of Object.values(TRANSFORM_KEYBINDS)) {
             if (
                 e.key.toLowerCase() == v.shortcut.key.toLowerCase() &&
                 e.shiftKey == v.shortcut.shift &&
@@ -334,7 +334,6 @@
                 let obj = state.get_preview_object();
                 v.cb(obj);
                 state.set_preview_object(obj);
-                // console.log(state.get_preview_object().debug());
             }
         }
     }}
@@ -385,6 +384,6 @@
     />
 </div>
 
-<div class="absolute overflow-visible w-full h-full pointer-events-none">
+<div class="absolute w-full h-full overflow-visible pointer-events-none">
     <Widget />
 </div>

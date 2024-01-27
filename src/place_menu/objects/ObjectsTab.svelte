@@ -36,15 +36,21 @@
                 class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
                 tabindex={$menuSettings.isMinimized ? -1 : 0}
                 on:click={() => {
+                    if (id == 3854) {
+                        var audio = new Audio("fire.mp3");
+                        audio.volume = 0.02;
+
+                        audio.play();
+                    }
                     $menuSettings.selectedObject = id;
                 }}
             >
                 {#if $DEBUG}
-                    <!-- <span
+                    <span
                         class="absolute opacity-50 text-red font-lg bottom-3/4 right-1/2"
                     >
                         {id}
-                    </span> -->
+                    </span>
                 {/if}
                 <div class="relative w-full h-full flex-center">
                     <ObjectButtonImage {id} {objButtonSize} />

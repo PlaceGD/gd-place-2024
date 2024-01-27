@@ -5,7 +5,14 @@
     export let widgetScale: number;
 
     import { onDestroy, onMount } from "svelte";
-    import { clamp, getCenterPos, round, signedClamp, snap } from "shared-lib";
+    import {
+        clamp,
+        getCenterPos,
+        remEuclid,
+        round,
+        signedClamp,
+        snap,
+    } from "shared-lib";
 
     let draggingX: [number, number, number, number] | null = null;
     let draggingY: [number, number, number, number] | null = null;
@@ -54,8 +61,10 @@
                 );
                 obj.x_angle = snap((Math.atan2(ny, nx) * 180) / Math.PI, 5) / 5;
 
-                settem(obj);
-                state.set_preview_object(obj);
+                if (remEuclid(obj.x_angle - obj.y_angle, 36) != 0) {
+                    settem(obj);
+                    state.set_preview_object(obj);
+                }
             });
         }
         if (draggingY != null) {
@@ -73,8 +82,10 @@
                 );
                 obj.y_angle = snap((Math.atan2(ny, nx) * 180) / Math.PI, 5) / 5;
 
-                settem(obj);
-                state.set_preview_object(obj);
+                if (remEuclid(obj.x_angle - obj.y_angle, 36) != 0) {
+                    settem(obj);
+                    state.set_preview_object(obj);
+                }
             });
         }
     }}
@@ -165,4 +176,12 @@
 </div>
 
 <style>
+    .the_dragger {
+        /* background-image: url("/assets/ui/edit/dot.svg"); */
+        /* background-size: 30px; */
+        box-shadow:
+            0px 0px 0px 3px #fff,
+            0px 2px 8px 6px #0004,
+            inset 0px 0px 0px 3px #000;
+    }
 </style>

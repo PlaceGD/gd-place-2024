@@ -321,14 +321,9 @@
     on:resize={() => {
         handleSub();
     }}
-/>
-
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-    class="absolute w-full h-full touch-none"
-    id="gesture-target"
-    tabindex="-1"
     on:keydown={e => {
+        if (document.activeElement?.tagName == "INPUT") return;
+
         for (let v of Object.values(KEYBINDS)) {
             if (
                 e.key.toLowerCase() == v.shortcut.key.toLowerCase() &&
@@ -343,6 +338,13 @@
             }
         }
     }}
+/>
+
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+    class="absolute w-full h-full touch-none"
+    id="gesture-target"
+    tabindex="-1"
     on:mousemove={e => {
         mouseX = e.pageX;
         mouseY = e.pageY;

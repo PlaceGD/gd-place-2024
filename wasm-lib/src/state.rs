@@ -188,16 +188,50 @@ impl AppState for State {
         // );
 
         let zoom_scale = self.get_zoom_scale();
+        // {
+        //     frame.fill(Color::Rgb8(
+        //         self.bg_color.0,
+        //         self.bg_color.1,
+        //         self.bg_color.2,
+        //     ));
+        //     let dimension = self.width.max(self.height) as f32;
+        //     frame.set_current_texture(self.info.background);
+
+        //     frame.texture().wh(dimension, dimension).centered().tinted();
+        // }
         {
+            frame.push();
+
+            frame.translate(
+                -self.camera_pos.x / 10.0 * 1.0,
+                -self.camera_pos.y / 10.0 * 1.0,
+            );
+
             frame.fill(Color::Rgb8(
                 self.bg_color.0,
                 self.bg_color.1,
                 self.bg_color.2,
             ));
-            let dimension = self.width.max(self.height) as f32;
             frame.set_current_texture(self.info.background);
 
-            frame.texture().wh(dimension, dimension).centered().tinted();
+            let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
+
+            let offset = (self.camera_pos / 10.0 * 1.0 / scale).map(f32::floor) * scale;
+
+            for i in -2i32..=2 {
+                for j in -2i32..=2 {
+                    frame.push();
+                    frame.translate(offset.x + scale * i as f32, offset.y + scale * j as f32);
+                    frame.scale(1.0, if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 });
+                    frame.texture().tinted().centered().wh(scale, scale);
+                    frame.pop()
+                }
+            }
+
+            // for (i, j) in (-2..=2).cartesian_product(-2..=2) {
+            // }
+
+            frame.pop();
         }
 
         // grid drawing

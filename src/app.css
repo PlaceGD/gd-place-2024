@@ -78,7 +78,7 @@ body {
     }
 
     .white-button {
-        @apply bg-white/5 hover:bg-white/15 active:bg-white/25;
+        @apply bg-white/5 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed;
     }
 
     .text-stroke {

@@ -6,7 +6,7 @@ export enum EditTab {
     Colors = "Colors",
 }
 
-export enum Widget {
+export enum WidgetType {
     None,
     Rotate,
     Scale,

@@ -814,7 +814,7 @@ impl StateWrapper {
         }
         Ok(())
     }
-    pub fn delete_object(&mut self, key: String) {
+    pub fn delete_object(&mut self, key: String) -> Option<Vec<f32>> {
         if let Ok(key) = key.into_bytes().try_into() {
             let key: DbKey = key;
 
@@ -825,19 +825,20 @@ impl StateWrapper {
             for c in self.bundle.state.level.chunks.values_mut() {
                 for (list, _) in c.objects.iter_mut() {
                     for m in list.objects.values_mut() {
-                        if m.shift_remove(&key).is_some() {
+                        if let Some(obj) = m.shift_remove(&key) {
                             // self.bundle.state.delete_texts.push((
                             //     "Deleted by Richard".into(),
                             //     obj.x,
                             //     obj.y,
                             //     1.0,
                             // ));
-                            return;
+                            return Some(vec![obj.x, obj.y]);
                         }
                     }
                 }
             }
         }
+        None
     }
 
     pub fn get_chunks_to_sub(&mut self) -> Vec<ChunkCoord> {

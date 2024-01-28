@@ -163,8 +163,17 @@ export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
 type DeleteReq = { chunkId: string; objId: string };
 
 export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "User is not authenticated");
+    }
     const db = database();
     const data = request.data;
+
+    const uid = request.auth.uid;
+
+    let [userData] = (
+        await Promise.all([db.ref(`/userData/${uid}`).get()])
+    ).map(a => a.val());
 
     if (!data.chunkId) {
         throw new HttpsError("invalid-argument", "Missing chunk id");
@@ -174,6 +183,5 @@ export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
     }
 
     const ref = db.ref(`/objects/${data.chunkId}/${data.objId}`);
-    const username = "test"; // TODO: get username from auth
-    ref.set(username).then(() => ref.remove());
+    ref.set(userData.username).then(() => ref.remove());
 });

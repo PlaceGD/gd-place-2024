@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import LocalSettingsFactory from "./utils/local_settings";
-import { EditTab, Widget } from "./place_menu/edit/edit_tab";
+import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
 
@@ -28,7 +28,7 @@ export const menuSettings = writable(
         },
         zLayer: ZLayer.B1,
         zOrder: 0,
-        selectedWidget: Widget.None,
+        selectedWidget: WidgetType.None,
     })
 );
 
@@ -41,3 +41,29 @@ export const loginData = writable<{
     showLoginUI: false,
     currentUserData: null,
 });
+
+let deleteTextCounter = 0;
+export const deleteTexts = writable<
+    Record<
+        number,
+        {
+            name: string;
+            x: number;
+            y: number;
+        }
+    >
+>({});
+export const addDeleteText = (name: string, x: number, y: number) => {
+    let id = deleteTextCounter++;
+    deleteTexts.update(v => {
+        v[id] = { name, x, y };
+
+        return v;
+    });
+    setTimeout(() => {
+        deleteTexts.update(v => {
+            delete v[id];
+            return v;
+        });
+    }, 1500);
+};

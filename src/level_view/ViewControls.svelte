@@ -2,21 +2,29 @@
     import { tweened } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
     import debounce from "lodash.debounce";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import TinyGesture from "tinygesture";
 
     import * as wasm from "wasm-lib";
 
     import { clamp, hexToRgb, lerp } from "shared-lib";
     import { subChunk, unsubChunk } from "../firebase/chunks";
-    import { TabGroup, menuSettings } from "../stores";
-    import { TRANSFORM_KEYBINDS } from "../place_menu/edit/edit_tab";
+    import { TabGroup, addDeleteText, menuSettings } from "../stores";
+    import {
+        TRANSFORM_KEYBINDS,
+        WidgetType,
+    } from "../place_menu/edit/edit_tab";
 
     import Toast from "../utils/toast";
     import LocalSettingsFactory from "../utils/local_settings";
     import { isMobile } from "../utils/document";
     import { decodeString } from "shared-lib";
     import Widget from "../widgets/Widget.svelte";
+    import { addCallback } from "../state";
+    import Rotate from "../widgets/Rotate.svelte";
+    import Scale from "../widgets/Scale.svelte";
+    import Warp from "../widgets/Warp.svelte";
+    import DeleteTexts from "../widgets/DeleteTexts.svelte";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
@@ -116,8 +124,13 @@
                 },
                 data => {
                     let key = data.key;
+                    console.log(data.val());
                     if (key != null) {
-                        state.delete_object(key);
+                        let coords = state.delete_object(key);
+                        if (coords != null) {
+                            console.log(coords);
+                            addDeleteText(data.val(), coords[0], coords[1]);
+                        }
                     }
                 }
             );
@@ -308,6 +321,28 @@
             });
         }
     });
+
+    let editWidgetPos: [number, number] = [0, 0];
+    let editWidgetScale = 1;
+    let editWidgetVisible = false;
+
+    let originScreen: [number, number] = [0, 0];
+    let textZoomScale = 0;
+
+    let cb = addCallback(state => {
+        let obj = state.get_preview_object();
+
+        let p = state.get_screen_pos(obj.x, obj.y);
+        editWidgetPos = [p[0], p[1]];
+
+        editWidgetScale = 1 + state.get_zoom() / 80;
+        editWidgetVisible = state.is_preview_visible();
+
+        textZoomScale = state.get_zoom_scale();
+        p = state.get_screen_pos(0, 0);
+        originScreen = [p[0], p[1]];
+    });
+    onDestroy(() => cb.remove());
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
@@ -385,5 +420,18 @@
 </div>
 
 <div class="absolute w-full h-full overflow-visible pointer-events-none">
-    <Widget />
+    {#if editWidgetVisible}
+        <Widget position={editWidgetPos} scale={editWidgetScale}>
+            {#if $menuSettings.selectedWidget == WidgetType.Rotate}
+                <Rotate />
+            {:else if $menuSettings.selectedWidget == WidgetType.Scale}
+                <Scale />
+            {:else if $menuSettings.selectedWidget == WidgetType.Warp}
+                <Warp widgetScale={editWidgetScale} />
+            {/if}
+        </Widget>
+    {/if}
+    <Widget position={originScreen} scale={textZoomScale}>
+        <DeleteTexts />
+    </Widget>
 </div>

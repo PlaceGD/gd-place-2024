@@ -5,7 +5,7 @@ import {
     onChildRemoved,
     ref,
 } from "firebase/database";
-import { db } from "./Firebase";
+import { db } from "./firebase";
 
 let unsubMap: { [key: string]: { add: Unsubscribe; remove: Unsubscribe } } = {};
 

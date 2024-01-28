@@ -24,7 +24,7 @@
     import SpriteSheet from "../utils/spritesheet";
     import LocalSettings from "../utils/local_settings";
 
-    import { EditTab, TRANSFORM_BUTTONS, Widget } from "./edit/edit_tab";
+    import { EditTab, TRANSFORM_BUTTONS, WidgetType } from "./edit/edit_tab";
     import ColorsTab from "./edit/ColorsTab.svelte";
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";

@@ -4,7 +4,7 @@
         EditTab,
         MOVE_BUTTONS,
         TRANSFORM_BUTTONS,
-        Widget,
+        WidgetType,
     } from "./edit_tab";
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
@@ -13,19 +13,19 @@
 
     export let state: wasm.StateWrapper;
 
-    let selectedWidget = Widget.None;
+    let selectedWidget = WidgetType.None;
 
     $: {
         $menuSettings.selectedWidget = selectedWidget;
     }
 
     onDestroy(() => {
-        $menuSettings.selectedWidget = Widget.None;
+        $menuSettings.selectedWidget = WidgetType.None;
     });
 
-    const changeWidget = (widget: Widget) => {
+    const changeWidget = (widget: WidgetType) => {
         if (selectedWidget !== widget) selectedWidget = widget;
-        else selectedWidget = Widget.None;
+        else selectedWidget = WidgetType.None;
     };
 
     $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
@@ -126,15 +126,15 @@
             class={cx({
                 "widget-button bounce-active": true,
                 "bg-button-green active:bg-button-green-dark":
-                    selectedWidget !== Widget.Rotate,
+                    selectedWidget !== WidgetType.Rotate,
                 "bg-button-cyan active:bg-button-cyan-dark":
-                    selectedWidget === Widget.Rotate,
+                    selectedWidget === WidgetType.Rotate,
             })}
             tabindex={canSelectByTab}
             aria-label="Rotate Object"
-            on:click={() => changeWidget(Widget.Rotate)}
+            on:click={() => changeWidget(WidgetType.Rotate)}
             role="checkbox"
-            aria-checked={selectedWidget == Widget.Rotate}
+            aria-checked={selectedWidget == WidgetType.Rotate}
         >
             <p class="font-pusab text-stroke">Rotate</p>
             <Image
@@ -146,15 +146,15 @@
             class={cx({
                 "widget-button bounce-active": true,
                 "bg-button-green active:bg-button-green-dark":
-                    selectedWidget !== Widget.Scale,
+                    selectedWidget !== WidgetType.Scale,
                 "bg-button-cyan active:bg-button-cyan-dark":
-                    selectedWidget === Widget.Scale,
+                    selectedWidget === WidgetType.Scale,
             })}
             tabindex={canSelectByTab}
             aria-label="Scale Object"
-            on:click={() => changeWidget(Widget.Scale)}
+            on:click={() => changeWidget(WidgetType.Scale)}
             role="checkbox"
-            aria-checked={selectedWidget == Widget.Scale}
+            aria-checked={selectedWidget == WidgetType.Scale}
         >
             <p class="font-pusab text-stroke">Scale</p>
             <Image
@@ -166,15 +166,15 @@
             class={cx({
                 "widget-button bounce-active": true,
                 "bg-button-green active:bg-button-green-dark":
-                    selectedWidget !== Widget.Warp,
+                    selectedWidget !== WidgetType.Warp,
                 "bg-button-cyan active:bg-button-cyan-dark":
-                    selectedWidget === Widget.Warp,
+                    selectedWidget === WidgetType.Warp,
             })}
             tabindex={canSelectByTab}
             aria-label="Warp Object"
-            on:click={() => changeWidget(Widget.Warp)}
+            on:click={() => changeWidget(WidgetType.Warp)}
             role="checkbox"
-            aria-checked={selectedWidget == Widget.Warp}
+            aria-checked={selectedWidget == WidgetType.Warp}
         >
             <p class="font-pusab text-stroke">Warp</p>
             <Image

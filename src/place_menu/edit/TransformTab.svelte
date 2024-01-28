@@ -9,9 +9,7 @@
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import { menuSettings } from "../../stores";
-    import Scale from "../../widgets/Scale.svelte";
-    import Warp from "../../widgets/Warp.svelte";
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy } from "svelte";
 
     export let state: wasm.StateWrapper;
 
@@ -45,7 +43,7 @@
                 })}
             >
                 <button
-                    class="z-20 w-12 rounded-md shrink-0 up flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 up flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} up"
                 >
@@ -56,7 +54,7 @@
                     />
                 </button>
                 <button
-                    class="z-20 w-12 rounded-md shrink-0 down flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 down flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} down"
                 >
@@ -66,7 +64,7 @@
                     />
                 </button>
                 <button
-                    class="z-20 w-12 rounded-md shrink-0 right flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 right flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} right"
                 >
@@ -77,7 +75,7 @@
                     />
                 </button>
                 <button
-                    class="z-20 w-12 rounded-md shrink-0 left flex-center aspect-square md:w-9 sm:w-7 bg-white/5 hover:bg-white/15 active:bg-white/30"
+                    class="z-20 w-12 rounded-md shrink-0 left flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} left"
                 >

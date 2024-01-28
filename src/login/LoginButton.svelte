@@ -11,7 +11,7 @@
         </h1>
     {/if}
     <button
-        class="top-0 right-0 z-30 w-16 h-16"
+        class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
         on:click={() => {
             if ($loginData.isLoggedIn) {
                 handleSignOut();

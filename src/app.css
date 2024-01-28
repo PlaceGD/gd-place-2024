@@ -72,8 +72,13 @@ body {
     .flex-center {
         @apply flex items-center justify-center;
     }
+
     .pointer-events-all {
         pointer-events: all;
+    }
+
+    .white-button {
+        @apply bg-white/5 hover:bg-white/15 active:bg-white/25;
     }
 
     .text-stroke {

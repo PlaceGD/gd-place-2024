@@ -1,12 +1,11 @@
 <script lang="ts">
     import Editor from "./Editor.svelte";
     import { SvelteToast } from "@zerodevx/svelte-toast";
-
-    import Logo from "./components/Logo.svelte";
     import Toast from "./utils/toast";
     import { alertHasDarkReader } from "./utils/document";
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
+    import DataPopup from "./DataPopup.svelte";
 
     import {
         wasmProgress,
@@ -14,6 +13,7 @@
         loadSpritesheet,
         spritesheetProgress,
     } from "./load_wasm";
+    import { writable } from "svelte/store";
 
     alertHasDarkReader();
 
@@ -43,6 +43,8 @@
 </script>
 
 <SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />
+
+<DataPopup />
 
 <div class="relative w-screen h-screen overflow-hidden">
     <div class="absolute top-0 right-0 flex gap-4 p-2 w-max h-max">

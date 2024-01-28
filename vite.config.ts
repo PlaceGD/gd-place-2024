@@ -3,6 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import topLevelAwait from "vite-plugin-top-level-await";
 import FullReload from "vite-plugin-full-reload";
 import svelteSVG from "vite-plugin-svelte-svg";
+import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 
 import { existsSync } from "fs";
 
@@ -14,13 +15,29 @@ export default defineConfig(({ mode }) => ({
     },
     plugins: [
         svelte(),
-        // svelteSVG({ svgo: {}, enforce: "pre" }),
         svelteSVG({
-            svgoConfig: {}, // See https://github.com/svg/svgo#configuration
-            requireSuffix: false, // Set false to accept '.svg' without the '?component'
+            svgoConfig: {},
+            requireSuffix: false,
         }),
-        //wasm(),
         topLevelAwait(),
+        // preload image assets (only works on `vite build`)
+        UnpluginInjectPreload({
+            files: [
+                {
+                    entryMatch: /\/assets\/ui\/.*\.(png|svg)/,
+                    attributes: {
+                        rel: "preload",
+                    },
+                },
+                {
+                    entryMatch: /Pusab\.oft/,
+                    attributes: {
+                        rel: "preload",
+                    },
+                },
+            ],
+            injectTo: "head-prepend",
+        }),
         FullReload(["src/**/*"]),
     ],
 }));

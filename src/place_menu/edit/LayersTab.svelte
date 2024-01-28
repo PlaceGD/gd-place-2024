@@ -161,9 +161,9 @@
                         >
                             <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
 
-                            <!-- <h2 class="opacity-50 font-pusab xs:text-sm">
-                                ({LAYER_NAME[$menuSettings.layerType]}{i + 1})
-                            </h2> -->
+                            <h2 class="opacity-50 font-pusab xs:text-sm">
+                                {`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
+                            </h2>
                         </button>
                         {#if layerIdx($menuSettings.zLayer) == i + 1}
                             <SlidingSelector layoutId="button-selector"

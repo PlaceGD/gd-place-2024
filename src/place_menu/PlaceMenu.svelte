@@ -12,10 +12,10 @@
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
     import SlidingSelector from "../components/SlidingSelector.svelte";
 
-    import Build from "./icons/build.svg";
-    import Edit from "./icons/edit.svg";
-    import Delete from "./icons/delete.svg";
-    import Minimize from "./icons/caret.svg";
+    import Build from "../icons/build.svg";
+    import Edit from "../icons/edit.svg";
+    import Delete from "../icons/delete.svg";
+    import Minimize from "../icons/caret.svg";
 
     import { TabGroup, menuSettings } from "../stores";
     import { addObject, removeObject } from "../firebase/object";

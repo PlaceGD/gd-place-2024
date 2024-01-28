@@ -4,8 +4,8 @@
     import Loading from "../components/Loading.svelte";
     import { LoginMethod, handleSignIn } from "./login";
     import { loginData } from "../stores";
-    import Cross from "./icons/close.svg";
-    import Check from "./icons/check.svg";
+    import Cross from "../icons/cross.svg";
+    import Check from "../icons/check.svg";
     import Toast from "../utils/toast";
     import Input from "../components/Input.svelte";
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib";
@@ -121,7 +121,7 @@
     >
         <div class="flex flex-col w-auto h-auto gap-2">
             <div
-                class="flex overflow-hidden rounded-lg shadow-lg w-96 h-96 bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
+                class="flex overflow-hidden rounded-lg shadow-lg w-96 aspect-square xs:w-80 bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
             >
                 <div class="w-full h-full">
                     <!-- LOGIN METHOD -->
@@ -129,13 +129,15 @@
                         <div
                             class="absolute flex flex-col items-center justify-between w-full h-full p-6"
                         >
-                            <h1 class="text-3xl font-pusab text-stroke">
+                            <h1
+                                class="text-3xl xs:text-2xl font-pusab text-stroke"
+                            >
                                 Login or Sign Up
                             </h1>
-                            <ul class="w-full h-24 gap-4 flex-center">
+                            <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
                                 <li class="h-full aspect-square max-w-max">
                                     <button
-                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
+                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
                                         aria-label="Login with Twitter"
                                         on:click={() =>
                                             signInWith(LoginMethod.Google)}
@@ -152,7 +154,7 @@
                                     class="h-full shadow-lg aspect-square max-w-max"
                                 >
                                     <button
-                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
+                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
                                         aria-label="Login with GitHub"
                                         on:click={() =>
                                             signInWith(LoginMethod.GitHub)}
@@ -167,7 +169,7 @@
                                 </li>
                                 <li class="h-full aspect-square max-w-max">
                                     <button
-                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center bg-white/10 hover:bg-white/20 active:bg-white/30"
+                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
                                         aria-label="Login with X (Twitter)"
                                         on:click={() =>
                                             signInWith(LoginMethod.X)}
@@ -214,9 +216,11 @@
                         </div>
                     {:else if currentPage == Page.CREATE_USER}
                         <div
-                            class="absolute flex flex-col items-center justify-between w-full h-full p-6 text-center"
+                            class="absolute flex flex-col items-center justify-between w-full h-full p-6 text-center xs:p-4"
                         >
-                            <h1 class="text-3xl font-pusab text-stroke">
+                            <h1
+                                class="text-3xl xs:text-2xl font-pusab text-stroke"
+                            >
                                 Enter a Username
                             </h1>
                             <div class="flex-col gap-2 flex-center">
@@ -231,7 +235,7 @@
                                         />
                                     {/if}
                                     <Input
-                                        class="p-2 w-[inherit] text-2xl text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+                                        class="p-2 w-[inherit] text-2xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
                                         maxLength={16}
                                         hardValidInput={VALID_USERNAME_CHARS}
                                         autoTrim
@@ -239,7 +243,7 @@
                                     />
                                 </div>
                                 <p
-                                    class="text-xs transition duration-500 text-disabled-white hover:text-white"
+                                    class="text-xs transition duration-500 text-white/50 hover:text-white"
                                 >
                                     Usernames can only be 3 to 16 characters in
                                     length, and only contain alphanumeric
@@ -273,7 +277,7 @@
                             </div>
                             <button
                                 class={cx({
-                                    "text-lg p-2 rounded-lg bg-white/10": true,
+                                    "text-lg xs:text-md p-2 rounded-lg bg-white/10": true,
                                     "hover:bg-white/20 active:bg-white/30":
                                         hasAgreedToTOS && userName.length > 0,
                                     "text-disabled-white cursor-not-allowed":
@@ -317,9 +321,3 @@
         class="absolute z-30 w-full h-full backdrop-blur-lg brightness-30"
     ></div>
 {/if}
-
-<style>
-    :global(.splide__list) {
-        @apply flex h-full w-full;
-    }
-</style>

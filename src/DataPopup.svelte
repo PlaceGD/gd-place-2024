@@ -7,28 +7,40 @@
 
     import Warning from "./icons/warning.svg";
     import Analytics from "./icons/analytics.svg";
+    import { onMount } from "svelte";
+    import { map } from "shared-lib";
 
     let showReadMore = false;
     let hasScrolledToBottom = false;
 
     let hidePopup = localStorage.getItem("analytics") !== null ? true : false;
 
-    let notice: HTMLDivElement;
+    let notice: HTMLDivElement | null = null;
+
+    let threshold = 20;
+    let scrollTop = 0;
+    let noticeBottom = threshold + 1;
 
     const onScrollNotice = () => {
-        if (notice.scrollTop === notice.scrollHeight - notice.offsetHeight) {
+        if (notice === null) return;
+
+        noticeBottom = notice.scrollHeight - notice.offsetHeight;
+        scrollTop = notice.scrollTop;
+        if (scrollTop === notice.scrollHeight - notice.offsetHeight) {
             hasScrolledToBottom = true;
-            window.removeEventListener("wheel", onScrollNotice);
         }
     };
 
     $: {
-        if (showReadMore) {
-            window.addEventListener("wheel", onScrollNotice);
-        } else {
-            window.removeEventListener("wheel", onScrollNotice);
+        if (notice !== null && showReadMore) {
+            notice.addEventListener("scroll", onScrollNotice);
+        } else if (notice !== null) {
+            notice.removeEventListener("scroll", onScrollNotice);
         }
     }
+
+    $: topThreshold = scrollTop >= threshold ? 10 : 0;
+    $: bottomThreshold = scrollTop >= noticeBottom - threshold ? 100 : 90;
 </script>
 
 {#if !hidePopup}
@@ -54,11 +66,22 @@
 {/if}
 
 {#if showReadMore}
-    <div class="absolute z-[60] flex flex-col w-full h-full gap-2 flex-center">
+    <div
+        class="absolute z-[60] flex flex-col w-full h-full gap-2 flex-center"
+        style="--gradient: linear-gradient(
+            transparent 0%,
+            black {topThreshold}%,
+            black {bottomThreshold ?? 80}%,
+            transparent 100%
+        )"
+    >
         <div
             class="flex flex-col p-6 overflow-hidden text-white rounded-lg shadow-lg w-[500px] aspect-square xs:w-80 bg-menu-gray/90 shadow-black/40 backdrop-blur-md gap-4"
         >
-            <div class="overflow-y-scroll fadeout" bind:this={notice}>
+            <div
+                class="overflow-y-scroll fadeout xs:text-sm"
+                bind:this={notice}
+            >
                 <p class="mb-4">We use cookies to:</p>
                 <ul>
                     <li
@@ -172,7 +195,8 @@
                     disabled={!hasScrolledToBottom}
                     on:click={() => {
                         showReadMore = false;
-                        //localStorage.setItem("analytics", "1");
+                        hidePopup = true;
+                        localStorage.setItem("analytics", "0");
                     }}
                 >
                     <Cross class="text-[#ff4747] w-11 h-11 xs:w-8 xs:h-8" />
@@ -184,7 +208,8 @@
                     disabled={!hasScrolledToBottom}
                     on:click={() => {
                         showReadMore = false;
-                        //localStorage.setItem("analytics", "1");
+                        hidePopup = true;
+                        localStorage.setItem("analytics", "1");
                     }}
                 >
                     <Check class="text-[#47ff47] w-11 h-11 xs:w-8 xs:h-8" />
@@ -201,17 +226,7 @@
 
 <style>
     .fadeout {
-        mask-image: linear-gradient(
-            transparent,
-            black 20%,
-            black 80%,
-            transparent 100%
-        );
-        -webkit-mask-image: linear-gradient(
-            transparent,
-            black 20%,
-            black 80%,
-            transparent 100%
-        );
+        mask-image: var(--gradient);
+        -webkit-mask-image: var(--gradient);
     }
 </style>

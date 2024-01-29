@@ -128,17 +128,23 @@ const deserializeColor = (
 type PlaceReq = { object: string };
 
 export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
-    const db = database();
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "User is not authenticated");
+    }
 
-    if (!request.data.object) {
+    const db = database();
+    const data = request.data;
+    const uid = request.auth.uid;
+
+    if (!data.object) {
         throw new HttpsError("invalid-argument", "Missing object string");
     }
-    const object_string = request.data.object.toString();
+    const objectString = data.object.toString();
 
     const objLogger = new LogGroup("placeObject");
     let object;
     try {
-        object = deserializeObject(request.data.object, objLogger);
+        object = deserializeObject(data.object, objLogger);
         objLogger.finish();
     } catch (e) {
         objLogger.finish(Level.ERROR);
@@ -146,18 +152,34 @@ export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
     }
 
     if (object === null) {
-        console.error(
-            `error decoding obj bytes: ${decodeString(request.data.object, 126)}`
-        );
+        objLogger.finish(Level.ERROR);
         throw new HttpsError("invalid-argument", "Invalid object string");
     }
 
-    let chunk_x = Math.floor(object.x / CHUNK_SIZE_UNITS);
-    let chunk_y = Math.floor(object.y / CHUNK_SIZE_UNITS);
+    let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
+    let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
 
-    const ref = db.ref(`/objects/${chunk_x},${chunk_y}/`);
+    let [
+        // obj_limit,
+        // obj_count,
+        // { eventStart, placeTimer: timer, canEdit },
+        userData,
+        // banned,
+    ] = (
+        await Promise.all([
+            // db.ref("chunkObjectLimit").get(),
+            // db.ref(`objectCount/${chunkX},${chunkY}`).get(),
+            // db.ref("editorState").get(),
+            db.ref(`/userData/${uid}`).get(),
+            // db.ref(`/bannedUsers/${uid}`).get(),
+        ])
+    ).map(a => a.val());
 
-    await ref.push(object_string);
+    const ref = db.ref(`/objects/${chunkX},${chunkY}/`);
+
+    let objRef = await ref.push(objectString);
+
+    db.ref(`/userPlaced/${objRef.key}`).set(userData.username);
 });
 
 type DeleteReq = { chunkId: string; objId: string };
@@ -166,9 +188,9 @@ export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
     if (!request.auth) {
         throw new HttpsError("unauthenticated", "User is not authenticated");
     }
+
     const db = database();
     const data = request.data;
-
     const uid = request.auth.uid;
 
     let [userData] = (
@@ -184,4 +206,6 @@ export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
 
     const ref = db.ref(`/objects/${data.chunkId}/${data.objId}`);
     ref.set(userData.username).then(() => ref.remove());
+
+    db.ref(`/userPlaced/${data.objId}`).remove();
 });

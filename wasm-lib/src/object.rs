@@ -3,7 +3,7 @@ use std::{mem, ptr};
 // use bytemuck::{bytes_of, Pod, Zeroable};
 use wasm_bindgen::prelude::*;
 
-use crate::{layer::ZLayer, level::ChunkCoord, util::get_chunk_coord, ErrorType, RustError};
+use crate::{layer::ZLayer, level::ChunkCoord, log, util::get_chunk_coord, ErrorType, RustError};
 
 #[derive(Debug, Clone, Copy)]
 #[wasm_bindgen]
@@ -58,6 +58,12 @@ pub struct GDObject {
     pub detail_color: GDColor,
 }
 
+impl GDObject {
+    pub fn get_chunk_coord(&self) -> ChunkCoord {
+        get_chunk_coord(self.x, self.y)
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 #[repr(C, packed)]
 #[wasm_bindgen]
@@ -108,12 +114,6 @@ impl GDObjectOpt {
         self.y_angle = self.y_angle.rem_euclid(72);
         self.x_scale_exp = self.x_scale_exp.clamp(-12, 12);
         self.y_scale_exp = self.y_scale_exp.clamp(-12, 12);
-    }
-}
-
-impl GDObject {
-    pub fn get_chunk_coord(&self) -> ChunkCoord {
-        get_chunk_coord(self.x, self.y)
     }
 }
 

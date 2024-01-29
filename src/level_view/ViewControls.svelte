@@ -9,7 +9,12 @@
 
     import { clamp, hexToRgb, lerp } from "shared-lib";
     import { subChunk, unsubChunk } from "../firebase/chunks";
-    import { TabGroup, addDeleteText, menuSettings } from "../stores";
+    import {
+        TabGroup,
+        addDeleteText,
+        loginData,
+        menuSettings,
+    } from "../stores";
     import {
         TRANSFORM_KEYBINDS,
         WidgetType,
@@ -45,11 +50,13 @@
         easing: cubicOut,
     });
 
-    const getWorldMousePos = () =>
-        state.get_world_pos(
+    const getWorldMousePos = () => {
+        // console.log(mouseX, mouseY);
+        return state.get_world_pos(
             mouseX - canvas.offsetWidth / 2,
             -(mouseY - canvas.offsetHeight / 2)
         );
+    };
 
     const changeZoom = (z: number) => {
         let [mx, my] = getWorldMousePos();
@@ -124,11 +131,9 @@
                 },
                 data => {
                     let key = data.key;
-                    console.log(data.val());
                     if (key != null) {
                         let coords = state.delete_object(key);
                         if (coords != null) {
-                            console.log(coords);
                             addDeleteText(data.val(), coords[0], coords[1]);
                         }
                     }
@@ -233,6 +238,7 @@
         if (!dragging.thresholdReached) {
             if ($menuSettings.selectedGroup == TabGroup.Delete) {
                 let [mx, my] = getWorldMousePos();
+
                 state.try_select_at(mx, my);
             } else {
                 placePreview();
@@ -288,7 +294,10 @@
         // svelte-gestures is not updated for svelte 4.0
         if (isMobile()) {
             const gestures = new TinyGesture(
-                document.getElementById("gesture-target")!
+                document.getElementById("gesture-target")!,
+                {
+                    mouseSupport: false,
+                }
             );
 
             // TODO: make these numbers better on different screens?
@@ -347,11 +356,11 @@
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
-    on:mouseup={() => {
+    on:mouseup={e => {
         handleShowObjPreview();
     }}
     on:mousemove={e => {
-        handleDrag(e.pageX, e.pageY);
+        handleDrag(e.clientX, e.clientY);
     }}
     on:resize={() => {
         handleSub();
@@ -380,12 +389,12 @@
     id="gesture-target"
     tabindex="-1"
     on:mousemove={e => {
-        mouseX = e.pageX;
-        mouseY = e.pageY;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     }}
     on:mousedown={e => {
         if (e.button == 0) {
-            startDrag(e.pageX, e.pageY);
+            startDrag(e.clientX, e.clientY);
         }
     }}
     on:wheel={e => {

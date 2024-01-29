@@ -49,7 +49,7 @@
 
     const handleDrag = (e: any) => {
         if (isPressingSlider) {
-            let ex = e.pageX - sliderContainer.getBoundingClientRect().left;
+            let ex = e.clientX - sliderContainer.getBoundingClientRect().left;
 
             let colorLen = sliderContainerWidth / colors.hues;
 

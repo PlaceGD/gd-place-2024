@@ -149,6 +149,7 @@ fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
 impl AppState for State {
     fn view(&mut self, frame: &mut desen::frame::Frame, delta: f32) {
         self.time += delta;
+        frame.tolerance(0.1);
 
         // for (_, _, _, lifetime) in &mut self.delete_texts {
         //     *lifetime -= delta / 1.5;

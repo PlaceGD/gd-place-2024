@@ -3,6 +3,8 @@ import _objectOrder from "./gd/object_order.json";
 import _spritesheet from "./gd/spritesheet.json";
 import _colors from "./gd/colors.json";
 
+export * from "./database";
+
 export interface SpriteData {
     pos: [number, number];
     size: [number, number];

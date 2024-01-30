@@ -19,6 +19,7 @@ import { auth, db } from "./firebase";
 import { initUserWithUsername } from "./cloud_functions";
 import { loginData } from "../stores";
 import Toast from "../utils/toast";
+import type { DatabaseSchema } from "shared-lib";
 
 setPersistence(auth, inMemoryPersistence);
 
@@ -26,13 +27,7 @@ const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
-export type PlaceData = {
-    username: string;
-    lastPlaced: number;
-    lastDeleted: number;
-    placeTimer: number | null;
-    deleteTimer: number | null;
-};
+export type PlaceData = DatabaseSchema["userData"][""];
 
 export type UserData = {
     userData: User;

@@ -5,8 +5,10 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { decodeString, objects, colors } from "shared-lib";
 
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
-import { Reader } from "./reader";
-import { Level, LogGroup } from "./logger";
+import { Reader } from "./utils/reader";
+import { Level, LogGroup } from "./utils/logger";
+import { ChunkID, ObjKey } from "shared-lib";
+import { refAllGet, ref } from "./utils/database";
 
 interface GDColor {
     r: number;
@@ -151,7 +153,11 @@ export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
         throw new HttpsError("unauthenticated", "User is not authenticated");
     }
 
+    // /ref/
+    //     <key>: gf
+
     const db = database();
+
     const data = request.data;
     const uid = request.auth.uid;
 
@@ -182,23 +188,20 @@ export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
         // obj_limit,
         // obj_count,
         // { eventStart, placeTimer: timer, canEdit },
-        userData,
+        _userName,
         // banned,
-    ] = (
-        await Promise.all([
-            // db.ref("chunkObjectLimit").get(),
-            // db.ref(`objectCount/${chunkX},${chunkY}`).get(),
-            // db.ref("editorState").get(),
-            db.ref(`/userData/${uid}`).get(),
-            // db.ref(`/bannedUsers/${uid}`).get(),
-        ])
-    ).map(a => a.val());
+    ] = await refAllGet(db, `userData/${uid}/username`);
 
-    const ref = db.ref(`/objects/${chunkX},${chunkY}/`);
+    let userName = _userName.val();
+    if (userName === undefined) {
+        throw new HttpsError("invalid-argument", "Missing user data");
+    }
 
-    let objRef = await ref.push(objectString);
+    const objRef = await ref(db, `objects/${chunkX},${chunkY}`).push(
+        objectString
+    );
 
-    db.ref(`/userPlaced/${objRef.key}`).set(userData.username);
+    ref(db, `userPlaced/${objRef.key}`).set(userName);
 });
 
 type DeleteReq = { chunkId: string; objId: string };
@@ -212,9 +215,11 @@ export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
     const data = request.data;
     const uid = request.auth.uid;
 
-    let [userData] = (
-        await Promise.all([db.ref(`/userData/${uid}`).get()])
-    ).map(a => a.val());
+    let [userName] = (await refAllGet(db, `userData/${uid}/username`)).map(v =>
+        v.val()
+    );
+
+    if (userName === undefined) return;
 
     if (!data.chunkId) {
         throw new HttpsError("invalid-argument", "Missing chunk id");
@@ -223,8 +228,8 @@ export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
         throw new HttpsError("invalid-argument", "Missing object id");
     }
 
-    const ref = db.ref(`/objects/${data.chunkId}/${data.objId}`);
-    ref.set(userData.username).then(() => ref.remove());
+    const obj = ref(db, `objects/${data.chunkId as ChunkID}/${data.objId}`);
+    obj.set(userName).then(() => obj.remove());
 
-    db.ref(`/userPlaced/${data.objId}`).remove();
+    ref(db, `/userPlaced/${data.objId}`).remove();
 });

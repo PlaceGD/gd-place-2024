@@ -1,7 +1,8 @@
 import { database } from "firebase-admin";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { VALID_USERNAME } from "shared-lib";
-import { Level, LogGroup } from "./logger";
+import { Level, LogGroup } from "./utils/logger";
+import { ref } from "./utils/database";
 
 type RequestData = {
     username: string;
@@ -32,8 +33,6 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
 
     const db = database();
 
-    const usernameExists = db.ref(`/userName/${data.username.toLowerCase()}`);
-
     // TODO: check username for bad words
     // BAD_WORDS.forEach(word => {
     //     if (data.username.toLowerCase().includes(word)) {
@@ -41,8 +40,10 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
     //     }
     // });
 
-    const val = (await usernameExists.get()).val();
-    if (val != null) {
+    const usernameExists = (
+        await ref(db, `userName/${data.username.toLowerCase()}`).get()
+    ).val();
+    if (usernameExists != undefined) {
         logger.error("User already exists");
         logger.finish(Level.ERROR);
         throw new HttpsError("already-exists", "Username already exists");
@@ -57,13 +58,13 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
     logger.info("User created sucessfully");
 
     // make new user
-    db.ref(`/userData/${data.uid}`).set(user);
+    ref(db, `userData/${data.uid}`).set(user);
 
-    db.ref(`/userName/${data.username.toLowerCase()}`).set({
+    ref(db, `userName/${data.username.toLowerCase()}`).set({
         uid: data.uid,
     });
 
-    db.ref("/userCount").transaction(count => {
+    ref(db, "userCount").transaction(count => {
         return count + 1;
     });
 
@@ -75,16 +76,6 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
 type ReportData = {
     username: string;
 };
-
-/*
-
-/userData
-/userName
-
-users/
-    usernames/
-        ...
-*/
 
 export const reportUser = onCall<ReportData>(async request => {
     const logger = new LogGroup("reportUser");
@@ -102,15 +93,20 @@ export const reportUser = onCall<ReportData>(async request => {
     const db = database();
     const data = request.data;
 
-    const userName = db.ref(`/userName/${data.username.toLowerCase()}`);
-    const userData = (await userName.get()).val();
+    const userData = (
+        await ref(db, `userName/${data.username.toLowerCase()}`).get()
+    ).val();
 
-    const reported = await db.ref(`/reportedUsers/${userData.uid}`);
+    if (userData === undefined) {
+        throw new HttpsError("invalid-argument", "Invalid username");
+    }
+
+    const reported = ref(db, `reportedUsers/${userData.uid}`);
 
     reported.transaction(data => {
         logger.debug(data);
         if (data == undefined) {
-            logger.info("User has been reported 1 time.");
+            logger.info("User has been reported 1 time");
             return {
                 count: 1,
             };

@@ -6,6 +6,7 @@
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
     import DataPopup from "./DataPopup.svelte";
+    import ModButton from "./moderator/ModButton.svelte";
 
     import {
         wasmProgress,
@@ -14,6 +15,7 @@
         spritesheetProgress,
     } from "./load_wasm";
     import { writable } from "svelte/store";
+    import ReportedUserList from "./moderator/ReportedUserList.svelte";
 
     alertHasDarkReader();
 
@@ -36,7 +38,7 @@
     loadSpritesheet();
 
     $: loaded =
-        $wasmProgress.hasLoaded && $spritesheetProgress.arrayBuffer !== null;
+        $wasmProgress.hasLoaded && $spritesheetProgress.arrayBuffer != null;
 
     $: max = $wasmProgress.max + $spritesheetProgress.max;
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
@@ -48,9 +50,11 @@
 
 <div class="relative w-screen h-screen overflow-hidden">
     <div class="absolute top-0 right-0 flex gap-4 p-2 w-max h-max">
-        <LoginButton></LoginButton>
+        <LoginButton />
+        <ModButton />
     </div>
-    <Login></Login>
+    <Login />
+    <ReportedUserList />
     <Editor bind:wasmLoaded={loaded} />
     {#if !loaded}
         <div class="absolute">

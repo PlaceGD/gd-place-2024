@@ -11,6 +11,7 @@ import {
     type Unsubscribe,
     set,
     remove,
+    get,
 } from "firebase/database";
 import Toast from "../utils/toast";
 import { getAuth } from "firebase/auth";
@@ -31,4 +32,4 @@ export const auth = getAuth(app);
 // const analytics = getAnalytics(app);
 export const db = getDatabase(app);
 
-console.log(ref(db, "objects/0,0").key);
+// console.log((await get(ref(db, "dog"))).val());

@@ -36,7 +36,7 @@
     }
 
     const checkIfValid = (v: string, validator: Validator) => {
-        if (validator === null) {
+        if (validator == null) {
             return true;
         }
         if (typeof validator == "function") {

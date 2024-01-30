@@ -44,7 +44,7 @@
         isInProgress = true;
         handleSignIn(method).then(async isOK => {
             if (isOK) {
-                if ($loginData.currentUserData !== null) {
+                if ($loginData.currentUserData != null) {
                     let maybeData = await get(
                         ref(
                             db,
@@ -54,7 +54,7 @@
 
                     let maybePlaceData = maybeData.val();
 
-                    if (maybePlaceData !== null) {
+                    if (maybePlaceData != null) {
                         $loginData.currentUserData.placeData = maybePlaceData;
                         $loginData.isLoggedIn = true;
                         $loginData.showLoginUI = false;
@@ -81,7 +81,7 @@
 
     const initNewUser = () => {
         isInProgress = true;
-        if ($loginData.currentUserData !== null) {
+        if ($loginData.currentUserData != null) {
             initUserData($loginData.currentUserData.userData.uid, userName)
                 .then(() => {
                     isInProgress = false;

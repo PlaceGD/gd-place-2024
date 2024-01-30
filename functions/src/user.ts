@@ -49,10 +49,12 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
         throw new HttpsError("already-exists", "Username already exists");
     }
 
-    let user = {
+    const user = {
         username: data.username,
         lastPlaced: 0,
         lastDeleted: 0,
+        moderator: false,
+        banned: false,
     };
 
     logger.info("User created sucessfully");
@@ -97,7 +99,7 @@ export const reportUser = onCall<ReportData>(async request => {
         await ref(db, `userName/${data.username.toLowerCase()}`).get()
     ).val();
 
-    if (userData === undefined) {
+    if (userData == undefined) {
         throw new HttpsError("invalid-argument", "Invalid username");
     }
 

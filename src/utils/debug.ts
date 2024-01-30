@@ -19,7 +19,7 @@ devtoolsFPS.config({
     width: fpsCanvasWidth,
     height: fpsCanvasHeight,
     bufferSize: 200,
-    style: { top: "80px" },
+    style: { top: "90px", left: "0px" },
 });
 // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
 const fpsCanvas = devtoolsFPS.canvas;

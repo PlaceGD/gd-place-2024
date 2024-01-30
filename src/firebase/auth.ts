@@ -74,7 +74,7 @@ onAuthStateChanged(auth, async user => {
             console.log(placeData);
 
             loginData.update(data => {
-                if (data.currentUserData !== null) {
+                if (data.currentUserData != null) {
                     data.isLoggedIn = true;
                     data.currentUserData.placeData = placeData;
                 } else {
@@ -88,7 +88,7 @@ onAuthStateChanged(auth, async user => {
                 return data;
             });
 
-            if (placeData !== null) {
+            if (placeData != null) {
                 setPersistence(auth, browserLocalPersistence);
             }
         });

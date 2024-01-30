@@ -1,5 +1,5 @@
 import { getAnalytics, logEvent as fbLogEvent } from "firebase/analytics";
-import { app } from "../firebase/Firebase";
+import { app } from "../firebase/firebase";
 
 const analytics = getAnalytics(app);
 

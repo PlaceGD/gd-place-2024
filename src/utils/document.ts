@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import Toast from "./Toast";
+import Toast from "./toast";
 
 // fixes safari toolbar blocking content
 // https://www.reddit.com/r/nextjs/comments/11g3znz/comment/janib69/?utm_source=share&utm_medium=web2x&context=3

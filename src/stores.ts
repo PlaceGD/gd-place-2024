@@ -32,6 +32,8 @@ export const menuSettings = writable(
     })
 );
 
+export const showModeratorOptions = writable<boolean>(false);
+
 export const loginData = writable<{
     isLoggedIn: boolean;
     showLoginUI: boolean;
@@ -53,13 +55,16 @@ export const deleteTexts = writable<
         }
     >
 >({});
+
 export const addDeleteText = (name: string, x: number, y: number) => {
     let id = deleteTextCounter++;
+
     deleteTexts.update(v => {
         v[id] = { name, x, y };
 
         return v;
     });
+
     setTimeout(() => {
         deleteTexts.update(v => {
             delete v[id];

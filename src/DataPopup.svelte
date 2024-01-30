@@ -13,7 +13,7 @@
     let showReadMore = false;
     let hasScrolledToBottom = false;
 
-    let hidePopup = localStorage.getItem("analytics") !== null ? true : false;
+    let hidePopup = localStorage.getItem("analytics") != null ? true : false;
 
     let notice: HTMLDivElement | null = null;
 
@@ -22,7 +22,7 @@
     let noticeBottom = threshold + 1;
 
     const onScrollNotice = () => {
-        if (notice === null) return;
+        if (notice == null) return;
 
         noticeBottom = notice.scrollHeight - notice.offsetHeight;
         scrollTop = notice.scrollTop;
@@ -32,9 +32,9 @@
     };
 
     $: {
-        if (notice !== null && showReadMore) {
+        if (notice != null && showReadMore) {
             notice.addEventListener("scroll", onScrollNotice);
-        } else if (notice !== null) {
+        } else if (notice != null) {
             notice.removeEventListener("scroll", onScrollNotice);
         }
     }

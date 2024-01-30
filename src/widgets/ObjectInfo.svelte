@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { default as cx } from "classnames";
     import ObjectButtonImage from "../place_menu/objects/ObjectButtonImage.svelte";
     import { loginData, selectedObject } from "../stores";
     import Image from "../components/Image.svelte";
@@ -97,7 +96,8 @@
                             aria-label="Report User"
                             on:click={() => {
                                 if ($selectedObject?.namePlaced != null) {
-                                    reportUser($selectedObject.namePlaced);
+                                    // reportUser($selectedObject.namePlaced);
+                                    reportUser("p[oserkg[ipfdipog");
                                 }
                             }}
                         >

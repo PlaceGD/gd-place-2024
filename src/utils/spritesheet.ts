@@ -62,6 +62,6 @@ export default class SpriteSheet {
     }
 
     spriteHasDetail(id: number): boolean {
-        return this.opts.detail_sprites[id] !== undefined;
+        return this.opts.detail_sprites[id] != undefined;
     }
 }

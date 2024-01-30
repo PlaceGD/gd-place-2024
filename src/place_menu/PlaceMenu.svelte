@@ -98,7 +98,7 @@
             })`
         );
 
-        if (placeDeleteBttnAnim === null) return;
+        if (placeDeleteBttnAnim == null) return;
 
         if (isSm.matches && !hasResetSm) {
             placeDeleteBttnAnim?.resetIntialStyles();

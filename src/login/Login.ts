@@ -31,7 +31,7 @@ const logInSuccess = (user: any): boolean => {
     //     .then(snapshot => {
     //         const placeData = snapshot.val();
 
-    //         if(placeData !== null) {
+    //         if(placeData != null) {
     //             loginData.update((data) => {
     //                 data.currentUserData?.placeData = placeData;
     //                 return data

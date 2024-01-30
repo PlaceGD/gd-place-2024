@@ -31,7 +31,7 @@ export const loadState = (s: wasm.StateWrapper) => {
 };
 
 export const withState = <T>(f: (state: wasm.StateWrapper) => T): T => {
-    if (state !== null) {
+    if (state != null) {
         return f(state);
     }
     return undefined as any;

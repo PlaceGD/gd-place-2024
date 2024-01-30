@@ -86,7 +86,7 @@
 
     $: {
         Object.keys(to).forEach(k => {
-            if (conditions[k] !== undefined) {
+            if (conditions[k] != undefined) {
                 if (conditions[k]) {
                     animation.start(
                         (to as ConditionalTarget)[k],

@@ -12,7 +12,7 @@
     import PaletteGrid from "../../components/PaletteGrid.svelte";
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
-    import colors from "../../gd/colors.json";
+    import { colors } from "shared-lib";
 
     import { menuSettings } from "../../stores";
 

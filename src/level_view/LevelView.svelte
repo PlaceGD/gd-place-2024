@@ -11,7 +11,8 @@
     export let state: wasm.StateWrapper | null;
 
     export let canvas: HTMLCanvasElement;
-    let view_size = [0, 0];
+    export let canvasWidth: number;
+    export let canvasHeight: number;
     // let text_draws: wasm.TextDraw[] = [];
 
     onMount(() => {
@@ -52,7 +53,7 @@
 
     $: {
         if (state != null && canvas != null) {
-            let [w, h] = view_size;
+            let [w, h] = [canvasWidth, canvasHeight];
             if (w % 2 != 0) {
                 w += 1;
             }
@@ -76,8 +77,8 @@
 
 <div
     class="absolute w-full h-full"
-    bind:offsetHeight={view_size[1]}
-    bind:offsetWidth={view_size[0]}
+    bind:offsetHeight={canvasHeight}
+    bind:offsetWidth={canvasWidth}
     aria-label="Level Canvas"
 >
     <canvas bind:this={canvas} />

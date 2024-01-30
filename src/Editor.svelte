@@ -10,14 +10,21 @@
     let state: wasm.StateWrapper | null = null;
 
     let canvas: HTMLCanvasElement;
+    let canvasWidth: number;
+    let canvasHeight: number;
 </script>
 
 <div class="absolute w-full h-full">
     {#if wasmLoaded}
-        <LevelView bind:state bind:canvas />
+        <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
     {#if state != null}
-        <ViewControls bind:state bind:canvas />
+        <ViewControls
+            bind:state
+            bind:canvas
+            bind:canvasHeight
+            bind:canvasWidth
+        />
         <PlaceMenu bind:state />
     {/if}
 </div>

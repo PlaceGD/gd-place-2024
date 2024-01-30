@@ -9,7 +9,7 @@
     } from "svelte-motion";
     import { clamp } from "shared-lib";
     import { spring, type Spring } from "svelte/motion";
-    import colors from "../gd/colors.json";
+    import { colors } from "shared-lib";
 
     export let currentHue: number;
 

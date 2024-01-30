@@ -93,6 +93,18 @@ body {
             1.76px -1.76px 0 black,
             -1.76px 1.76px 0 black;
     }
+    .text-stroke-white {
+        /* -webkit-text-stroke: 2.5px black; */
+        text-shadow:
+            -2.5px 0 0 white,
+            2.5px 0 0 white,
+            0 -2.5px 0 white,
+            0 2.5px 0 white,
+            -1.76px -1.76px 0 white,
+            1.76px 1.76px 0 white,
+            1.76px -1.76px 0 white,
+            -1.76px 1.76px 0 white;
+    }
 
     .bounce-active:active {
         animation: scale-easeOutBounce forwards linear 0.5s;

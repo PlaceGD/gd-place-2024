@@ -47,7 +47,7 @@ fn generate_shid() {
     )
     .unwrap();
     fs::write(
-        "../src/gd/colors.json",
+        "../shared-lib/src/gd/colors.json",
         serde_json::to_string(&get_available_colors()).unwrap(),
     )
     .unwrap();

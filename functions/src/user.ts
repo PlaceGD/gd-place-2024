@@ -71,3 +71,55 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
 
     return user;
 });
+
+type ReportData = {
+    username: string;
+};
+
+/*
+
+/userData
+/userName
+
+users/
+    usernames/
+        ...
+*/
+
+export const reportUser = onCall<ReportData>(async request => {
+    const logger = new LogGroup("reportUser");
+    logger.info(
+        "Is user authed?",
+        request.auth != null,
+        `UID: ${request.auth?.uid}`
+    );
+
+    if (!request.auth) {
+        logger.finish(Level.ERROR);
+        throw new HttpsError("unauthenticated", "User is not authenticated");
+    }
+
+    const db = database();
+    const data = request.data;
+
+    const userName = db.ref(`/userName/${data.username.toLowerCase()}`);
+    const userData = (await userName.get()).val();
+
+    const reported = await db.ref(`/reportedUsers/${userData.uid}`);
+
+    reported.transaction(data => {
+        logger.debug(data);
+        if (data == undefined) {
+            logger.info("User has been reported 1 time.");
+            return {
+                count: 1,
+            };
+        } else {
+            data.count += 1;
+            logger.info(`User has been reported ${data.count} times`);
+            return data;
+        }
+    });
+
+    logger.finish();
+});

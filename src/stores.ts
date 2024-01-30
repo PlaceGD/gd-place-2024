@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import LocalSettingsFactory from "./utils/local_settings";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
-import { ZLayer } from "wasm-lib";
+import { ZLayer, GDColor } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
 
 export enum TabGroup {
@@ -67,3 +67,12 @@ export const addDeleteText = (name: string, x: number, y: number) => {
         });
     }, 1500);
 };
+
+export const selectedObject = writable<{
+    id: number;
+    mainColor: GDColor;
+    detailColor: GDColor;
+    namePlaced: string | null;
+    zLayer: ZLayer;
+    zOrder: number;
+} | null>(null);

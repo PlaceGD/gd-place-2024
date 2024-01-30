@@ -1,4 +1,4 @@
-import { push, ref, remove } from "firebase/database";
+import { get, push, ref, remove } from "firebase/database";
 import { GDObjectOpt, GDColor } from "wasm-lib";
 import { db } from "./firebase";
 import Toast from "../utils/toast";
@@ -21,4 +21,17 @@ export const removeObject = (key: string, chunk: [number, number]) => {
             Toast.showErrorToast(e);
         }
     );
+};
+//MEOLW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+let userPlacedCache: Record<string, string> = {};
+
+export const getPlacedUsername = (key: string, cb: (name: string) => void) => {
+    if (userPlacedCache[key] != null) {
+        cb(userPlacedCache[key]);
+    } else {
+        get(ref(db, `userPlaced/${key}`)).then(username => {
+            userPlacedCache[key] = username.val();
+            cb(username.val());
+        });
+    }
 };

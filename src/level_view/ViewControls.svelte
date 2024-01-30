@@ -14,6 +14,7 @@
         addDeleteText,
         loginData,
         menuSettings,
+        selectedObject,
     } from "../stores";
     import {
         TRANSFORM_KEYBINDS,
@@ -30,9 +31,15 @@
     import Scale from "../widgets/Scale.svelte";
     import Warp from "../widgets/Warp.svelte";
     import DeleteTexts from "../widgets/DeleteTexts.svelte";
+    import ObjectInfo from "../widgets/ObjectInfo.svelte";
+    import { getPlacedUsername } from "../firebase/object";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
+    export let canvasWidth: number;
+    export let canvasHeight: number;
+
+    // let [canvasWidth, canvasHeight] = [0, 0];
 
     let dragging: null | {
         prevMouseX: number;
@@ -82,6 +89,7 @@
         if ($menuSettings.selectedGroup == TabGroup.Delete) {
             state.set_preview_visibility(false);
         } else {
+            $selectedObject = null;
             state.deselect_object();
         }
     }
@@ -239,7 +247,25 @@
             if ($menuSettings.selectedGroup == TabGroup.Delete) {
                 let [mx, my] = getWorldMousePos();
 
-                state.try_select_at(mx, my);
+                let selected = state.try_select_at(mx, my);
+                if (selected != undefined) {
+                    // console.log(selected.key());
+                    $selectedObject = {
+                        id: selected.id,
+                        mainColor: selected.main_color,
+                        detailColor: selected.detail_color,
+                        namePlaced: null,
+                        zLayer: selected.z_layer,
+                        zOrder: selected.z_order,
+                    };
+                    getPlacedUsername(selected.key(), v => {
+                        if ($selectedObject != null) {
+                            $selectedObject.namePlaced = v;
+                        }
+                    });
+                } else {
+                    $selectedObject = null;
+                }
             } else {
                 placePreview();
             }
@@ -442,5 +468,8 @@
     {/if}
     <Widget position={originScreen} scale={textZoomScale}>
         <DeleteTexts />
+    </Widget>
+    <Widget position={[60, -60]} scale={1.0} screenCenter={false}>
+        <ObjectInfo />
     </Widget>
 </div>

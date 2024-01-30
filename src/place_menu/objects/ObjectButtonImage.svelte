@@ -77,27 +77,29 @@
     );
 </script>
 
-{#if mainStyle != null}
-    <img
-        draggable="false"
-        class="absolute object-none"
-        src={$spritesheetProgress.blobURL}
-        style={mainStyle}
-        alt=""
-    />
-{/if}
-{#if detailColoredStyle != null}
-    <div
-        class="absolute object-none"
-        style={`
+<div class="relative w-0 h-0 max-w-0 max-h-0 flex-center">
+    {#if mainStyle != null}
+        <img
+            draggable="false"
+            class="absolute object-none"
+            src={$spritesheetProgress.blobURL}
+            style={mainStyle}
+            alt=""
+        />
+    {/if}
+    {#if detailColoredStyle != null}
+        <div
+            class="absolute object-none"
+            style={`
             ${detailColoredStyle}
         `}
-    />
-    <img
-        draggable="false"
-        class="absolute object-none"
-        src={$spritesheetProgress.blobURL}
-        style={detailMultStyle}
-        alt=""
-    />
-{/if}
+        />
+        <img
+            draggable="false"
+            class="absolute object-none"
+            src={$spritesheetProgress.blobURL}
+            style={detailMultStyle}
+            alt=""
+        />
+    {/if}
+</div>

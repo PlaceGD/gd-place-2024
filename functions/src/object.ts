@@ -2,7 +2,7 @@ import { database } from "firebase-admin";
 // import { initializeApp } from "firebase-admin/app";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-import { decodeString, objects } from "shared-lib";
+import { decodeString, objects, colors } from "shared-lib";
 
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Reader } from "./reader";
@@ -116,12 +116,31 @@ const deserializeColor = (
     logger.debug("Object opacity", r);
     if (opacity < 0 || opacity > 255) return null;
 
+    const blending = reader.readBool();
+
+    if (r == 0 && g == 0 && b == 0 && blending) return null;
+
+    const colorsContain = (r: number, g: number, b: number): boolean => {
+        for (let { palette } of colors.list) {
+            for (let i of palette) {
+                for (let j of i) {
+                    if (r == j[0] && g == j[1] && b == j[2]) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    };
+
+    if (!colorsContain(r, g, b)) return null;
+
     return {
         r,
         g,
         b,
         opacity,
-        blending: reader.readBool(),
+        blending,
     };
 };
 

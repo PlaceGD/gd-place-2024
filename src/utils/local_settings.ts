@@ -26,7 +26,7 @@ class LocalSettings<T extends Record<string, any>> {
             localStorage.setItem(this.id, JSON.stringify(this.value));
         } else {
             console.warn(`"${prop}" wanted from "${this.id}". Could not get.`);
-            localStorage.clear();
+            localStorage.removeItem(this.id);
             localStorage.setItem("didErrorOccur", "1");
             window.location.reload();
         }

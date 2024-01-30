@@ -9,7 +9,7 @@ use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
 use crate::{
-    layer::Z_LAYERS,
+    layer::{ZLayer, Z_LAYERS},
     level::{
         ChunkCoord, ChunkInfo, DbKey, Level, CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS,
         LEVEL_HEIGHT_BLOCKS, LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_BLOCKS,
@@ -891,7 +891,7 @@ impl StateWrapper {
         self.bundle.state.show_preview
     }
 
-    pub fn try_select_at(&mut self, x: f32, y: f32) {
+    pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {
         let chunk = get_chunk_coord(x, y);
 
         let mut clickable = vec![];
@@ -923,14 +923,14 @@ impl StateWrapper {
                             corners_world[2],
                             corners_world[3],
                         ) {
-                            clickable.push(key);
+                            clickable.push((key, *obj));
                         }
                     },
                 );
             }
         }
 
-        self.bundle.state.selected_object = if clickable.is_empty() {
+        let selected = if clickable.is_empty() {
             None
         } else {
             if self.bundle.state.select_depth as usize >= clickable.len() {
@@ -939,6 +939,17 @@ impl StateWrapper {
             self.bundle.state.select_depth += 1;
             Some(clickable[self.bundle.state.select_depth as usize - 1])
         };
+
+        self.bundle.state.selected_object = selected.map(|v| v.0);
+
+        selected.map(|(key, obj)| SelectedObjectInfo {
+            key: String::from_utf8(key.into()).unwrap(),
+            id: obj.id,
+            main_color: obj.main_color,
+            detail_color: obj.detail_color,
+            z_layer: obj.z_layer,
+            z_order: obj.z_order,
+        })
     }
     pub fn deselect_object(&mut self) {
         self.bundle.state.selected_object = None;
@@ -964,3 +975,20 @@ impl StateWrapper {
 }
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;
+
+#[wasm_bindgen]
+pub struct SelectedObjectInfo {
+    key: String,
+    pub id: u16,
+    pub main_color: GDColor,
+    pub detail_color: GDColor,
+    pub z_layer: ZLayer,
+    pub z_order: i8,
+}
+
+#[wasm_bindgen]
+impl SelectedObjectInfo {
+    pub fn key(&self) -> String {
+        self.key.clone()
+    }
+}

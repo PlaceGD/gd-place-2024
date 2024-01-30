@@ -15,6 +15,15 @@ macro_rules! z_layers {
             )*
         }
         pub const Z_LAYERS: &[ZLayer] = &[$(ZLayer::$name,)*];
+
+        #[wasm_bindgen]
+        pub fn z_layer_name(v: ZLayer) -> String {
+            match v {
+                $(
+                    ZLayer::$name => stringify!($name).into(),
+                )*
+            }
+        }
     };
 }
 

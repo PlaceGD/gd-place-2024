@@ -1,18 +1,13 @@
 <script lang="ts">
-    import Scale from "./Scale.svelte";
-    import { withState, addCallback } from "../state";
-    import { onDestroy } from "svelte";
-    import Rotate from "./Rotate.svelte";
-    import Warp from "./Warp.svelte";
-    import { menuSettings } from "../stores";
-    import { WidgetType } from "../place_menu/edit/edit_tab";
-
     export let position: [number, number];
     export let scale: number;
+    export let screenCenter: boolean = true;
 </script>
 
 <div
-    class="absolute w-full h-full overflow-visible pointer-events-none flex-center"
+    class="absolute w-full h-full overflow-visible pointer-events-none {screenCenter
+        ? 'flex-center'
+        : ''}"
     style={`
         left: ${position[0]}px;
         top: ${-position[1]}px;

@@ -213,7 +213,7 @@
     }
 
     .widget-button {
-        @apply flex h-full w-full flex-1 flex-col flex-col items-center justify-center gap-2 rounded-md text-2xl;
+        @apply flex h-full w-full flex-1 flex-col items-center justify-center gap-2 rounded-md text-2xl;
     }
 
     .transform-button {

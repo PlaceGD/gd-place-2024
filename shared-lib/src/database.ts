@@ -13,7 +13,7 @@ export interface DatabaseSchema {
             lastPlaced: number;
             username: string;
             nameColor?: string;
-            banned: boolean;
+            // banned: boolean;
             moderator: boolean;
         }
     >;

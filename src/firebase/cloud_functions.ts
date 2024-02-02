@@ -4,6 +4,7 @@ const functions = getFunctions();
 export const placeObject = httpsCallable(functions, "placeObject");
 export const deleteObject = httpsCallable(functions, "deleteObject");
 export const reportUser = httpsCallable(functions, "reportUser");
+export const banUser = httpsCallable(functions, "banUser");
 export const reportedUserOperation = httpsCallable(
     functions,
     "reportedUserOperation"

@@ -149,6 +149,9 @@ impl GDObjectOpt {
         }
     }
     pub fn bytes(&self) -> js_sys::Uint8Array {
+        // SAFETY:
+        // this is just getting the raw bytes of the struct. it will always be the correct size
+        // and endianess
         unsafe {
             let bytes: [u8; mem::size_of::<GDObjectOpt>()] =
                 mem::transmute(ptr::read(self as *const _));
@@ -163,6 +166,10 @@ impl GDObjectOpt {
             .try_into()
             .map_err(|_| RustError::from(ErrorType::ObjectDeserialization))?;
 
+        // SAFETY:
+        // the bytes of the object are always validated on the server side
+        // the server can never hold an invalid object, therefore the client can never
+        // deserialise an invalid object
         Ok(unsafe { mem::transmute(bytes) })
     }
 

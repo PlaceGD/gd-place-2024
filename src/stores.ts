@@ -32,7 +32,10 @@ export const menuSettings = writable(
     })
 );
 
-export const showModeratorOptions = writable<boolean>(false);
+export const showModeratorOptions = writable({
+    show: false,
+    newReports: localStorage.getItem("newReports") == "1",
+});
 
 export const loginData = writable<{
     isLoggedIn: boolean;

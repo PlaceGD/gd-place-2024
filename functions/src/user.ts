@@ -3,6 +3,8 @@ import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { VALID_USERNAME } from "shared-lib";
 import { Level, LogGroup } from "./utils/logger";
 import { ref } from "./utils/database";
+import { DEV_UIDS } from ".";
+import { Database } from "firebase-admin/database";
 
 type RequestData = {
     username: string;
@@ -43,6 +45,7 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
     const usernameExists = (
         await ref(db, `userName/${data.username.toLowerCase()}`).get()
     ).val();
+
     if (usernameExists != undefined) {
         logger.error("User already exists");
         logger.finish(Level.ERROR);
@@ -54,7 +57,6 @@ export const initUserWithUsername = onCall<RequestData>(async request => {
         lastPlaced: 0,
         lastDeleted: 0,
         moderator: false,
-        banned: false,
     };
 
     logger.info("User created sucessfully");
@@ -95,15 +97,15 @@ export const reportUser = onCall<ReportData>(async request => {
     const db = database();
     const data = request.data;
 
-    const userUid = (
+    const userToReport = (
         await ref(db, `userName/${data.username.toLowerCase()}`).get()
     ).val();
 
-    if (userUid == undefined) {
+    if (userToReport == undefined) {
         throw new HttpsError("invalid-argument", "Invalid username");
     }
 
-    const reported = ref(db, `reportedUsers/${userUid.uid}`);
+    const reported = ref(db, `reportedUsers/${userToReport.uid}`);
 
     reported.transaction(data => {
         logger.debug(data);
@@ -122,6 +124,30 @@ export const reportUser = onCall<ReportData>(async request => {
 
     logger.finish();
 });
+
+const banUserInner = async (
+    db: Database,
+    requesterUid: string,
+    userToBanUid: string
+) => {
+    if (!DEV_UIDS.includes(requesterUid)) {
+        const reportedUserIsMod = (
+            await ref(db, `userData/${userToBanUid}/moderator`).get()
+        ).val();
+
+        if (reportedUserIsMod) {
+            throw new HttpsError(
+                "permission-denied",
+                "Cannot ban a moderator. Please contact a developer if there is an issue."
+            );
+        }
+    }
+
+    ref(db, `userData/${userToBanUid}`).remove();
+    ref(db, "userCount").transaction(count => {
+        return count - 1;
+    });
+};
 
 type OperationData = {
     operation: "ignore" | "ban";
@@ -149,11 +175,59 @@ export const reportedUserOperation = onCall<OperationData>(async request => {
 
     const data = request.data;
 
-    if (data.operation == "ignore") {
-        ref(db, `reportedUsers/${request.auth.uid}`).remove();
-    } else if (data.operation == "ban") {
-        ref(db, `userData/${request.auth.uid}/banned`).set(true);
-    } else {
+    if (data.operation == "ban") {
+        await banUserInner(db, request.auth.uid, data.reportedUserUid);
+    } else if (data.operation != "ignore") {
         throw new HttpsError("invalid-argument", "Unknown operation");
     }
+
+    ref(db, `reportedUsers/${data.reportedUserUid}`).remove();
+});
+
+type BanRequestData = {
+    username: string;
+};
+
+export const banUser = onCall<BanRequestData>(async request => {
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "User is not authenticated");
+    }
+
+    const logger = new LogGroup("banUser");
+
+    const db = database();
+
+    const modData = (await ref(db, `userData/${request.auth.uid}`).get()).val();
+    if (modData == null) {
+        logger.finish(Level.ERROR);
+        throw new HttpsError("invalid-argument", "Invalid mod UID");
+    }
+
+    if (!modData.moderator) {
+        logger.debug("User is not mod");
+        logger.finish(Level.ERROR);
+        throw new HttpsError(
+            "permission-denied",
+            "User is not permitted to perform this operation"
+        );
+    }
+
+    const data = request.data;
+
+    logger.info("Username:", data.username, data.username.toLowerCase());
+
+    const userToBanUid = (
+        await ref(db, `userName/${data.username.toLowerCase()}`).get()
+    ).val()?.uid;
+
+    logger.info("User id:", userToBanUid);
+
+    if (userToBanUid == null) {
+        logger.finish(Level.ERROR);
+        throw new HttpsError("invalid-argument", "Unknown user");
+    }
+
+    await banUserInner(db, request.auth.uid, userToBanUid);
+
+    logger.finish();
 });

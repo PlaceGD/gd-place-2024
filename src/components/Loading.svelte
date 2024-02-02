@@ -3,7 +3,7 @@
 </script>
 
 <div
-    class="w-full h-full absolute flex-center z-50 {darken
+    class="w-full h-full absolute flex-center z-50 {$$restProps.class} {darken
         ? 'bg-black/70'
         : ''}"
 >

@@ -9,7 +9,7 @@
     let scrollTop = 0;
     let elemBottom = threshold + 1;
 
-    const onScrollNotice = () => {
+    const onScrollElem = () => {
         if (elem == null) return;
 
         elemBottom = elem.scrollHeight - elem.offsetHeight;
@@ -21,12 +21,12 @@
 
     $: {
         if (elem != null) {
-            elem.addEventListener("scroll", onScrollNotice);
+            elem.addEventListener("scroll", onScrollElem);
         }
     }
 
     onDestroy(() => {
-        elem?.removeEventListener("scroll", onScrollNotice);
+        elem?.removeEventListener("scroll", onScrollElem);
     });
 
     $: topThreshold = scrollTop >= threshold ? 10 : 0;

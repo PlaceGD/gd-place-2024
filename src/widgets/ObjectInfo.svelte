@@ -5,11 +5,16 @@
     import * as wasm from "wasm-lib";
     import Loading from "../components/Loading.svelte";
     import { reportedUsers, reportUser } from "../firebase/report";
+    import Button from "../components/Button.svelte";
+    import { banUser } from "../firebase/cloud_functions";
+    import Toast from "../utils/toast";
 
     $: hasReported =
         $selectedObject?.namePlaced != null
             ? $reportedUsers.reported.includes($selectedObject.namePlaced)
             : true;
+
+    let isBanning = false;
 </script>
 
 {#if $selectedObject != null}
@@ -82,7 +87,7 @@
             {/if}
         </li>
 
-        {#if $selectedObject?.namePlaced != null}
+        {#if $selectedObject?.namePlaced != null && $selectedObject?.namePlaced != "-"}
             <div class="flex flex-col items-center justify-center pt-3">
                 {#if $loginData.currentUserData != null}
                     {#if $loginData.currentUserData.placeData?.username != $selectedObject.namePlaced}
@@ -130,11 +135,38 @@
                 {/if}
             </div>
         {/if}
+
+        {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != "-"}
+            <div class="h-12 w-full pt-3">
+                <Button
+                    type="decline"
+                    iconClass="w-8 h-8"
+                    bind:disabled={isBanning}
+                    on:click={() => {
+                        isBanning = true;
+                        if ($selectedObject?.namePlaced != null) {
+                            banUser({
+                                username: $selectedObject.namePlaced,
+                            })
+                                .then(() => {
+                                    isBanning = false;
+                                })
+                                .catch(e => {
+                                    isBanning = false;
+                                    Toast.showErrorToast(
+                                        `Failed to ban user! (${e})`
+                                    );
+                                });
+                        }
+                    }}>Ban User</Button
+                >
+            </div>
+        {/if}
     </ul>
 {/if}
 
 <style lang="postcss">
     .object-info-item {
-        @apply flex h-12 w-full items-center justify-between rounded-lg p-2 even:bg-white/10;
+        @apply flex h-12 w-full items-center justify-between rounded-lg p-2 odd:bg-black/15 even:bg-white/10;
     }
 </style>

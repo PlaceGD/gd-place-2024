@@ -40,6 +40,12 @@
     let isInProgress = false;
     $: allowClose = currentPage == Page.LOGIN_METHOD ? !isInProgress : false;
 
+    $: {
+        if (!$loginData.showLoginUI) {
+            currentPage = Page.LOGIN_METHOD;
+        }
+    }
+
     const signInWith = (method: LoginMethod) => {
         isInProgress = true;
         handleSignIn(method).then(async isOK => {

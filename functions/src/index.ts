@@ -5,7 +5,11 @@ export {
     initUserWithUsername,
     reportUser,
     reportedUserOperation,
+    banUser,
 } from "./user";
+
+// TODO: add our uids
+export const DEV_UIDS: string[] = [];
 
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED (THERE ARE ANOTHER PLACEIN WASM)
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED (THERE ARE ANOTHER PLACEIN WASM)

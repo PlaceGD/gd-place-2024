@@ -116,7 +116,7 @@
         alt=""
     />
     <section
-        class="absolute z-40 flex-col w-full h-full text-white flex-center"
+        class="absolute z-40 flex-col w-full h-full text-white flex-center pointer-events-all"
         aria-label="Login or Sign Up"
     >
         <div class="flex flex-col w-auto h-auto gap-2">

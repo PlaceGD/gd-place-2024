@@ -1,7 +1,11 @@
 import { initializeApp } from "firebase-admin/app";
 
 export { deleteObject, placeObject } from "./object";
-export { initUserWithUsername, reportUser } from "./user";
+export {
+    initUserWithUsername,
+    reportUser,
+    reportedUserOperation,
+} from "./user";
 
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED (THERE ARE ANOTHER PLACEIN WASM)
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED (THERE ARE ANOTHER PLACEIN WASM)

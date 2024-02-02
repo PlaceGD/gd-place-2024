@@ -9,43 +9,17 @@
     import Analytics from "./icons/analytics.svg";
     import { onMount } from "svelte";
     import { map } from "shared-lib";
+    import FadedScroll from "./components/FadedScroll.svelte";
 
     let showReadMore = false;
     let hasScrolledToBottom = false;
 
     let hidePopup = localStorage.getItem("analytics") != null ? true : false;
-
-    let notice: HTMLDivElement | null = null;
-
-    let threshold = 20;
-    let scrollTop = 0;
-    let noticeBottom = threshold + 1;
-
-    const onScrollNotice = () => {
-        if (notice == null) return;
-
-        noticeBottom = notice.scrollHeight - notice.offsetHeight;
-        scrollTop = notice.scrollTop;
-        if (scrollTop === notice.scrollHeight - notice.offsetHeight) {
-            hasScrolledToBottom = true;
-        }
-    };
-
-    $: {
-        if (notice != null && showReadMore) {
-            notice.addEventListener("scroll", onScrollNotice);
-        } else if (notice != null) {
-            notice.removeEventListener("scroll", onScrollNotice);
-        }
-    }
-
-    $: topThreshold = scrollTop >= threshold ? 10 : 0;
-    $: bottomThreshold = scrollTop >= noticeBottom - threshold ? 100 : 90;
 </script>
 
 {#if !hidePopup}
     <div
-        class="absolute bottom-0 z-50 w-1/2 h-auto p-4 left-1/2 transform -translate-x-1/2"
+        class="absolute bottom-0 z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 left-1/2"
     >
         <div
             class="flex-col w-full gap-3 p-3 text-center text-white rounded-lg shadow-lg sm:text-sm sm:w-full flex-center bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
@@ -68,26 +42,15 @@
 {/if}
 
 {#if showReadMore}
-    <div
-        class="absolute z-[60] flex flex-col w-full h-full gap-2 flex-center"
-        style="--gradient: linear-gradient(
-            transparent 0%,
-            black {topThreshold}%,
-            black {bottomThreshold ?? 80}%,
-            transparent 100%
-        )"
-    >
+    <div class="absolute z-[60] flex flex-col w-full h-full gap-2 flex-center">
         <div
             class="flex flex-col p-6 overflow-hidden text-white rounded-lg shadow-lg w-[500px] aspect-square xs:w-80 bg-menu-gray/90 shadow-black/40 backdrop-blur-md gap-4"
         >
-            <div
-                class="overflow-y-scroll fadeout xs:text-sm"
-                bind:this={notice}
-            >
+            <FadedScroll bind:reachedBottom={hasScrolledToBottom}>
                 <p class="mb-4">We use cookies to:</p>
                 <ul>
                     <li
-                        class="flex items-center pl-6 gap-4 bg-black/20 p-1 rounded-md"
+                        class="flex items-center gap-4 p-1 pl-6 rounded-md bg-white/5"
                     >
                         <!-- <div class="w-10 h-10"> -->
                         <Warning class="w-10 h-10 xs:w-9 xs:h-9" />
@@ -122,7 +85,7 @@
                 <p class="my-4">We use analytics to:</p>
                 <ul class="list-disc">
                     <li
-                        class="flex items-center pl-6 gap-4 bg-black/20 p-1 rounded-md"
+                        class="flex items-center gap-4 p-1 pl-6 rounded-md bg-white/5"
                     >
                         <!-- <div class="w-10 h-10"> -->
                         <Analytics class="w-10 h-10 xs:w-9 xs:h-9" />
@@ -190,7 +153,7 @@
                         >Disable Analytics</span
                     >' we will disable both Cloudflare and Firebase analytics.
                 </p>
-            </div>
+            </FadedScroll>
             <div class="flex w-full gap-4">
                 <button
                     class="w-[inherit] gap-2 p-1 rounded-lg flex-center white-button"

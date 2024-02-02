@@ -73,10 +73,6 @@ class Ref<T> {
     }
 }
 
-// type F<X, Y> = never;
-
-// type B = F<...[string, number]>
-
 export const ref = <T extends string, D = DatabaseSchema>(
     db: Database,
     path: T

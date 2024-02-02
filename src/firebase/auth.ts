@@ -21,8 +21,6 @@ import { loginData } from "../stores";
 import Toast from "../utils/toast";
 import type { DatabaseSchema } from "shared-lib";
 
-setPersistence(auth, inMemoryPersistence);
-
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
@@ -71,8 +69,6 @@ onAuthStateChanged(auth, async user => {
         userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
             const placeData = snapshot.val();
 
-            console.log(placeData);
-
             loginData.update(data => {
                 if (data.currentUserData != null) {
                     data.isLoggedIn = true;
@@ -93,6 +89,8 @@ onAuthStateChanged(auth, async user => {
             }
         });
     } else {
+        setPersistence(auth, inMemoryPersistence);
+
         if (userDataUnsub != null) {
             userDataUnsub();
         }

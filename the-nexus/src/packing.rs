@@ -154,7 +154,7 @@ pub(crate) fn make_get_main_sprite_fn(data: &SpritesheetData) -> String {
 
     format!(
         "
-pub const MAIN_SPRITES: [SpriteInfo; 4600] = {ongy:?};
+pub const MAIN_SPRITES: [Option<SpriteInfo>; 4600] = {ongy:?};
     "
     )
 
@@ -182,7 +182,7 @@ pub(crate) fn make_get_detail_sprite_fn(data: &SpritesheetData) -> String {
 
     format!(
         "
-pub const DETAIL_SPRITES: [SpriteInfo; 4600] = {ongy:?};
+pub const DETAIL_SPRITES: [Option<SpriteInfo>; 4600] = {ongy:?};
     "
     )
 

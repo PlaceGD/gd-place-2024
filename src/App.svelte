@@ -49,12 +49,16 @@
 <DataPopup />
 
 <div class="relative w-screen h-screen overflow-hidden">
-    <div class="absolute top-0 right-0 flex gap-4 p-2 w-max h-max">
-        <LoginButton />
-        <ModButton />
+    <div
+        class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
+    >
+        <div class="flex justify-end gap-4 p-2 pointer-events-all">
+            <LoginButton />
+            <ModButton />
+        </div>
+        <Login />
+        <ReportedUserList />
     </div>
-    <Login />
-    <ReportedUserList />
     <Editor bind:wasmLoaded={loaded} />
     {#if !loaded}
         <div class="absolute">

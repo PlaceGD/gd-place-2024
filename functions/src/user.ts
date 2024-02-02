@@ -95,21 +95,22 @@ export const reportUser = onCall<ReportData>(async request => {
     const db = database();
     const data = request.data;
 
-    const userData = (
+    const userUid = (
         await ref(db, `userName/${data.username.toLowerCase()}`).get()
     ).val();
 
-    if (userData == undefined) {
+    if (userUid == undefined) {
         throw new HttpsError("invalid-argument", "Invalid username");
     }
 
-    const reported = ref(db, `reportedUsers/${userData.uid}`);
+    const reported = ref(db, `reportedUsers/${userUid.uid}`);
 
     reported.transaction(data => {
         logger.debug(data);
         if (data == undefined) {
             logger.info("User has been reported 1 time");
             return {
+                username: request.data.username,
                 count: 1,
             };
         } else {
@@ -120,4 +121,39 @@ export const reportUser = onCall<ReportData>(async request => {
     });
 
     logger.finish();
+});
+
+type OperationData = {
+    operation: "ignore" | "ban";
+    reportedUserUid: string;
+};
+
+export const reportedUserOperation = onCall<OperationData>(async request => {
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "User is not authenticated");
+    }
+
+    const db = database();
+
+    const modData = (await ref(db, `userData/${request.auth.uid}`).get()).val();
+    if (modData == null) {
+        throw new HttpsError("invalid-argument", "Invalid mod UID");
+    }
+
+    if (!modData.moderator) {
+        throw new HttpsError(
+            "permission-denied",
+            "User is not permitted to perform this operation"
+        );
+    }
+
+    const data = request.data;
+
+    if (data.operation == "ignore") {
+        ref(db, `reportedUsers/${request.auth.uid}`).remove();
+    } else if (data.operation == "ban") {
+        ref(db, `userData/${request.auth.uid}/banned`).set(true);
+    } else {
+        throw new HttpsError("invalid-argument", "Unknown operation");
+    }
 });

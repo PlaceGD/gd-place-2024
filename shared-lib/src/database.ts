@@ -4,7 +4,7 @@ export type ObjKey = string;
 export interface DatabaseSchema {
     objects: Record<ChunkID, Record<ObjKey, string>>;
 
-    reportedUsers: Record<string, { count: number }>;
+    reportedUsers: Record<string, { count: number; username: string }>;
     userCount: number;
     userData: Record<
         string,

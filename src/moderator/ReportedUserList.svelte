@@ -17,8 +17,10 @@
         if (container != null) {
             container.focus();
 
-            container.addEventListener("blur", () => {
-                console.log("here");
+            container.addEventListener("blur", e => {
+                if (e.relatedTarget != document.getElementById("mod-button")) {
+                    $showModeratorOptions.show = false;
+                }
             });
         }
     }
@@ -79,6 +81,7 @@
     <div
         bind:this={container}
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
+        tabindex="0"
     >
         <h1
             class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"

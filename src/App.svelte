@@ -52,9 +52,11 @@
     <div
         class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
     >
-        <div class="flex justify-end gap-4 p-2 pointer-events-all">
-            <LoginButton />
+        <div
+            class="flex flex-row-reverse justify-end gap-4 p-2 pointer-events-all"
+        >
             <ModButton />
+            <LoginButton />
         </div>
         <Login />
         <ReportedUserList />

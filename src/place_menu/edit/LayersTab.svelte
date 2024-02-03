@@ -8,7 +8,7 @@
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { menuSettings } from "../../stores";
-    import { clamp } from "shared-lib";
+    import { clamp } from "shared-lib/util";
 
     const layerName = (layer: ZLayer) => {
         switch (layer) {

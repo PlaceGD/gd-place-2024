@@ -1,15 +1,23 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
+import type {
+    ReportUserReq,
+    DeleteReq,
+    PlaceReq,
+    BanReq,
+    ReportedUserOperationReq,
+    InitWithUsernameReq,
+} from "shared-lib/cloud_functions";
 
 const functions = getFunctions();
-export const placeObject = httpsCallable(functions, "placeObject");
-export const deleteObject = httpsCallable(functions, "deleteObject");
-export const reportUser = httpsCallable(functions, "reportUser");
-export const banUser = httpsCallable(functions, "banUser");
-export const reportedUserOperation = httpsCallable(
+export const placeObject = httpsCallable<PlaceReq>(functions, "placeObject");
+export const deleteObject = httpsCallable<DeleteReq>(functions, "deleteObject");
+export const reportUser = httpsCallable<ReportUserReq>(functions, "reportUser");
+export const banUser = httpsCallable<BanReq>(functions, "banUser");
+export const reportedUserOperation = httpsCallable<ReportedUserOperationReq>(
     functions,
     "reportedUserOperation"
 );
-export const initUserWithUsername = httpsCallable(
+export const initUserWithUsername = httpsCallable<InitWithUsernameReq>(
     functions,
     "initUserWithUsername"
 );

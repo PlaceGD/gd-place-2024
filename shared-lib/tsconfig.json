@@ -9,6 +9,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "rootDir": "./src",
+        "outDir": "dist",
         "composite": true,
         "noImplicitAny": true,
         "baseUrl": "./",

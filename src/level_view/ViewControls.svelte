@@ -7,7 +7,8 @@
 
     import * as wasm from "wasm-lib";
 
-    import { clamp, hexToRgb, lerp } from "shared-lib";
+    import { clamp, hexToRgb, lerp } from "shared-lib/util";
+    import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
     import {
         TabGroup,
@@ -24,7 +25,6 @@
     import Toast from "../utils/toast";
     import LocalSettingsFactory from "../utils/local_settings";
     import { isMobile } from "../utils/document";
-    import { decodeString } from "shared-lib";
     import Widget from "../widgets/Widget.svelte";
     import { addCallback } from "../state";
     import Rotate from "../widgets/Rotate.svelte";

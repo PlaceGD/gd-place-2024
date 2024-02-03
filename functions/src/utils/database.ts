@@ -3,7 +3,7 @@ import {
     Reference,
     DataSnapshot as FDataSnapshot,
 } from "firebase-admin/database";
-import { DatabaseSchema } from "shared-lib";
+import { DatabaseSchema } from "shared-lib/database";
 
 type Child<T> = Record<any, any> extends T ? NonNullable<T>[keyof T] : never;
 

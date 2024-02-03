@@ -1,14 +1,14 @@
 import { database } from "firebase-admin";
-// import { initializeApp } from "firebase-admin/app";
-import { HttpsError, onCall } from "firebase-functions/v2/https";
-
-import { decodeString, objects, colors } from "shared-lib";
-
+import { decodeString } from "shared-lib/base_util";
+import { objects, colors } from "shared-lib/gd";
+import { ChunkID } from "shared-lib/database";
+import { PlaceReq, DeleteReq } from "shared-lib/cloud_functions";
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Reader } from "./utils/reader";
 import { Level, LogGroup } from "./utils/logger";
-import { ChunkID, ObjKey } from "shared-lib";
 import { refAllGet, ref } from "./utils/database";
+import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 
 interface GDColor {
     r: number;
@@ -146,71 +146,57 @@ const deserializeColor = (
     };
 };
 
-type PlaceReq = { object: string };
+export const placeObject = onCallAuthLogger<PlaceReq>(
+    "placeObject",
+    async (request, logger) => {
+        const db = database();
 
-export const placeObject = onCall<PlaceReq>({ cors: true }, async request => {
-    if (!request.auth) {
-        throw new HttpsError("unauthenticated", "User is not authenticated");
+        const data = request.data;
+        const uid = request.auth.uid;
+
+        if (!data.object) {
+            throw new HttpsError("invalid-argument", "Missing object string");
+        }
+        const objectString = data.object.toString();
+
+        const object = deserializeObject(data.object, logger);
+        // try {
+        // object = deserializeObject(data.object, logger);
+        //     objLogger.finish();
+        // } catch (e) {
+        //     objLogger.finish(Level.ERROR);
+        //     throw e;
+        // }
+
+        if (object === null) {
+            throw new HttpsError("invalid-argument", "Invalid object string");
+        }
+
+        let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
+        let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
+
+        let [
+            // obj_limit,
+            // obj_count,
+            // { eventStart, placeTimer: timer, canEdit },
+            _userName,
+            // banned,
+        ] = await refAllGet(db, `userData/${uid}/username`);
+
+        let userName = _userName.val();
+        if (userName === undefined) {
+            throw new HttpsError("invalid-argument", "Missing user data");
+        }
+
+        const objRef = await ref(db, `objects/${chunkX},${chunkY}`).push(
+            objectString
+        );
+
+        ref(db, `userPlaced/${objRef.key}`).set(userName);
     }
+);
 
-    // /ref/
-    //     <key>: gf
-
-    const db = database();
-
-    const data = request.data;
-    const uid = request.auth.uid;
-
-    if (!data.object) {
-        throw new HttpsError("invalid-argument", "Missing object string");
-    }
-    const objectString = data.object.toString();
-
-    const objLogger = new LogGroup("placeObject");
-    let object;
-    try {
-        object = deserializeObject(data.object, objLogger);
-        objLogger.finish();
-    } catch (e) {
-        objLogger.finish(Level.ERROR);
-        throw e;
-    }
-
-    if (object === null) {
-        objLogger.finish(Level.ERROR);
-        throw new HttpsError("invalid-argument", "Invalid object string");
-    }
-
-    let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
-    let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
-
-    let [
-        // obj_limit,
-        // obj_count,
-        // { eventStart, placeTimer: timer, canEdit },
-        _userName,
-        // banned,
-    ] = await refAllGet(db, `userData/${uid}/username`);
-
-    let userName = _userName.val();
-    if (userName === undefined) {
-        throw new HttpsError("invalid-argument", "Missing user data");
-    }
-
-    const objRef = await ref(db, `objects/${chunkX},${chunkY}`).push(
-        objectString
-    );
-
-    ref(db, `userPlaced/${objRef.key}`).set(userName);
-});
-
-type DeleteReq = { chunkId: string; objId: string };
-
-export const deleteObject = onCall<DeleteReq>({ cors: true }, async request => {
-    if (!request.auth) {
-        throw new HttpsError("unauthenticated", "User is not authenticated");
-    }
-
+export const deleteObject = onCallAuth<DeleteReq>(async request => {
     const db = database();
     const data = request.data;
     const uid = request.auth.uid;

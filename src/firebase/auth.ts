@@ -19,7 +19,7 @@ import { auth, db } from "./firebase";
 import { initUserWithUsername } from "./cloud_functions";
 import { loginData } from "../stores";
 import Toast from "../utils/toast";
-import type { DatabaseSchema } from "shared-lib";
+import type { DatabaseSchema } from "shared-lib/database";
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();

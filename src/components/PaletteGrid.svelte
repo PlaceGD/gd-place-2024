@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { colors } from "shared-lib";
+    import { colors } from "shared-lib/gd";
 
     export let hue: number;
 

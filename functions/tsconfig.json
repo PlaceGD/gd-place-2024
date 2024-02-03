@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "nodenext",
         "noImplicitReturns": true,
-        // "noUnusedLocals": true,
+        "skipLibCheck": true,
         "outDir": "lib",
         "sourceMap": true,
         "strict": true,
         "target": "es2017",
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "moduleResolution": "Node",
+        "moduleResolution": "nodenext",
     },
     "compileOnSave": true,
     "include": ["src"],

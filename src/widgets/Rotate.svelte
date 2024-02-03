@@ -2,7 +2,7 @@
     import Input from "../components/Input.svelte";
     import { addCallback as addUpdateCallback } from "../state";
     import { onDestroy } from "svelte";
-    import { clamp, getCenterPos, snap } from "shared-lib";
+    import { clamp, getCenterPos, snap } from "shared-lib/util";
 
     let rotating: number | null = null;
 

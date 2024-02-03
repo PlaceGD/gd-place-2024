@@ -7,9 +7,9 @@
         useAnimation,
         useReducedMotion,
     } from "svelte-motion";
-    import { clamp } from "shared-lib";
+    import { clamp } from "shared-lib/util";
+    import { colors } from "shared-lib/gd";
     import { spring, type Spring } from "svelte/motion";
-    import { colors } from "shared-lib";
 
     export let currentHue: number;
 

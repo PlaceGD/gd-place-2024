@@ -1,4 +1,4 @@
-import { objectOrder, objects, type ObjectData } from "shared-lib";
+import { objectOrder, objects, type ObjectData } from "shared-lib/gd";
 
 export const CATEGORY_ICONS = {
     Blocks: "/assets/ui/build_tab_icons/blocks.png",

@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { clamp, round } from "shared-lib";
-    import * as wasm from "wasm-lib";
+    import { round } from "shared-lib/util";
 
-    import Input from "../components/Input.svelte";
-    import { addCallback as addUpdateCallback, withState } from "../state";
+    import { addCallback as addUpdateCallback } from "../state";
     import { onDestroy } from "svelte";
 
     let scale = 1;

@@ -4,7 +4,7 @@
     import { default as cx } from "classnames";
     import { AnimateSharedLayout } from "svelte-motion";
 
-    import { colors } from "shared-lib";
+    import { colors } from "shared-lib/gd";
     import { CATEGORY_ICONS } from "../gd/object";
 
     import Image from "../components/Image.svelte";

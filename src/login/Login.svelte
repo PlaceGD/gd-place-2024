@@ -8,7 +8,7 @@
     import Check from "../icons/check.svg";
     import Toast from "../utils/toast";
     import Input from "../components/Input.svelte";
-    import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib";
+    import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib/user";
     import { initUserData } from "../firebase/auth";
     import { ref, get } from "firebase/database";
     import { db } from "../firebase/firebase";

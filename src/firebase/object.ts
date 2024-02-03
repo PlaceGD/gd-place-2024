@@ -1,10 +1,10 @@
-import { get, push, ref, remove } from "firebase/database";
-import { GDObjectOpt, GDColor } from "wasm-lib";
+import { get, ref } from "firebase/database";
+import { GDObjectOpt } from "wasm-lib";
 import { db } from "./firebase";
 import Toast from "../utils/toast";
 
 import { placeObject, deleteObject } from "./cloud_functions";
-import { decode, decodeString, encode, encodeString } from "shared-lib";
+import { encodeString } from "shared-lib/base_util";
 
 export const addObject = (obj: GDObjectOpt) => {
     let s = encodeString(obj.bytes(), 126);

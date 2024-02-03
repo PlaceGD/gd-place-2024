@@ -5,7 +5,7 @@
     import { get, ref, onChildAdded, onChildRemoved } from "firebase/database";
     import { db } from "../firebase/firebase";
     import Toast from "../utils/toast";
-    import type { DatabaseSchema } from "shared-lib";
+    import type { DatabaseSchema } from "shared-lib/database";
     import Button from "../components/Button.svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import { reportedUserOperation } from "../firebase/cloud_functions";

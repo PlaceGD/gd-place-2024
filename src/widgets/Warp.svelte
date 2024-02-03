@@ -5,14 +5,7 @@
     export let widgetScale: number;
 
     import { onDestroy, onMount } from "svelte";
-    import {
-        clamp,
-        getCenterPos,
-        remEuclid,
-        round,
-        signedClamp,
-        snap,
-    } from "shared-lib";
+    import { clamp, remEuclid, round, snap } from "shared-lib/util";
 
     let draggingX: [number, number, number, number] | null = null;
     let draggingY: [number, number, number, number] | null = null;

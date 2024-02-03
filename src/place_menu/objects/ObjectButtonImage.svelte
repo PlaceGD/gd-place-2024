@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { objects, round, spritesheet, type SpriteData } from "shared-lib";
+    import { objects, spritesheet, type SpriteData } from "shared-lib/gd";
+    import { round } from "shared-lib/util";
     import { spritesheetProgress } from "../../load_wasm";
 
     export let id: number;

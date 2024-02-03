@@ -8,7 +8,7 @@
     import Warning from "./icons/warning.svg";
     import Analytics from "./icons/analytics.svg";
     import { onMount } from "svelte";
-    import { map } from "shared-lib";
+    import { map } from "shared-lib/util";
     import FadedScroll from "./components/FadedScroll.svelte";
 
     let showReadMore = false;

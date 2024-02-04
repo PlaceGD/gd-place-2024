@@ -13,7 +13,7 @@ type AuthedCallableRequest<T> = WithRequired<CallableRequest<T>, "auth">;
 export const onCallAuth = <T, Return = Promise<any>>(
     handler: (request: AuthedCallableRequest<T>) => Return
 ): CallableFunction<T, Return> => {
-    return onCallF({ cors: true }, request => {
+    return onCallF(request => {
         if (!request.auth) {
             throw new HttpsError(
                 "unauthenticated",
@@ -29,7 +29,7 @@ export const onCallAuthLogger = <T, Return = Promise<any>>(
     handler: (request: AuthedCallableRequest<T>, logger: LogGroup) => Return
 ): CallableFunction<T, Return> => {
     const logger = new LogGroup(id);
-    return onCallF({ cors: true }, request => {
+    return onCallF(request => {
         if (!request.auth) {
             logger.finish(Level.ERROR);
             throw new HttpsError(

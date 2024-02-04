@@ -4,7 +4,7 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import FullReload from "vite-plugin-full-reload";
 import svelteSVG from "vite-plugin-svelte-svg";
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
-
+import obfuscatorPlugin from "vite-plugin-javascript-obfuscator";
 import { existsSync } from "fs";
 
 // https://vitejs.dev/config/
@@ -37,6 +37,12 @@ export default defineConfig(({ mode }) => ({
                 },
             ],
             injectTo: "head-prepend",
+        }),
+        obfuscatorPlugin({
+            include: ["**/*.js"],
+            exclude: [/node_modules/, "wasm-lib/pkg/**"],
+            debugger: true,
+            apply: "build",
         }),
         FullReload(["src/**/*"]),
     ],

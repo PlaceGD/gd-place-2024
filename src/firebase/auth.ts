@@ -12,7 +12,7 @@ import {
     type Unsubscribe,
 } from "firebase/auth";
 
-import { onValue, ref } from "firebase/database";
+import { get, onValue, ref } from "firebase/database";
 import type { HttpsCallableResult } from "firebase/functions";
 import { writable, type Writable } from "svelte/store";
 import { auth, db } from "./firebase";
@@ -49,6 +49,38 @@ export const initUserData = (uid: string, username: string) => {
 
 let userDataUnsub: Unsubscribe | null = null;
 // let userDisplayColorListener: Unsubscribe | null = null;
+
+// window.addEventListener("storage", async e => {
+//     if (e.key?.match(/firebase:authUser:.*/)) {
+//         const strData = localStorage.getItem(e.key);
+
+//         console.log(strData);
+//         if (strData == null) return;
+
+//         try {
+//             const newUserData: User = JSON.parse(strData);
+
+//             console.log(newUserData);
+
+//             const placeData = (
+//                 await get(ref(db, `userData/${newUserData.uid}`))
+//             ).val();
+
+//             console.log(placeData);
+
+//             loginData.update(data => {
+//                 if (data.currentUserData != null) {
+//                     data.isLoggedIn = true;
+//                     data.currentUserData.userData = newUserData;
+//                     data.currentUserData.placeData = placeData;
+//                 }
+//                 return data;
+//             });
+//         } catch {
+//             return;
+//         }
+//     }
+// });
 
 onAuthStateChanged(auth, async user => {
     if (user != null) {
@@ -96,6 +128,7 @@ onAuthStateChanged(auth, async user => {
         }
 
         loginData.update(data => {
+            data.isLoggedIn = false;
             data.currentUserData = null;
             return data;
         });

@@ -9,7 +9,6 @@
     import Button from "../components/Button.svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import { reportedUserOperation } from "../firebase/cloud_functions";
-    import Editor from "../Editor.svelte";
 
     let container: HTMLDivElement | null = null;
 

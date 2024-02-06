@@ -19,9 +19,8 @@
         >
             <p>
                 <b>
-                    This site uses cookies to protect from spam and abuse, and
-                    analytics to collect data about the event. Please read our
-                    privacy policy below.
+                    This site uses analytics to collect data about the event.
+                    Please read our privacy policy below.
                 </b>
             </p>
             <button
@@ -102,11 +101,11 @@
                             Host (the domain, so <code>.gd</code>)
                         </li>
                         <li class="list-item">
-                            Path (different links you visit, so none for this
+                            Path (different links You visit, so none for this
                             event)
                         </li>
                         <li class="list-item">
-                            Referer (how you found our site)
+                            Referer (how You found Our site)
                         </li>
                         <li class="list-item">Device Type</li>
                         <li class="list-item">Browser</li>
@@ -162,6 +161,15 @@
                             trends.
                         </li>
                     </ul>
+
+                    <p>
+                        We use Cloudflare Turnstile to enhance the security of
+                        Our Service. Cloudflare Turnstile does not store cookies
+                        or personally identifiable information and is designed
+                        to protect against spam and abuse. For more details
+                        about Cloudflare Turnstile and its privacy practices,
+                        you can refer to Cloudflare's own privacy policy.
+                    </p>
 
                     <b
                         >No Personal data or Usage data is held in the form of

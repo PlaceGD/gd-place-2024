@@ -7,11 +7,16 @@ import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 import obfuscatorPlugin from "vite-plugin-javascript-obfuscator";
 import { existsSync } from "fs";
 
+const TURNSTILE_LOGIN_SITE_KEY = "'0x4AAAAAAARPU_AxoWb2X1wE'";
+const TURNSTILE_REPORT_SITE_KEY = "'0x4AAAAAAARP5tpK_cioW-QN'";
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
     define: {
         __DEBUG: mode == "development",
         __HAS_OPT_WASM: existsSync("wasm-lib/pkg/wasm_lib_bg.wasm-opt.wasm"),
+        __TURNSTILE_LOGIN_SITE_KEY: TURNSTILE_LOGIN_SITE_KEY,
+        __TURNSTILE_REPORT_SITE_KEY: TURNSTILE_REPORT_SITE_KEY,
     },
     plugins: [
         svelte(),
@@ -41,8 +46,16 @@ export default defineConfig(({ mode }) => ({
         obfuscatorPlugin({
             include: ["**/*.js"],
             exclude: [/node_modules/, "wasm-lib/pkg/**"],
-            debugger: true,
+            // debugger: true,
             apply: "build",
+            options: {
+                domainLock: ["localhost"],
+                identifierNamesCache: {},
+                identifierNamesGenerator: "mangled-shuffled",
+                selfDefending: true,
+                stringArrayCallsTransform: true,
+                deadCodeInjection: false,
+            },
         }),
         FullReload(["src/**/*"]),
     ],

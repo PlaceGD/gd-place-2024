@@ -12,6 +12,7 @@
     import { initUserData } from "../firebase/auth";
     import { ref, get } from "firebase/database";
     import { db } from "../firebase/firebase";
+    import { Turnstile } from "svelte-turnstile";
 
     let twitter = false;
     document.addEventListener("keydown", e => {
@@ -88,7 +89,11 @@
     const initNewUser = () => {
         isInProgress = true;
         if ($loginData.currentUserData != null) {
-            initUserData($loginData.currentUserData.userData.uid, userName)
+            initUserData(
+                $loginData.currentUserData.userData.uid,
+                userName,
+                turnstileToken! // cant submit unless the token is not null
+            )
                 .then(() => {
                     isInProgress = false;
                     Toast.showSuccessToast(
@@ -102,6 +107,8 @@
                     console.error(e);
                     Toast.showErrorToast("Username already taken!");
                 });
+
+            turnstileReset && turnstileReset();
         } else {
             isInProgress = false;
             console.error(
@@ -112,6 +119,10 @@
             );
         }
     };
+
+    let turnstileToken: string | null = null;
+    const SITE_KEY = __TURNSTILE_LOGIN_SITE_KEY;
+    let turnstileReset: () => void | undefined;
 </script>
 
 {#if $loginData.showLoginUI}
@@ -127,138 +138,117 @@
     >
         <div class="flex flex-col w-auto h-auto gap-2">
             <div
-                class="flex overflow-hidden rounded-lg shadow-lg w-96 aspect-square xs:w-80 bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
+                class="flex overflow-hidden rounded-lg shadow-lg w-[450px] aspect-square xs:w-80 bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
             >
                 <div class="w-full h-full">
                     <!-- LOGIN METHOD -->
-                    {#if currentPage == Page.LOGIN_METHOD}
-                        <div
-                            class="absolute flex flex-col items-center justify-between w-full h-full p-6"
-                        >
-                            <h1
-                                class="text-3xl xs:text-2xl font-pusab text-stroke"
-                            >
-                                Login or Sign Up
-                            </h1>
-                            <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
-                                <li class="h-full aspect-square max-w-max">
-                                    <button
-                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
-                                        aria-label="Login with Twitter"
-                                        on:click={() =>
-                                            signInWith(LoginMethod.Google)}
-                                    >
-                                        <Image
-                                            src="/assets/ui/login/google.svg"
-                                            alt="Login with Google"
-                                            class="flex-1 object-contain w-max"
-                                        />
-                                        <p>Google</p>
-                                    </button>
-                                </li>
-                                <li
-                                    class="h-full shadow-lg aspect-square max-w-max"
-                                >
-                                    <button
-                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
-                                        aria-label="Login with GitHub"
-                                        on:click={() =>
-                                            signInWith(LoginMethod.GitHub)}
-                                    >
-                                        <Image
-                                            src="/assets/ui/login/github.svg"
-                                            alt="Login with GitHub"
-                                            class="flex-1 object-contain w-max"
-                                        />
-                                        <p>GitHub</p>
-                                    </button>
-                                </li>
-                                <li class="h-full aspect-square max-w-max">
-                                    <button
-                                        class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
-                                        aria-label="Login with X (Twitter)"
-                                        on:click={() =>
-                                            signInWith(LoginMethod.X)}
-                                    >
-                                        <Image
-                                            src="/assets/ui/login/{twitter
-                                                ? 'twitter'
-                                                : 'x'}.svg"
-                                            alt="Login with X (Twitter)"
-                                            class="flex-1 object-contain w-max"
-                                        />
-                                        <p>{twitter ? "Twitter" : "X"}</p>
-                                    </button>
-                                </li>
-                            </ul>
-                            <p class="text-sm">
-                                Don't forget to the read the
+                    <!-- {#if currentPage == Page.LOGIN_METHOD} -->
+                    <div
+                        class="absolute flex flex-col items-center justify-between w-full h-full p-6"
+                        style:visibility={currentPage == Page.LOGIN_METHOD
+                            ? "visible"
+                            : "hidden"}
+                    >
+                        <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
+                            Login or Sign Up
+                        </h1>
+                        <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
+                            <li class="h-full aspect-square max-w-max">
                                 <button
-                                    class="underline hover:decoration-dashed"
-                                    aria-label="Terms of Service"
-                                    on:click={() => {
-                                        previousPage = currentPage;
-                                        currentPage = Page.SHOW_TOS;
-                                    }}
+                                    class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
+                                    aria-label="Login with Twitter"
+                                    on:click={() =>
+                                        signInWith(LoginMethod.Google)}
                                 >
-                                    TOS
+                                    <Image
+                                        src="/assets/ui/login/google.svg"
+                                        alt="Login with Google"
+                                        class="flex-1 object-contain w-max"
+                                    />
+                                    <p>Google</p>
                                 </button>
-                                !
-                            </p>
-                        </div>
-                    {:else if currentPage == Page.SHOW_TOS}
-                        <div
-                            class="absolute w-full h-full text-center flex-center"
-                        >
-                            <p>HERE IS THE TOS PLEASE READ</p>
+                            </li>
+                            <li
+                                class="h-full shadow-lg aspect-square max-w-max"
+                            >
+                                <button
+                                    class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
+                                    aria-label="Login with GitHub"
+                                    on:click={() =>
+                                        signInWith(LoginMethod.GitHub)}
+                                >
+                                    <Image
+                                        src="/assets/ui/login/github.svg"
+                                        alt="Login with GitHub"
+                                        class="flex-1 object-contain w-max"
+                                    />
+                                    <p>GitHub</p>
+                                </button>
+                            </li>
+                            <li class="h-full aspect-square max-w-max">
+                                <button
+                                    class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
+                                    aria-label="Login with X (Twitter)"
+                                    on:click={() => signInWith(LoginMethod.X)}
+                                >
+                                    <Image
+                                        src="/assets/ui/login/{twitter
+                                            ? 'twitter'
+                                            : 'x'}.svg"
+                                        alt="Login with X (Twitter)"
+                                        class="flex-1 object-contain w-max"
+                                    />
+                                    <p>{twitter ? "Twitter" : "X"}</p>
+                                </button>
+                            </li>
+                        </ul>
+                        <p class="text-sm">
+                            Don't forget to the read the
                             <button
+                                class="underline hover:decoration-dashed"
+                                aria-label="Terms of Service"
                                 on:click={() => {
-                                    hasAgreedToTOS = true;
-                                    currentPage = previousPage;
+                                    previousPage = currentPage;
+                                    currentPage = Page.SHOW_TOS;
                                 }}
                             >
-                                Ok
+                                TOS
                             </button>
-                        </div>
-                    {:else if currentPage == Page.CREATE_USER}
-                        <div
-                            class="absolute flex flex-col items-center justify-between w-full h-full p-6 text-center xs:p-4"
+                            !
+                        </p>
+                    </div>
+                    <!-- TERMS OF SERVICE -->
+                    <!-- {:else if currentPage == Page.SHOW_TOS} -->
+                    <div
+                        class="absolute w-full h-full text-center flex-center"
+                        style:visibility={currentPage == Page.SHOW_TOS
+                            ? "visible"
+                            : "hidden"}
+                    >
+                        <p>HERE IS THE TOS PLEASE READ</p>
+                        <button
+                            on:click={() => {
+                                hasAgreedToTOS = true;
+                                currentPage = previousPage;
+                            }}
                         >
-                            <h1
-                                class="text-3xl xs:text-2xl font-pusab text-stroke"
-                            >
-                                Enter a Username
-                            </h1>
-                            <div class="flex-col gap-2 flex-center">
-                                <div class="w-full gap-2 flex-center">
-                                    {#if VALID_USERNAME.test(userName)}
-                                        <Check
-                                            class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
-                                        />
-                                    {:else}
-                                        <Cross
-                                            class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
-                                        />
-                                    {/if}
-                                    <Input
-                                        class="p-2 w-[inherit] text-2xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
-                                        maxLength={16}
-                                        hardValidInput={VALID_USERNAME_CHARS}
-                                        autoTrim
-                                        bind:value={userName}
-                                    />
-                                </div>
-                                <p
-                                    class="text-xs transition duration-500 text-white/50 hover:text-white"
-                                >
-                                    Usernames can only be 3 to 16 characters in
-                                    length, and only contain alphanumeric
-                                    characters, - and _. Usernames are case
-                                    insensitive.
-                                </p>
-                            </div>
+                            Ok
+                        </button>
+                    </div>
+                    <!-- CREATE USER -->
+                    <!-- {:else if currentPage == Page.CREATE_USER} -->
+                    <div
+                        class="absolute flex flex-col items-center justify-between w-full h-full p-6 text-center xs:p-4"
+                        style:visibility={currentPage == Page.CREATE_USER
+                            ? "visible"
+                            : "hidden"}
+                    >
+                        <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
+                            Enter a Username
+                        </h1>
+                        <div class="flex-col gap-2 flex-center">
                             <div class="w-full gap-2 flex-center">
-                                {#if hasAgreedToTOS}
+                                {#if VALID_USERNAME.test(userName)}
                                     <Check
                                         class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
                                     />
@@ -267,35 +257,79 @@
                                         class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
                                     />
                                 {/if}
-                                <p class="text-md shrink-1 grow-0">
-                                    I have read and agreed to the
-                                    <button
-                                        class="underline hover:decoration-dashed text-nowrap"
-                                        aria-label="Terms of Service"
-                                        on:click={() => {
-                                            previousPage = currentPage;
-                                            currentPage = Page.SHOW_TOS;
-                                        }}
-                                    >
-                                        Terms of Service
-                                    </button>
-                                </p>
+                                <form
+                                    class="w-full"
+                                    id="username-form"
+                                    on:submit={void 0}
+                                >
+                                    <Input
+                                        class="p-2 w-[inherit] text-2xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+                                        maxLength={16}
+                                        hardValidInput={VALID_USERNAME_CHARS}
+                                        autoTrim
+                                        bind:value={userName}
+                                    />
+                                </form>
                             </div>
-                            <button
-                                class={cx({
-                                    "text-lg xs:text-md p-2 rounded-lg bg-white/10": true,
-                                    "hover:bg-white/20 active:bg-white/30":
-                                        hasAgreedToTOS && userName.length > 0,
-                                    "text-disabled-white cursor-not-allowed":
-                                        !hasAgreedToTOS ||
-                                        userName.length === 0,
-                                })}
-                                on:click={initNewUser}
+                            <p
+                                class="text-xs transition duration-500 text-white/50 hover:text-white"
                             >
-                                Submit
-                            </button>
+                                Usernames can only be 3 to 16 characters in
+                                length, and only contain alphanumeric
+                                characters, - and _. Usernames are case
+                                insensitive.
+                            </p>
                         </div>
-                    {/if}
+                        <!-- <div id="cf-turnstile" bind:this={cfTurnstile}></div> -->
+                        <Turnstile
+                            siteKey={SITE_KEY}
+                            bind:reset={turnstileReset}
+                            on:turnstile-callback={e =>
+                                (turnstileToken = e.detail.token)}
+                            on:turnstile-error={e =>
+                                Toast.showErrorToast(
+                                    `There was an error with the Turnstile. (${e})`
+                                )}
+                            on:turnstile-expired={() =>
+                                turnstileReset && turnstileReset()}
+                        />
+                        <div class="w-full gap-2 flex-center">
+                            {#if hasAgreedToTOS}
+                                <Check
+                                    class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
+                                />
+                            {:else}
+                                <Cross
+                                    class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
+                                />
+                            {/if}
+                            <p class="text-md shrink-1 grow-0">
+                                I have read and agreed to the
+                                <button
+                                    class="underline hover:decoration-dashed text-nowrap"
+                                    aria-label="Terms of Service"
+                                    on:click={() => {
+                                        previousPage = currentPage;
+                                        currentPage = Page.SHOW_TOS;
+                                    }}
+                                >
+                                    Terms of Service
+                                </button>
+                            </p>
+                        </div>
+                        <button
+                            form="username-form"
+                            disabled={!hasAgreedToTOS ||
+                                userName.length === 0 ||
+                                turnstileToken == null}
+                            class="text-lg xs:text-md p-2 rounded-lg white-button"
+                            on:click={initNewUser}
+                            type="button"
+                        >
+                            Submit
+                        </button>
+                    </div>
+                    <!-- {/if} -->
                 </div>
                 {#if isInProgress}
                     <Loading />

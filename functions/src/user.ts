@@ -1,5 +1,6 @@
 import { database } from "firebase-admin";
-import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { HttpsError, onCall, Request } from "firebase-functions/v2/https";
+import { onMessagePublished } from "firebase-functions/v2/pubsub";
 import { VALID_USERNAME } from "shared-lib/user";
 import type {
     InitWithUsernameReq,
@@ -9,17 +10,61 @@ import type {
 } from "shared-lib/cloud_functions";
 import { Level, LogGroup } from "./utils/logger";
 import { ref } from "./utils/database";
-import { DEV_UIDS } from ".";
+import { DEV_UIDS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Database } from "firebase-admin/database";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
+
+const validateTurnstile = async (
+    key: string | undefined,
+    token: string,
+    request: Request,
+    logger: LogGroup
+) => {
+    if (key == undefined) {
+        throw new HttpsError(
+            "permission-denied",
+            "Missing turnstile key! Please contact a developer."
+        );
+    }
+
+    const ip = request.get("CF-Connecting-IP");
+
+    let formData = new FormData();
+    formData.append("secret", key);
+    formData.append("response", token!);
+    formData.append("remoteip", ip!);
+
+    const url = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+    const result = await fetch(url, {
+        body: formData,
+        method: "POST",
+    });
+
+    const outcome = await result.json();
+
+    logger.info("Turnstile outcome:", JSON.stringify(outcome));
+
+    if (!outcome.success) {
+        throw new HttpsError(
+            "permission-denied",
+            "Something went wrong. Please try again."
+        );
+    }
+};
 
 export const initUserWithUsername = onCallAuthLogger<InitWithUsernameReq>(
     "initUserWithUsername",
     async (request, logger) => {
         const data = request.data;
 
-        logger.debug("Username:", data.username);
+        await validateTurnstile(
+            process.env.TURNSTILE_LOGIN_PRIV_KEY,
+            data.turnstileResp,
+            request.rawRequest,
+            logger
+        );
 
+        logger.debug("Username:", data.username);
         if (!data.username.match(VALID_USERNAME)) {
             throw new HttpsError("invalid-argument", "Username is invalid");
         }
@@ -46,6 +91,7 @@ export const initUserWithUsername = onCallAuthLogger<InitWithUsernameReq>(
             username: data.username,
             lastPlaced: 0,
             lastDeleted: 0,
+            epochNextReport: 0,
             moderator: false,
         };
 
@@ -69,8 +115,31 @@ export const initUserWithUsername = onCallAuthLogger<InitWithUsernameReq>(
 export const reportUser = onCallAuthLogger<ReportUserReq>(
     "reportUser",
     async (request, logger) => {
-        const db = database();
         const data = request.data;
+
+        await validateTurnstile(
+            process.env.TURNSTILE_REPORT_PRIV_KEY,
+            data.turnstileResp,
+            request.rawRequest,
+            logger
+        );
+
+        const db = database();
+
+        const timeNextReport = (
+            await ref(db, `userData/${request.auth.uid}/epochNextReport`).get()
+        ).val();
+
+        if (timeNextReport == undefined) {
+            throw new HttpsError("invalid-argument", "Missing report timer");
+        }
+
+        if (Date.now() < timeNextReport) {
+            throw new HttpsError(
+                "permission-denied",
+                "Cannot report before timer expired"
+            );
+        }
 
         const userToReport = (
             await ref(db, `userName/${data.username.toLowerCase()}`).get()
@@ -80,22 +149,30 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             throw new HttpsError("invalid-argument", "Invalid username");
         }
 
-        const reported = ref(db, `reportedUsers/${userToReport.uid}`);
+        if (data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
+            throw new HttpsError("invalid-argument", "Invalid X");
+        }
+        if (data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
+            throw new HttpsError("invalid-argument", "Invalid Y");
+        }
 
-        reported.transaction(data => {
-            logger.debug(data);
-            if (data == undefined) {
-                logger.info("User has been reported 1 time");
-                return {
-                    username: request.data.username,
-                    count: 1,
-                };
-            } else {
-                data.count += 1;
-                logger.info(`User has been reported ${data.count} times`);
-                return data;
-            }
+        const reported = ref(db, `reportedUsers`);
+
+        logger.info(`Reported user ${data.username}`);
+
+        reported.push({
+            uid: userToReport.uid,
+            username: data.username,
+            timestamp: Date.now(),
+            x: data.x,
+            y: data.y,
         });
+
+        const nextReport = new Date();
+        nextReport.setMinutes(nextReport.getMinutes() + 3);
+        // nextReport.getMilliseconds()
+
+        // ref(db, `userData/${request.auth.uid}/lastReported`).set(Date.now());
     }
 );
 
@@ -117,11 +194,24 @@ const banUserInner = async (
         }
     }
 
-    ref(db, `userData/${userToBanUid}`).remove();
+    const userData = ref(db, `userData/${userToBanUid}`);
+
+    const username = (await userData.get()).val()?.username;
+    if (username == null) {
+        throw new HttpsError("invalid-argument", "Invalid user UID");
+    }
+
+    ref(db, `bannedUsers/${username.toLowerCase()}`).set(1);
+    userData.remove();
     ref(db, "userCount").transaction(count => {
         return count - 1;
     });
 };
+
+const clearReportsOfUser = (db: Database, reportedUserUid: string) => {};
+
+// projects/gd-place-2023/topics/clearOldReports
+export const clearReports = onMessagePublished("clearOldReports", event => {});
 
 export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
     async request => {
@@ -149,7 +239,8 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
             throw new HttpsError("invalid-argument", "Unknown operation");
         }
 
-        ref(db, `reportedUsers/${data.reportedUserUid}`).remove();
+        // TODO!
+        //ref(db, `reportedUsers/${data.reportedUserUid}`).remove();
     }
 );
 

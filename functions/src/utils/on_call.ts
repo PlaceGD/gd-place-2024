@@ -10,6 +10,7 @@ type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
 type AuthedCallableRequest<T> = WithRequired<CallableRequest<T>, "auth">;
 
+// TOOD: set multiple regions, memory, min instances?
 export const onCallAuth = <T, Return = Promise<any>>(
     handler: (request: AuthedCallableRequest<T>) => Return
 ): CallableFunction<T, Return> => {

@@ -1,20 +1,78 @@
 <script lang="ts">
     import ObjectButtonImage from "../place_menu/objects/ObjectButtonImage.svelte";
-    import { loginData, selectedObject } from "../stores";
+    import {
+        bannedUsers,
+        loginData,
+        reportTimer,
+        selectedObject,
+    } from "../stores";
     import Image from "../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import Loading from "../components/Loading.svelte";
-    import { reportedUsers, reportUser } from "../firebase/report";
     import Button from "../components/Button.svelte";
-    import { banUser } from "../firebase/cloud_functions";
+    import { banUser, reportUser } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
+    import { setClipboard } from "../utils/clipboard";
+    import { Turnstile } from "svelte-turnstile";
 
-    $: hasReported =
-        $selectedObject?.namePlaced != null
-            ? $reportedUsers.reported.includes($selectedObject.namePlaced)
-            : true;
+    // $: hasReported =
+    //     $selectedObject?.namePlaced != null
+    //         ? $reportedUsers.reported.includes($selectedObject.namePlaced)
+    //         : true
+
+    let { display: reportTimerDisplay, finished: reportTimerFinished } =
+        reportTimer;
+
+    $: isYourself =
+        $loginData.currentUserData?.placeData?.username ==
+        $selectedObject?.namePlaced;
+
+    let isReporting = false;
+    const report = async (name: string) => {
+        reportTimer.start(3);
+        // isReporting = true;
+
+        // try {
+        //     await reportUser({
+        //         username: name,
+        //         turnstileResp: turnstileToken as string,
+        //         x: 0,
+        //         y: 0,
+        //     });
+
+        // } catch (e) {
+        //     Toast.showErrorToast(`Failed to report user. (${e})`);
+        // }
+
+        // isReporting = false;
+
+        // turnstileToken = TokenStatus.Used;
+    };
 
     let isBanning = false;
+    const ban = async (name: string) => {
+        try {
+            await banUser({
+                username: name,
+            });
+        } catch (e) {
+            Toast.showErrorToast(`Failed to ban user! (${e})`);
+        }
+    };
+
+    enum TokenStatus {
+        NoToken,
+        Used,
+    }
+
+    let turnstileToken: string | TokenStatus = TokenStatus.NoToken;
+    const SITE_KEY = __TURNSTILE_REPORT_SITE_KEY;
+    let turnstileReset: () => void | undefined;
+
+    $: {
+        if ($selectedObject == null && turnstileToken == TokenStatus.Used)
+            turnstileToken = TokenStatus.NoToken;
+    }
 </script>
 
 {#if $selectedObject != null}
@@ -26,7 +84,7 @@
 
             <div class="w-9 h-9 max-w-9 max-h-9 flex-center">
                 <ObjectButtonImage
-                    id={$selectedObject?.id ?? 1}
+                    id={$selectedObject.id ?? 1}
                     objButtonSize={36 * 1.45}
                 />
             </div>
@@ -37,11 +95,11 @@
             <div
                 class="text-xl rounded-md w-9 h-9 flex-center text-stroke"
                 style={`
-                background: url("assets/ui/checker.png");
-                box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.mainColor.r}, ${$selectedObject.mainColor.g}, ${$selectedObject.mainColor.b}, ${$selectedObject.mainColor.opacity / 255})` : ""};
-            `}
+                    background: url("assets/ui/checker.png");
+                    box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.mainColor.r}, ${$selectedObject.mainColor.g}, ${$selectedObject.mainColor.b}, ${$selectedObject.mainColor.opacity / 255})` : ""};
+                `}
             >
-                {#if $selectedObject?.mainColor.blending ?? false}
+                {#if $selectedObject.mainColor.blending ?? false}
                     <span class="font-pusab">B</span>
                 {/if}
             </div>
@@ -56,7 +114,7 @@
                 box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.detailColor.r}, ${$selectedObject.detailColor.g}, ${$selectedObject.detailColor.b}, ${$selectedObject.detailColor.opacity / 255})` : ""};
             `}
             >
-                {#if $selectedObject?.detailColor.blending ?? false}
+                {#if $selectedObject.detailColor.blending ?? false}
                     <span class="font-pusab">B</span>
                 {/if}
             </div>
@@ -66,20 +124,35 @@
 
             <span
                 >{wasm.z_layer_name(
-                    $selectedObject?.zLayer ?? wasm.ZLayer.B1
+                    $selectedObject.zLayer ?? wasm.ZLayer.B1
                 )}</span
             >
         </li>
         <li class="object-info-item">
             <span>Z Order:</span>
 
-            <span>{$selectedObject?.zOrder ?? 0}</span>
+            <span>{$selectedObject.zOrder ?? 0}</span>
         </li>
         <li class="object-info-item">
             <span>Placed by:</span>
 
-            {#if $selectedObject?.namePlaced != null}
-                <span>{$selectedObject?.namePlaced}</span>
+            {#if $selectedObject.namePlaced != null}
+                <button
+                    aria-label="Copy Username"
+                    on:click={() => {
+                        if ($selectedObject != null) {
+                            setClipboard($selectedObject.namePlaced ?? "")
+                                .then(() =>
+                                    Toast.showInfoToast("Copied username!")
+                                )
+                                .catch(e => {
+                                    Toast.showErrorToast(
+                                        `There was an issue copying the username! (${e})`
+                                    );
+                                });
+                        }
+                    }}>{$selectedObject.namePlaced}</button
+                >
             {:else}
                 <div class="relative w-9 h-9 max-w-9 max-h-9">
                     <Loading darken={false} />
@@ -87,21 +160,41 @@
             {/if}
         </li>
 
-        {#if $selectedObject?.namePlaced != null && $selectedObject?.namePlaced != "-"}
+        {#if $selectedObject?.namePlaced != null}
             <div class="flex flex-col items-center justify-center pt-3">
+                {$reportTimerDisplay}
                 {#if $loginData.currentUserData != null}
-                    {#if $loginData.currentUserData.placeData?.username != $selectedObject.namePlaced}
+                    {#if (turnstileToken == TokenStatus.NoToken || turnstileToken == TokenStatus.Used) && $reportTimerFinished && !isYourself}
+                        <Turnstile
+                            siteKey={SITE_KEY}
+                            on:turnstile-callback={e => {
+                                turnstileToken = e.detail.token;
+                            }}
+                            on:turnstile-error={() =>
+                                Toast.showErrorToast(
+                                    `There was an error with the Turnstile`
+                                )}
+                            on:turnstile-expired={() => {
+                                // expritation is essentially the same as being used
+                                turnstileToken = TokenStatus.Used;
+                            }}
+                            bind:reset={turnstileReset}
+                        />
+                        <div class="relative relative w-9 h-9 max-w-9 max-h-9">
+                            <Loading darken={false} />
+                        </div>
+                    {:else if !isYourself}
                         <div class="flex items-center justify-center gap-1">
                             <h1 class="w-full text-lg text-center">
                                 Report User:
                             </h1>
                             <button
-                                disabled={hasReported}
+                                disabled={$reportTimerFinished || isReporting}
                                 class="h-16 enabled:bounce-active disabled:opacity-40 disabled:cursor-not-allowed"
                                 aria-label="Report User"
                                 on:click={() => {
                                     if ($selectedObject?.namePlaced != null) {
-                                        reportUser($selectedObject.namePlaced);
+                                        report($selectedObject.namePlaced);
                                     }
                                 }}
                             >
@@ -114,15 +207,12 @@
                         <p
                             class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
                         >
-                            {#if hasReported}
-                                You have already reported this user. Thanks!
+                            {#if $reportTimerFinished}
+                                TODO
                             {:else}
                                 Please report inappropriate usernames or alt
                                 accounts.
-                                <b
-                                    >Do not spam reports or falsely report
-                                    users.</b
-                                >
+                                <b>Do not falsely report users.</b>
                             {/if}
                         </p>
                     {:else}
@@ -136,31 +226,24 @@
             </div>
         {/if}
 
-        {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != "-"}
-            <div class="h-12 w-full pt-3">
-                <Button
-                    type="decline"
-                    iconClass="w-8 h-8"
-                    bind:disabled={isBanning}
-                    on:click={() => {
-                        isBanning = true;
-                        if ($selectedObject?.namePlaced != null) {
-                            banUser({
-                                username: $selectedObject.namePlaced,
-                            })
-                                .then(() => {
-                                    isBanning = false;
-                                })
-                                .catch(e => {
-                                    isBanning = false;
-                                    Toast.showErrorToast(
-                                        `Failed to ban user! (${e})`
-                                    );
-                                });
-                        }
-                    }}>Ban User</Button
-                >
-            </div>
+        {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != null}
+            {#if !$bannedUsers.includes($selectedObject.namePlaced.toLowerCase())}
+                <div class="h-12 w-full pt-3">
+                    <Button
+                        type="decline"
+                        iconClass="w-8 h-8"
+                        bind:disabled={isBanning}
+                        on:click={() => {
+                            isBanning = true;
+                            if ($selectedObject?.namePlaced != null) {
+                                ban($selectedObject.namePlaced);
+                            }
+                        }}>Ban User</Button
+                    >
+                </div>
+            {:else}
+                <p class="text-sm pt-3">This user has already been banned.</p>
+            {/if}
         {/if}
     </ul>
 {/if}

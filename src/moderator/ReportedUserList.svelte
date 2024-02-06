@@ -1,8 +1,17 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { showModeratorOptions } from "../stores";
+    import { bannedUsers, showModeratorOptions } from "../stores";
     import Loading from "../components/Loading.svelte";
-    import { get, ref, onChildAdded, onChildRemoved } from "firebase/database";
+    import {
+        get,
+        ref,
+        onChildAdded,
+        onChildRemoved,
+        onChildChanged,
+        query,
+        orderByChild,
+        startAfter,
+    } from "firebase/database";
     import { db } from "../firebase/firebase";
     import Toast from "../utils/toast";
     import type { DatabaseSchema } from "shared-lib/database";
@@ -24,23 +33,64 @@
         }
     }
 
+    let reportedUsers: {
+        uid: string;
+        timestamp: number;
+        username: string;
+        sumX: number; // used to get average report position
+        sumY: number;
+        count: number;
+    }[] = [];
+
     onMount(() => {
+        const reportedUsersRef = query(
+            ref(db, "reportedUsers"),
+            orderByChild("timestamp"),
+            startAfter(Date.now() - 15 * 60 * 1000)
+        );
+
         onChildRemoved(ref(db, "reportedUsers"), data => {
-            const idx = reportedUsers.findIndex(u => u.uid == data.key);
-            if (idx > -1) {
-                reportedUsers?.splice(idx, 1);
-                reportedUsers = reportedUsers;
+            reportedUsers = reportedUsers.filter(
+                user => data.val().uid != user.uid
+            );
+        });
+
+        onChildAdded(reportedUsersRef, data => {
+            const reportData = data.val();
+
+            const user = reportedUsers.find(c => c.uid == reportData.uid);
+
+            if (user != undefined) {
+                user.count += 1;
+                user.sumX += reportData.x;
+                user.sumY += reportData.y;
+            } else {
+                $showModeratorOptions.newReports = true;
+                localStorage.setItem("newReports", "1");
+
+                reportedUsers.push({
+                    count: 1,
+                    username: reportData.username,
+                    sumX: reportData.x,
+                    sumY: reportData.y,
+                    timestamp: reportData.timestamp,
+                    uid: reportData.uid,
+                });
+
+                reportedUsers.sort((a, b) =>
+                    a.timestamp > b.timestamp ? 1 : -1
+                );
             }
         });
 
-        onChildAdded(ref(db, "reportedUsers"), data => {
-            $showModeratorOptions.newReports = true;
-            localStorage.setItem("newReports", "1");
-            reportedUsers.push({
-                uid: data.key!,
-                ...data.val(),
-            });
-        });
+        // onChildAdded(ref(db, "bannedUsers"), data => {
+        //     bannedUsers.update(users => {
+        //         if (data.key) {
+        //             users = [...users, data.key]; // key will be the username
+        //         }
+        //         return users;
+        //     });
+        // });
     });
 
     $: {
@@ -52,31 +102,32 @@
 
     let currentIdx = -1;
 
-    type ReportedUser = {
-        uid: string;
-    } & DatabaseSchema["reportedUsers"][""];
+    // let reportedUsers: { [uid: string]: DatabaseSchema["reportedUsers"][""] } =
+    //     {};
 
-    let reportedUsers: ReportedUser[] = [];
-
-    const userOp = (op: "ignore" | "ban", user: ReportedUser, idx: number) => {
-        currentIdx = idx;
-        reportedUserOperation({
-            operation: op,
-            reportedUserUid: user.uid,
-        })
-            .then(() => {
-                reportedUsers?.splice(idx, 1);
-                reportedUsers = reportedUsers;
-                currentIdx = -1;
-            })
-            .catch(e => {
-                Toast.showErrorToast(`Failed to perform operation! (${e})`);
-                currentIdx = -1;
-            });
+    const userOp = (
+        op: "ignore" | "ban" | "expired",
+        userId: string,
+        idx: number
+    ) => {
+        // currentIdx = idx;
+        // reportedUserOperation({
+        //     operation: op,
+        //     reportedUserUid: userId,
+        // })
+        //     .then(() => {
+        //         delete reportedUsers[userId];
+        //         currentIdx = -1;
+        //     })
+        //     .catch(e => {
+        //         Toast.showErrorToast(`Failed to perform operation! (${e})`);
+        //         currentIdx = -1;
+        //     });
     };
 </script>
 
 {#if $showModeratorOptions.show}
+    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <div
         bind:this={container}
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
@@ -87,7 +138,7 @@
         >
             Reported Users:
         </h1>
-        {#if reportedUsers != null && reportedUsers.length == 0}
+        {#if reportedUsers != null && Object.keys(reportedUsers).length == 0}
             <p class="text-lg sm:text-sm xs:text-sm">
                 No users have been reported!
             </p>
@@ -113,7 +164,7 @@
                                     type="decline"
                                     iconClass="w-8 h-8"
                                     on:click={() => {
-                                        userOp("ignore", user, idx);
+                                        userOp("ignore", user.uid, idx);
                                     }}
                                     disabled={currentIdx == idx}
                                 >
@@ -123,7 +174,7 @@
                                     type="accept"
                                     iconClass="w-8 h-8"
                                     on:click={() => {
-                                        userOp("ban", user, idx);
+                                        userOp("ban", user.uid, idx);
                                     }}
                                     disabled={currentIdx == idx}
                                 >

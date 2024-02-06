@@ -6,6 +6,7 @@ export {
     reportUser,
     reportedUserOperation,
     banUser,
+    clearReports,
 } from "./user";
 
 // TODO: add our uids

@@ -1,10 +1,12 @@
-declare const __DEBUG: boolean;
-declare const __HAS_OPT_WASM: boolean;
-
 declare module "*.svg" {
     import { SvelteComponent } from "svelte";
     export default SvelteComponent;
 }
+
+declare const __DEBUG: boolean;
+declare const __HAS_OPT_WASM: boolean;
+declare const __TURNSTILE_LOGIN_SITE_KEY: string;
+declare const __TURNSTILE_REPORT_SITE_KEY: string;
 
 /// <reference types="svelte" />
 /// <reference types="vite/client" />

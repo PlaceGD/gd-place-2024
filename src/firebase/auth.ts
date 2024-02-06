@@ -41,10 +41,16 @@ export const signInTwitter = () => signInWithPopup(auth, twitterProvider);
 
 export const signOut = () => logOut(auth);
 
-export const initUserData = (uid: string, username: string) => {
-    return initUserWithUsername({ uid, username }) as Promise<
-        HttpsCallableResult<PlaceData>
-    >;
+export const initUserData = (
+    uid: string,
+    username: string,
+    turnstile: string
+) => {
+    return initUserWithUsername({
+        uid,
+        username,
+        turnstileResp: turnstile,
+    }) as Promise<HttpsCallableResult<PlaceData>>;
 };
 
 let userDataUnsub: Unsubscribe | null = null;

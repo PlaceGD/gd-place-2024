@@ -1,11 +1,6 @@
 <script lang="ts">
     import ObjectButtonImage from "../place_menu/objects/ObjectButtonImage.svelte";
-    import {
-        bannedUsers,
-        loginData,
-        reportTimer,
-        selectedObject,
-    } from "../stores";
+    import { bannedUsers, loginData, selectedObject } from "../stores";
     import Image from "../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import Loading from "../components/Loading.svelte";
@@ -14,14 +9,15 @@
     import Toast from "../utils/toast";
     import { setClipboard } from "../utils/clipboard";
     import { Turnstile } from "svelte-turnstile";
+    import { SyncedCooldown } from "../utils/cooldown";
+    import { REPORT_COOLDOWN_SECONDS } from "shared-lib/user";
 
-    // $: hasReported =
-    //     $selectedObject?.namePlaced != null
-    //         ? $reportedUsers.reported.includes($selectedObject.namePlaced)
-    //         : true
-
-    let { display: reportTimerDisplay, finished: reportTimerFinished } =
-        reportTimer;
+    const cooldown = new SyncedCooldown(
+        `userData/${$loginData.currentUserData?.userData.uid ?? "P2IGC3qIfhaaou1SLeN08R2qBHP2"}`, // TODO: remove
+        "epochNextPlaced",
+        REPORT_COOLDOWN_SECONDS
+    );
+    let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
 
     $: isYourself =
         $loginData.currentUserData?.placeData?.username ==
@@ -29,28 +25,29 @@
 
     let isReporting = false;
     const report = async (name: string) => {
-        reportTimer.start(3);
-        // isReporting = true;
+        isReporting = true;
 
-        // try {
-        //     await reportUser({
-        //         username: name,
-        //         turnstileResp: turnstileToken as string,
-        //         x: 0,
-        //         y: 0,
-        //     });
+        try {
+            await reportUser({
+                username: name,
+                turnstileResp: turnstileToken as string,
+                x: 0,
+                y: 0,
+            });
 
-        // } catch (e) {
-        //     Toast.showErrorToast(`Failed to report user. (${e})`);
-        // }
+            cooldown.start();
+        } catch (e) {
+            Toast.showErrorToast(`Failed to report user. (${e})`);
+        }
 
-        // isReporting = false;
+        isReporting = false;
 
-        // turnstileToken = TokenStatus.Used;
+        turnstileToken = TokenStatus.Used;
     };
 
     let isBanning = false;
     const ban = async (name: string) => {
+        isBanning = true;
         try {
             await banUser({
                 username: name,
@@ -58,6 +55,7 @@
         } catch (e) {
             Toast.showErrorToast(`Failed to ban user! (${e})`);
         }
+        isBanning = false;
     };
 
     enum TokenStatus {
@@ -162,9 +160,8 @@
 
         {#if $selectedObject?.namePlaced != null}
             <div class="flex flex-col items-center justify-center pt-3">
-                {$reportTimerDisplay}
                 {#if $loginData.currentUserData != null}
-                    {#if (turnstileToken == TokenStatus.NoToken || turnstileToken == TokenStatus.Used) && $reportTimerFinished && !isYourself}
+                    {#if (turnstileToken == TokenStatus.NoToken || turnstileToken == TokenStatus.Used) && $cooldownFinished && !isYourself}
                         <Turnstile
                             siteKey={SITE_KEY}
                             on:turnstile-callback={e => {
@@ -180,7 +177,7 @@
                             }}
                             bind:reset={turnstileReset}
                         />
-                        <div class="relative relative w-9 h-9 max-w-9 max-h-9">
+                        <div class="relative w-9 h-9 max-w-9 max-h-9">
                             <Loading darken={false} />
                         </div>
                     {:else if !isYourself}
@@ -189,7 +186,7 @@
                                 Report User:
                             </h1>
                             <button
-                                disabled={$reportTimerFinished || isReporting}
+                                disabled={!$cooldownFinished || isReporting}
                                 class="h-16 enabled:bounce-active disabled:opacity-40 disabled:cursor-not-allowed"
                                 aria-label="Report User"
                                 on:click={() => {
@@ -207,8 +204,9 @@
                         <p
                             class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
                         >
-                            {#if $reportTimerFinished}
-                                TODO
+                            {#if !$cooldownFinished}
+                                Thanks for reporting!
+                                {$cooldownDisplay}
                             {:else}
                                 Please report inappropriate usernames or alt
                                 accounts.
@@ -228,13 +226,11 @@
 
         {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != null}
             {#if !$bannedUsers.includes($selectedObject.namePlaced.toLowerCase())}
-                <div class="h-12 w-full pt-3">
+                <div class="w-full h-12 pt-3">
                     <Button
                         type="decline"
-                        iconClass="w-8 h-8"
                         bind:disabled={isBanning}
                         on:click={() => {
-                            isBanning = true;
                             if ($selectedObject?.namePlaced != null) {
                                 ban($selectedObject.namePlaced);
                             }
@@ -242,7 +238,7 @@
                     >
                 </div>
             {:else}
-                <p class="text-sm pt-3">This user has already been banned.</p>
+                <p class="pt-3 text-sm">This user has already been banned.</p>
             {/if}
         {/if}
     </ul>

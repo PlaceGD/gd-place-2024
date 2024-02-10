@@ -13,6 +13,7 @@
     import {
         TabGroup,
         addDeleteText,
+        editorData,
         loginData,
         menuSettings,
         selectedObject,
@@ -33,13 +34,11 @@
     import DeleteTexts from "../widgets/DeleteTexts.svelte";
     import ObjectInfo from "../widgets/ObjectInfo.svelte";
     import { getPlacedUsername } from "../firebase/object";
+    import { handleSub, handleUnsub, moveCamera } from "./view_controls";
 
     export let state: wasm.StateWrapper;
     export let canvas: HTMLCanvasElement;
-    export let canvasWidth: number;
-    export let canvasHeight: number;
-
-    // let [canvasWidth, canvasHeight] = [0, 0];
+    export let isFocused: boolean = false;
 
     let dragging: null | {
         prevMouseX: number;
@@ -74,11 +73,11 @@
 
         let zoom_scale_change = state.get_zoom_scale() / prev_zoom_scale;
 
-        state.set_camera_pos(
+        moveCamera(
+            state,
             lerp(mx, cx, 1 / zoom_scale_change),
             lerp(my, cy, 1 / zoom_scale_change)
         );
-        handleSub();
     };
 
     $: {
@@ -116,48 +115,9 @@
         }
     };
 
-    const handleSub = () => {
-        for (let chunk of state.get_chunks_to_sub()) {
-            subChunk(
-                [chunk.x, chunk.y],
-                data => {
-                    let key = data.key;
-                    if (key != null) {
-                        try {
-                            let obj = wasm.GDObjectOpt.from_bytes(
-                                decodeString(data.val(), 126)
-                            );
-
-                            state.add_object(key, obj);
-                        } catch (e: any) {
-                            console.error(
-                                "(Failed in `GDObjectOpt.from_bytes`)"
-                            );
-                            Toast.showErrorToast(e.display());
-                        }
-                    }
-                },
-                data => {
-                    let key = data.key;
-                    if (key != null) {
-                        let coords = state.delete_object(key);
-                        if (coords != null) {
-                            addDeleteText(data.val(), coords[0], coords[1]);
-                        }
-                    }
-                }
-            );
-        }
-    };
-    const handleUnsub = () => {
-        for (let chunk of state.get_chunks_to_unsub()) {
-            unsubChunk([chunk.x, chunk.y]);
-        }
-    };
-
     setInterval(() => {
         state.get_chunks_to_sub(); // this just updates time of visible chiunks, doesnt subscriber
-        handleUnsub();
+        handleUnsub(state);
     }, 50);
 
     const placePreview = () => {
@@ -198,46 +158,25 @@
         state.set_preview_visibility(true);
     };
 
-    const savePos = debounce(() => {
-        // dreaming insanity is so cool and he is so cool
-        // and i wish him nothing but the best
-        // he is my favorite skrunkle and such a good guy
-        // so cool
-        let zoom = Math.round(state.get_zoom());
-        let [x, y] = state.get_camera_pos().map(Math.round);
-
-        history.replaceState({}, "", `?x=${x}&y=${y}&zoom=${zoom}`);
-
-        editorData.x = x;
-        editorData.y = y;
-        editorData.zoom = zoom;
-    }, 200);
-
-    const editorData = LocalSettingsFactory("editorData", {
-        x: 0,
-        y: 0,
-        zoom: 0,
-    });
-
     onMount(() => {
         let data = new URLSearchParams(window.location.search);
 
         if (data.get("x")) {
-            editorData.x = parseFloat(data.get("x")!);
+            $editorData.x = parseFloat(data.get("x")!);
         }
         if (data.get("y")) {
-            editorData.y = parseFloat(data.get("y")!);
+            $editorData.y = parseFloat(data.get("y")!);
         }
         if (data.get("zoom")) {
-            editorData.zoom = parseFloat(data.get("zoom")!);
+            $editorData.zoom = parseFloat(data.get("zoom")!);
         }
 
-        zoomGoal = editorData.zoom;
+        zoomGoal = $editorData.zoom;
         zoomTween.set(zoomGoal);
-        state.set_zoom(editorData.zoom);
-        state.set_camera_pos(editorData.x, editorData.y);
+        state.set_zoom($editorData.zoom);
+        state.set_camera_pos($editorData.x, $editorData.y);
 
-        handleSub();
+        handleSub(state);
     });
 
     const handleShowObjPreview = () => {
@@ -292,13 +231,11 @@
             if (dragging.thresholdReached) {
                 let z = state.get_zoom_scale();
 
-                state.set_camera_pos(
+                moveCamera(
+                    state,
                     (1 / z) * (dragging.prevMouseX - x) + dragging.prevCameraX,
                     (1 / z) * (-dragging.prevMouseY + y) + dragging.prevCameraY
                 );
-
-                savePos();
-                handleSub();
             } else {
                 if (
                     Math.hypot(
@@ -389,7 +326,7 @@
         handleDrag(e.clientX, e.clientY);
     }}
     on:resize={() => {
-        handleSub();
+        handleSub(state);
     }}
     on:keydown={e => {
         if (document.activeElement?.tagName == "INPUT") return;
@@ -410,10 +347,13 @@
 />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
     class="absolute w-full h-full touch-none"
     id="gesture-target"
-    tabindex="-1"
+    tabindex="0"
+    on:focus={() => (isFocused = true)}
+    on:blur={() => (isFocused = false)}
     on:mousemove={e => {
         mouseX = e.clientX;
         mouseY = e.clientY;
@@ -426,7 +366,6 @@
     on:wheel={e => {
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
         zoomTween.set(zoomGoal);
-        savePos();
     }}
 />
 

@@ -18,18 +18,16 @@
     import Button from "../components/Button.svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import { reportedUserOperation } from "../firebase/cloud_functions";
+    import Back from "../icons/back.svg";
+    import { moveCamera } from "../level_view/view_controls";
+    import * as wasm from "wasm-lib";
 
-    let container: HTMLDivElement | null = null;
+    export let state: wasm.StateWrapper;
+    export let editorFocused: boolean;
 
     $: {
-        if (container != null) {
-            container.focus();
-
-            container.addEventListener("blur", e => {
-                if (e.relatedTarget != document.getElementById("mod-button")) {
-                    $showModeratorOptions.show = false;
-                }
-            });
+        if ($showModeratorOptions.show && editorFocused) {
+            $showModeratorOptions.show = false;
         }
     }
 
@@ -102,14 +100,7 @@
 
     let currentIdx = -1;
 
-    // let reportedUsers: { [uid: string]: DatabaseSchema["reportedUsers"][""] } =
-    //     {};
-
-    const userOp = (
-        op: "ignore" | "ban" | "expired",
-        userId: string,
-        idx: number
-    ) => {
+    const userOp = (op: "ignore" | "ban", userId: string, idx: number) => {
         // currentIdx = idx;
         // reportedUserOperation({
         //     operation: op,
@@ -127,11 +118,8 @@
 </script>
 
 {#if $showModeratorOptions.show}
-    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <div
-        bind:this={container}
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
-        tabindex="0"
     >
         <h1
             class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"
@@ -145,24 +133,46 @@
         {:else if reportedUsers != null}
             <FadedScroll>
                 <ul
-                    class="flex flex-col w-full gap-2 px-6 overflow-y-auto xs:px-4 rounded-lg"
+                    class="flex flex-col w-full gap-2 px-6 overflow-y-auto rounded-lg xs:px-4"
                 >
                     {#each Object.values(reportedUsers) as user, idx}
                         <li
-                            class="flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15 relative"
+                            class="relative flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15"
                         >
-                            <h2>
-                                <span class="text-base xs:text-sm"
-                                    >{user.username}</span
+                            <div
+                                class="grid items-center justify-center w-full grid-cols-3 grid-rows-1"
+                            >
+                                <h2 class="col-start-2">
+                                    <span class="text-base xs:text-sm"
+                                        >{user.username}</span
+                                    >
+                                    <span class="text-sm xs:text-xs"
+                                        >(x{user.count})</span
+                                    >
+                                </h2>
+                                <div
+                                    class="w-8 h-8 col-start-3 justify-self-end"
                                 >
-                                <span class="text-sm xs:text-xs"
-                                    >(x{user.count})</span
-                                >
-                            </h2>
+                                    <Button
+                                        title="View average report location"
+                                        type="plain"
+                                        on:click={() => {
+                                            const data = reportedUsers[idx];
+
+                                            moveCamera(
+                                                state,
+                                                data.sumX / data.count,
+                                                data.sumY / data.count
+                                            );
+                                        }}
+                                    >
+                                        <Back class="rotate-180"></Back>
+                                    </Button>
+                                </div>
+                            </div>
                             <div class="flex w-full h-10 gap-2 xs:h-9">
                                 <Button
                                     type="decline"
-                                    iconClass="w-8 h-8"
                                     on:click={() => {
                                         userOp("ignore", user.uid, idx);
                                     }}
@@ -172,7 +182,6 @@
                                 </Button>
                                 <Button
                                     type="accept"
-                                    iconClass="w-8 h-8"
                                     on:click={() => {
                                         userOp("ban", user.uid, idx);
                                     }}

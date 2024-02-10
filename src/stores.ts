@@ -32,49 +32,20 @@ export const menuSettings = writable(
     })
 );
 
+export const editorData = writable(
+    LocalSettingsFactory("editorData", {
+        x: 0,
+        y: 0,
+        zoom: 0,
+    })
+);
+
 export const bannedUsers = writable<string[]>([]);
 
 export const showModeratorOptions = writable({
     show: false,
     newReports: localStorage.getItem("newReports") == "1",
 });
-
-// test
-class Timer {
-    private value: number;
-    finished: Writable<boolean> = writable(false);
-    private interval: NodeJS.Timeout | null = null;
-    display: Writable<string> = writable("00:00");
-
-    constructor() {
-        this.value = 0;
-    }
-
-    private updateDisplay() {
-        this.display.update(() => {
-            const mins = Math.floor(this.value / 60);
-            const secs = Math.floor(this.value - mins * 60);
-            return `${mins > 10 ? "" : "0"}${mins}:${secs > 10 ? "" : "0"}${secs}`;
-        });
-    }
-
-    start(atMins: number) {
-        this.finished.update(() => false);
-        this.value = 60 * atMins;
-
-        this.interval = setInterval(() => {
-            if (this.value-- <= 0) {
-                this.updateDisplay();
-                this.finished.update(() => true);
-                clearInterval(this.interval!);
-            } else {
-                this.updateDisplay();
-            }
-        }, 1000);
-    }
-}
-
-export const reportTimer = new Timer();
 
 export const loginData = writable<{
     isLoggedIn: boolean;

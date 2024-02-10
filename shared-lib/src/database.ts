@@ -20,8 +20,8 @@ export interface DatabaseSchema {
         string,
         {
             epochNextReport: number;
-            lastDeleted: number;
-            lastPlaced: number;
+            epochNextDelete: number;
+            epochNextPlace: number;
             username: string;
             nameColor?: string;
             moderator: boolean;

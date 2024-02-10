@@ -1,7 +1,7 @@
 import { database } from "firebase-admin";
 import { HttpsError, onCall, Request } from "firebase-functions/v2/https";
 import { onMessagePublished } from "firebase-functions/v2/pubsub";
-import { VALID_USERNAME } from "shared-lib/user";
+import { REPORT_COOLDOWN_SECONDS, VALID_USERNAME } from "shared-lib/user";
 import type {
     InitWithUsernameReq,
     ReportUserReq,
@@ -89,8 +89,8 @@ export const initUserWithUsername = onCallAuthLogger<InitWithUsernameReq>(
 
         const user = {
             username: data.username,
-            lastPlaced: 0,
-            lastDeleted: 0,
+            epochNextPlace: 0,
+            epochNextDelete: 0,
             epochNextReport: 0,
             moderator: false,
         };
@@ -168,11 +168,10 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             y: data.y,
         });
 
-        const nextReport = new Date();
-        nextReport.setMinutes(nextReport.getMinutes() + 3);
-        // nextReport.getMilliseconds()
+        let nextReport = Date.now();
+        nextReport += REPORT_COOLDOWN_SECONDS * 1000;
 
-        // ref(db, `userData/${request.auth.uid}/lastReported`).set(Date.now());
+        ref(db, `userData/${request.auth.uid}/epochNextReport`).set(nextReport);
     }
 );
 
@@ -208,10 +207,15 @@ const banUserInner = async (
     });
 };
 
-const clearReportsOfUser = (db: Database, reportedUserUid: string) => {};
+// TODO: schedule delete old reports!!
+// const clearReportsOfUser = (db: Database, reportedUserUid: string) => {
 
-// projects/gd-place-2023/topics/clearOldReports
-export const clearReports = onMessagePublished("clearOldReports", event => {});
+// };
+
+// // projects/gd-place-2023/topics/clearOldReports
+// export const clearReports = onMessagePublished("clearOldReports", event => {
+
+// });
 
 export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
     async request => {
@@ -239,7 +243,7 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
             throw new HttpsError("invalid-argument", "Unknown operation");
         }
 
-        // TODO!
+        // TODO: clear reports
         //ref(db, `reportedUsers/${data.reportedUserUid}`).remove();
     }
 );

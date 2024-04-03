@@ -31,6 +31,7 @@
             objButtonSize /
             1.45 /
             Math.max(largest[0], largest[1], maxDisplaySize);
+
         return [
             mainSprite == null
                 ? null
@@ -78,7 +79,7 @@
     );
 </script>
 
-<div class="relative w-0 h-0 max-w-0 max-h-0 flex-center">
+<div class="relative w-0 h-0 flex-center">
     {#if mainStyle != null}
         <img
             draggable="false"

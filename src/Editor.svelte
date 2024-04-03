@@ -7,6 +7,7 @@
     import ReportedUserList from "./moderator/ReportedUserList.svelte";
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
+    import { loginData } from "./stores";
 
     export let wasmLoaded: boolean;
 

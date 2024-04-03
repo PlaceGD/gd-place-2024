@@ -54,19 +54,6 @@
                 {/if}
                 <div class="relative w-full h-full flex-center">
                     <ObjectButtonImage {id} {objButtonSize} />
-                    <!-- <img
-                        draggable="false"
-                        class="absolute object-none"
-                        src={$spritesheetProgress.blobURL}
-                        style={getImgStyle(id, objButtonSize)}
-                        alt=""
-                    /> -->
-                    <!-- <Image
-                        class="absolute object-contain max-w-full max-h-full"
-                        src={`/textures/main/${id}.png`}
-                        lazyLoad
-                        skeleton
-                    ></Image> -->
                 </div>
             </button>
             {#if $menuSettings.selectedObject == id}

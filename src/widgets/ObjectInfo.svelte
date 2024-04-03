@@ -11,9 +11,12 @@
     import { Turnstile } from "svelte-turnstile";
     import { SyncedCooldown } from "../utils/cooldown";
     import { REPORT_COOLDOWN_SECONDS } from "shared-lib/user";
+    import { getCameraPos } from "../level_view/view_controls";
+
+    export let state: wasm.StateWrapper;
 
     const cooldown = new SyncedCooldown(
-        `userData/${$loginData.currentUserData?.userData.uid ?? "P2IGC3qIfhaaou1SLeN08R2qBHP2"}`, // TODO: remove
+        `userData/${$loginData.currentUserData!.userData.uid}`,
         "epochNextPlaced",
         REPORT_COOLDOWN_SECONDS
     );
@@ -28,11 +31,12 @@
         isReporting = true;
 
         try {
+            const cameraPos = getCameraPos(state);
             await reportUser({
                 username: name,
                 turnstileResp: turnstileToken as string,
-                x: 0,
-                y: 0,
+                x: cameraPos[0],
+                y: cameraPos[1],
             });
 
             cooldown.start();
@@ -71,19 +75,25 @@
         if ($selectedObject == null && turnstileToken == TokenStatus.Used)
             turnstileToken = TokenStatus.NoToken;
     }
+
+    let objButtonSize = 0;
 </script>
 
 {#if $selectedObject != null}
     <ul
-        class="flex flex-col p-4 pt-5 text-lg text-white rounded-lg w-96 menu-panel flex-center pointer-events-all"
+        class="relative flex flex-col gap-2 p-4 text-lg text-white rounded-lg w-96 menu-panel flex-center pointer-events-all"
     >
+        <li
+            class="absolute opacity-0 object-info-item"
+            bind:offsetHeight={objButtonSize}
+        ></li>
         <li class="object-info-item">
             <span>Type:</span>
 
-            <div class="w-9 h-9 max-w-9 max-h-9 flex-center">
+            <div class="pr-3">
                 <ObjectButtonImage
                     id={$selectedObject.id ?? 1}
-                    objButtonSize={36 * 1.45}
+                    {objButtonSize}
                 />
             </div>
         </li>
@@ -91,14 +101,15 @@
             <span>Main color:</span>
 
             <div
-                class="text-xl rounded-md w-9 h-9 flex-center text-stroke"
+                class="h-full text-xl rounded-md aspect-square flex-center text-stroke"
                 style={`
                     background: url("assets/ui/checker.png");
+                    background-size: contain;
                     box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.mainColor.r}, ${$selectedObject.mainColor.g}, ${$selectedObject.mainColor.b}, ${$selectedObject.mainColor.opacity / 255})` : ""};
                 `}
             >
                 {#if $selectedObject.mainColor.blending ?? false}
-                    <span class="font-pusab">B</span>
+                    <span class="text-sm font-pusab" title="Blending">B</span>
                 {/if}
             </div>
         </li>
@@ -106,14 +117,15 @@
             <span>Detail color:</span>
 
             <div
-                class="text-xl rounded-md w-9 h-9 flex-center text-stroke"
+                class="h-full text-xl rounded-md aspect-square flex-center text-stroke"
                 style={`
                 background: url("assets/ui/checker.png");
+                background-size: contain;
                 box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.detailColor.r}, ${$selectedObject.detailColor.g}, ${$selectedObject.detailColor.b}, ${$selectedObject.detailColor.opacity / 255})` : ""};
             `}
             >
                 {#if $selectedObject.detailColor.blending ?? false}
-                    <span class="font-pusab">B</span>
+                    <span class="text-sm font-pusab">B</span>
                 {/if}
             </div>
         </li>
@@ -137,6 +149,7 @@
             {#if $selectedObject.namePlaced != null}
                 <button
                     aria-label="Copy Username"
+                    class="hover:underline"
                     on:click={() => {
                         if ($selectedObject != null) {
                             setClipboard($selectedObject.namePlaced ?? "")
@@ -149,8 +162,10 @@
                                     );
                                 });
                         }
-                    }}>{$selectedObject.namePlaced}</button
+                    }}
                 >
+                    {$selectedObject.namePlaced}
+                </button>
             {:else}
                 <div class="relative w-9 h-9 max-w-9 max-h-9">
                     <Loading darken={false} />
@@ -159,7 +174,7 @@
         </li>
 
         {#if $selectedObject?.namePlaced != null}
-            <div class="flex flex-col items-center justify-center pt-3">
+            <div class="flex flex-col items-center justify-center">
                 {#if $loginData.currentUserData != null}
                     {#if (turnstileToken == TokenStatus.NoToken || turnstileToken == TokenStatus.Used) && $cooldownFinished && !isYourself}
                         <Turnstile
@@ -226,7 +241,7 @@
 
         {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != null}
             {#if !$bannedUsers.includes($selectedObject.namePlaced.toLowerCase())}
-                <div class="w-full h-12 pt-3">
+                <div class="w-full h-10">
                     <Button
                         type="decline"
                         bind:disabled={isBanning}
@@ -238,7 +253,7 @@
                     >
                 </div>
             {:else}
-                <p class="pt-3 text-sm">This user has already been banned.</p>
+                <p class="text-sm">This user has already been banned.</p>
             {/if}
         {/if}
     </ul>
@@ -246,6 +261,6 @@
 
 <style lang="postcss">
     .object-info-item {
-        @apply flex h-12 w-full items-center justify-between rounded-lg p-2 odd:bg-black/15 even:bg-white/10;
+        @apply flex h-10 w-full items-center justify-between rounded-lg p-2 odd:bg-black/15 even:bg-white/10;
     }
 </style>

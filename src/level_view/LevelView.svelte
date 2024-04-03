@@ -35,10 +35,7 @@
                 state.pub_render((time - prevTime) / 1000);
                 prevTime = time;
 
-                let preview = state.get_preview_object();
-
                 runCallbacks();
-                // text_draws = state.get_text_draws();
             } catch (e: any) {
                 console.error(e, "(Failed in `state.pub_render`)");
                 Toast.showErrorToast(

@@ -408,7 +408,9 @@
     <Widget position={originScreen} scale={textZoomScale}>
         <DeleteTexts />
     </Widget>
-    <Widget position={[60, -60]} scale={1.0} screenCenter={false}>
-        <ObjectInfo />
-    </Widget>
+    {#if $loginData.currentUserData != null}
+        <Widget position={[60, -60]} scale={1.0} screenCenter={false}>
+            <ObjectInfo bind:state />
+        </Widget>
+    {/if}
 </div>

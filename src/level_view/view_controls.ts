@@ -63,3 +63,8 @@ export const moveCamera = (state: wasm.StateWrapper, x: number, y: number) => {
     savePos(state);
     handleSub(state);
 };
+
+export const getCameraPos = (state: wasm.StateWrapper): [number, number] => {
+    const [x, y] = state.get_camera_pos();
+    return [x, y];
+};

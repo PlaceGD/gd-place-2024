@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => ({
             // debugger: true,
             apply: "build",
             options: {
-                domainLock: ["localhost"],
+                domainLock: [mode == "development" ? "localhost" : "place.gd"],
                 identifierNamesCache: {},
                 identifierNamesGenerator: "mangled-shuffled",
                 selfDefending: true,

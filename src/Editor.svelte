@@ -7,7 +7,8 @@
     import ReportedUserList from "./moderator/ReportedUserList.svelte";
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
-    import { loginData } from "./stores";
+    import SettingsButton from "./settings/SettingsButton.svelte";
+    import SettingsOptions from "./settings/SettingsOptions.svelte";
 
     export let wasmLoaded: boolean;
 
@@ -27,6 +28,7 @@
         <div
             class="flex flex-row-reverse justify-end gap-4 p-2 pointer-events-all"
         >
+            <SettingsButton />
             {#if state != null}
                 <ModButton />
             {/if}
@@ -36,6 +38,7 @@
         {#if state != null}
             <ReportedUserList bind:state {editorFocused} />
         {/if}
+        <SettingsOptions {editorFocused}/>
     </div>
     {#if wasmLoaded}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />

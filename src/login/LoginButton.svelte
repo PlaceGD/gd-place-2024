@@ -1,6 +1,6 @@
 <script lang="ts">
     import Image from "../components/Image.svelte";
-    import { loginData } from "../stores";
+    import { ExclusiveMenus, loginData, openMenu } from "../stores";
     import { handleSignOut } from "./login";
 </script>
 
@@ -16,7 +16,7 @@
             if ($loginData.isLoggedIn) {
                 handleSignOut();
             } else {
-                $loginData.showLoginUI = true;
+                $openMenu = ExclusiveMenus.Login;
             }
         }}
     >

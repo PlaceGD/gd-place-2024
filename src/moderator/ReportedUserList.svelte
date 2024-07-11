@@ -1,6 +1,11 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { bannedUsers, showModeratorOptions } from "../stores";
+    import {
+        bannedUsers,
+        ExclusiveMenus,
+        newReports,
+        openMenu,
+    } from "../stores";
     import Loading from "../components/Loading.svelte";
     import {
         get,
@@ -26,8 +31,8 @@
     export let editorFocused: boolean;
 
     $: {
-        if ($showModeratorOptions.show && editorFocused) {
-            $showModeratorOptions.show = false;
+        if ($openMenu == ExclusiveMenus.Moderator && editorFocused) {
+            $openMenu = null;
         }
     }
 
@@ -63,7 +68,7 @@
                 user.sumX += reportData.x;
                 user.sumY += reportData.y;
             } else {
-                $showModeratorOptions.newReports = true;
+                $newReports = true;
                 localStorage.setItem("newReports", "1");
 
                 reportedUsers.push({
@@ -92,9 +97,9 @@
     });
 
     $: {
-        if ($showModeratorOptions.show) {
+        if ($openMenu == ExclusiveMenus.Moderator) {
             localStorage.setItem("newReports", "0");
-            $showModeratorOptions.newReports = false;
+            $newReports = false;
         }
     }
 
@@ -117,7 +122,7 @@
     };
 </script>
 
-{#if $showModeratorOptions.show}
+{#if $openMenu == ExclusiveMenus.Moderator}
     <div
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
     >

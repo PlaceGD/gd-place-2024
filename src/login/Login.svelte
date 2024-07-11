@@ -3,7 +3,7 @@
     import Image from "../components/Image.svelte";
     import Loading from "../components/Loading.svelte";
     import { LoginMethod, handleSignIn } from "./login";
-    import { loginData } from "../stores";
+    import { ExclusiveMenus, loginData, openMenu } from "../stores";
     import Cross from "../icons/cross.svg";
     import Check from "../icons/check.svg";
     import Toast from "../utils/toast";
@@ -17,7 +17,7 @@
     let twitter = false;
     document.addEventListener("keydown", e => {
         if (e.key == "Escape" && allowClose) {
-            $loginData.showLoginUI = false;
+            $openMenu = null;
         } else {
             twitter = e.shiftKey;
         }
@@ -42,7 +42,7 @@
     $: allowClose = currentPage == Page.LOGIN_METHOD ? !isInProgress : false;
 
     $: {
-        if (!$loginData.showLoginUI) {
+        if ($openMenu != ExclusiveMenus.Login) {
             currentPage = Page.LOGIN_METHOD;
         }
     }
@@ -64,7 +64,7 @@
                     if (maybePlaceData != null) {
                         $loginData.currentUserData.placeData = maybePlaceData;
                         $loginData.isLoggedIn = true;
-                        $loginData.showLoginUI = false;
+                        $openMenu = null;
                     } else {
                         previousPage = currentPage;
                         currentPage = Page.CREATE_USER;
@@ -99,7 +99,7 @@
                     Toast.showSuccessToast(
                         "User successfully created! Thanks for participating!"
                     );
-                    $loginData.showLoginUI = false;
+                    $openMenu = null;
                     $loginData.isLoggedIn = true;
                 })
                 .catch(e => {
@@ -125,7 +125,7 @@
     let turnstileReset: () => void | undefined;
 </script>
 
-{#if $loginData.showLoginUI}
+{#if $openMenu == ExclusiveMenus.Login}
     <Image
         tabindex="-1"
         src="/assets/ui/login/twitter.svg"
@@ -346,7 +346,7 @@
                         })}
                         aria-label="Close"
                         on:click={() => {
-                            $loginData.showLoginUI = false;
+                            $openMenu = null;
                         }}
                     >
                         <Cross alt="Close" class="w-full h-full"></Cross>

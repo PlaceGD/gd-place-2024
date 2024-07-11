@@ -42,20 +42,20 @@ export const editorData = writable(
 
 export const bannedUsers = writable<string[]>([]);
 
-export const showSettingsOptions = writable(false);
+export enum ExclusiveMenus {
+    Moderator,
+    Login,
+}
 
-export const showModeratorOptions = writable({
-    show: false,
-    newReports: localStorage.getItem("newReports") == "1",
-});
+export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
+
+export const newReports = writable(localStorage.getItem("newReports") == "1");
 
 export const loginData = writable<{
     isLoggedIn: boolean;
-    showLoginUI: boolean;
     currentUserData: UserData | null;
 }>({
     isLoggedIn: false,
-    showLoginUI: false,
     currentUserData: null,
 });
 

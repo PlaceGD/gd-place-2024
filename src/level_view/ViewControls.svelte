@@ -19,6 +19,7 @@
         selectedObject,
     } from "../stores";
     import {
+        MOVE_KEYBINDS,
         TRANSFORM_KEYBINDS,
         WidgetType,
     } from "../place_menu/edit/edit_tab";
@@ -331,7 +332,10 @@
     on:keydown={e => {
         if (document.activeElement?.tagName == "INPUT") return;
 
-        for (let v of Object.values(TRANSFORM_KEYBINDS)) {
+        for (let v of [
+            ...Object.values(TRANSFORM_KEYBINDS),
+            ...Object.values(MOVE_KEYBINDS).flatMap(v => Object.values(v)),
+        ]) {
             if (
                 e.key.toLowerCase() == v.shortcut.key.toLowerCase() &&
                 e.shiftKey == v.shortcut.shift &&

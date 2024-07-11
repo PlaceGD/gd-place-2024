@@ -32,38 +32,6 @@ interface TransformButton {
     cb: (obj: GDObjectOpt) => void;
 }
 
-interface MoveButton {
-    name: string;
-    image: string;
-    amount: string;
-    class?: string;
-}
-
-export const MOVE_BUTTONS: Record<string, MoveButton> = {
-    MOVE_TINY: {
-        name: "Move 1/60th",
-        image: "move_mini",
-        amount: "1/60",
-    },
-    MOVE_SMALL: {
-        name: "Move 1/15th",
-        image: "move_small",
-        amount: "1/15",
-        class: "hide-small",
-    },
-    MOVE_NORMAL: {
-        name: "Move 1",
-        image: "move_normal",
-        amount: "1",
-    },
-    MOVE_BIG: {
-        name: "Move 5",
-        image: "move_big",
-        amount: "5",
-        class: "hide-big",
-    },
-};
-
 interface MoveKeybind {
     up: Keybind;
     down: Keybind;
@@ -71,7 +39,7 @@ interface MoveKeybind {
     right: Keybind;
 }
 
-export const MOVE_KEYBINDS: Record<string, MoveKeybind> = {
+export const MOVE_KEYBINDS = {
     MOVE_TINY: {
         up: {
             cb: (obj: GDObjectOpt) => {
@@ -245,7 +213,44 @@ export const MOVE_KEYBINDS: Record<string, MoveKeybind> = {
     },
 };
 
-export const TRANSFORM_KEYBINDS: Record<string, Keybind> = {
+interface MoveButton {
+    name: string;
+    image: string;
+    amount: string;
+    keybinds: MoveKeybind;
+    class?: string;
+}
+
+export const MOVE_BUTTONS: Record<string, MoveButton> = {
+    MOVE_TINY: {
+        name: "Move 1/60th",
+        image: "move_mini",
+        amount: "1/60",
+        keybinds: MOVE_KEYBINDS.MOVE_TINY,
+    },
+    MOVE_SMALL: {
+        name: "Move 1/15th",
+        image: "move_small",
+        amount: "1/15",
+        keybinds: MOVE_KEYBINDS.MOVE_SMALL,
+        class: "hide-small",
+    },
+    MOVE_NORMAL: {
+        name: "Move 1",
+        image: "move_normal",
+        amount: "1",
+        keybinds: MOVE_KEYBINDS.MOVE_NORMAL,
+    },
+    MOVE_BIG: {
+        name: "Move 5",
+        image: "move_big",
+        amount: "5",
+        keybinds: MOVE_KEYBINDS.MOVE_BIG,
+        class: "hide-big",
+    },
+};
+
+export const TRANSFORM_KEYBINDS = {
     flip_vert: {
         cb: (obj: GDObjectOpt) => {
             obj.x_angle *= -1;

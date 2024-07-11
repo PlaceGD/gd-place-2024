@@ -45,6 +45,7 @@ export const bannedUsers = writable<string[]>([]);
 export enum ExclusiveMenus {
     Moderator,
     Login,
+    Settings,
 }
 
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);

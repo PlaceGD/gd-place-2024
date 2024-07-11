@@ -1,18 +1,18 @@
 <script lang="ts">
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import { showSettingsOptions } from "../stores";
+    import { ExclusiveMenus, openMenu } from "../stores";
 
     export let editorFocused: boolean;
 
     $: {
-        if ($showSettingsOptions && editorFocused) {
-            $showSettingsOptions = false;
+        if ($openMenu == ExclusiveMenus.Settings && editorFocused) {
+            $openMenu = null;
         }
     }
 </script>
 
-{#if $showSettingsOptions}
+{#if $openMenu == ExclusiveMenus.Settings}
     <div
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
     >

@@ -42,7 +42,7 @@ export const editorData = writable(
 
 export const bannedUsers = writable<string[]>([]);
 
-export const showSetttingsOptions = writable(false);
+export const showSettingsOptions = writable(false);
 
 export const showModeratorOptions = writable({
     show: false,

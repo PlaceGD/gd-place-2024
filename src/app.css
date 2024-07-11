@@ -81,6 +81,10 @@ body {
         @apply bg-white/5 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed;
     }
 
+    .li-alternating {
+        @apply odd:bg-black/15 even:bg-white/10;
+    }
+
     .text-stroke {
         /* -webkit-text-stroke: 2.5px black; */
         text-shadow:
@@ -154,5 +158,26 @@ body {
             background-color: #ffffff55;
             -webkit-border-radius: 10px;
         }
+    }
+}
+
+*:focus-visible {
+    outline-offset: 1px;
+
+    outline-width: 2px;
+    outline-style: solid;
+  
+    animation: spin 1s forwards infinite ease-in-out;
+}
+
+@keyframes spin {
+    0% {
+        outline-color: #7FFAFF;
+    }
+    50%  {
+        outline-color: #0074A3;
+    }
+    100%  {
+        outline-color: #7FFAFF;
     }
 }

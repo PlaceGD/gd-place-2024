@@ -84,10 +84,10 @@
         class="relative flex flex-col gap-2 p-4 text-lg text-white rounded-lg w-96 menu-panel flex-center pointer-events-all"
     >
         <li
-            class="absolute opacity-0 object-info-item"
+            class="absolute opacity-0 object-info-item li-alternating"
             bind:offsetHeight={objButtonSize}
         ></li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Type:</span>
 
             <div class="pr-3">
@@ -97,7 +97,7 @@
                 />
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Main color:</span>
 
             <div
@@ -113,7 +113,7 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Detail color:</span>
 
             <div
@@ -129,7 +129,7 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Z Layer:</span>
 
             <span
@@ -138,12 +138,12 @@
                 )}</span
             >
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Z Order:</span>
 
             <span>{$selectedObject.zOrder ?? 0}</span>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Placed by:</span>
 
             {#if $selectedObject.namePlaced != null}
@@ -261,6 +261,6 @@
 
 <style lang="postcss">
     .object-info-item {
-        @apply flex h-10 w-full items-center justify-between rounded-lg p-2 odd:bg-black/15 even:bg-white/10;
+        @apply flex h-10 w-full items-center justify-between rounded-lg p-2;
     }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import Image from "../components/Image.svelte";
-    import { loginData } from "../stores";
+    import { loginData, showSettingsOptions } from "../stores";
     import { handleSignOut } from "./login";
 </script>
 
@@ -13,6 +13,8 @@
     <button
         class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
         on:click={() => {
+            $showSettingsOptions = false;
+
             if ($loginData.isLoggedIn) {
                 handleSignOut();
             } else {

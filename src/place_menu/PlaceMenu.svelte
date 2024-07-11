@@ -89,12 +89,12 @@
     window.addEventListener("resize", () => {
         let isSm = window.matchMedia(
             `(max-width: ${
-                (config.theme?.screens as Record<string, any>).sm.max
+                (config.theme?.screens as Record<string, any>)["sm"].max
             })`
         );
         let isNotSm = window.matchMedia(
             `(min-width: ${
-                (config.theme?.screens as Record<string, any>).sm.max
+                (config.theme?.screens as Record<string, any>)["sm"].max
             })`
         );
 

@@ -22,7 +22,6 @@
     import { useIsOverflowing } from "../utils/document";
     import { DEBUG } from "../utils/debug";
     import SpriteSheet from "../utils/spritesheet";
-    import LocalSettings from "../utils/local_settings";
 
     import { EditTab, TRANSFORM_BUTTONS, WidgetType } from "./edit/edit_tab";
     import ColorsTab from "./edit/ColorsTab.svelte";
@@ -78,38 +77,6 @@
 
         state.set_preview_object(obj);
     }
-
-    import config from "../../tailwind.config";
-
-    // some bs to fix tiny little responsive anim issue
-    // that honestly no one would see but perfectionism :3
-    let placeDeleteBttnAnim: Animate | null;
-    let hasResetSm = false;
-    let hasResetLg = false;
-    window.addEventListener("resize", () => {
-        let isSm = window.matchMedia(
-            `(max-width: ${
-                (config.theme?.screens as Record<string, any>).sm.max
-            })`
-        );
-        let isNotSm = window.matchMedia(
-            `(min-width: ${
-                (config.theme?.screens as Record<string, any>).sm.max
-            })`
-        );
-
-        if (placeDeleteBttnAnim == null) return;
-
-        if (isSm.matches && !hasResetSm) {
-            placeDeleteBttnAnim?.resetIntialStyles();
-            hasResetSm = true;
-            hasResetLg = false;
-        } else if (isNotSm.matches && !hasResetLg) {
-            placeDeleteBttnAnim?.resetIntialStyles();
-            hasResetLg = true;
-            hasResetSm = false;
-        }
-    });
 
     $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
@@ -426,7 +393,6 @@
                     isMinimized: $menuSettings.isMinimized,
                 }}
                 let:motion
-                bind:this={placeDeleteBttnAnim}
             >
                 <button
                     class={cx({

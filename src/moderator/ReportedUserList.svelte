@@ -69,7 +69,6 @@
                 user.sumY += reportData.y;
             } else {
                 $newReports = true;
-                localStorage.setItem("newReports", "1");
 
                 reportedUsers.push({
                     count: 1,
@@ -98,7 +97,6 @@
 
     $: {
         if ($openMenu == ExclusiveMenus.Moderator) {
-            localStorage.setItem("newReports", "0");
             $newReports = false;
         }
     }

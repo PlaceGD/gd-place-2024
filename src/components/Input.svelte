@@ -10,7 +10,7 @@
     export let tabIndex: number = 0;
     export let autoTrim: boolean = false;
 
-    export let value: any = defaultValue;
+    export let value: string = defaultValue;
 
     let innerValue = value;
     $: innerValue = value;
@@ -46,15 +46,12 @@
         }
     };
     // const dispatcher = createEventDispatcher();
-
-    let inputElement: HTMLInputElement;
 </script>
 
 <input
     type="text"
     maxlength={maxLength}
     bind:value={innerValue}
-    bind:this={inputElement}
     tabindex={tabIndex}
     {...$$restProps}
 />

@@ -8,6 +8,7 @@
     } from "svelte-motion";
     import type {
         Easing,
+        MakeCustomValueType,
         Target,
         TargetAndTransition,
     } from "svelte-motion/types/types";
@@ -23,8 +24,8 @@
 
     let child: HTMLElement;
 
-    const fakeMotion = (motion_og: (node: any) => void) => {
-        return (node: any) => {
+    const fakeMotion = (motion_og: (node: HTMLElement) => void) => {
+        return (node: HTMLElement) => {
             child = node;
             motion_og(node);
         };
@@ -33,12 +34,15 @@
     export let easing: Easing = "linear";
     export let duration: number = 0;
 
-    export let initial: boolean | Target | VariantLabels | string[] = {};
-    let motionInitial: any = {};
+    export let initial: Target | VariantLabels | string[] = {};
+    let motionInitial:
+        | { [key: string]: string }
+        | string
+        | MakeCustomValueType<unknown> = {};
 
     const setIntial = () => {
         if (Array.isArray(initial)) {
-            let mappedPrts: { [key: string]: any } = {};
+            let mappedPrts: { [key: string]: string } = {};
 
             initial.map((prt): void => {
                 let styles = window.getComputedStyle(child);

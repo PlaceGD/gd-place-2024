@@ -147,19 +147,20 @@
                             <div
                                 class="grid items-center justify-center w-full grid-cols-3 grid-rows-1"
                             >
-                                <h2 class="col-start-2">
+                                <p class="col-start-2">
                                     <span class="text-base xs:text-sm"
                                         >{user.username}</span
                                     >
                                     <span class="text-sm xs:text-xs"
                                         >(x{user.count})</span
                                     >
-                                </h2>
+                                </p>
                                 <div
                                     class="w-8 h-8 col-start-3 justify-self-end"
                                 >
                                     <Button
                                         title="View average report location"
+                                        class="w-full h-full"
                                         type="plain"
                                         on:click={() => {
                                             const data = reportedUsers[idx];
@@ -178,6 +179,7 @@
                             <div class="flex w-full h-10 gap-2 xs:h-9">
                                 <Button
                                     type="decline"
+                                    class="w-full h-full"
                                     on:click={() => {
                                         userOp("ignore", user.uid, idx);
                                     }}
@@ -187,6 +189,7 @@
                                 </Button>
                                 <Button
                                     type="accept"
+                                    class="w-full h-full"
                                     on:click={() => {
                                         userOp("ban", user.uid, idx);
                                     }}

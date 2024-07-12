@@ -47,7 +47,7 @@
         }
     };
 
-    const handleDrag = (e: any) => {
+    const handleDrag = (e: PointerEvent) => {
         if (isPressingSlider) {
             let ex = e.clientX - sliderContainer.getBoundingClientRect().left;
 
@@ -73,7 +73,6 @@
     }}
 />
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <ul
     class="relative flex w-full h-full divide-x divide-black touch-none"
     bind:this={sliderContainer}

@@ -3,6 +3,7 @@
     import Check from "./icons/check.svg";
 
     import FadedScroll from "./components/FadedScroll.svelte";
+    import Button from "./components/Button.svelte";
 
     let showReadMore = false;
     let hasScrolledToBottom = false;
@@ -12,7 +13,7 @@
 
 {#if !hidePopup}
     <div
-        class="absolute bottom-0 z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 left-1/2"
+        class="absolute bottom-0 z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 xs:w-full left-1/2"
     >
         <div
             class="flex-col w-full gap-3 p-3 text-center text-white rounded-lg shadow-lg sm:text-sm sm:w-full flex-center bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
@@ -23,13 +24,14 @@
                     Please read our privacy policy below.
                 </b>
             </p>
-            <button
-                class="p-2 text-lg rounded-lg xs:text-lg white-button"
+            <Button
+                type="white"
+                class="p-2 w-max"
                 aria-label="Read More"
                 on:click={() => (showReadMore = true)}
             >
                 Read More
-            </button>
+            </Button>
         </div>
     </div>
 {/if}
@@ -231,8 +233,9 @@
                 </section>
             </FadedScroll>
             <div class="flex w-full gap-4">
-                <button
-                    class="w-[inherit] gap-2 p-1 rounded-lg flex-center white-button"
+                <Button
+                    type="decline"
+                    class="w-full"
                     disabled={!hasScrolledToBottom}
                     on:click={() => {
                         showReadMore = false;
@@ -240,12 +243,11 @@
                         localStorage.setItem("analytics", "0");
                     }}
                 >
-                    <Cross class="text-[#ff4747] w-11 h-11 xs:w-7 xs:h-7" />
-
                     <p class="xs:text-sm w-min">Disable Analytics</p>
-                </button>
-                <button
-                    class="w-[inherit] gap-2 p-1 rounded-lg flex-center white-button"
+                </Button>
+                <Button
+                    type="accept"
+                    class="w-full"
                     disabled={!hasScrolledToBottom}
                     on:click={() => {
                         showReadMore = false;
@@ -253,9 +255,8 @@
                         localStorage.setItem("analytics", "1");
                     }}
                 >
-                    <Check class="text-[#47ff47] w-11 h-11 xs:w-7 xs:h-7" />
                     <p class="xs:text-sm w-min">Continue</p>
-                </button>
+                </Button>
             </div>
         </div>
     </div>

@@ -4,7 +4,6 @@
     import Image from "../components/Image.svelte";
     import * as wasm from "wasm-lib";
     import Loading from "../components/Loading.svelte";
-    import Button from "../components/Button.svelte";
     import { banUser, reportUser } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
     import { setClipboard } from "../utils/clipboard";
@@ -12,6 +11,7 @@
     import { SyncedCooldown } from "../utils/cooldown";
     import { REPORT_COOLDOWN_SECONDS } from "shared-lib/user";
     import { getCameraPos } from "../level_view/view_controls";
+    import OnceButton from "../components/OnceButton.svelte";
 
     export let state: wasm.StateWrapper;
 
@@ -26,10 +26,10 @@
         $loginData.currentUserData?.placeData?.username ==
         $selectedObject?.namePlaced;
 
-    let isReporting = false;
-    const report = async (name: string) => {
-        isReporting = true;
+    let resetReportButton: () => void;
+    let resetBanButton: () => void;
 
+    const report = async (name: string) => {
         try {
             const cameraPos = getCameraPos(state);
             await reportUser({
@@ -44,14 +44,12 @@
             Toast.showErrorToast(`Failed to report user. (${e})`);
         }
 
-        isReporting = false;
+        resetReportButton();
 
         turnstileToken = TokenStatus.Used;
     };
 
-    let isBanning = false;
     const ban = async (name: string) => {
-        isBanning = true;
         try {
             await banUser({
                 username: name,
@@ -59,7 +57,8 @@
         } catch (e) {
             Toast.showErrorToast(`Failed to ban user! (${e})`);
         }
-        isBanning = false;
+
+        resetBanButton();
     };
 
     enum TokenStatus {
@@ -200,8 +199,9 @@
                             <h1 class="w-full text-lg text-center">
                                 Report User:
                             </h1>
-                            <button
-                                disabled={!$cooldownFinished || isReporting}
+                            <OnceButton
+                                type="plain"
+                                disabled={!$cooldownFinished}
                                 class="h-16 enabled:bounce-active disabled:opacity-40 disabled:cursor-not-allowed"
                                 aria-label="Report User"
                                 on:click={() => {
@@ -209,12 +209,13 @@
                                         report($selectedObject.namePlaced);
                                     }
                                 }}
+                                bind:reset={resetReportButton}
                             >
                                 <Image
                                     src="/assets/ui/report/report_button.png"
                                     class="object-contain w-auto h-auto max-w-full max-h-full"
                                 />
-                            </button>
+                            </OnceButton>
                         </div>
                         <p
                             class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
@@ -242,14 +243,15 @@
         {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != null}
             {#if !$bannedUsers.includes($selectedObject.namePlaced.toLowerCase())}
                 <div class="w-full h-10">
-                    <Button
+                    <OnceButton
                         type="decline"
-                        bind:disabled={isBanning}
+                        class="w-full h-full"
                         on:click={() => {
                             if ($selectedObject?.namePlaced != null) {
                                 ban($selectedObject.namePlaced);
                             }
-                        }}>Ban User</Button
+                        }}
+                        bind:reset={resetBanButton}>Ban User</OnceButton
                     >
                 </div>
             {:else}

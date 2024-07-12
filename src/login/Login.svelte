@@ -14,6 +14,7 @@
     import { db } from "../firebase/firebase";
     import { Turnstile } from "svelte-turnstile";
     import FadedScroll from "../components/FadedScroll.svelte";
+    import Button from "../components/Button.svelte";
 
     let twitter = false;
     document.addEventListener("keydown", e => {
@@ -161,8 +162,9 @@
                         </h1>
                         <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
                             <li class="h-full aspect-square max-w-max">
-                                <button
-                                    class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
+                                <Button
+                                    type="white"
+                                    class="flex-col w-full h-full p-2"
                                     aria-label="Login with Twitter"
                                     on:click={() =>
                                         signInWith(LoginMethod.Google)}
@@ -173,13 +175,14 @@
                                         class="flex-1 object-contain w-max"
                                     />
                                     <p>Google</p>
-                                </button>
+                                </Button>
                             </li>
                             <li
                                 class="h-full shadow-lg aspect-square max-w-max"
                             >
-                                <button
-                                    class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
+                                <Button
+                                    type="white"
+                                    class="flex-col w-full h-full p-2"
                                     aria-label="Login with GitHub"
                                     on:click={() =>
                                         signInWith(LoginMethod.GitHub)}
@@ -190,12 +193,12 @@
                                         class="flex-1 object-contain w-max"
                                     />
                                     <p>GitHub</p>
-                                </button>
+                                </Button>
                             </li>
                             <li class="h-full aspect-square max-w-max">
-                                <button
-                                    class="flex-col w-full h-full gap-2 p-2 rounded-lg flex-center white-button"
-                                    aria-label="Login with X (Twitter)"
+                                <Button
+                                    type="white"
+                                    class="flex-col w-full h-full p-2"
                                     on:click={() => signInWith(LoginMethod.X)}
                                 >
                                     <Image
@@ -206,7 +209,7 @@
                                         class="flex-1 object-contain w-max"
                                     />
                                     <p>{twitter ? "Twitter" : "X"}</p>
-                                </button>
+                                </Button>
                             </li>
                         </ul>
                         <p class="text-sm">
@@ -333,33 +336,28 @@
                         </section>
                     </FadedScroll>
                     <div class="flex w-full gap-4">
-                        <button
-                            class="w-[inherit] gap-2 p-1 rounded-lg flex-center white-button"
+                        <Button
+                            class="w-full h-full"
+                            type="decline"
                             disabled={!hasScrolledToBottomOfTos}
                             on:click={() => {
                                 currentPage = Page.LOGIN_METHOD;
                                 $openMenu = null;
                             }}
                         >
-                            <Cross
-                                class="text-[#ff4747] w-11 h-11 xs:w-7 xs:h-7"
-                            />
-
                             <p class="xs:text-sm w-min">Disagree</p>
-                        </button>
-                        <button
-                            class="w-[inherit] gap-2 p-1 rounded-lg flex-center white-button"
+                        </Button>
+                        <Button
+                            class="w-full h-full"
+                            type="accept"
                             disabled={!hasScrolledToBottomOfTos}
                             on:click={() => {
                                 hasAgreedToTOS = true;
                                 currentPage = previousPage;
                             }}
                         >
-                            <Check
-                                class="text-[#47ff47] w-11 h-11 xs:w-7 xs:h-7"
-                            />
                             <p class="xs:text-sm w-min">Agree</p>
-                        </button>
+                        </Button>
                     </div>
                 </div>
                 <div
@@ -444,17 +442,17 @@
                             </button>
                         </p>
                     </div>
-                    <button
+                    <Button
                         form="username-form"
                         disabled={!hasAgreedToTOS ||
                             !isValidUsername ||
                             turnstileToken == null}
-                        class="p-2 text-lg rounded-lg xs:text-md white-button"
+                        class="w-full p-2 h-min"
                         on:click={initNewUser}
-                        type="button"
+                        type="white"
                     >
-                        Submit
-                    </button>
+                        <p class="text-lg xs:text-md">Submit</p>
+                    </Button>
                 </div>
             </div>
             <div class="flex items-center h-12 text-white xs:h-10 flex-center">

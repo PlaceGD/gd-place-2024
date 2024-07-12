@@ -39,7 +39,7 @@
 
 <dialog
     aria-label="Privacy Policy Modal"
-    class="dialog-panel"
+    class="dialog-panel menu-panel xs:w-80 xs:h-96 w-[600px] sm:w-[450px]"
     bind:this={modal}
 >
     <FadedScroll bind:reachedBottom={hasScrolledToBottom}>

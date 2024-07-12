@@ -73,7 +73,7 @@ dialog::backdrop {
 
 @layer components {
     .dialog-panel {
-        @apply rounded-lg shadow-lg aspect-square xs:w-80 xs:h-96 bg-menu-gray/80 shadow-black/40 backdrop-blur-md open:flex flex-col p-6 xs:p-4 text-white w-[600px] sm:w-[450px] gap-4
+        @apply flex-col gap-4 p-6 text-white bg-transparent aspect-square open:flex xs:p-4;
     }
 
     .menu-panel {

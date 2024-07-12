@@ -16,6 +16,7 @@
     } from "./load_wasm";
     import { writable } from "svelte/store";
     import ReportedUserList from "./moderator/ReportedUserList.svelte";
+    import ToastContainer from "./components/ToastContainer.svelte";
 
     alertHasDarkReader();
 
@@ -44,7 +45,7 @@
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
 </script>
 
-<SvelteToast options={{ duration: 6000, intro: { y: -64 } }} />
+<ToastContainer />
 
 <DataPopup />
 

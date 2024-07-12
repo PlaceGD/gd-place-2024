@@ -34,6 +34,9 @@ h3 {
     @apply my-4 text-lg xs:text-base;
 }
 
+dialog::backdrop {
+    @apply backdrop-blur-lg brightness-[65%]
+}
 
 @keyframes scale-easeOutBounce {
 	0% {
@@ -69,6 +72,10 @@ h3 {
 } 
 
 @layer components {
+    .dialog-panel {
+        @apply rounded-lg shadow-lg aspect-square xs:w-80 xs:h-96 bg-menu-gray/80 shadow-black/40 backdrop-blur-md open:flex flex-col p-6 xs:p-4 text-white w-[600px] sm:w-[450px] gap-4
+    }
+
     .menu-panel {
         @apply relative shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
     }

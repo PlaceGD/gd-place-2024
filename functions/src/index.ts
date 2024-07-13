@@ -9,6 +9,8 @@ export {
     // clearReports,
 } from "./user";
 
+export { onKofiDonation } from "./donations";
+
 // TODO: add our uids
 export const DEV_UIDS: string[] = [];
 

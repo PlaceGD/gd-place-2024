@@ -1,3 +1,5 @@
+import { KofiTxId } from "./kofi";
+
 export type ChunkID = `${number},${number}`;
 export type ObjKey = string;
 
@@ -29,4 +31,6 @@ export interface DatabaseSchema {
     userName: Record<string, { uid: string }>;
 
     userPlaced: Record<ObjKey, string>;
+
+    activeDonations: Record<string, KofiTxId>;
 }

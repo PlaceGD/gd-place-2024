@@ -1,14 +1,10 @@
-import {
-    CallableRequest,
-    onCall,
-    CallableFunction,
-    HttpsError,
-    onRequest,
-} from "firebase-functions/v2/https";
+import { HttpsError, onRequest } from "firebase-functions/v2/https";
 import { LogGroup } from "./utils/logger";
 import { KofiTxId, VALID_KOFI_TRANSACTION_ID } from "shared-lib/kofi";
 import { database } from "firebase-admin";
 import { ref } from "./utils/database";
+import { onCallAuthLogger } from "./utils/on_call";
+import { KofiReq } from "shared-lib/cloud_functions";
 
 export type KofiDonation = {
     verification_token: string;
@@ -104,10 +100,10 @@ export const onKofiDonation = onRequest(
             return;
         }
 
-        const verification_token = jsonData.verification_token;
+        const verificationToken = jsonData.verification_token;
 
-        if (verification_token !== process.env["KOFI_VERIFICATION_TOKEN"]) {
-            logger.error(`Invalid verification token: ${verification_token}`);
+        if (verificationToken !== process.env["KOFI_VERIFICATION_TOKEN"]) {
+            logger.error(`Invalid verification token: ${verificationToken}`);
             logger.finish();
 
             response.status(400);
@@ -125,10 +121,10 @@ export const onKofiDonation = onRequest(
         }
 
         // TODO: should this be message id?
-        const tx_id = jsonData.kofi_transaction_id;
+        const txId = jsonData.kofi_transaction_id;
 
-        if (!VALID_KOFI_TRANSACTION_ID.test(tx_id)) {
-            logger.error(`Invalid transaction id: ${tx_id}`);
+        if (!VALID_KOFI_TRANSACTION_ID.test(txId)) {
+            logger.error(`Invalid transaction id: ${txId}`);
             logger.finish();
 
             response.status(400);
@@ -136,9 +132,35 @@ export const onKofiDonation = onRequest(
 
         const db = database();
 
-        ref(db, "activeDonations").push(tx_id);
+        ref(db, `activeDonations/${txId}`).set(1);
 
         // TODO: why does kofi call this function twice
         response.status(200);
+    }
+);
+
+export const submitKofiTxId = onCallAuthLogger<KofiReq>(
+    "submitKofiTxId",
+    async (request, logger) => {
+        const txId = request.data.txId;
+
+        if (!VALID_KOFI_TRANSACTION_ID.test(txId)) {
+            logger.error(`Invalid transaction id format: ${txId}`);
+            throw new HttpsError(
+                "invalid-argument",
+                "Invalid transaction ID format"
+            );
+        }
+
+        const db = database();
+
+        const data = (await ref(db, `activeDonations/${txId}`).get()).val();
+
+        if (data == null || data !== 1) {
+            logger.error(`Invalid transaction id: ${txId}`);
+            throw new HttpsError("invalid-argument", "Invalid transaction ID");
+        }
+
+        ref(db, `userData/${request.auth.uid}/hasDonated`).set(true);
     }
 );

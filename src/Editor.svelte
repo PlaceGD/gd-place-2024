@@ -8,6 +8,7 @@
     import Login from "./login/Login.svelte";
     import LoginButton from "./login/LoginButton.svelte";
     import { loginData } from "./stores";
+    import NameGradient from "./name_gradient/NameGradient.svelte";
 
     export let wasmLoaded: boolean;
 
@@ -33,6 +34,7 @@
             <LoginButton />
         </div>
         <Login />
+        <NameGradient />
         {#if state != null}
             <ReportedUserList bind:state {editorFocused} />
         {/if}

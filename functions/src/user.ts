@@ -95,6 +95,7 @@ export const initUserWithUsername = onCallAuthLogger<
         epochNextDelete: 0,
         epochNextReport: 0,
         moderator: false,
+        hasDonated: false,
     };
 
     logger.info("User created sucessfully");

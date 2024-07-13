@@ -9,6 +9,7 @@ export type UserData = {
     epochNextDelete: number;
     epochNextReport: number;
     moderator: boolean;
+    hasDonated: boolean;
 };
 
 export interface DatabaseSchema {
@@ -32,5 +33,5 @@ export interface DatabaseSchema {
 
     userPlaced: Record<ObjKey, string>;
 
-    activeDonations: Record<string, KofiTxId>;
+    activeDonations: Record<KofiTxId, number>;
 }

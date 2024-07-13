@@ -141,7 +141,7 @@
 
 <Image tabindex="-1" src="/assets/ui/login/twitter.svg" class="hidden" alt="" />
 <dialog
-    aria-label="Login or Sign UP Modal"
+    aria-label="Login or Sign Up Modal"
     class="overflow-visible pointer-events-auto dialog-panel"
     bind:this={modal}
 >
@@ -154,7 +154,7 @@
             style:display={currentPage == Page.LOGIN_METHOD ? "flex" : "none"}
         >
             <div
-                class="flex flex-col items-center justify-between w-full h-full p-6"
+                class="flex flex-col items-center justify-between w-full h-full p-6 xs:p-4"
             >
                 <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
                     Login or Sign Up
@@ -410,7 +410,7 @@
                 {:else}
                     <Cross class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto" />
                 {/if}
-                <p class="text-md shrink-1 grow-0">
+                <p class="text-base shrink-1 grow-0">
                     I have read and agreed to the
                     <button
                         class="underline hover:decoration-dashed text-nowrap"
@@ -433,7 +433,7 @@
                 on:click={initNewUser}
                 type="white"
             >
-                <p class="text-lg xs:text-md">Submit</p>
+                <p class="text-lg xs:text-base">Submit</p>
             </Button>
         </div>
         {#if isInProgress}

@@ -19,12 +19,12 @@
         selectedObject,
     } from "../stores";
     import {
+        MOVE_KEYBINDS,
         TRANSFORM_KEYBINDS,
         WidgetType,
     } from "../place_menu/edit/edit_tab";
 
     import Toast from "../utils/toast";
-    import LocalSettingsFactory from "../utils/local_settings";
     import { isMobile } from "../utils/document";
     import Widget from "../widgets/Widget.svelte";
     import { addCallback } from "../state";
@@ -93,22 +93,28 @@
         }
     }
 
-    const changeBgColor = (event: any) => {
-        let c = hexToRgb(event.target.value);
+    const changeBgColor = (
+        event: Event & { currentTarget: EventTarget & HTMLInputElement }
+    ) => {
+        let c = hexToRgb(event.currentTarget.value);
         if (c != null) {
             let { r, g, b } = c;
             state.set_bg_color(r, g, b);
         }
     };
-    const changeGround1Color = (event: any) => {
-        let c = hexToRgb(event.target.value);
+    const changeGround1Color = (
+        event: Event & { currentTarget: EventTarget & HTMLInputElement }
+    ) => {
+        let c = hexToRgb(event.currentTarget.value);
         if (c != null) {
             let { r, g, b } = c;
             state.set_ground1_color(r, g, b);
         }
     };
-    const changeGround2Color = (event: any) => {
-        let c = hexToRgb(event.target.value);
+    const changeGround2Color = (
+        event: Event & { currentTarget: EventTarget & HTMLInputElement }
+    ) => {
+        let c = hexToRgb(event.currentTarget.value);
         if (c != null) {
             let { r, g, b } = c;
             state.set_ground2_color(r, g, b);
@@ -331,7 +337,10 @@
     on:keydown={e => {
         if (document.activeElement?.tagName == "INPUT") return;
 
-        for (let v of Object.values(TRANSFORM_KEYBINDS)) {
+        for (let v of [
+            ...Object.values(TRANSFORM_KEYBINDS),
+            ...Object.values(MOVE_KEYBINDS).flatMap(v => Object.values(v)),
+        ]) {
             if (
                 e.key.toLowerCase() == v.shortcut.key.toLowerCase() &&
                 e.shiftKey == v.shortcut.shift &&

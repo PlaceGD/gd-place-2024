@@ -1,8 +1,8 @@
 import { writable, type Writable } from "svelte/store";
-import LocalSettingsFactory from "./utils/local_settings";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
+import { createLocalStorage, persist } from "@macfja/svelte-persistent-store";
 
 export enum TabGroup {
     Build,
@@ -10,8 +10,10 @@ export enum TabGroup {
     Delete,
 }
 
-export const menuSettings = writable(
-    LocalSettingsFactory("menuSettings", {
+const LS = createLocalStorage();
+
+export const menuSettings = persist(
+    writable({
         isMinimized: false,
 
         selectedGroup: TabGroup.Build,
@@ -29,15 +31,19 @@ export const menuSettings = writable(
         zLayer: ZLayer.B1,
         zOrder: 0,
         selectedWidget: WidgetType.None,
-    })
+    }),
+    LS,
+    "menuSettings"
 );
 
-export const editorData = writable(
-    LocalSettingsFactory("editorData", {
+export const editorData = persist(
+    writable({
         x: 0,
         y: 0,
         zoom: 0,
-    })
+    }),
+    LS,
+    "editorData"
 );
 
 export const bannedUsers = writable<string[]>([]);
@@ -50,7 +56,7 @@ export enum ExclusiveMenus {
 
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
-export const newReports = writable(localStorage.getItem("newReports") == "1");
+export const newReports = persist(writable(false), LS, "newReports");
 
 export const loginData = writable<{
     isLoggedIn: boolean;

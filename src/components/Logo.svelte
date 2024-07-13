@@ -1,13 +1,3 @@
-<script lang="ts">
-    let gluh = false
-</script>
-
-<button
-    on:click={() => {
-        gluh = !gluh
-    }}>bib</button
->
-
 <svg
     width="280"
     height="280"

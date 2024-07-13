@@ -27,6 +27,14 @@ body {
     --toastContainerLeft: calc(50vw - 8rem);
 }
 
+h2 {
+    @apply my-6 text-xl xs:text-lg;
+}
+h3 {
+    @apply my-4 text-lg xs:text-base;
+}
+
+
 @keyframes scale-easeOutBounce {
 	0% {
         transform: scale3d(1.0, 1.0, 1);
@@ -86,7 +94,6 @@ body {
     }
 
     .text-stroke {
-        /* -webkit-text-stroke: 2.5px black; */
         text-shadow:
             -2.5px 0 0 black,
             2.5px 0 0 black,
@@ -98,7 +105,6 @@ body {
             -1.76px 1.76px 0 black;
     }
     .text-stroke-white {
-        /* -webkit-text-stroke: 2.5px black; */
         text-shadow:
             -2.5px 0 0 white,
             2.5px 0 0 white,
@@ -118,6 +124,15 @@ body {
     .abs-centered-rel {
         @apply absolute -translate-x-1/2 -translate-y-1/2;
     }
+
+    .bulleted-list {
+        @apply flex flex-col gap-2 my-2 list-disc;
+
+        & > li {
+            @apply p-2 ml-6 rounded-lg odd:bg-black/15 even:bg-white/5 xs:ml-4;
+        }
+    }
+    
 }
 
 @layer utilities {

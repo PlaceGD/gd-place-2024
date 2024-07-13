@@ -8,7 +8,7 @@ export enum Level {
 
 export class LogGroup {
     private readonly label: string;
-    private logs: { message: any; level: Level }[] = [];
+    private logs: { message: string; level: Level }[] = [];
 
     constructor(label: string = "") {
         this.label = label;
@@ -18,15 +18,15 @@ export class LogGroup {
         this.logs = [...this.logs, { message, level }];
     }
 
-    info(...messages: any[]) {
+    info(...messages: { toString: () => string }[]) {
         this.addNewLog(messages.join(" "), Level.INFO);
     }
 
-    debug(...messages: any[]) {
+    debug(...messages: { toString: () => string }[]) {
         this.addNewLog(messages.join(" "), Level.DEBUG);
     }
 
-    error(...messages: any[]) {
+    error(...messages: { toString: () => string }[]) {
         this.addNewLog(messages.join(" "), Level.ERROR);
     }
 

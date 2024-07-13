@@ -15,7 +15,7 @@
 
 <button
     class={cx({
-        [`w-full h-full gap-2 rounded-lg flex-center ${$$restProps.class}`]: true,
+        [`gap-2 rounded-lg flex-center ${$$restProps["class"]}`]: true,
         "white-button": type !== "plain",
     })}
     on:click={() => dispatcher("click")}

@@ -34,6 +34,7 @@
         "vite-plugin-javascript-obfuscator": "^3.1.0"
     },
     "dependencies": {
+        "@macfja/svelte-persistent-store": "^2.4.1",
         "@types/postcss-import": "^14.0.2",
         "classnames": "^2.3.2",
         "devtools-fps": "^2.0.2",

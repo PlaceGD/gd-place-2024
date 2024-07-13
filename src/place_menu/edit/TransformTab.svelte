@@ -28,6 +28,12 @@
         else selectedWidget = WidgetType.None;
     };
 
+    const modifyObjCb = (cb: (obj: wasm.GDObjectOpt) => void) => () => {
+        let obj = state.get_preview_object();
+        cb(obj);
+        state.set_preview_object(obj);
+    };
+
     $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
 </script>
 
@@ -46,6 +52,7 @@
                     class="z-20 w-12 rounded-md shrink-0 up flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} up"
+                    on:click={modifyObjCb(MOVE_BUTTONS[button].keybinds.up.cb)}
                 >
                     <Image
                         src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
@@ -57,6 +64,9 @@
                     class="z-20 w-12 rounded-md shrink-0 down flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} down"
+                    on:click={modifyObjCb(
+                        MOVE_BUTTONS[button].keybinds.down.cb
+                    )}
                 >
                     <Image
                         src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
@@ -67,6 +77,9 @@
                     class="z-20 w-12 rounded-md shrink-0 right flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} right"
+                    on:click={modifyObjCb(
+                        MOVE_BUTTONS[button].keybinds.right.cb
+                    )}
                 >
                     <Image
                         src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
@@ -78,6 +91,9 @@
                     class="z-20 w-12 rounded-md shrink-0 left flex-center aspect-square md:w-9 sm:w-7 white-button"
                     tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} left"
+                    on:click={modifyObjCb(
+                        MOVE_BUTTONS[button].keybinds.left.cb
+                    )}
                 >
                     <Image
                         src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
@@ -100,11 +116,7 @@
             <li class="transform-button">
                 <button
                     class="flex-center w-full h-full p-2 md:p-1.5 sm:p-0 xs:p-0 z-20 rounded-md bg-button-green active:bg-button-green-dark bounce-active"
-                    on:click={() => {
-                        let obj = state.get_preview_object();
-                        button.cb(obj);
-                        state.set_preview_object(obj);
-                    }}
+                    on:click={modifyObjCb(button.cb)}
                     tabindex={canSelectByTab}
                     aria-label={button.name}
                 >

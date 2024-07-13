@@ -5,7 +5,8 @@ import {
 } from "firebase-admin/database";
 import { DatabaseSchema } from "shared-lib/database";
 
-type Child<T> = Record<any, any> extends T ? NonNullable<T>[keyof T] : never;
+type Child<T> =
+    Record<never, never> extends T ? NonNullable<T>[keyof T] : never;
 
 type PathType<
     P extends string,
@@ -16,13 +17,17 @@ type PathType<
         ? PathType<
               B,
               T[A],
-              U extends true ? true : Record<any, any> extends T ? true : false
+              U extends true
+                  ? true
+                  : Record<never, never> extends T
+                    ? true
+                    : false
           >
         : never
     : P extends keyof T
       ? U extends true
           ? T[P] | undefined
-          : Record<any, any> extends T
+          : Record<never, never> extends T
             ? T[P] | undefined
             : T[P]
       : never;

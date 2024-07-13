@@ -44,8 +44,8 @@ const deserializeObject = (
     let reader: Reader<Uint8Array>;
     try {
         reader = new Reader(bytes, GD_OBJECT_SIZE);
-    } catch (e: any) {
-        logger.error("Reader failed:", e);
+    } catch (e: unknown) {
+        logger.error("Reader failed:", e as string);
         throw new HttpsError("invalid-argument", "Invalid object string");
     }
 

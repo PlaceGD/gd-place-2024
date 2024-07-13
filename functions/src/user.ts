@@ -13,6 +13,7 @@ import { ref } from "./utils/database";
 import { DEV_UIDS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Database } from "firebase-admin/database";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
+import { UserData } from "shared-lib/database";
 
 const validateTurnstile = async (
     key: string | undefined,
@@ -52,65 +53,65 @@ const validateTurnstile = async (
     }
 };
 
-export const initUserWithUsername = onCallAuthLogger<InitWithUsernameReq>(
-    "initUserWithUsername",
-    async (request, logger) => {
-        const data = request.data;
+export const initUserWithUsername = onCallAuthLogger<
+    InitWithUsernameReq,
+    Promise<UserData>
+>("initUserWithUsername", async (request, logger) => {
+    const data = request.data;
 
-        await validateTurnstile(
-            process.env.TURNSTILE_LOGIN_PRIV_KEY,
-            data.turnstileResp,
-            request.rawRequest,
-            logger
-        );
+    await validateTurnstile(
+        process.env["TURNSTILE_LOGIN_PRIV_KEY"],
+        data.turnstileResp,
+        request.rawRequest,
+        logger
+    );
 
-        logger.debug("Username:", data.username);
-        if (!data.username.match(VALID_USERNAME)) {
-            throw new HttpsError("invalid-argument", "Username is invalid");
-        }
-
-        const db = database();
-
-        // TODO: check username for bad words
-        // BAD_WORDS.forEach(word => {
-        //     if (data.username.toLowerCase().includes(word)) {
-        //         throw new HttpsError("invalid-argument", "Invalid username");
-        //     }
-        // });
-
-        const usernameExists = (
-            await ref(db, `userName/${data.username.toLowerCase()}`).get()
-        ).val();
-
-        if (usernameExists != undefined) {
-            logger.error("User already exists");
-            throw new HttpsError("already-exists", "Username already exists");
-        }
-
-        const user = {
-            username: data.username,
-            epochNextPlace: 0,
-            epochNextDelete: 0,
-            epochNextReport: 0,
-            moderator: false,
-        };
-
-        logger.info("User created sucessfully");
-
-        // make new user
-        ref(db, `userData/${data.uid}`).set(user);
-
-        ref(db, `userName/${data.username.toLowerCase()}`).set({
-            uid: data.uid,
-        });
-
-        ref(db, "userCount").transaction(count => {
-            return count + 1;
-        });
-
-        return user;
+    logger.debug("Username:", data.username);
+    if (!data.username.match(VALID_USERNAME)) {
+        throw new HttpsError("invalid-argument", "Username is invalid");
     }
-);
+
+    const db = database();
+
+    // TODO: check username for bad words
+    // BAD_WORDS.forEach(word => {
+    //     if (data.username.toLowerCase().includes(word)) {
+    //         throw new HttpsError("invalid-argument", "Invalid username");
+    //     }
+    // });
+
+    const usernameExists = (
+        await ref(db, `userName/${data.username.toLowerCase()}`).get()
+    ).val();
+
+    if (usernameExists != undefined) {
+        logger.error("User already exists");
+        throw new HttpsError("already-exists", "Username already exists");
+    }
+
+    const user: UserData = {
+        username: data.username,
+        epochNextPlace: 0,
+        epochNextDelete: 0,
+        epochNextReport: 0,
+        moderator: false,
+    };
+
+    logger.info("User created sucessfully");
+
+    // make new user
+    ref(db, `userData/${data.uid}`).set(user);
+
+    ref(db, `userName/${data.username.toLowerCase()}`).set({
+        uid: data.uid,
+    });
+
+    ref(db, "userCount").transaction(count => {
+        return count + 1;
+    });
+
+    return user;
+});
 
 export const reportUser = onCallAuthLogger<ReportUserReq>(
     "reportUser",
@@ -118,7 +119,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
         const data = request.data;
 
         await validateTurnstile(
-            process.env.TURNSTILE_REPORT_PRIV_KEY,
+            process.env["TURNSTILE_LOGIN_PRIV_KEY"],
             data.turnstileResp,
             request.rawRequest,
             logger
@@ -276,11 +277,11 @@ export const banUser = onCallAuthLogger<BanReq>(
             await ref(db, `userName/${data.username.toLowerCase()}`).get()
         ).val()?.uid;
 
-        logger.info("User id:", userToBanUid);
-
         if (userToBanUid == null) {
             throw new HttpsError("invalid-argument", "Unknown user");
         }
+
+        logger.info("User id:", userToBanUid);
 
         await banUserInner(db, request.auth.uid, userToBanUid);
     }

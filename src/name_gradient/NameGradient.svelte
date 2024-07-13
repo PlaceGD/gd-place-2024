@@ -15,6 +15,7 @@
     import { submitKofiTxId } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
     import { loginData } from "../stores";
+    import GradientPicker from "../components/GradientPicker.svelte";
 
     let modal: HTMLDialogElement;
 
@@ -25,12 +26,12 @@
 
     let isInProgress = false;
 
-    let currentPage = Page.SUBMIT_TX_ID;
+    let currentPage = Page.SELECT_GRADIENT; //SUBMIT_TX_ID
 
-    $: currentPage =
-        $loginData.currentUserData?.placeData?.hasDonated != null
-            ? Page.SELECT_GRADIENT
-            : Page.SUBMIT_TX_ID;
+    // $: currentPage =
+    //     $loginData.currentUserData?.placeData?.hasDonated != null
+    //         ? Page.SELECT_GRADIENT
+    //         : Page.SUBMIT_TX_ID;
 
     let allowClose = true;
     $: allowClose = !isInProgress;
@@ -38,6 +39,8 @@
     let kofiTxId: string = "";
     let isValidKofiTxId = false;
     $: isValidKofiTxId = VALID_KOFI_TRANSACTION_ID.test(kofiTxId);
+
+    let nameGradientString: string;
 
     let resetSubmitButton: () => void;
 
@@ -141,6 +144,24 @@
                         Select Name Color
                     </h1>
                 </hgroup>
+                <div
+                    class="flex items-center justify-center z-30 text-2xl text-white font-pusab"
+                >
+                    <p
+                        class="username-gradient w-min"
+                        style={`
+                        background-image: ${nameGradientString};
+                    `}
+                    >
+                        {$loginData.currentUserData?.placeData?.username ?? ""}
+                    </p>
+                </div>
+                <div class="flex-col gap-2 flex-center h-full p-4">
+                    <GradientPicker
+                        maxStops={4}
+                        bind:gradientString={nameGradientString}
+                    ></GradientPicker>
+                </div>
             </div>
         {/if}
         {#if isInProgress}
@@ -165,3 +186,11 @@
         </div>
     </div>
 </dialog>
+
+<style lang="postcss">
+    .username-gradient {
+        -webkit-text-fill-color: rgba(255, 255, 255, 0.1) !important;
+        background-clip: text !important;
+        -webkit-background-clip: text !important;
+    }
+</style>

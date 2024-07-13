@@ -15,6 +15,8 @@
     import { Turnstile } from "svelte-turnstile";
     import FadedScroll from "../components/FadedScroll.svelte";
     import Button from "../components/Button.svelte";
+    import { SvelteToast } from "@zerodevx/svelte-toast";
+    import ToastContainer from "../components/ToastContainer.svelte";
 
     let twitter = false;
     document.addEventListener("keydown", e => {
@@ -27,6 +29,8 @@
     document.addEventListener("keyup", e => {
         twitter = e.shiftKey;
     });
+
+    let modal: HTMLDialogElement;
 
     enum Page {
         LOGIN_METHOD,
@@ -51,6 +55,9 @@
     $: {
         if ($openMenu != ExclusiveMenus.Login) {
             currentPage = Page.LOGIN_METHOD;
+            modal?.close();
+        } else if ($openMenu == ExclusiveMenus.Login) {
+            modal.showModal();
         }
     }
 
@@ -132,361 +139,328 @@
     let turnstileReset: () => void | undefined;
 </script>
 
-{#if $openMenu == ExclusiveMenus.Login}
-    <Image
-        tabindex="-1"
-        src="/assets/ui/login/twitter.svg"
-        class="hidden"
-        alt=""
-    />
-    <section
-        class="absolute z-40 flex-col w-full h-full text-white flex-center pointer-events-all"
-        aria-label="Login or Sign Up"
-    >
-        <div class="flex-col w-full h-full gap-2 flex-center">
+<Image tabindex="-1" src="/assets/ui/login/twitter.svg" class="hidden" alt="" />
+<dialog
+    aria-label="Login or Sign UP Modal"
+    class="overflow-visible pointer-events-auto dialog-panel"
+    bind:this={modal}
+>
+    <ToastContainer />
+
+    <div class="flex-col w-full h-full flex-center menu-panel">
+        <!-- LOGIN METHOD -->
+        <div
+            class="login-page w-[450px]"
+            style:display={currentPage == Page.LOGIN_METHOD ? "flex" : "none"}
+        >
             <div
-                class="grid justify-center grid-cols-1 grid-rows-1 flex-center justify-items-center"
+                class="flex flex-col items-center justify-between w-full h-full p-6"
             >
-                <!-- LOGIN METHOD -->
-                <div
-                    class="login-page w-[450px]"
-                    style:display={currentPage == Page.LOGIN_METHOD
-                        ? "flex"
-                        : "none"}
-                >
-                    <div
-                        class="flex flex-col items-center justify-between w-full h-full p-6"
-                    >
-                        <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
-                            Login or Sign Up
-                        </h1>
-                        <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
-                            <li class="h-full aspect-square max-w-max">
-                                <Button
-                                    type="white"
-                                    class="flex-col w-full h-full p-2"
-                                    aria-label="Login with Twitter"
-                                    on:click={() =>
-                                        signInWith(LoginMethod.Google)}
-                                >
-                                    <Image
-                                        src="/assets/ui/login/google.svg"
-                                        alt="Login with Google"
-                                        class="flex-1 object-contain w-max"
-                                    />
-                                    <p>Google</p>
-                                </Button>
-                            </li>
-                            <li
-                                class="h-full shadow-lg aspect-square max-w-max"
-                            >
-                                <Button
-                                    type="white"
-                                    class="flex-col w-full h-full p-2"
-                                    aria-label="Login with GitHub"
-                                    on:click={() =>
-                                        signInWith(LoginMethod.GitHub)}
-                                >
-                                    <Image
-                                        src="/assets/ui/login/github.svg"
-                                        alt="Login with GitHub"
-                                        class="flex-1 object-contain w-max"
-                                    />
-                                    <p>GitHub</p>
-                                </Button>
-                            </li>
-                            <li class="h-full aspect-square max-w-max">
-                                <Button
-                                    type="white"
-                                    class="flex-col w-full h-full p-2"
-                                    on:click={() => signInWith(LoginMethod.X)}
-                                >
-                                    <Image
-                                        src="/assets/ui/login/{twitter
-                                            ? 'twitter'
-                                            : 'x'}.svg"
-                                        alt="Login with X (Twitter)"
-                                        class="flex-1 object-contain w-max"
-                                    />
-                                    <p>{twitter ? "Twitter" : "X"}</p>
-                                </Button>
-                            </li>
-                        </ul>
-                        <p class="text-sm">
-                            Don't forget to the read the
-                            <button
-                                class="underline hover:decoration-dashed"
-                                aria-label="Terms of Service"
-                                on:click={() => {
-                                    previousPage = currentPage;
-                                    currentPage = Page.SHOW_TOS;
-                                }}
-                            >
-                                TOS
-                            </button>
-                            !
-                        </p>
-                    </div>
-                </div>
-                <!-- TERMS OF SERVICE -->
-                <div
-                    class="login-page w-[600px] sm:w-[450px] p-6 xs:p-4 flex flex-col gap-4"
-                    style:display={currentPage == Page.SHOW_TOS
-                        ? "flex"
-                        : "none"}
-                >
-                    <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
-                        <section>
-                            <h1><u><strong>Terms of Service</strong></u></h1>
-
-                            <h2>Notice</h2>
-
-                            <p>
-                                Welcome to GD Place! By accessing or using our
-                                platform, you agree to be bound by these Terms
-                                of Service. Please read them carefully before
-                                proceeding.
-                            </p>
-
-                            <h2>User Conduct</h2>
-
-                            <ul class="bulleted-list">
-                                <li>
-                                    <strong>Inappropriate Usernames:</strong> Users
-                                    must not use inappropriate or offensive usernames
-                                    when registering or using our platform.
-                                </li>
-                                <li>
-                                    <strong>Prohibited Activities:</strong> Botting
-                                    or the use of alternate accounts (alt accounts)
-                                    is strictly prohibited. Any violations may result
-                                    in the termination of your account.
-                                </li>
-                            </ul>
-
-                            <h2>Reporting Violations</h2>
-
-                            <p>
-                                Users who notice rule violations are encouraged
-                                to report them. You can report violations within
-                                the app or by contacting us via our contact
-                                information provided below.
-                            </p>
-
-                            <h2>Account Registration</h2>
-
-                            <p>
-                                Users can sign up using one of three external
-                                platforms. By signing up, users also agree to
-                                the Terms of Service of those platforms.
-                            </p>
-
-                            <h2>Ownership of User Content</h2>
-
-                            <p>
-                                By using our platform, you grant us (the
-                                creators) permission to use any content created
-                                by you on the site without requiring explicit
-                                permission.
-                            </p>
-
-                            <h2>External Services</h2>
-
-                            <p>
-                                Donations and merchandise are handled by
-                                external sites. We are not responsible for
-                                transactions made on these external platforms.
-                            </p>
-
-                            <h2>Termination</h2>
-
-                            <p>
-                                We reserve the right to terminate accounts for
-                                any violations of these Terms of Service.
-                            </p>
-
-                            <h2>Contact Information</h2>
-
-                            <p>
-                                For any inquiries or concerns about these Terms
-                                of Service, please contact us:
-                            </p>
-                            <ul class="bulleted-list">
-                                <li>
-                                    Twitter: <a
-                                        href="https://twitter.com/<twitter_handle>"
-                                        >@<twitter_handle></twitter_handle></a
-                                    >
-                                </li>
-                                <li>
-                                    Email: <a
-                                        href="mailto:geometrydash.place@gmail.com"
-                                        >geometrydash.place@gmail.com</a
-                                    >
-                                </li>
-                            </ul>
-
-                            <h2>Acceptance of Privacy Policy</h2>
-
-                            <p>
-                                Our Privacy Policy is presented as a popup on
-                                our website. By using our platform, you agree to
-                                our Privacy Policy.
-                            </p>
-                        </section>
-                    </FadedScroll>
-                    <div class="flex w-full gap-4">
+                <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
+                    Login or Sign Up
+                </h1>
+                <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
+                    <li class="h-full aspect-square max-w-max">
                         <Button
-                            class="w-full h-full"
-                            type="decline"
-                            disabled={!hasScrolledToBottomOfTos}
-                            on:click={() => {
-                                currentPage = Page.LOGIN_METHOD;
-                                $openMenu = null;
-                            }}
+                            type="white"
+                            class="flex-col w-full h-full p-2"
+                            aria-label="Login with Twitter"
+                            on:click={() => signInWith(LoginMethod.Google)}
                         >
-                            <p class="xs:text-sm w-min">Disagree</p>
+                            <Image
+                                src="/assets/ui/login/google.svg"
+                                alt="Login with Google"
+                                class="flex-1 object-contain w-max"
+                            />
+                            <p>Google</p>
                         </Button>
+                    </li>
+                    <li class="h-full shadow-lg aspect-square max-w-max">
                         <Button
-                            class="w-full h-full"
-                            type="accept"
-                            disabled={!hasScrolledToBottomOfTos}
-                            on:click={() => {
-                                hasAgreedToTOS = true;
-                                currentPage = previousPage;
-                            }}
+                            type="white"
+                            class="flex-col w-full h-full p-2"
+                            aria-label="Login with GitHub"
+                            on:click={() => signInWith(LoginMethod.GitHub)}
                         >
-                            <p class="xs:text-sm w-min">Agree</p>
+                            <Image
+                                src="/assets/ui/login/github.svg"
+                                alt="Login with GitHub"
+                                class="flex-1 object-contain w-max"
+                            />
+                            <p>GitHub</p>
                         </Button>
-                    </div>
-                </div>
-                <div
-                    class="login-page w-[450px] flex-col items-center justify-between p-6 text-center xs:p-4"
-                    style:display={currentPage == Page.CREATE_USER
-                        ? "flex"
-                        : "none"}
-                >
-                    <!-- CREATE USER -->
-                    <!-- {:else if currentPage == Page.CREATE_USER} -->
-
-                    <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
-                        Enter a Username
-                    </h1>
-                    <div class="flex-col gap-2 flex-center">
-                        <div class="w-full gap-2 flex-center">
-                            {#if isValidUsername}
-                                <Check
-                                    class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
-                                />
-                            {:else}
-                                <Cross
-                                    class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
-                                />
-                            {/if}
-                            <form
-                                class="w-full"
-                                id="username-form"
-                                on:submit={e => e.preventDefault()}
-                            >
-                                <Input
-                                    class="p-2 w-[inherit] text-2xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
-                                    maxLength={16}
-                                    hardValidInput={VALID_USERNAME_CHARS}
-                                    autoTrim
-                                    bind:value={userName}
-                                />
-                            </form>
-                        </div>
-                        <p
-                            class="text-xs transition duration-500 text-white/50 hover:text-white"
+                    </li>
+                    <li class="h-full aspect-square max-w-max">
+                        <Button
+                            type="white"
+                            class="flex-col w-full h-full p-2"
+                            on:click={() => signInWith(LoginMethod.X)}
                         >
-                            Usernames can only be 3 to 16 characters in length,
-                            and only contain alphanumeric characters, - and _.
-                            Usernames are case insensitive.
-                        </p>
-                    </div>
-                    <!-- <div id="cf-turnstile" bind:this={cfTurnstile}></div> -->
-                    <Turnstile
-                        siteKey={SITE_KEY}
-                        bind:reset={turnstileReset}
-                        on:turnstile-callback={e =>
-                            (turnstileToken = e.detail.token)}
-                        on:turnstile-error={e =>
-                            Toast.showErrorToast(
-                                `There was an error with the Turnstile. (${e})`
-                            )}
-                        on:turnstile-expired={() =>
-                            turnstileReset && turnstileReset()}
-                    />
-                    <div class="w-full gap-2 flex-center">
-                        {#if hasAgreedToTOS}
-                            <Check
-                                class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
+                            <Image
+                                src="/assets/ui/login/{twitter
+                                    ? 'twitter'
+                                    : 'x'}.svg"
+                                alt="Login with X (Twitter)"
+                                class="flex-1 object-contain w-max"
                             />
-                        {:else}
-                            <Cross
-                                class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
-                            />
-                        {/if}
-                        <p class="text-md shrink-1 grow-0">
-                            I have read and agreed to the
-                            <button
-                                class="underline hover:decoration-dashed text-nowrap"
-                                aria-label="Terms of Service"
-                                on:click={() => {
-                                    previousPage = currentPage;
-                                    currentPage = Page.SHOW_TOS;
-                                }}
-                            >
-                                Terms of Service
-                            </button>
-                        </p>
-                    </div>
-                    <Button
-                        form="username-form"
-                        disabled={!hasAgreedToTOS ||
-                            !isValidUsername ||
-                            turnstileToken == null}
-                        class="w-full p-2 h-min"
-                        on:click={initNewUser}
-                        type="white"
-                    >
-                        <p class="text-lg xs:text-md">Submit</p>
-                    </Button>
-                </div>
-            </div>
-            <div class="flex items-center h-12 text-white xs:h-10 flex-center">
-                <div class="h-full">
+                            <p>{twitter ? "Twitter" : "X"}</p>
+                        </Button>
+                    </li>
+                </ul>
+                <p class="text-sm">
+                    Don't forget to the read the
                     <button
-                        disabled={!allowClose}
-                        class={cx({
-                            "flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200": true,
-                            "text-disabled-white pointer-events-none":
-                                !allowClose,
-                        })}
-                        aria-label="Close"
+                        class="underline hover:decoration-dashed"
+                        aria-label="Terms of Service"
                         on:click={() => {
-                            $openMenu = null;
+                            previousPage = currentPage;
+                            currentPage = Page.SHOW_TOS;
                         }}
                     >
-                        <Cross alt="Close" class="w-full h-full"></Cross>
+                        TOS
                     </button>
-                </div>
+                    !
+                </p>
             </div>
-            {#if isInProgress}
-                <Loading />
-            {/if}
         </div>
-    </section>
+        <!-- TERMS OF SERVICE -->
+        <div
+            class="login-page w-[600px] sm:w-[450px] p-6 xs:p-4 flex flex-col gap-4"
+            style:display={currentPage == Page.SHOW_TOS ? "flex" : "none"}
+        >
+            <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
+                <section>
+                    <h1><u><strong>Terms of Service</strong></u></h1>
 
-    <div
-        tabindex="-1"
-        class="absolute z-30 w-full h-full backdrop-blur-lg brightness-30"
-    ></div>
-{/if}
+                    <h2>Notice</h2>
+
+                    <p>
+                        Welcome to GD Place! By accessing or using our platform,
+                        you agree to be bound by these Terms of Service. Please
+                        read them carefully before proceeding.
+                    </p>
+
+                    <h2>User Conduct</h2>
+
+                    <ul class="bulleted-list">
+                        <li>
+                            <strong>Inappropriate Usernames:</strong> Users must
+                            not use inappropriate or offensive usernames when registering
+                            or using our platform.
+                        </li>
+                        <li>
+                            <strong>Prohibited Activities:</strong> Botting or the
+                            use of alternate accounts (alt accounts) is strictly
+                            prohibited. Any violations may result in the termination
+                            of your account.
+                        </li>
+                    </ul>
+
+                    <h2>Reporting Violations</h2>
+
+                    <p>
+                        Users who notice rule violations are encouraged to
+                        report them. You can report violations within the app or
+                        by contacting us via our contact information provided
+                        below.
+                    </p>
+
+                    <h2>Account Registration</h2>
+
+                    <p>
+                        Users can sign up using one of three external platforms.
+                        By signing up, users also agree to the Terms of Service
+                        of those platforms.
+                    </p>
+
+                    <h2>Ownership of User Content</h2>
+
+                    <p>
+                        By using our platform, you grant us (the creators)
+                        permission to use any content created by you on the site
+                        without requiring explicit permission.
+                    </p>
+
+                    <h2>External Services</h2>
+
+                    <p>
+                        Donations and merchandise are handled by external sites.
+                        We are not responsible for transactions made on these
+                        external platforms.
+                    </p>
+
+                    <h2>Termination</h2>
+
+                    <p>
+                        We reserve the right to terminate accounts for any
+                        violations of these Terms of Service.
+                    </p>
+
+                    <h2>Contact Information</h2>
+
+                    <p>
+                        For any inquiries or concerns about these Terms of
+                        Service, please contact us:
+                    </p>
+                    <ul class="bulleted-list">
+                        <li>
+                            Twitter: <a
+                                href="https://twitter.com/<twitter_handle>"
+                                >@<twitter_handle></twitter_handle></a
+                            >
+                        </li>
+                        <li>
+                            Email: <a href="mailto:geometrydash.place@gmail.com"
+                                >geometrydash.place@gmail.com</a
+                            >
+                        </li>
+                    </ul>
+
+                    <h2>Acceptance of Privacy Policy</h2>
+
+                    <p>
+                        Our Privacy Policy is presented as a popup on our
+                        website. By using our platform, you agree to our Privacy
+                        Policy.
+                    </p>
+                </section>
+            </FadedScroll>
+            <div class="flex w-full gap-4">
+                <Button
+                    class="w-full h-full"
+                    type="decline"
+                    disabled={!hasScrolledToBottomOfTos}
+                    on:click={() => {
+                        currentPage = Page.LOGIN_METHOD;
+                        $openMenu = null;
+                    }}
+                >
+                    <p class="xs:text-sm w-min">Disagree</p>
+                </Button>
+                <Button
+                    class="w-full h-full"
+                    type="accept"
+                    disabled={!hasScrolledToBottomOfTos}
+                    on:click={() => {
+                        hasAgreedToTOS = true;
+                        currentPage = previousPage;
+                    }}
+                >
+                    <p class="xs:text-sm w-min">Agree</p>
+                </Button>
+            </div>
+        </div>
+        <div
+            class="login-page w-[450px] flex-col items-center justify-between p-6 text-center xs:p-4"
+            style:display={currentPage == Page.CREATE_USER ? "flex" : "none"}
+        >
+            <!-- CREATE USER -->
+            <!-- {:else if currentPage == Page.CREATE_USER} -->
+
+            <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
+                Enter a Username
+            </h1>
+            <div class="flex-col gap-2 flex-center">
+                <div class="w-full gap-2 flex-center">
+                    {#if isValidUsername}
+                        <Check
+                            class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
+                        />
+                    {:else}
+                        <Cross
+                            class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
+                        />
+                    {/if}
+                    <form
+                        class="w-full"
+                        id="username-form"
+                        on:submit={e => e.preventDefault()}
+                    >
+                        <Input
+                            class="p-2 w-[inherit] text-2xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+                            maxLength={16}
+                            hardValidInput={VALID_USERNAME_CHARS}
+                            autoTrim
+                            bind:value={userName}
+                        />
+                    </form>
+                </div>
+                <p
+                    class="text-xs transition duration-500 text-white/50 hover:text-white"
+                >
+                    Usernames can only be 3 to 16 characters in length, and only
+                    contain alphanumeric characters, - and _. Usernames are case
+                    insensitive.
+                </p>
+            </div>
+            <!-- <div id="cf-turnstile" bind:this={cfTurnstile}></div> -->
+            <Turnstile
+                siteKey={SITE_KEY}
+                bind:reset={turnstileReset}
+                on:turnstile-callback={e => (turnstileToken = e.detail.token)}
+                on:turnstile-error={e =>
+                    Toast.showErrorToast(
+                        `There was an error with the Turnstile. (${e})`
+                    )}
+                on:turnstile-expired={() => turnstileReset && turnstileReset()}
+            />
+            <div class="w-full gap-2 flex-center">
+                {#if hasAgreedToTOS}
+                    <Check class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto" />
+                {:else}
+                    <Cross class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto" />
+                {/if}
+                <p class="text-md shrink-1 grow-0">
+                    I have read and agreed to the
+                    <button
+                        class="underline hover:decoration-dashed text-nowrap"
+                        aria-label="Terms of Service"
+                        on:click={() => {
+                            previousPage = currentPage;
+                            currentPage = Page.SHOW_TOS;
+                        }}
+                    >
+                        Terms of Service
+                    </button>
+                </p>
+            </div>
+            <Button
+                form="username-form"
+                disabled={!hasAgreedToTOS ||
+                    !isValidUsername ||
+                    turnstileToken == null}
+                class="w-full p-2 h-min"
+                on:click={initNewUser}
+                type="white"
+            >
+                <p class="text-lg xs:text-md">Submit</p>
+            </Button>
+        </div>
+        {#if isInProgress}
+            <Loading class="rounded-xl" />
+        {/if}
+    </div>
+    <div class="flex items-center h-12 text-white xs:h-10 flex-center">
+        <div class="h-full">
+            <button
+                disabled={!allowClose}
+                class={cx({
+                    "flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200": true,
+                    "text-disabled-white pointer-events-none": !allowClose,
+                })}
+                aria-label="Close"
+                on:click={() => {
+                    $openMenu = null;
+                }}
+            >
+                <Cross alt="Close" class="w-full h-full"></Cross>
+            </button>
+        </div>
+    </div>
+</dialog>
 
 <style lang="postcss">
     .login-page {
-        @apply col-start-1 row-start-1 aspect-square overflow-hidden rounded-lg bg-menu-gray/90 shadow-lg shadow-black/40 backdrop-blur-md xs:h-96 xs:w-80;
+        @apply aspect-square overflow-hidden xs:h-96 xs:w-80;
     }
 </style>

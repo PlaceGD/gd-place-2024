@@ -1,6 +1,14 @@
 export type ChunkID = `${number},${number}`;
 export type ObjKey = string;
 
+export type UserData = {
+    username: string;
+    epochNextPlace: number;
+    epochNextDelete: number;
+    epochNextReport: number;
+    moderator: boolean;
+};
+
 export interface DatabaseSchema {
     objects: Record<ChunkID, Record<ObjKey, string>>;
 
@@ -16,17 +24,7 @@ export interface DatabaseSchema {
     >;
     bannedUsers: Record<string, number>;
     userCount: number;
-    userData: Record<
-        string,
-        {
-            epochNextReport: number;
-            epochNextDelete: number;
-            epochNextPlace: number;
-            username: string;
-            nameColor?: string;
-            moderator: boolean;
-        }
-    >;
+    userData: Record<string, UserData>;
 
     userName: Record<string, { uid: string }>;
 

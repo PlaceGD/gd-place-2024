@@ -16,6 +16,8 @@
     import Toast from "../utils/toast";
     import { loginData } from "../stores";
     import GradientPicker from "../components/GradientPicker.svelte";
+    import Button from "../components/Button.svelte";
+    import { complement } from "../utils/gradient";
 
     let modal: HTMLDialogElement;
 
@@ -26,7 +28,7 @@
 
     let isInProgress = false;
 
-    let currentPage = Page.SELECT_GRADIENT; //SUBMIT_TX_ID
+    let currentPage: Page = Page.SELECT_GRADIENT; //SUBMIT_TX_ID
 
     // $: currentPage =
     //     $loginData.currentUserData?.placeData?.hasDonated != null
@@ -80,23 +82,29 @@
 >
     <ToastContainer />
 
-    <div class="h-full menu-panel xs:h-96 xs:w-80 w-[450px]">
+    <div
+        class={cx({
+            "menu-panel xs:h-96 xs:w-80 w-[450px]": true,
+            "h-96": currentPage === Page.SUBMIT_TX_ID,
+            "h-[500px]": currentPage === Page.SELECT_GRADIENT,
+        })}
+    >
         {#if currentPage === Page.SUBMIT_TX_ID}
             <div
                 class="grid grid-rows-[min-content_1fr] items-start h-full p-6 xs:p-4"
             >
-                <hgroup class="flex gap-1 items-center justify-center flex-col">
+                <hgroup class="flex flex-col items-center justify-center gap-1">
                     <h1
-                        class="text-2xl xs:text-xl font-pusab text-stroke text-center"
+                        class="text-2xl text-center xs:text-xl font-pusab text-stroke"
                     >
                         Enter Kofi Transaction ID
                     </h1>
-                    <p class="text-center text-sm xs:text-xs text-white/55">
+                    <p class="text-sm text-center xs:text-xs text-white/55">
                         EX.: <wbr />00000000-1111-2222-3333-444444444444
                     </p>
                     <!-- TODO: add turnstile + cooldown? -->
                 </hgroup>
-                <div class="flex-col gap-2 flex-center h-full">
+                <div class="flex-col h-full gap-2 flex-center">
                     <div class="w-full gap-2 flex-center">
                         {#if isValidKofiTxId}
                             <Check
@@ -135,17 +143,17 @@
             </div>
         {:else if currentPage === Page.SELECT_GRADIENT}
             <div
-                class="grid grid-rows-[min-content_1fr] items-start h-full p-6 xs:p-4"
+                class="grid items-start h-full gap-2 px-6 py-4 select-gradient xs:p-4"
             >
-                <hgroup class="flex gap-1 items-center justify-center flex-col">
+                <hgroup class="flex flex-col items-center justify-center gap-1">
                     <h1
-                        class="text-3xl xs:text-2xl font-pusab text-stroke text-center"
+                        class="text-3xl text-center xs:text-2xl font-pusab text-stroke"
                     >
                         Select Name Color
                     </h1>
                 </hgroup>
                 <div
-                    class="flex items-center justify-center z-30 text-2xl text-white font-pusab"
+                    class="z-30 flex self-center w-full gap-2 p-1 overflow-scroll text-2xl text-white font-pusab usernames"
                 >
                     <p
                         class="username-gradient w-min"
@@ -155,20 +163,31 @@
                     >
                         {$loginData.currentUserData?.placeData?.username ?? ""}
                     </p>
+                    <p
+                        class="username-gradient w-min font-pusab"
+                        style={`
+                        background-image: ${nameGradientString};
+                    `}
+                    >
+                        {$loginData.currentUserData?.placeData?.username ?? ""}
+                    </p>
                 </div>
-                <div class="flex-col gap-2 flex-center h-full p-4">
+                <div class="flex-col h-full gap-2 px-4 py-1">
                     <GradientPicker
-                        maxStops={4}
+                        maxStops={5}
                         bind:gradientString={nameGradientString}
                     ></GradientPicker>
                 </div>
+                <Button class="w-full p-2 h-min" type="white">
+                    <p class="text-lg xs:text-base">Submit</p>
+                </Button>
             </div>
         {/if}
         {#if isInProgress}
-            <Loading class="rounded-xl top-0" />
+            <Loading class="top-0 rounded-xl" />
         {/if}
     </div>
-    <div class="flex items-center h-12 text-white xs:h-10 flex-center">
+    <div class="flex items-center h-12 text-white xs:h-10 flex-center -z-10">
         <div class="h-full">
             <button
                 disabled={!allowClose}
@@ -188,6 +207,31 @@
 </dialog>
 
 <style lang="postcss">
+    .select-gradient {
+        grid-template-rows: min-content min-content minmax(0, 1fr);
+    }
+
+    .usernames {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 20%,
+            black 80%,
+            transparent
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent,
+            black 20%,
+            black 80%,
+            transparent
+        );
+    }
+    .usernames::before,
+    .usernames::after {
+        content: "";
+    }
+
     .username-gradient {
         -webkit-text-fill-color: rgba(255, 255, 255, 0.1) !important;
         background-clip: text !important;

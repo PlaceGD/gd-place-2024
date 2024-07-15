@@ -10,7 +10,7 @@
     export let tabIndex: number = 0;
     export let autoTrim: boolean = false;
 
-    export let value: string = defaultValue;
+    export let value: any = defaultValue;
 
     let innerValue = value;
     $: innerValue = value;

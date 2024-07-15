@@ -28,7 +28,7 @@
 
     let isInProgress = false;
 
-    let currentPage: Page = Page.SELECT_GRADIENT; //SUBMIT_TX_ID
+    let currentPage: Page = Page.SUBMIT_TX_ID; //SUBMIT_TX_ID
 
     // $: currentPage =
     //     $loginData.currentUserData?.placeData?.hasDonated != null
@@ -153,7 +153,7 @@
                     </h1>
                 </hgroup>
                 <div
-                    class="z-30 flex self-center w-full gap-2 p-1 overflow-scroll text-2xl text-white font-pusab usernames"
+                    class="z-30 flex self-center w-full gap-2 p-1 overflow-x-scroll text-2xl text-white font-pusab usernames thin-scrollbar"
                 >
                     <p
                         class="username-gradient w-min"
@@ -175,7 +175,7 @@
                 <div class="flex-col h-full gap-2 px-4 py-1">
                     <GradientPicker
                         maxStops={5}
-                        bind:gradientString={nameGradientString}
+                        bind:rotatedGradientString={nameGradientString}
                     ></GradientPicker>
                 </div>
                 <Button class="w-full p-2 h-min" type="white">

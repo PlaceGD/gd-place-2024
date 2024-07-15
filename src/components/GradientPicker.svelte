@@ -4,60 +4,39 @@
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
     import Input from "./Input.svelte";
     import Button from "./Button.svelte";
+    import { clamp, remEuclid } from "shared-lib/util";
 
     function random(min: number, max: number) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    export let maxStops: number = 10;
+    export let maxStops: number;
 
-    export let gradientString = "";
+    let rotateKnob: HTMLDivElement;
+    let gradientAngle = 90;
+    let isRotating = false;
+
+    let sliderContainer: HTMLDivElement;
+
+    let gradientPositions = [10, 20, 30];
+    let gradientColors = ["#ff0000", "#00ff00", "#0000ff"];
+
+    // $: {
+    //     gradientPositions = gradientPositions.sort((a, b) => a - b);
+    // }
+
+    $: gradientColorListString = gradientPositions
+        .map((pos, idx) => [pos, gradientColors[idx]] as [number, string])
+        .sort(([a], [b]) => a - b)
+        .map(([pos, color]) => `${color} ${pos}%`)
+        .join(", ");
+
+    export let rotatedGradientString;
+    // $: gradientString = `linear-gradient(${gradientAngle}deg, ${gradientPositions.map((pos, idx) => `${gradientColors[idx]} ${pos}%`).join(", ")})`;
+    $: rotatedGradientString = `linear-gradient(${gradientAngle}deg, ${gradientColorListString})`;
+    $: previewGradientString = `linear-gradient(90deg, ${gradientColorListString})`;
 
     let clickedNub = false;
-
-    let rawValues: number[] = new Array(maxStops)
-        .fill(0)
-        .map((_, i) => (i / (maxStops - 1)) * 100);
-
-    export let pickerValues = rawValues.map(() => ({
-        r: random(0, 255),
-        g: random(0, 255),
-        b: random(0, 255),
-        a: 1,
-    }));
-
-    let currentStops = rawValues.map((v, i) => ({
-        position: v,
-        rgb: pickerValues[i],
-    }));
-
-    let userInput = new Array(maxStops)
-        .fill("")
-        .map((_, i) => `${Math.round(rawValues[i])}`);
-
-    let gradientAngle = 90;
-    let gradientAngleString = gradientAngle.toString();
-    $: gradientAngleString = Math.round(gradientAngle).toString();
-
-    let isRotating: { rect: DOMRect } | null = null;
-
-    $: {
-        userInput.forEach((v, i) => {
-            let vn = parseInt(v);
-
-            vn = isNaN(vn) ? 0 : vn;
-
-            rawValues[i] = vn;
-            currentStops[i] = {
-                ...currentStops[i],
-                position: vn,
-            };
-        });
-
-        currentStops = currentStops.sort((a, b) => a.position - b.position);
-
-        gradientString = `linear-gradient(${gradientAngle}deg, ${currentStops.map(c => `rgba(${c.rgb?.r ?? 0},${c.rgb?.g ?? 0},${c.rgb?.b ?? 0},1) ${c.position ?? 0}%`)})`;
-    }
 
     const handlePointerDown = (
         e: PointerEvent & { currentTarget: EventTarget & HTMLDivElement }
@@ -66,18 +45,29 @@
             clickedNub = true;
         }
     };
+
+    /*
+    
+        on:pointerdown={handlePointerDown}
+        on:pointerup={e => {
+            if (clickedNub) {
+                clickedNub = false;
+                return;
+            }
+
+            console.log("ADD STOP", e);
+        }}
+    */
 </script>
 
 <svelte:window
     on:pointerup={() => {
-        if (isRotating != null) {
-            isRotating = null;
-        }
+        isRotating = false;
     }}
     on:pointermove={e => {
-        if (isRotating == null) return;
+        if (!isRotating) return;
 
-        const rect = isRotating.rect;
+        const rect = rotateKnob.getBoundingClientRect();
 
         // Calculate the center of the circle
         const centerX = rect.left + rect.width / 2;
@@ -90,20 +80,17 @@
         const deltaX = mouseX - centerX;
         const deltaY = mouseY - centerY;
 
-        let angle = (Math.atan2(deltaY, deltaX) * 180) / Math.PI;
+        let angle =
+            ((Math.atan2(deltaY, deltaX) + Math.PI / 2) * 180) / Math.PI;
 
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        gradientAngle = angle;
+        gradientAngle = Math.round(remEuclid(angle, 360));
     }}
 />
 
 <div class="grid w-full h-full pointer-events-auto">
     <div
         class="h-16 min-h-0 cursor-copy"
-        style={`--bg: ${gradientString}`}
+        style={`--bg: ${previewGradientString}`}
         on:pointerdown={handlePointerDown}
         on:pointerup={e => {
             if (clickedNub) {
@@ -111,12 +98,24 @@
                 return;
             }
 
-            console.log("ADD STOP", e);
+            if (gradientPositions.length > maxStops - 1) return;
+
+            let rect = sliderContainer.getBoundingClientRect();
+            let p = Math.round(
+                clamp(((e.clientX - rect.left) / rect.width) * 100, 0, 100)
+            );
+
+            gradientPositions.push(p);
+            gradientColors.push("#ffffff");
+
+            gradientPositions = gradientPositions;
+            gradientColors = gradientColors;
         }}
+        bind:this={sliderContainer}
     >
         <RangeSlider
-            bind:values={rawValues}
             id="gradient-slider"
+            bind:values={gradientPositions}
             springValues={{ stiffness: 1, damping: 1 }}
             step={1}
             min={0}
@@ -133,11 +132,10 @@
         <div class="flex flex-col items-center justify-center gap-2 pr-4">
             <div
                 class="relative flex flex-center"
-                on:pointerdown={e => {
-                    isRotating = {
-                        rect: e.currentTarget.getBoundingClientRect(),
-                    };
+                on:pointerdown={() => {
+                    isRotating = true;
                 }}
+                bind:this={rotateKnob}
             >
                 <div
                     class="box-content flex w-10 border-2 border-white rounded-full cursor-pointer aspect-square flex-center"
@@ -147,7 +145,7 @@
                         style:transform={`rotate(${gradientAngle}deg)`}
                     >
                         <span
-                            class="absolute w-2 bg-white rounded-full top-2 aspect-square"
+                            class="absolute w-2 bg-white rounded-full top-1 aspect-square"
                         ></span>
                     </div>
                 </div>
@@ -162,18 +160,22 @@
             </div>
             <Input
                 maxLength={3}
-                bind:value={gradientAngleString}
+                bind:value={gradientAngle}
                 class="p-2 text-center rounded-lg outline-none w-14 text-stroke bg-black/40 outline-2 outline outline-white/20 -outline-offset-2"
             />
         </div>
-        <ul class="overflow-scroll rounded-lg alternating-bg stop-list">
-            {#each currentStops as stop, i}
+        <ul
+            class="overflow-y-scroll rounded-lg alternating-bg stop-list thin-scrollbar"
+        >
+            {#each gradientPositions
+                .map((pos, idx) => [pos, idx])
+                .sort(([a], [b]) => a - b) as [pos, idx]}
                 <li class="grid grid-cols-3">
                     <div
                         class="flex items-center justify-center flex-auto p-1 gradient-picker-color"
                     >
                         <ColorPicker
-                            bind:rgb={stop.rgb}
+                            bind:hex={gradientColors[idx]}
                             label=""
                             isAlpha={false}
                             components={{ wrapper: ColorPickerWrapper }}
@@ -183,13 +185,23 @@
                     <div class="flex items-center justify-center flex-auto p-1">
                         <Input
                             maxLength={3}
-                            bind:value={userInput[i]}
+                            bind:value={gradientPositions[idx]}
                             class="w-full p-2 text-center rounded-lg outline-none text-stroke bg-black/40 outline outline-white/20 -outline-offset-2"
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">
-                        <Button type="decline" class="w-8 aspect-square"
-                        ></Button>
+                        <Button
+                            type="decline"
+                            class="w-8 aspect-square"
+                            on:click={() => {
+                                if (gradientPositions.length <= 2) return;
+
+                                gradientPositions.splice(idx, 1);
+                                gradientColors.splice(idx, 1);
+                                gradientPositions = gradientPositions;
+                                gradientColors = gradientColors;
+                            }}
+                        />
                     </div>
                 </li>
             {/each}
@@ -220,7 +232,7 @@
     }
 
     :global(#gradient-slider .rangeNub) {
-        @apply rounded-md bg-transparent outline outline-4 outline-white ring-2 ring-black ring-offset-4;
+        @apply cursor-move rounded-md bg-transparent outline outline-4 outline-white ring-2 ring-black ring-offset-4;
     }
 
     :global(#gradient-slider .rangeFloat) {

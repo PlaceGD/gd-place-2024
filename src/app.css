@@ -128,6 +128,9 @@ dialog::backdrop {
         @apply absolute -translate-x-1/2 -translate-y-1/2;
     }
 
+    .alternating-bg {
+        @apply bg-black/10;
+    }
     .alternating-bg > * {
         @apply odd:bg-black/25 even:bg-white/5;
     }

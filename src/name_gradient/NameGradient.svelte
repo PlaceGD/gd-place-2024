@@ -28,7 +28,7 @@
 
     let isInProgress = false;
 
-    let currentPage: Page = Page.SUBMIT_TX_ID; //SUBMIT_TX_ID
+    let currentPage: Page = Page.SELECT_GRADIENT; //SUBMIT_TX_ID
 
     // $: currentPage =
     //     $loginData.currentUserData?.placeData?.hasDonated != null
@@ -143,7 +143,7 @@
             </div>
         {:else if currentPage === Page.SELECT_GRADIENT}
             <div
-                class="grid items-start h-full gap-2 px-6 py-4 select-gradient xs:p-4"
+                class="grid items-start h-full gap-2 px-6 py-4 select-gradient xs:p-2"
             >
                 <hgroup class="flex flex-col items-center justify-center gap-1">
                     <h1
@@ -156,18 +156,18 @@
                     class="z-30 flex self-center w-full gap-2 p-1 overflow-x-scroll text-2xl text-white font-pusab usernames thin-scrollbar"
                 >
                     <p
-                        class="username-gradient w-min"
+                        class="m-auto username-gradient w-min"
                         style={`
-                        background-image: ${nameGradientString};
-                    `}
+                            background-image: ${nameGradientString};
+                        `}
                     >
                         {$loginData.currentUserData?.placeData?.username ?? ""}
                     </p>
                     <p
-                        class="username-gradient w-min font-pusab"
+                        class="m-auto username-gradient w-min font-pusab"
                         style={`
-                        background-image: ${nameGradientString};
-                    `}
+                            background-image: ${nameGradientString};
+                        `}
                     >
                         {$loginData.currentUserData?.placeData?.username ?? ""}
                     </p>
@@ -179,7 +179,7 @@
                     ></GradientPicker>
                 </div>
                 <Button class="w-full p-2 h-min" type="white">
-                    <p class="text-lg xs:text-base">Submit</p>
+                    <p class="text-lg xs:text-base">Update</p>
                 </Button>
             </div>
         {/if}

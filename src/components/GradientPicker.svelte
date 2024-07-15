@@ -6,10 +6,6 @@
     import Button from "./Button.svelte";
     import { clamp, remEuclid } from "shared-lib/util";
 
-    function random(min: number, max: number) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
     export let maxStops: number;
 
     let rotateKnob: HTMLDivElement;
@@ -18,12 +14,8 @@
 
     let sliderContainer: HTMLDivElement;
 
-    let gradientPositions = [10, 20, 30];
+    let gradientPositions = [0, 50, 100];
     let gradientColors = ["#ff0000", "#00ff00", "#0000ff"];
-
-    // $: {
-    //     gradientPositions = gradientPositions.sort((a, b) => a - b);
-    // }
 
     $: gradientColorListString = gradientPositions
         .map((pos, idx) => [pos, gradientColors[idx]] as [number, string])
@@ -32,7 +24,6 @@
         .join(", ");
 
     export let rotatedGradientString;
-    // $: gradientString = `linear-gradient(${gradientAngle}deg, ${gradientPositions.map((pos, idx) => `${gradientColors[idx]} ${pos}%`).join(", ")})`;
     $: rotatedGradientString = `linear-gradient(${gradientAngle}deg, ${gradientColorListString})`;
     $: previewGradientString = `linear-gradient(90deg, ${gradientColorListString})`;
 
@@ -41,23 +32,14 @@
     const handlePointerDown = (
         e: PointerEvent & { currentTarget: EventTarget & HTMLDivElement }
     ) => {
-        if ((e.target as HTMLElement | null)?.classList.contains("rangeNub")) {
+        const target = e.target as HTMLElement | null;
+        if (
+            target?.classList.contains("rangeNub") ||
+            target?.classList.contains("rangeFloat")
+        ) {
             clickedNub = true;
         }
     };
-
-    /*
-    
-        on:pointerdown={handlePointerDown}
-        on:pointerup={e => {
-            if (clickedNub) {
-                clickedNub = false;
-                return;
-            }
-
-            console.log("ADD STOP", e);
-        }}
-    */
 </script>
 
 <svelte:window
@@ -87,9 +69,9 @@
     }}
 />
 
-<div class="grid w-full h-full pointer-events-auto">
+<div class="grid w-full h-full pointer-events-auto gradient-picker">
     <div
-        class="h-16 min-h-0 cursor-copy"
+        class="h-16 min-h-0 mb-16 xs:h-14 cursor-copy xs:mb-14"
         style={`--bg: ${previewGradientString}`}
         on:pointerdown={handlePointerDown}
         on:pointerup={e => {
@@ -128,7 +110,7 @@
         <div id="color-picker-portal" />
     </div>
 
-    <div class="flex w-full min-h-0 mt-16 overflow-hidden">
+    <div class="flex w-full h-full min-h-0 overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-2 pr-4">
             <div
                 class="relative flex flex-center"
@@ -138,7 +120,7 @@
                 bind:this={rotateKnob}
             >
                 <div
-                    class="box-content flex w-10 border-2 border-white rounded-full cursor-pointer aspect-square flex-center"
+                    class="box-content flex w-10 border-2 border-white rounded-full cursor-pointer xs:w-9 aspect-square flex-center"
                 >
                     <div
                         class="relative w-2 h-full"
@@ -161,7 +143,7 @@
             <Input
                 maxLength={3}
                 bind:value={gradientAngle}
-                class="p-2 text-center rounded-lg outline-none w-14 text-stroke bg-black/40 outline-2 outline outline-white/20 -outline-offset-2"
+                class="p-2 text-base text-center rounded-lg outline-none xs:p-1 w-14 text-stroke bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 xs:text-sm"
             />
         </div>
         <ul
@@ -186,7 +168,7 @@
                         <Input
                             maxLength={3}
                             bind:value={gradientPositions[idx]}
-                            class="w-full p-2 text-center rounded-lg outline-none text-stroke bg-black/40 outline outline-white/20 -outline-offset-2"
+                            class="w-full p-2 text-base text-center rounded-lg outline-none xs:p-1 text-stroke bg-black/40 outline outline-white/20 -outline-offset-2 xs:text-sm"
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">
@@ -210,6 +192,10 @@
 </div>
 
 <style lang="postcss">
+    .gradient-picker {
+        grid-template-rows: min-content 1fr;
+    }
+
     .dark {
         --cp-bg-color: #333;
         --cp-border-color: white;
@@ -232,11 +218,17 @@
     }
 
     :global(#gradient-slider .rangeNub) {
-        @apply cursor-move rounded-md bg-transparent outline outline-4 outline-white ring-2 ring-black ring-offset-4;
+        @apply relative cursor-move  rounded-md bg-transparent;
+    }
+
+    :global(#gradient-slider .rangeNub::before) {
+        content: "";
+        height: calc(100% + 8px);
+        @apply absolute bottom-1/2 right-1/2 w-full translate-x-1/2 translate-y-1/2 rounded-full border-4 border-white bg-transparent p-1 outline outline-2 outline-black;
     }
 
     :global(#gradient-slider .rangeFloat) {
-        @apply pointer-events-auto top-full mt-4 h-8 w-12 -translate-x-1/2 translate-y-0 rounded-md border-2 border-white bg-black text-white opacity-100 transition-none;
+        @apply pointer-events-auto top-full mt-3 flex h-7 w-11 -translate-x-1/2 translate-y-0 cursor-move items-center justify-center rounded-md border-2 border-white bg-black text-base text-white opacity-100 transition-none xs:text-sm;
     }
 
     .gradient-picker-color :global(.container) :global(.alpha) {

@@ -6,18 +6,24 @@
     import OnceButton from "../components/OnceButton.svelte";
     import Loading from "../components/Loading.svelte";
     import {
+        MAX_GRADIENT_STOPS,
         VALID_KOFI_TRANSACTION_ID,
         VALID_KOFI_TRANSACTION_ID_CHARS,
         type KofiTxId,
     } from "shared-lib/kofi";
     import Cross from "../icons/cross.svg";
     import Check from "../icons/check.svg";
-    import { submitKofiTxId } from "../firebase/cloud_functions";
+    import {
+        changeNameGradient,
+        submitKofiTxId,
+    } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
-    import { loginData } from "../stores";
+    import { currentNameGradient, loginData } from "../stores";
     import GradientPicker from "../components/GradientPicker.svelte";
     import Button from "../components/Button.svelte";
     import { complement } from "../utils/gradient";
+    import { SyncedCooldown } from "../utils/cooldown";
+    import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
 
     let modal: HTMLDialogElement;
 
@@ -43,15 +49,24 @@
     $: isValidKofiTxId = VALID_KOFI_TRANSACTION_ID.test(kofiTxId);
 
     let nameGradientString: string;
+    let nameGradientStops: number[] = $currentNameGradient.positions ?? [
+        0, 50, 100,
+    ];
+    let nameGradientColors: string[] = $currentNameGradient.colors ?? [
+        "#ff0000",
+        "#00ff00",
+        "#0000ff",
+    ];
 
     let resetSubmitButton: () => void;
+    let resetGradientButton: () => void;
 
     // temporary
     onMount(() => {
         modal?.showModal();
     });
 
-    const submit = async () => {
+    const onSubmitTxId = async () => {
         isInProgress = true;
 
         try {
@@ -72,6 +87,38 @@
         isInProgress = false;
 
         resetSubmitButton();
+    };
+
+    const gradientCooldown = new SyncedCooldown(
+        `userData/${$loginData.currentUserData?.userData?.uid ?? ""}`,
+        "epochNextGradient",
+        GRADIENT_COOLDOWN_SECONDS
+    );
+    let {
+        display: gradientCooldownDisplay,
+        finished: gradientCooldownFinished,
+    } = gradientCooldown;
+
+    const onUpdateGradient = async () => {
+        try {
+            await changeNameGradient({
+                grad: nameGradientString,
+            });
+
+            $currentNameGradient.positions = nameGradientStops;
+            $currentNameGradient.colors = nameGradientColors;
+
+            gradientCooldown.start();
+
+            Toast.showSuccessToast("Successfully updated gradient!");
+        } catch (e) {
+            console.error(`Failed to update gradient: ${e}`);
+            Toast.showErrorToast(
+                "There was an updating your gradient. Please try again."
+            );
+        }
+
+        resetGradientButton();
     };
 </script>
 
@@ -135,7 +182,7 @@
                     disabled={!isValidKofiTxId}
                     class="w-full p-2 h-min"
                     type="white"
-                    on:click={submit}
+                    on:click={onSubmitTxId}
                     bind:reset={resetSubmitButton}
                 >
                     <p class="text-lg xs:text-base">Submit</p>
@@ -174,13 +221,29 @@
                 </div>
                 <div class="flex-col h-full gap-2 px-4 py-1">
                     <GradientPicker
-                        maxStops={5}
+                        maxStops={MAX_GRADIENT_STOPS}
                         bind:rotatedGradientString={nameGradientString}
+                        bind:gradientStops={nameGradientStops}
+                        bind:gradientColors={nameGradientColors}
                     ></GradientPicker>
                 </div>
-                <Button class="w-full p-2 h-min" type="white">
+                <OnceButton
+                    class="w-full p-2 h-min"
+                    type="white"
+                    disabled={!$gradientCooldownFinished}
+                    on:click={onUpdateGradient}
+                    bind:reset={resetGradientButton}
+                >
                     <p class="text-lg xs:text-base">Update</p>
-                </Button>
+                </OnceButton>
+                {#if !$gradientCooldownFinished}
+                    <p
+                        class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
+                    >
+                        You changed your gradient recently! Please wait {$gradientCooldownDisplay}
+                        before changing it again.
+                    </p>
+                {/if}
             </div>
         {/if}
         {#if isInProgress}

@@ -20,7 +20,9 @@ export type ReportedUserOperationReq = {
 export type BanReq = {
     username: string;
 };
-
 export type KofiReq = {
     txId: KofiTxId;
+};
+export type GradientReq = {
+    grad: string;
 };

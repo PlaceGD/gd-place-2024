@@ -1,10 +1,15 @@
 import { HttpsError, onRequest } from "firebase-functions/v2/https";
 import { LogGroup } from "./utils/logger";
-import { KofiTxId, VALID_KOFI_TRANSACTION_ID } from "shared-lib/kofi";
+import {
+    KofiTxId,
+    MAX_GRADIENT_STOPS,
+    VALID_KOFI_TRANSACTION_ID,
+} from "shared-lib/kofi";
 import { database } from "firebase-admin";
 import { ref } from "./utils/database";
 import { onCallAuthLogger } from "./utils/on_call";
-import { KofiReq } from "shared-lib/cloud_functions";
+import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
+import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
 
 export type KofiDonation = {
     verification_token: string;
@@ -162,5 +167,67 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
         }
 
         ref(db, `userData/${request.auth.uid}/hasDonated`).set(true);
+    }
+);
+
+const VALID_GRADIENT = new RegExp(
+    `linear-gradient\\(\\d+deg((,\\s*)?#[a-fA-F0-9]{6} \\d{1,3}%){2,${MAX_GRADIENT_STOPS}}\\)`
+);
+
+export const changeNameGradient = onCallAuthLogger<GradientReq>(
+    "changeNameGradient",
+    async (request, logger) => {
+        const data = request.data;
+
+        // await validateTurnstile(
+        //     process.env["TURNSTILE_LOGIN_PRIV_KEY"],
+        //     data.turnstileResp,
+        //     request.rawRequest,
+        //     logger
+        // );
+
+        const db = database();
+
+        const userData = (
+            await ref(db, `userData/${request.auth.uid}`).get()
+        ).val();
+        if (userData == null) {
+            throw new HttpsError("invalid-argument", "Invalid user id");
+        }
+
+        const timeNextGradient = userData.epochNextGradient;
+        if (timeNextGradient == undefined) {
+            throw new HttpsError("invalid-argument", "Missing report timer");
+        }
+
+        if (Date.now() < timeNextGradient) {
+            throw new HttpsError(
+                "permission-denied",
+                "Cannot update before timer expired"
+            );
+        }
+
+        if (!userData.hasDonated) {
+            throw new HttpsError(
+                "permission-denied",
+                "Cannot change gradient of user without donation"
+            );
+        }
+
+        const grad = data.grad;
+
+        if (!VALID_GRADIENT.test(grad)) {
+            throw new HttpsError("permission-denied", "Invalid gradient");
+        }
+
+        let nextReport = Date.now();
+        nextReport += GRADIENT_COOLDOWN_SECONDS * 1000;
+
+        ref(db, `userData/${request.auth.uid}/epochNextGradient`).set(
+            nextReport
+        );
+        ref(db, `userName/${userData.username.toLowerCase()}/displayColor`).set(
+            grad
+        );
     }
 );

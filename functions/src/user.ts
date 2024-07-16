@@ -94,6 +94,7 @@ export const initUserWithUsername = onCallAuthLogger<
         epochNextPlace: 0,
         epochNextDelete: 0,
         epochNextReport: 0,
+        epochNextGradient: 0,
         moderator: false,
         hasDonated: false,
     };
@@ -105,6 +106,7 @@ export const initUserWithUsername = onCallAuthLogger<
 
     ref(db, `userName/${data.username.toLowerCase()}`).set({
         uid: data.uid,
+        displayColor: "white",
     });
 
     ref(db, "userCount").transaction(count => {

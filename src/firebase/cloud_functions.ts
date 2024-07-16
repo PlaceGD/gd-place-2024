@@ -7,6 +7,7 @@ import type {
     ReportedUserOperationReq,
     InitWithUsernameReq,
     KofiReq,
+    GradientReq,
 } from "shared-lib/cloud_functions";
 
 const functions = getFunctions();
@@ -25,4 +26,8 @@ export const initUserWithUsername = httpsCallable<InitWithUsernameReq>(
 export const submitKofiTxId = httpsCallable<KofiReq>(
     functions,
     "submitKofiTxId"
+);
+export const changeNameGradient = httpsCallable<GradientReq>(
+    functions,
+    "changeNameGradient"
 );

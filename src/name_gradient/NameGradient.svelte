@@ -18,7 +18,12 @@
         submitKofiTxId,
     } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
-    import { currentNameGradient, loginData } from "../stores";
+    import {
+        currentNameGradient,
+        ExclusiveMenus,
+        loginData,
+        openMenu,
+    } from "../stores";
     import GradientPicker from "../components/GradientPicker.svelte";
     import Button from "../components/Button.svelte";
     import { complement } from "../utils/gradient";
@@ -34,12 +39,20 @@
 
     let isInProgress = false;
 
-    let currentPage: Page = Page.SELECT_GRADIENT; //SUBMIT_TX_ID
+    let currentPage: Page = Page.SUBMIT_TX_ID;
 
-    // $: currentPage =
-    //     $loginData.currentUserData?.placeData?.hasDonated != null
-    //         ? Page.SELECT_GRADIENT
-    //         : Page.SUBMIT_TX_ID;
+    $: currentPage =
+        $loginData.currentUserData?.placeData?.hasDonated != null
+            ? Page.SELECT_GRADIENT
+            : Page.SUBMIT_TX_ID;
+
+    $: {
+        if ($openMenu != ExclusiveMenus.Kofi) {
+            modal?.close();
+        } else if ($openMenu == ExclusiveMenus.Kofi) {
+            modal.showModal();
+        }
+    }
 
     let allowClose = true;
     $: allowClose = !isInProgress;
@@ -61,11 +74,6 @@
     let resetSubmitButton: () => void;
     let resetGradientButton: () => void;
 
-    // temporary
-    onMount(() => {
-        modal?.showModal();
-    });
-
     const onSubmitTxId = async () => {
         isInProgress = true;
 
@@ -73,6 +81,8 @@
             await submitKofiTxId({
                 txId: kofiTxId as KofiTxId,
             });
+
+            currentPage = Page.SELECT_GRADIENT;
 
             Toast.showSuccessToast(
                 "Transaction ID recieved successfully. Thanks for keeping this project going! <3"

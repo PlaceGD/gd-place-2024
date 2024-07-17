@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ColoredName from "../components/ColoredName.svelte";
     import Image from "../components/Image.svelte";
     import { getUsernameColor } from "../firebase/donations";
     import { ExclusiveMenus, loginData, openMenu } from "../stores";
@@ -9,19 +10,11 @@
 
 <div class="gap-2 flex-center">
     {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.isLoggedIn}
-        {#await getUsernameColor($loginData.currentUserData.placeData.username) then color}
-            <h1
-                class="z-30 text-2xl text-white font-pusab"
-                style={`
-                    background-image: ${color};
-                    -webkit-text-fill-color: rgba(255, 255, 255, 0.1);
-                    background-clip: text;
-                    -webkit-background-clip: text;
-                `}
-            >
-                {$loginData.currentUserData.placeData.username}
-            </h1>
-        {/await}
+        <h1 class="font-pusab text-2xl xs:text-xl z-30 text-white">
+            <ColoredName
+                username={$loginData.currentUserData.placeData.username}
+            />
+        </h1>
     {/if}
     <button
         class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"

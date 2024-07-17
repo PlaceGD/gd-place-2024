@@ -1,10 +1,13 @@
-export const complement = (
-    rbg: { r: number; g: number; b: number; a?: number }[]
-): string => {
+export const complement = (colors: string[]): string => {
     // returns "black" or "white"
 
+    const rbg = colors.map(color => {
+        const colorN = parseInt(color.replace("#", ""), 16);
+        return [(colorN >> 16) & 255, (colorN >> 8) & 255, colorN & 255];
+    });
+
     let [r, g, b] = rbg.reduce<[number, number, number]>(
-        (acc, cur) => [acc[0] + cur.r, acc[1] + cur.b, acc[2] + cur.g],
+        (acc, cur) => [acc[0] + cur[0], acc[1] + cur[1], acc[2] + cur[2]],
         [0, 0, 0]
     );
 

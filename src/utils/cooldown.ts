@@ -4,7 +4,7 @@ import { db } from "../firebase/firebase";
 import Toast from "./toast";
 
 export class SyncedCooldown {
-    finished: Writable<boolean> = writable(false);
+    finished: Writable<boolean> = writable(true);
     display: Writable<string> = writable("--:--");
     private interval: NodeJS.Timeout | null = null;
     private value: number;
@@ -43,7 +43,7 @@ export class SyncedCooldown {
                 })
                 .catch(e => {
                     Toast.showErrorToast(
-                        `Failed to get ${ref} epoch from database! (${e})`
+                        `Failed to get ${refS} epoch from database! (${e})`
                     );
                 });
         }

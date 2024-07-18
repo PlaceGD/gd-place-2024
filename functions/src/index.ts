@@ -9,6 +9,12 @@ export {
     // clearReports,
 } from "./user";
 
+export {
+    onKofiDonation,
+    submitKofiTxId,
+    changeNameGradient,
+} from "./donations";
+
 // TODO: add our uids
 export const DEV_UIDS: string[] = [];
 

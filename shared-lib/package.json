@@ -35,6 +35,11 @@
             "import": "./esm/cloud_functions.js",
             "types": "./esm/cloud_functions.d.ts"
         },
+        "./kofi": {
+            "require": "./cjs/kofi.js",
+            "import": "./esm/kofi.js",
+            "types": "./esm/kofi.d.ts"
+        },
         ".": {
             "require": "./cjs/index.js",
             "import": "./esm/index.js",

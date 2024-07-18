@@ -10,8 +10,6 @@ export enum TabGroup {
     Delete,
 }
 
-const LS = createLocalStorage();
-
 export const menuSettings = persist(
     writable({
         isMinimized: false,
@@ -32,7 +30,7 @@ export const menuSettings = persist(
         zOrder: 0,
         selectedWidget: WidgetType.None,
     }),
-    LS,
+    createLocalStorage(),
     "menuSettings"
 );
 
@@ -42,7 +40,7 @@ export const editorData = persist(
         y: 0,
         zoom: 0,
     }),
-    LS,
+    createLocalStorage(),
     "editorData"
 );
 
@@ -52,16 +50,21 @@ export enum ExclusiveMenus {
     Moderator,
     Login,
     Settings,
+    Kofi,
 }
 
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
 export const analytics = persist(
     writable<boolean | null>(null),
-    LS,
+    createLocalStorage(),
     "analytics"
 );
-export const newReports = persist(writable(false), LS, "newReports");
+export const newReports = persist(
+    writable(false),
+    createLocalStorage(),
+    "newReports"
+);
 
 export const loginData = writable<{
     isLoggedIn: boolean;
@@ -70,6 +73,18 @@ export const loginData = writable<{
     isLoggedIn: false,
     currentUserData: null,
 });
+
+export const currentNameGradient = persist(
+    writable<{
+        positions: number[] | null;
+        colors: string[] | null;
+    }>({
+        positions: null,
+        colors: null,
+    }),
+    createLocalStorage(),
+    "nameGradient"
+);
 
 let deleteTextCounter = 0;
 export const deleteTexts = writable<

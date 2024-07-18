@@ -16,6 +16,8 @@
             $openMenu = null;
 
             if ($loginData.isLoggedIn) {
+                $openMenu = null;
+
                 handleSignOut();
             } else {
                 $openMenu = ExclusiveMenus.Login;

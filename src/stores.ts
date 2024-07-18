@@ -56,6 +56,11 @@ export enum ExclusiveMenus {
 
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
+export const analytics = persist(
+    writable<boolean | null>(null),
+    LS,
+    "analytics"
+);
 export const newReports = persist(writable(false), LS, "newReports");
 
 export const loginData = writable<{

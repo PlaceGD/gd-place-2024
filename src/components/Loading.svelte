@@ -3,9 +3,9 @@
 </script>
 
 <div
-    class="w-full h-full absolute flex-center z-50 {$$restProps.class} {darken
-        ? 'bg-black/70'
-        : ''}"
+    class="w-full h-full absolute flex-center z-50 {$$restProps[
+        'class'
+    ]} {darken ? 'bg-black/70' : ''}"
 >
     <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
     <svg

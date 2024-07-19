@@ -196,17 +196,17 @@ dialog::backdrop {
     outline-width: 2px;
     outline-style: solid;
   
-    animation: spin 1s forwards infinite ease-in-out;
+    animation: pulse 3s forwards infinite ease-in-out;
 }
 
-@keyframes spin {
+@keyframes pulse {
     0% {
-        outline-color: #7FFAFF;
+        outline-color: #7FFAFF !important;
     }
     50%  {
-        outline-color: #0074A3;
+        outline-color: #0074A3 !important;
     }
     100%  {
-        outline-color: #7FFAFF;
+        outline-color: #7FFAFF !important;
     }
 }

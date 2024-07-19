@@ -228,7 +228,7 @@
             on:click={() => {
                 modal.close();
                 hidePopup = true;
-                $analytics = 0;
+                $analytics = false;
             }}
         >
             <p class="xs:text-sm w-min">Disable Analytics</p>
@@ -240,7 +240,7 @@
             on:click={() => {
                 modal.close();
                 hidePopup = true;
-                $analytics = 1;
+                $analytics = true;
             }}
         >
             <p class="xs:text-sm w-min">Continue</p>

@@ -10,12 +10,16 @@ const fixHeight = () => {
 fixHeight();
 
 let oldHeight = 0;
-window.addEventListener("resize", () => {
-    if (oldHeight != window.innerHeight) {
-        oldHeight = window.innerHeight;
-        fixHeight();
-    }
-});
+window.addEventListener(
+    "resize",
+    () => {
+        if (oldHeight != window.innerHeight) {
+            oldHeight = window.innerHeight;
+            fixHeight();
+        }
+    },
+    { passive: true }
+);
 
 export const isOverflowing = (element: HTMLElement): boolean => {
     if (!element) return false;
@@ -44,8 +48,10 @@ export const useIsOverflowing = () => {
                 updateIsOverflowing(() => isOverflowing(element!));
             }
         };
-        window.addEventListener("resize", updateElement);
-        window.addEventListener("DOMContentLoaded", updateElement);
+        window.addEventListener("resize", updateElement, { passive: true });
+        window.addEventListener("DOMContentLoaded", updateElement, {
+            passive: true,
+        });
     };
 
     return {

@@ -180,12 +180,20 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
             // obj_count,
             // { eventStart, placeTimer: timer, canEdit },
             _userName,
-            // banned,
-        ] = await refAllGet(db, `userData/${uid}/username`);
+            banned,
+        ] = await refAllGet(
+            db,
+            `userData/${uid}/username`,
+            `bannedUsers/${uid}`
+        );
 
         let userName = _userName.val();
         if (userName === undefined) {
             throw new HttpsError("invalid-argument", "Missing user data");
+        }
+
+        if (banned.val() === 1) {
+            throw new HttpsError("permission-denied", "Banned");
         }
 
         const objRef = await ref(db, `objects/${chunkX},${chunkY}`).push(
@@ -201,11 +209,20 @@ export const deleteObject = onCallAuth<DeleteReq>(async request => {
     const data = request.data;
     const uid = request.auth.uid;
 
-    let [userName] = (await refAllGet(db, `userData/${uid}/username`)).map(v =>
-        v.val()
+    let [_userName, banned] = await refAllGet(
+        db,
+        `userData/${uid}/username`,
+        `bannedUsers/${uid}`
     );
 
-    if (userName === undefined) return;
+    let userName = _userName.val();
+    if (userName === undefined) {
+        throw new HttpsError("invalid-argument", "Missing user data");
+    }
+
+    if (banned.val() === 1) {
+        throw new HttpsError("permission-denied", "Banned");
+    }
 
     if (!data.chunkId) {
         throw new HttpsError("invalid-argument", "Missing chunk id");

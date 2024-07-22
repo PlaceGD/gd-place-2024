@@ -203,6 +203,11 @@ const banUserInner = async (
     requesterUid: string,
     userToBanUid: string
 ) => {
+    const isBanned = (await ref(db, `bannedUsers/${requesterUid}`).get()).val();
+    if (isBanned === 1) {
+        throw new HttpsError("permission-denied", "Banned");
+    }
+
     if (!DEV_UIDS.includes(requesterUid)) {
         const reportedUserIsMod = (
             await ref(db, `userData/${userToBanUid}/moderator`).get()

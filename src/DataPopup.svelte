@@ -18,10 +18,10 @@
             class="flex-col w-full gap-3 p-3 text-center text-white rounded-lg shadow-lg sm:text-sm sm:w-full flex-center bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
         >
             <p>
-                <b>
+                <strong>
                     This site uses analytics to collect data about the event.
                     Please read our privacy policy below.
-                </b>
+                </strong>
             </p>
             <Button
                 type="white"
@@ -228,10 +228,10 @@
             on:click={() => {
                 modal.close();
                 hidePopup = true;
-                $analytics = 0;
+                $analytics = true;
             }}
         >
-            <p class="xs:text-sm w-min">Disable Analytics</p>
+            <p class="xs:text-sm">Disable Analytics</p>
         </Button>
         <Button
             type="accept"
@@ -240,10 +240,10 @@
             on:click={() => {
                 modal.close();
                 hidePopup = true;
-                $analytics = 1;
+                $analytics = false;
             }}
         >
-            <p class="xs:text-sm w-min">Continue</p>
+            <p class="xs:text-sm">Continue</p>
         </Button>
     </div>
 </dialog>

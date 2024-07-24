@@ -25,6 +25,7 @@ pub struct RenderState {
     pub multisampled_frame_descriptor: wgpu::TextureDescriptor<'static>,
 
     pub pipeline_rect: wgpu::RenderPipeline,
+    pub pipeline_rect_additive_sq_alpha: wgpu::RenderPipeline,
     pub pipeline_grid: wgpu::RenderPipeline,
     pub rect_vertex_buffer: Buffer,
     pub rect_index_buffer: Buffer,
@@ -154,6 +155,36 @@ impl RenderState {
                 }),
                 write_mask: wgpu::ColorWrites::ALL,
             })],
+            "vs_main",
+            "fs_main",
+        );
+        let pipeline_rect_additive_sq_alpha = create_pipeline(
+            &device,
+            &device.create_shader_module(wgpu::ShaderModuleDescriptor {
+                label: Some("shader"),
+                source: wgpu::ShaderSource::Wgsl(
+                    include_str!("./pipeline_rect/shader.wgsl").into(),
+                ),
+            }),
+            &[&globals_bind_group_layout, &onion_bind_group_layout],
+            &[
+                pipeline_rect::vertex::Vertex::desc(),
+                pipeline_rect::instance::Instance::desc(),
+            ],
+            &[Some(wgpu::ColorTargetState {
+                format: surface_config.format,
+                blend: Some(wgpu::BlendState {
+                    color: wgpu::BlendComponent {
+                        src_factor: wgpu::BlendFactor::SrcAlpha,
+                        dst_factor: wgpu::BlendFactor::One,
+                        operation: wgpu::BlendOperation::Add,
+                    },
+                    alpha: wgpu::BlendComponent::OVER,
+                }),
+                write_mask: wgpu::ColorWrites::ALL,
+            })],
+            "vs_main",
+            "fs_main_sq_alpha",
         );
         let pipeline_grid = create_pipeline(
             &device,
@@ -177,6 +208,8 @@ impl RenderState {
                 }),
                 write_mask: wgpu::ColorWrites::ALL,
             })],
+            "vs_main",
+            "fs_main",
         );
 
         use image::GenericImageView;
@@ -277,6 +310,7 @@ impl RenderState {
             onion_size: uvec2(onion_width, onion_height),
             multisampled_frame_descriptor,
             pipeline_rect,
+            pipeline_rect_additive_sq_alpha,
             pipeline_grid,
             rect_vertex_buffer,
             rect_index_buffer,

@@ -1,4 +1,4 @@
-use glam::{mat2, vec2, vec4, Affine2, Vec2};
+use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
@@ -82,7 +82,9 @@ impl State {
     pub fn view_transform(&self) -> Affine2 {
         let scale = self.get_zoom_scale();
 
-        Affine2::from_scale_angle_translation(vec2(scale, scale), 0.0, -self.camera_pos)
+        Affine2::from_scale(vec2(scale, scale)) * Affine2::from_translation(-self.camera_pos)
+
+        // Affine2::from_scale_angle_translation(vec2(scale, scale), 0.0, -self.camera_pos)
     }
 }
 
@@ -504,62 +506,305 @@ impl State {
                 onion_size: self.render.onion_size.as_vec2().to_array(),
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
+                // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
                 _pad: [0; 4],
             }]),
         );
 
         {
-            let (bg_instance_buffer, bg_instances) = {
-                let mut rects: Vec<pipeline_rect::instance::Instance> = vec![];
+            self.time += delta;
 
-                // background
-                {
-                    let mut transform = Affine2::IDENTITY;
+            let mut rects: Vec<pipeline_rect::instance::Instance> = vec![];
+            enum BlendMode {
+                Normal,
+                Additive,
+            }
+            struct DrawCall {
+                blend_mode: BlendMode,
+                until_instance: u32,
+            }
+            let mut calls: Vec<DrawCall> = vec![];
 
-                    transform *= Affine2::from_translation(-self.camera_pos / 10.0);
+            // background
+            {
+                let mut transform = Affine2::IDENTITY;
 
-                    let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
+                transform *= Affine2::from_translation(-self.camera_pos / 10.0);
 
-                    let offset = (self.camera_pos / 10.0 / scale).floor() * scale;
+                let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
 
-                    for i in -2i32..=2 {
-                        for j in -2i32..=2 {
-                            let mut transform = transform;
-                            transform *= Affine2::from_translation(
-                                offset + scale * vec2(i as f32, j as f32),
-                            );
-                            transform *= Affine2::from_scale(vec2(
-                                1.0,
-                                if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 },
-                            ));
+                let offset = (self.camera_pos / 10.0 / scale).floor() * scale;
 
-                            rects.push(pipeline_rect::instance::Instance::new(
-                                transform.transform_point2(-vec2(scale, scale) / 2.0),
-                                transform.transform_vector2(vec2(scale, scale)),
-                                vec4(
-                                    self.bg_color.0 as f32 / 255.0,
-                                    self.bg_color.1 as f32 / 255.0,
-                                    self.bg_color.2 as f32 / 255.0,
-                                    1.0,
+                for i in -2i32..=2 {
+                    for j in -2i32..=2 {
+                        let mut transform = transform;
+                        transform *=
+                            Affine2::from_translation(offset + scale * vec2(i as f32, j as f32));
+                        transform *= Affine2::from_scale(vec2(
+                            1.0,
+                            if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 },
+                        ));
+
+                        rects.push(pipeline_rect::instance::Instance::new(
+                            transform
+                                * Affine2::from_scale_angle_translation(
+                                    vec2(scale, scale) + 1.0,
+                                    0.0,
+                                    -(vec2(scale, scale) + 1.0) / 2.0,
                                 ),
-                                1,
-                                vec2(0.0, 0.0),
-                                vec2(1024.0, 1024.0),
-                            ));
-                        }
+                            // transform.transform_point2(-vec2(scale + 1.0, scale + 1.0) / 2.0),
+                            // transform.transform_vector2(vec2(scale + 1.0, scale + 1.0)),
+                            vec4(
+                                self.bg_color.0 as f32 / 255.0,
+                                self.bg_color.1 as f32 / 255.0,
+                                self.bg_color.2 as f32 / 255.0,
+                                1.0,
+                            ),
+                            1,
+                            vec2(0.0, 0.0),
+                            vec2(1024.0, 1024.0),
+                        ));
                     }
-                };
-                (
-                    self.render
-                        .device
-                        .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                            label: None,
-                            contents: bytemuck::cast_slice(&rects),
-                            usage: wgpu::BufferUsages::VERTEX,
-                        }),
-                    rects.len(),
-                )
+                }
+
+                calls.push(DrawCall {
+                    blend_mode: BlendMode::Normal,
+                    until_instance: rects.len() as u32,
+                });
             };
+
+            // objects
+            {
+                let transform = self.view_transform();
+
+                let draw_obj_sprite = |rects: &mut Vec<pipeline_rect::instance::Instance>,
+                                       mut transform: Affine2,
+                                       sprite: SpriteInfo,
+                                       obj: &GDObject,
+                                       color: Vec4| {
+                    transform *= obj_transform(obj);
+
+                    let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
+                    let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        transform
+                            * Affine2::from_scale_angle_translation(
+                                uv_size,
+                                0.0,
+                                vec2(
+                                    -(sprite.size.0 as f32 / 2.0) + sprite.offset.0,
+                                    -(sprite.size.1 as f32 / 2.0) - sprite.offset.1,
+                                ),
+                            ),
+                        // transform.transform_point2(
+                        //     -vec2(
+                        //         sprite.size.0 as f32 / 2.0 + sprite.offset.0,
+                        //         sprite.size.1 as f32 / 2.0 - sprite.offset.1,
+                        //     ) / 2.0,
+                        // ),
+                        // transform.transform_vector2(uv_size),
+                        color,
+                        4,
+                        uv_pos,
+                        uv_size,
+                    ));
+                };
+
+                let selected_color = |lighter| {
+                    let c = map!(
+                        (self.time * 10.0).sin(),
+                        -1.0,
+                        1.0,
+                        if lighter {
+                            150.0 / 255.0
+                        } else {
+                            100.0 / 255.0
+                        },
+                        if lighter { 1.0 } else { 200.0 / 255.0 }
+                    );
+                    vec4(1.0, c, c, 1.0)
+                };
+
+                for &layer in Z_LAYERS {
+                    for z_order in -50..50 {
+                        self.level.foreach_obj_in_z(
+                            layer,
+                            z_order,
+                            |key, obj| {
+                                if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
+                                    if obj.main_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(false)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.main_color.r,
+                                                    obj.main_color.g,
+                                                    obj.main_color.b,
+                                                    obj.main_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                            },
+                            self.show_preview.then(|| self.preview_object.into_obj()),
+                        )
+                    }
+                    calls.push(DrawCall {
+                        blend_mode: BlendMode::Additive,
+                        until_instance: rects.len() as u32,
+                    });
+
+                    for z_order in -50..50 {
+                        self.level.foreach_obj_in_z(
+                            layer,
+                            z_order,
+                            |key, obj| {
+                                if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
+                                    if !obj.main_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(false)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.main_color.r,
+                                                    obj.main_color.g,
+                                                    obj.main_color.b,
+                                                    obj.main_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                                if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
+                                    if !obj.detail_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(true)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.detail_color.r,
+                                                    obj.detail_color.g,
+                                                    obj.detail_color.b,
+                                                    obj.detail_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                            },
+                            self.show_preview.then(|| self.preview_object.into_obj()),
+                        )
+                    }
+                    calls.push(DrawCall {
+                        blend_mode: BlendMode::Normal,
+                        until_instance: rects.len() as u32,
+                    });
+
+                    for z_order in -50..50 {
+                        self.level.foreach_obj_in_z(
+                            layer,
+                            z_order,
+                            |key, obj| {
+                                if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
+                                    if obj.detail_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(false)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.detail_color.r,
+                                                    obj.detail_color.g,
+                                                    obj.detail_color.b,
+                                                    obj.detail_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                            },
+                            self.show_preview.then(|| self.preview_object.into_obj()),
+                        )
+                    }
+                    calls.push(DrawCall {
+                        blend_mode: BlendMode::Additive,
+                        until_instance: rects.len() as u32,
+                    });
+                }
+            };
+
+            // ground
+            {
+                const GROUND_SIZE_BLOCKS: f32 = 4.25;
+                const GROUND_SIZE_UNITS: f32 = GROUND_SIZE_BLOCKS * 30.0;
+
+                let transform = self.view_transform();
+
+                let mut view_rect = self.get_camera_world_rect();
+                // view_rect.w /= 2.0;
+                // view_rect.h /= 2.0;
+                // view_rect.x += view_rect.w / 2.0;
+                // view_rect.y += view_rect.h / 2.0;
+                let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
+                let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
+
+                for i in min_x..=max_x {
+                    let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
+                    let t = transform
+                        * Affine2::from_scale_angle_translation(
+                            vec2(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS) + 0.2,
+                            0.0,
+                            vec2(x, -GROUND_SIZE_UNITS) - 0.1,
+                        );
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        t,
+                        vec4(
+                            self.ground1_color.0 as f32 / 255.0,
+                            self.ground1_color.1 as f32 / 255.0,
+                            self.ground1_color.2 as f32 / 255.0,
+                            1.0,
+                        ),
+                        2,
+                        vec2(0.0, 0.0),
+                        vec2(256.0, 256.0),
+                    ));
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        t,
+                        vec4(
+                            self.ground2_color.0 as f32 / 255.0,
+                            self.ground2_color.1 as f32 / 255.0,
+                            self.ground2_color.2 as f32 / 255.0,
+                            1.0,
+                        ),
+                        3,
+                        vec2(0.0, 0.0),
+                        vec2(256.0, 256.0),
+                    ));
+                }
+
+                calls.push(DrawCall {
+                    blend_mode: BlendMode::Normal,
+                    until_instance: rects.len() as u32,
+                });
+            };
+            let instance_buffer =
+                self.render
+                    .device
+                    .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                        label: None,
+                        contents: bytemuck::cast_slice(&rects),
+                        usage: wgpu::BufferUsages::VERTEX,
+                    });
 
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("render_pass"),
@@ -581,21 +826,30 @@ impl State {
                 timestamp_writes: None,
             });
 
-            render_pass.set_pipeline(&self.render.pipeline_rect);
-
             render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
             render_pass.set_bind_group(1, &self.render.onion_bind_group, &[]);
 
             render_pass.set_vertex_buffer(0, self.render.rect_vertex_buffer.slice(..));
-            render_pass.set_vertex_buffer(1, bg_instance_buffer.slice(..));
+            render_pass.set_vertex_buffer(1, instance_buffer.slice(..));
             render_pass.set_index_buffer(
                 self.render.rect_index_buffer.slice(..),
                 wgpu::IndexFormat::Uint32,
             );
-            render_pass.draw_indexed(0..6, 0, 0..bg_instances as u32);
 
-            render_pass.set_pipeline(&self.render.pipeline_grid);
-            render_pass.draw_indexed(0..6, 0, 0..1);
+            let mut last_instance = 0;
+            for (i, call) in calls.iter().enumerate() {
+                render_pass.set_pipeline(match call.blend_mode {
+                    BlendMode::Normal => &self.render.pipeline_rect,
+                    BlendMode::Additive => &self.render.pipeline_rect_additive_sq_alpha,
+                });
+                render_pass.draw_indexed(0..6, 0, last_instance..call.until_instance);
+                last_instance = call.until_instance;
+
+                if i == 0 {
+                    render_pass.set_pipeline(&self.render.pipeline_grid);
+                    render_pass.draw_indexed(0..6, 0, 0..1);
+                }
+            }
         }
 
         self.render.queue.submit([encoder.finish()]);

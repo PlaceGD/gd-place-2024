@@ -13,7 +13,7 @@
     import { getCameraPos } from "../level_view/view_controls";
     import OnceButton from "../components/OnceButton.svelte";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
 
     const cooldown = new SyncedCooldown(
         `userData/${$loginData.currentUserData!.userData.uid}`,

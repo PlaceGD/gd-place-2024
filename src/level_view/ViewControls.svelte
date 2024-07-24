@@ -36,7 +36,7 @@
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
     export let isFocused: boolean = false;
 

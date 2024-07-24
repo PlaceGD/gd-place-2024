@@ -19,6 +19,7 @@ macro_rules! map {
     }};
 }
 
+use glam::Vec2;
 use image::DynamicImage;
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
@@ -132,13 +133,11 @@ pub fn get_max_bounding_box(id: u32) -> Option<(f32, f32)> {
     rect_size
 }
 
-type Point = (f32, f32);
-
-fn sign(p1: Point, p2: Point, p3: Point) -> f32 {
-    (p1.0 - p3.0) * (p2.1 - p3.1) - (p2.0 - p3.0) * (p1.1 - p3.1)
+fn sign(p1: Vec2, p2: Vec2, p3: Vec2) -> f32 {
+    (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
 }
 
-pub fn point_in_triangle(pt: Point, v1: Point, v2: Point, v3: Point) -> bool {
+pub fn point_in_triangle(pt: Vec2, v1: Vec2, v2: Vec2, v3: Vec2) -> bool {
     let (d1, d2, d3) = (sign(pt, v1, v2), sign(pt, v2, v3), sign(pt, v3, v1));
 
     let has_neg = (d1 < 0.0) || (d2 < 0.0) || (d3 < 0.0);

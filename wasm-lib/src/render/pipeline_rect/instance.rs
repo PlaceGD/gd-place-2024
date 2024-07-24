@@ -1,0 +1,65 @@
+use std::mem::offset_of;
+
+use glam::{Vec2, Vec4};
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq, bytemuck::Zeroable, bytemuck::Pod)]
+pub struct Instance {
+    pub pos: [f32; 2],
+    pub size: [f32; 2],
+    pub color: [f32; 4],
+    pub img: u32,
+    pub uv_pos: [f32; 2],
+    pub uv_size: [f32; 2],
+}
+
+impl Instance {
+    pub fn new(pos: Vec2, size: Vec2, color: Vec4, img: u32, uv_pos: Vec2, uv_size: Vec2) -> Self {
+        Self {
+            pos: pos.to_array(),
+            size: size.to_array(),
+            color: color.to_array(),
+            uv_pos: uv_pos.to_array(),
+            uv_size: uv_size.to_array(),
+            img,
+        }
+    }
+    pub fn desc() -> wgpu::VertexBufferLayout<'static> {
+        wgpu::VertexBufferLayout {
+            array_stride: std::mem::size_of::<Instance>() as wgpu::BufferAddress,
+            step_mode: wgpu::VertexStepMode::Instance,
+            attributes: &[
+                wgpu::VertexAttribute {
+                    offset: 0,
+                    shader_location: 1,
+                    format: wgpu::VertexFormat::Float32x2,
+                },
+                wgpu::VertexAttribute {
+                    offset: const { offset_of!(Instance, size) } as wgpu::BufferAddress,
+                    shader_location: 2,
+                    format: wgpu::VertexFormat::Float32x2,
+                },
+                wgpu::VertexAttribute {
+                    offset: const { offset_of!(Instance, color) } as wgpu::BufferAddress,
+                    shader_location: 3,
+                    format: wgpu::VertexFormat::Float32x4,
+                },
+                wgpu::VertexAttribute {
+                    offset: const { offset_of!(Instance, img) } as wgpu::BufferAddress,
+                    shader_location: 4,
+                    format: wgpu::VertexFormat::Uint32,
+                },
+                wgpu::VertexAttribute {
+                    offset: const { offset_of!(Instance, uv_pos) } as wgpu::BufferAddress,
+                    shader_location: 5,
+                    format: wgpu::VertexFormat::Float32x2,
+                },
+                wgpu::VertexAttribute {
+                    offset: const { offset_of!(Instance, uv_size) } as wgpu::BufferAddress,
+                    shader_location: 6,
+                    format: wgpu::VertexFormat::Float32x2,
+                },
+            ],
+        }
+    }
+}

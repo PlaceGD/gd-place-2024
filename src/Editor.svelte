@@ -13,7 +13,7 @@
 
     let editorFocused: boolean;
 
-    let state: wasm.StateWrapper | null = null;
+    let state: wasm.State | null = null;
 
     let canvas: HTMLCanvasElement;
     let canvasWidth: number;

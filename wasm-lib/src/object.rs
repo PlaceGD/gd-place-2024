@@ -91,9 +91,7 @@ impl GDObjectOpt {
             self.x_angle,
             self.y_scale_exp,
             self.y_angle,
-        )[..] else {
-            unreachable!()
-        };
+        );
 
         GDObject {
             id: self.id,
@@ -199,25 +197,34 @@ impl GDObjectOpt {
     }
 }
 
-#[wasm_bindgen]
 pub fn convert_opt_transform(
     x_scale_exp: i8,
     x_angle: i8,
     y_scale_exp: i8,
     y_angle: i8,
-) -> Vec<f32> {
+) -> [f32; 4] {
     let x_scale = 2.0f32.powf((x_scale_exp as f32) / 12.0);
     let x_angle = (x_angle as f32 * 5.0).to_radians();
 
     let y_scale = 2.0f32.powf((y_scale_exp as f32) / 12.0);
     let y_angle = (y_angle as f32 * 5.0).to_radians();
 
-    vec![
+    [
         x_scale * x_angle.cos(),
         x_scale * x_angle.sin(),
         y_scale * y_angle.cos(),
         y_scale * y_angle.sin(),
     ]
+}
+
+#[wasm_bindgen(js_name = "convert_opt_transform")]
+pub fn wasm_convert_opt_transform(
+    x_scale_exp: i8,
+    x_angle: i8,
+    y_scale_exp: i8,
+    y_angle: i8,
+) -> Vec<f32> {
+    convert_opt_transform(x_scale_exp, x_angle, y_scale_exp, y_angle).into()
 }
 
 // #[wasm_bindgen]

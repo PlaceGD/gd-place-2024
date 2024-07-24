@@ -29,7 +29,7 @@
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
 
     const minimizeAnimDur = 0.5;
 

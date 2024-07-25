@@ -38,9 +38,28 @@ fn vs_main(
     let pos = mat2x2<f32>(instance.t_x, instance.t_y) * vertex.pos + instance.pos;
 
     out.pos = vec4<f32>(pos / globals.screen_size * 2.0, 0.0, 1.0);
-    out.uv = (vec2(vertex.pos.x, 1.0 - vertex.pos.y) * instance.uv_size + instance.uv_pos) / globals.onion_size;
+    out.uv = (vec2(vertex.pos.x, 1.0 - vertex.pos.y) * instance.uv_size + instance.uv_pos);
     out.color = instance.color;
     out.img = instance.img;
+
+    switch instance.img {
+        case 1u: {
+            out.uv /= vec2<f32>(textureDimensions(t_1));
+        }
+        case 2u: {
+            out.uv /= vec2<f32>(textureDimensions(t_2));
+        }
+        case 3u: {
+            out.uv /= vec2<f32>(textureDimensions(t_3));
+        }
+        case 4u: {
+            out.uv /= vec2<f32>(textureDimensions(t_4));
+        }
+        case 5u: {
+            out.uv /= vec2<f32>(textureDimensions(t_5));
+        }
+        default: {}
+    }
 
     return out;
 }
@@ -48,21 +67,69 @@ fn vs_main(
 
 @group(0) @binding(0) var<uniform> globals: Globals;
 
-@group(1) @binding(0) var t_onion_linear: texture_2d_array<f32>;
-@group(1) @binding(1) var s_onion_linear: sampler;
+@group(1) @binding(0) var t_1: texture_2d<f32>;
+@group(1) @binding(1) var s_1: sampler;
+@group(1) @binding(2) var t_2: texture_2d<f32>;
+@group(1) @binding(3) var s_2: sampler;
+@group(1) @binding(4) var t_3: texture_2d<f32>;
+@group(1) @binding(5) var s_3: sampler;
+@group(1) @binding(6) var t_4: texture_2d<f32>;
+@group(1) @binding(7) var s_4: sampler;
+@group(1) @binding(8) var t_5: texture_2d<f32>;
+@group(1) @binding(9) var s_5: sampler;
 
-@group(2) @binding(0) var t_onion_nearest: texture_2d_array<f32>;
-@group(2) @binding(1) var s_onion_nearest: sampler;
-
+// fn zonky(id: u32) -> texture_2d<f32> {
+//     switch id {
+//         case 1u: {
+//             return t_1;
+//         }
+//         case 2u: {
+//             return t_2;
+//         }
+//         case 3u: {
+//             return t_3;
+//         }
+//         case 4u: {
+//             return t_4;
+//         }
+//         default: {
+//             return t_5;
+//         }
+//     }
+// }
 
 fn fs_color(in: VertexOutput) -> vec4<f32> {
-    if in.img == 0u {
-        return in.color;
-    } else if in.img <= 100 {
-        return textureSampleLevel(t_onion_linear, s_onion_linear, in.uv, in.img - 1u, 0.0) * in.color;
-    } else {
-        return textureSampleLevel(t_onion_nearest, s_onion_nearest, in.uv, in.img - 101u, 0.0) * in.color;
+
+    switch in.img {
+        case 0u: {
+            return in.color;
+        }
+        case 1u: {
+            return textureSampleLevel(t_1, s_1, in.uv, 0.0) * in.color;
+        }
+        case 2u: {
+            return textureSampleLevel(t_2, s_2, in.uv, 0.0) * in.color;
+        }
+        case 3u: {
+            return textureSampleLevel(t_3, s_3, in.uv, 0.0) * in.color;
+        }
+        case 4u: {
+            return textureSampleLevel(t_4, s_4, in.uv, 0.0) * in.color;
+        }
+        case 5u: {
+            return textureSampleLevel(t_5, s_5, in.uv, 0.0) * in.color;
+        }
+        default: {
+            return vec4(sin(globals.time), cos(globals.time), 0.0, 1.0);
+        }
     }
+
+    // if in.img == 0u {
+    // } else if in.img <= 100 {
+    //     return textureSampleLevel(t_onion_linear, s_onion_linear, in.uv, in.img - 1u, 0.0) * in.color;
+    // } else {
+    //     return textureSampleLevel(t_onion_nearest, s_onion_nearest, in.uv, in.img - 101u, 0.0) * in.color;
+    // }
 }
 
 

@@ -503,7 +503,7 @@ impl State {
                     self.render.surface_config.width as f32,
                     self.render.surface_config.height as f32,
                 ],
-                onion_size: self.render.onion_size.as_vec2().to_array(),
+                onion_size: Vec2::ZERO.to_array(),
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
@@ -587,7 +587,7 @@ impl State {
                     let tex_idx = if OBJECT_INFO[obj.id as usize].builtin_scale == 1.0 {
                         4
                     } else {
-                        101
+                        5
                     };
 
                     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
@@ -833,8 +833,8 @@ impl State {
             });
 
             render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
-            render_pass.set_bind_group(1, &self.render.onion_linear_bind_group, &[]);
-            render_pass.set_bind_group(2, &self.render.onion_nearest_bind_group, &[]);
+            render_pass.set_bind_group(1, &self.render.textures_bind_group, &[]);
+            // render_pass.set_bind_group(2, &self.render.onion_nearest_bind_group, &[]);
 
             render_pass.set_vertex_buffer(0, self.render.rect_vertex_buffer.slice(..));
             render_pass.set_vertex_buffer(1, instance_buffer.slice(..));

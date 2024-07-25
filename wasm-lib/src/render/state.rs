@@ -19,10 +19,11 @@ pub struct RenderState {
     pub globals_buffer: wgpu::Buffer,
     pub globals_bind_group: wgpu::BindGroup,
 
-    pub onion_linear_bind_group: wgpu::BindGroup,
-    pub onion_nearest_bind_group: wgpu::BindGroup,
-    pub onion_size: UVec2,
+    pub textures_bind_group: wgpu::BindGroup,
 
+    // pub onion_linear_bind_group: wgpu::BindGroup,
+    // pub onion_nearest_bind_group: wgpu::BindGroup,
+    // pub onion_size: UVec2,
     pub multisampled_frame_descriptor: wgpu::TextureDescriptor<'static>,
 
     pub pipeline_rect: wgpu::RenderPipeline,
@@ -30,6 +31,96 @@ pub struct RenderState {
     pub pipeline_grid: wgpu::RenderPipeline,
     pub rect_vertex_buffer: Buffer,
     pub rect_index_buffer: Buffer,
+}
+
+fn create_textures_bind_group(
+    device: &wgpu::Device,
+    queue: &wgpu::Queue,
+    spritesheet_data: &[u8],
+) -> (wgpu::BindGroupLayout, wgpu::BindGroup) {
+    use image::GenericImageView;
+
+    let bg = image::load_from_memory(include_bytes!("../../assets/background.png")).unwrap();
+    let ground1 = image::load_from_memory(include_bytes!("../../assets/ground1.png")).unwrap();
+    let ground2 = image::load_from_memory(include_bytes!("../../assets/ground2.png")).unwrap();
+    let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
+
+    let list = [
+        (&bg, false),
+        (&ground1, false),
+        (&ground2, false),
+        (&spritesheet, false),
+        (&spritesheet, true),
+    ];
+
+    let textures_bind_group_layout =
+        device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            entries: &list
+                .iter()
+                .enumerate()
+                .flat_map(|(i, (img, nearest))| {
+                    [
+                        wgpu::BindGroupLayoutEntry {
+                            binding: 2 * i as u32,
+                            visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                            ty: wgpu::BindingType::Texture {
+                                multisampled: false,
+                                view_dimension: wgpu::TextureViewDimension::D2,
+                                sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                            },
+                            count: None,
+                        },
+                        wgpu::BindGroupLayoutEntry {
+                            binding: 2 * i as u32 + 1,
+                            visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                            ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                            count: None,
+                        },
+                    ]
+                })
+                .collect::<Vec<_>>(),
+            label: None,
+        });
+
+    let mut textures = list
+        .iter()
+        .map(|(img, nearest)| {
+            Texture::from_image(
+                device,
+                queue,
+                img,
+                if *nearest {
+                    wgpu::FilterMode::Nearest
+                } else {
+                    wgpu::FilterMode::Linear
+                },
+            )
+        })
+        .collect::<Vec<_>>();
+    let mut entries = vec![];
+
+    for (i, t) in textures.iter().enumerate() {
+        entries.extend([
+            wgpu::BindGroupEntry {
+                binding: 2 * i as u32,
+                resource: wgpu::BindingResource::TextureView(&t.view),
+            },
+            wgpu::BindGroupEntry {
+                binding: 2 * i as u32 + 1,
+                resource: wgpu::BindingResource::Sampler(&t.sampler),
+            },
+        ]);
+    }
+
+    let textures_bind_group = {
+        device.create_bind_group(&wgpu::BindGroupDescriptor {
+            layout: &textures_bind_group_layout,
+            entries: &entries,
+            label: None,
+        })
+    };
+
+    (textures_bind_group_layout, textures_bind_group)
 }
 
 pub const SAMPLE_COUNT: u32 = 4;
@@ -85,29 +176,6 @@ impl RenderState {
         };
         surface.configure(&device, &surface_config);
 
-        let onion_bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                entries: &[
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Texture {
-                            multisampled: false,
-                            view_dimension: wgpu::TextureViewDimension::D2Array,
-                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                        },
-                        count: None,
-                    },
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 1,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                        count: None,
-                    },
-                ],
-                label: None,
-            });
-
         let (globals_buffer, globals_bind_group_layout, globals_bind_group) =
             create_buffer_bind_group(
                 &device,
@@ -116,6 +184,9 @@ impl RenderState {
                 wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,
                 wgpu::BufferBindingType::Uniform,
             );
+
+        let (textures_bind_group_layout, textures_bind_group) =
+            create_textures_bind_group(&device, &queue, spritesheet_data);
 
         let multisampled_frame_descriptor = wgpu::TextureDescriptor {
             label: Some("Multisampled frame descriptor"),
@@ -139,11 +210,7 @@ impl RenderState {
                     include_str!("./pipeline_rect/shader.wgsl").into(),
                 ),
             }),
-            &[
-                &globals_bind_group_layout,
-                &onion_bind_group_layout,
-                &onion_bind_group_layout,
-            ],
+            &[&globals_bind_group_layout, &textures_bind_group_layout],
             &[
                 pipeline_rect::vertex::Vertex::desc(),
                 pipeline_rect::instance::Instance::desc(),
@@ -171,11 +238,7 @@ impl RenderState {
                     include_str!("./pipeline_rect/shader.wgsl").into(),
                 ),
             }),
-            &[
-                &globals_bind_group_layout,
-                &onion_bind_group_layout,
-                &onion_bind_group_layout,
-            ],
+            &[&globals_bind_group_layout, &textures_bind_group_layout],
             &[
                 pipeline_rect::vertex::Vertex::desc(),
                 pipeline_rect::instance::Instance::desc(),
@@ -203,11 +266,7 @@ impl RenderState {
                     include_str!("./pipeline_grid/shader.wgsl").into(),
                 ),
             }),
-            &[
-                &globals_bind_group_layout,
-                &onion_bind_group_layout,
-                &onion_bind_group_layout,
-            ],
+            &[&globals_bind_group_layout, &textures_bind_group_layout],
             &[pipeline_grid::vertex::Vertex::desc()],
             &[Some(wgpu::ColorTargetState {
                 format: surface_config.format,
@@ -224,110 +283,6 @@ impl RenderState {
             "vs_main",
             "fs_main",
         );
-
-        use image::GenericImageView;
-
-        let bg = image::load_from_memory(include_bytes!("../../assets/background.png")).unwrap();
-        let ground1 = image::load_from_memory(include_bytes!("../../assets/ground1.png")).unwrap();
-        let ground2 = image::load_from_memory(include_bytes!("../../assets/ground2.png")).unwrap();
-        let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
-
-        let list = [
-            (&bg, false),
-            (&ground1, false),
-            (&ground2, false),
-            (&spritesheet, false),
-            (&spritesheet, true),
-        ];
-
-        let onion_width = list.iter().map(|(v, _)| v.width()).max().unwrap();
-        let onion_height = list.iter().map(|(v, _)| v.height()).max().unwrap();
-
-        let onion_linear_texture = Texture::init_onion(
-            &device,
-            onion_width,
-            onion_height,
-            list.iter().filter(|&&(_, v)| !v).count() as u32,
-            wgpu::FilterMode::Linear,
-        );
-        let onion_nearest_texture = Texture::init_onion(
-            &device,
-            onion_width,
-            onion_height,
-            list.iter().filter(|&&(_, v)| v).count() as u32,
-            wgpu::FilterMode::Nearest,
-        );
-
-        let mut linear_count = 0;
-        let mut nearest_count = 0;
-
-        for (img, nearest) in list {
-            let rgba = img.to_rgba8();
-            let dimensions = img.dimensions();
-
-            let (count, texture) = if nearest {
-                (&mut nearest_count, &onion_nearest_texture)
-            } else {
-                (&mut linear_count, &onion_linear_texture)
-            };
-
-            queue.write_texture(
-                wgpu::ImageCopyTexture {
-                    aspect: wgpu::TextureAspect::All,
-                    texture: &texture.texture,
-                    mip_level: 0,
-                    origin: wgpu::Origin3d {
-                        z: *count as u32,
-                        ..wgpu::Origin3d::ZERO
-                    },
-                },
-                &rgba,
-                wgpu::ImageDataLayout {
-                    offset: 0,
-                    bytes_per_row: Some(4 * dimensions.0),
-                    rows_per_image: Some(dimensions.1),
-                },
-                wgpu::Extent3d {
-                    width: dimensions.0,
-                    height: dimensions.1,
-                    depth_or_array_layers: 1,
-                },
-            );
-            *count += 1;
-        }
-
-        let onion_linear_bind_group = {
-            device.create_bind_group(&wgpu::BindGroupDescriptor {
-                layout: &onion_bind_group_layout,
-                entries: &[
-                    wgpu::BindGroupEntry {
-                        binding: 0,
-                        resource: wgpu::BindingResource::TextureView(&onion_linear_texture.view),
-                    },
-                    wgpu::BindGroupEntry {
-                        binding: 1,
-                        resource: wgpu::BindingResource::Sampler(&onion_linear_texture.sampler),
-                    },
-                ],
-                label: None,
-            })
-        };
-        let onion_nearest_bind_group = {
-            device.create_bind_group(&wgpu::BindGroupDescriptor {
-                layout: &onion_bind_group_layout,
-                entries: &[
-                    wgpu::BindGroupEntry {
-                        binding: 0,
-                        resource: wgpu::BindingResource::TextureView(&onion_nearest_texture.view),
-                    },
-                    wgpu::BindGroupEntry {
-                        binding: 1,
-                        resource: wgpu::BindingResource::Sampler(&onion_nearest_texture.sampler),
-                    },
-                ],
-                label: None,
-            })
-        };
 
         let rect_vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
             label: None,
@@ -363,9 +318,8 @@ impl RenderState {
             surface_config,
             globals_buffer,
             globals_bind_group,
-            onion_linear_bind_group,
-            onion_nearest_bind_group,
-            onion_size: uvec2(onion_width, onion_height),
+            textures_bind_group,
+
             multisampled_frame_descriptor,
             pipeline_rect,
             pipeline_rect_additive_sq_alpha,

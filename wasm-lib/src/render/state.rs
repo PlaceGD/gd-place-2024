@@ -19,7 +19,8 @@ pub struct RenderState {
     pub globals_buffer: wgpu::Buffer,
     pub globals_bind_group: wgpu::BindGroup,
 
-    pub onion_bind_group: wgpu::BindGroup,
+    pub onion_linear_bind_group: wgpu::BindGroup,
+    pub onion_nearest_bind_group: wgpu::BindGroup,
     pub onion_size: UVec2,
 
     pub multisampled_frame_descriptor: wgpu::TextureDescriptor<'static>,
@@ -138,7 +139,11 @@ impl RenderState {
                     include_str!("./pipeline_rect/shader.wgsl").into(),
                 ),
             }),
-            &[&globals_bind_group_layout, &onion_bind_group_layout],
+            &[
+                &globals_bind_group_layout,
+                &onion_bind_group_layout,
+                &onion_bind_group_layout,
+            ],
             &[
                 pipeline_rect::vertex::Vertex::desc(),
                 pipeline_rect::instance::Instance::desc(),
@@ -166,7 +171,11 @@ impl RenderState {
                     include_str!("./pipeline_rect/shader.wgsl").into(),
                 ),
             }),
-            &[&globals_bind_group_layout, &onion_bind_group_layout],
+            &[
+                &globals_bind_group_layout,
+                &onion_bind_group_layout,
+                &onion_bind_group_layout,
+            ],
             &[
                 pipeline_rect::vertex::Vertex::desc(),
                 pipeline_rect::instance::Instance::desc(),
@@ -194,7 +203,11 @@ impl RenderState {
                     include_str!("./pipeline_grid/shader.wgsl").into(),
                 ),
             }),
-            &[&globals_bind_group_layout, &onion_bind_group_layout],
+            &[
+                &globals_bind_group_layout,
+                &onion_bind_group_layout,
+                &onion_bind_group_layout,
+            ],
             &[pipeline_grid::vertex::Vertex::desc()],
             &[Some(wgpu::ColorTargetState {
                 format: surface_config.format,
@@ -219,25 +232,52 @@ impl RenderState {
         let ground2 = image::load_from_memory(include_bytes!("../../assets/ground2.png")).unwrap();
         let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
 
-        let list = [bg, ground1, ground2, spritesheet];
+        let list = [
+            (&bg, false),
+            (&ground1, false),
+            (&ground2, false),
+            (&spritesheet, false),
+            (&spritesheet, true),
+        ];
 
-        let onion_width = list.iter().map(|v| v.width()).max().unwrap();
-        let onion_height = list.iter().map(|v| v.height()).max().unwrap();
+        let onion_width = list.iter().map(|(v, _)| v.width()).max().unwrap();
+        let onion_height = list.iter().map(|(v, _)| v.height()).max().unwrap();
 
-        let onion_texture =
-            Texture::init_onion(&device, onion_width, onion_height, list.len() as u32);
+        let onion_linear_texture = Texture::init_onion(
+            &device,
+            onion_width,
+            onion_height,
+            list.iter().filter(|&&(_, v)| !v).count() as u32,
+            wgpu::FilterMode::Linear,
+        );
+        let onion_nearest_texture = Texture::init_onion(
+            &device,
+            onion_width,
+            onion_height,
+            list.iter().filter(|&&(_, v)| v).count() as u32,
+            wgpu::FilterMode::Nearest,
+        );
 
-        for (i, img) in list.iter().enumerate() {
+        let mut linear_count = 0;
+        let mut nearest_count = 0;
+
+        for (img, nearest) in list {
             let rgba = img.to_rgba8();
             let dimensions = img.dimensions();
+
+            let (count, texture) = if nearest {
+                (&mut nearest_count, &onion_nearest_texture)
+            } else {
+                (&mut linear_count, &onion_linear_texture)
+            };
 
             queue.write_texture(
                 wgpu::ImageCopyTexture {
                     aspect: wgpu::TextureAspect::All,
-                    texture: &onion_texture.texture,
+                    texture: &texture.texture,
                     mip_level: 0,
                     origin: wgpu::Origin3d {
-                        z: i as u32,
+                        z: *count as u32,
                         ..wgpu::Origin3d::ZERO
                     },
                 },
@@ -253,19 +293,36 @@ impl RenderState {
                     depth_or_array_layers: 1,
                 },
             );
+            *count += 1;
         }
 
-        let onion_bind_group = {
+        let onion_linear_bind_group = {
             device.create_bind_group(&wgpu::BindGroupDescriptor {
                 layout: &onion_bind_group_layout,
                 entries: &[
                     wgpu::BindGroupEntry {
                         binding: 0,
-                        resource: wgpu::BindingResource::TextureView(&onion_texture.view),
+                        resource: wgpu::BindingResource::TextureView(&onion_linear_texture.view),
                     },
                     wgpu::BindGroupEntry {
                         binding: 1,
-                        resource: wgpu::BindingResource::Sampler(&onion_texture.sampler),
+                        resource: wgpu::BindingResource::Sampler(&onion_linear_texture.sampler),
+                    },
+                ],
+                label: None,
+            })
+        };
+        let onion_nearest_bind_group = {
+            device.create_bind_group(&wgpu::BindGroupDescriptor {
+                layout: &onion_bind_group_layout,
+                entries: &[
+                    wgpu::BindGroupEntry {
+                        binding: 0,
+                        resource: wgpu::BindingResource::TextureView(&onion_nearest_texture.view),
+                    },
+                    wgpu::BindGroupEntry {
+                        binding: 1,
+                        resource: wgpu::BindingResource::Sampler(&onion_nearest_texture.sampler),
                     },
                 ],
                 label: None,
@@ -306,7 +363,8 @@ impl RenderState {
             surface_config,
             globals_buffer,
             globals_bind_group,
-            onion_bind_group,
+            onion_linear_bind_group,
+            onion_nearest_bind_group,
             onion_size: uvec2(onion_width, onion_height),
             multisampled_frame_descriptor,
             pipeline_rect,

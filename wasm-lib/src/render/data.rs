@@ -5,5 +5,5 @@ pub struct Globals {
     pub onion_size: [f32; 2],
     pub camera_pos: [f32; 2],
     pub zoom_scale: f32,
-    pub _pad: [u8; 4],
+    pub time: f32,
 }

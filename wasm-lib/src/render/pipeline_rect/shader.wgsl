@@ -4,6 +4,7 @@ struct Globals {
     onion_size: vec2<f32>,
     camera_pos: vec2<f32>,
     zoom_scale: f32,
+    time: f32,
 };
 
 
@@ -47,15 +48,20 @@ fn vs_main(
 
 @group(0) @binding(0) var<uniform> globals: Globals;
 
-@group(1) @binding(0) var t_tex_array: texture_2d_array<f32>;
-@group(1) @binding(1) var s_tex_array: sampler;
+@group(1) @binding(0) var t_onion_linear: texture_2d_array<f32>;
+@group(1) @binding(1) var s_onion_linear: sampler;
+
+@group(2) @binding(0) var t_onion_nearest: texture_2d_array<f32>;
+@group(2) @binding(1) var s_onion_nearest: sampler;
 
 
 fn fs_color(in: VertexOutput) -> vec4<f32> {
     if in.img == 0u {
         return in.color;
+    } else if in.img <= 100 {
+        return textureSampleLevel(t_onion_linear, s_onion_linear, in.uv, in.img - 1u, 0.0) * in.color;
     } else {
-        return textureSampleLevel(t_tex_array, s_tex_array, in.uv, in.img - 1u, 0.0) * in.color;
+        return textureSampleLevel(t_onion_nearest, s_onion_nearest, in.uv, in.img - 101u, 0.0) * in.color;
     }
 }
 

@@ -13,7 +13,7 @@ impl Texture {
         width: u32,
         height: u32,
         layers: u32,
-        // filter: wgpu::FilterMode,
+        filter: wgpu::FilterMode,
     ) -> Self {
         let size = wgpu::Extent3d {
             width,
@@ -42,9 +42,9 @@ impl Texture {
             address_mode_u: wgpu::AddressMode::ClampToEdge,
             address_mode_v: wgpu::AddressMode::ClampToEdge,
             address_mode_w: wgpu::AddressMode::ClampToEdge,
-            // mag_filter: filter,
-            // min_filter: filter,
-            // mipmap_filter: filter,
+            mag_filter: filter,
+            min_filter: filter,
+            mipmap_filter: filter,
             ..Default::default()
         });
 

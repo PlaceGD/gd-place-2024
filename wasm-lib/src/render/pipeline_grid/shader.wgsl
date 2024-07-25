@@ -21,6 +21,7 @@ struct Globals {
     onion_size: vec2<f32>,
     camera_pos: vec2<f32>,
     zoom_scale: f32,
+    time: f32,
 };
 
 

@@ -507,7 +507,7 @@ impl State {
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
-                _pad: [0; 4],
+                time: self.time,
             }]),
         );
 
@@ -584,6 +584,12 @@ impl State {
                                        color: Vec4| {
                     transform *= obj_transform(obj);
 
+                    let tex_idx = if OBJECT_INFO[obj.id as usize].builtin_scale == 1.0 {
+                        4
+                    } else {
+                        101
+                    };
+
                     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
                     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
@@ -605,7 +611,7 @@ impl State {
                         // ),
                         // transform.transform_vector2(uv_size),
                         color,
-                        4,
+                        tex_idx,
                         uv_pos,
                         uv_size,
                     ));
@@ -827,7 +833,8 @@ impl State {
             });
 
             render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
-            render_pass.set_bind_group(1, &self.render.onion_bind_group, &[]);
+            render_pass.set_bind_group(1, &self.render.onion_linear_bind_group, &[]);
+            render_pass.set_bind_group(2, &self.render.onion_nearest_bind_group, &[]);
 
             render_pass.set_vertex_buffer(0, self.render.rect_vertex_buffer.slice(..));
             render_pass.set_vertex_buffer(1, instance_buffer.slice(..));

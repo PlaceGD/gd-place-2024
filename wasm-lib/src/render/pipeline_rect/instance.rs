@@ -9,6 +9,9 @@ pub struct Instance {
     pub t_x: [f32; 2],
     pub t_y: [f32; 2],
     pub color: [f32; 4],
+    // 0
+    // 1, 2, 3
+    // 101,
     pub img: u32,
     pub uv_pos: [f32; 2],
     pub uv_size: [f32; 2],

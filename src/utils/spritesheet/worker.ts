@@ -1,9 +1,30 @@
 import { PNG } from "pngjs/browser";
 import { spritesheet, type SpriteData } from "shared-lib/gd";
 import { clamp } from "shared-lib/util";
+import type { Message, SpritesheetData } from "./spritesheet";
+import { PlaceDB } from "../indexdb";
+
+// const spriteCache = indexedDB.open("spriteCache");
+
+// spriteCache.onupgradeneeded = () => {
+//     const db = spriteCache.result;
+
+//     const store = db.createObjectStore("sprite", { keyPath: "id" });
+// };
+
+let db: PlaceDB | null = null;
+try {
+    db = await PlaceDB.open();
+} catch (e) {
+    console.warn(
+        `Worker failed to open database, falling back to no cache (${e})`
+    );
+}
+
+let spriteUrls: Record<number, string> = {};
 
 const copyOverlay = (
-    src: { buffer: Uint8ClampedArray; width: number },
+    src: SpritesheetData,
     dst: PNG,
     srcX: number,
     srcY: number,
@@ -45,7 +66,7 @@ const copyOverlay = (
 };
 
 const bitBlt = (
-    src: { buffer: Uint8ClampedArray; width: number },
+    src: SpritesheetData,
     dst: PNG,
     srcX: number,
     srcY: number,
@@ -54,9 +75,7 @@ const bitBlt = (
     deltaX: number,
     deltaY: number
 ) => {
-    // console.log("SRC", src.buffer, src.buffer.copy);
     for (let y = 0; y < height; y++) {
-        // src.buffer.
         dst.data.set(
             src.buffer.slice(
                 ((srcY + y) * src.width + srcX) << 2,
@@ -64,26 +83,28 @@ const bitBlt = (
             ),
             ((deltaY + y) * dst.width + deltaX) << 2
         );
-        // Buffer.from(src.buffer).copy(
-        //     dst.data,
-        // );
     }
 };
 
-const loadSprite = (
-    spritesheetData: { buffer: Uint8ClampedArray; width: number },
+const loadSprite = async (
+    spritesheetData: SpritesheetData,
     id: number
-): string | null => {
-    // if (spriteUrls[id] != undefined) {
-    //     return spriteUrls[id];
-    // }
+): Promise<string | null> => {
+    if (spriteUrls[id] != undefined) {
+        return spriteUrls[id];
+    }
 
-    // if (_sprites[main] != undefined) {
-    //     const url = URL.createObjectURL(_sprites[main]);
-    //     spriteUrls[main] = url;
+    try {
+        if (db != null) {
+            let blob = await db.getSpriteCache(id);
+            if (blob != null) {
+                const url = URL.createObjectURL(blob);
+                spriteUrls[id] = url;
 
-    //     return url;
-    // }
+                return url;
+            }
+        }
+    } catch {}
 
     let mSprite = spritesheet.mainSprites[id] as SpriteData | null;
     let dSprite = spritesheet.detailSprites[id] as SpriteData | null;
@@ -139,30 +160,34 @@ const loadSprite = (
     let newPngBuffer = PNG.sync.write(dest);
     let blob = new Blob([newPngBuffer], { type: "image/png" });
 
-    // sprites.update(s => {
-    //     s[id] = blob;
-    //     return s;
-    // });
+    try {
+        if (db != null) {
+            await db.putSpriteCache(id, blob);
+        }
+    } catch {}
 
     const url = URL.createObjectURL(blob);
-    // spriteUrls[id] = url;
+    spriteUrls[id] = url;
 
     return url;
 };
 
-let spritesheetData: { buffer: Uint8ClampedArray; width: number };
+let spritesheetData: SpritesheetData;
 
-onmessage = ev => {
+postMessage({ type: "worker_loaded" } as Message);
+
+onmessage = (ev: MessageEvent<Message>) => {
     if (ev.data.type === "load_sprite") {
-        const blobUrl = loadSprite(spritesheetData, ev.data.spriteId);
-
-        postMessage({
-            type: "loaded_sprite",
-            blobUrl,
-            spriteId: ev.data.spriteId,
+        let id = ev.data.spriteId;
+        loadSprite(spritesheetData, id).then(blobUrl => {
+            postMessage({
+                type: "loaded_sprite",
+                blobUrl,
+                spriteId: id,
+            } as Message);
         });
     } else if (ev.data.type === "load_sheet") {
         spritesheetData = ev.data.spritesheetData;
-        postMessage({ type: "loaded_sheet" });
+        postMessage({ type: "loaded_sheet" } as Message);
     }
 };

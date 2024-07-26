@@ -8,38 +8,64 @@ import { spritesheet, type SpriteData } from "shared-lib/gd";
 import Toast from "../toast";
 import { clamp } from "shared-lib/util";
 
-// export const sprites = persist(
-//     writable<Record<number, Blob>>({}),
-//     createIndexedDBStorage(),
-//     "sprites"
-// );
-// let _sprites: Record<number, Blob> = {};
-// sprites.subscribe(v => {
-//     _sprites = v;
-// });
+export type SpritesheetData = {
+    buffer: Uint8Array;
+    width: number;
+};
 
-// let spriteUrls: Record<number, string> = {};
+export type Message =
+    | {
+          type: "loaded_sheet";
+      }
+    | {
+          type: "loaded_sprite";
+          blobUrl: string;
+          spriteId: number;
+      }
+    | {
+          type: "load_sheet";
+          spritesheetData: SpritesheetData;
+      }
+    | {
+          type: "load_sprite";
+          spriteId: number;
+      }
+    | {
+          type: "worker_loaded";
+      };
 
 export class Spritesheet {
-    static worker: Worker = new Worker(
-        new URL("./worker.ts", import.meta.url),
-        {
-            type: "module",
-        }
-    );
-    static promise_res_list: Record<number, ((v: string) => void)[]> = {};
+    static worker: Worker;
+    static promiseResList: Record<number, ((v: string) => void)[]> = {};
+    static sheetLoadRes: () => void;
 
-    static async loadSheet(spritesheetData: ArrayBuffer): Promise<void> {
-        return new Promise(loadRes => {
-            this.worker.onmessage = e => {
+    // constructor(public worker: Worker)
+
+    static async waitForWorkerLoad(): Promise<void> {
+        return new Promise(workerLoadRes => {
+            Spritesheet.worker = new Worker(
+                new URL("./worker.ts", import.meta.url),
+                {
+                    type: "module",
+                }
+            );
+            Spritesheet.worker.onmessage = (e: MessageEvent<Message>) => {
                 if (e.data.type == "loaded_sprite") {
-                    this.promise_res_list[e.data.spriteId].pop()!(
+                    Spritesheet.promiseResList[e.data.spriteId].pop()!(
                         e.data.blobUrl
                     );
                 } else if (e.data.type == "loaded_sheet") {
-                    loadRes();
+                    Spritesheet.sheetLoadRes();
+                } else if (e.data.type == "worker_loaded") {
+                    workerLoadRes();
                 }
             };
+        });
+    }
+
+    static async loadSheet(spritesheetData: ArrayBuffer): Promise<void> {
+        return new Promise(loadRes => {
+            Spritesheet.sheetLoadRes = loadRes;
 
             new PNG().parse(spritesheetData as Buffer, (error, png) => {
                 if (error) {
@@ -48,28 +74,29 @@ export class Spritesheet {
                     );
                     console.error("PNG parse error:", error);
                 }
-                this.worker.postMessage({
+
+                Spritesheet.worker.postMessage({
                     type: "load_sheet",
                     spritesheetData: {
                         buffer: png.data,
                         width: png.width,
                     },
-                });
+                } as Message);
             });
         });
     }
 
     static async spriteImageStringFromId(id: number): Promise<string | null> {
         return new Promise(res => {
-            if (this.promise_res_list[id] == undefined) {
-                this.promise_res_list[id] = [];
+            if (Spritesheet.promiseResList[id] == undefined) {
+                Spritesheet.promiseResList[id] = [];
             }
-            this.promise_res_list[id].push(res);
+            Spritesheet.promiseResList[id].push(res);
 
-            this.worker.postMessage({
+            Spritesheet.worker.postMessage({
                 type: "load_sprite",
                 spriteId: id,
-            });
+            } as Message);
         });
     }
 }

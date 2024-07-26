@@ -15,6 +15,13 @@ const toastThemes = {
             "--toastBarBackground": "#852F2F",
         },
     },
+    WARN: {
+        theme: {
+            "--toastColor": "#000",
+            "--toastBackground": "#D79921",
+            "--toastBarBackground": "#AC7A1A",
+        },
+    },
     INFO: {
         theme: {
             "--toastColor": "#FFF",
@@ -28,6 +35,10 @@ export default class Toast {
     static showErrorToast = (...message: string[]) => {
         console.error(...message);
         _toast.push(message.join(" "), toastThemes.ERROR);
+    };
+    static showWarningToast = (...message: string[]) => {
+        console.warn(...message);
+        _toast.push(message.join(" "), toastThemes.WARN);
     };
     static showSuccessToast = (...message: string[]) => {
         console.log(...message);

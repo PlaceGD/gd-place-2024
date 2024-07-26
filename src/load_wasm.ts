@@ -84,12 +84,14 @@ export const loadSpritesheet = () => {
 
         blob.arrayBuffer()
             .then((ab: ArrayBuffer) => {
-                Spritesheet.loadSheet(ab).then(() => {
-                    spritesheetProgress.update(v => ({
-                        ...v,
-                        arrayBuffer: new Uint8Array(ab),
-                        blobURL: URL.createObjectURL(blob),
-                    }));
+                Spritesheet.waitForWorkerLoad().then(() => {
+                    Spritesheet.loadSheet(ab).then(() => {
+                        spritesheetProgress.update(v => ({
+                            ...v,
+                            arrayBuffer: new Uint8Array(ab),
+                            blobURL: URL.createObjectURL(blob),
+                        }));
+                    });
                 });
             })
             .catch((e: any) => {

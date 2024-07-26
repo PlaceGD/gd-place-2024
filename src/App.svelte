@@ -20,13 +20,6 @@
 
     alertHasDarkReader();
 
-    if (localStorage.getItem("didErrorOccur") == "1") {
-        localStorage.setItem("didErrorOccur", "0");
-        Toast.showErrorToast(
-            "An error occured and the page had to be refreshed."
-        );
-    }
-
     // import { onMount } from "svelte";
     // import { SITE_KEY } from "./grecaptcha";
     // onMount(() => {

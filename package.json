@@ -8,8 +8,9 @@
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "wasm:build": "cd wasm-lib && wasm-pack build --reference-types --weak-refs --target web && cd ..",
-        "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib"
+        "wasm:build": "cd wasm-lib && npm run random-uuid --silent > ../public/wasm.txt && wasm-pack build --reference-types --weak-refs --target web && cd ..",
+        "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib",
+        "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\""
     },
     "devDependencies": {
         "@jill64/eslint-config-svelte": "^1.2.20",

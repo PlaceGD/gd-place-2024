@@ -77,4 +77,28 @@ export class PlaceDB {
             query.onerror = e => rej(e);
         });
     }
+
+    async putSpritesheetCache(data: Blob): Promise<void> {
+        return new Promise((res, rej) => {
+            const tx = this.db.transaction("randomCache", "readwrite");
+
+            const randomCache = tx.objectStore("randomCache");
+
+            const put = randomCache.put(data, "spritesheet");
+
+            put.onsuccess = () => res();
+            put.onerror = e => rej(e);
+        });
+    }
+    async getSpritesheetCache(): Promise<Blob | null> {
+        return new Promise((res, rej) => {
+            const tx = this.db.transaction("randomCache", "readwrite");
+
+            const randomCache = tx.objectStore("randomCache");
+            const query = randomCache.get("spritesheet");
+
+            query.onsuccess = () => res(query.result);
+            query.onerror = e => rej(e);
+        });
+    }
 }

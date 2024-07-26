@@ -49,16 +49,29 @@ export const initWasm = async () => {
     }`;
 
     try {
-        if (db != null) {
+        const newVersion = (
+            await (await fetch("/public/wasm.txt")).text()
+        ).trim();
+        const currentVersion = localStorage.getItem("wasmVersion");
+
+        if (db != null && newVersion === currentVersion) {
             const wasm = await db.getWasmCache();
 
             if (wasm != undefined) {
+                wasmProgress.set({
+                    max: 100,
+                    progress: 100,
+                    hasLoaded: false,
+                });
+
                 startWasm(wasm);
                 return;
             }
+        } else if (newVersion !== currentVersion) {
+            localStorage.setItem("wasmVersion", newVersion);
         }
     } catch {
-        // console.war
+        Toast.showWarningToast("Database is null, cache will not be used");
     }
 
     downloadWithProgress(WASM_URL, "arraybuffer", p => {
@@ -80,8 +93,47 @@ export const initWasm = async () => {
         });
 };
 
-export const loadSpritesheet = () => {
+const startSpritesheet = (data: Blob) => {
+    data.arrayBuffer()
+        .then((ab: ArrayBuffer) => {
+            Spritesheet.waitForWorkerLoad().then(() => {
+                Spritesheet.loadSheet(ab).then(() => {
+                    spritesheetProgress.update(v => ({
+                        ...v,
+                        arrayBuffer: new Uint8Array(ab),
+                        blobURL: URL.createObjectURL(data),
+                    }));
+                });
+            });
+        })
+        .catch((e: any) => {
+            console.error(e, "(failed in `blob.arrayBuffer`)");
+            Toast.showErrorToast(`Failed to get spritesheet. (${e})`);
+        });
+};
+
+export const loadSpritesheet = async () => {
     const SPRITESHEET_URL = "textures/spritesheet.png";
+
+    try {
+        if (db != null) {
+            const spritesheet = await db.getSpritesheetCache();
+
+            if (spritesheet != undefined) {
+                spritesheetProgress.set({
+                    max: 100,
+                    progress: 100,
+                    arrayBuffer: null,
+                    blobURL: null,
+                });
+
+                startSpritesheet(spritesheet);
+                return;
+            }
+        }
+    } catch {
+        Toast.showWarningToast("Database is null, cache will not be used");
+    }
 
     downloadWithProgress(SPRITESHEET_URL, "blob", progress => {
         console.info(
@@ -95,23 +147,9 @@ export const loadSpritesheet = () => {
         });
     })
         .then(result => {
-            result
-                .arrayBuffer()
-                .then((ab: ArrayBuffer) => {
-                    Spritesheet.waitForWorkerLoad().then(() => {
-                        Spritesheet.loadSheet(ab).then(() => {
-                            spritesheetProgress.update(v => ({
-                                ...v,
-                                arrayBuffer: new Uint8Array(ab),
-                                blobURL: URL.createObjectURL(result),
-                            }));
-                        });
-                    });
-                })
-                .catch((e: any) => {
-                    console.error(e, "(failed in `blob.arrayBuffer`)");
-                    Toast.showErrorToast(`Failed to get spritesheet. (${e})`);
-                });
+            db?.putSpritesheetCache(result);
+
+            startSpritesheet(result);
         })
         .catch(() => {
             Toast.showErrorToast(

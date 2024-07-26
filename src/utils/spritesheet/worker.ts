@@ -187,7 +187,17 @@ onmessage = (ev: MessageEvent<Message>) => {
             } as Message);
         });
     } else if (ev.data.type === "load_sheet") {
-        spritesheetData = ev.data.spritesheetData;
-        postMessage({ type: "loaded_sheet" } as Message);
+        new PNG().parse(ev.data.spritesheetData as Buffer, (error, png) => {
+            if (error) {
+                console.error("PNG parse error:", error);
+            } else {
+                spritesheetData = {
+                    buffer: png.data,
+                    width: png.width,
+                };
+
+                postMessage({ type: "loaded_sheet" } as Message);
+            }
+        });
     }
 };

@@ -16,6 +16,10 @@ export class PlaceDB {
                     keyPath: "id",
                     autoIncrement: false,
                 });
+
+                db.createObjectStore("randomCache", {
+                    autoIncrement: false,
+                });
             };
 
             request.onsuccess = () => {
@@ -46,6 +50,30 @@ export class PlaceDB {
             const query = spriteCache.get(id);
 
             query.onsuccess = () => res(query.result?.data);
+            query.onerror = e => rej(e);
+        });
+    }
+
+    async putWasmCache(data: ArrayBuffer): Promise<void> {
+        return new Promise((res, rej) => {
+            const tx = this.db.transaction("randomCache", "readwrite");
+
+            const randomCache = tx.objectStore("randomCache");
+
+            const put = randomCache.put(data, "wasm");
+
+            put.onsuccess = () => res();
+            put.onerror = e => rej(e);
+        });
+    }
+    async getWasmCache(): Promise<ArrayBuffer | null> {
+        return new Promise((res, rej) => {
+            const tx = this.db.transaction("randomCache", "readwrite");
+
+            const randomCache = tx.objectStore("randomCache");
+            const query = randomCache.get("wasm");
+
+            query.onsuccess = () => res(query.result);
             query.onerror = e => rej(e);
         });
     }

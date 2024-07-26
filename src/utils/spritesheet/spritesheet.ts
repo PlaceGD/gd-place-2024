@@ -9,7 +9,7 @@ import Toast from "../toast";
 import { clamp } from "shared-lib/util";
 
 export type SpritesheetData = {
-    buffer: Uint8Array;
+    buffer: Buffer;
     width: number;
 };
 
@@ -24,7 +24,7 @@ export type Message =
       }
     | {
           type: "load_sheet";
-          spritesheetData: SpritesheetData;
+          spritesheetData: ArrayBuffer;
       }
     | {
           type: "load_sprite";
@@ -67,22 +67,10 @@ export class Spritesheet {
         return new Promise(loadRes => {
             Spritesheet.sheetLoadRes = loadRes;
 
-            new PNG().parse(spritesheetData as Buffer, (error, png) => {
-                if (error) {
-                    Toast.showErrorToast(
-                        "There was an error parsing the spritesheet."
-                    );
-                    console.error("PNG parse error:", error);
-                }
-
-                Spritesheet.worker.postMessage({
-                    type: "load_sheet",
-                    spritesheetData: {
-                        buffer: png.data,
-                        width: png.width,
-                    },
-                } as Message);
-            });
+            Spritesheet.worker.postMessage({
+                type: "load_sheet",
+                spritesheetData,
+            } as Message);
         });
     }
 

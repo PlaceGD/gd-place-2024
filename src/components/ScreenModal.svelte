@@ -25,20 +25,9 @@
     }
 </script>
 
-<!-- <svelte:window
-    on:keyup={e => {
-        console.log("HERE");
-        if (canClose && e.key === "Escape") {
-            modal?.close();
-        } else {
-            e.preventDefault();
-        }
-    }}
-/> -->
-
 <dialog
     aria-label={label}
-    class="flex w-full h-full p-0 overflow-visible pointer-events-auto dialog-panel flex-center"
+    class="flex flex-col w-full h-full gap-4 p-6 overflow-visible text-white bg-transparent pointer-events-auto xs:gap-2 aspect-square open:flex xs:p-4 flex-center"
     bind:this={modal}
     on:close={() => dispatcher("close")}
     on:cancel={e => {
@@ -51,7 +40,7 @@
 >
     <ToastContainer />
 
-    <div class="flex-auto menu-panel w-full max-w-[600px] max-h-[600px]">
+    <div class="flex-auto menu-panel w-full max-w-[500px] max-h-[500px] h-full">
         <slot />
         {#if state === "loading"}
             <Loading class="rounded-xl" />

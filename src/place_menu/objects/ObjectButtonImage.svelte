@@ -108,7 +108,7 @@
 
 <script lang="ts">
     import Image from "../../components/Image.svelte";
-    import { BUTTON_SPRITESHEET, sprites } from "../../utils/spritesheet";
+    import { BUTTON_SPRITESHEET } from "../../utils/spritesheet/spritesheet";
 
     export let id: number;
     export let objButtonSize: number;
@@ -118,9 +118,11 @@
     const onImageVisible = () => {
         if (!BUTTON_SPRITESHEET) return;
 
-        console.log(objButtonSize);
+        // console.log(objButtonSize);
 
-        src = BUTTON_SPRITESHEET.spriteImageStringFromId(id);
+        BUTTON_SPRITESHEET.spriteImageStringFromId(id).then(bSrc => {
+            src = bSrc;
+        });
     };
 </script>
 

@@ -3,7 +3,10 @@ import initWasmInner from "wasm-lib";
 import * as wasm from "wasm-lib";
 import Toast from "./utils/toast";
 import { HAS_OPT_WASM } from "./main";
-import { loadButtonSpritesheet, Spritesheet } from "./utils/spritesheet";
+import {
+    loadButtonSpritesheet,
+    Spritesheet,
+} from "./utils/spritesheet/spritesheet";
 
 export const wasmProgress = writable({
     progress: -1,

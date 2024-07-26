@@ -1,0 +1,165 @@
+import { PNG } from "pngjs/browser";
+import { spritesheet, type SpriteData } from "shared-lib/gd";
+import { clamp } from "shared-lib/util";
+
+const copyOverlay = (
+    src: { buffer: Uint8ClampedArray; width: number },
+    dst: PNG,
+    srcX: number,
+    srcY: number,
+    width: number,
+    height: number,
+    dstX: number,
+    dstY: number,
+    colorMod: [number, number, number]
+) => {
+    const to1D = (x: number, y: number, width: number) => x + y * width;
+
+    const srcData = src.buffer;
+
+    for (let i = 0; i < +width; i++) {
+        for (let j = 0; j < +height; j++) {
+            let sx = i + srcX;
+            let sy = j + srcY;
+            let dx = i + dstX;
+            let dy = j + dstY;
+
+            let srcIdx = to1D(sx, sy, src.width) * 4;
+            let dstIdx = to1D(dx, dy, dst.width) * 4;
+
+            let srcA = srcData[srcIdx + 3] / 255;
+            let dstA = dst.data[dstIdx + 3] / 255;
+
+            let finalA = clamp(dstA * (1 - srcA) + srcA, 0, 1);
+            for (let i = 0; i < 3; i++) {
+                dst.data[dstIdx + i] =
+                    dst.data[dstIdx + i] * dstA * (1 - srcA) +
+                    ((srcData[srcIdx + i] * colorMod[i]) / 255) * srcA;
+                if (finalA > 0) {
+                    dst.data[dstIdx + i] /= finalA;
+                }
+            }
+            dst.data[dstIdx + 3] = finalA * 255;
+        }
+    }
+};
+
+const bitBlt = (
+    src: { buffer: Uint8ClampedArray; width: number },
+    dst: PNG,
+    srcX: number,
+    srcY: number,
+    width: number,
+    height: number,
+    deltaX: number,
+    deltaY: number
+) => {
+    // console.log("SRC", src.buffer, src.buffer.copy);
+    for (let y = 0; y < height; y++) {
+        // src.buffer.
+        dst.data.set(
+            src.buffer.slice(
+                ((srcY + y) * src.width + srcX) << 2,
+                ((srcY + y) * src.width + srcX + width) << 2
+            ),
+            ((deltaY + y) * dst.width + deltaX) << 2
+        );
+        // Buffer.from(src.buffer).copy(
+        //     dst.data,
+        // );
+    }
+};
+
+const loadSprite = (
+    spritesheetData: { buffer: Uint8ClampedArray; width: number } | null,
+    id: number
+): string | null => {
+    if (!spritesheetData) {
+        return null;
+    }
+
+    // if (spriteUrls[id] != undefined) {
+    //     return spriteUrls[id];
+    // }
+
+    // if (_sprites[main] != undefined) {
+    //     const url = URL.createObjectURL(_sprites[main]);
+    //     spriteUrls[main] = url;
+
+    //     return url;
+    // }
+
+    let mSprite = spritesheet.mainSprites[id] as SpriteData | null;
+    let dSprite = spritesheet.detailSprites[id] as SpriteData | null;
+
+    const dest = new PNG({
+        width:
+            Math.max(
+                (mSprite == null ? 0 : mSprite.size[0]) +
+                    Math.abs(mSprite == null ? 0 : mSprite.offset[0]) * 2,
+                (dSprite == null ? 0 : dSprite.size[0]) +
+                    Math.abs(dSprite == null ? 0 : dSprite.offset[0]) * 2
+            ) + 2,
+        height:
+            Math.max(
+                (mSprite == null ? 0 : mSprite.size[1]) +
+                    Math.abs(mSprite == null ? 0 : mSprite.offset[1]) * 2,
+                (dSprite == null ? 0 : dSprite.size[1]) +
+                    Math.abs(dSprite == null ? 0 : dSprite.offset[1]) * 2
+            ) + 2,
+    });
+
+    if (mSprite != null) {
+        const mTLX = (dest.width - mSprite.size[0]) / 2 + mSprite.offset[0];
+        const mTLY = (dest.height - mSprite.size[1]) / 2 + mSprite.offset[1];
+
+        bitBlt(
+            spritesheetData,
+            dest,
+            spritesheet.mainSprites[id].pos[0],
+            spritesheet.mainSprites[id].pos[1],
+            mSprite.size[0],
+            mSprite.size[1],
+            mTLX,
+            mTLY
+        );
+    }
+    if (dSprite != null) {
+        const dTLX = (dest.width - dSprite.size[0]) / 2 + dSprite.offset[0];
+        const dTLY = (dest.height - dSprite.size[1]) / 2 + dSprite.offset[1];
+        copyOverlay(
+            spritesheetData,
+            dest,
+            spritesheet.detailSprites[id].pos[0],
+            spritesheet.detailSprites[id].pos[1],
+            dSprite.size[0],
+            dSprite.size[1],
+            dTLX,
+            dTLY,
+            [178, 178, 255]
+        );
+    }
+
+    let newPngBuffer = PNG.sync.write(dest);
+    let blob = new Blob([newPngBuffer], { type: "image/png" });
+
+    // sprites.update(s => {
+    //     s[id] = blob;
+    //     return s;
+    // });
+
+    const url = URL.createObjectURL(blob);
+    // spriteUrls[id] = url;
+
+    return url;
+};
+
+onmessage = ev => {
+    if (ev.data.type === "load_sprite") {
+        // console.log("glebby: ", ev.data.spritesheetData);
+
+        const blobUrl = loadSprite(ev.data.spritesheetData, ev.data.spriteId);
+
+        postMessage({ type: "loaded_sprite", blobUrl });
+    }
+};

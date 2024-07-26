@@ -1,4 +1,18 @@
 
+
+fn eucl_mod(a: f32, b: f32) -> f32 {
+    let r = a % b;
+    if r < 0.0 { return r + abs(b); } else { return r; }
+}
+fn is_within_rect(
+    pos: vec2<f32>,
+    min: vec2<f32>,
+    max: vec2<f32>,
+    extend: f32,
+) -> bool {
+    return pos.x >= min.x - extend && pos.y >= min.y - extend && pos.x <= max.x + extend && pos.y <= max.y + extend;
+}
+
 struct Globals {
     screen_size: vec2<f32>,
     onion_size: vec2<f32>,
@@ -26,6 +40,7 @@ struct VertexOutput {
     @location(0) color: vec4<f32>,
     @location(1) uv: vec2<f32>,
     @location(2) img: u32,
+    @location(3) uv_size: vec2<f32>,
 };
 
 @vertex
@@ -39,6 +54,7 @@ fn vs_main(
 
     out.pos = vec4<f32>(pos / globals.screen_size * 2.0, 0.0, 1.0);
     out.uv = (vec2(vertex.pos.x, 1.0 - vertex.pos.y) * instance.uv_size + instance.uv_pos);
+    out.uv_size = instance.uv_size;
     out.color = instance.color;
     out.img = instance.img;
 
@@ -118,6 +134,13 @@ fn fs_color(in: VertexOutput) -> vec4<f32> {
         }
         case 5u: {
             return textureSampleLevel(t_5, s_5, in.uv, 0.0) * in.color;
+        }
+        case 1000u: {
+            if !is_within_rect(in.uv, vec2(0.0), in.uv_size, -10.0) && eucl_mod(in.uv.x + in.uv.y - globals.time * 40.0, 40.0) < 20.0 {
+                return in.color;
+            } else {
+                return vec4(0.0);
+            }
         }
         default: {
             return vec4(sin(globals.time), cos(globals.time), 0.0, 1.0);

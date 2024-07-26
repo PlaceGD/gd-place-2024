@@ -198,19 +198,22 @@ impl State {
     fn get_camera_world_rect(&self) -> Rect<f32> {
         let (cx, cy) = (self.camera_pos.x, self.camera_pos.y);
         let s = self.get_zoom_scale();
-        Rect::new(
+        let mut gongy = Rect::new(
             cx - self.width as f32 / 2.0 / s,
             cy - self.height as f32 / 2.0 / s,
             self.width as f32 / s,
             self.height as f32 / s,
-        )
+        );
+
+        gongy.w /= 2.0;
+        gongy.h /= 2.0;
+        gongy.x += gongy.w / 2.0;
+        gongy.y += gongy.h / 2.0;
+
+        gongy
     }
     fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
-        let mut view_rect = self.get_camera_world_rect();
-        view_rect.w /= 2.0;
-        view_rect.h /= 2.0;
-        view_rect.x += view_rect.w / 2.0;
-        view_rect.y += view_rect.h / 2.0;
+        let view_rect = self.get_camera_world_rect();
 
         let mut out = vec![];
 
@@ -573,6 +576,76 @@ impl State {
                 });
             };
 
+            // view rect and chunk debug
+            // {
+            //     let transform = self.view_transform();
+            //     let view_rect = self.get_camera_world_rect();
+
+            //     let size = vec2(view_rect.w, view_rect.h);
+
+            //     rects.push(pipeline_rect::instance::Instance::new(
+            //         transform
+            //             * Affine2::from_scale_angle_translation(
+            //                 size,
+            //                 0.0,
+            //                 vec2(view_rect.x, view_rect.y),
+            //             ),
+            //         vec4(1.0, 0.0, 0.0, 0.5),
+            //         1000,
+            //         vec2(0.0, 0.0),
+            //         size * 4.0,
+            //     ));
+
+            //     // for (x, y) in view_rect.corners() {
+            //     //     rects.push(pipeline_rect::instance::Instance::new(
+            //     //         transform
+            //     //             * Affine2::from_scale_angle_translation(
+            //     //                 vec2(10.0, 10.0),
+            //     //                 0.0,
+            //     //                 vec2(x - 5.0, y - 5.0),
+            //     //             ),
+            //     //         vec4(1.0, 0.0, 0.0, 0.5),
+            //     //         0,
+            //     //         vec2(0.0, 0.0),
+            //     //         vec2(0.0, 0.0),
+            //     //     ));
+            //     // }
+
+            //     let now = now();
+
+            //     for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
+            //         let size = vec2(20.0 * 30.0, 20.0 * 30.0);
+            //         rects.push(pipeline_rect::instance::Instance::new(
+            //             transform
+            //                 * Affine2::from_scale_angle_translation(
+            //                     size,
+            //                     0.0,
+            //                     vec2(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0),
+            //                 ),
+            //             vec4(
+            //                 0.0,
+            //                 1.0,
+            //                 0.0,
+            //                 map!(
+            //                     now - chunk.last_time_visible,
+            //                     0.0,
+            //                     UNLOAD_CHUNK_TIME * 1000.0,
+            //                     1.0,
+            //                     0.0
+            //                 ) as f32,
+            //             ),
+            //             1000,
+            //             vec2(0.0, 0.0),
+            //             size * 4.0,
+            //         ));
+            //     }
+
+            //     calls.push(DrawCall {
+            //         blend_mode: BlendMode::Normal,
+            //         until_instance: rects.len() as u32,
+            //     });
+            // }
+
             // objects
             {
                 let transform = self.view_transform();
@@ -749,6 +822,40 @@ impl State {
                 }
             };
 
+            // selection box
+            {
+                let highlight_obj = if self.show_preview {
+                    Some((self.preview_object.into_obj(), (100, 255, 100), None))
+                } else if let Some(d) = self.selected_object {
+                    self.level.get_obj_by_key(d).map(|v| {
+                        (
+                            *v,
+                            (255, 100, 100),
+                            Some(String::from_utf8(d.into()).unwrap()),
+                        )
+                    })
+                } else {
+                    None
+                };
+
+                if let Some((obj, (r, g, b), key)) = highlight_obj {
+                    let transform = self.view_transform() * obj_transform(&obj);
+
+                    let rect = padded_obj_rect(&obj, 30.0);
+                    let rect_size_vec = vec2(rect.w, rect.h);
+
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        transform
+                            * Affine2::from_translation(-rect_size_vec / 2.0)
+                            * Affine2::from_scale(rect_size_vec),
+                        vec4(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0),
+                        1000,
+                        vec2(0.0, 0.0),
+                        rect_size_vec,
+                    ));
+                }
+            }
+
             // ground
             {
                 const GROUND_SIZE_BLOCKS: f32 = 4.25;
@@ -756,11 +863,7 @@ impl State {
 
                 let transform = self.view_transform();
 
-                let mut view_rect = self.get_camera_world_rect();
-                // view_rect.w /= 2.0;
-                // view_rect.h /= 2.0;
-                // view_rect.x += view_rect.w / 2.0;
-                // view_rect.y += view_rect.h / 2.0;
+                let view_rect = self.get_camera_world_rect();
                 let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
                 let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
 

@@ -20,48 +20,56 @@ import { clamp } from "shared-lib/util";
 
 // let spriteUrls: Record<number, string> = {};
 
-export let BUTTON_SPRITESHEET: Spritesheet | null = null;
-export const loadButtonSpritesheet = (b: ArrayBuffer) => {
-    BUTTON_SPRITESHEET = new Spritesheet(b);
-};
-
 export class Spritesheet {
-    sPng: PNG | null = null;
-    worker: Worker = new Worker(new URL("./worker.ts", import.meta.url), {
-        type: "module",
-    });
+    static worker: Worker = new Worker(
+        new URL("./worker.ts", import.meta.url),
+        {
+            type: "module",
+        }
+    );
+    static promise_res_list: Record<number, ((v: string) => void)[]> = {};
 
-    constructor(spritesheetData: ArrayBuffer) {
-        new PNG().parse(spritesheetData as Buffer, (error, data) => {
-            if (error) {
-                Toast.showErrorToast(
-                    "There was an error parsing the spritesheet."
-                );
-                console.error("PNG parse error:", error);
-            }
-            this.sPng = data;
+    static async loadSheet(spritesheetData: ArrayBuffer): Promise<void> {
+        return new Promise(loadRes => {
+            this.worker.onmessage = e => {
+                if (e.data.type == "loaded_sprite") {
+                    this.promise_res_list[e.data.spriteId].pop()!(
+                        e.data.blobUrl
+                    );
+                } else if (e.data.type == "loaded_sheet") {
+                    loadRes();
+                }
+            };
+
+            new PNG().parse(spritesheetData as Buffer, (error, png) => {
+                if (error) {
+                    Toast.showErrorToast(
+                        "There was an error parsing the spritesheet."
+                    );
+                    console.error("PNG parse error:", error);
+                }
+                this.worker.postMessage({
+                    type: "load_sheet",
+                    spritesheetData: {
+                        buffer: png.data,
+                        width: png.width,
+                    },
+                });
+            });
         });
     }
 
-    async spriteImageStringFromId(id: number): Promise<string | null> {
+    static async spriteImageStringFromId(id: number): Promise<string | null> {
         return new Promise(res => {
-            if (!this.sPng) {
-                res(null);
-            } else {
-                this.worker.addEventListener("message", e => {
-                    // res(e.data.blobUrl
-                    res(e.data.blobUrl);
-                });
-
-                this.worker.postMessage({
-                    type: "load_sprite",
-                    spritesheetData: {
-                        buffer: this.sPng.data,
-                        width: this.sPng.width,
-                    },
-                    spriteId: id,
-                });
+            if (this.promise_res_list[id] == undefined) {
+                this.promise_res_list[id] = [];
             }
+            this.promise_res_list[id].push(res);
+
+            this.worker.postMessage({
+                type: "load_sprite",
+                spriteId: id,
+            });
         });
     }
 }

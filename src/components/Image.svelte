@@ -11,6 +11,7 @@
 
     const dispatcher = createEventDispatcher();
 
+    let hasBeenVisible = false;
     let hasLoaded = false;
 
     const options = {
@@ -20,11 +21,15 @@
     };
 
     let observer: IntersectionObserver;
-    $: if (hasLoaded) {
+    $: if (hasBeenVisible) {
         observer.unobserve(imgElement);
     }
-    $: if (src != null && hasLoaded) {
+    $: if (src != null && hasBeenVisible) {
         imgElement.src = src;
+        // const onLoad = imgElement.addEventListener("load", () => {
+        //     console.log("gonga");
+        //     onLoad
+        // });
     }
 
     // $: {
@@ -43,7 +48,7 @@
         observer = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
                 dispatcher("visible");
-                hasLoaded = true;
+                hasBeenVisible = true;
             }
         }, options);
         observer.observe(image);
@@ -65,6 +70,7 @@
         <img
             bind:this={imgElement}
             use:useLazyLoad
+            on:load={() => (hasLoaded = true)}
             {alt}
             draggable="false"
             style={`

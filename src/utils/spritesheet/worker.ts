@@ -71,13 +71,9 @@ const bitBlt = (
 };
 
 const loadSprite = (
-    spritesheetData: { buffer: Uint8ClampedArray; width: number } | null,
+    spritesheetData: { buffer: Uint8ClampedArray; width: number },
     id: number
 ): string | null => {
-    if (!spritesheetData) {
-        return null;
-    }
-
     // if (spriteUrls[id] != undefined) {
     //     return spriteUrls[id];
     // }
@@ -154,12 +150,19 @@ const loadSprite = (
     return url;
 };
 
+let spritesheetData: { buffer: Uint8ClampedArray; width: number };
+
 onmessage = ev => {
     if (ev.data.type === "load_sprite") {
-        // console.log("glebby: ", ev.data.spritesheetData);
+        const blobUrl = loadSprite(spritesheetData, ev.data.spriteId);
 
-        const blobUrl = loadSprite(ev.data.spritesheetData, ev.data.spriteId);
-
-        postMessage({ type: "loaded_sprite", blobUrl });
+        postMessage({
+            type: "loaded_sprite",
+            blobUrl,
+            spriteId: ev.data.spriteId,
+        });
+    } else if (ev.data.type === "load_sheet") {
+        spritesheetData = ev.data.spritesheetData;
+        postMessage({ type: "loaded_sheet" });
     }
 };

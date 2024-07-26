@@ -3,10 +3,7 @@ import initWasmInner from "wasm-lib";
 import * as wasm from "wasm-lib";
 import Toast from "./utils/toast";
 import { HAS_OPT_WASM } from "./main";
-import {
-    loadButtonSpritesheet,
-    Spritesheet,
-} from "./utils/spritesheet/spritesheet";
+import { Spritesheet } from "./utils/spritesheet/spritesheet";
 
 export const wasmProgress = writable({
     progress: -1,
@@ -87,13 +84,13 @@ export const loadSpritesheet = () => {
 
         blob.arrayBuffer()
             .then((ab: ArrayBuffer) => {
-                loadButtonSpritesheet(ab);
-
-                spritesheetProgress.update(v => ({
-                    ...v,
-                    arrayBuffer: new Uint8Array(ab),
-                    blobURL: URL.createObjectURL(blob),
-                }));
+                Spritesheet.loadSheet(ab).then(() => {
+                    spritesheetProgress.update(v => ({
+                        ...v,
+                        arrayBuffer: new Uint8Array(ab),
+                        blobURL: URL.createObjectURL(blob),
+                    }));
+                });
             })
             .catch((e: any) => {
                 console.error(e, "(failed in `blob.arrayBuffer`)");

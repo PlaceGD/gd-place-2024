@@ -3,7 +3,7 @@
     import ToastContainer from "./ToastContainer.svelte";
     import Cross from "../icons/cross.svg";
     import Loading from "../components/Loading.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
 
     let modal: HTMLDialogElement | null = null;
 
@@ -17,6 +17,11 @@
 
     let dispatcher = createEventDispatcher();
 
+    onMount(() => {
+        console.log(modal);
+        modal?.close();
+    });
+
     $: {
         if (isOpen) {
             modal?.showModal();
@@ -28,7 +33,11 @@
 
 <dialog
     aria-label={label}
-    class="flex flex-col w-full h-full gap-4 p-6 overflow-visible text-white bg-transparent pointer-events-auto xs:gap-2 aspect-square open:flex xs:p-4 flex-center"
+    class={cx({
+        "flex-col w-full h-full gap-4 p-6 overflow-visible text-white bg-transparent pointer-events-auto xs:gap-2 aspect-square open:flex xs:p-4 flex-center": true,
+        flex: isOpen,
+        hidden: !isOpen,
+    })}
     bind:this={modal}
     on:close={() => dispatcher("close")}
     on:cancel={e => {
@@ -41,11 +50,11 @@
 >
     <ToastContainer />
 
-    <div class={`flex-auto menu-panel w-full h-full ${size}`}>
-        <slot />
+    <div class={`flex-auto menu-panel w-full h-full relative ${size}`}>
         {#if state === "loading"}
             <Loading class="rounded-xl" />
         {/if}
+        <slot />
     </div>
 
     {#if hasCloseButton}

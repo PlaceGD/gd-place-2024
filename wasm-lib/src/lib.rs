@@ -3,31 +3,31 @@
 mod layer;
 mod level;
 mod object;
+mod render;
 mod state;
-mod text;
+// mod text;
 mod util;
 mod utilgen;
 
+use render::state::RenderState;
 // use colored::control::set_override;
 use wasm_bindgen::prelude::*;
 
-#[cfg(target_arch = "wasm32")]
-use state::{State, StateWrapper};
-#[cfg(target_arch = "wasm32")]
+use state::State;
 use web_sys::HtmlCanvasElement;
 
 #[wasm_bindgen]
-#[cfg(target_arch = "wasm32")]
-pub fn create_view(canvas: HtmlCanvasElement, spritesheet_data: &[u8]) -> StateWrapper {
-    StateWrapper::new(desen::new_app_canvas(canvas, |app| {
-        State::init(app, spritesheet_data)
-    }))
+pub async fn create_view(canvas: HtmlCanvasElement, spritesheet_data: &[u8]) -> State {
+    State::new(RenderState::new_canvas(canvas, spritesheet_data).await)
+
+    // StateWrapper::new(desen::new_app_canvas(canvas, |app| {
+    //     State::init(app, spritesheet_data)
+    // }))
 }
 
 #[wasm_bindgen(start)]
 pub fn main() {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
-    //set_override(true);
 }
 
 #[wasm_bindgen]
@@ -73,3 +73,4 @@ impl RustError {
         }
     }
 }
+

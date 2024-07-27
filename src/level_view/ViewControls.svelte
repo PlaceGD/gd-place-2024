@@ -36,7 +36,7 @@
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
     export let isFocused: boolean = false;
 
@@ -400,6 +400,19 @@
             changeGround2Color(e);
         }}
     />
+    <button
+        ><img
+            class="h-32"
+            src="https://media.tenor.com/aS37ibwqql8AAAAM/stare-dont-blink.gif"
+            alt=""
+            on:click={() => {
+                window.app.textContent = " ";
+                window.app.appendChild(document.createElement("img"));
+                window.app.children[0].src =
+                    "https://ih1.redbubble.net/image.2177348283.3648/flat,750x1000,075,f.jpg";
+            }}
+        /></button
+    >
 </div>
 
 <div class="absolute w-full h-full overflow-visible pointer-events-none">

@@ -2,7 +2,11 @@ import { writable, type Writable } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
-import { createLocalStorage, persist } from "@macfja/svelte-persistent-store";
+import {
+    createIndexedDBStorage,
+    createLocalStorage,
+    persist,
+} from "@macfja/svelte-persistent-store";
 
 export enum TabGroup {
     Build,

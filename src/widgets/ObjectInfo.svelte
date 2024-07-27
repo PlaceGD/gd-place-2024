@@ -14,7 +14,7 @@
     import OnceButton from "../components/OnceButton.svelte";
     import ColoredName from "../components/ColoredName.svelte";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
 
     const cooldown = new SyncedCooldown(
         `userData/${$loginData.currentUserData!.userData.uid}`,

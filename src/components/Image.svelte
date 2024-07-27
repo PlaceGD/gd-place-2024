@@ -1,11 +1,17 @@
 <script lang="ts">
     import { default as cx } from "classnames";
+    import { createEventDispatcher } from "svelte";
 
-    export let src: string;
+    export let src: string | null = null;
     export let alt: string = "";
     export let skeleton: boolean = false;
     export let lazyLoad: boolean = false;
 
+    let imgElement: HTMLImageElement;
+
+    const dispatcher = createEventDispatcher();
+
+    let hasBeenVisible = false;
     let hasLoaded = false;
 
     const options = {
@@ -14,26 +20,42 @@
         threshold: 0,
     };
 
-    const useLazyLoad = (image: HTMLImageElement) => {
-        const loaded = () => {
-            hasLoaded = true;
-        };
+    let observer: IntersectionObserver;
+    $: if (hasBeenVisible) {
+        observer.unobserve(imgElement);
+    }
+    $: if (src != null && hasBeenVisible) {
+        imgElement.src = src;
+        // const onLoad = imgElement.addEventListener("load", () => {
+        //     console.log("gonga");
+        //     onLoad
+        // });
+    }
 
-        const observer = new IntersectionObserver(entries => {
+    // $: {
+    //     if (currentImage != null && src != null) {
+    //         currentImage.src = src;
+    //     }
+    // }
+
+    // const loaded = () => {
+    //     if (src != null) {
+    //         hasLoaded = true;
+    //     }
+    // };
+
+    const useLazyLoad = (image: HTMLImageElement) => {
+        observer = new IntersectionObserver(entries => {
             if (entries[0].isIntersecting) {
-                image.src = src;
-                if (image.complete) {
-                    loaded();
-                } else {
-                    image.addEventListener("load", loaded);
-                }
+                dispatcher("visible");
+                hasBeenVisible = true;
             }
         }, options);
         observer.observe(image);
 
         return {
             destroy() {
-                image.removeEventListener("load", loaded);
+                // image.removeEventListener("load", loaded);
             },
         };
     };
@@ -44,19 +66,24 @@
 </script>
 
 {#if lazyLoad}
-    <img
-        use:useLazyLoad
-        {alt}
-        draggable="false"
-        style={cx({
-            hidden: !hasLoaded,
-        })}
-        aria-label={alt}
-        {...restProps}
-    />
-    {#if skeleton && !hasLoaded}
-        <div class="w-2/3 h-2/3 placeholder" />
-    {/if}
+    <span class="relative w-full h-full flex-center">
+        <img
+            bind:this={imgElement}
+            use:useLazyLoad
+            on:load={() => (hasLoaded = true)}
+            {alt}
+            draggable="false"
+            style={`
+                position: absolute;
+                ${hasLoaded ? "visibility: visible;" : "visibility: hidden;"}
+            `}
+            aria-label={alt}
+            {...restProps}
+        />
+        {#if skeleton && !hasLoaded}
+            <div class="absolute w-2/3 h-2/3 placeholder" />
+        {/if}
+    </span>
 {:else}
     <img {src} {alt} aria-label={alt} {...$$restProps} draggable="false" />
 {/if}

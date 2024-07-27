@@ -5,7 +5,7 @@ import Toast from "../utils/toast";
 import { addDeleteText, editorData } from "../stores";
 import debounce from "lodash.debounce";
 
-export const handleSub = (state: wasm.StateWrapper) => {
+export const handleSub = (state: wasm.State) => {
     for (let chunk of state.get_chunks_to_sub()) {
         subChunk(
             [chunk.x, chunk.y],
@@ -37,13 +37,13 @@ export const handleSub = (state: wasm.StateWrapper) => {
     }
 };
 
-export const handleUnsub = (state: wasm.StateWrapper) => {
+export const handleUnsub = (state: wasm.State) => {
     for (let chunk of state.get_chunks_to_unsub()) {
         unsubChunk([chunk.x, chunk.y]);
     }
 };
 
-const savePos = debounce((state: wasm.StateWrapper) => {
+const savePos = debounce((state: wasm.State) => {
     let zoom = Math.round(state.get_zoom());
     let [x, y] = state.get_camera_pos().map(Math.round);
 
@@ -57,14 +57,14 @@ const savePos = debounce((state: wasm.StateWrapper) => {
     });
 }, 200);
 
-export const moveCamera = (state: wasm.StateWrapper, x: number, y: number) => {
+export const moveCamera = (state: wasm.State, x: number, y: number) => {
     state.set_camera_pos(x, y);
 
     savePos(state);
     handleSub(state);
 };
 
-export const getCameraPos = (state: wasm.StateWrapper): [number, number] => {
+export const getCameraPos = (state: wasm.State): [number, number] => {
     const [x, y] = state.get_camera_pos();
     return [x, y];
 };

@@ -20,13 +20,6 @@
 
     alertHasDarkReader();
 
-    if (localStorage.getItem("didErrorOccur") == "1") {
-        localStorage.setItem("didErrorOccur", "0");
-        Toast.showErrorToast(
-            "An error occured and the page had to be refreshed."
-        );
-    }
-
     // import { onMount } from "svelte";
     // import { SITE_KEY } from "./grecaptcha";
     // onMount(() => {
@@ -43,6 +36,19 @@
 
     $: max = $wasmProgress.max + $spritesheetProgress.max;
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
+
+    // const myWorker = new Worker(new URL("./wonktest.ts", import.meta.url), {
+    //     type: "module",
+    // });
+
+    // myWorker.onmessage = e => {
+    //     console.log("Message received from worker", e.data);
+    // };
+
+    // for (let i = 0; i < 10; i++) {
+    //     myWorker.postMessage({ gay: i });
+    //     console.log("post", i);
+    // }
 </script>
 
 <ToastContainer />

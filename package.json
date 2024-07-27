@@ -8,14 +8,16 @@
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "wasm:build": "cd wasm-lib && wasm-pack build --reference-types --weak-refs --target web && cd ..",
-        "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib"
+        "wasm:build": "cd wasm-lib && npm run random-uuid --silent > ../public/wasm.txt && wasm-pack build --reference-types --weak-refs --target web && cd ..",
+        "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib",
+        "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\""
     },
     "devDependencies": {
         "@jill64/eslint-config-svelte": "^1.2.20",
         "@sveltejs/vite-plugin-svelte": "^2.4.2",
         "@tsconfig/svelte": "^5.0.0",
         "@types/lodash.debounce": "^4.0.8",
+        "@types/pngjs": "^6.0.5",
         "@types/svelte-range-slider-pips": "^2.0.2",
         "@zerodevx/svelte-toast": "^0.9.5",
         "autoprefixer": "^10.4.16",
@@ -41,6 +43,7 @@
         "firebase": "^10.5.2",
         "firebase-tools": "^13.0.3",
         "lodash.debounce": "^4.0.8",
+        "pngjs": "^7.0.0",
         "prettier-plugin-svelte": "^3.0.3",
         "shared-lib": "file:shared-lib",
         "svelte-awesome-color-picker": "^3.1.0",

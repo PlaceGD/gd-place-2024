@@ -8,17 +8,22 @@
     import Widget from "../widgets/Widget.svelte";
     import { loadState, runCallbacks } from "../state";
 
-    export let state: wasm.StateWrapper | null;
+    export let state: wasm.State | null;
 
     export let canvas: HTMLCanvasElement;
     export let canvasWidth: number;
     export let canvasHeight: number;
     // let text_draws: wasm.TextDraw[] = [];
 
-    onMount(() => {
+    onMount(async () => {
         try {
-            state = wasm.create_view(canvas, $spritesheetProgress.arrayBuffer!);
+            console.log("A");
+            state = await wasm.create_view(
+                canvas,
+                $spritesheetProgress.arrayBuffer!
+            );
             loadState(state);
+            console.log("B");
         } catch (e: any) {
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(
@@ -32,12 +37,12 @@
     const draw = (time: number) => {
         if (state != null) {
             try {
-                state.pub_render((time - prevTime) / 1000);
+                state.render((time - prevTime) / 1000);
                 prevTime = time;
 
                 runCallbacks();
             } catch (e: any) {
-                console.error(e, "(Failed in `state.pub_render`)");
+                console.error(e, "(Failed in `state.render`)");
                 Toast.showErrorToast(
                     `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`
                 );

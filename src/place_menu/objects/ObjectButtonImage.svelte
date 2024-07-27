@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import { objects, spritesheet, type SpriteData } from "shared-lib/gd";
     import { round } from "shared-lib/util";
     import { spritesheetProgress } from "../../load_wasm";
@@ -104,4 +104,33 @@
             alt=""
         />
     {/if}
-</div>
+</div> -->
+
+<script lang="ts">
+    import Image from "../../components/Image.svelte";
+    import { Spritesheet } from "../../utils/spritesheet/spritesheet";
+
+    export let id: number;
+    export let objButtonSize: number;
+
+    let src: string | null = null;
+
+    const onImageVisible = () => {
+        // console.log(objButtonSize);
+
+        Spritesheet.spriteImageStringFromId(id).then(bSrc => {
+            // console.log("gle", bSrc);
+            src = bSrc;
+        });
+    };
+</script>
+
+<!-- <div class="relative flex-center"> -->
+<Image
+    bind:src
+    lazyLoad
+    on:visible={onImageVisible}
+    skeleton
+    class="object-contain w-full h-full"
+/>
+<!-- </div> -->

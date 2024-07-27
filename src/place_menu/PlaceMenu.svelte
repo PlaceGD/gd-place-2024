@@ -21,7 +21,7 @@
     import { addObject, removeObject } from "../firebase/object";
     import { useIsOverflowing } from "../utils/document";
     import { DEBUG } from "../utils/debug";
-    import SpriteSheet from "../utils/spritesheet";
+    // import SpriteSheet from "../utils/spritesheet";
 
     import { EditTab, TRANSFORM_BUTTONS, WidgetType } from "./edit/edit_tab";
     import ColorsTab from "./edit/ColorsTab.svelte";
@@ -29,7 +29,7 @@
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
 
     const minimizeAnimDur = 0.5;
 

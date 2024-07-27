@@ -9355,17 +9355,6 @@ pub fn get_available_objects() -> &'static [(u32, ObjectInfo)] {
             },
         ),
         (
-            3979,
-            ObjectInfo {
-                place_offset_x: 0.0,
-                place_offset_y: 0.0,
-                tintable: true,
-                solid: false,
-                builtin_scale: 1f32,
-                category: ObjectCategory::Deco,
-            },
-        ),
-        (
             3983,
             ObjectInfo {
                 place_offset_x: 0.0,

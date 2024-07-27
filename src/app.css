@@ -76,6 +76,10 @@ dialog::backdrop {
         @apply relative shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
     }
 
+    .modal-panel {
+        @apply h-full w-full overflow-hidden p-6 xs:p-4;
+    }
+
     .sliding-selector {
         @apply relative overflow-hidden rounded-lg bg-white/20;
     }

@@ -49,7 +49,7 @@
 
     $: {
         if ($openMenu != ExclusiveMenus.Login) {
-            currentPage = Page.CREATE_USER;
+            currentPage = Page.LOGIN_METHOD;
             isOpen = false;
             // modal?.close();
         } else if ($openMenu == ExclusiveMenus.Login) {
@@ -148,7 +148,7 @@
     <!-- LOGIN METHOD -->
     {#if currentPage == Page.LOGIN_METHOD}
         <div
-            class="flex flex-col items-center justify-between gap-2 login-page"
+            class="flex flex-col items-center justify-between gap-2 modal-panel"
         >
             <h1 class="text-3xl text-center xs:text-2xl font-pusab text-stroke">
                 Login or Sign Up
@@ -226,7 +226,7 @@
     <!-- TERMS OF SERVICE -->
     {#if currentPage == Page.SHOW_TOS}
         <div
-            class="grid gap-4 login-page grid-rows-[minmax(0,_1fr)_min-content]"
+            class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content]"
         >
             <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
                 <section>
@@ -306,7 +306,7 @@
                         <li>
                             Twitter: <a
                                 href="https://twitter.com/<twitter_handle>"
-                                >@<twitter_handle></twitter_handle></a
+                                >@TODO</a
                             >
                         </li>
                         <li>
@@ -355,7 +355,7 @@
     <!-- CREATE USER -->
     {#if currentPage == Page.CREATE_USER}
         <div
-            class="flex flex-col items-center justify-between text-center login-page"
+            class="flex flex-col items-center justify-between text-center modal-panel"
         >
             <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
                 Enter a Username
@@ -445,9 +445,3 @@
         </div>
     {/if}
 </ScreenModal>
-
-<style lang="postcss">
-    .login-page {
-        @apply h-full w-full overflow-hidden p-6 xs:p-4;
-    }
-</style>

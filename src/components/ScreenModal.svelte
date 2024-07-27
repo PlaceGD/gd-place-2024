@@ -13,6 +13,7 @@
     export let isOpen = false;
     export let state: "default" | "loading" = "default";
     export let label: string = "";
+    export let size: string = "max-w-[500px] max-h-[500px]";
 
     let dispatcher = createEventDispatcher();
 
@@ -40,7 +41,7 @@
 >
     <ToastContainer />
 
-    <div class="flex-auto menu-panel w-full max-w-[500px] max-h-[500px] h-full">
+    <div class={`flex-auto menu-panel w-full h-full ${size}`}>
         <slot />
         {#if state === "loading"}
             <Loading class="rounded-xl" />

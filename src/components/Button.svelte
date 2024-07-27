@@ -15,7 +15,7 @@
 
 <button
     class={cx({
-        [`gap-2 rounded-lg relative grid items-center justify-items-center ${$$restProps["class"]}`]: true,
+        [`rounded-lg relative grid items-center justify-items-center ${$$restProps["class"]}`]: true,
         "white-button": type !== "plain",
         "grid-cols-[min-content_1fr]": type === "accept" || type === "decline",
         "grid-cols-[1fr]": type === "plain" || type === "white",
@@ -25,9 +25,9 @@
     {...restProps}
 >
     {#if type == "accept"}
-        <Check class="text-[#47ff47] h-full p-1 ml-3 {iconClass}" />
+        <Check class="text-[#47ff47] h-full p-1 ml-2 xs:ml-0 {iconClass}" />
     {:else if type == "decline"}
-        <Cross class="text-[#ff4747] h-full p-1 ml-3 {iconClass}" />
+        <Cross class="text-[#ff4747] h-full p-1 ml-2 xs:ml-0 {iconClass}" />
     {/if}
 
     <slot />

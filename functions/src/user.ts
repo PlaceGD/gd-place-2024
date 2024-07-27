@@ -85,8 +85,20 @@ export const initUserWithUsername = onCallAuthLogger<
     ).val();
 
     if (usernameExists != undefined) {
-        logger.error("User already exists");
+        logger.error("Username already exists");
         throw new HttpsError("already-exists", "Username already exists");
+    }
+
+    const maybeUserData = ref(db, `userData/${data.uid}`);
+
+    if ((await maybeUserData.get()) != null) {
+        logger.error("User data already exists");
+        throw new HttpsError("already-exists", "User data already exists");
+    }
+
+    const isBanned = (await ref(db, `bannedUsers/${data.uid}`).get()).val();
+    if (isBanned === 1) {
+        throw new HttpsError("permission-denied", "Banned");
     }
 
     const user: UserData = {
@@ -102,7 +114,7 @@ export const initUserWithUsername = onCallAuthLogger<
     logger.info("User created sucessfully");
 
     // make new user
-    ref(db, `userData/${data.uid}`).set(user);
+    maybeUserData.set(user);
 
     ref(db, `userName/${data.username.toLowerCase()}`).set({
         uid: data.uid,
@@ -129,6 +141,13 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
         );
 
         const db = database();
+
+        const isBanned = (
+            await ref(db, `bannedUsers/${request.auth.uid}`).get()
+        ).val();
+        if (isBanned === 1) {
+            throw new HttpsError("permission-denied", "Banned");
+        }
 
         const timeNextReport = (
             await ref(db, `userData/${request.auth.uid}/epochNextReport`).get()
@@ -184,6 +203,11 @@ const banUserInner = async (
     requesterUid: string,
     userToBanUid: string
 ) => {
+    const isBanned = (await ref(db, `bannedUsers/${requesterUid}`).get()).val();
+    if (isBanned === 1) {
+        throw new HttpsError("permission-denied", "Banned");
+    }
+
     if (!DEV_UIDS.includes(requesterUid)) {
         const reportedUserIsMod = (
             await ref(db, `userData/${userToBanUid}/moderator`).get()
@@ -197,15 +221,13 @@ const banUserInner = async (
         }
     }
 
-    const userData = ref(db, `userData/${userToBanUid}`);
+    const userData = (await ref(db, `userData/${userToBanUid}`).get()).val();
 
-    const username = (await userData.get()).val()?.username;
-    if (username == null) {
+    if (userData == null) {
         throw new HttpsError("invalid-argument", "Invalid user UID");
     }
 
-    ref(db, `bannedUsers/${username.toLowerCase()}`).set(1);
-    userData.remove();
+    ref(db, `bannedUsers/${userToBanUid}`).set(1);
     ref(db, "userCount").transaction(count => {
         return count - 1;
     });

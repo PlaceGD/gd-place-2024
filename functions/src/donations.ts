@@ -188,6 +188,13 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
 
         const db = database();
 
+        const isBanned = (
+            await ref(db, `bannedUsers/${request.auth.uid}`).get()
+        ).val();
+        if (isBanned === 1) {
+            throw new HttpsError("permission-denied", "Banned");
+        }
+
         const userData = (
             await ref(db, `userData/${request.auth.uid}`).get()
         ).val();

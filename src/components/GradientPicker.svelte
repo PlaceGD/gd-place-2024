@@ -3,7 +3,7 @@
     import ColorPicker from "svelte-awesome-color-picker";
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
     import Input from "./Input.svelte";
-    import Button from "./Button.svelte";
+    import Cross from "../icons/cross.svg";
     import { clamp, remEuclid } from "shared-lib/util";
 
     export let maxStops: number;
@@ -72,7 +72,7 @@
 
 <div class="grid w-full h-full pointer-events-auto gradient-picker">
     <div
-        class="h-16 min-h-0 mb-16 xs:h-14 cursor-copy xs:mb-14"
+        class="h-16 xs:h-12 min-h-0 mb-16 cursor-copy xs:mb-5"
         style={`--bg: ${previewGradientString}`}
         on:pointerdown={handlePointerDown}
         on:pointerup={e => {
@@ -173,9 +173,8 @@
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">
-                        <Button
-                            type="decline"
-                            class="w-8 aspect-square"
+                        <button
+                            class="rounded-lg relative grid items-center justify-items-center w-8 aspect-square white-button"
                             on:click={() => {
                                 if (gradientStops.length <= 2) return;
 
@@ -184,7 +183,9 @@
                                 gradientStops = gradientStops;
                                 gradientColors = gradientColors;
                             }}
-                        />
+                        >
+                            <Cross class="text-[#ff4747] w-full h-full p-1" />
+                        </button>
                     </div>
                 </li>
             {/each}
@@ -229,7 +230,7 @@
     }
 
     :global(#gradient-slider .rangeFloat) {
-        @apply pointer-events-auto top-full mt-3 flex h-7 w-11 -translate-x-1/2 translate-y-0 cursor-move items-center justify-center rounded-md border-2 border-white bg-black text-base text-white opacity-100 transition-none xs:text-sm;
+        @apply pointer-events-auto top-full mt-3 flex h-7 w-11 -translate-x-1/2 translate-y-0 cursor-move items-center justify-center rounded-md border-2 border-white bg-black text-base text-white opacity-100 transition-none xs:hidden xs:text-sm;
     }
 
     .gradient-picker-color :global(.container) :global(.alpha) {

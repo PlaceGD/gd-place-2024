@@ -38,6 +38,7 @@
         </div>
         <Login />
         <NameGradient />
+
         {#if state != null}
             <ReportedUserList bind:state {editorFocused} />
         {/if}

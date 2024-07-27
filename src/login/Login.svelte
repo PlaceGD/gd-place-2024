@@ -17,20 +17,15 @@
     import Button from "../components/Button.svelte";
     import { SvelteToast } from "@zerodevx/svelte-toast";
     import ToastContainer from "../components/ToastContainer.svelte";
+    import ScreenModal from "../components/ScreenModal.svelte";
 
     let twitter = false;
     document.addEventListener("keydown", e => {
-        if (e.key == "Escape" && allowClose) {
-            $openMenu = null;
-        } else {
-            twitter = e.shiftKey;
-        }
+        twitter = e.shiftKey;
     });
     document.addEventListener("keyup", e => {
         twitter = e.shiftKey;
     });
-
-    let modal: HTMLDialogElement;
 
     enum Page {
         LOGIN_METHOD,
@@ -48,16 +43,18 @@
     let userName = "";
 
     let isInProgress = false;
-    $: allowClose = currentPage == Page.LOGIN_METHOD ? !isInProgress : false;
+    let isOpen = false;
 
     let hasScrolledToBottomOfTos = false;
 
     $: {
         if ($openMenu != ExclusiveMenus.Login) {
             currentPage = Page.LOGIN_METHOD;
-            modal?.close();
+            isOpen = false;
+            // modal?.close();
         } else if ($openMenu == ExclusiveMenus.Login) {
-            modal.showModal();
+            isOpen = true;
+            // modal.showModal();
         }
     }
 
@@ -140,93 +137,96 @@
 </script>
 
 <Image tabindex="-1" src="/assets/ui/login/twitter.svg" class="hidden" alt="" />
-<dialog
-    aria-label="Login or Sign Up Modal"
-    class="overflow-visible pointer-events-auto dialog-panel"
-    bind:this={modal}
+<ScreenModal
+    label="Login or Sign Up Modal"
+    state={isInProgress ? "loading" : "default"}
+    canClose={!isInProgress && currentPage !== Page.SHOW_TOS}
+    {isOpen}
+    hasCloseButton={true}
+    on:close={() => ($openMenu = null)}
 >
-    <ToastContainer />
-
-    <div class="flex-col w-full h-full flex-center menu-panel">
-        <!-- LOGIN METHOD -->
+    <!-- LOGIN METHOD -->
+    {#if currentPage == Page.LOGIN_METHOD}
         <div
-            class="login-page w-[450px]"
-            style:display={currentPage == Page.LOGIN_METHOD ? "flex" : "none"}
+            class="flex flex-col items-center justify-between gap-2 modal-panel"
         >
-            <div
-                class="flex flex-col items-center justify-between w-full h-full p-6 xs:p-4"
-            >
-                <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
-                    Login or Sign Up
-                </h1>
-                <ul class="w-full h-24 gap-4 xs:h-20 flex-center">
-                    <li class="h-full aspect-square max-w-max">
-                        <Button
-                            type="white"
-                            class="flex-col w-full h-full p-2"
-                            aria-label="Login with Twitter"
-                            on:click={() => signInWith(LoginMethod.Google)}
-                        >
+            <h1 class="text-3xl text-center xs:text-2xl font-pusab text-stroke">
+                Login or Sign Up
+            </h1>
+            <ul class="grid w-full grid-cols-3 gap-4 xs:gap-2">
+                <li>
+                    <Button
+                        type="white"
+                        class="flex-col w-full h-full p-2"
+                        aria-label="Login with Twitter"
+                        on:click={() => signInWith(LoginMethod.Google)}
+                    >
+                        <span class="flex flex-col h-full gap-2 flex-center">
                             <Image
                                 src="/assets/ui/login/google.svg"
                                 alt="Login with Google"
-                                class="flex-1 object-contain w-max"
+                                class="w-11 xs:w-10 aspect-square"
                             />
                             <p>Google</p>
-                        </Button>
-                    </li>
-                    <li class="h-full shadow-lg aspect-square max-w-max">
-                        <Button
-                            type="white"
-                            class="flex-col w-full h-full p-2"
-                            aria-label="Login with GitHub"
-                            on:click={() => signInWith(LoginMethod.GitHub)}
-                        >
+                        </span>
+                    </Button>
+                </li>
+                <li>
+                    <Button
+                        type="white"
+                        class="flex-col w-full h-full p-2"
+                        aria-label="Login with GitHub"
+                        on:click={() => signInWith(LoginMethod.GitHub)}
+                    >
+                        <span class="flex flex-col h-full gap-2 flex-center">
                             <Image
                                 src="/assets/ui/login/github.svg"
                                 alt="Login with GitHub"
-                                class="flex-1 object-contain w-max"
+                                class="w-11 xs:w-10 aspect-square"
                             />
                             <p>GitHub</p>
-                        </Button>
-                    </li>
-                    <li class="h-full aspect-square max-w-max">
-                        <Button
-                            type="white"
-                            class="flex-col w-full h-full p-2"
-                            on:click={() => signInWith(LoginMethod.X)}
-                        >
+                        </span>
+                    </Button>
+                </li>
+                <li>
+                    <Button
+                        type="white"
+                        class="flex-col w-full h-full p-2"
+                        on:click={() => signInWith(LoginMethod.X)}
+                    >
+                        <span class="flex flex-col h-full gap-2 flex-center">
                             <Image
                                 src="/assets/ui/login/{twitter
                                     ? 'twitter'
                                     : 'x'}.svg"
                                 alt="Login with X (Twitter)"
-                                class="flex-1 object-contain w-max"
+                                class="w-11 xs:w-10 aspect-square"
                             />
                             <p>{twitter ? "Twitter" : "X"}</p>
-                        </Button>
-                    </li>
-                </ul>
-                <p class="text-sm">
-                    Don't forget to the read the
-                    <button
-                        class="underline hover:decoration-dashed"
-                        aria-label="Terms of Service"
-                        on:click={() => {
-                            previousPage = currentPage;
-                            currentPage = Page.SHOW_TOS;
-                        }}
-                    >
-                        TOS
-                    </button>
-                    !
-                </p>
-            </div>
+                        </span>
+                    </Button>
+                </li>
+            </ul>
+            <p class="text-sm text-center">
+                Don't forget to the read the
+                <button
+                    class="underline hover:decoration-dashed"
+                    aria-label="Terms of Service"
+                    on:click={() => {
+                        previousPage = currentPage;
+                        currentPage = Page.SHOW_TOS;
+                    }}
+                >
+                    TOS
+                </button>
+                !
+            </p>
         </div>
-        <!-- TERMS OF SERVICE -->
+    {/if}
+    <!-- TERMS OF SERVICE -->
+    {#if currentPage == Page.SHOW_TOS}
         <div
-            class="login-page w-[600px] sm:w-[450px] p-6 xs:p-4 flex flex-col gap-4"
-            style:display={currentPage == Page.SHOW_TOS ? "flex" : "none"}
+            class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content]"
         >
             <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
                 <section>
@@ -306,7 +306,7 @@
                         <li>
                             Twitter: <a
                                 href="https://twitter.com/<twitter_handle>"
-                                >@<twitter_handle></twitter_handle></a
+                                >@TODO</a
                             >
                         </li>
                         <li>
@@ -325,17 +325,18 @@
                     </p>
                 </section>
             </FadedScroll>
+
             <div class="flex w-full gap-4">
                 <Button
                     class="w-full h-full"
                     type="decline"
                     disabled={!hasScrolledToBottomOfTos}
                     on:click={() => {
-                        currentPage = Page.LOGIN_METHOD;
+                        hasAgreedToTOS = false;
                         $openMenu = null;
                     }}
                 >
-                    <p class="xs:text-sm w-min">Disagree</p>
+                    <p class="xs:text-sm">Disagree</p>
                 </Button>
                 <Button
                     class="w-full h-full"
@@ -346,17 +347,16 @@
                         currentPage = previousPage;
                     }}
                 >
-                    <p class="xs:text-sm w-min">Agree</p>
+                    <p class="xs:text-sm">Agree</p>
                 </Button>
             </div>
         </div>
+    {/if}
+    <!-- CREATE USER -->
+    {#if currentPage == Page.CREATE_USER}
         <div
-            class="login-page w-[450px] flex-col items-center justify-between p-6 text-center xs:p-4"
-            style:display={currentPage == Page.CREATE_USER ? "flex" : "none"}
+            class="flex flex-col items-center justify-between text-center modal-panel"
         >
-            <!-- CREATE USER -->
-            <!-- {:else if currentPage == Page.CREATE_USER} -->
-
             <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
                 Enter a Username
             </h1>
@@ -393,24 +393,31 @@
                     insensitive.
                 </p>
             </div>
-            <!-- <div id="cf-turnstile" bind:this={cfTurnstile}></div> -->
-            <Turnstile
-                siteKey={SITE_KEY}
-                bind:reset={turnstileReset}
-                on:turnstile-callback={e => (turnstileToken = e.detail.token)}
-                on:turnstile-error={e =>
-                    Toast.showErrorToast(
-                        `There was an error with the Turnstile. (${e})`
-                    )}
-                on:turnstile-expired={() => turnstileReset && turnstileReset()}
-            />
-            <div class="w-full gap-2 flex-center">
+            <span
+                class="flex items-center justify-center w-full h-auto xs:scale-90"
+            >
+                <Turnstile
+                    siteKey={SITE_KEY}
+                    bind:reset={turnstileReset}
+                    on:turnstile-callback={e =>
+                        (turnstileToken = e.detail.token)}
+                    on:turnstile-error={e => {
+                        console.error(e);
+                        Toast.showErrorToast(
+                            `There was an error with the Turnstile. (${e})`
+                        );
+                    }}
+                    on:turnstile-expired={() =>
+                        turnstileReset && turnstileReset()}
+                />
+            </span>
+            <div class="flex w-full gap-2">
                 {#if hasAgreedToTOS}
-                    <Check class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto" />
+                    <Check class="text-[#47ff47] w-7 h-7 shrink-0" />
                 {:else}
-                    <Cross class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto" />
+                    <Cross class="text-[#ff4747] w-7 h-7 shrink-0" />
                 {/if}
-                <p class="text-base shrink-1 grow-0">
+                <p class="flex-auto m-auto text-base xs:text-sm">
                     I have read and agreed to the
                     <button
                         class="underline hover:decoration-dashed text-nowrap"
@@ -436,31 +443,5 @@
                 <p class="text-lg xs:text-base">Submit</p>
             </Button>
         </div>
-        {#if isInProgress}
-            <Loading class="rounded-xl" />
-        {/if}
-    </div>
-    <div class="flex items-center h-12 text-white xs:h-10 flex-center">
-        <div class="h-full">
-            <button
-                disabled={!allowClose}
-                class={cx({
-                    "flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200": true,
-                    "text-disabled-white pointer-events-none": !allowClose,
-                })}
-                aria-label="Close"
-                on:click={() => {
-                    $openMenu = null;
-                }}
-            >
-                <Cross alt="Close" class="w-full h-full"></Cross>
-            </button>
-        </div>
-    </div>
-</dialog>
-
-<style lang="postcss">
-    .login-page {
-        @apply aspect-square overflow-hidden xs:h-96 xs:w-80;
-    }
-</style>
+    {/if}
+</ScreenModal>

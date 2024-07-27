@@ -29,8 +29,7 @@
     import { complement } from "../utils/gradient";
     import { SyncedCooldown } from "../utils/cooldown";
     import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
-
-    let modal: HTMLDialogElement;
+    import ScreenModal from "../components/ScreenModal.svelte";
 
     enum Page {
         SUBMIT_TX_ID,
@@ -38,6 +37,7 @@
     }
 
     let isInProgress = false;
+    let isOpen = false;
 
     let currentPage: Page = Page.SUBMIT_TX_ID;
 
@@ -48,14 +48,11 @@
 
     $: {
         if ($openMenu != ExclusiveMenus.Kofi) {
-            modal?.close();
+            isOpen = false;
         } else if ($openMenu == ExclusiveMenus.Kofi) {
-            modal.showModal();
+            isOpen = true;
         }
     }
-
-    let allowClose = true;
-    $: allowClose = !isInProgress;
 
     let kofiTxId: string = "";
     let isValidKofiTxId = false;
@@ -132,152 +129,123 @@
     };
 </script>
 
-<dialog
-    aria-label="Change name color modal"
-    class="overflow-visible pointer-events-auto dialog-panel"
-    bind:this={modal}
+<ScreenModal
+    hasCloseButton={true}
+    state={isInProgress ? "loading" : "default"}
+    {isOpen}
+    canClose={!isInProgress}
 >
-    <ToastContainer />
-
-    <div
-        class={cx({
-            "menu-panel xs:h-96 xs:w-80 w-[450px]": true,
-            "h-96": currentPage === Page.SUBMIT_TX_ID,
-            "h-[500px]": currentPage === Page.SELECT_GRADIENT,
-        })}
-    >
-        {#if currentPage === Page.SUBMIT_TX_ID}
-            <div
-                class="grid grid-rows-[min-content_1fr] items-start h-full p-6 xs:p-4"
-            >
-                <hgroup class="flex flex-col items-center justify-center gap-1">
-                    <h1
-                        class="text-2xl text-center xs:text-xl font-pusab text-stroke"
-                    >
-                        Enter Kofi Transaction ID
-                    </h1>
-                    <p class="text-sm text-center xs:text-xs text-white/55">
-                        EX.: <wbr />00000000-1111-2222-3333-444444444444
-                    </p>
-                    <!-- TODO: add turnstile + cooldown? -->
-                </hgroup>
-                <div class="flex-col h-full gap-2 flex-center">
-                    <div class="w-full gap-2 flex-center">
-                        {#if isValidKofiTxId}
-                            <Check
-                                class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
-                            />
-                        {:else}
-                            <Cross
-                                class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
-                            />
-                        {/if}
-                        <form
-                            class="w-full"
-                            id="kofi-tx-id-form"
-                            on:submit={e => e.preventDefault()}
-                        >
-                            <Input
-                                class="w-[inherit] h-12 text-base xs:text-sm text-center rounded-lg outline-none font-pusab text-stroke bg-black/40 px-2"
-                                maxLength={36}
-                                hardValidInput={VALID_KOFI_TRANSACTION_ID_CHARS}
-                                autoTrim
-                                bind:value={kofiTxId}
-                            />
-                        </form>
-                    </div>
-                </div>
-                <OnceButton
-                    form="kofi-tx-id-form"
-                    disabled={!isValidKofiTxId}
-                    class="w-full p-2 h-min"
-                    type="white"
-                    on:click={onSubmitTxId}
-                    bind:reset={resetSubmitButton}
+    {#if currentPage === Page.SUBMIT_TX_ID}
+        <div
+            class="grid grid-rows-[min-content_1fr] items-start h-full p-6 xs:p-4"
+        >
+            <hgroup class="flex flex-col items-center justify-center gap-1">
+                <h1
+                    class="text-2xl text-center xs:text-xl font-pusab text-stroke"
                 >
-                    <p class="text-lg xs:text-base">Submit</p>
-                </OnceButton>
+                    Enter Kofi Transaction ID
+                </h1>
+                <p class="text-sm text-center xs:text-xs text-white/55">
+                    EX.: 00000000-1111-2222-<wbr />3333-444444444444
+                </p>
+                <!-- TODO: add turnstile + cooldown? -->
+            </hgroup>
+            <div class="flex-col h-full gap-2 flex-center">
+                <div class="w-full gap-2 flex-center">
+                    {#if isValidKofiTxId}
+                        <Check
+                            class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
+                        />
+                    {:else}
+                        <Cross
+                            class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
+                        />
+                    {/if}
+                    <form
+                        class="w-full"
+                        id="kofi-tx-id-form"
+                        on:submit={e => e.preventDefault()}
+                    >
+                        <Input
+                            class="w-[inherit] h-12 text-base xs:text-sm text-center rounded-lg outline-none font-pusab text-stroke bg-black/40 px-2"
+                            maxLength={36}
+                            hardValidInput={VALID_KOFI_TRANSACTION_ID_CHARS}
+                            autoTrim
+                            bind:value={kofiTxId}
+                        />
+                    </form>
+                </div>
             </div>
-        {:else if currentPage === Page.SELECT_GRADIENT}
-            <div
-                class="grid items-start h-full gap-2 px-6 py-4 select-gradient xs:p-2"
+            <OnceButton
+                form="kofi-tx-id-form"
+                disabled={!isValidKofiTxId}
+                class="w-full p-2 h-11 xs:h-10"
+                type="white"
+                on:click={onSubmitTxId}
+                bind:reset={resetSubmitButton}
             >
-                <hgroup class="flex flex-col items-center justify-center gap-1">
-                    <h1
-                        class="text-3xl text-center xs:text-2xl font-pusab text-stroke"
-                    >
-                        Select Name Color
-                    </h1>
-                </hgroup>
-                <div
-                    class="z-30 flex self-center w-full gap-2 p-1 overflow-x-scroll text-2xl text-white font-pusab usernames thin-scrollbar"
-                >
-                    <p
-                        class="m-auto username-gradient w-min"
-                        style={`
-                            background-image: ${nameGradientString};
-                        `}
-                    >
-                        {$loginData.currentUserData?.placeData?.username ?? ""}
-                    </p>
-                    <p
-                        class="m-auto username-gradient w-min font-pusab"
-                        style={`
-                            background-image: ${nameGradientString};
-                        `}
-                    >
-                        {$loginData.currentUserData?.placeData?.username ?? ""}
-                    </p>
-                </div>
-                <div class="flex-col h-full gap-2 px-4 py-1">
-                    <GradientPicker
-                        maxStops={MAX_GRADIENT_STOPS}
-                        bind:rotatedGradientString={nameGradientString}
-                        bind:gradientStops={nameGradientStops}
-                        bind:gradientColors={nameGradientColors}
-                    ></GradientPicker>
-                </div>
-                <OnceButton
-                    class="w-full p-2 h-min"
-                    type="white"
-                    disabled={!$gradientCooldownFinished}
-                    on:click={onUpdateGradient}
-                    bind:reset={resetGradientButton}
-                >
-                    <p class="text-lg xs:text-base">Update</p>
-                </OnceButton>
-                {#if !$gradientCooldownFinished}
-                    <p
-                        class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
-                    >
-                        You changed your gradient recently! Please wait {$gradientCooldownDisplay}
-                        before changing it again.
-                    </p>
-                {/if}
-            </div>
-        {/if}
-        {#if isInProgress}
-            <Loading class="top-0 rounded-xl" />
-        {/if}
-    </div>
-    <div class="flex items-center h-12 text-white xs:h-10 flex-center -z-10">
-        <div class="h-full">
-            <button
-                disabled={!allowClose}
-                class={cx({
-                    "flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200": true,
-                    "text-disabled-white pointer-events-none": !allowClose,
-                })}
-                aria-label="Close"
-                on:click={() => {
-                    // $openMenu = null;
-                }}
-            >
-                <Cross alt="Close" class="w-full h-full"></Cross>
-            </button>
+                <p class="text-lg xs:text-base">Submit</p>
+            </OnceButton>
         </div>
-    </div>
-</dialog>
+    {:else if currentPage === Page.SELECT_GRADIENT}
+        <div
+            class="grid items-start h-full gap-2 px-6 py-4 select-gradient xs:p-2"
+        >
+            <hgroup class="flex flex-col items-center justify-center gap-1">
+                <h1
+                    class="text-3xl text-center xs:text-2xl font-pusab text-stroke"
+                >
+                    Select Name Color
+                </h1>
+            </hgroup>
+            <div
+                class="z-30 flex self-center w-full gap-2 p-1 overflow-x-scroll text-2xl text-white font-pusab usernames thin-scrollbar"
+            >
+                <p
+                    class="m-auto username-gradient w-min text-2xl xs:text-xl"
+                    style={`
+                            background-image: ${nameGradientString};
+                        `}
+                >
+                    {$loginData.currentUserData?.placeData?.username ?? ""}
+                </p>
+                <p
+                    class="m-auto username-gradient w-min font-pusab text-2xl xs:text-xl"
+                    style={`
+                            background-image: ${nameGradientString};
+                        `}
+                >
+                    {$loginData.currentUserData?.placeData?.username ?? ""}
+                </p>
+            </div>
+            <div class="flex-col h-full gap-2 px-4 py-1">
+                <GradientPicker
+                    maxStops={MAX_GRADIENT_STOPS}
+                    bind:rotatedGradientString={nameGradientString}
+                    bind:gradientStops={nameGradientStops}
+                    bind:gradientColors={nameGradientColors}
+                ></GradientPicker>
+            </div>
+            <OnceButton
+                class="w-full p-2 h-11 xs:h-10"
+                type="white"
+                disabled={!$gradientCooldownFinished}
+                on:click={onUpdateGradient}
+                bind:reset={resetGradientButton}
+            >
+                <p class="text-lg xs:text-base">Update</p>
+            </OnceButton>
+            {#if !$gradientCooldownFinished}
+                <p
+                    class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
+                >
+                    You changed your gradient recently! Please wait {$gradientCooldownDisplay}
+                    before changing it again.
+                </p>
+            {/if}
+        </div>
+    {/if}
+</ScreenModal>
 
 <style lang="postcss">
     .select-gradient {

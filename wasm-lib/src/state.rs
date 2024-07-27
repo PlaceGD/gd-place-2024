@@ -1,12 +1,7 @@
-use desen::{
-    color::Color,
-    frame::{BlendMode, Frame, FrameTransform, FrameTransformMatrix},
-    state::{AppState, CanvasAppInfo, CanvasAppState},
-    texture::LoadedTexture,
-    App, CanvasAppBundle,
-};
+use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 use the_nexus::packing::SpriteInfo;
 use wasm_bindgen::prelude::*;
+use wgpu::util::DeviceExt;
 
 use crate::{
     layer::{ZLayer, Z_LAYERS},
@@ -17,31 +12,22 @@ use crate::{
     },
     log, map,
     object::{GDColor, GDObject, GDObjectOpt},
+    render::{data::Globals, pipeline_rect, state::RenderState},
     util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
     ErrorType, RustError,
 };
 
-use nalgebra::{vector, Matrix2, Matrix3, Vector2};
-
-pub struct AppInfo {
-    app: App,
-    background: LoadedTexture,
-    ground1: LoadedTexture,
-    ground2: LoadedTexture,
-    spritesheet_nearest_neighbor: LoadedTexture,
-    spritesheet: LoadedTexture,
-}
-
+#[wasm_bindgen]
 pub struct State {
-    info: AppInfo,
+    render: RenderState,
 
     time: f32,
 
     width: u32,
     height: u32,
 
-    camera_pos: Vector2<f32>,
+    camera_pos: Vec2,
     zoom: f32,
 
     level: Level,
@@ -62,13 +48,12 @@ pub struct State {
 }
 
 impl State {
-    pub fn init(mut app: App, spritesheet_data: &[u8]) -> Self {
-        let spritesheet = quick_image_load(spritesheet_data);
+    pub fn new(render: RenderState) -> Self {
         Self {
             time: 0.0,
             width: 10,
             height: 10,
-            camera_pos: vector![0.0, 0.0],
+            camera_pos: vec2(0.0, 0.0),
             zoom: 0.0,
             bg_color: (40, 125, 255),
             ground1_color: (40, 125, 255),
@@ -91,46 +76,34 @@ impl State {
             show_preview: false,
             select_depth: 0,
             selected_object: None,
-            // text_draws: vec![],
-            // delete_texts: vec![],
-            info: AppInfo {
-                ground1: app
-                    .load_texture(&quick_image_load(include_bytes!("../ground1.png")), false),
-                ground2: app
-                    .load_texture(&quick_image_load(include_bytes!("../ground2.png")), false),
-                background: app.load_texture(
-                    &quick_image_load(include_bytes!("../background.png")),
-                    false,
-                ),
-                spritesheet_nearest_neighbor: app.load_texture(&spritesheet, true),
-                spritesheet: app.load_texture(&spritesheet, false),
-                app,
-            },
+            render,
         }
     }
-    pub fn get_zoom_scale(&self) -> f32 {
-        2.0f32.powf(self.zoom / 12.0)
-    }
-    pub fn view_transform(&self) -> FrameTransformMatrix {
+    pub fn view_transform(&self) -> Affine2 {
         let scale = self.get_zoom_scale();
-        FrameTransform::series_mat([
-            FrameTransform::Scale { x: scale, y: scale },
-            FrameTransform::Translate {
-                x: -self.camera_pos.x,
-                y: -self.camera_pos.y,
-            },
-        ])
+
+        Affine2::from_scale(vec2(scale, scale)) * Affine2::from_translation(-self.camera_pos)
+
+        // Affine2::from_scale_angle_translation(vec2(scale, scale), 0.0, -self.camera_pos)
     }
 }
 
-#[rustfmt::skip]
-fn obj_transform(obj: &GDObject) -> FrameTransformMatrix {
+fn obj_transform(obj: &GDObject) -> Affine2 {
     let scale = OBJECT_INFO[obj.id as usize].builtin_scale / 4.0;
-    Matrix3::new(
-        obj.ix * scale, obj.jx * scale, obj.x,
-        obj.iy * scale, obj.jy * scale, obj.y,
-        0.0, 0.0, 1.0
+
+    Affine2::from_mat2_translation(
+        mat2(
+            vec2(obj.ix * scale, obj.iy * scale),
+            vec2(obj.jx * scale, obj.jy * scale),
+        ),
+        vec2(obj.x, obj.y),
     )
+
+    // Matrix3::new(
+    //     obj.ix * scale, obj.jx * scale, obj.x,
+    //     obj.iy * scale, obj.jy * scale, obj.y,
+    //     0.0, 0.0, 1.0
+    // )
 }
 fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
     let mut rect_size = get_max_bounding_box(obj.id as u32).unwrap_or((10.0, 10.0));
@@ -144,425 +117,6 @@ fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
         rect_size.0,
         rect_size.1,
     )
-}
-
-impl AppState for State {
-    fn view(&mut self, frame: &mut desen::frame::Frame, delta: f32) {
-        self.time += delta;
-        frame.tolerance(0.1);
-
-        // for (_, _, _, lifetime) in &mut self.delete_texts {
-        //     *lifetime -= delta / 1.5;
-        // }
-        // self.delete_texts.retain(|(_, _, _, l)| *l > 0.0);
-
-        // self.preview_object.rotation += 1;
-        // let viewable = self.get_viewable_chunks();
-
-        // for w in (0..viewable.len()).step_by(2) {
-        //     let x = viewable[w];
-        //     let y = viewable[w + 1];
-        //     frame.stroke(0, 255, 0, 255);
-        //     frame.stroke_weight(4.0);
-        //     frame.no_fill();
-        //     frame.rect(
-        //         x as f32 * 20.0 * 30.0,
-        //         y as f32 * 20.0 * 30.0,
-        //         20.0 * 30.0,
-        //         20.0 * 30.0,
-        //     );
-        // }
-
-        // self.text_draws.clear();
-
-        // self.draw_text(frame, self.time, 0.0, 0.0, 50.0, "");
-
-        // let mut view_rect = self.get_camera_world_rect();
-
-        // self.draw_text(
-        //     frame,
-        //     format!("{:?}", self.get_camera_world_rect()),
-        //     0.0,
-        //     0.0,
-        //     50.0,
-        //     "color: white;",
-        // );
-
-        let zoom_scale = self.get_zoom_scale();
-        // {
-        //     frame.fill(Color::Rgb8(
-        //         self.bg_color.0,
-        //         self.bg_color.1,
-        //         self.bg_color.2,
-        //     ));
-        //     let dimension = self.width.max(self.height) as f32;
-        //     frame.set_current_texture(self.info.background);
-
-        //     frame.texture().wh(dimension, dimension).centered().tinted();
-        // }
-        {
-            frame.push();
-
-            frame.translate(
-                -self.camera_pos.x / 10.0 * 1.0,
-                -self.camera_pos.y / 10.0 * 1.0,
-            );
-
-            frame.fill(Color::Rgb8(
-                self.bg_color.0,
-                self.bg_color.1,
-                self.bg_color.2,
-            ));
-            frame.set_current_texture(self.info.background);
-
-            let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
-
-            let offset = (self.camera_pos / 10.0 * 1.0 / scale).map(f32::floor) * scale;
-
-            for i in -2i32..=2 {
-                for j in -2i32..=2 {
-                    frame.push();
-                    frame.translate(offset.x + scale * i as f32, offset.y + scale * j as f32);
-                    frame.scale(1.0, if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 });
-                    frame.texture().tinted().centered().wh(scale, scale);
-                    frame.pop()
-                }
-            }
-
-            // for (i, j) in (-2..=2).cartesian_product(-2..=2) {
-            // }
-
-            frame.pop();
-        }
-
-        // grid drawing
-        // have to do some shit manually to make sure the lines are pixel aligned
-        {
-            frame.push();
-
-            let tx = (-self.camera_pos.x * zoom_scale).floor();
-            let ty = (-self.camera_pos.y * zoom_scale).floor();
-
-            frame.translate(tx, ty);
-
-            frame.stroke_weight(4.0);
-            frame.stroke(Color::Rgb8(0, 0, 0));
-            frame.no_fill();
-            frame.rect().wh(
-                LEVEL_WIDTH_UNITS as f32 * zoom_scale,
-                LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
-            );
-
-            // frame.line(-2.0, 0.0, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, 0.0);
-            // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
-            // frame.line(-2.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale, LEVEL_SIZE_UNITS.x as f32 * zoom_scale, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
-            // frame.line(0.0, 0.0, 0.0, LEVEL_SIZE_UNITS.y as f32 * zoom_scale);
-
-            frame.stroke_weight(1.0);
-            frame.stroke(Color::Rgba(
-                0.0,
-                0.0,
-                0.0,
-                map!(self.zoom, -24.0, 24.0, 0.0, 1.0),
-            ));
-            if self.zoom >= -24.0 {
-                for x in 1..=LEVEL_WIDTH_BLOCKS {
-                    frame
-                        .line()
-                        .xy0((x as f32 * 30.0 * zoom_scale).floor() + 0.5, 0.0)
-                        .xy1(
-                            (x as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                            LEVEL_HEIGHT_UNITS as f32 * zoom_scale,
-                        );
-                }
-                for y in 1..=LEVEL_HEIGHT_BLOCKS {
-                    frame
-                        .line()
-                        .xy0(0.0, (y as f32 * 30.0 * zoom_scale).floor() + 0.5)
-                        .xy1(
-                            LEVEL_WIDTH_UNITS as f32 * zoom_scale,
-                            (y as f32 * 30.0 * zoom_scale).floor() + 0.5,
-                        );
-                }
-            }
-            frame.pop()
-        }
-
-        frame.set_current_texture_group(1);
-        frame.set_current_texture(self.info.spritesheet_nearest_neighbor);
-        frame.set_current_texture_group(0);
-        frame.set_current_texture(self.info.spritesheet);
-        frame.transform(FrameTransform::Custom(self.view_transform()));
-
-        // for i in 0..self.delete_texts.len() {
-        //     let (text, x, y, lifetime) = self.delete_texts[i].clone();
-        //     let factor = (1.0 - lifetime).powf(1.5);
-        //     let offset = factor * 15.0;
-        //     self.draw_text(
-        //         frame,
-        //         text,
-        //         x,
-        //         y + offset,
-        //         10.0,
-        //         format!("color: rgb(255, 255, 255); opacity: {};", 1.0 - factor),
-        //     );
-        // }
-
-        {
-            let mut view_rect = self.get_camera_world_rect();
-            view_rect.w /= 2.0;
-            view_rect.h /= 2.0;
-            view_rect.x += view_rect.w / 2.0;
-            view_rect.y += view_rect.h / 2.0;
-
-            frame.fill(Color::Rgba8(255, 0, 0, 127));
-            frame.no_stroke();
-            for (x, y) in view_rect.corners() {
-                frame.circle().xy(x, y).radius(10.0);
-            }
-        }
-
-        frame.stroke_weight(4.0);
-        frame.no_fill();
-
-        let now = now();
-
-        for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
-            frame.stroke(Color::Rgba(
-                0.0,
-                1.0,
-                0.0,
-                map!(
-                    now - chunk.last_time_visible,
-                    0.0,
-                    UNLOAD_CHUNK_TIME * 1000.0,
-                    1.0,
-                    0.0
-                ) as f32,
-            ));
-            frame
-                .rect()
-                .xy(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0)
-                .wh(20.0 * 30.0, 20.0 * 30.0);
-        }
-
-        {
-            let draw_obj_sprite = |frame: &mut Frame, sprite: &SpriteInfo, obj: &GDObject| {
-                frame.push();
-                frame.transform(FrameTransform::Custom(obj_transform(obj)));
-                frame.set_current_texture_group(
-                    if OBJECT_INFO[obj.id as usize].builtin_scale == 1.0 {
-                        0
-                    } else {
-                        1
-                    },
-                );
-                frame
-                    .texture()
-                    .xy(
-                        -(sprite.size.0 as f32) / 2.0 + sprite.offset.0,
-                        -(sprite.size.1 as f32) / 2.0 - sprite.offset.1,
-                    )
-                    .cropped((
-                        sprite.pos.0 as f32,
-                        sprite.pos.1 as f32,
-                        sprite.size.0 as f32,
-                        sprite.size.1 as f32,
-                    ))
-                    .tinted();
-                frame.pop()
-            };
-
-            let set_fill_if_selected = |frame: &mut Frame, key: DbKey, lighter: bool| {
-                if self.selected_object == Some(key) {
-                    let c = map!(
-                        (self.time * 10.0).sin(),
-                        -1.0,
-                        1.0,
-                        if lighter { 150.0 } else { 100.0 },
-                        if lighter { 255.0 } else { 200.0 }
-                    ) as u8;
-
-                    frame.fill(Color::Rgba8(255, c, c, 255));
-                }
-            };
-
-            for layer in Z_LAYERS {
-                frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
-                for z_order in -50..=50 {
-                    self.level.foreach_obj_in_z(
-                        *layer,
-                        z_order,
-                        |key, obj| {
-                            if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
-                                if obj.main_color.blending {
-                                    frame.fill(Color::Rgba8(
-                                        obj.main_color.r,
-                                        obj.main_color.g,
-                                        obj.main_color.b,
-                                        obj.main_color.opacity,
-                                    ));
-                                    set_fill_if_selected(frame, key, false);
-                                    draw_obj_sprite(frame, &sprite, obj);
-                                }
-                            }
-                        },
-                        if self.show_preview {
-                            Some(self.preview_object.into_obj())
-                        } else {
-                            None
-                        },
-                    );
-                }
-                frame.set_blend_mode(BlendMode::Normal);
-                for z_order in -50..=50 {
-                    self.level.foreach_obj_in_z(
-                        *layer,
-                        z_order,
-                        |key, obj| {
-                            if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
-                                if !obj.main_color.blending {
-                                    frame.fill(Color::Rgba8(
-                                        obj.main_color.r,
-                                        obj.main_color.g,
-                                        obj.main_color.b,
-                                        obj.main_color.opacity,
-                                    ));
-                                    set_fill_if_selected(frame, key, false);
-                                    draw_obj_sprite(frame, &sprite, obj);
-                                }
-                            }
-                            if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
-                                if !obj.detail_color.blending {
-                                    frame.fill(Color::Rgba8(
-                                        obj.detail_color.r,
-                                        obj.detail_color.g,
-                                        obj.detail_color.b,
-                                        obj.detail_color.opacity,
-                                    ));
-                                    set_fill_if_selected(frame, key, true);
-                                    draw_obj_sprite(frame, &sprite, obj);
-                                }
-                            }
-                        },
-                        if self.show_preview {
-                            Some(self.preview_object.into_obj())
-                        } else {
-                            None
-                        },
-                    );
-                }
-                frame.set_blend_mode(BlendMode::AdditiveSquaredAlpha);
-                for z_order in -50..=50 {
-                    self.level.foreach_obj_in_z(
-                        *layer,
-                        z_order,
-                        |key, obj| {
-                            if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
-                                if obj.detail_color.blending {
-                                    frame.fill(Color::Rgba8(
-                                        obj.detail_color.r,
-                                        obj.detail_color.g,
-                                        obj.detail_color.b,
-                                        obj.detail_color.opacity,
-                                    ));
-                                    set_fill_if_selected(frame, key, true);
-                                    draw_obj_sprite(frame, &sprite, obj);
-                                }
-                            }
-                        },
-                        if self.show_preview {
-                            Some(self.preview_object.into_obj())
-                        } else {
-                            None
-                        },
-                    );
-                }
-            }
-            frame.set_blend_mode(BlendMode::Normal);
-
-            let highlight_obj = if self.show_preview {
-                Some((self.preview_object.into_obj(), (100, 255, 100), None))
-            } else if let Some(d) = self.selected_object {
-                self.level.get_obj_by_key(d).map(|v| {
-                    (
-                        *v,
-                        (255, 100, 100),
-                        Some(String::from_utf8(d.into()).unwrap()),
-                    )
-                })
-            } else {
-                None
-            };
-
-            if let Some((obj, color, key)) = highlight_obj {
-                frame.push();
-                frame.transform(FrameTransform::Custom(obj_transform(&obj)));
-
-                let rect = padded_obj_rect(&obj, 30.0);
-
-                frame.no_fill();
-
-                const IDEAL_DASH_LEN: f32 = 30.0;
-                let dash_len =
-                    rect.perimeter() / (rect.perimeter() / (IDEAL_DASH_LEN * 2.0)).round() / 2.0;
-
-                let mut offset = self.time * 70.0;
-
-                for ((x0, y0), (x1, y1)) in rect.sides() {
-                    offset = self.dashed_line(frame, x0, y0, x1, y1, dash_len, offset, color, 8.0);
-                }
-
-                frame.pop();
-            }
-        }
-
-        {
-            const GROUND_SIZE_BLOCKS: f32 = 4.25;
-            const GROUND_SIZE_UNITS: f32 = GROUND_SIZE_BLOCKS * 30.0;
-
-            let mut view_rect = self.get_camera_world_rect();
-            // view_rect.w /= 2.0;
-            // view_rect.h /= 2.0;
-            // view_rect.x += view_rect.w / 2.0;
-            // view_rect.y += view_rect.h / 2.0;
-            let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
-            let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
-
-            frame.set_current_texture(self.info.ground1);
-            frame.fill(Color::Rgba8(
-                self.ground1_color.0,
-                self.ground1_color.1,
-                self.ground1_color.2,
-                255,
-            ));
-            for i in min_x..=max_x {
-                let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
-
-                frame
-                    .texture()
-                    .xy(x, -GROUND_SIZE_UNITS)
-                    .wh(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS)
-                    .tinted();
-            }
-            frame.set_current_texture(self.info.ground2);
-            frame.fill(Color::Rgba8(
-                self.ground2_color.0,
-                self.ground2_color.1,
-                self.ground2_color.2,
-                255,
-            ));
-            for i in min_x..=max_x {
-                let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
-
-                frame
-                    .texture()
-                    .xy(x, -GROUND_SIZE_UNITS)
-                    .wh(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS)
-                    .tinted();
-            }
-        }
-    }
 }
 
 fn chunk_rect_blocks(x: i32, y: i32) -> Rect<i32> {
@@ -583,80 +137,83 @@ fn chunk_rect_units(x: i32, y: i32) -> Rect<i32> {
 }
 
 impl State {
-    #[allow(clippy::too_many_arguments)]
-    fn dashed_line(
-        &self,
-        frame: &mut Frame,
-        x0: f32,
-        y0: f32,
-        x1: f32,
-        y1: f32,
-        dash_len: f32,
-        offset: f32,
-        (r, g, b): (u8, u8, u8),
-        weight: f32,
-    ) -> f32 {
-        let start = vector![x0, y0];
-        let end = vector![x1, y1];
-        let to = end - start;
-        let dir = to.normalize();
+    // #[allow(clippy::too_many_arguments)]
+    // fn dashed_line(
+    //     &self,
+    //     frame: &mut Frame,
+    //     x0: f32,
+    //     y0: f32,
+    //     x1: f32,
+    //     y1: f32,
+    //     dash_len: f32,
+    //     offset: f32,
+    //     (r, g, b): (u8, u8, u8),
+    //     weight: f32,
+    // ) -> f32 {
+    //     let start = vector![x0, y0];
+    //     let end = vector![x1, y1];
+    //     let to = end - start;
+    //     let dir = to.normalize();
 
-        macro_rules! line {
-            ($a:expr, $l:expr) => {{
-                let pb = start + dir * ($a + $l);
-                let pa = start + dir * $a;
-                frame.no_fill();
-                frame.stroke(Color::Rgba8(r, g, b, 255));
-                frame.stroke_weight(weight);
-                frame.line().xy0(pa.x, pa.y).xy1(pb.x, pb.y);
+    //     macro_rules! line {
+    //         ($a:expr, $l:expr) => {{
+    //             let pb = start + dir * ($a + $l);
+    //             let pa = start + dir * $a;
+    //             frame.no_fill();
+    //             frame.stroke(Color::Rgba8(r, g, b, 255));
+    //             frame.stroke_weight(weight);
+    //             frame.line().xy0(pa.x, pa.y).xy1(pb.x, pb.y);
 
-                frame.no_stroke();
-                frame.fill(Color::Rgba8(r, g, b, 255));
-                frame.circle().xy(pa.x, pa.y).radius(weight / 2.0);
-                frame.circle().xy(pb.x, pb.y).radius(weight / 2.0);
-            }};
-        }
+    //             frame.no_stroke();
+    //             frame.fill(Color::Rgba8(r, g, b, 255));
+    //             frame.circle().xy(pa.x, pa.y).radius(weight / 2.0);
+    //             frame.circle().xy(pb.x, pb.y).radius(weight / 2.0);
+    //         }};
+    //     }
 
-        let offset = offset.rem_euclid(dash_len * 2.0);
-        if offset > dash_len {
-            let bit = offset - dash_len;
+    //     let offset = offset.rem_euclid(dash_len * 2.0);
+    //     if offset > dash_len {
+    //         let bit = offset - dash_len;
 
-            // frame.stroke(255, 0, 0, 255);
-            line!(0.0, bit);
-        }
-        let (full, rem) = {
-            let d = (to.magnitude() - offset) / (dash_len * 2.0);
-            (d.floor() as i32, d.fract())
-        };
-        for i in 0..full {
-            let i = i as f32;
-            // frame.stroke(0, 255, 0, 255);
-            line!(offset + i * (dash_len * 2.0), dash_len);
-        }
-        let bit = (rem * dash_len * 2.0).min(dash_len);
-        if bit > 0.0 {
-            // frame.stroke(0, 0, 255, 255);
-            line!(offset + (dash_len * 2.0) * full as f32, bit);
-        }
-        (1.0 - rem) * (dash_len * 2.0)
-    }
+    //         // frame.stroke(255, 0, 0, 255);
+    //         line!(0.0, bit);
+    //     }
+    //     let (full, rem) = {
+    //         let d = (to.magnitude() - offset) / (dash_len * 2.0);
+    //         (d.floor() as i32, d.fract())
+    //     };
+    //     for i in 0..full {
+    //         let i = i as f32;
+    //         // frame.stroke(0, 255, 0, 255);
+    //         line!(offset + i * (dash_len * 2.0), dash_len);
+    //     }
+    //     let bit = (rem * dash_len * 2.0).min(dash_len);
+    //     if bit > 0.0 {
+    //         // frame.stroke(0, 0, 255, 255);
+    //         line!(offset + (dash_len * 2.0) * full as f32, bit);
+    //     }
+    //     (1.0 - rem) * (dash_len * 2.0)
+    // }
 
     fn get_camera_world_rect(&self) -> Rect<f32> {
         let (cx, cy) = (self.camera_pos.x, self.camera_pos.y);
         let s = self.get_zoom_scale();
-        Rect::new(
+        let mut gongy = Rect::new(
             cx - self.width as f32 / 2.0 / s,
             cy - self.height as f32 / 2.0 / s,
             self.width as f32 / s,
             self.height as f32 / s,
-        )
+        );
+
+        gongy.w /= 2.0;
+        gongy.h /= 2.0;
+        gongy.x += gongy.w / 2.0;
+        gongy.y += gongy.h / 2.0;
+
+        gongy
     }
     fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
-        let mut view_rect = self.get_camera_world_rect();
-        view_rect.w /= 2.0;
-        view_rect.h /= 2.0;
-        view_rect.x += view_rect.w / 2.0;
-        view_rect.y += view_rect.h / 2.0;
+        let view_rect = self.get_camera_world_rect();
 
         let mut out = vec![];
 
@@ -698,94 +255,64 @@ impl State {
     // }
 }
 
-impl CanvasAppState<AppInfo> for State {
-    fn get_info(&mut self) -> &mut AppInfo {
-        &mut self.info
-    }
-}
-
-impl CanvasAppInfo for AppInfo {
-    fn get_app(&mut self) -> &mut App {
-        &mut self.app
-    }
-}
-
 #[wasm_bindgen]
-pub struct StateWrapper {
-    bundle: CanvasAppBundle<State, AppInfo>,
-}
-
-impl StateWrapper {
-    pub fn new(bundle: CanvasAppBundle<State, AppInfo>) -> Self {
-        Self { bundle }
-    }
-}
-
-#[wasm_bindgen]
-impl StateWrapper {
-    pub fn pub_render(&mut self, delta: f32) {
-        self.bundle.render(delta);
-    }
-
+impl State {
     pub fn resize(&mut self, width: u32, height: u32) {
-        self.bundle.state.info.app.resize((width, height).into());
+        self.render.resize(width, height);
 
-        (self.bundle.state.width, self.bundle.state.height) = (width, height);
+        (self.width, self.height) = (width, height);
     }
 
+    pub fn get_zoom_scale(&self) -> f32 {
+        2.0f32.powf(self.zoom / 12.0)
+    }
     pub fn get_camera_pos(&self) -> Vec<f32> {
-        vec![
-            self.bundle.state.camera_pos.x,
-            self.bundle.state.camera_pos.y,
-        ]
+        vec![self.camera_pos.x, self.camera_pos.y]
     }
     pub fn set_camera_pos(&mut self, x: f32, y: f32) {
-        self.bundle.state.camera_pos = vector![
-            x.clamp(0.0, LEVEL_WIDTH_UNITS as f32),
-            y.clamp(0.0, LEVEL_HEIGHT_UNITS as f32)
-        ];
+        self.camera_pos = vec2(x, y).clamp(
+            Vec2::ZERO,
+            vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32),
+        );
     }
     pub fn set_bg_color(&mut self, r: u8, g: u8, b: u8) {
-        self.bundle.state.bg_color = (r, g, b);
+        self.bg_color = (r, g, b);
     }
     pub fn get_bg_color(&mut self) -> Vec<u8> {
-        let (r, g, b) = self.bundle.state.bg_color;
+        let (r, g, b) = self.bg_color;
         vec![r, g, b]
     }
     pub fn set_ground1_color(&mut self, r: u8, g: u8, b: u8) {
-        self.bundle.state.ground1_color = (r, g, b);
+        self.ground1_color = (r, g, b);
     }
     pub fn get_ground1_color(&mut self) -> Vec<u8> {
-        let (r, g, b) = self.bundle.state.ground1_color;
+        let (r, g, b) = self.ground1_color;
         vec![r, g, b]
     }
     pub fn set_ground2_color(&mut self, r: u8, g: u8, b: u8) {
-        self.bundle.state.ground2_color = (r, g, b);
+        self.ground2_color = (r, g, b);
     }
     pub fn get_ground2_color(&mut self) -> Vec<u8> {
-        let (r, g, b) = self.bundle.state.ground2_color;
+        let (r, g, b) = self.ground2_color;
         vec![r, g, b]
     }
 
     pub fn get_zoom(&self) -> f32 {
-        self.bundle.state.zoom
+        self.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.bundle.state.zoom = v.clamp(-36.0, 36.0);
-    }
-    pub fn get_zoom_scale(&self) -> f32 {
-        self.bundle.state.get_zoom_scale()
+        self.zoom = v.clamp(-36.0, 36.0);
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
-        let inv = self.bundle.state.view_transform().try_inverse().unwrap();
+        let inv = self.view_transform().inverse();
 
-        let p = inv * vector![x, y, 1.0];
+        let p = inv.transform_point2(vec2(x, y));
 
         vec![p.x, p.y]
     }
     pub fn get_screen_pos(&self, x: f32, y: f32) -> Vec<f32> {
-        let p = self.bundle.state.view_transform() * vector![x, y, 1.0];
+        let p = self.view_transform().transform_point2(vec2(x, y));
 
         vec![p.x, p.y]
     }
@@ -800,9 +327,7 @@ impl StateWrapper {
 
             let chunk = obj.get_chunk_coord();
 
-            self.bundle
-                .state
-                .level
+            self.level
                 .chunks
                 .entry(chunk)
                 .or_insert_with(ChunkInfo::new)
@@ -819,20 +344,14 @@ impl StateWrapper {
         if let Ok(key) = key.into_bytes().try_into() {
             let key: DbKey = key;
 
-            if Some(key) == self.bundle.state.selected_object {
-                self.bundle.state.selected_object = None;
+            if Some(key) == self.selected_object {
+                self.selected_object = None;
             }
 
-            for c in self.bundle.state.level.chunks.values_mut() {
+            for c in self.level.chunks.values_mut() {
                 for (list, _) in c.objects.iter_mut() {
                     for m in list.objects.values_mut() {
                         if let Some(obj) = m.shift_remove(&key) {
-                            // self.bundle.state.delete_texts.push((
-                            //     "Deleted by Richard".into(),
-                            //     obj.x,
-                            //     obj.y,
-                            //     1.0,
-                            // ));
                             return Some(vec![obj.x, obj.y]);
                         }
                     }
@@ -843,17 +362,17 @@ impl StateWrapper {
     }
 
     pub fn get_chunks_to_sub(&mut self) -> Vec<ChunkCoord> {
-        let visible = self.bundle.state.get_viewable_chunks();
+        let visible = self.get_viewable_chunks();
 
         let mut out = vec![];
 
         for v in visible {
             // check if it is in the hashmap already
             //if not, set it to subscribe
-            match self.bundle.state.level.chunks.get_mut(&v) {
+            match self.level.chunks.get_mut(&v) {
                 Some(chunk) => chunk.last_time_visible = now(),
                 None => {
-                    self.bundle.state.level.chunks.insert(v, ChunkInfo::new());
+                    self.level.chunks.insert(v, ChunkInfo::new());
                     out.push(v);
                 }
             }
@@ -865,7 +384,7 @@ impl StateWrapper {
         let mut out = vec![];
         let now = now();
 
-        self.bundle.state.level.chunks.retain(|coord, chunk| {
+        self.level.chunks.retain(|coord, chunk| {
             if now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
                 out.push(*coord);
                 false
@@ -878,17 +397,17 @@ impl StateWrapper {
     }
 
     pub fn set_preview_visibility(&mut self, to: bool) {
-        self.bundle.state.show_preview = to;
+        self.show_preview = to;
     }
     pub fn get_preview_object(&mut self) -> GDObjectOpt {
-        self.bundle.state.preview_object
+        self.preview_object
     }
     pub fn set_preview_object(&mut self, mut to: GDObjectOpt) {
         to.fix();
-        self.bundle.state.preview_object = to
+        self.preview_object = to
     }
     pub fn is_preview_visible(&self) -> bool {
-        self.bundle.state.show_preview
+        self.show_preview
     }
 
     pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {
@@ -900,47 +419,43 @@ impl StateWrapper {
             for j in -1..=1 {
                 let cx = chunk.x + i;
                 let cy = chunk.y + j;
-                self.bundle.state.level.foreach_obj_in_chunk(
-                    ChunkCoord { x: cx, y: cy },
-                    |key, obj| {
+                self.level
+                    .foreach_obj_in_chunk(ChunkCoord { x: cx, y: cy }, |key, obj| {
                         let rect = padded_obj_rect(obj, 20.0);
 
                         let t = obj_transform(obj);
 
-                        let corners_world = rect.corners().map(|(x, y)| {
-                            let v = t * vector![x, y, 1.0];
-                            (v.x, v.y)
-                        });
+                        let corners_world =
+                            rect.corners().map(|(x, y)| t.transform_point2(vec2(x, y)));
 
                         if point_in_triangle(
-                            (x, y),
+                            vec2(x, y),
                             corners_world[0],
                             corners_world[1],
                             corners_world[2],
                         ) || point_in_triangle(
-                            (x, y),
+                            vec2(x, y),
                             corners_world[0],
                             corners_world[2],
                             corners_world[3],
                         ) {
                             clickable.push((key, *obj));
                         }
-                    },
-                );
+                    });
             }
         }
 
         let selected = if clickable.is_empty() {
             None
         } else {
-            if self.bundle.state.select_depth as usize >= clickable.len() {
-                self.bundle.state.select_depth = 0;
+            if self.select_depth as usize >= clickable.len() {
+                self.select_depth = 0;
             }
-            self.bundle.state.select_depth += 1;
-            Some(clickable[self.bundle.state.select_depth as usize - 1])
+            self.select_depth += 1;
+            Some(clickable[self.select_depth as usize - 1])
         };
 
-        self.bundle.state.selected_object = selected.map(|v| v.0);
+        self.selected_object = selected.map(|v| v.0);
 
         selected.map(|(key, obj)| SelectedObjectInfo {
             key: String::from_utf8(key.into()).unwrap(),
@@ -952,26 +467,510 @@ impl StateWrapper {
         })
     }
     pub fn deselect_object(&mut self) {
-        self.bundle.state.selected_object = None;
+        self.selected_object = None;
     }
     pub fn get_selected_object_key(&mut self) -> Option<String> {
-        self.bundle
-            .state
-            .selected_object
+        self.selected_object
             .and_then(|v| String::from_utf8(v.into()).ok())
     }
     pub fn get_selected_object_chunk(&mut self) -> Option<ChunkCoord> {
-        self.bundle.state.selected_object.and_then(|k| {
-            self.bundle
-                .state
-                .level
-                .get_obj_by_key(k)
-                .map(|o| o.get_chunk_coord())
-        })
+        self.selected_object
+            .and_then(|k| self.level.get_obj_by_key(k).map(|o| o.get_chunk_coord()))
     }
     // pub fn get_text_draws(&self) -> Vec<TextDraw> {
     //     self.bundle.state.text_draws.clone()
     // }
+
+    fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
+        let output = self.render.surface.get_current_texture()?;
+        let output_view = output
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+
+        let multisample_view = self
+            .render
+            .device
+            .create_texture(&self.render.multisampled_frame_descriptor)
+            .create_view(&wgpu::TextureViewDescriptor::default());
+
+        let mut encoder = self
+            .render
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+
+        self.render.queue.write_buffer(
+            &self.render.globals_buffer,
+            0,
+            bytemuck::cast_slice(&[Globals {
+                screen_size: [
+                    self.render.surface_config.width as f32,
+                    self.render.surface_config.height as f32,
+                ],
+                onion_size: Vec2::ZERO.to_array(),
+                camera_pos: self.camera_pos.to_array(),
+                zoom_scale: self.get_zoom_scale(),
+                // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
+                time: self.time,
+            }]),
+        );
+
+        {
+            self.time += delta;
+
+            let mut rects: Vec<pipeline_rect::instance::Instance> = vec![];
+            enum BlendMode {
+                Normal,
+                Additive,
+            }
+            struct DrawCall {
+                blend_mode: BlendMode,
+                until_instance: u32,
+            }
+            let mut calls: Vec<DrawCall> = vec![];
+
+            // background
+            {
+                let mut transform = Affine2::IDENTITY;
+
+                transform *= Affine2::from_translation(-self.camera_pos / 10.0);
+
+                let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
+
+                let offset = (self.camera_pos / 10.0 / scale).floor() * scale;
+
+                for i in -2i32..=2 {
+                    for j in -2i32..=2 {
+                        let mut transform = transform;
+                        transform *=
+                            Affine2::from_translation(offset + scale * vec2(i as f32, j as f32));
+                        transform *= Affine2::from_scale(vec2(
+                            1.0,
+                            if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 },
+                        ));
+
+                        rects.push(pipeline_rect::instance::Instance::new(
+                            transform
+                                * Affine2::from_scale_angle_translation(
+                                    vec2(scale, scale) + 1.0,
+                                    0.0,
+                                    -(vec2(scale, scale) + 1.0) / 2.0,
+                                ),
+                            // transform.transform_point2(-vec2(scale + 1.0, scale + 1.0) / 2.0),
+                            // transform.transform_vector2(vec2(scale + 1.0, scale + 1.0)),
+                            vec4(
+                                self.bg_color.0 as f32 / 255.0,
+                                self.bg_color.1 as f32 / 255.0,
+                                self.bg_color.2 as f32 / 255.0,
+                                1.0,
+                            ),
+                            1,
+                            vec2(0.0, 0.0),
+                            vec2(1024.0, 1024.0),
+                        ));
+                    }
+                }
+
+                calls.push(DrawCall {
+                    blend_mode: BlendMode::Normal,
+                    until_instance: rects.len() as u32,
+                });
+            };
+
+            // view rect and chunk debug
+            {
+                let transform = self.view_transform();
+                let view_rect = self.get_camera_world_rect();
+
+                let size = vec2(view_rect.w, view_rect.h);
+
+                rects.push(pipeline_rect::instance::Instance::new(
+                    transform
+                        * Affine2::from_scale_angle_translation(
+                            size,
+                            0.0,
+                            vec2(view_rect.x, view_rect.y),
+                        ),
+                    vec4(1.0, 0.0, 0.0, 0.5),
+                    1000,
+                    vec2(0.0, 0.0),
+                    size * 4.0,
+                ));
+
+                // for (x, y) in view_rect.corners() {
+                //     rects.push(pipeline_rect::instance::Instance::new(
+                //         transform
+                //             * Affine2::from_scale_angle_translation(
+                //                 vec2(10.0, 10.0),
+                //                 0.0,
+                //                 vec2(x - 5.0, y - 5.0),
+                //             ),
+                //         vec4(1.0, 0.0, 0.0, 0.5),
+                //         0,
+                //         vec2(0.0, 0.0),
+                //         vec2(0.0, 0.0),
+                //     ));
+                // }
+
+                let now = now();
+
+                for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
+                    let size = vec2(20.0 * 30.0, 20.0 * 30.0);
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        transform
+                            * Affine2::from_scale_angle_translation(
+                                size,
+                                0.0,
+                                vec2(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0),
+                            ),
+                        vec4(
+                            0.0,
+                            1.0,
+                            0.0,
+                            map!(
+                                now - chunk.last_time_visible,
+                                0.0,
+                                UNLOAD_CHUNK_TIME * 1000.0,
+                                1.0,
+                                0.0
+                            ) as f32,
+                        ),
+                        1000,
+                        vec2(0.0, 0.0),
+                        size * 4.0,
+                    ));
+                }
+
+                calls.push(DrawCall {
+                    blend_mode: BlendMode::Normal,
+                    until_instance: rects.len() as u32,
+                });
+            }
+
+            // objects
+            {
+                let transform = self.view_transform();
+
+                let draw_obj_sprite = |rects: &mut Vec<pipeline_rect::instance::Instance>,
+                                       mut transform: Affine2,
+                                       sprite: SpriteInfo,
+                                       obj: &GDObject,
+                                       color: Vec4| {
+                    transform *= obj_transform(obj);
+
+                    let tex_idx = if OBJECT_INFO[obj.id as usize].builtin_scale == 1.0 {
+                        4
+                    } else {
+                        5
+                    };
+
+                    let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
+                    let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        transform
+                            * Affine2::from_scale_angle_translation(
+                                uv_size,
+                                0.0,
+                                vec2(
+                                    -(sprite.size.0 as f32 / 2.0) + sprite.offset.0,
+                                    -(sprite.size.1 as f32 / 2.0) - sprite.offset.1,
+                                ),
+                            ),
+                        // transform.transform_point2(
+                        //     -vec2(
+                        //         sprite.size.0 as f32 / 2.0 + sprite.offset.0,
+                        //         sprite.size.1 as f32 / 2.0 - sprite.offset.1,
+                        //     ) / 2.0,
+                        // ),
+                        // transform.transform_vector2(uv_size),
+                        color,
+                        tex_idx,
+                        uv_pos,
+                        uv_size,
+                    ));
+                };
+
+                let selected_color = |lighter| {
+                    let c = map!(
+                        (self.time * 10.0).sin(),
+                        -1.0,
+                        1.0,
+                        if lighter {
+                            150.0 / 255.0
+                        } else {
+                            100.0 / 255.0
+                        },
+                        if lighter { 1.0 } else { 200.0 / 255.0 }
+                    );
+                    vec4(1.0, c, c, 1.0)
+                };
+
+                for &layer in Z_LAYERS {
+                    for z_order in -50..50 {
+                        self.level.foreach_obj_in_z(
+                            layer,
+                            z_order,
+                            |key, obj| {
+                                if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
+                                    if obj.main_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(false)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.main_color.r,
+                                                    obj.main_color.g,
+                                                    obj.main_color.b,
+                                                    obj.main_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                            },
+                            self.show_preview.then(|| self.preview_object.into_obj()),
+                        )
+                    }
+                    calls.push(DrawCall {
+                        blend_mode: BlendMode::Additive,
+                        until_instance: rects.len() as u32,
+                    });
+
+                    for z_order in -50..50 {
+                        self.level.foreach_obj_in_z(
+                            layer,
+                            z_order,
+                            |key, obj| {
+                                if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
+                                    if !obj.main_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(false)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.main_color.r,
+                                                    obj.main_color.g,
+                                                    obj.main_color.b,
+                                                    obj.main_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                                if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
+                                    if !obj.detail_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(true)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.detail_color.r,
+                                                    obj.detail_color.g,
+                                                    obj.detail_color.b,
+                                                    obj.detail_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                            },
+                            self.show_preview.then(|| self.preview_object.into_obj()),
+                        )
+                    }
+                    calls.push(DrawCall {
+                        blend_mode: BlendMode::Normal,
+                        until_instance: rects.len() as u32,
+                    });
+
+                    for z_order in -50..50 {
+                        self.level.foreach_obj_in_z(
+                            layer,
+                            z_order,
+                            |key, obj| {
+                                if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
+                                    if obj.detail_color.blending {
+                                        let color = if self.selected_object == Some(key) {
+                                            selected_color(false)
+                                        } else {
+                                            Vec4::from_array(
+                                                [
+                                                    obj.detail_color.r,
+                                                    obj.detail_color.g,
+                                                    obj.detail_color.b,
+                                                    obj.detail_color.opacity,
+                                                ]
+                                                .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
+                                    }
+                                }
+                            },
+                            self.show_preview.then(|| self.preview_object.into_obj()),
+                        )
+                    }
+                    calls.push(DrawCall {
+                        blend_mode: BlendMode::Additive,
+                        until_instance: rects.len() as u32,
+                    });
+                }
+            };
+
+            // selection box
+            {
+                let highlight_obj = if self.show_preview {
+                    Some((self.preview_object.into_obj(), (100, 255, 100), None))
+                } else if let Some(d) = self.selected_object {
+                    self.level.get_obj_by_key(d).map(|v| {
+                        (
+                            *v,
+                            (255, 100, 100),
+                            Some(String::from_utf8(d.into()).unwrap()),
+                        )
+                    })
+                } else {
+                    None
+                };
+
+                if let Some((obj, (r, g, b), key)) = highlight_obj {
+                    let transform = self.view_transform() * obj_transform(&obj);
+
+                    let rect = padded_obj_rect(&obj, 30.0);
+                    let rect_size_vec = vec2(rect.w, rect.h);
+
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        transform
+                            * Affine2::from_translation(-rect_size_vec / 2.0)
+                            * Affine2::from_scale(rect_size_vec),
+                        vec4(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0),
+                        1000,
+                        vec2(0.0, 0.0),
+                        rect_size_vec,
+                    ));
+                }
+            }
+
+            // ground
+            {
+                const GROUND_SIZE_BLOCKS: f32 = 4.25;
+                const GROUND_SIZE_UNITS: f32 = GROUND_SIZE_BLOCKS * 30.0;
+
+                let transform = self.view_transform();
+
+                let view_rect = self.get_camera_world_rect();
+                let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
+                let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
+
+                for i in min_x..=max_x {
+                    let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
+                    let t = transform
+                        * Affine2::from_scale_angle_translation(
+                            vec2(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS) + 0.2,
+                            0.0,
+                            vec2(x, -GROUND_SIZE_UNITS) - 0.1,
+                        );
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        t,
+                        vec4(
+                            self.ground1_color.0 as f32 / 255.0,
+                            self.ground1_color.1 as f32 / 255.0,
+                            self.ground1_color.2 as f32 / 255.0,
+                            1.0,
+                        ),
+                        2,
+                        vec2(0.0, 0.0),
+                        vec2(256.0, 256.0),
+                    ));
+                    rects.push(pipeline_rect::instance::Instance::new(
+                        t,
+                        vec4(
+                            self.ground2_color.0 as f32 / 255.0,
+                            self.ground2_color.1 as f32 / 255.0,
+                            self.ground2_color.2 as f32 / 255.0,
+                            1.0,
+                        ),
+                        3,
+                        vec2(0.0, 0.0),
+                        vec2(256.0, 256.0),
+                    ));
+                }
+
+                calls.push(DrawCall {
+                    blend_mode: BlendMode::Normal,
+                    until_instance: rects.len() as u32,
+                });
+            };
+            let instance_buffer =
+                self.render
+                    .device
+                    .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                        label: None,
+                        contents: bytemuck::cast_slice(&rects),
+                        usage: wgpu::BufferUsages::VERTEX,
+                    });
+
+            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("render_pass"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &multisample_view,
+                    resolve_target: Some(&output_view),
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: 0.0,
+                            g: 0.0,
+                            b: 0.0,
+                            a: 1.0,
+                        }),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                depth_stencil_attachment: None,
+                occlusion_query_set: None,
+                timestamp_writes: None,
+            });
+
+            render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
+            render_pass.set_bind_group(1, &self.render.textures_bind_group, &[]);
+            // render_pass.set_bind_group(2, &self.render.onion_nearest_bind_group, &[]);
+
+            render_pass.set_vertex_buffer(0, self.render.rect_vertex_buffer.slice(..));
+            render_pass.set_vertex_buffer(1, instance_buffer.slice(..));
+            render_pass.set_index_buffer(
+                self.render.rect_index_buffer.slice(..),
+                wgpu::IndexFormat::Uint32,
+            );
+
+            let mut last_instance = 0;
+            for (i, call) in calls.iter().enumerate() {
+                render_pass.set_pipeline(match call.blend_mode {
+                    BlendMode::Normal => &self.render.pipeline_rect,
+                    BlendMode::Additive => &self.render.pipeline_rect_additive_sq_alpha,
+                });
+                render_pass.draw_indexed(0..6, 0, last_instance..call.until_instance);
+                last_instance = call.until_instance;
+
+                if i == 0 {
+                    render_pass.set_pipeline(&self.render.pipeline_grid);
+                    render_pass.draw_indexed(0..6, 0, 0..1);
+                }
+            }
+        }
+
+        self.render.queue.submit([encoder.finish()]);
+        output.present();
+
+        Ok(())
+    }
+
+    pub fn render(&mut self, delta: f32) {
+        self.render_inner(delta).unwrap()
+    }
 }
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;

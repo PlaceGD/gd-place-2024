@@ -11,7 +11,7 @@
     import { menuSettings } from "../../stores";
     import { onDestroy } from "svelte";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
 
     let selectedWidget = WidgetType.None;
 

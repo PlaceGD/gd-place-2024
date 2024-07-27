@@ -1,8 +1,8 @@
 import * as wasm from "wasm-lib";
 
-let state: wasm.StateWrapper | null = null;
+let state: wasm.State | null = null;
 
-type Callback = (s: wasm.StateWrapper) => void;
+type Callback = (s: wasm.State) => void;
 
 let callbacks: Record<number, Callback> = {};
 let callbackCount = 0;
@@ -26,11 +26,11 @@ export const runCallbacks = () => {
     }
 };
 
-export const loadState = (s: wasm.StateWrapper) => {
+export const loadState = (s: wasm.State) => {
     state = s;
 };
 
-export const withState = <T>(f: (state: wasm.StateWrapper) => T): T => {
+export const withState = <T>(f: (state: wasm.State) => T): T => {
     if (state != null) {
         return f(state);
     }

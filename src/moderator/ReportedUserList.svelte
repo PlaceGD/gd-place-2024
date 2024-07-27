@@ -27,7 +27,7 @@
     import { moveCamera } from "../level_view/view_controls";
     import * as wasm from "wasm-lib";
 
-    export let state: wasm.StateWrapper;
+    export let state: wasm.State;
     export let editorFocused: boolean;
 
     $: {

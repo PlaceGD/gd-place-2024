@@ -87,7 +87,7 @@
 </script>
 
 <div
-    class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-md"
+    class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-base"
 >
     <ul class="flex flex-col h-full buttons w-min">
         <AnimateSharedLayout>

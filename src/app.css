@@ -72,12 +72,12 @@ dialog::backdrop {
 } 
 
 @layer components {
-    .dialog-panel {
-        @apply flex-col gap-4 p-6 text-white bg-transparent aspect-square open:flex xs:p-4;
-    }
-
     .menu-panel {
         @apply relative shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
+    }
+
+    .modal-panel {
+        @apply h-full w-full overflow-hidden p-6 xs:p-4;
     }
 
     .sliding-selector {
@@ -128,11 +128,18 @@ dialog::backdrop {
         @apply absolute -translate-x-1/2 -translate-y-1/2;
     }
 
+    .alternating-bg {
+        @apply bg-black/10;
+    }
+    .alternating-bg > * {
+        @apply odd:bg-black/25 even:bg-white/5;
+    }
+
     .bulleted-list {
-        @apply flex flex-col gap-2 my-2 list-disc;
+        @apply flex flex-col gap-2 my-2 list-disc alternating-bg;
 
         & > li {
-            @apply p-2 ml-6 rounded-lg odd:bg-black/15 even:bg-white/5 xs:ml-4;
+            @apply p-2 ml-6 rounded-lg xs:ml-4;
         }
     }
     

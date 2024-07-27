@@ -33,9 +33,6 @@
 
     const minimizeAnimDur = 0.5;
 
-    const { isOverflowing: isTabsPanelOverflowing, element: tabsPanel } =
-        useIsOverflowing();
-
     $: {
         let [mr, mg, mb] =
             colors.list[$menuSettings.selectedMainColor.hue].palette[
@@ -108,9 +105,7 @@
                 easing="easeInOut"
                 duration={minimizeAnimDur}
                 from={{
-                    gridTemplateRows: `${
-                        $isTabsPanelOverflowing ? "56px" : "48px"
-                    } 200px`,
+                    gridTemplateRows: "48px 200px",
                 }}
                 to={{
                     isMinimized: {
@@ -187,7 +182,6 @@
                                 <ul
                                     class="absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar"
                                     tabindex="-1"
-                                    use:tabsPanel
                                     use:motion
                                     on:wheel={e => {
                                         if (!e || !e.target) return;

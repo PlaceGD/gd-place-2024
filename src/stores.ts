@@ -53,6 +53,7 @@ export const bannedUsers = writable<string[]>([]);
 export enum ExclusiveMenus {
     Moderator,
     Login,
+    Kofi,
 }
 
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
@@ -75,6 +76,18 @@ export const loginData = writable<{
     isLoggedIn: false,
     currentUserData: null,
 });
+
+export const currentNameGradient = persist(
+    writable<{
+        positions: number[] | null;
+        colors: string[] | null;
+    }>({
+        positions: null,
+        colors: null,
+    }),
+    createLocalStorage(),
+    "nameGradient"
+);
 
 let deleteTextCounter = 0;
 export const deleteTexts = writable<

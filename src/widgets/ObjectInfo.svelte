@@ -12,6 +12,7 @@
     import { REPORT_COOLDOWN_SECONDS } from "shared-lib/user";
     import { getCameraPos } from "../level_view/view_controls";
     import OnceButton from "../components/OnceButton.svelte";
+    import ColoredName from "../components/ColoredName.svelte";
 
     export let state: wasm.State;
 
@@ -163,7 +164,7 @@
                         }
                     }}
                 >
-                    {$selectedObject.namePlaced}
+                    <ColoredName username={$selectedObject.namePlaced} />
                 </button>
             {:else}
                 <div class="relative w-9 h-9 max-w-9 max-h-9">

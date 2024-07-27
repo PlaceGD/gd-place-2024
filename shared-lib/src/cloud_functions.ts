@@ -1,3 +1,5 @@
+import { KofiTxId } from "./kofi";
+
 export type PlaceReq = { object: string };
 export type DeleteReq = { chunkId: string; objId: string };
 export type InitWithUsernameReq = {
@@ -17,4 +19,10 @@ export type ReportedUserOperationReq = {
 };
 export type BanReq = {
     username: string;
+};
+export type KofiReq = {
+    txId: KofiTxId;
+};
+export type GradientReq = {
+    grad: string;
 };

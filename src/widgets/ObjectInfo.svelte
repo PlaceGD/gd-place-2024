@@ -13,12 +13,13 @@
     import { getCameraPos } from "../level_view/view_controls";
     import OnceButton from "../components/OnceButton.svelte";
     import ColoredName from "../components/ColoredName.svelte";
+    import { getNewTurnstileToken } from "../utils/turnstile";
 
     export let state: wasm.State;
 
     const cooldown = new SyncedCooldown(
         `userData/${$loginData.currentUserData!.userData.uid}`,
-        "epochNextPlaced",
+        "epochNextReport",
         REPORT_COOLDOWN_SECONDS
     );
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
@@ -33,9 +34,12 @@
     const report = async (name: string) => {
         try {
             const cameraPos = getCameraPos(state);
+
+            const token = await getNewTurnstileToken();
+
             await reportUser({
                 username: name,
-                turnstileResp: turnstileToken as string,
+                turnstileResp: token,
                 x: cameraPos[0],
                 y: cameraPos[1],
             });
@@ -46,8 +50,6 @@
         }
 
         resetReportButton();
-
-        turnstileToken = TokenStatus.Used;
     };
 
     const ban = async (name: string) => {
@@ -61,40 +63,17 @@
 
         resetBanButton();
     };
-
-    enum TokenStatus {
-        NoToken,
-        Used,
-    }
-
-    let turnstileToken: string | TokenStatus = TokenStatus.NoToken;
-    const SITE_KEY = __TURNSTILE_REPORT_SITE_KEY;
-    let turnstileReset: () => void | undefined;
-
-    $: {
-        if ($selectedObject == null && turnstileToken == TokenStatus.Used)
-            turnstileToken = TokenStatus.NoToken;
-    }
-
-    let objButtonSize = 0;
 </script>
 
 {#if $selectedObject != null}
     <ul
         class="relative flex flex-col gap-2 p-4 text-lg text-white rounded-lg w-96 menu-panel flex-center pointer-events-all"
     >
-        <li
-            class="absolute opacity-0 object-info-item"
-            bind:offsetHeight={objButtonSize}
-        ></li>
         <li class="object-info-item">
             <span>Type:</span>
 
             <div class="pr-3">
-                <ObjectButtonImage
-                    id={$selectedObject.id ?? 1}
-                    {objButtonSize}
-                />
+                <ObjectButtonImage id={$selectedObject.id ?? 1} />
             </div>
         </li>
         <li class="object-info-item">
@@ -176,26 +155,7 @@
         {#if $selectedObject?.namePlaced != null}
             <div class="flex flex-col items-center justify-center">
                 {#if $loginData.currentUserData != null}
-                    {#if (turnstileToken == TokenStatus.NoToken || turnstileToken == TokenStatus.Used) && $cooldownFinished && !isYourself}
-                        <Turnstile
-                            siteKey={SITE_KEY}
-                            on:turnstile-callback={e => {
-                                turnstileToken = e.detail.token;
-                            }}
-                            on:turnstile-error={() =>
-                                Toast.showErrorToast(
-                                    `There was an error with the Turnstile`
-                                )}
-                            on:turnstile-expired={() => {
-                                // expritation is essentially the same as being used
-                                turnstileToken = TokenStatus.Used;
-                            }}
-                            bind:reset={turnstileReset}
-                        />
-                        <div class="relative w-9 h-9 max-w-9 max-h-9">
-                            <Loading darken={false} />
-                        </div>
-                    {:else if !isYourself}
+                    {#if !isYourself}
                         <div class="flex items-center justify-center gap-1">
                             <h1 class="w-full text-lg text-center">
                                 Report User:

@@ -53,6 +53,7 @@ export const bannedUsers = writable<string[]>([]);
 export enum ExclusiveMenus {
     Moderator,
     Login,
+    Settings,
     Kofi,
 }
 

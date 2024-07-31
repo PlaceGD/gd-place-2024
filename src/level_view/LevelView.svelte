@@ -17,13 +17,11 @@
 
     onMount(async () => {
         try {
-            console.log("A");
             state = await wasm.create_view(
                 canvas,
                 $spritesheetProgress.arrayBuffer!
             );
             loadState(state);
-            console.log("B");
         } catch (e: any) {
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(

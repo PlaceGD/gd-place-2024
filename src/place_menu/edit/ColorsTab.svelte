@@ -5,7 +5,6 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import RangeSlider from "svelte-range-slider-pips";
-    import { AnimateSharedLayout } from "svelte-motion";
 
     import ToggleSwitch from "../../components/ToggleSwitch.svelte";
     import HueSlider from "../../components/HueSlider.svelte";
@@ -49,36 +48,32 @@
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items colors-tab-container md:text-lg sm:text-base"
 >
     <ul class="flex flex-col h-full buttons">
-        <AnimateSharedLayout>
-            <li class="relative flex-1 w-full h-full flex-center font-pusab">
-                <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke xs:text-sm"
-                    on:click={() => (selectedTab = ColorTab.Main)}
-                    tabindex={canSelectByTab}
-                    aria-label="Main Color Channel"
-                >
-                    Main
-                </button>
-                {#if selectedTab == ColorTab.Main}
-                    <SlidingSelector layoutId="button-selector"
-                    ></SlidingSelector>
-                {/if}
-            </li>
-            <li class="relative flex-1 w-full h-full flex-center font-pusab">
-                <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke xs:text-sm"
-                    on:click={() => (selectedTab = ColorTab.Detail)}
-                    tabindex={canSelectByTab}
-                    aria-label="Detail Color Channel"
-                >
-                    Detail
-                </button>
-                {#if selectedTab == ColorTab.Detail}
-                    <SlidingSelector layoutId="button-selector"
-                    ></SlidingSelector>
-                {/if}
-            </li>
-        </AnimateSharedLayout>
+        <li class="relative flex-1 w-full h-full flex-center font-pusab">
+            <button
+                class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke xs:text-sm"
+                on:click={() => (selectedTab = ColorTab.Main)}
+                tabindex={canSelectByTab}
+                aria-label="Main Color Channel"
+            >
+                Main
+            </button>
+            {#if selectedTab == ColorTab.Main}
+                <div class="sliding-selector"></div>
+            {/if}
+        </li>
+        <li class="relative flex-1 w-full h-full flex-center font-pusab">
+            <button
+                class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke xs:text-sm"
+                on:click={() => (selectedTab = ColorTab.Detail)}
+                tabindex={canSelectByTab}
+                aria-label="Detail Color Channel"
+            >
+                Detail
+            </button>
+            {#if selectedTab == ColorTab.Detail}
+                <div class="sliding-selector"></div>
+            {/if}
+        </li>
     </ul>
 
     <div class="flex flex-col justify-center h-full gap-8 xs:gap-6 sliders">

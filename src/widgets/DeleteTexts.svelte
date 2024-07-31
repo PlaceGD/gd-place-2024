@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ColoredName from "../components/ColoredName.svelte";
     import { deleteTexts } from "../stores";
 
     // $: console.log($deleteTexts);
@@ -14,8 +15,12 @@
             `}
         >
             <span
-                class="absolute letext text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
+                class="absolute letext text-black text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
                 >Deleted by {name}</span
+            >
+            <span
+                class="absolute letext text-saira text-3xl text-nowrap w-[500px] text-center"
+                >Deleted by <ColoredName username={name}></ColoredName></span
             >
         </div>
     {/each}

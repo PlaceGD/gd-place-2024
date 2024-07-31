@@ -4,27 +4,11 @@ use std::{
 };
 
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
-use itertools::Itertools;
 use texture_packer::{exporter::ImageExporter, importer::ImageImporter, TexturePacker};
 
-use crate::{config::PACKER_CONFIG, objects::list::get_available_objects};
+use crate::{objects::list::AVAILABLE_OBJECTS, sprites::SpriteInfo, util::is_fully_transparent};
 
-#[derive(Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize)]
-pub struct SpriteInfo {
-    pub pos: (u32, u32),
-    pub size: (u32, u32),
-    pub rotated: bool,
-    pub offset: (f32, f32),
-}
-
-impl SpriteInfo {
-    pub fn offset_rect_size(self) -> (f32, f32) {
-        (
-            self.size.0 as f32 + (self.offset.0 * 2.0).abs(),
-            self.size.1 as f32 + (self.offset.1 * 2.0).abs(),
-        )
-    }
-}
+use super::config::PACKER_CONFIG;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -33,22 +17,11 @@ pub struct SpritesheetData {
     detail_sprites: HashMap<u32, SpriteInfo>,
 }
 
-fn is_fully_transparent(img: &DynamicImage) -> bool {
-    for x in 0..img.width() {
-        for y in 0..img.height() {
-            if img.get_pixel(x, y).0[3] != 0 {
-                return false;
-            }
-        }
-    }
-    true
-}
-
-pub(crate) fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
+pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
     let mut packer: TexturePacker<'_, image::DynamicImage, (u32, bool)> =
         TexturePacker::new_skyline(PACKER_CONFIG);
 
-    for &(i, _) in get_available_objects() {
+    for &(i, _) in AVAILABLE_OBJECTS.iter() {
         let main =
             ImageImporter::import_from_file(&PathBuf::from(format!("textures/main/{}.png", i)))
                 .unwrap();
@@ -94,7 +67,7 @@ pub(crate) fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
     (sheet, data)
 }
 
-pub(crate) fn color_bleed(img: &mut DynamicImage) {
+pub fn color_bleed(img: &mut DynamicImage) {
     let mut fixed = HashSet::new();
     let mut pass_fixed = HashSet::new();
 
@@ -146,7 +119,7 @@ pub(crate) fn color_bleed(img: &mut DynamicImage) {
     }
 }
 
-pub(crate) fn make_get_main_sprite_fn(data: &SpritesheetData) -> String {
+pub fn make_get_main_sprite_fn(data: &SpritesheetData) -> String {
     let mut ongy = [None; 4600];
     for (&k, &v) in &data.main_sprites {
         ongy[k as usize] = Some(v);
@@ -174,7 +147,7 @@ pub const MAIN_SPRITES: [Option<SpriteInfo>; 4600] = {ongy:?};
     //     )
 }
 
-pub(crate) fn make_get_detail_sprite_fn(data: &SpritesheetData) -> String {
+pub fn make_get_detail_sprite_fn(data: &SpritesheetData) -> String {
     let mut ongy = [None; 4600];
     for (&k, &v) in &data.detail_sprites {
         ongy[k as usize] = Some(v);

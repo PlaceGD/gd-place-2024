@@ -9,16 +9,27 @@ export interface SpriteData {
     offset: [number, number];
     rotated: boolean;
 }
-export interface ObjectData {
+
+export type ObjectCategory =
+    | "Blocks"
+    | "Outlines"
+    | "Spikes"
+    | "OrbsAndGlorbs"
+    | "Pixel"
+    | "Deco"
+    | "Saws"
+    | "Triggers";
+export type HitboxType = "NoHitbox" | "Solid" | "Hazard" | "Special";
+export interface ObjectInfo {
     placeOffsetX: number;
     placeOffsetY: number;
-    tintable: boolean;
-    solid: boolean;
-    category: string; // CATEGORY_ICONS key
-    builtinScale: number;
+    hitboxType: HitboxType;
+    builtinScaleX: number;
+    builtinScaleY: number;
+    category: ObjectCategory; // CATEGORY_ICONS key
 }
 
-export const objects: Record<string, ObjectData> = _objects;
+export const objects: Record<string, ObjectInfo> = _objects as any;
 export const spritesheet: {
     mainSprites: Record<string, SpriteData>;
     detailSprites: Record<string, SpriteData>;

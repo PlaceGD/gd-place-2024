@@ -372,7 +372,7 @@
             startDrag(e.clientX, e.clientY);
         }
     }}
-    on:wheel={e => {
+    on:wheel|passive={e => {
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
         zoomTween.set(zoomGoal);
     }}
@@ -406,10 +406,10 @@
             src="https://media.tenor.com/aS37ibwqql8AAAAM/stare-dont-blink.gif"
             alt=""
             on:click={() => {
-                window.app.textContent = " ";
-                window.app.appendChild(document.createElement("img"));
-                window.app.children[0].src =
-                    "https://ih1.redbubble.net/image.2177348283.3648/flat,750x1000,075,f.jpg";
+                // window.app.textContent = " ";
+                // window.app.appendChild(document.createElement("img"));
+                // window.app.children[0].src =
+                //     "https://ih1.redbubble.net/image.2177348283.3648/flat,750x1000,075,f.jpg";
             }}
         /></button
     >

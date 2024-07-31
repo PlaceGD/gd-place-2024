@@ -46,7 +46,7 @@
 >
     <div class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content]">
         <FadedScroll bind:reachedBottom={hasScrolledToBottom}>
-            <section>
+            <section class="text">
                 <h1><u><strong>Privacy Policy for GD Place</strong></u></h1>
 
                 <h2>Definitions</h2>

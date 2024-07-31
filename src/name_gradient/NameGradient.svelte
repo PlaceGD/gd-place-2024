@@ -107,6 +107,8 @@
     } = gradientCooldown;
 
     const onUpdateGradient = async () => {
+        isInProgress = true;
+
         try {
             await changeNameGradient({
                 grad: nameGradientString,
@@ -121,9 +123,11 @@
         } catch (e) {
             console.error(`Failed to update gradient: ${e}`);
             Toast.showErrorToast(
-                "There was an updating your gradient. Please try again."
+                "There was error an updating your gradient. Please try again."
             );
         }
+
+        isInProgress = false;
 
         resetGradientButton();
     };
@@ -202,7 +206,7 @@
                 class="z-30 flex self-center w-full gap-2 p-1 overflow-x-scroll text-2xl text-white font-pusab usernames thin-scrollbar"
             >
                 <p
-                    class="m-auto username-gradient w-min text-2xl xs:text-xl"
+                    class="m-auto text-2xl username-gradient w-min xs:text-xl"
                     style={`
                             background-image: ${nameGradientString};
                         `}
@@ -210,7 +214,7 @@
                     {$loginData.currentUserData?.placeData?.username ?? ""}
                 </p>
                 <p
-                    class="m-auto username-gradient w-min font-pusab text-2xl xs:text-xl"
+                    class="m-auto text-2xl username-gradient w-min font-pusab xs:text-xl"
                     style={`
                             background-image: ${nameGradientString};
                         `}

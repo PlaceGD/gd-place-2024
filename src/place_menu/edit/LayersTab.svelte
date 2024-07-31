@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { ZLayer } from "wasm-lib";
-    import { AnimateSharedLayout } from "svelte-motion";
 
     import Image from "../../components/Image.svelte";
     import Input from "../../components/Input.svelte";
@@ -30,6 +29,8 @@
                 return "T3";
             case ZLayer.T4:
                 return "T4";
+            default:
+                return "T1";
         }
     };
     const equivalentTop = (layer: ZLayer) => {
@@ -90,88 +91,81 @@
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-base"
 >
     <ul class="flex flex-col h-full buttons w-min">
-        <AnimateSharedLayout>
-            <li
-                class="relative flex-1 w-20 h-full md:w-18 xs:w-12 font-pusab flex-center"
+        <li
+            class="relative flex-1 w-20 h-full md:w-18 xs:w-12 font-pusab flex-center"
+        >
+            <button
+                class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
+                on:click={() =>
+                    ($menuSettings.zLayer = equivalentBottom(
+                        $menuSettings.zLayer
+                    ))}
+                tabindex={canSelectByTab}
+                aria-label="Layer Below Player"
             >
-                <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
-                    on:click={() =>
-                        ($menuSettings.zLayer = equivalentBottom(
-                            $menuSettings.zLayer
-                        ))}
-                    tabindex={canSelectByTab}
-                    aria-label="Layer Below Player"
-                >
-                    <Image
-                        src="/assets/ui/layer_tab/bottom.svg"
-                        class="object-contain max-w-full max-h-full"
-                        lazyLoad
-                        skeleton
-                    ></Image>
-                </button>
-                {#if isBottom($menuSettings.zLayer)}
-                    <SlidingSelector layoutId="button-selector"
-                    ></SlidingSelector>
-                {/if}
-            </li>
-            <li
-                class="relative flex-1 w-20 h-full md:w-16 xs:w-12 font-pusab flex-center"
+                <Image
+                    src="/assets/ui/layer_tab/bottom.svg"
+                    class="object-contain max-w-full max-h-full"
+                    lazyLoad
+                    skeleton
+                ></Image>
+            </button>
+            {#if isBottom($menuSettings.zLayer)}
+                <div class="sliding-selector"></div>
+            {/if}
+        </li>
+        <li
+            class="relative flex-1 w-20 h-full md:w-16 xs:w-12 font-pusab flex-center"
+        >
+            <button
+                class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
+                on:click={() =>
+                    ($menuSettings.zLayer = equivalentTop(
+                        $menuSettings.zLayer
+                    ))}
+                tabindex={canSelectByTab}
+                aria-label="Layer Above Player"
             >
-                <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
-                    on:click={() =>
-                        ($menuSettings.zLayer = equivalentTop(
-                            $menuSettings.zLayer
-                        ))}
-                    tabindex={canSelectByTab}
-                    aria-label="Layer Above Player"
-                >
-                    <Image
-                        src="/assets/ui/layer_tab/top.svg"
-                        class="object-contain max-w-full max-h-full"
-                        lazyLoad
-                        skeleton
-                    ></Image>
-                </button>
-                {#if !isBottom($menuSettings.zLayer)}
-                    <SlidingSelector layoutId="button-selector"
-                    ></SlidingSelector>
-                {/if}
-            </li>
-        </AnimateSharedLayout>
+                <Image
+                    src="/assets/ui/layer_tab/top.svg"
+                    class="object-contain max-w-full max-h-full"
+                    lazyLoad
+                    skeleton
+                ></Image>
+            </button>
+            {#if !isBottom($menuSettings.zLayer)}
+                <div class="sliding-selector"></div>
+            {/if}
+        </li>
     </ul>
 
     <div class="flex flex-col w-full h-full gap-2 content">
         <ul class="flex h-full ids">
-            <AnimateSharedLayout>
-                {#each Array(layerCount(isBottom($menuSettings.zLayer))).fill(0) as _, i}
-                    <li
-                        class="relative flex-1 w-full h-full flex-center font-pusab"
+            {#each Array(layerCount(isBottom($menuSettings.zLayer))).fill(0) as _, i}
+                <li
+                    class="relative flex-1 w-full h-full flex-center font-pusab"
+                >
+                    <button
+                        class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
+                        on:click={() =>
+                            ($menuSettings.zLayer = layerFrom(
+                                isBottom($menuSettings.zLayer),
+                                i
+                            ))}
+                        tabindex={canSelectByTab}
+                        aria-label={`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
                     >
-                        <button
-                            class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
-                            on:click={() =>
-                                ($menuSettings.zLayer = layerFrom(
-                                    isBottom($menuSettings.zLayer),
-                                    i
-                                ))}
-                            tabindex={canSelectByTab}
-                            aria-label={`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
-                        >
-                            <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
+                        <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
 
-                            <h2 class="opacity-50 font-pusab xs:text-sm">
-                                {`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
-                            </h2>
-                        </button>
-                        {#if layerIdx($menuSettings.zLayer) == i + 1}
-                            <SlidingSelector layoutId="button-selector"
-                            ></SlidingSelector>
-                        {/if}
-                    </li>
-                {/each}
-            </AnimateSharedLayout>
+                        <h2 class="opacity-50 font-pusab xs:text-sm">
+                            {`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
+                        </h2>
+                    </button>
+                    {#if layerIdx($menuSettings.zLayer) == i + 1}
+                        <div class="sliding-selector"></div>
+                    {/if}
+                </li>
+            {/each}
         </ul>
 
         <div class="flex flex-col items-center justify-center zindex g-8">

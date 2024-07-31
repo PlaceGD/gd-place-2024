@@ -229,7 +229,7 @@
             class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content]"
         >
             <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
-                <section>
+                <section class="text">
                     <h1><u><strong>Terms of Service</strong></u></h1>
 
                     <h2>Notice</h2>

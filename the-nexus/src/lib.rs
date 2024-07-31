@@ -1,20 +1,41 @@
-use std::collections::HashMap;
+use gen::{colors::get_available_colors, objects::make_get_object_info_fn};
 
-use itertools::Itertools;
-#[cfg(test)]
-use packing::SpritesheetData;
+mod gen;
+mod objects;
+mod sprites;
+mod util;
 
-use crate::{colors::get_available_colors, packing::color_bleed};
+pub use objects::{list::AVAILABLE_OBJECTS, HitboxType, ObjectCategory, ObjectInfo};
+pub use sprites::SpriteInfo;
 
-pub mod colors;
-mod config;
-pub mod objects;
-pub mod packing;
+fn make_wasm_lib_utilgen(sheet_data: &gen::sprites::SpritesheetData) -> String {
+    use crate::gen::sprites::{make_get_detail_sprite_fn, make_get_main_sprite_fn};
+
+    format!(
+        "
+use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
+
+{}
+
+{}
+
+{}
+
+    ",
+        make_get_object_info_fn(),
+        make_get_main_sprite_fn(sheet_data),
+        make_get_detail_sprite_fn(sheet_data),
+    )
+}
 
 #[test]
 fn generate_shid() {
-    use crate::objects::list::get_available_objects;
-    use packing::make_spritesheet;
+    use std::collections::HashMap;
+
+    use crate::gen::sprites::color_bleed;
+    use crate::objects::list::AVAILABLE_OBJECTS;
+    use gen::sprites::make_spritesheet;
+    use itertools::Itertools;
     use serde_json::json;
     use std::fs;
 
@@ -30,7 +51,7 @@ fn generate_shid() {
 
     fs::write(
         "../shared-lib/src/gd/objects.json",
-        serde_json::to_string(&json!(get_available_objects()
+        serde_json::to_string(&json!(AVAILABLE_OBJECTS
             .iter()
             .copied()
             .collect::<HashMap<_, _>>()))
@@ -39,11 +60,7 @@ fn generate_shid() {
     .unwrap();
     fs::write(
         "../shared-lib/src/gd/object_order.json",
-        serde_json::to_string(&json!(get_available_objects()
-            .iter()
-            .map(|v| v.0)
-            .collect_vec()))
-        .unwrap(),
+        serde_json::to_string(&json!(AVAILABLE_OBJECTS.iter().map(|v| v.0).collect_vec())).unwrap(),
     )
     .unwrap();
     fs::write(
@@ -53,29 +70,4 @@ fn generate_shid() {
     .unwrap();
 
     fs::write("../wasm-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
-}
-
-#[cfg(test)]
-fn make_wasm_lib_utilgen(sheet_data: &SpritesheetData) -> String {
-    use crate::{
-        objects::make_get_object_info_fn,
-        packing::{make_get_detail_sprite_fn, make_get_main_sprite_fn},
-    };
-
-    format!(
-        "
-use the_nexus::objects::{{ObjectCategory::*, ObjectInfo}};
-use the_nexus::packing::SpriteInfo;
-
-{}
-
-{}
-
-{}
-
-    ",
-        make_get_object_info_fn(),
-        make_get_main_sprite_fn(sheet_data),
-        make_get_detail_sprite_fn(sheet_data),
-    )
 }

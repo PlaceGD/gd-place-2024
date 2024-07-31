@@ -1,5 +1,5 @@
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
-use the_nexus::packing::SpriteInfo;
+use the_nexus::SpriteInfo;
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -89,12 +89,13 @@ impl State {
 }
 
 fn obj_transform(obj: &GDObject) -> Affine2 {
-    let scale = OBJECT_INFO[obj.id as usize].builtin_scale / 4.0;
+    let scale_x = OBJECT_INFO[obj.id as usize].builtin_scale_x / 4.0;
+    let scale_y = OBJECT_INFO[obj.id as usize].builtin_scale_y / 4.0;
 
     Affine2::from_mat2_translation(
         mat2(
-            vec2(obj.ix * scale, obj.iy * scale),
-            vec2(obj.jx * scale, obj.jy * scale),
+            vec2(obj.ix * scale_x, obj.iy * scale_x),
+            vec2(obj.jx * scale_y, obj.jy * scale_y),
         ),
         vec2(obj.x, obj.y),
     )
@@ -107,6 +108,8 @@ fn obj_transform(obj: &GDObject) -> Affine2 {
 }
 fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
     let mut rect_size = get_max_bounding_box(obj.id as u32).unwrap_or((10.0, 10.0));
+    // rect_size.0 *= OBJECT_INFO[obj.id as usize].builtin_scale_x;
+    // rect_size.1 *= OBJECT_INFO[obj.id as usize].builtin_scale_y;
 
     rect_size.0 += pad;
     rect_size.1 += pad;
@@ -657,7 +660,9 @@ impl State {
                                        color: Vec4| {
                     transform *= obj_transform(obj);
 
-                    let tex_idx = if OBJECT_INFO[obj.id as usize].builtin_scale == 1.0 {
+                    let tex_idx = if OBJECT_INFO[obj.id as usize].builtin_scale_x == 1.0
+                        && OBJECT_INFO[obj.id as usize].builtin_scale_y == 1.0
+                    {
                         4
                     } else {
                         5
@@ -838,20 +843,26 @@ impl State {
                     None
                 };
 
-                if let Some((obj, (r, g, b), key)) = highlight_obj {
+                if let Some((obj, (r, g, b), _)) = highlight_obj {
                     let transform = self.view_transform() * obj_transform(&obj);
+                    let scale_vec = vec2(
+                        OBJECT_INFO[obj.id as usize].builtin_scale_x,
+                        OBJECT_INFO[obj.id as usize].builtin_scale_y,
+                    );
 
-                    let rect = padded_obj_rect(&obj, 30.0);
+                    let rect = padded_obj_rect(&obj, 0.0);
                     let rect_size_vec = vec2(rect.w, rect.h);
 
                     rects.push(pipeline_rect::instance::Instance::new(
                         transform
-                            * Affine2::from_translation(-rect_size_vec / 2.0)
-                            * Affine2::from_scale(rect_size_vec),
+                            * Affine2::from_translation(
+                                -(rect_size_vec + vec2(30.0, 30.0) / scale_vec) / 2.0,
+                            )
+                            * Affine2::from_scale(rect_size_vec + vec2(30.0, 30.0) / scale_vec),
                         vec4(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0),
                         1000,
                         vec2(0.0, 0.0),
-                        rect_size_vec,
+                        rect_size_vec * scale_vec + 30.0,
                     ));
                 }
             }

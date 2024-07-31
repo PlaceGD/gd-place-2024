@@ -27,10 +27,12 @@ body {
     --toastContainerLeft: calc(50vw - 8rem);
 }
 
-h2 {
+
+.text > h2 {
     @apply my-6 text-xl xs:text-lg;
 }
-h3 {
+
+.text > h3 {
     @apply my-4 text-lg xs:text-base;
 }
 
@@ -77,11 +79,11 @@ dialog::backdrop {
     }
 
     .modal-panel {
-        @apply h-full w-full overflow-hidden p-6 xs:p-4;
+        @apply w-full h-full p-6 overflow-hidden xs:p-4;
     }
 
     .sliding-selector {
-        @apply relative overflow-hidden rounded-lg bg-white/20;
+        @apply overflow-hidden rounded-lg bg-white/20 absolute w-full h-full;
     }
 
     .flex-center {

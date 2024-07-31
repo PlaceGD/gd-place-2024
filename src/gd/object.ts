@@ -1,6 +1,11 @@
-import { objectOrder, objects, type ObjectData } from "shared-lib/gd";
+import {
+    objectOrder,
+    objects,
+    type ObjectCategory,
+    type ObjectInfo,
+} from "shared-lib/gd";
 
-export const CATEGORY_ICONS = {
+export const CATEGORY_ICONS: Record<ObjectCategory, string> = {
     Blocks: "/assets/ui/build_tab_icons/blocks.png",
     Outlines: "/assets/ui/build_tab_icons/outlines.png",
     Spikes: "/assets/ui/build_tab_icons/spikes.png",
@@ -8,9 +13,10 @@ export const CATEGORY_ICONS = {
     Pixel: "/assets/ui/build_tab_icons/pixel.png",
     Deco: "/assets/ui/build_tab_icons/deco.png",
     Saws: "/assets/ui/build_tab_icons/saws.png",
+    Triggers: "/assets/ui/build_tab_icons/triggers.png",
 };
 
-export const getObjsInOrder = (): [number, ObjectData][] =>
+export const getObjsInOrder = (): [number, ObjectInfo][] =>
     objectOrder.map(id => [id, objects[id]]);
 
 // object id: index

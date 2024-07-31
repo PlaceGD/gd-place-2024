@@ -9,6 +9,7 @@
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "wasm:build": "cd wasm-lib && npm run random-uuid --silent > ../public/wasm.txt && wasm-pack build --reference-types --weak-refs --target web && cd ..",
+        "shared:build": "cd shared-lib && npm run build && cd ..",
         "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib",
         "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\""
     },

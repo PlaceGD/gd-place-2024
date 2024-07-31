@@ -3,65 +3,79 @@
 
     import Image from "../../components/Image.svelte";
 
-    import { getObjsInOrder } from "../../gd/object";
+    import { CATEGORY_ICONS, getObjsInOrder } from "../../gd/object";
 
     import { DEBUG } from "../../utils/debug";
 
     import { TabGroup, menuSettings } from "../../stores";
     import ObjectButtonImage from "./ObjectButtonImage.svelte";
+    import { type ObjectInfo, objects as objectMap } from "shared-lib/gd";
+    import { onMount } from "svelte";
 
     let objButtonSize = 0;
+
+    let objects: [number, ObjectInfo][] = [];
+
+    onMount(() => {
+        objects = getObjsInOrder();
+    });
 </script>
 
 <div
-    class="absolute opacity-0 w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10"
-    style="position: absolute;"
-    bind:offsetWidth={objButtonSize}
-/>
-<ul
     class={cx({
-        "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
+        "w-full h-full": true,
         "!hidden": $menuSettings.selectedGroup != TabGroup.Build,
     })}
-    tabindex="-1"
 >
-    {#each getObjsInOrder() as [id, obj]}
-        <li
+    {#each Object.entries(CATEGORY_ICONS) as [key, path]}
+        <ul
             class={cx({
-                "relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10": true,
-                hidden: $menuSettings.selectedBuildTab != obj.category,
+                "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
+                "!hidden": $menuSettings.selectedBuildTab != key,
             })}
+            tabindex="-1"
         >
-            <button
-                class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
-                tabindex={$menuSettings.isMinimized ? -1 : 0}
-                on:click={() => {
-                    if (id == 3854) {
-                        var audio = new Audio("fire.mp3");
-                        audio.volume = 0.02;
+            {#each objects.filter(([_, obj]) => obj.category == key) as [id, _]}
+                <li class="relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10">
+                    <button
+                        class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
+                        tabindex={$menuSettings.isMinimized ? -1 : 0}
+                        on:click={() => {
+                            if (id == 3854) {
+                                var audio = new Audio("fire.mp3");
+                                audio.volume = 0.02;
 
-                        audio.play();
-                    }
-                    $menuSettings.selectedObject = id;
-                }}
-            >
-                {#if $DEBUG}
-                    <span
-                        class="absolute opacity-50 text-red font-lg bottom-3/4 right-1/2"
+                                audio.play();
+                            }
+                            $menuSettings.selectedObject = id;
+                        }}
                     >
-                        {id}
-                    </span>
-                {/if}
-                <div class="relative w-full h-full flex-center">
-                    <ObjectButtonImage {id} {objButtonSize} />
-                </div>
-            </button>
-            {#if $menuSettings.selectedObject == id}
-                <span class="absolute w-full h-full sliding-selector"></span>
-            {/if}
-        </li>
+                        {#if $DEBUG}
+                            <span
+                                class="absolute z-50 flex flex-col items-start gap-0 font-bold -top-[2px] -left-[0px] text-stroke"
+                            >
+                                <span class="text-red">{id}</span>
+                                <span class="text-xs text-orange"
+                                    >{objectMap[id].hitboxType.slice(
+                                        0,
+                                        2
+                                    )}</span
+                                >
+                            </span>
+                        {/if}
+                        <div class="relative w-full h-full flex-center">
+                            <ObjectButtonImage {id} />
+                        </div>
+                    </button>
+                    {#if $menuSettings.selectedObject == id}
+                        <span class="absolute w-full h-full sliding-selector"
+                        ></span>
+                    {/if}
+                </li>
+            {/each}
+        </ul>
     {/each}
-</ul>
+</div>
 
 <style lang="postcss">
     .object-grid-container {

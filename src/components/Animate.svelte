@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import { onMount, createEventDispatcher } from "svelte";
     import {
         Motion,
@@ -122,4 +122,53 @@
     onAnimationComplete={() => dispatcher("end", {})}
 >
     <slot motion={fakeMotion(motion)} />
-</Motion>
+</Motion> -->
+
+<script lang="ts">
+    // import { type TransitionConfig } from "svelte/transition";
+
+    // export let animation: (node: HTMLElement, config: TransitionConfig) => any;
+    // export let config: TransitionConfig;
+    export let condition: boolean = false;
+
+    // const conditionalAnim = (
+    //     node: HTMLElement,
+    //     options: TransitionConfig & {
+    //         fn: (node: HTMLElement, config: TransitionConfig) => any;
+    //     }
+    // ) => {
+    //     console.log("HERE");
+    //     if (condition) {
+    //         const { fn, ...config } = options;
+    //         return fn(node, config);
+    //     }
+    // };
+
+    let elem: HTMLDivElement | null;
+
+    export let keyframes: Keyframe[] = [];
+    export let options: KeyframeEffectOptions | undefined = undefined;
+
+    let currentAnimation: Animation | null = null;
+
+    $: {
+        if (elem != null) {
+            const kf = new KeyframeEffect(elem, keyframes, options);
+
+            currentAnimation = new Animation(kf);
+        }
+    }
+
+    $: {
+        console.log(currentAnimation);
+        if (condition && currentAnimation != null) {
+            currentAnimation.play();
+        } else if (!condition && currentAnimation != null) {
+            currentAnimation.reverse();
+        }
+    }
+</script>
+
+<div style:display="initial" bind:this={elem}>
+    <slot />
+</div>

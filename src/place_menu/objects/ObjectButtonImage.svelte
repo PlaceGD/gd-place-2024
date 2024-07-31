@@ -111,7 +111,6 @@
     import { Spritesheet } from "../../utils/spritesheet/spritesheet";
 
     export let id: number;
-    export let objButtonSize: number;
 
     let src: string | null = null;
 

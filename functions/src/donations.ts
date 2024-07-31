@@ -204,7 +204,7 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
 
         const timeNextGradient = userData.epochNextGradient;
         if (timeNextGradient == undefined) {
-            throw new HttpsError("invalid-argument", "Missing report timer");
+            throw new HttpsError("invalid-argument", "Missing gradient timer");
         }
 
         if (Date.now() < timeNextGradient) {

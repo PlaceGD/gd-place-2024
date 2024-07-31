@@ -14,6 +14,7 @@ export default {
             white: "white",
             "disabled-white": "#444",
             red: "red",
+            orange: "orange",
             "button-green": "#7ADE2D",
             "button-green-dark": "#61b91d",
             "button-cyan": "#35CECE",

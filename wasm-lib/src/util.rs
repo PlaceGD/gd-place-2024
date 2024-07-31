@@ -21,7 +21,7 @@ macro_rules! map {
 
 use glam::Vec2;
 use image::DynamicImage;
-use the_nexus::packing::SpriteInfo;
+use the_nexus::SpriteInfo;
 use wasm_bindgen::prelude::*;
 
 use crate::{

@@ -1,5 +1,5 @@
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
-use the_nexus::SpriteInfo;
+use the_nexus::{HitboxType, SpriteInfo};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -41,6 +41,8 @@ pub struct State {
 
     selected_object: Option<DbKey>,
     select_depth: u32,
+
+    show_collidable: bool,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -76,6 +78,7 @@ impl State {
             show_preview: false,
             select_depth: 0,
             selected_object: None,
+            show_collidable: false,
             render,
         }
     }
@@ -484,6 +487,10 @@ impl State {
     //     self.bundle.state.text_draws.clone()
     // }
 
+    pub fn set_show_collidable(&mut self, to: bool) {
+        self.show_collidable = to;
+    }
+
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
         let output_view = output
@@ -671,6 +678,17 @@ impl State {
                     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
                     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
+                    let color = if !self.show_collidable {
+                        color
+                    } else {
+                        match OBJECT_INFO[obj.id as usize].hitbox_type {
+                            HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
+                            HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
+                            HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
+                            HitboxType::Special => vec4(0.0, 100.0, 0.0, 0.5),
+                        }
+                    };
+
                     rects.push(pipeline_rect::instance::Instance::new(
                         transform
                             * Affine2::from_scale_angle_translation(
@@ -739,7 +757,11 @@ impl State {
                         )
                     }
                     calls.push(DrawCall {
-                        blend_mode: BlendMode::Additive,
+                        blend_mode: if self.show_collidable {
+                            BlendMode::Normal
+                        } else {
+                            BlendMode::Additive
+                        },
                         until_instance: rects.len() as u32,
                     });
 
@@ -821,7 +843,11 @@ impl State {
                         )
                     }
                     calls.push(DrawCall {
-                        blend_mode: BlendMode::Additive,
+                        blend_mode: if self.show_collidable {
+                            BlendMode::Normal
+                        } else {
+                            BlendMode::Additive
+                        },
                         until_instance: rects.len() as u32,
                     });
                 }

@@ -2,7 +2,12 @@
     import { onMount } from "svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import { ExclusiveMenus, loginData, openMenu } from "../stores";
+    import {
+        editorSettings,
+        ExclusiveMenus,
+        loginData,
+        openMenu,
+    } from "../stores";
     import Button from "../components/Button.svelte";
 
     export let editorFocused: boolean;
@@ -37,14 +42,16 @@
                             class="grid w-full items-center grid-cols-[1fr_min-content]"
                         >
                             <div class="flex flex-col">
-                                <span>Show Danger Objects</span>
+                                <span>Show Collidable Objects</span>
                                 <span class="text-xs text-white/50"
                                     >Highlights the objects in the level that
-                                    can kill you.</span
+                                    you can collide with.</span
                                 >
                             </div>
                             <span>
-                                <ToggleSwitch id="show-danger" isToggled={false}
+                                <ToggleSwitch
+                                    id="show-danger"
+                                    bind:isToggled={$editorSettings.showCollidable}
                                 ></ToggleSwitch>
                             </span>
                         </label>

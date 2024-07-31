@@ -150,12 +150,13 @@ impl GDObjectOpt {
         // SAFETY:
         // this is just getting the raw bytes of the struct. it will always be the correct size
         // and endianess
-        unsafe {
-            let bytes: [u8; mem::size_of::<GDObjectOpt>()] =
-                mem::transmute(ptr::read(self as *const _));
+        let bytes: [u8; mem::size_of::<GDObjectOpt>()] =
+            unsafe { mem::transmute(ptr::read(self as *const _)) };
 
-            js_sys::Uint8Array::view(&bytes)
-        }
+        let array = js_sys::Uint8Array::new_with_length(bytes.len() as u32);
+        array.copy_from(&bytes);
+
+        array
     }
 
     pub fn from_bytes(bytes: js_sys::Uint8Array) -> Result<GDObjectOpt, RustError> {

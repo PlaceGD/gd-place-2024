@@ -21,12 +21,12 @@
 
     $: {
         if (elem != null) {
-            elem.addEventListener("scroll", onScrollElem);
+            elem.addEventListener("scroll", onScrollElem, { passive: true });
         }
     }
 
     onDestroy(() => {
-        elem?.removeEventListener("scroll", onScrollElem);
+        elem?.removeEventListener("scroll", onScrollElem, { passive: true });
     });
 
     $: topThreshold = scrollTop >= threshold ? 10 : 0;

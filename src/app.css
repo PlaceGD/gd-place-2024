@@ -98,6 +98,10 @@ dialog::backdrop {
         @apply bg-white/5 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed;
     }
 
+    .li-alternating {
+        @apply odd:bg-black/15 even:bg-white/10;
+    }
+
     .text-stroke {
         text-shadow:
             -2.5px 0 0 black,

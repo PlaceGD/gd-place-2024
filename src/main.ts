@@ -1,3 +1,16 @@
+// why cant this go in the d.ts file?
+// who the fuck knows!!!!!!!!!!!!
+interface KofiWidget {
+    init: (a: string, b: string, c: string) => void;
+    getHTML: () => string;
+}
+
+declare global {
+    interface Window {
+        kofiwidget2: KofiWidget;
+    }
+}
+
 import "./app.css";
 import App from "./App.svelte";
 

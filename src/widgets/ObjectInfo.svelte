@@ -76,7 +76,7 @@
                 <ObjectButtonImage id={$selectedObject.id ?? 1} />
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Main color:</span>
 
             <div
@@ -92,7 +92,7 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Detail color:</span>
 
             <div
@@ -108,7 +108,7 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Z Layer:</span>
 
             <span
@@ -117,12 +117,12 @@
                 )}</span
             >
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Z Order:</span>
 
             <span>{$selectedObject.zOrder ?? 0}</span>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Placed by:</span>
 
             {#if $selectedObject.namePlaced != null}
@@ -224,6 +224,6 @@
 
 <style lang="postcss">
     .object-info-item {
-        @apply flex h-10 w-full items-center justify-between rounded-lg p-2 odd:bg-black/15 even:bg-white/10;
+        @apply flex h-10 w-full items-center justify-between rounded-lg p-2;
     }
 </style>

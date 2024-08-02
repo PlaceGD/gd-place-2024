@@ -41,10 +41,15 @@
 
     let currentPage: Page = Page.SUBMIT_TX_ID;
 
-    $: currentPage =
-        $loginData.currentUserData?.placeData?.hasDonated != null
-            ? Page.SELECT_GRADIENT
-            : Page.SUBMIT_TX_ID;
+    $: {
+        const hasDonated = $loginData.currentUserData?.placeData?.hasDonated;
+
+        if (hasDonated == null || !hasDonated) {
+            currentPage = Page.SUBMIT_TX_ID;
+        } else {
+            currentPage = Page.SELECT_GRADIENT;
+        }
+    }
 
     $: {
         if ($openMenu != ExclusiveMenus.Kofi) {

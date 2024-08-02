@@ -19,6 +19,8 @@
     <button
         class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
         on:click={() => {
+            $openMenu = null;
+
             if ($loginData.isLoggedIn) {
                 $openMenu = null;
 

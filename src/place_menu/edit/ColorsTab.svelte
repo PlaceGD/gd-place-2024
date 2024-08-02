@@ -144,6 +144,7 @@
                     bind:isToggled={$menuSettings.selectedMainColor.blending}
                     disabled={isBlack}
                     tabIndex={canSelectByTab}
+                    aria-label="Toggle Blending for Main Channel"
                 ></ToggleSwitch>
             {:else}
                 <ToggleSwitch
@@ -151,6 +152,7 @@
                     bind:isToggled={$menuSettings.selectedDetailColor.blending}
                     disabled={isBlack}
                     tabIndex={canSelectByTab}
+                    aria-label="Toggle Blending for Detail Channel"
                 ></ToggleSwitch>
             {/if}
             <h2 class="font-pusab text-stroke xs:text-sm">Blending</h2>

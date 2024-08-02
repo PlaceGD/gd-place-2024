@@ -48,6 +48,14 @@ export const editorData = persist(
     "editorData"
 );
 
+export const editorSettings = persist(
+    writable({
+        showCollidable: false,
+    }),
+    createLocalStorage(),
+    "editorSettings"
+);
+
 export const bannedUsers = writable<string[]>([]);
 
 export enum ExclusiveMenus {

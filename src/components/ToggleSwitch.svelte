@@ -20,14 +20,16 @@
         class="flex items-center rounded-full cursor-pointer bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 focus:outline-white focus:outline-offset-0"
         tabindex={tabIndex}
         role="checkbox"
-        aria-label="Toggle Blending"
         aria-checked={isToggled}
         on:click={() => {
             if (disabled) return;
             isToggled = !isToggled;
         }}
         on:keydown={e => {
-            if (e.key == "Enter" || !disabled) isToggled = !isToggled;
+            if ((e.key === "Enter" || e.key === " ") && !disabled) {
+                isToggled = !isToggled;
+                e.preventDefault();
+            }
         }}
     >
         <div class="relative">
@@ -36,6 +38,7 @@
                 type="checkbox"
                 disabled
                 class="sr-only"
+                {id}
             />
             <div
                 class="block h-8 bg-gray-600 rounded-full w-14"

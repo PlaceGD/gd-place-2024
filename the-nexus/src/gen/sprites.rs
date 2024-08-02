@@ -6,7 +6,11 @@ use std::{
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
 use texture_packer::{exporter::ImageExporter, importer::ImageImporter, TexturePacker};
 
-use crate::{objects::list::AVAILABLE_OBJECTS, sprites::SpriteInfo, util::is_fully_transparent};
+use crate::{
+    objects::list::{special_ids, AVAILABLE_OBJECTS},
+    sprites::SpriteInfo,
+    util::is_fully_transparent,
+};
 
 use super::config::PACKER_CONFIG;
 
@@ -22,18 +26,39 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
         TexturePacker::new_skyline(PACKER_CONFIG);
 
     for &(i, _) in AVAILABLE_OBJECTS.iter() {
-        let main =
-            ImageImporter::import_from_file(&PathBuf::from(format!("textures/main/{}.png", i)))
+        let special_tex = match i {
+            special_ids::BG_TRIGGER => Some("bg_trigger"),
+            special_ids::GROUND_TRIGGER => Some("ground_trigger"),
+            special_ids::GROUND_2_TRIGGER => Some("ground_2_trigger"),
+            _ => None,
+        };
+        if let Some(tex) = special_tex {
+            packer
+                .pack_own(
+                    (i, false),
+                    ImageImporter::import_from_file(&PathBuf::from(format!(
+                        "textures/special/{}.png",
+                        tex
+                    )))
+                    .unwrap(),
+                )
                 .unwrap();
-        let detail =
-            ImageImporter::import_from_file(&PathBuf::from(format!("textures/detail/{}.png", i)))
-                .unwrap();
+        } else {
+            let main =
+                ImageImporter::import_from_file(&PathBuf::from(format!("textures/main/{}.png", i)))
+                    .unwrap();
+            let detail = ImageImporter::import_from_file(&PathBuf::from(format!(
+                "textures/detail/{}.png",
+                i
+            )))
+            .unwrap();
 
-        if !is_fully_transparent(&main) {
-            packer.pack_own((i, false), main).unwrap();
-        }
-        if !is_fully_transparent(&detail) {
-            packer.pack_own((i, true), detail).unwrap();
+            if !is_fully_transparent(&main) {
+                packer.pack_own((i, false), main).unwrap();
+            }
+            if !is_fully_transparent(&detail) {
+                packer.pack_own((i, true), detail).unwrap();
+            }
         }
     }
 

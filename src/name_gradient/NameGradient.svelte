@@ -2,7 +2,6 @@
     import { default as cx } from "classnames";
     import { onMount } from "svelte";
     import ToastContainer from "../components/ToastContainer.svelte";
-    import Input from "../components/Input.svelte";
     import OnceButton from "../components/OnceButton.svelte";
     import Loading from "../components/Loading.svelte";
     import {
@@ -30,6 +29,7 @@
     import { SyncedCooldown } from "../utils/cooldown";
     import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
     import ScreenModal from "../components/ScreenModal.svelte";
+    import DarkInput from "../components/DarkInput.svelte";
 
     enum Page {
         SUBMIT_TX_ID,
@@ -170,8 +170,8 @@
                         id="kofi-tx-id-form"
                         on:submit={e => e.preventDefault()}
                     >
-                        <Input
-                            class="w-[inherit] h-12 text-base xs:text-sm text-center rounded-lg outline-none font-pusab text-stroke bg-black/40 px-2"
+                        <DarkInput
+                            class="w-[inherit] h-12 xs:text-sm font-pusab"
                             maxLength={36}
                             hardValidInput={VALID_KOFI_TRANSACTION_ID_CHARS}
                             autoTrim

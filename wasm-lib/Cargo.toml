@@ -52,6 +52,7 @@ the-nexus = { path = "../the-nexus" }
 # colored = "2.0.4"
 indexmap = "2.2.6"
 image = "0.25.1"
+specta = "1.0.5"
 
 [build]
 target = "wasm32-unknown-unknown"

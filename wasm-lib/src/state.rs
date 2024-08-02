@@ -13,7 +13,7 @@ use crate::{
     log, map,
     object::{GDColor, GDObject, GDObjectOpt},
     render::{data::Globals, pipeline_rect, state::RenderState},
-    util::{get_chunk_coord, get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
+    util::{get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
     ErrorType, RustError,
 };
@@ -414,7 +414,7 @@ impl State {
     }
 
     pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {
-        let chunk = get_chunk_coord(x, y);
+        let chunk = ChunkCoord::get_from_pos(x, y);
 
         let mut clickable = vec![];
 
@@ -711,7 +711,7 @@ impl State {
                 };
 
                 for &layer in Z_LAYERS {
-                    for z_order in -50..50 {
+                    for z_order in -50..=50 {
                         self.level.foreach_obj_in_z(
                             layer,
                             z_order,
@@ -743,7 +743,7 @@ impl State {
                         until_instance: rects.len() as u32,
                     });
 
-                    for z_order in -50..50 {
+                    for z_order in -50..=50 {
                         self.level.foreach_obj_in_z(
                             layer,
                             z_order,
@@ -793,7 +793,7 @@ impl State {
                         until_instance: rects.len() as u32,
                     });
 
-                    for z_order in -50..50 {
+                    for z_order in -50..=50 {
                         self.level.foreach_obj_in_z(
                             layer,
                             z_order,

@@ -17,7 +17,7 @@
     {...rest}
 >
     <button
-        class="flex items-center rounded-full cursor-pointer bg-black/40"
+        class="flex items-center rounded-full cursor-pointer bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 focus:outline-white focus:outline-offset-0"
         tabindex={tabIndex}
         role="checkbox"
         aria-label="Toggle Blending"

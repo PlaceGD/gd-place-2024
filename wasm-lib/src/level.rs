@@ -47,6 +47,14 @@ pub struct ChunkCoord {
     pub x: i32,
     pub y: i32,
 }
+impl ChunkCoord {
+    pub fn get_from_pos(x: f32, y: f32) -> Self {
+        Self {
+            x: (x / CHUNK_SIZE_UNITS as f32).floor() as i32,
+            y: (y / CHUNK_SIZE_UNITS as f32).floor() as i32,
+        }
+    }
+}
 
 #[derive(Debug)]
 pub struct ChunkInfo {

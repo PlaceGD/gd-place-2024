@@ -1,16 +1,47 @@
 <script lang="ts">
     import { round } from "shared-lib/util";
+    import * as wasm from "wasm-lib";
 
-    import { addCallback as addUpdateCallback } from "../state";
     import { onDestroy } from "svelte";
 
-    let scale = 1;
-    let prevScale = 1;
+    export let state: wasm.State;
+    let slider: HTMLInputElement;
+
+    // let scale = 1;
+    // let prevScale = 1;
 
     const MIN = 0.5;
     const MAX = 2.0;
 
-    let cb = addUpdateCallback(state => {
+    // let cb = addUpdateCallback(state => {
+    //     let obj = state.get_preview_object();
+    //     let xLen = obj.x_scale_exp;
+    //     let yLen = obj.y_scale_exp;
+
+    //     let larger = Math.max(xLen, yLen);
+    //     // let smaller = Math.min(xLen, yLen);
+
+    //     let scaleExp = Math.round(Math.log2(scale) * 12);
+
+    //     if (scale != prevScale) {
+    //         obj.scale(scaleExp - larger);
+    //         state.set_preview_object(obj);
+    //         scale = 2 ** (scaleExp / 12);
+    //         prevScale = scale;
+    //         return;
+    //     }
+    //     if (scaleExp != larger) {
+    //         scale = 2 ** (larger / 12);
+    //         prevScale = scale;
+    //     }
+    // });
+
+    // onDestroy(() => cb.remove());
+
+    let scale = 0;
+    // let newAngle = 0;
+
+    const loopFn = () => {
         let obj = state.get_preview_object();
         let xLen = obj.x_scale_exp;
         let yLen = obj.y_scale_exp;
@@ -18,22 +49,18 @@
         let larger = Math.max(xLen, yLen);
         // let smaller = Math.min(xLen, yLen);
 
-        let scaleExp = Math.round(Math.log2(scale) * 12);
+        // let scaleExp = Math.round(Math.log2(scale) * 12);
 
-        if (scale != prevScale) {
-            obj.scale(scaleExp - larger);
-            state.set_preview_object(obj);
-            scale = 2 ** (scaleExp / 12);
-            prevScale = scale;
-            return;
-        }
-        if (scaleExp != larger) {
-            scale = 2 ** (larger / 12);
-            prevScale = scale;
-        }
-    });
+        scale = 2 ** (larger / 12);
+        slider.value = `${scale}`;
+        console.log(scale);
 
-    onDestroy(() => cb.remove());
+        loop = requestAnimationFrame(loopFn);
+    };
+
+    let loop = requestAnimationFrame(loopFn);
+
+    onDestroy(() => cancelAnimationFrame(loop));
 </script>
 
 <div class="absolute text-white">
@@ -47,14 +74,27 @@
 
         <input
             type="range"
+            bind:this={slider}
             class="pointer-events-all scale-slider w-[400px] cursor-pointer appearance-none bg-transparent focus:outline-none"
             style:width="500px"
             max={MAX}
             min={MIN}
             step={0.0001}
-            value={scale}
             on:input={e => {
-                scale = parseFloat(e.currentTarget.value);
+                let newScale = parseFloat(e.currentTarget.value);
+
+                let obj = state.get_preview_object();
+                let xLen = obj.x_scale_exp;
+                let yLen = obj.y_scale_exp;
+                let larger = Math.max(xLen, yLen);
+
+                let scaleExp = Math.round(Math.log2(newScale) * 12);
+
+                obj.scale(scaleExp - larger);
+                state.set_preview_object(obj);
+                scale = 2 ** (scaleExp / 12);
+
+                slider.value = `${scale}`;
             }}
             aria-label="Scale slider"
         />

@@ -3,7 +3,7 @@
     import { ZLayer } from "wasm-lib";
 
     import Image from "../../components/Image.svelte";
-    import Input from "../../components/Input.svelte";
+    import DarkInput from "../../components/DarkInput.svelte";
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { menuSettings } from "../../stores";
@@ -184,8 +184,8 @@
                     />
                 </button>
 
-                <Input
-                    class="w-20 p-2 text-3xl text-center rounded-lg outline-none md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab text-stroke bg-black/40"
+                <DarkInput
+                    class="w-20 text-3xl md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab"
                     maxLength={3}
                     tabIndex={canSelectByTab}
                     hardValidInput={HARD_VALID_INPUT}

@@ -28,14 +28,14 @@ export const setTurnstileResetFunction = (f: () => void) => {
                 return;
             }
             fs.rej();
-            // resetTurnstile();
+            resetTurnstile();
         } else if (typeof turnstileToken == "string") {
             let fs = turnstilePromiseFuncs.pop();
             if (fs === undefined) {
                 return;
             }
             fs.res(turnstileToken);
-            // resetTurnstile();
+            resetTurnstile();
         }
     }, 100);
 };

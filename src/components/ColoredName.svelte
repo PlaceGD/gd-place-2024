@@ -9,7 +9,7 @@
         style={`
             font-family: inherit;
             background-image: ${color};
-            -webkit-text-fill-color: rgba(255, 255, 255, 0.1);
+            ${color !== "white" ? "-webkit-text-fill-color: rgba(255, 255, 255, 0.1);" : ""}
             background-clip: text;
             -webkit-background-clip: text;
         `}

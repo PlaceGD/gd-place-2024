@@ -83,7 +83,7 @@ dialog::backdrop {
     }
 
     .sliding-selector {
-        @apply overflow-hidden rounded-lg bg-white/20 absolute w-full h-full;
+        @apply absolute w-full h-full overflow-hidden rounded-lg bg-white/20;
     }
 
     .flex-center {
@@ -186,5 +186,26 @@ dialog::backdrop {
             -webkit-border-radius: 10px;
         }
     }
+}
+
+
+@keyframes pulse {
+    0% {
+        outline-color: #7FFAFF;
+    }
+    50%  {
+        outline-color: #0074A3;
+    }
+    100%  {
+        outline-color: #7FFAFF;
+    }
+}
+
+*:focus-visible {
+    outline-offset: 1px;
+
+    outline-width: 2px;
+    outline-style: solid;
+    animation: pulse 3s forwards infinite ease-in-out !important;
 }
 

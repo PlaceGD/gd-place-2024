@@ -6,6 +6,7 @@ mod sprites;
 mod util;
 
 pub use objects::{list::AVAILABLE_OBJECTS, HitboxType, ObjectCategory, ObjectInfo};
+
 pub use sprites::SpriteInfo;
 
 fn make_wasm_lib_utilgen(sheet_data: &gen::sprites::SpritesheetData) -> String {

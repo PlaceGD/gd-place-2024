@@ -10,6 +10,10 @@
     import { loginData } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
 
+    // const dick = (v: wasm.Gliberal) => {
+    //     v.doink
+    // }
+
     export let wasmLoaded: boolean;
 
     let editorFocused: boolean;

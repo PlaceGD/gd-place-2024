@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { addCallback as addUpdateCallback, withState } from "../state";
     import * as wasm from "wasm-lib";
 
     export let widgetScale: number;
+    export let state: wasm.State;
 
     import { onDestroy, onMount } from "svelte";
     import { clamp, remEuclid, round, snap } from "shared-lib/util";
+    import { isValidObject, objects } from "shared-lib/gd";
 
     let draggingX: [number, number, number, number] | null = null;
     let draggingY: [number, number, number, number] | null = null;
@@ -21,13 +22,17 @@
         );
     };
 
-    let cb = addUpdateCallback(state => {
+    const loopFn = () => {
         let obj = state.get_preview_object();
 
         settem(obj);
-    });
 
-    onDestroy(() => cb.remove());
+        loop = requestAnimationFrame(loopFn);
+    };
+
+    let loop = requestAnimationFrame(loopFn);
+
+    onDestroy(() => cancelAnimationFrame(loop));
 
     let xElement: HTMLElement;
     let yElement: HTMLElement;
@@ -39,47 +44,46 @@
         draggingY = null;
     }}
     on:mousemove={e => {
+        let snapDegrees =
+            objects[state.get_preview_object().id].hitboxType == "Solid"
+                ? 90
+                : 5;
+
         if (draggingX != null) {
             let [dix, diy, dpix, dpiy] = draggingX;
-            withState(state => {
-                let obj = state.get_preview_object();
 
-                let nx = dpix + (e.clientX - dix) / 100 / widgetScale;
-                let ny = dpiy - (e.clientY - diy) / 100 / widgetScale;
-
-                obj.x_scale_exp = clamp(
-                    Math.round(Math.log2(Math.hypot(nx, ny)) * 12),
-                    -12,
-                    12
-                );
-                obj.x_angle = snap((Math.atan2(ny, nx) * 180) / Math.PI, 5) / 5;
-
-                if (remEuclid(obj.x_angle - obj.y_angle, 36) != 0) {
-                    settem(obj);
-                    state.set_preview_object(obj);
-                }
-            });
+            let obj = state.get_preview_object();
+            let nx = dpix + (e.clientX - dix) / 100 / widgetScale;
+            let ny = dpiy - (e.clientY - diy) / 100 / widgetScale;
+            obj.x_scale_exp = clamp(
+                Math.round(Math.log2(Math.hypot(nx, ny)) * 12),
+                -12,
+                12
+            );
+            obj.x_angle =
+                snap((Math.atan2(ny, nx) * 180) / Math.PI, snapDegrees) / 5;
+            if (isValidObject(obj)) {
+                settem(obj);
+                state.set_preview_object(obj);
+            }
         }
         if (draggingY != null) {
             let [djx, djy, dpjx, dpjy] = draggingY;
-            withState(state => {
-                let obj = state.get_preview_object();
 
-                let nx = dpjx + (e.clientX - djx) / 100 / widgetScale;
-                let ny = dpjy - (e.clientY - djy) / 100 / widgetScale;
-
-                obj.y_scale_exp = clamp(
-                    Math.round(Math.log2(Math.hypot(nx, ny)) * 12),
-                    -12,
-                    12
-                );
-                obj.y_angle = snap((Math.atan2(ny, nx) * 180) / Math.PI, 5) / 5;
-
-                if (remEuclid(obj.x_angle - obj.y_angle, 36) != 0) {
-                    settem(obj);
-                    state.set_preview_object(obj);
-                }
-            });
+            let obj = state.get_preview_object();
+            let nx = dpjx + (e.clientX - djx) / 100 / widgetScale;
+            let ny = dpjy - (e.clientY - djy) / 100 / widgetScale;
+            obj.y_scale_exp = clamp(
+                Math.round(Math.log2(Math.hypot(nx, ny)) * 12),
+                -12,
+                12
+            );
+            obj.y_angle =
+                snap((Math.atan2(ny, nx) * 180) / Math.PI, snapDegrees) / 5;
+            if (isValidObject(obj)) {
+                settem(obj);
+                state.set_preview_object(obj);
+            }
         }
     }}
 />
@@ -135,7 +139,7 @@
                 >{round((Math.atan2(iy, ix) * 180) / Math.PI, 2)}°</span
             >
             <span class="font-pusab text-lg max-h-0 text-stroke"
-                >{round(Math.hypot(iy, ix), 2)}</span
+                >{round(Math.hypot(iy, ix), 3)}</span
             >
         </div>
     </button>
@@ -162,7 +166,7 @@
                 >{round((Math.atan2(jy, jx) * 180) / Math.PI, 2)}°</span
             >
             <span class="font-pusab text-lg max-h-0 text-stroke"
-                >{round(Math.hypot(jy, jx), 2)}</span
+                >{round(Math.hypot(jy, jx), 3)}</span
             >
         </div>
     </button>

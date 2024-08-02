@@ -7,7 +7,6 @@
     import Cross from "../icons/cross.svg";
     import Check from "../icons/check.svg";
     import Toast from "../utils/toast";
-    import Input from "../components/Input.svelte";
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib/user";
     import { initUserData } from "../firebase/auth";
     import { ref, get } from "firebase/database";
@@ -18,6 +17,7 @@
     import { SvelteToast } from "@zerodevx/svelte-toast";
     import ToastContainer from "../components/ToastContainer.svelte";
     import ScreenModal from "../components/ScreenModal.svelte";
+    import DarkInput from "../components/DarkInput.svelte";
 
     let twitter = false;
     document.addEventListener("keydown", e => {
@@ -166,6 +166,7 @@
                                 src="/assets/ui/login/google.svg"
                                 alt="Login with Google"
                                 class="w-11 xs:w-10 aspect-square"
+                                tabindex="-1"
                             />
                             <p>Google</p>
                         </span>
@@ -183,6 +184,7 @@
                                 src="/assets/ui/login/github.svg"
                                 alt="Login with GitHub"
                                 class="w-11 xs:w-10 aspect-square"
+                                tabindex="-1"
                             />
                             <p>GitHub</p>
                         </span>
@@ -201,6 +203,7 @@
                                     : 'x'}.svg"
                                 alt="Login with X (Twitter)"
                                 class="w-11 xs:w-10 aspect-square"
+                                tabindex="-1"
                             />
                             <p>{twitter ? "Twitter" : "X"}</p>
                         </span>
@@ -376,8 +379,8 @@
                         id="username-form"
                         on:submit={e => e.preventDefault()}
                     >
-                        <Input
-                            class="p-2 w-[inherit] text-2xl xs:text-lg text-center rounded-lg outline-none font-pusab text-stroke bg-black/40"
+                        <DarkInput
+                            class="w-[inherit] text-2xl xs:text-lg font-pusab"
                             maxLength={16}
                             hardValidInput={VALID_USERNAME_CHARS}
                             autoTrim

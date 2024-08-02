@@ -145,12 +145,6 @@ pub fn point_in_triangle(pt: Vec2, v1: Vec2, v2: Vec2, v3: Vec2) -> bool {
 
     !(has_neg && has_pos)
 }
-pub fn get_chunk_coord(x: f32, y: f32) -> ChunkCoord {
-    ChunkCoord {
-        x: (x / CHUNK_SIZE_UNITS as f32).floor() as i32,
-        y: (y / CHUNK_SIZE_UNITS as f32).floor() as i32,
-    }
-}
 
 pub fn quick_image_load(bytes: &[u8]) -> DynamicImage {
     use image::io::Reader as ImageReader;

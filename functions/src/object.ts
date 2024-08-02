@@ -1,6 +1,13 @@
 import { database } from "firebase-admin";
 import { decodeString } from "shared-lib/base_util";
-import { objects, colors } from "shared-lib/gd";
+import {
+    objects,
+    colors,
+    GDObjectOpt,
+    GD_OBJECT_OPT_BYTE_SIZE,
+    GDColor,
+    isValidObject,
+} from "shared-lib/gd";
 import { ChunkID } from "shared-lib/database";
 import { PlaceReq, DeleteReq } from "shared-lib/cloud_functions";
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
@@ -9,29 +16,6 @@ import { Level, LogGroup } from "./utils/logger";
 import { refAllGet, ref } from "./utils/database";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
-
-interface GDColor {
-    r: number;
-    g: number;
-    b: number;
-    opacity: number;
-    blending: boolean;
-}
-
-interface GDObjectOpt {
-    id: number;
-    x: number;
-    y: number;
-    x_scale_exp: number;
-    x_angle: number;
-    y_scale_exp: number;
-    y_angle: number;
-    zLayer: number;
-    zOrder: number;
-    mainColor: GDColor;
-    detailColor: GDColor;
-}
-const GD_OBJECT_SIZE = 26;
 
 const deserializeObject = (
     data: string,
@@ -43,7 +27,7 @@ const deserializeObject = (
 
     let reader: Reader<Uint8Array>;
     try {
-        reader = new Reader(bytes, GD_OBJECT_SIZE);
+        reader = new Reader(bytes, GD_OBJECT_OPT_BYTE_SIZE);
     } catch (e: unknown) {
         logger.error("Reader failed:", e as string);
         throw new HttpsError("invalid-argument", "Invalid object string");
@@ -60,6 +44,7 @@ const deserializeObject = (
     logger.debug("Object y:", y);
     if (y < 0 || y > LEVEL_HEIGHT_UNITS) return null;
 
+    ///// validated inside `isValidObject`
     const x_scale_exp = reader.readI8();
     logger.debug("Object x_scale_exp:", x_scale_exp);
     const x_angle = reader.readI8();
@@ -69,21 +54,20 @@ const deserializeObject = (
     const y_angle = reader.readI8();
     logger.debug("Object y_angle:", y_angle);
 
-    const zLayer = reader.readU8();
-    logger.debug("Object zLayer:", zLayer);
-    if (zLayer < 0 || zLayer > 8) return null;
+    const z_layer = reader.readU8();
+    logger.debug("Object z_layer:", z_layer);
 
-    const zOrder = reader.readI8();
-    logger.debug("Object zOrder:", zOrder);
-    if (zOrder < -50 || zOrder > 50) return null;
+    const z_order = reader.readI8();
+    logger.debug("Object z_order:", z_order);
+    /////
 
-    const mainColor = deserializeColor(reader, logger);
-    if (mainColor === null) return null;
+    const main_color = deserializeColor(reader, logger);
+    if (main_color === null) return null;
 
-    const detailColor = deserializeColor(reader, logger);
-    if (detailColor === null) return null;
+    const detail_color = deserializeColor(reader, logger);
+    if (detail_color === null) return null;
 
-    return {
+    let obj = {
         id,
         x,
         y,
@@ -91,11 +75,16 @@ const deserializeObject = (
         x_angle,
         y_scale_exp,
         y_angle,
-        zLayer,
-        zOrder,
-        mainColor,
-        detailColor,
+        z_layer,
+        z_order,
+        main_color,
+        detail_color,
     };
+    if (!isValidObject(obj)) {
+        return null;
+    }
+
+    return obj;
 };
 
 const deserializeColor = (

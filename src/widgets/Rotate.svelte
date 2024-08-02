@@ -1,8 +1,11 @@
 <script lang="ts">
     import Input from "../components/Input.svelte";
-    import { addCallback as addUpdateCallback } from "../state";
     import { onDestroy } from "svelte";
     import { clamp, getCenterPos, snap } from "shared-lib/util";
+    import * as wasm from "wasm-lib";
+    import { isValidObject, objects } from "shared-lib/gd";
+
+    export let state: wasm.State;
 
     let rotating: number | null = null;
 
@@ -12,25 +15,19 @@
     };
 
     let angle = 0;
-    let prevAngle = 0;
+    // let newAngle = 0;
 
-    let cb = addUpdateCallback(state => {
+    const loopFn = () => {
         let obj = state.get_preview_object();
-        let xAngle = obj.x_angle;
 
-        if (angle != prevAngle) {
-            obj.rotate(angle - xAngle);
-            state.set_preview_object(obj);
-            prevAngle = angle;
-            return;
-        }
-        if (angle != xAngle) {
-            angle = xAngle;
-            prevAngle = angle;
-        }
-    });
+        angle = obj.x_angle;
 
-    onDestroy(() => cb.remove());
+        loop = requestAnimationFrame(loopFn);
+    };
+
+    let loop = requestAnimationFrame(loopFn);
+
+    onDestroy(() => cancelAnimationFrame(loop));
 
     let circleElement: HTMLDivElement;
 </script>
@@ -41,14 +38,29 @@
     }}
     on:mousemove={e => {
         if (rotating != null) {
-            angle = snap(getMouseAngle(e) - rotating, 5) / 5;
+            let snapDegrees =
+                objects[state.get_preview_object().id].hitboxType == "Solid"
+                    ? 90
+                    : 5;
+            let newAngle = snap(getMouseAngle(e) - rotating, snapDegrees) / 5;
+
+            let obj = state.get_preview_object();
+            let xAngle = obj.x_angle;
+
+            console.log(isValidObject(obj));
+
+            obj.rotate(newAngle - xAngle);
+            if (isValidObject(obj)) {
+                state.set_preview_object(obj);
+                angle = newAngle;
+            }
         }
     }}
 />
 
 <div class="absolute text-white">
     <div
-        class="abs-centered-rel w-72 h-72 border-white/50 border-dashed border-2 rounded-full"
+        class="border-2 border-dashed rounded-full abs-centered-rel w-72 h-72 border-white/50"
         bind:this={circleElement}
     />
     <button

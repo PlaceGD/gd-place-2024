@@ -3,7 +3,6 @@
     import { cubicOut } from "svelte/easing";
     import debounce from "lodash.debounce";
     import { onDestroy, onMount } from "svelte";
-    import TinyGesture from "tinygesture";
 
     import * as wasm from "wasm-lib";
 
@@ -27,7 +26,7 @@
     import Toast from "../utils/toast";
     import { isMobile } from "../utils/document";
     import Widget from "../widgets/Widget.svelte";
-    import { addCallback } from "../state";
+    // import { addCallback } from "../state";
     import Rotate from "../widgets/Rotate.svelte";
     import Scale from "../widgets/Scale.svelte";
     import Warp from "../widgets/Warp.svelte";
@@ -35,6 +34,7 @@
     import ObjectInfo from "../widgets/ObjectInfo.svelte";
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
+    import { pinch } from "svelte-gestures";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -82,6 +82,7 @@
 
     $: {
         changeZoom($zoomTween);
+        positionWidget();
     }
 
     $: {
@@ -254,51 +255,52 @@
                     dragging.prevMouseY = y;
                 }
             }
+            positionWidget();
         }
     };
 
-    const dpr = window.devicePixelRatio;
+    // const dpr = window.devicePixelRatio;
 
-    onMount(() => {
-        // svelte-gestures is not updated for svelte 4.0
-        if (isMobile()) {
-            const gestures = new TinyGesture(
-                document.getElementById("gesture-target")!,
-                {
-                    mouseSupport: false,
-                }
-            );
+    // onMount(() => {
+    //     // svelte-gestures is not updated for svelte 4.0
+    //     if (isMobile()) {
+    //         const gestures = new TinyGesture(
+    //             document.getElementById("gesture-target")!,
+    //             {
+    //                 mouseSupport: false,
+    //             }
+    //         );
 
-            // TODO: make these numbers better on different screens?
-            gestures.on("pinch", () => {
-                console.log(gestures.scale!);
-                //zoomGoal = clamp(zoomGoal - gestures.scale! / 100, -36, 36);
+    //         // TODO: make these numbers better on different screens?
+    //         gestures.on("pinch", () => {
+    //             console.log(gestures.scale!);
+    //             //zoomGoal = clamp(zoomGoal - gestures.scale! / 100, -36, 36);
 
-                zoomTween.set(gestures.scale!);
-                //savePos();
-            });
+    //             zoomTween.set(gestures.scale!);
+    //             //savePos();
+    //         });
 
-            gestures.on("panstart", () => {
-                startDrag(
-                    gestures.touchMoveX! * dpr,
-                    gestures.touchMoveY! * dpr
-                );
-            });
+    //         gestures.on("panstart", () => {
+    //             startDrag(
+    //                 gestures.touchMoveX! * dpr,
+    //                 gestures.touchMoveY! * dpr
+    //             );
+    //         });
 
-            gestures.on("panmove", () => {
-                handleDrag(
-                    gestures.touchMoveX! * dpr,
-                    gestures.touchMoveY! * dpr
-                );
-            });
+    //         gestures.on("panmove", () => {
+    //             handleDrag(
+    //                 gestures.touchMoveX! * dpr,
+    //                 gestures.touchMoveY! * dpr
+    //             );
+    //         });
 
-            gestures.on("tap", () => {
-                mouseX = gestures.touchStartX!;
-                mouseY = gestures.touchStartY!;
-                handleShowObjPreview();
-            });
-        }
-    });
+    //         gestures.on("tap", () => {
+    //             mouseX = gestures.touchStartX!;
+    //             mouseY = gestures.touchStartY!;
+    //             handleShowObjPreview();
+    //         });
+    //     }
+    // });
 
     let editWidgetPos: [number, number] = [0, 0];
     let editWidgetScale = 1;
@@ -307,7 +309,7 @@
     let originScreen: [number, number] = [0, 0];
     let textZoomScale = 0;
 
-    let cb = addCallback(state => {
+    let positionWidget = () => {
         let obj = state.get_preview_object();
 
         let p = state.get_screen_pos(obj.x, obj.y);
@@ -319,20 +321,21 @@
         textZoomScale = state.get_zoom_scale();
         p = state.get_screen_pos(0, 0);
         originScreen = [p[0], p[1]];
-    });
-    onDestroy(() => cb.remove());
+    };
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
     on:mouseup={e => {
         handleShowObjPreview();
+        positionWidget();
     }}
     on:mousemove={e => {
         handleDrag(e.clientX, e.clientY);
     }}
     on:resize={() => {
         handleSub(state);
+        positionWidget();
     }}
     on:keydown={e => {
         if (document.activeElement?.tagName == "INPUT") return;
@@ -352,6 +355,7 @@
                 state.set_preview_object(obj);
             }
         }
+        positionWidget();
     }}
 />
 
@@ -376,6 +380,12 @@
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
         zoomTween.set(zoomGoal);
     }}
+    use:pinch
+    on:pinch={e => {
+        console.log(e.detail.scale);
+        alert(`cock ${e.detail.scale}`);
+    }}
+    on:pinchup={e => {}}
 />
 
 <div class="absolute flex flex-col">
@@ -419,11 +429,11 @@
     {#if editWidgetVisible}
         <Widget position={editWidgetPos} scale={editWidgetScale}>
             {#if $menuSettings.selectedWidget == WidgetType.Rotate}
-                <Rotate />
+                <Rotate bind:state />
             {:else if $menuSettings.selectedWidget == WidgetType.Scale}
-                <Scale />
+                <Scale bind:state />
             {:else if $menuSettings.selectedWidget == WidgetType.Warp}
-                <Warp widgetScale={editWidgetScale} />
+                <Warp bind:state widgetScale={editWidgetScale} />
             {/if}
         </Widget>
     {/if}

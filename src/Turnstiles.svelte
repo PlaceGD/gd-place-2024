@@ -18,7 +18,7 @@
     }
 </script>
 
-<Turnstile
+<!-- <Turnstile
     siteKey={SITE_KEY}
     on:turnstile-callback={e => {
         console.log("HERE", e);
@@ -40,4 +40,4 @@
         setTurnstileToken(TokenStatus.NoToken);
     }}
     bind:reset={turnstileReset}
-/>
+/> -->

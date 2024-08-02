@@ -2,9 +2,9 @@
     import RangeSlider from "svelte-range-slider-pips";
     import ColorPicker from "svelte-awesome-color-picker";
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
-    import Input from "./Input.svelte";
     import Cross from "../icons/cross.svg";
     import { clamp, remEuclid } from "shared-lib/util";
+    import DarkInput from "./DarkInput.svelte";
 
     export let maxStops: number;
 
@@ -72,7 +72,7 @@
 
 <div class="grid w-full h-full pointer-events-auto gradient-picker">
     <div
-        class="h-16 xs:h-12 min-h-0 mb-16 cursor-copy xs:mb-5"
+        class="h-16 min-h-0 mb-16 xs:h-12 cursor-copy xs:mb-5"
         style={`--bg: ${previewGradientString}`}
         on:pointerdown={handlePointerDown}
         on:pointerup={e => {
@@ -141,10 +141,10 @@
                     bind:value={gradientAngle}
                 />
             </div>
-            <Input
+            <DarkInput
                 maxLength={3}
                 bind:value={gradientAngle}
-                class="p-2 text-base text-center rounded-lg outline-none xs:p-1 w-14 text-stroke bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 xs:text-sm"
+                class="w-14 xs:text-sm"
             />
         </div>
         <ul
@@ -166,15 +166,15 @@
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">
-                        <Input
+                        <DarkInput
                             maxLength={3}
                             bind:value={gradientStops[idx]}
-                            class="w-full p-2 text-base text-center rounded-lg outline-none xs:p-1 text-stroke bg-black/40 outline outline-white/20 -outline-offset-2 xs:text-sm"
+                            class="xs:text-sm"
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">
                         <button
-                            class="rounded-lg relative grid items-center justify-items-center w-8 aspect-square white-button"
+                            class="relative grid items-center w-8 rounded-lg justify-items-center aspect-square white-button"
                             on:click={() => {
                                 if (gradientStops.length <= 2) return;
 

@@ -10,7 +10,11 @@ use super::{levelstring::parse_obj, ObjectInfo};
 
 use crate::objects::{levelstring::ObjectMap, HitboxType, ObjectCategory};
 
-const CUSTOM_OBJ_START_ID: u32 = 4600;
+pub mod special_ids {
+    pub const BG_TRIGGER: u32 = 4550;
+    pub const GROUND_TRIGGER: u32 = 4551;
+    pub const GROUND_2_TRIGGER: u32 = 4552;
+}
 
 pub static AVAILABLE_OBJECTS: Lazy<Box<[(u32, ObjectInfo)]>> = Lazy::new(|| {
     let objects = {
@@ -107,6 +111,26 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u32, ObjectInfo)]>> = Lazy::new(|| {
                 },
             )
         })
+        .chain(
+            [
+                special_ids::BG_TRIGGER,
+                special_ids::GROUND_TRIGGER,
+                special_ids::GROUND_2_TRIGGER,
+            ]
+            .map(|v| {
+                (
+                    v,
+                    ObjectInfo {
+                        place_offset_x: 0.0,
+                        place_offset_y: 0.0,
+                        hitbox_type: HitboxType::Special,
+                        builtin_scale_x: 0.5,
+                        builtin_scale_y: 0.5,
+                        category: ObjectCategory::Triggers,
+                    },
+                )
+            }),
+        )
         .collect_vec()
         .into_boxed_slice();
 

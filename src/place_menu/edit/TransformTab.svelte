@@ -311,6 +311,12 @@
         }
     }
 
+    @media only screen and (min-width: 900px) and (max-width: 1000px) {
+        .hide-small {
+            @apply grid;
+        }
+    }
+
     @media screen(sm) {
         .transform-button {
             @apply w-8;
@@ -322,6 +328,20 @@
 
         .widget-button {
             @apply w-36 text-base;
+        }
+    }
+
+    @media only screen and (min-width: 700px) and (max-width: 750px) {
+        .hide-small {
+            @apply grid;
+        }
+        .hide-big {
+            @apply grid;
+        }
+    }
+    @media only screen and (min-width: 570px) and (max-width: 700px) {
+        .hide-small {
+            @apply grid;
         }
     }
 

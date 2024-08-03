@@ -11,12 +11,12 @@ use super::{levelstring::parse_obj, ObjectInfo};
 use crate::objects::{levelstring::ObjectMap, HitboxType, ObjectCategory};
 
 pub mod special_ids {
-    pub const BG_TRIGGER: u32 = 4550;
-    pub const GROUND_TRIGGER: u32 = 4551;
-    pub const GROUND_2_TRIGGER: u32 = 4552;
+    pub const BG_TRIGGER: u16 = 4550;
+    pub const GROUND_TRIGGER: u16 = 4551;
+    pub const GROUND_2_TRIGGER: u16 = 4552;
 }
 
-pub static AVAILABLE_OBJECTS: Lazy<Box<[(u32, ObjectInfo)]>> = Lazy::new(|| {
+pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
     let objects = {
         let lvl = include_str!("placeobjs.gmd");
         let r = Regex::new(r##"H4sIAAA[A-Za-z0-9-_=]+"##).unwrap();
@@ -74,7 +74,7 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u32, ObjectInfo)]>> = Lazy::new(|| {
         x - 100000.0 * y
     };
 
-    let mut objects = objects
+    let objects = objects
         .iter()
         .filter(|v| v[&1] != "914")
         .sorted_by(|a, b| sort_key(a).partial_cmp(&sort_key(b)).unwrap())
@@ -82,6 +82,7 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u32, ObjectInfo)]>> = Lazy::new(|| {
             let id = v[&1].parse::<u16>().unwrap();
 
             let x = v[&2].parse::<f32>().unwrap();
+            let y = v[&3].parse::<f32>().unwrap();
             let category = categories
                 .iter()
                 .find(|c| x >= c.0 .0 && x < c.0 .1)
@@ -96,11 +97,15 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u32, ObjectInfo)]>> = Lazy::new(|| {
                 .get(&129)
                 .map(|v| v.parse::<f32>().unwrap())
                 .unwrap_or(1.0);
+
+            let center_x = (x / 30.0).floor() * 30.0 + 15.0;
+            let center_y = (y / 30.0).floor() * 30.0 + 15.0;
+
             (
-                v[&1].parse::<u32>().unwrap(),
+                id,
                 ObjectInfo {
-                    place_offset_x: 0.0,
-                    place_offset_y: 0.0,
+                    place_offset_x: x - center_x,
+                    place_offset_y: y - center_y,
                     hitbox_type: object_hitbox_types
                         .get(&id)
                         .copied()

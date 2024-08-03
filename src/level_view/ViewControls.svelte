@@ -36,6 +36,7 @@
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
     import { pinch } from "svelte-gestures";
+    import { objects } from "shared-lib/gd";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -137,8 +138,12 @@
 
         let obj = new wasm.GDObjectOpt(
             $menuSettings.selectedObject,
-            Math.floor(mx / 30) * 30 + 15,
-            Math.floor(my / 30) * 30 + 15,
+            Math.floor(mx / 30) * 30 +
+                15 +
+                objects[$menuSettings.selectedObject].placeOffsetX,
+            Math.floor(my / 30) * 30 +
+                15 +
+                objects[$menuSettings.selectedObject].placeOffsetY,
             0,
             0,
             0,

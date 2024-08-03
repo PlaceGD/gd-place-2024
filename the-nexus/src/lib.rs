@@ -5,7 +5,10 @@ mod objects;
 mod sprites;
 mod util;
 
-pub use objects::{list::AVAILABLE_OBJECTS, HitboxType, ObjectCategory, ObjectInfo};
+pub use objects::{
+    list::{special_ids, AVAILABLE_OBJECTS},
+    HitboxType, ObjectCategory, ObjectInfo,
+};
 
 pub use sprites::SpriteInfo;
 

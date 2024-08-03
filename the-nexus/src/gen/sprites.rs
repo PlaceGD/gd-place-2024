@@ -17,12 +17,12 @@ use super::config::PACKER_CONFIG;
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SpritesheetData {
-    main_sprites: HashMap<u32, SpriteInfo>,
-    detail_sprites: HashMap<u32, SpriteInfo>,
+    main_sprites: HashMap<u16, SpriteInfo>,
+    detail_sprites: HashMap<u16, SpriteInfo>,
 }
 
 pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
-    let mut packer: TexturePacker<'_, image::DynamicImage, (u32, bool)> =
+    let mut packer: TexturePacker<'_, image::DynamicImage, (u16, bool)> =
         TexturePacker::new_skyline(PACKER_CONFIG);
 
     for &(i, _) in AVAILABLE_OBJECTS.iter() {

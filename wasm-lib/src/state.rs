@@ -1,5 +1,5 @@
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
-use the_nexus::{HitboxType, SpriteInfo};
+use the_nexus::{special_ids, HitboxType, ObjectCategory, SpriteInfo};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -665,11 +665,11 @@ impl State {
                                        sprite: SpriteInfo,
                                        obj: &GDObject,
                                        color: Vec4| {
+                    let info = OBJECT_INFO[obj.id as usize];
+
                     transform *= obj_transform(obj);
 
-                    let tex_idx = if OBJECT_INFO[obj.id as usize].builtin_scale_x == 1.0
-                        && OBJECT_INFO[obj.id as usize].builtin_scale_y == 1.0
-                    {
+                    let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
                         4
                     } else {
                         5
@@ -678,10 +678,14 @@ impl State {
                     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
                     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
-                    let color = if !self.show_collidable {
-                        color
+                    let tint_color = if !self.show_collidable {
+                        if info.category == ObjectCategory::Triggers {
+                            vec4(1.0, 1.0, 1.0, 1.0)
+                        } else {
+                            color
+                        }
                     } else {
-                        match OBJECT_INFO[obj.id as usize].hitbox_type {
+                        match info.hitbox_type {
                             HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
                             HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
                             HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
@@ -699,18 +703,45 @@ impl State {
                                     -(sprite.size.1 as f32 / 2.0) - sprite.offset.1,
                                 ),
                             ),
-                        // transform.transform_point2(
-                        //     -vec2(
-                        //         sprite.size.0 as f32 / 2.0 + sprite.offset.0,
-                        //         sprite.size.1 as f32 / 2.0 - sprite.offset.1,
-                        //     ) / 2.0,
-                        // ),
-                        // transform.transform_vector2(uv_size),
-                        color,
+                        tint_color,
                         tex_idx,
                         uv_pos,
                         uv_size,
                     ));
+                    if [
+                        special_ids::BG_TRIGGER,
+                        special_ids::GROUND_TRIGGER,
+                        special_ids::GROUND_2_TRIGGER,
+                    ]
+                    .contains(&obj.id)
+                    {
+                        rects.push(pipeline_rect::instance::Instance::new(
+                            transform
+                                * Affine2::from_scale_angle_translation(
+                                    vec2(128.0, 128.0),
+                                    0.0,
+                                    -vec2(64.0, 64.0) - vec2(0.0, 42.0),
+                                ),
+                            vec4(0.0, 0.0, 0.0, 1.0),
+                            0,
+                            vec2(0.0, 0.0),
+                            vec2(0.0, 0.0),
+                        ));
+                        if !self.show_collidable {
+                            rects.push(pipeline_rect::instance::Instance::new(
+                                transform
+                                    * Affine2::from_scale_angle_translation(
+                                        vec2(112.0, 112.0),
+                                        0.0,
+                                        -vec2(56.0, 56.0) - vec2(0.0, 42.0),
+                                    ),
+                                color,
+                                0,
+                                vec2(0.0, 0.0),
+                                vec2(0.0, 0.0),
+                            ));
+                        }
+                    }
                 };
 
                 let selected_color = |lighter| {

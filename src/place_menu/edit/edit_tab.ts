@@ -252,7 +252,9 @@ export const MOVE_BUTTONS: Record<string, MoveButton> = {
     },
 };
 
-const getAnchorPos = (obj: GDObjectOpt): [number, number] => {
+export const getTransformedPlaceOffset = (
+    obj: GDObjectOpt
+): [number, number] => {
     let info = objects[obj.id];
     let [vx, vy] = [-info.placeOffsetX, -info.placeOffsetY];
 
@@ -263,18 +265,18 @@ const getAnchorPos = (obj: GDObjectOpt): [number, number] => {
         obj.y_angle
     );
 
-    return [obj.x + ix * vx + jx * vy, obj.y + iy * vx + jy * vy];
+    return [ix * vx + jx * vy, iy * vx + jy * vy];
 };
 
 export const TRANSFORM_KEYBINDS = {
     flip_vert: {
         cb: (obj: GDObjectOpt) => {
-            let [_, ay] = getAnchorPos(obj);
+            let [_, ay] = getTransformedPlaceOffset(obj);
 
             obj.x_angle *= -1;
             obj.y_angle *= -1;
 
-            obj.y += (ay - obj.y) * 2;
+            obj.y += ay * 2;
         },
         shortcut: {
             key: "e",
@@ -284,7 +286,7 @@ export const TRANSFORM_KEYBINDS = {
     },
     flip_horiz: {
         cb: (obj: GDObjectOpt) => {
-            let [ax, _] = getAnchorPos(obj);
+            let [ax, _] = getTransformedPlaceOffset(obj);
 
             obj.x_angle -= 18;
             obj.y_angle -= 18;
@@ -293,7 +295,7 @@ export const TRANSFORM_KEYBINDS = {
             obj.x_angle += 18;
             obj.y_angle += 18;
 
-            obj.x += (ax - obj.x) * 2;
+            obj.x += ax * 2;
         },
         shortcut: {
             key: "q",
@@ -304,16 +306,13 @@ export const TRANSFORM_KEYBINDS = {
 
     rotate_ccw: {
         cb: (obj: GDObjectOpt) => {
-            let [ax, ay] = getAnchorPos(obj);
+            let [ax, ay] = getTransformedPlaceOffset(obj);
 
             obj.x_angle += 18;
             obj.y_angle += 18;
 
-            let [ox, oy] = rotateVec(
-                [obj.x - ax, obj.y - ay],
-                (90 / 180) * Math.PI
-            );
-            [obj.x, obj.y] = [ax + ox, ay + oy];
+            let [ox, oy] = rotateVec([ax, ay], (90 / 180) * Math.PI);
+            [obj.x, obj.y] = [obj.x + ax - ox, obj.y + ay - oy];
         },
         shortcut: {
             key: "q",
@@ -323,16 +322,13 @@ export const TRANSFORM_KEYBINDS = {
     },
     rotate_cw: {
         cb: (obj: GDObjectOpt) => {
-            let [ax, ay] = getAnchorPos(obj);
+            let [ax, ay] = getTransformedPlaceOffset(obj);
 
             obj.x_angle -= 18;
             obj.y_angle -= 18;
 
-            let [ox, oy] = rotateVec(
-                [obj.x - ax, obj.y - ay],
-                (-90 / 180) * Math.PI
-            );
-            [obj.x, obj.y] = [ax + ox, ay + oy];
+            let [ox, oy] = rotateVec([ax, ay], (-90 / 180) * Math.PI);
+            [obj.x, obj.y] = [obj.x + ax - ox, obj.y + ay - oy];
         },
         shortcut: {
             key: "e",
@@ -342,16 +338,13 @@ export const TRANSFORM_KEYBINDS = {
     },
     rotate_ccw_5: {
         cb: (obj: GDObjectOpt) => {
-            let [ax, ay] = getAnchorPos(obj);
+            let [ax, ay] = getTransformedPlaceOffset(obj);
 
             obj.x_angle += 1;
             obj.y_angle += 1;
 
-            let [ox, oy] = rotateVec(
-                [obj.x - ax, obj.y - ay],
-                (5 / 180) * Math.PI
-            );
-            [obj.x, obj.y] = [ax + ox, ay + oy];
+            let [ox, oy] = rotateVec([ax, ay], (5 / 180) * Math.PI);
+            [obj.x, obj.y] = [obj.x + ax - ox, obj.y + ay - oy];
         },
         shortcut: {
             key: "q",
@@ -361,16 +354,13 @@ export const TRANSFORM_KEYBINDS = {
     },
     rotate_cw_5: {
         cb: (obj: GDObjectOpt) => {
-            let [ax, ay] = getAnchorPos(obj);
+            let [ax, ay] = getTransformedPlaceOffset(obj);
 
             obj.x_angle -= 1;
             obj.y_angle -= 1;
 
-            let [ox, oy] = rotateVec(
-                [obj.x - ax, obj.y - ay],
-                (-5 / 180) * Math.PI
-            );
-            [obj.x, obj.y] = [ax + ox, ay + oy];
+            let [ox, oy] = rotateVec([ax, ay], (-5 / 180) * Math.PI);
+            [obj.x, obj.y] = [obj.x + ax - ox, obj.y + ay - oy];
         },
         shortcut: {
             key: "e",

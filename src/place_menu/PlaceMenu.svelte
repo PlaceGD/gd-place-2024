@@ -3,7 +3,7 @@
 
     import { default as cx } from "classnames";
 
-    import { colors } from "shared-lib/gd";
+    import { colors, objects } from "shared-lib/gd";
     import { CATEGORY_ICONS } from "../gd/object";
 
     import Image from "../components/Image.svelte";
@@ -22,7 +22,12 @@
     import { DEBUG } from "../utils/debug";
     // import SpriteSheet from "../utils/spritesheet";
 
-    import { EditTab, TRANSFORM_BUTTONS, WidgetType } from "./edit/edit_tab";
+    import {
+        EditTab,
+        getTransformedPlaceOffset,
+        TRANSFORM_BUTTONS,
+        WidgetType,
+    } from "./edit/edit_tab";
     import ColorsTab from "./edit/ColorsTab.svelte";
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";
@@ -66,11 +71,22 @@
             d_opacity * 255,
             d_blending
         );
-        obj.id = $menuSettings.selectedObject;
         obj.z_layer = $menuSettings.zLayer;
         obj.z_order = $menuSettings.zOrder;
 
         // console.log($menuSettings.selectedMainColor == $menuSettings.selectedDetailColor);
+
+        state.set_preview_object(obj);
+    }
+    $: {
+        let obj = state.get_preview_object();
+        let [oldPx, oldPy] = getTransformedPlaceOffset(obj);
+
+        obj.id = $menuSettings.selectedObject;
+        let [newPx, newPy] = getTransformedPlaceOffset(obj);
+
+        obj.x = obj.x + oldPx - newPx;
+        obj.y = obj.y + oldPy - newPy;
 
         state.set_preview_object(obj);
     }

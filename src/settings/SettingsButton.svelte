@@ -1,6 +1,8 @@
 <script lang="ts">
     import Image from "../components/Image.svelte";
     import { ExclusiveMenus, openMenu } from "../stores";
+
+    import settingsButtonUrl from "./assets/settings.png?url";
 </script>
 
 <button
@@ -12,6 +14,5 @@
                 : ExclusiveMenus.Settings;
     }}
 >
-    <Image src="/assets/ui/settings.png" class="object-contain aspect-square"
-    ></Image>
+    <Image src={settingsButtonUrl} class="object-contain aspect-square"></Image>
 </button>

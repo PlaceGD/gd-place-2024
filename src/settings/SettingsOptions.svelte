@@ -103,7 +103,7 @@
                     >
                     <Button
                         type="plain"
-                        class="text-sm text-center underline transition duration-500 text-white/50 hover:text-white hover:decoration-dashed"
+                        class="text-sm text-center p-1 underline transition duration-500 text-white/50 hover:text-white hover:decoration-dashed"
                         on:click={() => {
                             $openMenu = ExclusiveMenus.Kofi;
                         }}

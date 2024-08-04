@@ -5,15 +5,24 @@ import {
     type ObjectInfo,
 } from "shared-lib/gd";
 
+import blocksUrl from "./assets/build_tab_icons/blocks.png?url";
+import outlinesUrl from "./assets/build_tab_icons/outlines.png?url";
+import spikesUrl from "./assets/build_tab_icons/spikes.png?url";
+import orbsUrl from "./assets/build_tab_icons/orbs.png?url";
+import pixelUrl from "./assets/build_tab_icons/pixel.png?url";
+import decoUrl from "./assets/build_tab_icons/deco.png?url";
+import sawsUrl from "./assets/build_tab_icons/saws.png?url";
+import triggersUrl from "./assets/build_tab_icons/triggers.png?url";
+
 export const CATEGORY_ICONS: Record<ObjectCategory, string> = {
-    Blocks: "/assets/ui/build_tab_icons/blocks.png",
-    Outlines: "/assets/ui/build_tab_icons/outlines.png",
-    Spikes: "/assets/ui/build_tab_icons/spikes.png",
-    OrbsAndGlorbs: "/assets/ui/build_tab_icons/orbs.png",
-    Pixel: "/assets/ui/build_tab_icons/pixel.png",
-    Deco: "/assets/ui/build_tab_icons/deco.png",
-    Saws: "/assets/ui/build_tab_icons/saws.png",
-    Triggers: "/assets/ui/build_tab_icons/triggers.png",
+    Blocks: blocksUrl,
+    Outlines: outlinesUrl,
+    Spikes: spikesUrl,
+    OrbsAndGlorbs: orbsUrl,
+    Pixel: pixelUrl,
+    Deco: decoUrl,
+    Saws: sawsUrl,
+    Triggers: triggersUrl,
 };
 
 export const getObjsInOrder = (): [number, ObjectInfo][] =>

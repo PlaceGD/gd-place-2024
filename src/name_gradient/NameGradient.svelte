@@ -212,17 +212,13 @@
             >
                 <p
                     class="m-auto text-2xl username-gradient w-min xs:text-xl"
-                    style={`
-                            background-image: ${nameGradientString};
-                        `}
+                    style={`background-image: ${nameGradientString};`}
                 >
                     {$loginData.currentUserData?.placeData?.username ?? ""}
                 </p>
                 <p
                     class="m-auto text-2xl username-gradient w-min font-pusab xs:text-xl"
-                    style={`
-                            background-image: ${nameGradientString};
-                        `}
+                    style={`background-image: ${nameGradientString};`}
                 >
                     {$loginData.currentUserData?.placeData?.username ?? ""}
                 </p>

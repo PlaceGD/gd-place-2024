@@ -5,12 +5,15 @@
     import { ExclusiveMenus, loginData, openMenu } from "../stores";
     import { handleSignOut } from "./login";
 
+    import profileInUrl from "./assets/profile_in.png";
+    import profileOutUrl from "./assets/profile_out.png";
+
     // TODO: make user gradient update immediately when changed
 </script>
 
 <div class="gap-2 flex-center">
     {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.isLoggedIn}
-        <h1 class="font-pusab text-2xl xs:text-xl z-30 text-white">
+        <h1 class="z-30 text-2xl text-white font-pusab xs:text-xl">
             <ColoredName
                 username={$loginData.currentUserData.placeData.username}
             />
@@ -31,9 +34,7 @@
         }}
     >
         <Image
-            src="/assets/ui/login/profile_{$loginData.isLoggedIn
-                ? 'out'
-                : 'in'}.png"
+            src={$loginData.isLoggedIn ? profileOutUrl : profileInUrl}
             class="object-contain aspect-square"
         ></Image>
     </button>

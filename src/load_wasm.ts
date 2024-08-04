@@ -1,11 +1,13 @@
 import { writable } from "svelte/store";
 import initWasmInner from "wasm-lib";
-import * as wasm from "wasm-lib";
 import Toast from "./utils/toast";
-import { HAS_OPT_WASM } from "./main";
 import { Spritesheet } from "./utils/spritesheet/spritesheet";
 import { downloadWithProgress } from "./utils/download";
 import { PlaceDB } from "./utils/indexdb";
+
+import wasmUrl from "../wasm-lib/pkg/wasm_lib_bg.wasm?url";
+import wasmVersionUrl from "../public/wasm.txt?url";
+import spritesheetUrl from "../public/assets/spritesheet.png?url";
 
 let db: PlaceDB | null = null;
 try {
@@ -37,21 +39,17 @@ const startWasm = (data: ArrayBuffer) => {
         .then(() => {
             wasmProgress.update(v => ({ ...v, hasLoaded: true }));
         })
-        .catch((e: any) => {
+        .catch((e: unknown) => {
             console.error(e, "(failed in initWasmInner)");
             Toast.showErrorToast(`Failed to initialize WASM. (${e})`);
         });
 };
 
 export const initWasm = async () => {
-    const WASM_URL = `../wasm-lib/pkg/wasm_lib_bg.wasm${
-        HAS_OPT_WASM ? "-opt.wasm" : ""
-    }`;
+    console.debug(wasmUrl, wasmVersionUrl);
 
     try {
-        const newVersion = (
-            await (await fetch("/public/wasm.txt")).text()
-        ).trim();
+        const newVersion = (await (await fetch(wasmVersionUrl)).text()).trim();
         const currentVersion = localStorage.getItem("wasmVersion");
 
         if (db != null && newVersion === currentVersion) {
@@ -74,7 +72,7 @@ export const initWasm = async () => {
         Toast.showWarningToast("Database is null, cache will not be used");
     }
 
-    downloadWithProgress(WASM_URL, "arraybuffer", p => {
+    downloadWithProgress(wasmUrl, "arraybuffer", p => {
         console.info(`downloading wasm: ${p.loaded}/${p.total}`);
         wasmProgress.set({
             max: p.total,
@@ -106,14 +104,14 @@ const startSpritesheet = (data: Blob) => {
                 });
             });
         })
-        .catch((e: any) => {
+        .catch((e: unknown) => {
             console.error(e, "(failed in `blob.arrayBuffer`)");
             Toast.showErrorToast(`Failed to get spritesheet. (${e})`);
         });
 };
 
 export const loadSpritesheet = async () => {
-    const SPRITESHEET_URL = "textures/spritesheet.png";
+    console.debug(spritesheetUrl);
 
     try {
         if (db != null) {
@@ -135,7 +133,7 @@ export const loadSpritesheet = async () => {
         Toast.showWarningToast("Database is null, cache will not be used");
     }
 
-    downloadWithProgress(SPRITESHEET_URL, "blob", progress => {
+    downloadWithProgress(spritesheetUrl, "blob", progress => {
         console.info(
             `downloading spritesheet: ${progress.loaded}/${progress.total}`
         );

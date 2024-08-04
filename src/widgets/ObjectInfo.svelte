@@ -82,7 +82,7 @@
             <div
                 class="h-full text-xl rounded-md aspect-square flex-center text-stroke"
                 style={`
-                    background: url("assets/ui/checker.png");
+                    background: url("static/checker.png");
                     background-size: contain;
                     box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.mainColor.r}, ${$selectedObject.mainColor.g}, ${$selectedObject.mainColor.b}, ${$selectedObject.mainColor.opacity / 255})` : ""};
                 `}
@@ -98,7 +98,7 @@
             <div
                 class="h-full text-xl rounded-md aspect-square flex-center text-stroke"
                 style={`
-                background: url("assets/ui/checker.png");
+                background: url("static/checker.png");
                 background-size: contain;
                 box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.detailColor.r}, ${$selectedObject.detailColor.g}, ${$selectedObject.detailColor.b}, ${$selectedObject.detailColor.opacity / 255})` : ""};
             `}

@@ -1,6 +1,9 @@
 <script lang="ts">
     import Image from "../components/Image.svelte";
     import { ExclusiveMenus, loginData, newReports, openMenu } from "../stores";
+
+    import newReportUrl from "./assets/new_report.png?url";
+    import reportButtonUrl from "./assets/report_button.png?url";
 </script>
 
 {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator}
@@ -16,14 +19,11 @@
                 }
             }}
         >
-            <Image
-                src="/assets/ui/report/report_button.png"
-                class="object-contain aspect-square"
-            />
+            <Image src={reportButtonUrl} class="object-contain aspect-square" />
         </button>
         {#if $newReports}
             <Image
-                src="/assets/ui/report/new_report.png"
+                src={newReportUrl}
                 class="absolute z-30 object-contain w-6 translate-x-1/2 translate-y-1/2 pointer-events-none top-1/2 left-1/2 aspect-square"
             />
         {/if}

@@ -46,7 +46,7 @@ fn generate_shid() {
     let (mut img, data) = make_spritesheet();
     color_bleed(&mut img);
 
-    img.save("../public/textures/spritesheet.png").unwrap();
+    img.save("../public/assets/spritesheet.png").unwrap();
     fs::write(
         "../shared-lib/src/gd/spritesheet.json",
         serde_json::to_string(&json!(data)).unwrap(),

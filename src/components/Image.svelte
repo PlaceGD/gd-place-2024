@@ -73,10 +73,8 @@
             on:load={() => (hasLoaded = true)}
             {alt}
             draggable="false"
-            style={`
-                position: absolute;
-                ${hasLoaded ? "visibility: visible;" : "visibility: hidden;"}
-            `}
+            style:visibility={hasLoaded ? "visible" : "hidden"}
+            class="absolute"
             aria-label={alt}
             {...restProps}
         />

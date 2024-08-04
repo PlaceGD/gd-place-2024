@@ -19,6 +19,11 @@
     import ScreenModal from "../components/ScreenModal.svelte";
     import DarkInput from "../components/DarkInput.svelte";
 
+    import twitterIconUrl from "./assets/twitter.svg?url";
+    import googleIconUrl from "./assets/google.svg?url";
+    import githubIconUrl from "./assets/github.svg?url";
+    import xIconUrl from "./assets/x.svg?url";
+
     let twitter = false;
     document.addEventListener("keydown", e => {
         twitter = e.shiftKey;
@@ -136,7 +141,7 @@
     let turnstileReset: () => void | undefined;
 </script>
 
-<Image tabindex="-1" src="/assets/ui/login/twitter.svg" class="hidden" alt="" />
+<Image tabindex="-1" src={twitterIconUrl} class="hidden" alt="" />
 <ScreenModal
     label="Login or Sign Up Modal"
     state={isInProgress ? "loading" : "default"}
@@ -163,7 +168,7 @@
                     >
                         <span class="flex flex-col h-full gap-2 flex-center">
                             <Image
-                                src="/assets/ui/login/google.svg"
+                                src={googleIconUrl}
                                 alt="Login with Google"
                                 class="w-11 xs:w-10 aspect-square"
                                 tabindex="-1"
@@ -181,7 +186,7 @@
                     >
                         <span class="flex flex-col h-full gap-2 flex-center">
                             <Image
-                                src="/assets/ui/login/github.svg"
+                                src={githubIconUrl}
                                 alt="Login with GitHub"
                                 class="w-11 xs:w-10 aspect-square"
                                 tabindex="-1"
@@ -198,9 +203,7 @@
                     >
                         <span class="flex flex-col h-full gap-2 flex-center">
                             <Image
-                                src="/assets/ui/login/{twitter
-                                    ? 'twitter'
-                                    : 'x'}.svg"
+                                src={twitter ? twitterIconUrl : xIconUrl}
                                 alt="Login with X (Twitter)"
                                 class="w-11 xs:w-10 aspect-square"
                                 tabindex="-1"

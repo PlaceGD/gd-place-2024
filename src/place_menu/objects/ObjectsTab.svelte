@@ -12,7 +12,7 @@
     import { type ObjectInfo, objects as objectMap } from "shared-lib/gd";
     import { onMount } from "svelte";
 
-    let objButtonSize = 0;
+    import fireMp3Url from "../assets/fire.mp3?url";
 
     let objects: [number, ObjectInfo][] = [];
 
@@ -42,7 +42,7 @@
                         tabindex={$menuSettings.isMinimized ? -1 : 0}
                         on:click={() => {
                             if (id == 3854) {
-                                var audio = new Audio("fire.mp3");
+                                var audio = new Audio(fireMp3Url);
                                 audio.volume = 0.02;
 
                                 audio.play();

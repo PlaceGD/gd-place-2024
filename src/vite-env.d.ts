@@ -4,7 +4,6 @@ declare module "*.svg" {
 }
 
 declare const __DEBUG: boolean;
-declare const __HAS_OPT_WASM: boolean;
 declare const __TURNSTILE_LOGIN_SITE_KEY: string;
 declare const __TURNSTILE_REPORT_SITE_KEY: string;
 

@@ -9,6 +9,9 @@
     import { menuSettings } from "../../stores";
     import { clamp } from "shared-lib/util";
 
+    import bottomIconUrl from "../assets/layer_tab/bottom.svg?url";
+    import topIconUrl from "../assets/layer_tab/top.svg?url";
+
     const layerName = (layer: ZLayer) => {
         switch (layer) {
             case ZLayer.B1:
@@ -67,7 +70,7 @@
     const isBottom = (layer: ZLayer) => BOTTOMS.includes(layer);
     const layerCount = (bottom: boolean) => (bottom ? 5 : 4);
     const layerFrom = (bottom: boolean, idx: number) =>
-        (bottom ? (v: any) => v : equivalentTop)(BOTTOMS[idx]);
+        (bottom ? (v: ZLayer) => v : equivalentTop)(BOTTOMS[idx]);
     const layerIdx = (layer: ZLayer) =>
         isBottom(layer) ? -layer + 5 : layer - 4;
 
@@ -104,7 +107,7 @@
                 aria-label="Layer Below Player"
             >
                 <Image
-                    src="/assets/ui/layer_tab/bottom.svg"
+                    src={bottomIconUrl}
                     class="object-contain max-w-full max-h-full"
                     lazyLoad
                     skeleton
@@ -127,7 +130,7 @@
                 aria-label="Layer Above Player"
             >
                 <Image
-                    src="/assets/ui/layer_tab/top.svg"
+                    src={topIconUrl}
                     class="object-contain max-w-full max-h-full"
                     lazyLoad
                     skeleton

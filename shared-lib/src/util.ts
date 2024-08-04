@@ -71,3 +71,13 @@ export const getCenterPos = (element: HTMLElement): [number, number] => {
     let rect = element.getBoundingClientRect();
     return [rect.left + rect.width / 2, rect.top + rect.height / 2];
 };
+
+export const rotateVec = (
+    [x, y]: [number, number],
+    angle: number
+): [number, number] => {
+    let c = Math.cos(angle);
+    let s = Math.sin(angle);
+
+    return [c * x - s * y, s * x + c * y];
+};

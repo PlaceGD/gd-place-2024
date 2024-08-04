@@ -102,12 +102,6 @@ fn obj_transform(obj: &GDObject) -> Affine2 {
         ),
         vec2(obj.x, obj.y),
     )
-
-    // Matrix3::new(
-    //     obj.ix * scale, obj.jx * scale, obj.x,
-    //     obj.iy * scale, obj.jy * scale, obj.y,
-    //     0.0, 0.0, 1.0
-    // )
 }
 fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
     let mut rect_size = get_max_bounding_box(obj.id as u32).unwrap_or((10.0, 10.0));

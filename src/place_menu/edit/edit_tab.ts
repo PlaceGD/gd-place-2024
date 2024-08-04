@@ -1,4 +1,6 @@
-import type { GDObjectOpt } from "wasm-lib";
+import { objects } from "shared-lib/gd";
+import { rotateVec } from "shared-lib/util";
+import { type GDObjectOpt, convert_opt_transform } from "wasm-lib";
 
 export enum EditTab {
     Transform = "Transform",
@@ -250,11 +252,29 @@ export const MOVE_BUTTONS: Record<string, MoveButton> = {
     },
 };
 
+const getAnchorPos = (obj: GDObjectOpt): [number, number] => {
+    let info = objects[obj.id];
+    let [vx, vy] = [-info.placeOffsetX, -info.placeOffsetY];
+
+    let [ix, iy, jx, jy] = convert_opt_transform(
+        obj.x_scale_exp,
+        obj.x_angle,
+        obj.y_scale_exp,
+        obj.y_angle
+    );
+
+    return [obj.x + ix * vx + jx * vy, obj.y + iy * vx + jy * vy];
+};
+
 export const TRANSFORM_KEYBINDS = {
     flip_vert: {
         cb: (obj: GDObjectOpt) => {
+            let [_, ay] = getAnchorPos(obj);
+
             obj.x_angle *= -1;
             obj.y_angle *= -1;
+
+            obj.y += (ay - obj.y) * 2;
         },
         shortcut: {
             key: "e",
@@ -264,12 +284,16 @@ export const TRANSFORM_KEYBINDS = {
     },
     flip_horiz: {
         cb: (obj: GDObjectOpt) => {
+            let [ax, _] = getAnchorPos(obj);
+
             obj.x_angle -= 18;
             obj.y_angle -= 18;
             obj.x_angle *= -1;
             obj.y_angle *= -1;
             obj.x_angle += 18;
             obj.y_angle += 18;
+
+            obj.x += (ax - obj.x) * 2;
         },
         shortcut: {
             key: "q",
@@ -280,8 +304,16 @@ export const TRANSFORM_KEYBINDS = {
 
     rotate_ccw: {
         cb: (obj: GDObjectOpt) => {
+            let [ax, ay] = getAnchorPos(obj);
+
             obj.x_angle += 18;
             obj.y_angle += 18;
+
+            let [ox, oy] = rotateVec(
+                [obj.x - ax, obj.y - ay],
+                (90 / 180) * Math.PI
+            );
+            [obj.x, obj.y] = [ax + ox, ay + oy];
         },
         shortcut: {
             key: "q",
@@ -291,8 +323,16 @@ export const TRANSFORM_KEYBINDS = {
     },
     rotate_cw: {
         cb: (obj: GDObjectOpt) => {
+            let [ax, ay] = getAnchorPos(obj);
+
             obj.x_angle -= 18;
             obj.y_angle -= 18;
+
+            let [ox, oy] = rotateVec(
+                [obj.x - ax, obj.y - ay],
+                (-90 / 180) * Math.PI
+            );
+            [obj.x, obj.y] = [ax + ox, ay + oy];
         },
         shortcut: {
             key: "e",
@@ -302,8 +342,16 @@ export const TRANSFORM_KEYBINDS = {
     },
     rotate_ccw_5: {
         cb: (obj: GDObjectOpt) => {
+            let [ax, ay] = getAnchorPos(obj);
+
             obj.x_angle += 1;
             obj.y_angle += 1;
+
+            let [ox, oy] = rotateVec(
+                [obj.x - ax, obj.y - ay],
+                (5 / 180) * Math.PI
+            );
+            [obj.x, obj.y] = [ax + ox, ay + oy];
         },
         shortcut: {
             key: "q",
@@ -313,8 +361,16 @@ export const TRANSFORM_KEYBINDS = {
     },
     rotate_cw_5: {
         cb: (obj: GDObjectOpt) => {
+            let [ax, ay] = getAnchorPos(obj);
+
             obj.x_angle -= 1;
             obj.y_angle -= 1;
+
+            let [ox, oy] = rotateVec(
+                [obj.x - ax, obj.y - ay],
+                (-5 / 180) * Math.PI
+            );
+            [obj.x, obj.y] = [ax + ox, ay + oy];
         },
         shortcut: {
             key: "e",

@@ -68,10 +68,16 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
         .collect_vec();
     println!("{:?}", categories);
 
+    let center_xy = |x: f32, y: f32| {
+        (
+            (x / 30.0).floor() * 30.0 + 15.0,
+            (y / 30.0).floor() * 30.0 + 15.0,
+        )
+    };
+
     let sort_key = |v: &ObjectMap| {
-        let x = v[&2].parse::<f32>().unwrap();
-        let y = v[&3].parse::<f32>().unwrap();
-        x - 100000.0 * y
+        let (cx, cy) = center_xy(v[&2].parse::<f32>().unwrap(), v[&3].parse::<f32>().unwrap());
+        cx - 100000.0 * cy
     };
 
     let objects = objects
@@ -98,14 +104,13 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
                 .map(|v| v.parse::<f32>().unwrap())
                 .unwrap_or(1.0);
 
-            let center_x = (x / 30.0).floor() * 30.0 + 15.0;
-            let center_y = (y / 30.0).floor() * 30.0 + 15.0;
+            let (cx, cy) = center_xy(x, y);
 
             (
                 id,
                 ObjectInfo {
-                    place_offset_x: x - center_x,
-                    place_offset_y: y - center_y,
+                    place_offset_x: x - cx,
+                    place_offset_y: y - cy,
                     hitbox_type: object_hitbox_types
                         .get(&id)
                         .copied()

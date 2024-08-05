@@ -34,6 +34,7 @@
             <FadedScroll>
                 <ul class="alternating-bg">
                     <!-- TODO(sputnix) add the settings here -->
+
                     <li
                         class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
                     >
@@ -74,6 +75,27 @@
                                 <ToggleSwitch
                                     id="show-triggers"
                                     bind:isToggled={$editorSettings.hideTriggers}
+                                ></ToggleSwitch>
+                            </span>
+                        </label>
+                    </li>
+                    <li
+                        class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
+                    >
+                        <label
+                            for="show-triggers"
+                            class="grid w-full items-center grid-cols-[1fr_min-content]"
+                        >
+                            <div class="flex flex-col">
+                                <span>Hide grid</span>
+                                <span class="text-xs text-white/50"
+                                    >Hide the editor grid</span
+                                >
+                            </div>
+                            <span>
+                                <ToggleSwitch
+                                    id="show-triggers"
+                                    bind:isToggled={$editorSettings.hideGrid}
                                 ></ToggleSwitch>
                             </span>
                         </label>

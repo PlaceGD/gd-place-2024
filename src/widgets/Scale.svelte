@@ -67,8 +67,8 @@
     <div class="abs-centered-rel flex flex-col items-center gap-8 bottom-12">
         <div class="flex flex-row items-center gap-4 bottom-12">
             <span class="font-pusab text-3xl text-stroke">Scale:</span>
-            <span class="font-pusab text-3xl text-stroke w-16 text-center"
-                >{round(scale, 2)}</span
+            <span class="font-pusab text-3xl text-stroke w-20 text-center"
+                >{round(scale, 3)}</span
             >
         </div>
 

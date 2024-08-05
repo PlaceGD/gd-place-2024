@@ -18,7 +18,6 @@
         TabGroup,
         addDeleteText,
         colors,
-        peepo,
         editorData,
         editorSettings,
         loginData,
@@ -30,6 +29,7 @@
         menuZOrder,
         menuTabGroup,
         menuOpenWidget,
+        addTriggerRun,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -50,6 +50,7 @@
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
     import { pinch } from "svelte-gestures";
     import { objects } from "shared-lib/gd";
+    import TriggerRuns from "../widgets/TriggerRuns.svelte";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -72,7 +73,6 @@
     });
     $: {
         changeZoom($zoomTween);
-        positionWidget();
     }
 
     const getWorldMousePos = () => {
@@ -185,6 +185,7 @@
                         b: i.obj.main_color.b,
                     };
                     triggersRun = true;
+                    addTriggerRun(i.obj.x, i.obj.y);
                     break;
                 }
                 case GROUND_TRIGGER: {
@@ -194,6 +195,7 @@
                         b: i.obj.main_color.b,
                     };
                     triggersRun = true;
+                    addTriggerRun(i.obj.x, i.obj.y);
                     break;
                 }
                 case GROUND_2_TRIGGER: {
@@ -203,6 +205,7 @@
                         b: i.obj.main_color.b,
                     };
                     triggersRun = true;
+                    addTriggerRun(i.obj.x, i.obj.y);
                     break;
                 }
             }
@@ -305,7 +308,6 @@
                     dragging.prevMouseY = y;
                 }
             }
-            positionWidget();
         }
     };
 
@@ -359,7 +361,7 @@
     let originScreen: [number, number] = [0, 0];
     let textZoomScale = 0;
 
-    let positionWidget = () => {
+    const loopFn = () => {
         let obj = state.get_preview_object();
 
         let p = state.get_screen_pos(obj.x, obj.y);
@@ -371,21 +373,25 @@
         textZoomScale = state.get_zoom_scale();
         p = state.get_screen_pos(0, 0);
         originScreen = [p[0], p[1]];
+
+        loop = requestAnimationFrame(loopFn);
     };
+
+    let loop = requestAnimationFrame(loopFn);
+
+    onDestroy(() => cancelAnimationFrame(loop));
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
     on:mouseup={e => {
         handleShowObjPreview();
-        positionWidget();
     }}
     on:mousemove={e => {
         handleDrag(e.clientX, e.clientY);
     }}
     on:resize={() => {
         handleSub(state);
-        positionWidget();
     }}
     on:keydown={e => {
         if (document.activeElement?.tagName == "INPUT") return;
@@ -405,7 +411,6 @@
                 state.set_preview_object(obj);
             }
         }
-        positionWidget();
     }}
 />
 
@@ -489,6 +494,9 @@
     {/if}
     <Widget position={originScreen} scale={textZoomScale}>
         <DeleteTexts />
+    </Widget>
+    <Widget position={originScreen} scale={textZoomScale}>
+        <TriggerRuns />
     </Widget>
     {#if $loginData.currentUserData != null}
         <Widget position={[60, -60]} scale={1.0} screenCenter={false}>

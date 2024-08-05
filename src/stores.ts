@@ -52,38 +52,6 @@ export const menuOpenWidget = persistLocalWritable(
     "menuOpenWidget"
 );
 
-// export const menuSettings = persist(
-//     writable({
-//         isMinimized: false,
-
-//         selectedGroup: TabGroup.Build,
-//         selectedEditTab: EditTab.Transform,
-//         selectedBuildTab: "Blocks",
-//         selectedObject: 1,
-//         selectedMainColor: { hue: 0, x: 0, y: 0, opacity: 1, blending: false },
-//         selectedDetailColor: {
-//             hue: 0,
-//             x: 0,
-//             y: 0,
-//             opacity: 1,
-//             blending: false,
-//         },
-//         zLayer: ZLayer.B1,
-//         zOrder: 0,
-//         selectedWidget: WidgetType.None,
-//     }),
-//     createLocalStorage(),
-//     "menuSettings"
-// );
-
-export const peepo = writable<{
-    a: number;
-    b: number;
-}>({
-    a: 0,
-    b: 69,
-});
-
 export const editorData = persist(
     writable({
         x: 0,
@@ -98,6 +66,7 @@ export const editorSettings = persist(
     writable({
         showCollidable: false,
         hideTriggers: true,
+        hideGrid: true,
     }),
     createLocalStorage(),
     "editorSettings"
@@ -156,7 +125,6 @@ export const deleteTexts = writable<
         }
     >
 >({});
-
 export const addDeleteText = (name: string, x: number, y: number) => {
     let id = deleteTextCounter++;
 
@@ -168,6 +136,33 @@ export const addDeleteText = (name: string, x: number, y: number) => {
 
     setTimeout(() => {
         deleteTexts.update(v => {
+            delete v[id];
+            return v;
+        });
+    }, 1500);
+};
+
+let triggerRunCount = 0;
+export const triggerRuns = writable<
+    Record<
+        number,
+        {
+            x: number;
+            y: number;
+        }
+    >
+>({});
+export const addTriggerRun = (x: number, y: number) => {
+    let id = triggerRunCount++;
+
+    triggerRuns.update(v => {
+        v[id] = { x, y };
+
+        return v;
+    });
+
+    setTimeout(() => {
+        triggerRuns.update(v => {
             delete v[id];
             return v;
         });

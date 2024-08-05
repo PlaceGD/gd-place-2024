@@ -81,7 +81,7 @@ export const initWasm = async () => {
         });
     })
         .then(result => {
-            db?.putWasmCache(result);
+            // db?.putWasmCache(result);
             startWasm(result);
         })
         .catch(() => {

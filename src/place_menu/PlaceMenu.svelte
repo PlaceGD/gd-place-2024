@@ -127,6 +127,7 @@
     const handleEditorSettings = (settings: typeof $editorSettings) => {
         state.set_show_collidable(settings.showCollidable);
         state.set_hide_triggers(settings.hideTriggers);
+        state.set_hide_grid(settings.hideGrid);
     };
     $: handleEditorSettings($editorSettings);
 

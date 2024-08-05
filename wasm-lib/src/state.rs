@@ -43,6 +43,7 @@ pub struct State {
     // select_depth: u32,
     show_collidable: bool,
     hide_triggers: bool,
+    hide_grid: bool,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -80,6 +81,7 @@ impl State {
             selected_object: None,
             show_collidable: false,
             hide_triggers: false,
+            hide_grid: false,
             render,
         }
     }
@@ -474,6 +476,9 @@ impl State {
     pub fn set_hide_triggers(&mut self, to: bool) {
         self.hide_triggers = to;
     }
+    pub fn set_hide_grid(&mut self, to: bool) {
+        self.hide_grid = to;
+    }
 
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
@@ -526,7 +531,7 @@ impl State {
             {
                 let mut transform = Affine2::IDENTITY;
 
-                transform *= Affine2::from_translation(-self.camera_pos / 10.0);
+                transform *= Affine2::from_translation(-self.camera_pos / 3.0 / 2.0);
 
                 let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
 
@@ -537,10 +542,10 @@ impl State {
                         let mut transform = transform;
                         transform *=
                             Affine2::from_translation(offset + scale * vec2(i as f32, j as f32));
-                        transform *= Affine2::from_scale(vec2(
-                            1.0,
-                            if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 },
-                        ));
+                        // transform *= Affine2::from_scale(vec2(
+                        //     1.0,
+                        //     if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 },
+                        // ));
 
                         rects.push(pipeline_rect::instance::Instance::new(
                             transform
@@ -1006,7 +1011,7 @@ impl State {
                 render_pass.draw_indexed(0..6, 0, last_instance..call.until_instance);
                 last_instance = call.until_instance;
 
-                if i == 0 {
+                if i == 0 && !self.hide_grid {
                     render_pass.set_pipeline(&self.render.pipeline_grid);
                     render_pass.draw_indexed(0..6, 0, 0..1);
                 }

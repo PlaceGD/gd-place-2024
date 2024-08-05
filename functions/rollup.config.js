@@ -13,7 +13,10 @@ export default [
             preserveModulesRoot: "src",
         },
         plugins: [
-            typescript({ tsconfig: "./tsconfig.json" }),
+            typescript({
+                tsconfig: "./tsconfig.json",
+                moduleResolution: "node",
+            }),
             json({ compact: true, preferConst: true }),
             terser(),
         ],

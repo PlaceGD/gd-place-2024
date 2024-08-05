@@ -14,6 +14,8 @@
     import Delete from "../icons/delete.svg";
     import Minimize from "../icons/caret.svg";
 
+    console.log(Minimize);
+
     import {
         TabGroup,
         editorSettings,

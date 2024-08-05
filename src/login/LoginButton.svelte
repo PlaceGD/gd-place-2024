@@ -11,9 +11,9 @@
     // TODO: make user gradient update immediately when changed
 </script>
 
-<div class="gap-2 flex-center">
+<div class="gap-4 flex-center">
     {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.isLoggedIn}
-        <h1 class="z-30 text-2xl text-white font-pusab xs:text-xl">
+        <h1 class="z-30 text-3xl text-white font-pusab xs:text-2xl">
             <ColoredName
                 username={$loginData.currentUserData.placeData.username}
             />

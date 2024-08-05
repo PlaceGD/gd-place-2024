@@ -70,7 +70,7 @@ class Ref<T> {
     }
 
     async push(value: Child<T>): Promise<Ref<Child<T>>> {
-        return new Ref(this.ref.push(value));
+        return new Ref(await this.ref.push(value));
     }
 
     async transaction(cb: (value: T) => T) {

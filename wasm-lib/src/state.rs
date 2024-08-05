@@ -13,7 +13,7 @@ use crate::{
     log, map,
     object::{GDColor, GDObject, GDObjectOpt},
     render::{data::Globals, pipeline_rect, state::RenderState},
-    util::{get_max_bounding_box, now, point_in_triangle, quick_image_load, Rect},
+    util::{get_max_bounding_box, now, point_in_triangle, Rect},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
     ErrorType, RustError,
 };

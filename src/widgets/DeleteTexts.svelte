@@ -15,7 +15,7 @@
             `}
         >
             <span
-                class="absolute letext text-black text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
+                class="absolute letext text-black text-saira text-stroke-both text-3xl text-nowrap w-[500px] text-center"
                 >Deleted by {name}</span
             >
             <span

@@ -146,13 +146,13 @@ pub fn point_in_triangle(pt: Vec2, v1: Vec2, v2: Vec2, v3: Vec2) -> bool {
     !(has_neg && has_pos)
 }
 
-pub fn quick_image_load(bytes: &[u8]) -> DynamicImage {
-    use image::io::Reader as ImageReader;
-    use std::io::Cursor;
+// pub fn quick_image_load(bytes: &[u8]) -> DynamicImage {
+//     use image::io::Reader as ImageReader;
+//     use std::io::Cursor;
 
-    ImageReader::new(Cursor::new(bytes))
-        .with_guessed_format()
-        .unwrap()
-        .decode()
-        .unwrap()
-}
+//     ImageReader::new(Cursor::new(bytes))
+//         .with_guessed_format()
+//         .unwrap()
+//         .decode()
+//         .unwrap()
+// }

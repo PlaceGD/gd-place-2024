@@ -9,6 +9,8 @@ import {
     type PersistentStore,
 } from "@macfja/svelte-persistent-store";
 import type { ObjectCategory } from "shared-lib/gd";
+import { tweened, type TweenedOptions } from "svelte/motion";
+import { linear } from "svelte/easing";
 
 export enum TabGroup {
     Build,
@@ -18,6 +20,11 @@ export enum TabGroup {
 
 const persistLocalWritable = <T>(v: T, key: string) =>
     persist(writable(v), createLocalStorage(), key);
+const persistLocalTweened = <T>(
+    v: T,
+    key: string,
+    options: TweenedOptions<T>
+) => persist(tweened(v, options), createLocalStorage(), key);
 
 export const menuMinimized = persistLocalWritable(false, "menuMinimized");
 export const menuTabGroup = persistLocalWritable(
@@ -65,8 +72,8 @@ export const editorData = persist(
 export const editorSettings = persist(
     writable({
         showCollidable: false,
-        hideTriggers: true,
-        hideGrid: true,
+        hideTriggers: false,
+        hideGrid: false,
     }),
     createLocalStorage(),
     "editorSettings"
@@ -80,7 +87,6 @@ export enum ExclusiveMenus {
     Settings,
     Kofi,
 }
-
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
 export const analytics = persist(
@@ -178,12 +184,28 @@ export const selectedObject = writable<{
     zOrder: number;
 } | null>(null);
 
-export const colors = persist(
-    writable({
-        bg: { r: 40, g: 125, b: 255 },
-        ground1: { r: 40, g: 125, b: 255 },
-        ground2: { r: 127, g: 178, b: 255 },
-    }),
-    createLocalStorage(),
-    "colors"
+// export const colors = persist(
+//     writable({
+//         bg: { r: 40, g: 125, b: 255 },
+//         ground1: { r: 40, g: 125, b: 255 },
+//         ground2: { r: 127, g: 178, b: 255 },
+//     }),
+//     createLocalStorage(),
+//     "colors"
+// );
+
+export const bgColor = persistLocalTweened(
+    { r: 40, g: 125, b: 255 },
+    "bgColor",
+    { duration: 500, easing: linear }
+);
+export const ground1Color = persistLocalTweened(
+    { r: 40, g: 125, b: 255 },
+    "ground1Color",
+    { duration: 500, easing: linear }
+);
+export const ground2Color = persistLocalTweened(
+    { r: 127, g: 178, b: 255 },
+    "ground2Color",
+    { duration: 500, easing: linear }
 );

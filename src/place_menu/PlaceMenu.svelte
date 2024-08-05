@@ -4,6 +4,11 @@
     import { default as cx } from "classnames";
 
     import { colors, objects } from "shared-lib/gd";
+    import {
+        BG_TRIGGER,
+        GROUND_TRIGGER,
+        GROUND_2_TRIGGER,
+    } from "shared-lib/nexusgen";
     import { CATEGORY_ICONS } from "../gd/object";
 
     import Image from "../components/Image.svelte";
@@ -18,7 +23,6 @@
         TabGroup,
         editorSettings,
         selectedObject,
-        colors as colorsStore,
         menuSelectedObject,
         menuMainColor,
         menuDetailColor,
@@ -28,6 +32,9 @@
         menuMinimized,
         menuBuildTab,
         menuEditTab,
+        bgColor,
+        ground1Color,
+        ground2Color,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { useIsOverflowing } from "../utils/document";
@@ -59,33 +66,31 @@
             $menuDetailColor.opacity = 1;
         }
     }
+    $: [mainR, mainG, mainB] =
+        colors.list[$menuMainColor.hue].palette[$menuMainColor.y][
+            $menuMainColor.x
+        ];
+    $: [detailR, detailG, detailB] =
+        colors.list[$menuDetailColor.hue].palette[$menuDetailColor.y][
+            $menuDetailColor.x
+        ];
     $: {
-        let [mr, mg, mb] =
-            colors.list[$menuMainColor.hue].palette[$menuMainColor.y][
-                $menuMainColor.x
-            ];
-
         let obj = state.get_preview_object();
         obj.main_color = new wasm.GDColor(
-            mr,
-            mg,
-            mb,
+            mainR,
+            mainG,
+            mainB,
             $menuMainColor.opacity * 255,
             $menuMainColor.blending
         );
         state.set_preview_object(obj);
     }
     $: {
-        let [mr, mg, mb] =
-            colors.list[$menuDetailColor.hue].palette[$menuDetailColor.y][
-                $menuDetailColor.x
-            ];
-
         let obj = state.get_preview_object();
         obj.detail_color = new wasm.GDColor(
-            mr,
-            mg,
-            mb,
+            detailR,
+            detailG,
+            detailB,
             $menuDetailColor.opacity * 255,
             $menuDetailColor.blending
         );
@@ -124,27 +129,60 @@
 
     $: canSelectByTab = $menuMinimized ? -1 : 0;
 
-    const handleEditorSettings = (settings: typeof $editorSettings) => {
-        state.set_show_collidable(settings.showCollidable);
-        state.set_hide_triggers(settings.hideTriggers);
-        state.set_hide_grid(settings.hideGrid);
-    };
-    $: handleEditorSettings($editorSettings);
+    $: {
+        state.set_show_collidable($editorSettings.showCollidable);
+        state.set_hide_triggers($editorSettings.hideTriggers);
+        state.set_hide_grid($editorSettings.hideGrid);
+    }
 
-    const handleColorStore = (settings: typeof $colorsStore) => {
-        state.set_bg_color(settings.bg.r, settings.bg.g, settings.bg.b);
+    $: {
+        state.set_bg_color($bgColor.r, $bgColor.g, $bgColor.b);
+    }
+    $: {
         state.set_ground1_color(
-            settings.ground1.r,
-            settings.ground1.g,
-            settings.ground1.b
+            $ground1Color.r,
+            $ground1Color.g,
+            $ground1Color.b
         );
+    }
+    $: {
         state.set_ground2_color(
-            settings.ground2.r,
-            settings.ground2.g,
-            settings.ground2.b
+            $ground2Color.r,
+            $ground2Color.g,
+            $ground2Color.b
         );
-    };
-    $: handleColorStore($colorsStore);
+    }
+
+    $: {
+        if ($menuSelectedObject == BG_TRIGGER) {
+            $bgColor = {
+                r: mainR,
+                g: mainG,
+                b: mainB,
+            };
+        }
+    }
+    $: {
+        if ($menuSelectedObject == GROUND_TRIGGER) {
+            $ground1Color = {
+                r: mainR,
+                g: mainG,
+                b: mainB,
+            };
+        }
+    }
+    $: {
+        if ($menuSelectedObject == GROUND_2_TRIGGER) {
+            $ground2Color = {
+                r: mainR,
+                g: mainG,
+                b: mainB,
+            };
+        }
+    }
+
+    // const gradientFunc = t =>
+    //     `conic-gradient(white ${t * 360}deg, black ${t * 360}deg 360deg)`;
 </script>
 
 <div

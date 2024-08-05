@@ -46,7 +46,7 @@
         {#if state != null}
             <ReportedUserList bind:state {editorFocused} />
         {/if}
-        <SettingsOptions {editorFocused}/>
+        <SettingsOptions {editorFocused} />
     </div>
     {#if wasmLoaded}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />

@@ -130,7 +130,7 @@
             {#if $selectedObject.namePlaced != null}
                 <button
                     aria-label="Copy Username"
-                    class="hover:underline"
+                    class="hover:underline font-bold"
                     on:click={() => {
                         if ($selectedObject != null) {
                             setClipboard($selectedObject.namePlaced ?? "")

@@ -17,7 +17,6 @@
     import {
         TabGroup,
         addDeleteText,
-        colors,
         editorData,
         editorSettings,
         loginData,
@@ -30,6 +29,9 @@
         menuTabGroup,
         menuOpenWidget,
         addTriggerRun,
+        bgColor,
+        ground1Color,
+        ground2Color,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -179,17 +181,18 @@
         for (let i of hit) {
             switch (i.obj.id) {
                 case BG_TRIGGER: {
-                    $colors.bg = {
+                    $bgColor = {
                         r: i.obj.main_color.r,
                         g: i.obj.main_color.g,
                         b: i.obj.main_color.b,
                     };
+
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;
                 }
                 case GROUND_TRIGGER: {
-                    $colors.ground1 = {
+                    $ground1Color = {
                         r: i.obj.main_color.r,
                         g: i.obj.main_color.g,
                         b: i.obj.main_color.b,
@@ -199,7 +202,7 @@
                     break;
                 }
                 case GROUND_2_TRIGGER: {
-                    $colors.ground2 = {
+                    $ground2Color = {
                         r: i.obj.main_color.r,
                         g: i.obj.main_color.g,
                         b: i.obj.main_color.b,

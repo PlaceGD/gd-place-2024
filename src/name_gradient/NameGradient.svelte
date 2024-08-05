@@ -10,8 +10,8 @@
         VALID_KOFI_TRANSACTION_ID_CHARS,
         type KofiTxId,
     } from "shared-lib/kofi";
-    import Cross from "../icons/cross.svg";
-    import Check from "../icons/check.svg";
+    import { IconX as Cross } from "@tabler/icons-svelte";
+    import { IconCheck as Check } from "@tabler/icons-svelte";
     import {
         changeNameGradient,
         submitKofiTxId,
@@ -163,11 +163,11 @@
                 <div class="w-full gap-2 flex-center">
                     {#if isValidKofiTxId}
                         <Check
-                            class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
+                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
                         />
                     {:else}
                         <Cross
-                            class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
+                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
                         />
                     {/if}
                     <form

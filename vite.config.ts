@@ -8,7 +8,6 @@ import {
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import topLevelAwait from "vite-plugin-top-level-await";
 import FullReload from "vite-plugin-full-reload";
-import svelteSVG from "vite-plugin-svelte-svg";
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
@@ -49,13 +48,6 @@ export default defineConfig(({ mode }) => ({
     },
     plugins: [
         svelte(),
-        svelteSVG({
-            svgoConfig: {
-                multipass: true,
-                datauri: "base64",
-            },
-            requireSuffix: false,
-        }),
         topLevelAwait(),
         // preload image assets (only works on `vite build`)
         UnpluginInjectPreload({
@@ -75,22 +67,24 @@ export default defineConfig(({ mode }) => ({
             ],
             injectTo: "head-prepend",
         }),
-        ViteImageOptimizer({
-            exclude: ["spritesheet.png"],
-            cache: false,
-            svg: {
-                plugins: [
-                    {
-                        name: "preset-default",
-                        params: {
-                            overrides: {
-                                removeViewBox: false,
-                            },
-                        },
-                    },
-                ],
-            },
-        }),
+        mode !== "development"
+            ? ViteImageOptimizer({
+                  exclude: ["spritesheet.png"],
+                  cache: false,
+                  svg: {
+                      plugins: [
+                          {
+                              name: "preset-default",
+                              params: {
+                                  overrides: {
+                                      removeViewBox: false,
+                                  },
+                              },
+                          },
+                      ],
+                  },
+              })
+            : null,
         FullReload(["src/**/*"]),
     ],
     build: {

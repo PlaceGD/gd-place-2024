@@ -2,7 +2,7 @@
     import RangeSlider from "svelte-range-slider-pips";
     import ColorPicker from "svelte-awesome-color-picker";
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
-    import Cross from "../icons/cross.svg";
+    import { IconX as Cross } from "@tabler/icons-svelte";
     import { clamp, remEuclid } from "shared-lib/util";
     import DarkInput from "./DarkInput.svelte";
 
@@ -184,7 +184,9 @@
                                 gradientColors = gradientColors;
                             }}
                         >
-                            <Cross class="text-[#ff4747] w-full h-full p-1" />
+                            <Cross
+                                class="text-[#ff4747] w-full h-full p-1 stroke-[1.5px]"
+                            />
                         </button>
                     </div>
                 </li>

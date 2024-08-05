@@ -4,8 +4,8 @@
     import Loading from "../components/Loading.svelte";
     import { LoginMethod, handleSignIn } from "./login";
     import { ExclusiveMenus, loginData, openMenu } from "../stores";
-    import Cross from "../icons/cross.svg";
-    import Check from "../icons/check.svg";
+    import { IconX as Cross } from "@tabler/icons-svelte";
+    import { IconCheck as Check } from "@tabler/icons-svelte";
     import Toast from "../utils/toast";
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib/user";
     import { initUserData } from "../firebase/auth";
@@ -239,7 +239,10 @@
         >
             <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
                 <section class="text">
-                    <h1><u><strong>rules</strong></u></h1>
+                    <!-- svelte-ignore a11y-autofocus -->
+                    <button aria-hidden="true" tabindex="-1" autofocus
+                        ><h1><u><strong>rules</strong></u></h1></button
+                    >
 
                     <h2>Notice</h2>
 
@@ -373,11 +376,11 @@
                 <div class="w-full gap-2 flex-center">
                     {#if isValidUsername}
                         <Check
-                            class="text-[#47ff47] w-7 h-7 shrink-0 ml-auto"
+                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
                         />
                     {:else}
                         <Cross
-                            class="text-[#ff4747] w-7 h-7 shrink-0 ml-auto"
+                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
                         />
                     {/if}
                     <form
@@ -422,9 +425,13 @@
             </span>
             <div class="flex w-full gap-2">
                 {#if hasAgreedToTOS}
-                    <Check class="text-[#47ff47] w-7 h-7 shrink-0" />
+                    <Check
+                        class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-1"
+                    />
                 {:else}
-                    <Cross class="text-[#ff4747] w-7 h-7 shrink-0" />
+                    <Cross
+                        class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-1"
+                    />
                 {/if}
                 <p class="flex-auto m-auto text-base xs:text-sm">
                     I have read and agreed to the

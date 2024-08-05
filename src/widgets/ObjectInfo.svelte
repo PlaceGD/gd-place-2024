@@ -15,6 +15,8 @@
     import ColoredName from "../components/ColoredName.svelte";
     import { getNewTurnstileToken } from "../utils/turnstile";
 
+    import reportButtonUrl from "../moderator/assets/report_button.png?url";
+
     export let state: wasm.State;
 
     const cooldown = new SyncedCooldown(
@@ -173,7 +175,7 @@
                                 bind:reset={resetReportButton}
                             >
                                 <Image
-                                    src="/assets/ui/report/report_button.png"
+                                    src={reportButtonUrl}
                                     class="object-contain w-auto h-auto max-w-full max-h-full"
                                 />
                             </OnceButton>

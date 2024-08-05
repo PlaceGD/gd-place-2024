@@ -91,10 +91,10 @@ export const initUserWithUsername = onCallAuthLogger<
 
     const maybeUserData = ref(db, `userData/${data.uid}`);
 
-    if ((await maybeUserData.get()) != null) {
-        logger.error("User data already exists");
-        throw new HttpsError("already-exists", "User data already exists");
-    }
+    // if ((await maybeUserData.get()) != null) {
+    //     logger.error("User data already exists");
+    //     throw new HttpsError("already-exists", "User data already exists");
+    // }
 
     const isBanned = (await ref(db, `bannedUsers/${data.uid}`).get()).val();
     if (isBanned === 1) {

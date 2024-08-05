@@ -8,7 +8,7 @@
     } from "./edit_tab";
     import Image from "../../components/Image.svelte";
     import * as wasm from "wasm-lib";
-    import { menuSettings } from "../../stores";
+    import { menuMinimized, menuOpenWidget } from "../../stores";
     import { onDestroy } from "svelte";
 
     export let state: wasm.State;
@@ -16,11 +16,11 @@
     let selectedWidget = WidgetType.None;
 
     $: {
-        $menuSettings.selectedWidget = selectedWidget;
+        $menuOpenWidget = selectedWidget;
     }
 
     onDestroy(() => {
-        $menuSettings.selectedWidget = WidgetType.None;
+        $menuOpenWidget = WidgetType.None;
     });
 
     const changeWidget = (widget: WidgetType) => {
@@ -34,7 +34,7 @@
         state.set_preview_object(obj);
     };
 
-    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
+    $: canSelectByTab = $menuMinimized ? -1 : 0;
 </script>
 
 <div class="transform-container">

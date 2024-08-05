@@ -56,6 +56,28 @@
                             </span>
                         </label>
                     </li>
+
+                    <li
+                        class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
+                    >
+                        <label
+                            for="show-triggers"
+                            class="grid w-full items-center grid-cols-[1fr_min-content]"
+                        >
+                            <div class="flex flex-col">
+                                <span>Hide Triggers</span>
+                                <span class="text-xs text-white/50"
+                                    >Hide triggers in the editor</span
+                                >
+                            </div>
+                            <span>
+                                <ToggleSwitch
+                                    id="show-triggers"
+                                    bind:isToggled={$editorSettings.hideTriggers}
+                                ></ToggleSwitch>
+                            </span>
+                        </label>
+                    </li>
                 </ul>
             </FadedScroll>
             <!-- TODO: get stream link from database -->

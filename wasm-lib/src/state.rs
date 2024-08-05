@@ -40,9 +40,9 @@ pub struct State {
     show_preview: bool,
 
     selected_object: Option<DbKey>,
-    select_depth: u32,
-
+    // select_depth: u32,
     show_collidable: bool,
+    hide_triggers: bool,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -76,9 +76,10 @@ impl State {
                 detail_color: GDColor::white(),
             },
             show_preview: false,
-            select_depth: 0,
+            // select_depth: 0,
             selected_object: None,
             show_collidable: false,
+            hide_triggers: false,
             render,
         }
     }
@@ -231,28 +232,6 @@ impl State {
 
         out
     }
-
-    // fn draw_text<T, U>(
-    //     &mut self,
-    //     frame: &Frame,
-    //     text: T,
-    //     x: f32,
-    //     y: f32,
-    //     font_size: f32,
-    //     extra_style: U,
-    // ) where
-    //     T: ToString,
-    //     U: ToString,
-    // {
-    //     let t = frame.get_transform().mat() * FrameTransform::Translate { x, y }.mat();
-
-    //     self.text_draws.push(TextDraw {
-    //         text: text.to_string(),
-    //         font_size,
-    //         transform: t,
-    //         extra_style: extra_style.to_string(),
-    //     })
-    // }
 }
 
 #[wasm_bindgen]
@@ -323,7 +302,7 @@ impl State {
         // }
 
         if let Ok(key) = key.into_bytes().try_into() {
-            let key: DbKey = key;
+            // let key: DbKey = key;
 
             let chunk = obj.get_chunk_coord();
 
@@ -410,7 +389,7 @@ impl State {
         self.show_preview
     }
 
-    pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {
+    pub fn objects_hit_at(&self, x: f32, y: f32, pad: f32) -> Vec<HitObjectInfo> {
         let chunk = ChunkCoord::get_from_pos(x, y);
 
         let mut clickable = vec![];
@@ -421,7 +400,7 @@ impl State {
                 let cy = chunk.y + j;
                 self.level
                     .foreach_obj_in_chunk(ChunkCoord { x: cx, y: cy }, |key, obj| {
-                        let rect = padded_obj_rect(obj, 20.0);
+                        let rect = padded_obj_rect(obj, pad);
 
                         let t = obj_transform(obj);
 
@@ -439,35 +418,43 @@ impl State {
                             corners_world[2],
                             corners_world[3],
                         ) {
-                            clickable.push((key, *obj));
+                            clickable.push(HitObjectInfo { key, obj: *obj });
                         }
                     });
             }
         }
-
-        let selected = if clickable.is_empty() {
-            None
-        } else {
-            if self.select_depth as usize >= clickable.len() {
-                self.select_depth = 0;
-            }
-            self.select_depth += 1;
-            Some(clickable[self.select_depth as usize - 1])
-        };
-
-        self.selected_object = selected.map(|v| v.0);
-
-        selected.map(|(key, obj)| SelectedObjectInfo {
-            key: String::from_utf8(key.into()).unwrap(),
-            id: obj.id,
-            main_color: obj.main_color,
-            detail_color: obj.detail_color,
-            z_layer: obj.z_layer,
-            z_order: obj.z_order,
-        })
+        clickable
     }
+
+    // pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {
+    //     let clickable = self.objects_hit_at(x, y, 20.0);
+
+    //     let selected = if clickable.is_empty() {
+    //         None
+    //     } else {
+    //         if self.select_depth as usize >= clickable.len() {
+    //             self.select_depth = 0;
+    //         }
+    //         self.select_depth += 1;
+    //         Some(clickable[self.select_depth as usize - 1])
+    //     };
+
+    //     self.selected_object = selected.map(|v| v.0);
+
+    //     selected.map(|(key, obj)| SelectedObjectInfo {
+    //         key: String::from_utf8(key.into()).unwrap(),
+    //         id: obj.id,
+    //         main_color: obj.main_color,
+    //         detail_color: obj.detail_color,
+    //         z_layer: obj.z_layer,
+    //         z_order: obj.z_order,
+    //     })
+    // }
     pub fn deselect_object(&mut self) {
         self.selected_object = None;
+    }
+    pub fn set_selected_object(&mut self, key: String) {
+        self.selected_object = Some(key.into_bytes().try_into().unwrap());
     }
     pub fn get_selected_object_key(&mut self) -> Option<String> {
         self.selected_object
@@ -483,6 +470,9 @@ impl State {
 
     pub fn set_show_collidable(&mut self, to: bool) {
         self.show_collidable = to;
+    }
+    pub fn set_hide_triggers(&mut self, to: bool) {
+        self.hide_triggers = to;
     }
 
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
@@ -659,6 +649,10 @@ impl State {
                                        sprite: SpriteInfo,
                                        obj: &GDObject,
                                        color: Vec4| {
+                    if self.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
+                        return;
+                    }
+
                     let info = OBJECT_INFO[obj.id as usize];
 
                     transform *= obj_transform(obj);
@@ -702,13 +696,7 @@ impl State {
                         uv_pos,
                         uv_size,
                     ));
-                    if [
-                        special_ids::BG_TRIGGER,
-                        special_ids::GROUND_TRIGGER,
-                        special_ids::GROUND_2_TRIGGER,
-                    ]
-                    .contains(&obj.id)
-                    {
+                    if special_ids::COLOR_TRIGGERS.contains(&obj.id) {
                         rects.push(pipeline_rect::instance::Instance::new(
                             transform
                                 * Affine2::from_scale_angle_translation(
@@ -977,25 +965,26 @@ impl State {
                         usage: wgpu::BufferUsages::VERTEX,
                     });
 
-            let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("render_pass"),
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &multisample_view,
-                    resolve_target: Some(&output_view),
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 0.0,
-                            g: 0.0,
-                            b: 0.0,
-                            a: 1.0,
-                        }),
-                        store: wgpu::StoreOp::Store,
-                    },
-                })],
-                depth_stencil_attachment: None,
-                occlusion_query_set: None,
-                timestamp_writes: None,
-            });
+            let mut render_pass: wgpu::RenderPass =
+                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: Some("render_pass"),
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: &multisample_view,
+                        resolve_target: Some(&output_view),
+                        ops: wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(wgpu::Color {
+                                r: 0.0,
+                                g: 0.0,
+                                b: 0.0,
+                                a: 1.0,
+                            }),
+                            store: wgpu::StoreOp::Store,
+                        },
+                    })],
+                    depth_stencil_attachment: None,
+                    occlusion_query_set: None,
+                    timestamp_writes: None,
+                });
 
             render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
             render_pass.set_bind_group(1, &self.render.textures_bind_group, &[]);
@@ -1037,19 +1026,32 @@ impl State {
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;
 
-#[wasm_bindgen]
-pub struct SelectedObjectInfo {
-    key: String,
-    pub id: u16,
-    pub main_color: GDColor,
-    pub detail_color: GDColor,
-    pub z_layer: ZLayer,
-    pub z_order: i8,
-}
+// #[wasm_bindgen]
+// pub struct SelectedObjectInfo {
+//     key: String,
+//     pub id: u16,
+//     pub main_color: GDColor,
+//     pub detail_color: GDColor,
+//     pub z_layer: ZLayer,
+//     pub z_order: i8,
+// }
+
+// #[wasm_bindgen]
+// impl SelectedObjectInfo {
+//     pub fn key(&self) -> String {
+//         self.key.clone()
+//     }
+// }
 
 #[wasm_bindgen]
-impl SelectedObjectInfo {
+#[derive(Debug, Clone, Copy)]
+pub struct HitObjectInfo {
+    pub(crate) key: DbKey,
+    pub obj: GDObject,
+}
+#[wasm_bindgen]
+impl HitObjectInfo {
     pub fn key(&self) -> String {
-        self.key.clone()
+        String::from_utf8(self.key.into()).unwrap()
     }
 }

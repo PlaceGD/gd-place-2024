@@ -7,16 +7,29 @@
     import * as wasm from "wasm-lib";
 
     import { clamp, hexToRgb, lerp } from "shared-lib/util";
+    import {
+        BG_TRIGGER,
+        GROUND_TRIGGER,
+        GROUND_2_TRIGGER,
+    } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
     import {
         TabGroup,
         addDeleteText,
+        colors,
+        peepo,
         editorData,
         editorSettings,
         loginData,
-        menuSettings,
         selectedObject,
+        menuSelectedObject,
+        menuMainColor,
+        menuDetailColor,
+        menuZLayer,
+        menuZOrder,
+        menuTabGroup,
+        menuOpenWidget,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -57,6 +70,10 @@
         duration: 100,
         easing: cubicOut,
     });
+    $: {
+        changeZoom($zoomTween);
+        positionWidget();
+    }
 
     const getWorldMousePos = () => {
         // console.log(mouseX, mouseY);
@@ -82,68 +99,20 @@
         );
     };
 
-    $: {
-        changeZoom($zoomTween);
-        positionWidget();
-    }
-
-    $: {
-        if ($menuSettings.selectedGroup == TabGroup.Delete) {
-            state.set_preview_visibility(false);
-        } else {
-            $selectedObject = null;
-            state.deselect_object();
-        }
-    }
-
-    $: {
-        state.set_show_collidable($editorSettings.showCollidable);
-    }
-
-    const changeBgColor = (
-        event: Event & { currentTarget: EventTarget & HTMLInputElement }
-    ) => {
-        let c = hexToRgb(event.currentTarget.value);
-        if (c != null) {
-            let { r, g, b } = c;
-            state.set_bg_color(r, g, b);
-        }
-    };
-    const changeGround1Color = (
-        event: Event & { currentTarget: EventTarget & HTMLInputElement }
-    ) => {
-        let c = hexToRgb(event.currentTarget.value);
-        if (c != null) {
-            let { r, g, b } = c;
-            state.set_ground1_color(r, g, b);
-        }
-    };
-    const changeGround2Color = (
-        event: Event & { currentTarget: EventTarget & HTMLInputElement }
-    ) => {
-        let c = hexToRgb(event.currentTarget.value);
-        if (c != null) {
-            let { r, g, b } = c;
-            state.set_ground2_color(r, g, b);
-        }
-    };
-
     setInterval(() => {
         state.get_chunks_to_sub(); // this just updates time of visible chiunks, doesnt subscriber
         handleUnsub(state);
     }, 50);
 
-    const placePreview = () => {
-        let [mx, my] = getWorldMousePos();
-
+    const placePreview = (mx: number, my: number) => {
         let obj = new wasm.GDObjectOpt(
-            $menuSettings.selectedObject,
+            $menuSelectedObject,
             Math.floor(mx / 30) * 30 +
                 15 +
-                objects[$menuSettings.selectedObject].placeOffsetX,
+                objects[$menuSelectedObject].placeOffsetX,
             Math.floor(my / 30) * 30 +
                 15 +
-                objects[$menuSettings.selectedObject].placeOffsetY,
+                objects[$menuSelectedObject].placeOffsetY,
             0,
             0,
             0,
@@ -153,26 +122,92 @@
             wasm.GDColor.white(),
             wasm.GDColor.white()
         );
-        $menuSettings.selectedMainColor = {
+        $menuMainColor = {
             hue: 0,
             x: 0,
             y: 0,
             opacity: 1,
             blending: false,
         };
-        $menuSettings.selectedDetailColor = {
+        $menuDetailColor = {
             hue: 0,
             x: 0,
             y: 0,
             opacity: 1,
             blending: false,
         };
-        $menuSettings.zLayer = wasm.ZLayer.B4;
-        $menuSettings.zOrder = 0;
-        // $menuSettings.zLayer = wasm.ZLayer.B1;
+        $menuZLayer = wasm.ZLayer.B4;
+        $menuZOrder = 0;
+        // $menuZLayer = wasm.ZLayer.B1;
 
         state.set_preview_object(obj);
         state.set_preview_visibility(true);
+    };
+
+    let selectDepth = 0;
+    const trySelectAt = (mx: number, my: number, hit: wasm.HitObjectInfo[]) => {
+        if (hit.length == 0) {
+            $selectedObject = null;
+            state.deselect_object();
+            return;
+        }
+        if (selectDepth >= hit.length) {
+            selectDepth = 0;
+        }
+        selectDepth += 1;
+        let selected = hit[selectDepth - 1];
+
+        state.set_selected_object(selected.key());
+
+        $selectedObject = {
+            id: selected.obj.id,
+            mainColor: selected.obj.main_color,
+            detailColor: selected.obj.detail_color,
+            namePlaced: null,
+            zLayer: selected.obj.z_layer,
+            zOrder: selected.obj.z_order,
+        };
+        getPlacedUsername(selected.key(), v => {
+            if ($selectedObject != null) {
+                $selectedObject.namePlaced = v;
+            }
+        });
+    };
+
+    const tryRunTriggers = (hit: wasm.HitObjectInfo[]): boolean => {
+        let triggersRun = false;
+        for (let i of hit) {
+            switch (i.obj.id) {
+                case BG_TRIGGER: {
+                    $colors.bg = {
+                        r: i.obj.main_color.r,
+                        g: i.obj.main_color.g,
+                        b: i.obj.main_color.b,
+                    };
+                    triggersRun = true;
+                    break;
+                }
+                case GROUND_TRIGGER: {
+                    $colors.ground1 = {
+                        r: i.obj.main_color.r,
+                        g: i.obj.main_color.g,
+                        b: i.obj.main_color.b,
+                    };
+                    triggersRun = true;
+                    break;
+                }
+                case GROUND_2_TRIGGER: {
+                    $colors.ground2 = {
+                        r: i.obj.main_color.r,
+                        g: i.obj.main_color.g,
+                        b: i.obj.main_color.b,
+                    };
+                    triggersRun = true;
+                    break;
+                }
+            }
+        }
+        return triggersRun;
     };
 
     onMount(() => {
@@ -200,30 +235,35 @@
         if (!dragging) return;
 
         if (!dragging.thresholdReached) {
-            if ($menuSettings.selectedGroup == TabGroup.Delete) {
-                let [mx, my] = getWorldMousePos();
+            let [mx, my] = getWorldMousePos();
+            let hit = state.objects_hit_at(mx, my, 0.0);
+            if ($menuTabGroup == TabGroup.Delete) {
+                // console.log(hit);
+                trySelectAt(mx, my, hit);
 
-                let selected = state.try_select_at(mx, my);
-                if (selected != undefined) {
-                    // console.log(selected.key());
-                    $selectedObject = {
-                        id: selected.id,
-                        mainColor: selected.main_color,
-                        detailColor: selected.detail_color,
-                        namePlaced: null,
-                        zLayer: selected.z_layer,
-                        zOrder: selected.z_order,
-                    };
-                    getPlacedUsername(selected.key(), v => {
-                        if ($selectedObject != null) {
-                            $selectedObject.namePlaced = v;
-                        }
-                    });
-                } else {
-                    $selectedObject = null;
-                }
+                // let selected = state.try_select_at(mx, my);
+                // if (selected != undefined) {
+                //     // console.log(selected.key());
+                //     $selectedObject = {
+                //         id: selected.id,
+                //         mainColor: selected.main_color,
+                //         detailColor: selected.detail_color,
+                //         namePlaced: null,
+                //         zLayer: selected.z_layer,
+                //         zOrder: selected.z_order,
+                //     };
+                //     getPlacedUsername(selected.key(), v => {
+                //         if ($selectedObject != null) {
+                //             $selectedObject.namePlaced = v;
+                //         }
+                //     });
+                // } else {
+                //     $selectedObject = null;
+                // }
             } else {
-                placePreview();
+                if (!tryRunTriggers(hit)) {
+                    placePreview(mx, my);
+                }
             }
         }
 
@@ -399,7 +439,7 @@
 />
 
 <div class="absolute flex flex-col">
-    <input
+    <!-- <input
         type="color"
         tabindex="-1"
         on:input={e => {
@@ -419,7 +459,7 @@
         on:input={e => {
             changeGround2Color(e);
         }}
-    />
+    /> -->
     <button
         ><img
             class="h-32"
@@ -438,11 +478,11 @@
 <div class="absolute w-full h-full overflow-visible pointer-events-none">
     {#if editWidgetVisible}
         <Widget position={editWidgetPos} scale={editWidgetScale}>
-            {#if $menuSettings.selectedWidget == WidgetType.Rotate}
+            {#if $menuOpenWidget == WidgetType.Rotate}
                 <Rotate bind:state />
-            {:else if $menuSettings.selectedWidget == WidgetType.Scale}
+            {:else if $menuOpenWidget == WidgetType.Scale}
                 <Scale bind:state />
-            {:else if $menuSettings.selectedWidget == WidgetType.Warp}
+            {:else if $menuOpenWidget == WidgetType.Warp}
                 <Warp bind:state widgetScale={editWidgetScale} />
             {/if}
         </Widget>

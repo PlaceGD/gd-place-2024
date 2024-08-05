@@ -7,7 +7,13 @@
 
     import { DEBUG } from "../../utils/debug";
 
-    import { TabGroup, menuSettings } from "../../stores";
+    import {
+        menuBuildTab,
+        menuMinimized,
+        menuSelectedObject,
+        menuTabGroup,
+        TabGroup,
+    } from "../../stores";
     import ObjectButtonImage from "./ObjectButtonImage.svelte";
     import { type ObjectInfo, objects as objectMap } from "shared-lib/gd";
     import { onMount } from "svelte";
@@ -24,14 +30,14 @@
 <div
     class={cx({
         "w-full h-full": true,
-        "!hidden": $menuSettings.selectedGroup != TabGroup.Build,
+        "!hidden": $menuTabGroup != TabGroup.Build,
     })}
 >
     {#each Object.entries(CATEGORY_ICONS) as [key, path]}
         <ul
             class={cx({
                 "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
-                "!hidden": $menuSettings.selectedBuildTab != key,
+                "!hidden": $menuBuildTab != key,
             })}
             tabindex="-1"
         >
@@ -39,7 +45,7 @@
                 <li class="relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10">
                     <button
                         class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
-                        tabindex={$menuSettings.isMinimized ? -1 : 0}
+                        tabindex={$menuMinimized ? -1 : 0}
                         on:click={() => {
                             if (id == 3854) {
                                 var audio = new Audio("fire.mp3");
@@ -47,7 +53,7 @@
 
                                 audio.play();
                             }
-                            $menuSettings.selectedObject = id;
+                            $menuSelectedObject = id;
                         }}
                     >
                         {#if $DEBUG}
@@ -67,7 +73,7 @@
                             <ObjectButtonImage {id} />
                         </div>
                     </button>
-                    {#if $menuSettings.selectedObject == id}
+                    {#if $menuSelectedObject == id}
                         <span class="absolute w-full h-full sliding-selector"
                         ></span>
                     {/if}

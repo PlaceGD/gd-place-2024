@@ -14,7 +14,7 @@
 
         elemBottom = elem.scrollHeight - elem.offsetHeight;
         scrollTop = elem.scrollTop;
-        if (scrollTop === elem.scrollHeight - elem.offsetHeight) {
+        if (scrollTop >= elemBottom - threshold) {
             reachedBottom = true;
         }
     };
@@ -26,7 +26,7 @@
     }
 
     onDestroy(() => {
-        elem?.removeEventListener("scroll", onScrollElem, { passive: true });
+        elem?.removeEventListener("scroll", onScrollElem);
     });
 
     $: topThreshold = scrollTop >= threshold ? 10 : 0;

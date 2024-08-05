@@ -16,7 +16,21 @@
     import Delete from "../icons/delete.svg";
     import Minimize from "../icons/caret.svg";
 
-    import { TabGroup, menuSettings } from "../stores";
+    import {
+        TabGroup,
+        editorSettings,
+        selectedObject,
+        colors as colorsStore,
+        menuSelectedObject,
+        menuMainColor,
+        menuDetailColor,
+        menuZLayer,
+        menuZOrder,
+        menuTabGroup,
+        menuMinimized,
+        menuBuildTab,
+        menuEditTab,
+    } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { useIsOverflowing } from "../utils/document";
     import { DEBUG } from "../utils/debug";
@@ -33,56 +47,67 @@
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
     import { fade, type TransitionConfig } from "svelte/transition";
+    import { COLOR_TRIGGERS } from "../../shared-lib/esm/nexusgen";
 
     export let state: wasm.State;
 
     const minimizeAnimDur = 0.5;
 
     $: {
+        if (COLOR_TRIGGERS.includes($menuSelectedObject)) {
+            $menuMainColor.blending = false;
+            $menuDetailColor.blending = false;
+            $menuMainColor.opacity = 1;
+            $menuDetailColor.opacity = 1;
+        }
+    }
+    $: {
         let [mr, mg, mb] =
-            colors.list[$menuSettings.selectedMainColor.hue].palette[
-                $menuSettings.selectedMainColor.y
-            ][$menuSettings.selectedMainColor.x];
-
-        let m_opacity = $menuSettings.selectedMainColor.opacity;
-        let m_blending = $menuSettings.selectedMainColor.blending;
-
-        let [dr, dg, db] =
-            colors.list[$menuSettings.selectedDetailColor.hue].palette[
-                $menuSettings.selectedDetailColor.y
-            ][$menuSettings.selectedDetailColor.x];
-
-        let d_opacity = $menuSettings.selectedDetailColor.opacity;
-        let d_blending = $menuSettings.selectedDetailColor.blending;
+            colors.list[$menuMainColor.hue].palette[$menuMainColor.y][
+                $menuMainColor.x
+            ];
 
         let obj = state.get_preview_object();
-
         obj.main_color = new wasm.GDColor(
             mr,
             mg,
             mb,
-            m_opacity * 255,
-            m_blending
+            $menuMainColor.opacity * 255,
+            $menuMainColor.blending
         );
+        state.set_preview_object(obj);
+    }
+    $: {
+        let [mr, mg, mb] =
+            colors.list[$menuDetailColor.hue].palette[$menuDetailColor.y][
+                $menuDetailColor.x
+            ];
+
+        let obj = state.get_preview_object();
         obj.detail_color = new wasm.GDColor(
-            dr,
-            dg,
-            db,
-            d_opacity * 255,
-            d_blending
+            mr,
+            mg,
+            mb,
+            $menuDetailColor.opacity * 255,
+            $menuDetailColor.blending
         );
-        obj.z_layer = $menuSettings.zLayer;
-        obj.z_order = $menuSettings.zOrder;
-
-        // console.log($menuSettings.selectedMainColor == $menuSettings.selectedDetailColor);
-
         state.set_preview_object(obj);
     }
     $: {
         let obj = state.get_preview_object();
-        let [oldPx, oldPy] = getTransformedPlaceOffset(obj);
+        obj.z_layer = $menuZLayer;
+        state.set_preview_object(obj);
+    }
+    $: {
+        let obj = state.get_preview_object();
+        obj.z_order = $menuZOrder;
+        state.set_preview_object(obj);
+    }
+    $: {
+        let obj = state.get_preview_object();
 
-        obj.id = $menuSettings.selectedObject;
+        let [oldPx, oldPy] = getTransformedPlaceOffset(obj);
+        obj.id = $menuSelectedObject;
         let [newPx, newPy] = getTransformedPlaceOffset(obj);
 
         obj.x = obj.x + oldPx - newPx;
@@ -90,20 +115,49 @@
 
         state.set_preview_object(obj);
     }
+    $: {
+        if ($menuTabGroup == TabGroup.Delete) {
+            state.set_preview_visibility(false);
+        } else {
+            $selectedObject = null;
+            state.deselect_object();
+        }
+    }
 
-    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
+    $: canSelectByTab = $menuMinimized ? -1 : 0;
+
+    const handleEditorSettings = (settings: typeof $editorSettings) => {
+        state.set_show_collidable(settings.showCollidable);
+        state.set_hide_triggers(settings.hideTriggers);
+    };
+    $: handleEditorSettings($editorSettings);
+
+    const handleColorStore = (settings: typeof $colorsStore) => {
+        state.set_bg_color(settings.bg.r, settings.bg.g, settings.bg.b);
+        state.set_ground1_color(
+            settings.ground1.r,
+            settings.ground1.g,
+            settings.ground1.b
+        );
+        state.set_ground2_color(
+            settings.ground2.r,
+            settings.ground2.g,
+            settings.ground2.b
+        );
+    };
+    $: handleColorStore($colorsStore);
 </script>
 
 <div
     class="absolute flex flex-col justify-end w-full pointer-events-none place-menu"
-    data-minimised={+$menuSettings.isMinimized}
+    data-minimised={+$menuMinimized}
 >
     <div
         class="flex justify-end gap-2 text-white sm:flex-col pointer-events-all"
     >
         <div
             class="grid flex-1 gap-2 menu-grid-container"
-            data-minimised={+$menuSettings.isMinimized}
+            data-minimised={+$menuMinimized}
         >
             <div
                 class="flex flex-col items-center minimize menu-panel justify-evenly focus:outline focus:outline-1 focus:outline-offset-1"
@@ -111,14 +165,14 @@
                 <button
                     class="absolute w-full p-3"
                     on:click={() => {
-                        $menuSettings.isMinimized = !$menuSettings.isMinimized;
+                        $menuMinimized = !$menuMinimized;
                     }}
                     aria-label="Minimize Menu"
                 >
                     <Minimize
                         class={cx({
                             "cursor-pointer": true,
-                            "rotate-180": $menuSettings.isMinimized,
+                            "rotate-180": $menuMinimized,
                         })}
                     ></Minimize>
                 </button>
@@ -132,9 +186,9 @@
                         if (!e || !e.target) return;
                         e.currentTarget.scrollLeft += e.deltaY / 10;
                     }}
-                    data-minimised={+$menuSettings.isMinimized}
+                    data-minimised={+$menuMinimized}
                 >
-                    {#if $menuSettings.selectedGroup == TabGroup.Build}
+                    {#if $menuTabGroup == TabGroup.Build}
                         {#each Object.entries(CATEGORY_ICONS) as [key, path]}
                             <li
                                 class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px] xs:min-w-[52px]"
@@ -142,7 +196,8 @@
                                 <button
                                     class="z-20 w-full p-1 xs:p-1.5 h-full flex-center"
                                     on:click={() => {
-                                        $menuSettings.selectedBuildTab = key;
+                                        // @ts-ignore
+                                        $menuBuildTab = key;
                                     }}
                                     tabindex={canSelectByTab}
                                     aria-label={key}
@@ -153,12 +208,12 @@
                                         class="object-contain w-auto h-auto max-w-full max-h-full"
                                     ></Image>
                                 </button>
-                                {#if $menuSettings.selectedBuildTab == key}
+                                {#if $menuBuildTab == key}
                                     <div class="sliding-selector"></div>
                                 {/if}
                             </li>
                         {/each}
-                    {:else if $menuSettings.selectedGroup == TabGroup.Edit}
+                    {:else if $menuTabGroup == TabGroup.Edit}
                         {#each Object.values(EditTab) as value}
                             <li
                                 class="relative flex-1 h-full cursor-pointer flex-center"
@@ -166,7 +221,7 @@
                                 <button
                                     class="w-full h-full px-4 cursor-pointer xs:px-2 flex-center"
                                     on:click={() => {
-                                        $menuSettings.selectedEditTab = value;
+                                        $menuEditTab = value;
                                     }}
                                     tabindex={canSelectByTab}
                                     aria-label={value}
@@ -177,7 +232,7 @@
                                         {value}
                                     </h1>
                                 </button>
-                                {#if $menuSettings.selectedEditTab == value}
+                                {#if $menuEditTab == value}
                                     <div class="sliding-selector"></div>
                                 {/if}
                             </li>
@@ -187,7 +242,7 @@
 
                 <div
                     class="absolute flex justify-around w-24 h-full gap-3 p-2.5 tab-mini-icons"
-                    data-minimised={+$menuSettings.isMinimized}
+                    data-minimised={+$menuMinimized}
                 >
                     <Build></Build>
                     <Delete></Delete>
@@ -204,7 +259,7 @@
                         <button
                             class="w-full cursor-pointer"
                             on:click={() => {
-                                $menuSettings.selectedGroup = TabGroup.Build;
+                                $menuTabGroup = TabGroup.Build;
                             }}
                             tabindex={canSelectByTab}
                             aria-label="Build Tab"
@@ -212,8 +267,7 @@
                             <Build
                                 class={cx({
                                     "opacity-30":
-                                        $menuSettings.selectedGroup !=
-                                        TabGroup.Build,
+                                        $menuTabGroup != TabGroup.Build,
                                 })}
                             ></Build>
                         </button>
@@ -222,7 +276,7 @@
                         <button
                             class="w-full cursor-pointer"
                             on:click={() => {
-                                $menuSettings.selectedGroup = TabGroup.Edit;
+                                $menuTabGroup = TabGroup.Edit;
                             }}
                             tabindex={canSelectByTab}
                             aria-label="Edit Tab"
@@ -230,8 +284,7 @@
                             <Edit
                                 class={cx({
                                     "opacity-30":
-                                        $menuSettings.selectedGroup !=
-                                        TabGroup.Edit,
+                                        $menuTabGroup != TabGroup.Edit,
                                 })}
                             ></Edit>
                         </button>
@@ -240,7 +293,7 @@
                         <button
                             class="w-full cursor-pointer"
                             on:click={() => {
-                                $menuSettings.selectedGroup = TabGroup.Delete;
+                                $menuTabGroup = TabGroup.Delete;
                             }}
                             tabindex={canSelectByTab}
                             aria-label="Delete Tab"
@@ -248,8 +301,7 @@
                             <Delete
                                 class={cx({
                                     "opacity-30":
-                                        $menuSettings.selectedGroup !=
-                                        TabGroup.Delete,
+                                        $menuTabGroup != TabGroup.Delete,
                                 })}
                             ></Delete>
                         </button>
@@ -267,17 +319,17 @@
                         -->
                 <ObjectsTab></ObjectsTab>
                 <!-- EDIT TAB TRANSFORM + LAYERS -->
-                {#if $menuSettings.selectedGroup == TabGroup.Edit}
-                    {#if $menuSettings.selectedEditTab == EditTab.Transform}
+                {#if $menuTabGroup == TabGroup.Edit}
+                    {#if $menuEditTab == EditTab.Transform}
                         <TransformTab bind:state></TransformTab>
-                    {:else if $menuSettings.selectedEditTab == EditTab.Layers}
+                    {:else if $menuEditTab == EditTab.Layers}
                         <LayersTab></LayersTab>
-                    {:else if $menuSettings.selectedEditTab == EditTab.Colors}
+                    {:else if $menuEditTab == EditTab.Colors}
                         <ColorsTab></ColorsTab>
                     {/if}
                 {/if}
 
-                {#if $menuSettings.selectedGroup == TabGroup.Delete}
+                {#if $menuTabGroup == TabGroup.Delete}
                     <div
                         class="w-full h-full p-4 text-4xl text-center md:text-3x sm:text-2x xs:text-xl flex-center font-pusab text-stroke"
                     >
@@ -290,16 +342,14 @@
         <button
             class={cx({
                 "self-end overflow-hidden bounce-active pd-button": true,
-                "place-bttn-place":
-                    $menuSettings.selectedGroup != TabGroup.Delete,
-                "place-bttn-delete":
-                    $menuSettings.selectedGroup == TabGroup.Delete,
+                "place-bttn-place": $menuTabGroup != TabGroup.Delete,
+                "place-bttn-delete": $menuTabGroup == TabGroup.Delete,
             })}
             tabindex={canSelectByTab}
-            aria-label={`${$menuSettings.selectedGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
-            data-minimised={+$menuSettings.isMinimized}
+            aria-label={`${$menuTabGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
+            data-minimised={+$menuMinimized}
             on:click={() => {
-                if ($menuSettings.selectedGroup != TabGroup.Delete) {
+                if ($menuTabGroup != TabGroup.Delete) {
                     addObject(state.get_preview_object());
                     state.set_preview_visibility(false);
                 } else {
@@ -315,7 +365,7 @@
                 <h1
                     class="w-full h-full overflow-hidden text-5xl md:text-4xl sm:text-4xl font-pusab text-stroke flex-center"
                 >
-                    {#if $menuSettings.selectedGroup != TabGroup.Delete}
+                    {#if $menuTabGroup != TabGroup.Delete}
                         Place
                     {:else}
                         Delete

@@ -6,7 +6,9 @@ import {
     createIndexedDBStorage,
     createLocalStorage,
     persist,
+    type PersistentStore,
 } from "@macfja/svelte-persistent-store";
+import type { ObjectCategory } from "shared-lib/gd";
 
 export enum TabGroup {
     Build,
@@ -14,29 +16,73 @@ export enum TabGroup {
     Delete,
 }
 
-export const menuSettings = persist(
-    writable({
-        isMinimized: false,
+const persistLocalWritable = <T>(v: T, key: string) =>
+    persist(writable(v), createLocalStorage(), key);
 
-        selectedGroup: TabGroup.Build,
-        selectedEditTab: EditTab.Transform,
-        selectedBuildTab: "Blocks",
-        selectedObject: 1,
-        selectedMainColor: { hue: 0, x: 0, y: 0, opacity: 1, blending: false },
-        selectedDetailColor: {
-            hue: 0,
-            x: 0,
-            y: 0,
-            opacity: 1,
-            blending: false,
-        },
-        zLayer: ZLayer.B1,
-        zOrder: 0,
-        selectedWidget: WidgetType.None,
-    }),
-    createLocalStorage(),
-    "menuSettings"
+export const menuMinimized = persistLocalWritable(false, "menuMinimized");
+export const menuTabGroup = persistLocalWritable(
+    TabGroup.Build,
+    "menuTabGroup"
 );
+export const menuEditTab = persistLocalWritable(
+    EditTab.Transform,
+    "menuEditTab"
+);
+export const menuBuildTab: PersistentStore<ObjectCategory> =
+    persistLocalWritable("Blocks", "menuBuildTab");
+export const menuSelectedObject = persistLocalWritable(1, "menuSelectedObject");
+export const menuMainColor = persistLocalWritable(
+    { hue: 0, x: 0, y: 0, opacity: 1, blending: false },
+    "menuMainColor"
+);
+export const menuDetailColor = persistLocalWritable(
+    {
+        hue: 0,
+        x: 0,
+        y: 0,
+        opacity: 1,
+        blending: false,
+    },
+    "menuDetailColor"
+);
+export const menuZLayer = persistLocalWritable(ZLayer.B1, "menuZLayer");
+export const menuZOrder = persistLocalWritable(0, "menuZOrder");
+export const menuOpenWidget = persistLocalWritable(
+    WidgetType.None,
+    "menuOpenWidget"
+);
+
+// export const menuSettings = persist(
+//     writable({
+//         isMinimized: false,
+
+//         selectedGroup: TabGroup.Build,
+//         selectedEditTab: EditTab.Transform,
+//         selectedBuildTab: "Blocks",
+//         selectedObject: 1,
+//         selectedMainColor: { hue: 0, x: 0, y: 0, opacity: 1, blending: false },
+//         selectedDetailColor: {
+//             hue: 0,
+//             x: 0,
+//             y: 0,
+//             opacity: 1,
+//             blending: false,
+//         },
+//         zLayer: ZLayer.B1,
+//         zOrder: 0,
+//         selectedWidget: WidgetType.None,
+//     }),
+//     createLocalStorage(),
+//     "menuSettings"
+// );
+
+export const peepo = writable<{
+    a: number;
+    b: number;
+}>({
+    a: 0,
+    b: 69,
+});
 
 export const editorData = persist(
     writable({
@@ -51,6 +97,7 @@ export const editorData = persist(
 export const editorSettings = persist(
     writable({
         showCollidable: false,
+        hideTriggers: true,
     }),
     createLocalStorage(),
     "editorSettings"
@@ -135,3 +182,13 @@ export const selectedObject = writable<{
     zLayer: ZLayer;
     zOrder: number;
 } | null>(null);
+
+export const colors = persist(
+    writable({
+        bg: { r: 40, g: 125, b: 255 },
+        ground1: { r: 40, g: 125, b: 255 },
+        ground2: { r: 127, g: 178, b: 255 },
+    }),
+    createLocalStorage(),
+    "colors"
+);

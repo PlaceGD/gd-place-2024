@@ -14,6 +14,9 @@ pub mod special_ids {
     pub const BG_TRIGGER: u16 = 4550;
     pub const GROUND_TRIGGER: u16 = 4551;
     pub const GROUND_2_TRIGGER: u16 = 4552;
+
+    pub const TRIGGERS: &[u16] = &[BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER];
+    pub const COLOR_TRIGGERS: &[u16] = &[BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER];
 }
 
 pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {

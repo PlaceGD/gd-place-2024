@@ -11,6 +11,7 @@
         "wasm:build": "cd wasm-lib && npm run random-uuid --silent > ../public/wasm.txt && wasm-pack build --reference-types --weak-refs --target web && cd ..",
         "shared:build": "cd shared-lib && npm run build && cd ..",
         "nexus:gen": "cd the-nexus && cargo test --release generate_shid && cd ..",
+        "nexus:gen_no_sheet": "cd the-nexus && cargo test --release generate_shid_no_sheet && cd ..",
         "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib",
         "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\""
     },

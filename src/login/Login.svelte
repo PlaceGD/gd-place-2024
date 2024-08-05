@@ -49,6 +49,7 @@
 
     let isInProgress = false;
     let isOpen = false;
+    $: canClose = currentPage == Page.LOGIN_METHOD ? !isInProgress : false;
 
     let hasScrolledToBottomOfTos = false;
 
@@ -145,7 +146,7 @@
 <ScreenModal
     label="Login or Sign Up Modal"
     state={isInProgress ? "loading" : "default"}
-    canClose={!isInProgress && currentPage !== Page.SHOW_TOS}
+    {canClose}
     {isOpen}
     hasCloseButton={true}
     on:close={() => ($openMenu = null)}
@@ -208,7 +209,9 @@
                                 class="w-11 xs:w-10 aspect-square"
                                 tabindex="-1"
                             />
-                            <p>{twitter ? "Twitter" : "X"}</p>
+                            <p>
+                                {twitter ? "Twitter" : "the everything app"}
+                            </p>
                         </span>
                     </Button>
                 </li>
@@ -223,7 +226,7 @@
                         currentPage = Page.SHOW_TOS;
                     }}
                 >
-                    TOS
+                    rules
                 </button>
                 !
             </p>
@@ -236,7 +239,7 @@
         >
             <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
                 <section class="text">
-                    <h1><u><strong>Terms of Service</strong></u></h1>
+                    <h1><u><strong>rules</strong></u></h1>
 
                     <h2>Notice</h2>
 
@@ -275,8 +278,8 @@
 
                     <p>
                         Users can sign up using one of three external platforms.
-                        By signing up, users also agree to the Terms of Service
-                        of those platforms.
+                        By signing up, users also agree to the rules of those
+                        platforms.
                     </p>
 
                     <h2>Ownership of User Content</h2>
@@ -433,7 +436,7 @@
                             currentPage = Page.SHOW_TOS;
                         }}
                     >
-                        Terms of Service
+                        rules
                     </button>
                 </p>
             </div>

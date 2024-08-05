@@ -30,6 +30,11 @@
             "import": "./esm/gd.js",
             "types": "./esm/gd.d.ts"
         },
+        "./nexusgen": {
+            "require": "./cjs/nexusgen.js",
+            "import": "./esm/nexusgen.js",
+            "types": "./esm/nexusgen.d.ts"
+        },
         "./cloud_functions": {
             "require": "./cjs/cloud_functions.js",
             "import": "./esm/cloud_functions.js",

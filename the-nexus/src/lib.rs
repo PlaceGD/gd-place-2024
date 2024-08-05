@@ -34,6 +34,15 @@ use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
 
 #[test]
 fn generate_shid() {
+    generate_shide(true)
+}
+
+#[test]
+fn generate_shid_no_sheet() {
+    generate_shide(false)
+}
+
+fn generate_shide(sheet: bool) {
     use std::collections::HashMap;
 
     use crate::gen::sprites::color_bleed;
@@ -42,16 +51,18 @@ fn generate_shid() {
     use itertools::Itertools;
     use serde_json::json;
     use std::fs;
+    if sheet {
+        let (mut img, data) = make_spritesheet();
+        color_bleed(&mut img);
 
-    let (mut img, data) = make_spritesheet();
-    color_bleed(&mut img);
-
-    img.save("../public/assets/spritesheet.png").unwrap();
-    fs::write(
-        "../shared-lib/src/gd/spritesheet.json",
-        serde_json::to_string(&json!(data)).unwrap(),
-    )
-    .unwrap();
+        img.save("../public/assets/spritesheet.png").unwrap();
+        fs::write(
+            "../shared-lib/src/gd/spritesheet.json",
+            serde_json::to_string(&json!(data)).unwrap(),
+        )
+        .unwrap();
+        fs::write("../wasm-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
+    }
 
     fs::write(
         "../shared-lib/src/gd/objects.json",
@@ -72,6 +83,23 @@ fn generate_shid() {
         serde_json::to_string(&get_available_colors()).unwrap(),
     )
     .unwrap();
+    fs::write(
+        "../shared-lib/src/nexusgen.ts",
+        format!(
+            "
+export const BG_TRIGGER: number = {};
+export const GROUND_TRIGGER: number = {};
+export const GROUND_2_TRIGGER: number = {};
 
-    fs::write("../wasm-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
+export const TRIGGERS: number[] = {:?};
+export const COLOR_TRIGGERS: number[] = {:?};
+    ",
+            special_ids::BG_TRIGGER,
+            special_ids::GROUND_TRIGGER,
+            special_ids::GROUND_2_TRIGGER,
+            special_ids::TRIGGERS,
+            special_ids::COLOR_TRIGGERS
+        ),
+    )
+    .unwrap();
 }

@@ -43,6 +43,7 @@ impl GDColor {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[wasm_bindgen(js_name = "GDObjectUnopt")]
 pub struct GDObject {
     pub id: u16,
     pub x: f32,

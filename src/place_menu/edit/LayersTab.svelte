@@ -6,7 +6,7 @@
     import DarkInput from "../../components/DarkInput.svelte";
     import SlidingSelector from "../../components/SlidingSelector.svelte";
 
-    import { menuSettings } from "../../stores";
+    import { menuMinimized, menuZLayer, menuZOrder } from "../../stores";
     import { clamp } from "shared-lib/util";
 
     import bottomIconUrl from "../assets/layer_tab/bottom.svg?url";
@@ -83,11 +83,11 @@
         return -50 <= n && n <= 50;
     };
 
-    $: $menuSettings.zOrder = clamp($menuSettings.zOrder, -50, 50);
+    $: $menuZOrder = clamp($menuZOrder, -50, 50);
 
     // clamp layer count
 
-    $: canSelectByTab = $menuSettings.isMinimized ? -1 : 0;
+    $: canSelectByTab = $menuMinimized ? -1 : 0;
 </script>
 
 <div
@@ -99,10 +99,7 @@
         >
             <button
                 class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
-                on:click={() =>
-                    ($menuSettings.zLayer = equivalentBottom(
-                        $menuSettings.zLayer
-                    ))}
+                on:click={() => ($menuZLayer = equivalentBottom($menuZLayer))}
                 tabindex={canSelectByTab}
                 aria-label="Layer Below Player"
             >
@@ -113,7 +110,7 @@
                     skeleton
                 ></Image>
             </button>
-            {#if isBottom($menuSettings.zLayer)}
+            {#if isBottom($menuZLayer)}
                 <div class="sliding-selector"></div>
             {/if}
         </li>
@@ -122,10 +119,7 @@
         >
             <button
                 class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
-                on:click={() =>
-                    ($menuSettings.zLayer = equivalentTop(
-                        $menuSettings.zLayer
-                    ))}
+                on:click={() => ($menuZLayer = equivalentTop($menuZLayer))}
                 tabindex={canSelectByTab}
                 aria-label="Layer Above Player"
             >
@@ -136,7 +130,7 @@
                     skeleton
                 ></Image>
             </button>
-            {#if !isBottom($menuSettings.zLayer)}
+            {#if !isBottom($menuZLayer)}
                 <div class="sliding-selector"></div>
             {/if}
         </li>
@@ -144,27 +138,24 @@
 
     <div class="flex flex-col w-full h-full gap-2 content">
         <ul class="flex h-full ids">
-            {#each Array(layerCount(isBottom($menuSettings.zLayer))).fill(0) as _, i}
+            {#each Array(layerCount(isBottom($menuZLayer))).fill(0) as _, i}
                 <li
                     class="relative flex-1 w-full h-full flex-center font-pusab"
                 >
                     <button
                         class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
                         on:click={() =>
-                            ($menuSettings.zLayer = layerFrom(
-                                isBottom($menuSettings.zLayer),
-                                i
-                            ))}
+                            ($menuZLayer = layerFrom(isBottom($menuZLayer), i))}
                         tabindex={canSelectByTab}
-                        aria-label={`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
+                        aria-label={`${isBottom($menuZLayer) ? "B" : "T"}${i + 1}`}
                     >
                         <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
 
                         <h2 class="opacity-50 font-pusab xs:text-sm">
-                            {`${isBottom($menuSettings.zLayer) ? "B" : "T"}${i + 1}`}
+                            {`${isBottom($menuZLayer) ? "B" : "T"}${i + 1}`}
                         </h2>
                     </button>
-                    {#if layerIdx($menuSettings.zLayer) == i + 1}
+                    {#if layerIdx($menuZLayer) == i + 1}
                         <div class="sliding-selector"></div>
                     {/if}
                 </li>
@@ -176,7 +167,7 @@
                 <button
                     class="h-full flex-center"
                     on:click={() => {
-                        $menuSettings.zOrder -= 1;
+                        $menuZOrder -= 1;
                     }}
                     tabindex={canSelectByTab}
                     aria-label="Decrease Z-Index"
@@ -194,12 +185,12 @@
                     hardValidInput={HARD_VALID_INPUT}
                     softValidInput={SOFT_VALID_INPUT}
                     aria-label="Scale input"
-                    bind:value={$menuSettings.zOrder}
+                    bind:value={$menuZOrder}
                 />
                 <button
                     class="h-full flex-center"
                     on:click={() => {
-                        $menuSettings.zOrder += 1;
+                        $menuZOrder += 1;
                     }}
                     tabindex={canSelectByTab}
                     aria-label="Increase Z-Index"

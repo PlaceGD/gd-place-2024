@@ -18,7 +18,7 @@
         menuMinimized,
         menuSelectedObject,
     } from "../../stores";
-    import { COLOR_TRIGGERS } from "../../../shared-lib/esm/nexusgen";
+    import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
 
     enum ColorTab {
         Main,

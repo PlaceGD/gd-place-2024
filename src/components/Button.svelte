@@ -1,8 +1,8 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import { createEventDispatcher } from "svelte";
-    import Check from "../icons/check.svg";
-    import Cross from "../icons/cross.svg";
+    import { IconCheck as Check } from "@tabler/icons-svelte";
+    import { IconX as Cross } from "@tabler/icons-svelte";
 
     export let type: "accept" | "decline" | "white" | "plain" = "white";
     export let iconClass = "";
@@ -26,9 +26,13 @@
     {...restProps}
 >
     {#if type == "accept"}
-        <Check class="text-[#47ff47] h-full p-1 {iconClass}" />
+        <Check
+            class="stroke-1 text-[#47ff47] xs:w-9 xs:h-9 w-10 h-10 p-1 {iconClass}"
+        />
     {:else if type == "decline"}
-        <Cross class="text-[#ff4747] h-full p-1 {iconClass}" />
+        <Cross
+            class="stroke-1 text-[#ff4747] xs:w-9 xs:h-9 w-10 h-10 p-1 {iconClass}"
+        />
     {/if}
 
     <slot />

@@ -1,4 +1,5 @@
-import { database } from "firebase-admin";
+import pkg from "firebase-admin";
+const { database } = pkg;
 import { HttpsError, onCall, Request } from "firebase-functions/v2/https";
 import { onMessagePublished } from "firebase-functions/v2/pubsub";
 import { REPORT_COOLDOWN_SECONDS, VALID_USERNAME } from "shared-lib/user";

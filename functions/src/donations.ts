@@ -1,3 +1,5 @@
+import pkg from "firebase-admin";
+const { database } = pkg;
 import { HttpsError, onRequest } from "firebase-functions/v2/https";
 import { LogGroup } from "./utils/logger";
 import {
@@ -5,7 +7,6 @@ import {
     MAX_GRADIENT_STOPS,
     VALID_KOFI_TRANSACTION_ID,
 } from "shared-lib/kofi";
-import { database } from "firebase-admin";
 import { ref } from "./utils/database";
 import { onCallAuthLogger } from "./utils/on_call";
 import { GradientReq, KofiReq } from "shared-lib/cloud_functions";

@@ -9,10 +9,10 @@
     import Image from "../components/Image.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
 
-    import Build from "../icons/build.svg";
-    import Edit from "../icons/edit.svg";
-    import Delete from "../icons/delete.svg";
-    import Minimize from "../icons/caret.svg";
+    import { IconBox as Build } from "@tabler/icons-svelte";
+    import { IconAdjustmentsHorizontal as Edit } from "@tabler/icons-svelte";
+    import { IconTrash as Delete } from "@tabler/icons-svelte";
+    import { IconCaretDownFilled as Minimize } from "@tabler/icons-svelte";
 
     import {
         TabGroup,
@@ -45,7 +45,7 @@
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
     import { fade, type TransitionConfig } from "svelte/transition";
-    import { COLOR_TRIGGERS } from "../../shared-lib/esm/nexusgen";
+    import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
 
     export let state: wasm.State;
 
@@ -243,8 +243,8 @@
                     class="absolute flex justify-around w-24 h-full gap-3 p-2.5 tab-mini-icons"
                     data-minimised={+$menuMinimized}
                 >
-                    <Build></Build>
-                    <Delete></Delete>
+                    <Build class="stroke-1 w-full h-full"></Build>
+                    <Delete class="stroke-1 w-full h-full"></Delete>
                 </div>
             </div>
 
@@ -265,6 +265,7 @@
                         >
                             <Build
                                 class={cx({
+                                    "stroke-1 w-full h-full": true,
                                     "opacity-30":
                                         $menuTabGroup != TabGroup.Build,
                                 })}
@@ -282,6 +283,7 @@
                         >
                             <Edit
                                 class={cx({
+                                    "stroke-1 w-full h-full": true,
                                     "opacity-30":
                                         $menuTabGroup != TabGroup.Edit,
                                 })}
@@ -299,6 +301,7 @@
                         >
                             <Delete
                                 class={cx({
+                                    "stroke-1 w-full h-full": true,
                                     "opacity-30":
                                         $menuTabGroup != TabGroup.Delete,
                                 })}

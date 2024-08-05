@@ -2,56 +2,53 @@
     "name": "shared-lib",
     "version": "1.0.0",
     "description": "",
-    "types": "esm/index.d.ts",
     "type": "module",
     "exports": {
         "./util": {
-            "require": "./cjs/util.js",
-            "import": "./esm/util.js",
-            "types": "./esm/util.d.ts"
+            "import": "./dist/util.js",
+            "types": "./dist/util.d.ts"
         },
         "./base_util": {
-            "require": "./cjs/base_util.js",
-            "import": "./esm/base_util.js",
-            "types": "./esm/base_util.d.ts"
+            "import": "./dist/base_util.js",
+            "types": "./dist/base_util.d.ts"
         },
         "./database": {
-            "require": "./cjs/database.js",
-            "import": "./esm/database.js",
-            "types": "./esm/database.d.ts"
+            "import": "./dist/database.js",
+            "types": "./dist/database.d.ts"
         },
         "./user": {
-            "require": "./cjs/user.js",
-            "import": "./esm/user.js",
-            "types": "./esm/user.d.ts"
+            "import": "./dist/user.js",
+            "types": "./dist/user.d.ts"
         },
         "./gd": {
-            "require": "./cjs/gd.js",
-            "import": "./esm/gd.js",
-            "types": "./esm/gd.d.ts"
+            "import": "./dist/gd.js",
+            "types": "./dist/gd.d.ts"
         },
         "./nexusgen": {
-            "require": "./cjs/nexusgen.js",
-            "import": "./esm/nexusgen.js",
-            "types": "./esm/nexusgen.d.ts"
+            "import": "./dist/nexusgen.js",
+            "types": "./dist/nexusgen.d.ts"
         },
         "./cloud_functions": {
-            "require": "./cjs/cloud_functions.js",
-            "import": "./esm/cloud_functions.js",
-            "types": "./esm/cloud_functions.d.ts"
+            "import": "./dist/cloud_functions.js",
+            "types": "./dist/cloud_functions.d.ts"
         },
         "./kofi": {
-            "require": "./cjs/kofi.js",
-            "import": "./esm/kofi.js",
-            "types": "./esm/kofi.d.ts"
+            "import": "./dist/kofi.js",
+            "types": "./dist/kofi.d.ts"
         },
         ".": {
-            "require": "./cjs/index.js",
-            "import": "./esm/index.js",
-            "types": "./esm/index.d.ts"
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
         }
     },
     "scripts": {
-        "build": "tsc --module commonjs --outDir cjs/ && tsc --module esnext --outDir esm/"
+        "build": "rollup --config"
+    },
+    "devDependencies": {
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^11.1.6",
+        "glob": "^11.0.0",
+        "rollup": "^4.20.0"
     }
 }

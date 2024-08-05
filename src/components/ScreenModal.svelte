@@ -1,7 +1,7 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import ToastContainer from "./ToastContainer.svelte";
-    import Cross from "../icons/cross.svg";
+    import { IconX as Cross } from "@tabler/icons-svelte";
     import Loading from "../components/Loading.svelte";
     import { createEventDispatcher, onMount } from "svelte";
 
@@ -71,7 +71,7 @@
                         isOpen = false;
                     }}
                 >
-                    <Cross alt="Close" class="w-full h-full"></Cross>
+                    <Cross aria-label="Close" class="w-full h-full stroke-1" />
                 </button>
             </div>
         </div>

@@ -1,4 +1,5 @@
-import { database } from "firebase-admin";
+import pkg from "firebase-admin";
+const { database } = pkg;
 import { decodeString } from "shared-lib/base_util";
 import {
     objects,

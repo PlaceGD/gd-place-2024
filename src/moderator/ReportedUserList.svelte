@@ -23,7 +23,7 @@
     import Button from "../components/Button.svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import { reportedUserOperation } from "../firebase/cloud_functions";
-    import Back from "../icons/back.svg";
+    import { IconChevronLeft as Back } from "@tabler/icons-svelte";
     import { moveCamera } from "../level_view/view_controls";
     import * as wasm from "wasm-lib";
 
@@ -170,7 +170,8 @@
                                             );
                                         }}
                                     >
-                                        <Back class="rotate-180"></Back>
+                                        <Back class="rotate-180 stroke-1"
+                                        ></Back>
                                     </Button>
                                 </div>
                             </div>

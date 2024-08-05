@@ -1,13 +1,15 @@
 {
     "compilerOptions": {
-        "module": "nodenext",
+        "module": "ESNext",
         "skipLibCheck": true,
-        "outDir": "lib",
         "sourceMap": true,
-        "target": "es2017",
+        "target": "ESNext",
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "moduleResolution": "nodenext",
+        "moduleResolution": "node",
+        "rootDir": "./src",
+        "outDir": "dist",
+        "baseUrl": "./",
 
         "strict": true /* Enable all strict type-checking options. */,
         "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,

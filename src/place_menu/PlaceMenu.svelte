@@ -45,7 +45,7 @@
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
     import { fade, type TransitionConfig } from "svelte/transition";
-    import { COLOR_TRIGGERS } from "../../shared-lib/esm/nexusgen";
+    import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
 
     export let state: wasm.State;
 

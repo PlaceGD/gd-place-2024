@@ -6,39 +6,39 @@
     "exports": {
         "./util": {
             "import": "./dist/util.js",
-            "types": "./dist/types/util.d.ts"
+            "types": "./dist/util.d.ts"
         },
         "./base_util": {
             "import": "./dist/base_util.js",
-            "types": "./dist/types/base_util.d.ts"
+            "types": "./dist/base_util.d.ts"
         },
         "./database": {
             "import": "./dist/database.js",
-            "types": "./dist/types/database.d.ts"
+            "types": "./dist/database.d.ts"
         },
         "./user": {
             "import": "./dist/user.js",
-            "types": "./dist/types/user.d.ts"
+            "types": "./dist/user.d.ts"
         },
         "./gd": {
             "import": "./dist/gd.js",
-            "types": "./dist/types/gd.d.ts"
+            "types": "./dist/gd.d.ts"
         },
         "./nexusgen": {
             "import": "./dist/nexusgen.js",
-            "types": "./dist/types/nexusgen.d.ts"
+            "types": "./dist/nexusgen.d.ts"
         },
         "./cloud_functions": {
             "import": "./dist/cloud_functions.js",
-            "types": "./dist/types/cloud_functions.d.ts"
+            "types": "./dist/cloud_functions.d.ts"
         },
         "./kofi": {
             "import": "./dist/kofi.js",
-            "types": "./dist/types/kofi.d.ts"
+            "types": "./dist/kofi.d.ts"
         },
         ".": {
             "import": "./dist/index.js",
-            "types": "./dist/types/index.d.ts"
+            "types": "./dist/index.d.ts"
         }
     },
     "scripts": {

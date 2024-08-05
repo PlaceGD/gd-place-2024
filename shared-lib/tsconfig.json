@@ -8,14 +8,14 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "rootDir": "./src",
-        "outDir": "dist",
+        "outDir": "./dist",
         // "composite": true,
         "baseUrl": "./",
         "resolveJsonModule": true,
 
         "declaration": true,
         "emitDeclarationOnly": true,
-        "declarationDir": "./dist/types",
+        "declarationDir": "./dist",
 
         "strict": true /* Enable all strict type-checking options. */,
         "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,

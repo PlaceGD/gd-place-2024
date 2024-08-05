@@ -9,7 +9,6 @@
     import ToggleSwitch from "../../components/ToggleSwitch.svelte";
     import HueSlider from "../../components/HueSlider.svelte";
     import PaletteGrid from "../../components/PaletteGrid.svelte";
-    import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { colors } from "shared-lib/gd";
 

@@ -21,8 +21,9 @@
                 canvas,
                 $spritesheetProgress.arrayBuffer!
             );
+
             // loadState(state);
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(
                 `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`
@@ -39,7 +40,7 @@
                 prevTime = time;
 
                 // runCallbacks();
-            } catch (e: any) {
+            } catch (e: unknown) {
                 console.error(e, "(Failed in `state.render`)");
                 Toast.showErrorToast(
                     `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`

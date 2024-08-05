@@ -7,9 +7,7 @@
     import { CATEGORY_ICONS } from "../gd/object";
 
     import Image from "../components/Image.svelte";
-    import Animate from "../components/Animate.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import SlidingSelector from "../components/SlidingSelector.svelte";
 
     import Build from "../icons/build.svg";
     import Edit from "../icons/edit.svg";

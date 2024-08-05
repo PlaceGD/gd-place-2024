@@ -1,12 +1,6 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import { onMount } from "svelte";
-    import {
-        AnimateSharedLayout,
-        Motion,
-        useAnimation,
-        useReducedMotion,
-    } from "svelte-motion";
     import { clamp } from "shared-lib/util";
     import { colors } from "shared-lib/gd";
     import { spring, type Spring } from "svelte/motion";

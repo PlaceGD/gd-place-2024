@@ -1,12 +1,4 @@
-import {
-    createIndexedDBStorage,
-    persist,
-} from "@macfja/svelte-persistent-store";
-import { PNG } from "pngjs/browser";
-import { writable } from "svelte/store";
-import { spritesheet, type SpriteData } from "shared-lib/gd";
-import Toast from "../toast";
-import { clamp } from "shared-lib/util";
+import spritesheetWorkerUrl from "./worker?worker&url";
 
 export type SpritesheetData = {
     buffer: Buffer;
@@ -42,13 +34,13 @@ export class Spritesheet {
     // constructor(public worker: Worker)
 
     static async waitForWorkerLoad(): Promise<void> {
+        console.log(spritesheetWorkerUrl);
         return new Promise(workerLoadRes => {
             Spritesheet.worker = new Worker(
-                new URL("./worker.ts", import.meta.url),
-                {
-                    type: "module",
-                }
+                new URL(spritesheetWorkerUrl, import.meta.url),
+                { type: "module" }
             );
+
             Spritesheet.worker.onmessage = (e: MessageEvent<Message>) => {
                 if (e.data.type == "loaded_sprite") {
                     Spritesheet.promiseResList[e.data.spriteId].pop()!(

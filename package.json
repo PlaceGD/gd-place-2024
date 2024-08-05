@@ -23,6 +23,7 @@
         "@types/pngjs": "^6.0.5",
         "@types/postcss-import": "^14.0.3",
         "@types/svelte-range-slider-pips": "^2.0.2",
+        "@types/uuid": "^10.0.0",
         "@zerodevx/svelte-toast": "^0.9.5",
         "autoprefixer": "^10.4.16",
         "cssnano": "^7.0.4",
@@ -55,7 +56,6 @@
         "shared-lib": "file:shared-lib",
         "svelte-awesome-color-picker": "^3.1.0",
         "svelte-gestures": "^4.0.0",
-        "svelte-motion": "^0.12.0",
         "svelte-portal": "^2.2.1",
         "svelte-range-slider-pips": "^2.2.3",
         "wasm-lib": "file:wasm-lib/pkg"

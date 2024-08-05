@@ -4,7 +4,6 @@
 
     import Image from "../../components/Image.svelte";
     import DarkInput from "../../components/DarkInput.svelte";
-    import SlidingSelector from "../../components/SlidingSelector.svelte";
 
     import { menuMinimized, menuZLayer, menuZOrder } from "../../stores";
     import { clamp } from "shared-lib/util";

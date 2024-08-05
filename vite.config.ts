@@ -1,11 +1,15 @@
-import { defineConfig } from "vite";
+import {
+    defineConfig,
+    Plugin,
+    PluginOption,
+    splitVendorChunk,
+    splitVendorChunkPlugin,
+} from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import topLevelAwait from "vite-plugin-top-level-await";
 import FullReload from "vite-plugin-full-reload";
 import svelteSVG from "vite-plugin-svelte-svg";
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
-import { existsSync } from "fs";
-import { splitVendorChunkPlugin } from "vite";
 
 const TURNSTILE_LOGIN_SITE_KEY = "'0x4AAAAAAARPU_AxoWb2X1wE'";
 const TURNSTILE_REPORT_SITE_KEY = "'0x4AAAAAAARP5tpK_cioW-QN'";
@@ -23,6 +27,21 @@ export default defineConfig(({ mode }) => ({
     },
     worker: {
         format: "es",
+        rollupOptions: {
+            output: {
+                manualChunks(id: string) {
+                    if (id.includes("shared-lib")) {
+                        return "shared";
+                    }
+                    if (id.includes("pngjs")) {
+                        return "pngjs-vendor";
+                    }
+                    if (id.includes("node_modules")) {
+                        return "worker-vendor";
+                    }
+                },
+            },
+        },
     },
     esbuild: {
         legalComments: "none",
@@ -35,32 +54,47 @@ export default defineConfig(({ mode }) => ({
         }),
         topLevelAwait(),
         // preload image assets (only works on `vite build`)
-        // UnpluginInjectPreload({
-        //     files: [
-        //         {
-        //             // entryMatch: /\/assets\/ui\/.*\.(png|svg)/,
-        //             outputMatch: /\/assets\/ui\/.*\.(png|svg|otf|mp3)/,
-        //             attributes: {
-        //                 rel: "preload",
-        //             },
-        //         },
-        //         {
-        //             // entryMatch: /\/assets\/ui\/.*\.(png|svg)/,
-        //             outputMatch: /\/assets\/.*\.(png|svg|otf|mp3)/,
-        //             attributes: {
-        //                 rel: "preload",
-        //             },
-        //         },
-        //         // {
-        //         //     entryMatch: /Pusab\.oft/,
-        //         //     attributes: {
-        //         //         rel: "preload",
-        //         //     },
-        //         // },
-        //     ],
-        //     injectTo: "head-prepend",
-        // }),
+        UnpluginInjectPreload({
+            files: [
+                {
+                    outputMatch: /ui\/.*\.(png|svg|otf|mp3)/,
+                    attributes: {
+                        rel: "preload",
+                    },
+                },
+                {
+                    outputMatch: /.*\.(png|svg|otf|mp3)/,
+                    attributes: {
+                        rel: "preload",
+                    },
+                },
+            ],
+            injectTo: "head-prepend",
+        }),
         FullReload(["src/**/*"]),
-        splitVendorChunkPlugin(),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                // @ts-ignore
+                manualChunks(id: string) {
+                    if (id.includes("shared-lib")) {
+                        return "shared";
+                    }
+                    if (id.includes("wasm-lib")) {
+                        return "wasm";
+                    }
+                    if (id.includes("@firebase")) {
+                        return "firebase-vendor";
+                    }
+                    if (id.includes("devtools-fps")) {
+                        return "devtools-fps-vendor";
+                    }
+                    if (id.includes("node_modules")) {
+                        return "client-vendor";
+                    }
+                },
+            },
+        },
+    },
 }));

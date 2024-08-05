@@ -1,4 +1,4 @@
-import { KofiTxId } from "./kofi";
+import { type KofiTxId } from "./kofi.js";
 
 export type PlaceReq = { object: string };
 export type DeleteReq = { chunkId: string; objId: string };

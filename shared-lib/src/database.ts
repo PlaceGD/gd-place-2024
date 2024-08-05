@@ -1,4 +1,4 @@
-import { KofiTxId } from "./kofi";
+import { type KofiTxId } from "./kofi.js";
 
 export type ChunkID = `${number},${number}`;
 export type ObjKey = string;

@@ -14,9 +14,10 @@
     "type": "module",
     "main": "dist/index.js",
     "dependencies": {
-        "firebase-admin": "^12.2.0",
+        "firebase-admin": "12.3.0",
         "firebase-functions": "^4.3.1",
-        "shared-lib": "file:shared-lib"
+        "shared-lib": "file:shared-lib",
+        "@firebase-parity/from-admin": "https://gitpkg.vercel.app/FlowVix/firebase-parity/from-admin?test-no-monorepo&scripts.postinstall=%26%26%20npm%20install%20--ignore-scripts%20%26%26%20npm%20run%20build"
     },
     "devDependencies": {
         "@rollup/plugin-json": "^6.1.0",

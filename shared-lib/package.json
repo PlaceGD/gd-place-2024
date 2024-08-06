@@ -12,6 +12,10 @@
             "import": "./dist/base_util.js",
             "types": "./dist/base_util.d.ts"
         },
+        "./db_util": {
+            "import": "./dist/db_util.js",
+            "types": "./dist/db_util.d.ts"
+        },
         "./database": {
             "import": "./dist/database.js",
             "types": "./dist/database.d.ts"
@@ -50,5 +54,8 @@
         "@rollup/plugin-typescript": "^11.1.6",
         "glob": "^11.0.0",
         "rollup": "^4.20.0"
+    },
+    "dependencies": {
+        "@firebase-parity/db-interfaces": "https://gitpkg.vercel.app/FlowVix/firebase-parity/db-interfaces?test-no-monorepo&scripts.postinstall=%26%26%20npm%20install%20--ignore-scripts%20%26%26%20npm%20run%20build"
     }
 }

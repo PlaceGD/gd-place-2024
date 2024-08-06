@@ -7,9 +7,9 @@ import {
     MAX_GRADIENT_STOPS,
     VALID_KOFI_TRANSACTION_ID,
 } from "shared-lib/kofi";
-import { ref } from "./utils/database";
 import { onCallAuthLogger } from "./utils/on_call";
 import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
+import { SmartDatabase } from "shared-lib/db_util";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
 
 export type KofiDonation = {
@@ -136,7 +136,7 @@ export const onKofiDonation = onRequest(
             response.status(400);
         }
 
-        const db = database();
+        const db = new SmartDatabase();
 
         ref(db, `activeDonations/${txId}`).set(1);
 

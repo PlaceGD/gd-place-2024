@@ -1,4 +1,4 @@
-import { ref } from "shared-lib/db_util";
+import { get, ref } from "firebase/database";
 import { db } from "./firebase";
 
 let userColorCache: Record<string, string> = {};
@@ -8,12 +8,17 @@ export const getUsernameColor = async (username: string): Promise<string> => {
         return userColorCache[username];
     }
 
-    let colorRef = await ref(
-        db,
-        `userName/${username?.toLowerCase()}/displayColor`
-    ).get();
+    let colorRef = await get(
+        ref(db, `userName/${username?.toLowerCase()}/displayColor`)
+    );
 
-    let color = colorRef.val() ?? "white";
+    let color;
+
+    if (!colorRef.exists()) {
+        color = "white";
+    } else {
+        color = colorRef.val();
+    }
 
     userColorCache[username] = color;
 

@@ -1,42 +1,9 @@
-import { DatabaseSchema } from "./database";
-
-export interface CommonDataSnapshot {
-    child(path: string): CommonDataSnapshot;
-    exists(): boolean;
-    forEach(action: (a: CommonIteratedDataSnapshot) => boolean | void): boolean;
-    readonly key: string | null;
-    val(): any;
-}
-export interface CommonIteratedDataSnapshot extends CommonDataSnapshot {
-    readonly key: string;
-}
-
-export interface CommonTransactionResult {
-    committed: boolean;
-    snapshot: CommonDataSnapshot;
-}
-
-export interface CommonReference {
-    readonly key: string | null;
-    push(value?: any): Promise<CommonReference>;
-    remove(): Promise<void>;
-    set(value: any): Promise<void>;
-    get(): Promise<CommonDataSnapshot>;
-    transaction(
-        transactionUpdate: (a: any) => any
-    ): Promise<CommonTransactionResult>;
-    update(values: Object): Promise<void>;
-
-    onValue(cb: (data: CommonDataSnapshot) => void): () => void;
-    onChildAdded(cb: (data: CommonDataSnapshot) => void): () => void;
-    onChildRemoved(cb: (data: CommonDataSnapshot) => void): () => void;
-}
-
-export interface CommonDatabase {
-    ref(path?: string): CommonReference;
-}
-
-// ----------------------------------------------------------------------------
+import {
+    Database,
+    Reference,
+    DataSnapshot as FDataSnapshot,
+} from "firebase-admin/database";
+import { DatabaseSchema } from "shared-lib/database";
 
 type Child<T> =
     Record<never, never> extends T ? NonNullable<T>[keyof T] : never;
@@ -65,8 +32,8 @@ type PathType<
             : T[P]
       : never;
 
-export class DataSnapshot<T> {
-    constructor(private data: CommonDataSnapshot) {}
+class DataSnapshot<T> {
+    constructor(private data: FDataSnapshot) {}
     exists(): boolean {
         return this.data.exists();
     }
@@ -76,13 +43,10 @@ export class DataSnapshot<T> {
     val(): T {
         return this.data.val();
     }
-    get key(): string | null {
-        return this.data.key;
-    }
 }
 
-export class Ref<T> {
-    constructor(private ref: CommonReference) {}
+class Ref<T> {
+    constructor(private ref: Reference) {}
 
     get key() {
         return this.ref.key;
@@ -112,20 +76,10 @@ export class Ref<T> {
     async transaction(cb: (value: T) => T) {
         return this.ref.transaction(cb);
     }
-
-    onValue(cb: (data: DataSnapshot<T>) => void): () => void {
-        return this.ref.onValue(v => cb(new DataSnapshot(v)));
-    }
-    onChildAdded(cb: (data: DataSnapshot<Child<T>>) => void): () => void {
-        return this.ref.onChildAdded(v => cb(new DataSnapshot(v)));
-    }
-    onChildRemoved(cb: (data: DataSnapshot<Child<T>>) => void): () => void {
-        return this.ref.onChildRemoved(v => cb(new DataSnapshot(v)));
-    }
 }
 
 export const ref = <T extends string, D = DatabaseSchema>(
-    db: CommonDatabase,
+    db: Database,
     path: T
 ): Ref<PathType<T, D>> => new Ref(db.ref(path));
 
@@ -144,7 +98,7 @@ type MapSnapshot<
       : never;
 
 export const refAllGet = async <T extends string[], D = DatabaseSchema>(
-    db: CommonDatabase,
+    db: Database,
     ...paths: T
 ): Promise<MapSnapshot<T, D>> => {
     return Promise.all(paths.map(async p => await ref(db, p).get())) as any;

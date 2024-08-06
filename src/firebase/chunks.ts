@@ -1,20 +1,24 @@
-import { DataSnapshot, ref } from "shared-lib/db_util";
+import {
+    onChildAdded,
+    type DataSnapshot,
+    type Unsubscribe,
+    onChildRemoved,
+    ref,
+} from "firebase/database";
 import { db } from "./firebase";
 
-type Unsubscribe = () => void;
 let unsubMap: { [key: string]: { add: Unsubscribe; remove: Unsubscribe } } = {};
 
 export const subChunk = (
     chunk: [number, number],
-    onAdd: (data: DataSnapshot<string>) => void,
-    onRemove: (data: DataSnapshot<string>) => void
+    onAdd: (data: DataSnapshot) => void,
+    onRemove: (data: DataSnapshot) => void
 ) => {
-    let add = ref(db, `objects/${chunk[0]},${chunk[1]}`).onChildAdded(onAdd);
-    let remove = ref(db, `objects/${chunk[0]},${chunk[1]}`).onChildRemoved(
-        onRemove
-    );
-
-    unsubMap[`${chunk[0]},${chunk[1]}`] = { add, remove };
+    let chunk_name = chunk.join(",");
+    let chunk_path = "/objects/" + chunk_name;
+    let add = onChildAdded(ref(db, chunk_path), onAdd);
+    let remove = onChildRemoved(ref(db, chunk_path), onRemove);
+    unsubMap[chunk_name] = { add, remove };
 };
 export const unsubChunk = (chunk: [number, number]) => {
     let unsub = unsubMap[chunk.join(",")];

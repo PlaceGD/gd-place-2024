@@ -1,10 +1,10 @@
-import { get, ref } from "firebase/database";
 import { GDObjectOpt } from "wasm-lib";
 import { db } from "./firebase";
 import Toast from "../utils/toast";
 
 import { placeObject, deleteObject } from "./cloud_functions";
 import { encodeString } from "shared-lib/base_util";
+import { ref } from "shared-lib/db_util";
 
 export const addObject = (obj: GDObjectOpt) => {
     let v = obj.bytes();
@@ -28,9 +28,14 @@ export const getPlacedUsername = (key: string, cb: (name: string) => void) => {
     if (userPlacedCache[key] != null) {
         cb(userPlacedCache[key]);
     } else {
-        get(ref(db, `userPlaced/${key}`)).then(username => {
-            userPlacedCache[key] = username.val();
-            cb(username.val());
-        });
+        ref(db, `userPlaced/${key}`)
+            .get()
+            .then(username => {
+                let val = username.val();
+                if (val != undefined) {
+                    userPlacedCache[key] = val;
+                    cb(val);
+                }
+            });
     }
 };

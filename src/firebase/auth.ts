@@ -12,7 +12,6 @@ import {
     type Unsubscribe,
 } from "firebase/auth";
 
-import { get, onValue, ref } from "firebase/database";
 import type { HttpsCallableResult } from "firebase/functions";
 import { writable, type Writable } from "svelte/store";
 import { auth, db } from "./firebase";
@@ -20,6 +19,7 @@ import { initUserWithUsername } from "./cloud_functions";
 import { loginData } from "../stores";
 import Toast from "../utils/toast";
 import type { DatabaseSchema } from "shared-lib/database";
+import { ref } from "shared-lib/db_util";
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -104,13 +104,13 @@ onAuthStateChanged(auth, async user => {
             userDataUnsub();
         }
 
-        userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
+        userDataUnsub = ref(db, `userData/${user.uid}`).onValue(snapshot => {
             const placeData = snapshot.val();
 
             loginData.update(data => {
                 if (data.currentUserData != null) {
                     data.isLoggedIn = true;
-                    data.currentUserData.placeData = placeData;
+                    data.currentUserData.placeData = placeData ?? null;
                 } else {
                     console.error(
                         "User data set before user was created! (`onAuthStateChanged`)"

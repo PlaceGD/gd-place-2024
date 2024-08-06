@@ -141,6 +141,8 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
     async (request, logger) => {
         const db = database();
 
+        // db.ref().ord
+
         const data = request.data;
         const uid = request.auth.uid;
 

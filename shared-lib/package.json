@@ -12,6 +12,10 @@
             "import": "./dist/base_util.js",
             "types": "./dist/base_util.d.ts"
         },
+        "./db_util": {
+            "import": "./dist/db_util.js",
+            "types": "./dist/db_util.d.ts"
+        },
         "./database": {
             "import": "./dist/database.js",
             "types": "./dist/database.d.ts"

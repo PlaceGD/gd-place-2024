@@ -15,6 +15,7 @@ import {
 } from "firebase/database";
 import Toast from "../utils/toast";
 import { getAuth } from "firebase/auth";
+import { convertDatabase } from "../utils/db_commonize";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB9PSVZzg5WOp26PuCkVrrSTVrWg-XJMgg",
@@ -30,4 +31,4 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 // const analytics = getAnalytics(app);
-export const db = getDatabase(app);
+export const db = convertDatabase(getDatabase(app));

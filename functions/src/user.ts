@@ -1,5 +1,3 @@
-import pkg from "firebase-admin";
-const { database } = pkg;
 import { HttpsError, onCall, Request } from "firebase-functions/v2/https";
 import { onMessagePublished } from "firebase-functions/v2/pubsub";
 import { REPORT_COOLDOWN_SECONDS, VALID_USERNAME } from "shared-lib/user";
@@ -10,11 +8,10 @@ import type {
     BanReq,
 } from "shared-lib/cloud_functions";
 import { Level, LogGroup } from "./utils/logger";
-import { ref } from "./utils/database";
 import { DEV_UIDS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
-import { Database } from "firebase-admin/database";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserData } from "shared-lib/database";
+import { smartDatabase } from "src";
 
 const validateTurnstile = async (
     key: string | undefined,
@@ -72,7 +69,7 @@ export const initUserWithUsername = onCallAuthLogger<
         throw new HttpsError("invalid-argument", "Username is invalid");
     }
 
-    const db = database();
+    const db = smartDatabase();
 
     // TODO: check username for bad words
     // BAD_WORDS.forEach(word => {
@@ -82,7 +79,7 @@ export const initUserWithUsername = onCallAuthLogger<
     // });
 
     const usernameExists = (
-        await ref(db, `userName/${data.username.toLowerCase()}`).get()
+        await db.ref(`userName/${data.username.toLowerCase()}`).get()
     ).val();
 
     if (usernameExists != undefined) {
@@ -90,14 +87,14 @@ export const initUserWithUsername = onCallAuthLogger<
         throw new HttpsError("already-exists", "Username already exists");
     }
 
-    const maybeUserData = ref(db, `userData/${data.uid}`);
+    const maybeUserData = db.ref(`userData/${data.uid}`);
 
     // if ((await maybeUserData.get()) != null) {
     //     logger.error("User data already exists");
     //     throw new HttpsError("already-exists", "User data already exists");
     // }
 
-    const isBanned = (await ref(db, `bannedUsers/${data.uid}`).get()).val();
+    const isBanned = (await db.ref(`bannedUsers/${data.uid}`).get()).val();
     if (isBanned === 1) {
         throw new HttpsError("permission-denied", "Banned");
     }
@@ -117,12 +114,12 @@ export const initUserWithUsername = onCallAuthLogger<
     // make new user
     maybeUserData.set(user);
 
-    ref(db, `userName/${data.username.toLowerCase()}`).set({
+    db.ref(`userName/${data.username.toLowerCase()}`).set({
         uid: data.uid,
         displayColor: "white",
     });
 
-    ref(db, "userCount").transaction(count => {
+    db.ref("userCount").transaction(count => {
         return count + 1;
     });
 
@@ -141,17 +138,17 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             logger
         );
 
-        const db = database();
+        const db = smartDatabase();
 
         const isBanned = (
-            await ref(db, `bannedUsers/${request.auth.uid}`).get()
+            await db.ref(`bannedUsers/${request.auth.uid}`).get()
         ).val();
         if (isBanned === 1) {
             throw new HttpsError("permission-denied", "Banned");
         }
 
         const timeNextReport = (
-            await ref(db, `userData/${request.auth.uid}/epochNextReport`).get()
+            await db.ref(`userData/${request.auth.uid}/epochNextReport`).get()
         ).val();
 
         if (timeNextReport == undefined) {
@@ -166,7 +163,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
         }
 
         const userToReport = (
-            await ref(db, `userName/${data.username.toLowerCase()}`).get()
+            await db.ref(`userName/${data.username.toLowerCase()}`).get()
         ).val();
 
         if (userToReport == undefined) {
@@ -180,7 +177,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             throw new HttpsError("invalid-argument", "Invalid Y");
         }
 
-        const reported = ref(db, `reportedUsers`);
+        const reported = db.ref(`reportedUsers`);
 
         logger.info(`Reported user ${data.username}`);
 
@@ -195,23 +192,23 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
         let nextReport = Date.now();
         nextReport += REPORT_COOLDOWN_SECONDS * 1000;
 
-        ref(db, `userData/${request.auth.uid}/epochNextReport`).set(nextReport);
+        db.ref(`userData/${request.auth.uid}/epochNextReport`).set(nextReport);
     }
 );
 
 const banUserInner = async (
-    db: Database,
+    db: ReturnType<typeof smartDatabase>,
     requesterUid: string,
     userToBanUid: string
 ) => {
-    const isBanned = (await ref(db, `bannedUsers/${requesterUid}`).get()).val();
+    const isBanned = (await db.ref(`bannedUsers/${requesterUid}`).get()).val();
     if (isBanned === 1) {
         throw new HttpsError("permission-denied", "Banned");
     }
 
     if (!DEV_UIDS.includes(requesterUid)) {
         const reportedUserIsMod = (
-            await ref(db, `userData/${userToBanUid}/moderator`).get()
+            await db.ref(`userData/${userToBanUid}/moderator`).get()
         ).val();
 
         if (reportedUserIsMod) {
@@ -222,14 +219,14 @@ const banUserInner = async (
         }
     }
 
-    const userData = (await ref(db, `userData/${userToBanUid}`).get()).val();
+    const userData = (await db.ref(`userData/${userToBanUid}`).get()).val();
 
     if (userData == null) {
         throw new HttpsError("invalid-argument", "Invalid user UID");
     }
 
-    ref(db, `bannedUsers/${userToBanUid}`).set(1);
-    ref(db, "userCount").transaction(count => {
+    db.ref(`bannedUsers/${userToBanUid}`).set(1);
+    db.ref("userCount").transaction(count => {
         return count - 1;
     });
 };
@@ -246,10 +243,10 @@ const banUserInner = async (
 
 export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
     async request => {
-        const db = database();
+        const db = smartDatabase();
 
         const modData = (
-            await ref(db, `userData/${request.auth.uid}`).get()
+            await db.ref(`userData/${request.auth.uid}`).get()
         ).val();
         if (modData == null) {
             throw new HttpsError("invalid-argument", "Invalid mod UID");
@@ -278,10 +275,10 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
 export const banUser = onCallAuthLogger<BanReq>(
     "banUser",
     async (request, logger) => {
-        const db = database();
+        const db = smartDatabase();
 
         const modData = (
-            await ref(db, `userData/${request.auth.uid}`).get()
+            await db.ref(`userData/${request.auth.uid}`).get()
         ).val();
         if (modData == null) {
             throw new HttpsError("invalid-argument", "Invalid mod UID");
@@ -300,7 +297,7 @@ export const banUser = onCallAuthLogger<BanReq>(
         logger.info("Username:", data.username, data.username.toLowerCase());
 
         const userToBanUid = (
-            await ref(db, `userName/${data.username.toLowerCase()}`).get()
+            await db.ref(`userName/${data.username.toLowerCase()}`).get()
         ).val()?.uid;
 
         if (userToBanUid == null) {

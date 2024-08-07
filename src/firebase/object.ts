@@ -1,4 +1,3 @@
-import { get, ref } from "firebase/database";
 import { GDObjectOpt } from "wasm-lib";
 import { db } from "./firebase";
 import Toast from "../utils/toast";
@@ -28,9 +27,14 @@ export const getPlacedUsername = (key: string, cb: (name: string) => void) => {
     if (userPlacedCache[key] != null) {
         cb(userPlacedCache[key]);
     } else {
-        get(ref(db, `userPlaced/${key}`)).then(username => {
-            userPlacedCache[key] = username.val();
-            cb(username.val());
-        });
+        db.ref(`userPlaced/${key}`)
+            .get()
+            .then(s => {
+                let username = s.val();
+                if (username != undefined) {
+                    userPlacedCache[key] = username;
+                    cb(username);
+                }
+            });
     }
 };

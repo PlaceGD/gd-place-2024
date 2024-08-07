@@ -1,17 +1,16 @@
-import { get, ref } from "firebase/database";
 import { writable, type Writable } from "svelte/store";
 import { db } from "../firebase/firebase";
 import Toast from "./toast";
 
-export class SyncedCooldown {
+export class SyncedCooldown<P extends string, RefS extends string> {
     finished: Writable<boolean> = writable(true);
     display: Writable<string> = writable("--:--");
     private interval: NodeJS.Timeout | null = null;
     private value: number;
 
     constructor(
-        dbPath: string,
-        private refS: string,
+        dbPath: P,
+        private refS: RefS,
         private duration: number
     ) {
         this.value = duration;
@@ -30,7 +29,8 @@ export class SyncedCooldown {
                 localStorage.setItem(this.refS, `${numEpoch}`);
             }
         } else {
-            get(ref(db, `${dbPath}/${refS}`))
+            db.ref(`${dbPath}/${refS}`)
+                .get()
                 .then(v => {
                     const epoch = v.val() ?? 0;
 

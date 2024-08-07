@@ -1,5 +1,3 @@
-import pkg from "firebase-admin";
-const { database } = pkg;
 import { HttpsError, onRequest } from "firebase-functions/v2/https";
 import { LogGroup } from "./utils/logger";
 import {
@@ -7,10 +5,10 @@ import {
     MAX_GRADIENT_STOPS,
     VALID_KOFI_TRANSACTION_ID,
 } from "shared-lib/kofi";
-import { ref } from "./utils/database";
 import { onCallAuthLogger } from "./utils/on_call";
 import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
+import { smartDatabase } from "src";
 
 export type KofiDonation = {
     verification_token: string;
@@ -136,9 +134,8 @@ export const onKofiDonation = onRequest(
             response.status(400);
         }
 
-        const db = database();
-
-        ref(db, `activeDonations/${txId}`).set(1);
+        const db = smartDatabase();
+        db.ref(`activeDonations/${txId}`).set(1);
 
         // TODO: why does kofi call this function twice
         response.status(200);
@@ -158,16 +155,16 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
             );
         }
 
-        const db = database();
+        const db = smartDatabase();
 
-        const data = (await ref(db, `activeDonations/${txId}`).get()).val();
+        const data = (await db.ref(`activeDonations/${txId}`).get()).val();
 
         if (data == null || data !== 1) {
             logger.error(`Invalid transaction id: ${txId}`);
             throw new HttpsError("invalid-argument", "Invalid transaction ID");
         }
 
-        ref(db, `userData/${request.auth.uid}/hasDonated`).set(true);
+        db.ref(`userData/${request.auth.uid}/hasDonated`).set(true);
     }
 );
 
@@ -187,17 +184,17 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         //     logger
         // );
 
-        const db = database();
+        const db = smartDatabase();
 
         const isBanned = (
-            await ref(db, `bannedUsers/${request.auth.uid}`).get()
+            await db.ref(`bannedUsers/${request.auth.uid}`).get()
         ).val();
         if (isBanned === 1) {
             throw new HttpsError("permission-denied", "Banned");
         }
 
         const userData = (
-            await ref(db, `userData/${request.auth.uid}`).get()
+            await db.ref(`userData/${request.auth.uid}`).get()
         ).val();
         if (userData == null) {
             throw new HttpsError("invalid-argument", "Invalid user id");
@@ -231,10 +228,10 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         let nextReport = Date.now();
         nextReport += GRADIENT_COOLDOWN_SECONDS * 1000;
 
-        ref(db, `userData/${request.auth.uid}/epochNextGradient`).set(
+        db.ref(`userData/${request.auth.uid}/epochNextGradient`).set(
             nextReport
         );
-        ref(db, `userName/${userData.username.toLowerCase()}/displayColor`).set(
+        db.ref(`userName/${userData.username.toLowerCase()}/displayColor`).set(
             grad
         );
     }

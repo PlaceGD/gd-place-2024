@@ -1,4 +1,8 @@
 import { initializeApp } from "firebase-admin/app";
+import { convertDatabase } from "@smart-firebase/admin";
+import { DatabaseSchema } from "shared-lib/database";
+import pkg from "firebase-admin";
+const { database } = pkg;
 
 export { deleteObject, placeObject } from "./object";
 export {
@@ -35,5 +39,7 @@ export const LEVEL_WIDTH_BLOCKS = 800;
 export const LEVEL_HEIGHT_BLOCKS = 800;
 export const LEVEL_WIDTH_UNITS = LEVEL_WIDTH_BLOCKS * 30;
 export const LEVEL_HEIGHT_UNITS = LEVEL_HEIGHT_BLOCKS * 30;
+
+export const smartDatabase = () => convertDatabase<DatabaseSchema>(database());
 
 initializeApp();

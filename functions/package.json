@@ -14,12 +14,14 @@
     "type": "module",
     "main": "dist/index.js",
     "dependencies": {
-        "firebase-admin": "^12.2.0",
+        "@smart-firebase/admin": "^0.1.1",
+        "firebase-admin": "12.3.0",
         "firebase-functions": "^4.3.1",
         "shared-lib": "file:shared-lib"
     },
     "devDependencies": {
         "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^11.1.6",
         "firebase-functions-test": "^3.1.0",

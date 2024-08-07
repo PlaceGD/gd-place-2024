@@ -12,7 +12,6 @@ import {
     type Unsubscribe,
 } from "firebase/auth";
 
-import { get, onValue, ref } from "firebase/database";
 import type { HttpsCallableResult } from "firebase/functions";
 import { writable, type Writable } from "svelte/store";
 import { auth, db } from "./firebase";
@@ -104,13 +103,13 @@ onAuthStateChanged(auth, async user => {
             userDataUnsub();
         }
 
-        userDataUnsub = onValue(ref(db, `userData/${user.uid}`), snapshot => {
+        userDataUnsub = db.ref(`userData/${user.uid}`).on("value", snapshot => {
             const placeData = snapshot.val();
 
             loginData.update(data => {
                 if (data.currentUserData != null) {
                     data.isLoggedIn = true;
-                    data.currentUserData.placeData = placeData;
+                    data.currentUserData.placeData = placeData ?? null;
                 } else {
                     console.error(
                         "User data set before user was created! (`onAuthStateChanged`)"

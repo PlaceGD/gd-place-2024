@@ -7,16 +7,7 @@
         openMenu,
     } from "../stores";
     import Loading from "../components/Loading.svelte";
-    import {
-        get,
-        ref,
-        onChildAdded,
-        onChildRemoved,
-        onChildChanged,
-        query,
-        orderByChild,
-        startAfter,
-    } from "firebase/database";
+
     import { db } from "../firebase/firebase";
     import Toast from "../utils/toast";
     import type { DatabaseSchema } from "shared-lib/database";
@@ -46,44 +37,41 @@
     }[] = [];
 
     onMount(() => {
-        const reportedUsersRef = query(
-            ref(db, "reportedUsers"),
-            orderByChild("timestamp"),
-            startAfter(Date.now() - 15 * 60 * 1000)
-        );
-
-        onChildRemoved(ref(db, "reportedUsers"), data => {
+        db.ref("reportedUsers").on("child_removed", data => {
             reportedUsers = reportedUsers.filter(
                 user => data.val().uid != user.uid
             );
         });
 
-        onChildAdded(reportedUsersRef, data => {
-            const reportData = data.val();
+        db.ref("reportedUsers")
+            .orderByChild("timestamp")
+            .startAfter(Date.now() - 15 * 60 * 1000)
+            .on("child_added", data => {
+                const reportData = data.val();
 
-            const user = reportedUsers.find(c => c.uid == reportData.uid);
+                const user = reportedUsers.find(c => c.uid == reportData.uid);
 
-            if (user != undefined) {
-                user.count += 1;
-                user.sumX += reportData.x;
-                user.sumY += reportData.y;
-            } else {
-                $newReports = true;
+                if (user != undefined) {
+                    user.count += 1;
+                    user.sumX += reportData.x;
+                    user.sumY += reportData.y;
+                } else {
+                    $newReports = true;
 
-                reportedUsers.push({
-                    count: 1,
-                    username: reportData.username,
-                    sumX: reportData.x,
-                    sumY: reportData.y,
-                    timestamp: reportData.timestamp,
-                    uid: reportData.uid,
-                });
+                    reportedUsers.push({
+                        count: 1,
+                        username: reportData.username,
+                        sumX: reportData.x,
+                        sumY: reportData.y,
+                        timestamp: reportData.timestamp,
+                        uid: reportData.uid,
+                    });
 
-                reportedUsers.sort((a, b) =>
-                    a.timestamp > b.timestamp ? 1 : -1
-                );
-            }
-        });
+                    reportedUsers.sort((a, b) =>
+                        a.timestamp > b.timestamp ? 1 : -1
+                    );
+                }
+            });
 
         // onChildAdded(ref(db, "bannedUsers"), data => {
         //     bannedUsers.update(users => {

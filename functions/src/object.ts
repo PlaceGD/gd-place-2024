@@ -1,5 +1,3 @@
-import pkg from "firebase-admin";
-const { database } = pkg;
 import { decodeString } from "shared-lib/base_util";
 import {
     objects,
@@ -14,9 +12,9 @@ import { PlaceReq, DeleteReq } from "shared-lib/cloud_functions";
 import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { Reader } from "./utils/reader";
 import { Level, LogGroup } from "./utils/logger";
-import { refAllGet, ref } from "./utils/database";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
+import { smartDatabase } from "src";
 
 const deserializeObject = (
     data: string,
@@ -139,7 +137,7 @@ const deserializeColor = (
 export const placeObject = onCallAuthLogger<PlaceReq>(
     "placeObject",
     async (request, logger) => {
-        const db = database();
+        const db = smartDatabase();
 
         const data = request.data;
         const uid = request.auth.uid;
@@ -165,52 +163,38 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
         let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
 
-        let [
-            // obj_limit,
-            // obj_count,
-            // { eventStart, placeTimer: timer, canEdit },
-            _userName,
-            banned,
-        ] = await refAllGet(
-            db,
-            `userData/${uid}/username`,
-            `bannedUsers/${uid}`
-        );
+        let userName = (await db.ref(`userData/${uid}/username`).get()).val();
+        let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
 
-        let userName = _userName.val();
         if (userName === undefined) {
             throw new HttpsError("invalid-argument", "Missing user data");
         }
 
-        if (banned.val() === 1) {
+        if (banned === 1) {
             throw new HttpsError("permission-denied", "Banned");
         }
 
-        const objRef = await ref(db, `objects/${chunkX},${chunkY}`).push(
-            objectString
-        );
+        const objRef = await db
+            .ref(`objects/${chunkX},${chunkY}`)
+            .push(objectString);
 
-        ref(db, `userPlaced/${objRef.key}`).set(userName);
+        db.ref(`userPlaced/${objRef.key}`).set(userName);
     }
 );
 
 export const deleteObject = onCallAuth<DeleteReq>(async request => {
-    const db = database();
+    const db = smartDatabase();
     const data = request.data;
     const uid = request.auth.uid;
 
-    let [_userName, banned] = await refAllGet(
-        db,
-        `userData/${uid}/username`,
-        `bannedUsers/${uid}`
-    );
+    let userName = (await db.ref(`userData/${uid}/username`).get()).val();
+    let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
 
-    let userName = _userName.val();
     if (userName === undefined) {
         throw new HttpsError("invalid-argument", "Missing user data");
     }
 
-    if (banned.val() === 1) {
+    if (banned === 1) {
         throw new HttpsError("permission-denied", "Banned");
     }
 
@@ -221,8 +205,8 @@ export const deleteObject = onCallAuth<DeleteReq>(async request => {
         throw new HttpsError("invalid-argument", "Missing object id");
     }
 
-    const obj = ref(db, `objects/${data.chunkId as ChunkID}/${data.objId}`);
+    const obj = db.ref(`objects/${data.chunkId as ChunkID}/${data.objId}`);
     obj.set(userName).then(() => obj.remove());
 
-    ref(db, `/userPlaced/${data.objId}`).remove();
+    db.ref(`/userPlaced/${data.objId}`).remove();
 });

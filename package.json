@@ -50,10 +50,11 @@
     },
     "dependencies": {
         "@macfja/svelte-persistent-store": "^2.4.1",
+        "@smart-firebase/client": "^0.1.1",
         "@tabler/icons-svelte": "^3.11.0",
         "classnames": "^2.3.2",
         "devtools-fps": "^2.0.2",
-        "firebase": "^10.5.2",
+        "firebase": "10.12.5",
         "lodash.debounce": "^4.0.8",
         "pngjs": "^7.0.0",
         "shared-lib": "file:shared-lib",

@@ -7,8 +7,6 @@ import {
     type UserData,
 } from "../firebase/auth";
 import Toast from "../utils/toast";
-import { get, ref } from "firebase/database";
-import { db } from "../firebase/firebase";
 import { loginData } from "../stores";
 
 export enum SlideIds {

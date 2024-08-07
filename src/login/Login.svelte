@@ -9,7 +9,6 @@
     import Toast from "../utils/toast";
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib/user";
     import { initUserData } from "../firebase/auth";
-    import { ref, get } from "firebase/database";
     import { db } from "../firebase/firebase";
     import { Turnstile } from "svelte-turnstile";
     import FadedScroll from "../components/FadedScroll.svelte";
@@ -69,13 +68,11 @@
         handleSignIn(method).then(async isOK => {
             if (isOK) {
                 if ($loginData.currentUserData != null) {
-                    let maybeData = await get(
-                        ref(
-                            db,
+                    let maybeData = await db
+                        .ref(
                             `userData/${$loginData.currentUserData.userData.uid}`
                         )
-                    );
-
+                        .get();
                     let maybePlaceData = maybeData.val();
 
                     if (maybePlaceData != null) {

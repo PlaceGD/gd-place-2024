@@ -53,6 +53,8 @@
     import ObjectsTab from "./objects/ObjectsTab.svelte";
     import { fade, type TransitionConfig } from "svelte/transition";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
+    import { CoolSyncedCooldown } from "../utils/cooldown";
+    import { timerDisplay } from "shared-lib/util";
 
     export let state: wasm.State;
 
@@ -180,6 +182,10 @@
             };
         }
     }
+
+    // CoolSyncedCooldown.new("grogu", v => {
+    console.log("lol:", timerDisplay(66 * 60));
+    // });
 
     // const gradientFunc = t =>
     //     `conic-gradient(white ${t * 360}deg, black ${t * 360}deg 360deg)`;

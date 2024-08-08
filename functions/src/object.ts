@@ -163,7 +163,9 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
         let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
 
-        let userName = (await db.ref(`userData/${uid}/username`).get()).val();
+        let userName = (
+            await db.ref(`userDetails/${uid}/username`).get()
+        ).val();
         let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
 
         if (userName === undefined) {
@@ -187,7 +189,7 @@ export const deleteObject = onCallAuth<DeleteReq>(async request => {
     const data = request.data;
     const uid = request.auth.uid;
 
-    let userName = (await db.ref(`userData/${uid}/username`).get()).val();
+    let userName = (await db.ref(`userDetails/${uid}/username`).get()).val();
     let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
 
     if (userName === undefined) {

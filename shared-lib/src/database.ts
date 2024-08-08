@@ -3,7 +3,7 @@ import { type KofiTxId } from "./kofi.js";
 export type ChunkID = `${number},${number}`;
 export type ObjKey = string;
 
-export type UserData = {
+export type UserDetails = {
     username: string;
     epochNextPlace: number;
     epochNextDelete: number;
@@ -30,11 +30,16 @@ export interface DatabaseSchema {
     >;
     bannedUsers: Record<string, number>;
     userCount: number;
-    userData: Record<string, UserData>;
+    userDetails: Record<string, UserDetails>;
 
     userName: Record<string, UsernameData>;
 
     userPlaced: Record<ObjKey, string>;
 
     activeDonations: Record<KofiTxId, number>;
+
+    metaVariables: {
+        placeCooldown: number;
+        deleteCooldown: number;
+    };
 }

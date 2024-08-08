@@ -12,10 +12,10 @@
 </script>
 
 <div class="gap-4 flex-center">
-    {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.isLoggedIn}
+    {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.isLoggedIn}
         <h1 class="z-30 text-3xl text-white font-pusab xs:text-2xl">
             <ColoredName
-                username={$loginData.currentUserData.placeData.username}
+                username={$loginData.currentUserData.userDetails.username}
             />
         </h1>
     {/if}

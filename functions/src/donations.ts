@@ -164,7 +164,7 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
             throw new HttpsError("invalid-argument", "Invalid transaction ID");
         }
 
-        db.ref(`userData/${request.auth.uid}/hasDonated`).set(true);
+        db.ref(`userDetails/${request.auth.uid}/hasDonated`).set(true);
     }
 );
 
@@ -194,7 +194,7 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         }
 
         const userData = (
-            await db.ref(`userData/${request.auth.uid}`).get()
+            await db.ref(`userDetails/${request.auth.uid}`).get()
         ).val();
         if (userData == null) {
             throw new HttpsError("invalid-argument", "Invalid user id");
@@ -228,7 +228,7 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         let nextReport = Date.now();
         nextReport += GRADIENT_COOLDOWN_SECONDS * 1000;
 
-        db.ref(`userData/${request.auth.uid}/epochNextGradient`).set(
+        db.ref(`userDetails/${request.auth.uid}/epochNextGradient`).set(
             nextReport
         );
         db.ref(`userName/${userData.username.toLowerCase()}/displayColor`).set(

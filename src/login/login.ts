@@ -25,7 +25,7 @@ let currentUser: UserData | null = null;
 
 const logInSuccess = (user: any): boolean => {
     Toast.showSuccessToast("Signed in successfully!");
-    // get(ref(db, `userData/${user.user.uid}`))
+    // get(ref(db, `userDetails/${user.user.uid}`))
     //     .then(snapshot => {
     //         const placeData = snapshot.val();
 

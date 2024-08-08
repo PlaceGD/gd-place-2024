@@ -20,14 +20,14 @@
     export let state: wasm.State;
 
     const cooldown = new SyncedCooldown(
-        `userData/${$loginData.currentUserData!.userData.uid}`,
+        `userDetails/${$loginData.currentUserData!.user.uid}`,
         "epochNextReport",
         REPORT_COOLDOWN_SECONDS
     );
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
 
     $: isYourself =
-        $loginData.currentUserData?.placeData?.username ==
+        $loginData.currentUserData?.userDetails?.username ==
         $selectedObject?.namePlaced;
 
     let resetReportButton: () => void;
@@ -130,7 +130,7 @@
             {#if $selectedObject.namePlaced != null}
                 <button
                     aria-label="Copy Username"
-                    class="hover:underline font-bold"
+                    class="font-bold hover:underline"
                     on:click={() => {
                         if ($selectedObject != null) {
                             setClipboard($selectedObject.namePlaced ?? "")
@@ -203,7 +203,7 @@
             </div>
         {/if}
 
-        {#if $loginData.currentUserData && $loginData.currentUserData.placeData && $loginData.currentUserData.placeData.moderator && $selectedObject.namePlaced != null}
+        {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.currentUserData.userDetails.moderator && $selectedObject.namePlaced != null}
             {#if !$bannedUsers.includes($selectedObject.namePlaced.toLowerCase())}
                 <div class="w-full h-10">
                     <OnceButton

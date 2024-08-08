@@ -42,7 +42,7 @@
     let currentPage: Page = Page.SUBMIT_TX_ID;
 
     $: {
-        const hasDonated = $loginData.currentUserData?.placeData?.hasDonated;
+        const hasDonated = $loginData.currentUserData?.userDetails?.hasDonated;
 
         if (hasDonated == null || !hasDonated) {
             currentPage = Page.SUBMIT_TX_ID;
@@ -102,7 +102,7 @@
     };
 
     const gradientCooldown = new SyncedCooldown(
-        `userData/${$loginData.currentUserData?.userData?.uid ?? ""}`,
+        `userDetails/${$loginData.currentUserData?.user?.uid ?? ""}`,
         "epochNextGradient",
         GRADIENT_COOLDOWN_SECONDS
     );
@@ -214,13 +214,13 @@
                     class="m-auto text-2xl username-gradient w-min xs:text-xl"
                     style={`background-image: ${nameGradientString};`}
                 >
-                    {$loginData.currentUserData?.placeData?.username ?? ""}
+                    {$loginData.currentUserData?.userDetails?.username ?? ""}
                 </p>
                 <p
                     class="m-auto text-2xl username-gradient w-min font-pusab xs:text-xl"
                     style={`background-image: ${nameGradientString};`}
                 >
-                    {$loginData.currentUserData?.placeData?.username ?? ""}
+                    {$loginData.currentUserData?.userDetails?.username ?? ""}
                 </p>
             </div>
             <div class="flex-col h-full gap-2 px-4 py-1">

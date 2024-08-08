@@ -81,3 +81,13 @@ export const rotateVec = (
 
     return [c * x - s * y, s * x + c * y];
 };
+
+export const timerDisplay = (time?: number) => {
+    if (time == null) {
+        return "--:--";
+    }
+
+    const mins = Math.floor(time / 60);
+    const secs = Math.floor(time - mins * 60);
+    return `${mins >= 10 ? "" : "0"}${mins}:${secs >= 10 ? "" : "0"}${secs}`;
+};

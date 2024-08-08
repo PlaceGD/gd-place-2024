@@ -70,13 +70,14 @@
                 if ($loginData.currentUserData != null) {
                     let maybeData = await db
                         .ref(
-                            `userData/${$loginData.currentUserData.userData.uid}`
+                            `userDetails/${$loginData.currentUserData.user.uid}`
                         )
                         .get();
+
                     let maybePlaceData = maybeData.val();
 
                     if (maybePlaceData != null) {
-                        $loginData.currentUserData.placeData = maybePlaceData;
+                        $loginData.currentUserData.userDetails = maybePlaceData;
                         $loginData.isLoggedIn = true;
                         $openMenu = null;
                     } else {
@@ -104,7 +105,7 @@
         isInProgress = true;
         if ($loginData.currentUserData != null) {
             initUserData(
-                $loginData.currentUserData.userData.uid,
+                $loginData.currentUserData.user.uid,
                 userName,
                 turnstileToken! // cant submit unless the token is not null
             )

@@ -1,6 +1,45 @@
 import { writable, type Writable } from "svelte/store";
 import { db } from "../firebase/firebase";
 import Toast from "./toast";
+import type { PathType, SmartDatabase } from "@smart-firebase/client";
+import type { DatabaseSchema } from "shared-lib/database";
+
+// type Lol = <P>(p: P) => void;
+
+export class CoolSyncedCooldown {
+    private epoch: number = 0;
+    readonly unsub: () => void;
+
+    private constructor(path: string, cb: (remaining: number) => void) {
+        let interval: NodeJS.Timeout | null = null;
+        let onValue = db.ref(path).on("value", v => {
+            console.log("ballsack");
+            this.epoch = v.val() as number;
+
+            if (interval != null) {
+                clearInterval(interval);
+            }
+            interval = setInterval(
+                () => cb((this.epoch - Date.now()) / 1000),
+                1000
+            );
+        });
+        this.unsub = () => {
+            onValue();
+
+            if (interval != null) {
+                clearInterval(interval);
+            }
+        };
+    }
+
+    static new<P extends string>(
+        path: number extends PathType<P, DatabaseSchema> ? P : never,
+        cb: (remaining: number) => void
+    ) {
+        return new this(path, cb);
+    }
+}
 
 export class SyncedCooldown<P extends string, RefS extends string> {
     finished: Writable<boolean> = writable(true);
@@ -20,8 +59,8 @@ export class SyncedCooldown<P extends string, RefS extends string> {
             const numEpoch = parseInt(epoch);
 
             if (Date.now() > numEpoch) {
-                this.display.update(() => "00:00");
-                this.finished.update(() => true);
+                this.display.set("00:00");
+                this.finished.set(true);
             } else {
                 this.value = (numEpoch - Date.now()) / 1000;
                 this.duration = this.value;
@@ -35,8 +74,8 @@ export class SyncedCooldown<P extends string, RefS extends string> {
                     const epoch = v.val() ?? 0;
 
                     if (Date.now() > epoch) {
-                        this.display.update(() => "00:00");
-                        this.finished.update(() => true);
+                        this.display.set("00:00");
+                        this.finished.set(true);
                     }
 
                     localStorage.setItem(refS, epoch);
@@ -63,11 +102,11 @@ export class SyncedCooldown<P extends string, RefS extends string> {
         localStorage.setItem(this.refS, `${Date.now() + this.duration * 1000}`);
         // updating the database is handled in the cloud function
 
-        this.finished.update(() => false);
+        this.finished.set(false);
 
         this.interval = setInterval(() => {
             if (--this.duration < 0) {
-                this.finished.update(() => true);
+                this.finished.set(true);
                 clearInterval(this.interval!);
                 this.duration = this.value;
             } else {

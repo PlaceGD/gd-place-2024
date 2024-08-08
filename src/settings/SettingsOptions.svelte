@@ -113,7 +113,7 @@
             <div
                 class="flex flex-col items-center justify-center gap-2 p-2 pb-0 text-center"
             >
-                {#if $loginData.currentUserData?.placeData?.hasDonated}
+                {#if $loginData.currentUserData?.userDetails?.hasDonated}
                     <Button
                         type="white"
                         class="p-2 text-base xs:text-sm"

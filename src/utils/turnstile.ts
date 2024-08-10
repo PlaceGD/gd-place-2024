@@ -24,14 +24,14 @@ export const setTurnstileResetFunction = (f: () => void) => {
     setInterval(() => {
         if (turnstileToken === TokenStatus.Error) {
             let fs = turnstilePromiseFuncs.pop();
-            if (fs === undefined) {
+            if (fs == undefined) {
                 return;
             }
             fs.rej();
             resetTurnstile();
         } else if (typeof turnstileToken == "string") {
             let fs = turnstilePromiseFuncs.pop();
-            if (fs === undefined) {
+            if (fs == undefined) {
                 return;
             }
             fs.res(turnstileToken);

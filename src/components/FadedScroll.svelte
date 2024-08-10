@@ -1,9 +1,12 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
+    import { useIsOverflowing } from "../utils/document";
 
     export let reachedBottom = false;
 
     let elem: HTMLDivElement | null = null;
+
+    const { isOverflowing, element: overflowElem } = useIsOverflowing();
 
     let threshold = 20;
     let scrollTop = 0;
@@ -36,12 +39,17 @@
 <div
     class="w-full h-full overflow-auto fadeout xs:text-sm"
     bind:this={elem}
-    style="--gradient: linear-gradient(
+    style={`--gradient: ${
+        $isOverflowing
+            ? `linear-gradient(
             transparent 0%,
-            black {topThreshold}%,
-            black {bottomThreshold}%,
+            black ${topThreshold}%,
+            black ${bottomThreshold}%,
             transparent 100%
-        )"
+        )`
+            : "transparent"
+    }`}
+    use:overflowElem
 >
     <slot />
 </div>

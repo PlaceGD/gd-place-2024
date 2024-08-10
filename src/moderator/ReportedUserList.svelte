@@ -158,7 +158,7 @@
                                             );
                                         }}
                                     >
-                                        <Back class="rotate-180 stroke-1"
+                                        <Back class="rotate-180 stroke-[1.5]"
                                         ></Back>
                                     </Button>
                                 </div>

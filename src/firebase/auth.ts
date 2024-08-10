@@ -72,7 +72,6 @@ onAuthStateChanged(auth, async user => {
 
                 loginData.update(data => {
                     if (data.currentUserData != null) {
-                        data.isLoggedIn = true;
                         data.currentUserData.userDetails = placeData ?? null;
                     } else {
                         console.error(
@@ -97,7 +96,6 @@ onAuthStateChanged(auth, async user => {
         }
 
         loginData.update(data => {
-            data.isLoggedIn = false;
             data.currentUserData = null;
             return data;
         });

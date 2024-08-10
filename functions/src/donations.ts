@@ -9,6 +9,7 @@ import { onCallAuthLogger } from "./utils/on_call";
 import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
 import { smartDatabase } from "src";
+import { getCheckedUserDetails } from "./utils/utils";
 
 export type KofiDonation = {
     verification_token: string;
@@ -145,7 +146,13 @@ export const onKofiDonation = onRequest(
 export const submitKofiTxId = onCallAuthLogger<KofiReq>(
     "submitKofiTxId",
     async (request, logger) => {
+        const db = smartDatabase();
         const txId = request.data.txId;
+
+        const { userDetailsRef } = await getCheckedUserDetails(
+            db,
+            request.auth.uid
+        );
 
         if (!VALID_KOFI_TRANSACTION_ID.test(txId)) {
             logger.error(`Invalid transaction id format: ${txId}`);
@@ -155,16 +162,13 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
             );
         }
 
-        const db = smartDatabase();
-
         const data = (await db.ref(`activeDonations/${txId}`).get()).val();
-
         if (data == null || data !== 1) {
             logger.error(`Invalid transaction id: ${txId}`);
             throw new HttpsError("invalid-argument", "Invalid transaction ID");
         }
 
-        db.ref(`userDetails/${request.auth.uid}/hasDonated`).set(true);
+        userDetailsRef.child("hasDonated").set(true);
     }
 );
 
@@ -175,6 +179,7 @@ const VALID_GRADIENT = new RegExp(
 export const changeNameGradient = onCallAuthLogger<GradientReq>(
     "changeNameGradient",
     async (request, logger) => {
+        const db = smartDatabase();
         const data = request.data;
 
         // await validateTurnstile(
@@ -184,35 +189,20 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         //     logger
         // );
 
-        const db = smartDatabase();
+        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
+            db,
+            request.auth.uid
+        );
 
-        const isBanned = (
-            await db.ref(`bannedUsers/${request.auth.uid}`).get()
-        ).val();
-        if (isBanned === 1) {
-            throw new HttpsError("permission-denied", "Banned");
-        }
-
-        const userData = (
-            await db.ref(`userDetails/${request.auth.uid}`).get()
-        ).val();
-        if (userData == null) {
-            throw new HttpsError("invalid-argument", "Invalid user id");
-        }
-
-        const timeNextGradient = userData.epochNextGradient;
-        if (timeNextGradient == undefined) {
-            throw new HttpsError("invalid-argument", "Missing gradient timer");
-        }
-
-        if (Date.now() < timeNextGradient) {
+        const timeNextGradient = userDetails.epochNextGradient;
+        if (Date.now() < timeNextGradient ?? 0) {
             throw new HttpsError(
                 "permission-denied",
                 "Cannot update before timer expired"
             );
         }
 
-        if (!userData.hasDonated) {
+        if (!userDetails.hasDonated) {
             throw new HttpsError(
                 "permission-denied",
                 "Cannot change gradient of user without donation"
@@ -225,14 +215,12 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
             throw new HttpsError("permission-denied", "Invalid gradient");
         }
 
-        let nextReport = Date.now();
-        nextReport += GRADIENT_COOLDOWN_SECONDS * 1000;
+        let nextGradient = Date.now();
+        nextGradient += GRADIENT_COOLDOWN_SECONDS * 1000;
+        userDetailsRef.child("epochNextGradient").set(nextGradient);
 
-        db.ref(`userDetails/${request.auth.uid}/epochNextGradient`).set(
-            nextReport
-        );
-        db.ref(`userName/${userData.username.toLowerCase()}/displayColor`).set(
-            grad
-        );
+        db.ref(
+            `userName/${userDetails.username.toLowerCase()}/displayColor`
+        ).set(grad);
     }
 );

@@ -45,13 +45,15 @@ export const useIsOverflowing = () => {
     const updateElement = (element: HTMLElement | null) => {
         let updateElement = () => {
             if (element) {
-                updateIsOverflowing(() => isOverflowing(element!));
+                updateIsOverflowing(() => isOverflowing(element));
             }
         };
         window.addEventListener("resize", updateElement, { passive: true });
         window.addEventListener("DOMContentLoaded", updateElement, {
             passive: true,
         });
+
+        if (element) updateElement();
     };
 
     return {

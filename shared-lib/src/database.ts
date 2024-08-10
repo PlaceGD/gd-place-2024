@@ -28,7 +28,7 @@ export interface DatabaseSchema {
             y: number;
         }
     >;
-    bannedUsers: Record<string, number>;
+    bannedUsers: Record<string, boolean>;
     userCount: number;
     userDetails: Record<string, UserDetails>;
 

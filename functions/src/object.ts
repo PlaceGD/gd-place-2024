@@ -15,6 +15,7 @@ import { Level, LogGroup } from "./utils/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { smartDatabase } from "src";
+import { getCheckedUserDetails } from "./utils/utils";
 
 const deserializeObject = (
     data: string,
@@ -34,7 +35,7 @@ const deserializeObject = (
 
     const id = reader.readU16();
     logger.debug("Object id:", id);
-    if (objects[id] === undefined) return null;
+    if (objects[id] == undefined) return null;
 
     const x = reader.readF32();
     logger.debug("Object x:", x);
@@ -142,73 +143,93 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         const data = request.data;
         const uid = request.auth.uid;
 
+        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
+            db,
+            uid
+        );
+
+        const placeTimerCooldown =
+            (await db.ref("metaVariables/placeCooldown").get()).val() ?? 5 * 60;
+
+        let transactionResult = await userDetailsRef
+            .child("epochNextPlace")
+            .transaction(nextPlace => {
+                if (Date.now() < nextPlace ?? 0) {
+                    throw new HttpsError(
+                        "permission-denied",
+                        "Cannot place before timer expired"
+                    );
+                }
+
+                return Date.now() + placeTimerCooldown * 1000;
+            });
+        if (!transactionResult.committed) {
+            logger.debug("Transaction not committed");
+            return;
+        }
+
         if (!data.object) {
             throw new HttpsError("invalid-argument", "Missing object string");
         }
         const objectString = data.object.toString();
 
         const object = deserializeObject(data.object, logger);
-        // try {
-        // object = deserializeObject(data.object, logger);
-        //     objLogger.finish();
-        // } catch (e) {
-        //     objLogger.finish(Level.ERROR);
-        //     throw e;
-        // }
-
         if (object === null) {
             throw new HttpsError("invalid-argument", "Invalid object string");
         }
 
         let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
         let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
-
-        let userName = (
-            await db.ref(`userDetails/${uid}/username`).get()
-        ).val();
-        let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
-
-        if (userName === undefined) {
-            throw new HttpsError("invalid-argument", "Missing user data");
-        }
-
-        if (banned === 1) {
-            throw new HttpsError("permission-denied", "Banned");
-        }
-
         const objRef = await db
             .ref(`objects/${chunkX},${chunkY}`)
             .push(objectString);
 
-        db.ref(`userPlaced/${objRef.key}`).set(userName);
+        db.ref(`userPlaced/${objRef.key}`).set(userDetails.username);
     }
 );
 
-export const deleteObject = onCallAuth<DeleteReq>(async request => {
-    const db = smartDatabase();
-    const data = request.data;
-    const uid = request.auth.uid;
+export const deleteObject = onCallAuthLogger<DeleteReq>(
+    "deleteObject",
+    async (request, logger) => {
+        const db = smartDatabase();
+        const data = request.data;
+        const uid = request.auth.uid;
 
-    let userName = (await db.ref(`userDetails/${uid}/username`).get()).val();
-    let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
+        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
+            db,
+            uid
+        );
 
-    if (userName === undefined) {
-        throw new HttpsError("invalid-argument", "Missing user data");
+        if (!data.chunkId) {
+            throw new HttpsError("invalid-argument", "Missing chunk id");
+        }
+        if (!data.objId) {
+            throw new HttpsError("invalid-argument", "Missing object id");
+        }
+        const deleteTimerCooldown =
+            (await db.ref("metaVariables/deleteCooldown").get()).val() ??
+            5 * 60;
+
+        let transactionResult = await userDetailsRef
+            .child("epochNextDelete")
+            .transaction(nextDelete => {
+                if (Date.now() < nextDelete ?? 0) {
+                    throw new HttpsError(
+                        "permission-denied",
+                        "Cannot delete before timer expired"
+                    );
+                }
+
+                return Date.now() + deleteTimerCooldown * 1000;
+            });
+        if (!transactionResult.committed) {
+            logger.debug("Transaction not committed");
+            return;
+        }
+
+        const obj = db.ref(`objects/${data.chunkId as ChunkID}/${data.objId}`);
+        obj.set(userDetails.username).then(() => obj.remove());
+
+        db.ref(`/userPlaced/${data.objId}`).remove();
     }
-
-    if (banned === 1) {
-        throw new HttpsError("permission-denied", "Banned");
-    }
-
-    if (!data.chunkId) {
-        throw new HttpsError("invalid-argument", "Missing chunk id");
-    }
-    if (!data.objId) {
-        throw new HttpsError("invalid-argument", "Missing object id");
-    }
-
-    const obj = db.ref(`objects/${data.chunkId as ChunkID}/${data.objId}`);
-    obj.set(userName).then(() => obj.remove());
-
-    db.ref(`/userPlaced/${data.objId}`).remove();
-});
+);

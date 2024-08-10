@@ -26,10 +26,12 @@
     import GradientPicker from "../components/GradientPicker.svelte";
     import Button from "../components/Button.svelte";
     import { complement } from "../utils/gradient";
-    import { SyncedCooldown } from "../utils/cooldown";
     import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
     import ScreenModal from "../components/ScreenModal.svelte";
     import DarkInput from "../components/DarkInput.svelte";
+    import { SyncedCooldown } from "../utils/cooldown";
+    import type { Readable } from "svelte/store";
+    import type { UserData } from "../firebase/auth";
 
     enum Page {
         SUBMIT_TX_ID,
@@ -37,7 +39,7 @@
     }
 
     let isInProgress = false;
-    let isOpen = false;
+    $: isOpen = $openMenu == ExclusiveMenus.Kofi;
 
     let currentPage: Page = Page.SUBMIT_TX_ID;
 
@@ -48,14 +50,6 @@
             currentPage = Page.SUBMIT_TX_ID;
         } else {
             currentPage = Page.SELECT_GRADIENT;
-        }
-    }
-
-    $: {
-        if ($openMenu != ExclusiveMenus.Kofi) {
-            isOpen = false;
-        } else if ($openMenu == ExclusiveMenus.Kofi) {
-            isOpen = true;
         }
     }
 
@@ -101,15 +95,37 @@
         resetSubmitButton();
     };
 
-    const gradientCooldown = new SyncedCooldown(
-        `userDetails/${$loginData.currentUserData?.user?.uid ?? ""}`,
-        "epochNextGradient",
-        GRADIENT_COOLDOWN_SECONDS
-    );
-    let {
-        display: gradientCooldownDisplay,
-        finished: gradientCooldownFinished,
-    } = gradientCooldown;
+    let gradientCooldown: SyncedCooldown | null = null;
+    let gradientCooldownDisplay: Readable<string> | null = null;
+    let gradientCooldownFinished: Readable<boolean> | null = null;
+
+    const onUserData = (data: UserData | null) => {
+        if (gradientCooldown != null) {
+            gradientCooldown.unsub();
+        }
+        if (data != null) {
+            gradientCooldown = SyncedCooldown.new(
+                `userDetails/${data?.user?.uid ?? ""}/epochNextGradient`
+            );
+            gradientCooldownDisplay = gradientCooldown.display;
+            gradientCooldownFinished = gradientCooldown.finished;
+        } else {
+            gradientCooldown = null;
+            gradientCooldownDisplay = null;
+            gradientCooldownFinished = null;
+        }
+    };
+
+    $: {
+        onUserData($loginData.currentUserData);
+    }
+    // const gradientCooldown = SyncedCooldown.new(
+    //     `userDetails/${$loginData.currentUserData?.user?.uid ?? ""}/epochNextGradient`
+    // );
+    // let {
+    //     display: gradientCooldownDisplay,
+    //     finished: gradientCooldownFinished,
+    // } = gradientCooldown;
 
     const onUpdateGradient = async () => {
         isInProgress = true;
@@ -121,8 +137,6 @@
 
             $currentNameGradient.positions = nameGradientStops;
             $currentNameGradient.colors = nameGradientColors;
-
-            gradientCooldown.start();
 
             Toast.showSuccessToast("Successfully updated gradient!");
         } catch (e) {
@@ -163,11 +177,11 @@
                 <div class="w-full gap-2 flex-center">
                     {#if isValidKofiTxId}
                         <Check
-                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
+                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
                         />
                     {:else}
                         <Cross
-                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
+                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
                         />
                     {/if}
                     <form
@@ -234,17 +248,20 @@
             <OnceButton
                 class="w-full p-2 h-11 xs:h-10"
                 type="white"
-                disabled={!$gradientCooldownFinished}
+                disabled={!$gradientCooldownFinished ?? true}
                 on:click={onUpdateGradient}
                 bind:reset={resetGradientButton}
             >
                 <p class="text-lg xs:text-base">Update</p>
             </OnceButton>
-            {#if !$gradientCooldownFinished}
+            {#if !$gradientCooldownFinished ?? false}
                 <p
                     class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
                 >
-                    You changed your gradient recently! Please wait {$gradientCooldownDisplay}
+                    You changed your gradient recently! Please wait <span
+                        class="proportional-nums"
+                        >{$gradientCooldownDisplay ?? "--:--"}</span
+                    >
                     before changing it again.
                 </p>
             {/if}

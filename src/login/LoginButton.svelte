@@ -12,7 +12,7 @@
 </script>
 
 <div class="gap-4 flex-center">
-    {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.isLoggedIn}
+    {#if $loginData.currentUserData != null && $loginData.currentUserData.userDetails != null}
         <h1 class="z-30 text-3xl text-white font-pusab xs:text-2xl">
             <ColoredName
                 username={$loginData.currentUserData.userDetails.username}
@@ -24,7 +24,7 @@
         on:click={() => {
             $openMenu = null;
 
-            if ($loginData.isLoggedIn) {
+            if ($loginData.currentUserData?.userDetails != null) {
                 $openMenu = null;
 
                 handleSignOut();
@@ -34,7 +34,9 @@
         }}
     >
         <Image
-            src={$loginData.isLoggedIn ? profileOutUrl : profileInUrl}
+            src={$loginData.currentUserData?.userDetails != null
+                ? profileOutUrl
+                : profileInUrl}
             class="object-contain aspect-square"
         ></Image>
     </button>

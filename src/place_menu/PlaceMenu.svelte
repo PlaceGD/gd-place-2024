@@ -35,9 +35,9 @@
         bgColor,
         ground1Color,
         ground2Color,
+        loginData,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
-    import { useIsOverflowing } from "../utils/document";
     import { DEBUG } from "../utils/debug";
     // import SpriteSheet from "../utils/spritesheet";
 
@@ -53,8 +53,12 @@
     import ObjectsTab from "./objects/ObjectsTab.svelte";
     import { fade, type TransitionConfig } from "svelte/transition";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
-    import { CoolSyncedCooldown } from "../utils/cooldown";
     import { timerDisplay } from "shared-lib/util";
+    import { SyncedCooldown } from "../utils/cooldown";
+    import { db } from "../firebase/firebase";
+    import { onDestroy } from "svelte";
+    import RadialCooldown from "../components/RadialCooldown.svelte";
+    import OnceButton from "../components/OnceButton.svelte";
 
     export let state: wasm.State;
 
@@ -183,12 +187,43 @@
         }
     }
 
-    // CoolSyncedCooldown.new("grogu", v => {
-    console.log("lol:", timerDisplay(66 * 60));
-    // });
+    let totalPlaceCooldown = 0;
+    let totalDeleteCooldown = 0;
+    let totalPlaceListener = db
+        .ref("metaVariables/placeCooldown")
+        .on("value", v => (totalPlaceCooldown = v.val()));
+    let totalDeleteListener = db
+        .ref("metaVariables/deleteCooldown")
+        .on("value", v => (totalDeleteCooldown = v.val()));
+    onDestroy(() => {
+        totalPlaceListener();
+        totalDeleteListener();
+        placeCooldown.unsub();
+        deleteCooldown.unsub();
+    });
 
-    // const gradientFunc = t =>
-    //     `conic-gradient(white ${t * 360}deg, black ${t * 360}deg 360deg)`;
+    const placeCooldown = SyncedCooldown.new(
+        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextPlace`
+    );
+    let {
+        display: placeCooldownDisplay,
+        finished: placeCooldownFinished,
+        remaining: placeCooldownRemaining,
+    } = placeCooldown;
+
+    const deleteCooldown = SyncedCooldown.new(
+        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextDelete`
+    );
+    let {
+        display: deleteCooldownDisplay,
+        finished: deleteCooldownFinished,
+        remaining: deleteCooldownRemaining,
+    } = deleteCooldown;
+
+    $: pdButtonDisabled =
+        $menuTabGroup != TabGroup.Delete
+            ? !$placeCooldownFinished
+            : !$deleteCooldownFinished;
 </script>
 
 <div
@@ -287,8 +322,18 @@
                     class="absolute flex justify-around w-24 h-full gap-3 p-2.5 tab-mini-icons"
                     data-minimised={+$menuMinimized}
                 >
-                    <Build class="stroke-1 w-full h-full"></Build>
-                    <Delete class="stroke-1 w-full h-full"></Delete>
+                    <RadialCooldown
+                        max={totalPlaceCooldown}
+                        remaining={$placeCooldownRemaining}
+                    >
+                        <Build class="w-full h-full stroke-[1.5]" />
+                    </RadialCooldown>
+                    <RadialCooldown
+                        max={totalDeleteCooldown}
+                        remaining={$deleteCooldownRemaining}
+                    >
+                        <Delete class="w-full h-full stroke-[1.5]" />
+                    </RadialCooldown>
                 </div>
             </div>
 
@@ -307,13 +352,18 @@
                             tabindex={canSelectByTab}
                             aria-label="Build Tab"
                         >
-                            <Build
-                                class={cx({
-                                    "stroke-1 w-full h-full": true,
-                                    "opacity-30":
-                                        $menuTabGroup != TabGroup.Build,
-                                })}
-                            ></Build>
+                            <RadialCooldown
+                                max={totalPlaceCooldown}
+                                remaining={$placeCooldownRemaining}
+                            >
+                                <Build
+                                    class={cx({
+                                        "stroke-[1.5] w-full h-full": true,
+                                        "opacity-30":
+                                            $menuTabGroup != TabGroup.Build,
+                                    })}
+                                ></Build>
+                            </RadialCooldown>
                         </button>
                     </li>
                     <li class="w-full flex-center grow-0 shrink-0">
@@ -327,7 +377,7 @@
                         >
                             <Edit
                                 class={cx({
-                                    "stroke-1 w-full h-full": true,
+                                    "stroke-[1.5] w-full h-full": true,
                                     "opacity-30":
                                         $menuTabGroup != TabGroup.Edit,
                                 })}
@@ -343,13 +393,18 @@
                             tabindex={canSelectByTab}
                             aria-label="Delete Tab"
                         >
-                            <Delete
-                                class={cx({
-                                    "stroke-1 w-full h-full": true,
-                                    "opacity-30":
-                                        $menuTabGroup != TabGroup.Delete,
-                                })}
-                            ></Delete>
+                            <RadialCooldown
+                                max={totalDeleteCooldown}
+                                remaining={$deleteCooldownRemaining}
+                            >
+                                <Delete
+                                    class={cx({
+                                        "stroke-[1.5] w-full h-full": true,
+                                        "opacity-30":
+                                            $menuTabGroup != TabGroup.Delete,
+                                    })}
+                                ></Delete>
+                            </RadialCooldown>
                         </button>
                     </li>
                 </ul>
@@ -387,7 +442,7 @@
 
         <button
             class={cx({
-                "self-end overflow-hidden bounce-active pd-button": true,
+                "self-end overflow-hidden pd-button cursor-pointer": true,
                 "place-bttn-place": $menuTabGroup != TabGroup.Delete,
                 "place-bttn-delete": $menuTabGroup == TabGroup.Delete,
             })}
@@ -395,6 +450,8 @@
             aria-label={`${$menuTabGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
             data-minimised={+$menuMinimized}
             on:click={() => {
+                pdButtonDisabled = true;
+
                 if ($menuTabGroup != TabGroup.Delete) {
                     addObject(state.get_preview_object());
                     state.set_preview_visibility(false);
@@ -406,17 +463,25 @@
                     }
                 }
             }}
+            disabled={pdButtonDisabled}
         >
-            <div class="w-full h-full py-4 overflow-hidden">
-                <h1
-                    class="w-full h-full overflow-hidden text-5xl md:text-4xl sm:text-4xl font-pusab text-stroke flex-center"
-                >
+            <div
+                class="flex flex-col w-full h-full gap-1 py-4 text-5xl flex-center md:text-4xl sm:text-4xl text-stroke"
+            >
+                <h1 class="font-pusab tab-text">
                     {#if $menuTabGroup != TabGroup.Delete}
                         Place
                     {:else}
                         Delete
                     {/if}
                 </h1>
+                {#if pdButtonDisabled}
+                    <span class="proportional-nums font-pusab"
+                        >{$menuTabGroup != TabGroup.Delete
+                            ? $placeCooldownDisplay
+                            : $deleteCooldownDisplay}</span
+                    >
+                {/if}
             </div>
         </button>
     </div>
@@ -500,7 +565,7 @@
             -4px -4px 0px 8px #49851b inset,
             4px 4px 0px 8px #c6f249 inset;
     }
-    .place-bttn-place:active {
+    .place-bttn-place:not(:disabled):active {
         border-radius: 16px;
         background: #61b91d;
         box-shadow:
@@ -509,6 +574,17 @@
             -4px -4px 0px 8px #3a6a16 inset,
             4px 4px 0px 8px #b2eb11 inset;
     }
+    .place-bttn-place:not(:disabled) {
+        @apply bounce-active;
+    }
+    .place-bttn-place:disabled {
+        cursor: not-allowed;
+    }
+    .place-bttn-place:disabled .tab-text {
+        @apply text-xl;
+        opacity: 0.5;
+    }
+
     .place-bttn-delete {
         border-radius: 16px;
         background: #de2d30;
@@ -518,7 +594,7 @@
             -4px -4px 0px 8px #851b1d inset,
             4px 4px 0px 8px #f24980 inset;
     }
-    .place-bttn-delete:active {
+    .place-bttn-delete:not(:disabled):active {
         border-radius: 16px;
         background: #b91d20;
         box-shadow:
@@ -526,6 +602,16 @@
             0px 0px 0px 8px #000 inset,
             -4px -4px 0px 8px #6a1617 inset,
             4px 4px 0px 8px #eb1158 inset;
+    }
+    .place-bttn-delete:not(:disabled) {
+        @apply bounce-active;
+    }
+    .place-bttn-delete:disabled {
+        cursor: not-allowed;
+    }
+    .place-bttn-delete:disabled .tab-text {
+        @apply text-xl;
+        opacity: 0.5;
     }
 
     @media screen(md) {

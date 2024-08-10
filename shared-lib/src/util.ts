@@ -83,7 +83,7 @@ export const rotateVec = (
 };
 
 export const timerDisplay = (time?: number) => {
-    if (time == null) {
+    if (time == null || time < 0) {
         return "--:--";
     }
 

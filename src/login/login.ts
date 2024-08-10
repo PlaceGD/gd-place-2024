@@ -55,10 +55,6 @@ export const handleSignOut = () => {
     if (confirm("Are you sure you want to sign out?")) {
         signOut()
             .then(() => {
-                loginData.update(data => {
-                    data.isLoggedIn = false;
-                    return data;
-                });
                 Toast.showSuccessToast("Successfully logged out!");
             })
             .catch(err => {

@@ -12,6 +12,7 @@ import { DEV_UIDS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
 import { smartDatabase } from "src";
+import { getCheckedUserDetails } from "./utils/utils";
 
 const validateTurnstile = async (
     key: string | undefined,
@@ -95,7 +96,7 @@ export const initUserWithUsername = onCallAuthLogger<
     // }
 
     const isBanned = (await db.ref(`bannedUsers/${data.uid}`).get()).val();
-    if (isBanned === 1) {
+    if (isBanned === true) {
         throw new HttpsError("permission-denied", "Banned");
     }
 
@@ -140,28 +141,26 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
 
         const db = smartDatabase();
 
-        const isBanned = (
-            await db.ref(`bannedUsers/${request.auth.uid}`).get()
-        ).val();
-        if (isBanned === 1) {
-            throw new HttpsError("permission-denied", "Banned");
-        }
+        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
+            db,
+            request.auth.uid
+        );
 
-        const timeNextReport = (
-            await db
-                .ref(`userDetails/${request.auth.uid}/epochNextReport`)
-                .get()
-        ).val();
+        let transactionResult = await userDetailsRef
+            .child("epochNextReport")
+            .transaction(nextReport => {
+                if (Date.now() < nextReport ?? 0) {
+                    throw new HttpsError(
+                        "permission-denied",
+                        "Cannot report before timer expired"
+                    );
+                }
 
-        if (timeNextReport == undefined) {
-            throw new HttpsError("invalid-argument", "Missing report timer");
-        }
-
-        if (Date.now() < timeNextReport) {
-            throw new HttpsError(
-                "permission-denied",
-                "Cannot report before timer expired"
-            );
+                return Date.now() + REPORT_COOLDOWN_SECONDS * 1000;
+            });
+        if (!transactionResult.committed) {
+            logger.debug("Transaction not committed");
+            return;
         }
 
         const userToReport = (
@@ -179,7 +178,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             throw new HttpsError("invalid-argument", "Invalid Y");
         }
 
-        const reported = db.ref(`reportedUsers`);
+        const reported = db.ref("reportedUsers");
 
         logger.info(`Reported user ${data.username}`);
 
@@ -190,13 +189,6 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             x: data.x,
             y: data.y,
         });
-
-        let nextReport = Date.now();
-        nextReport += REPORT_COOLDOWN_SECONDS * 1000;
-
-        db.ref(`userDetails/${request.auth.uid}/epochNextReport`).set(
-            nextReport
-        );
     }
 );
 
@@ -206,13 +198,19 @@ const banUserInner = async (
     userToBanUid: string
 ) => {
     const isBanned = (await db.ref(`bannedUsers/${requesterUid}`).get()).val();
-    if (isBanned === 1) {
+    if (isBanned === true) {
         throw new HttpsError("permission-denied", "Banned");
+    }
+
+    const userToBanDetailsRef = db.ref(`userDetails/${userToBanUid}`);
+    const userToBanDetails = (await userToBanDetailsRef.get()).val();
+    if (userToBanDetails == null) {
+        throw new HttpsError("invalid-argument", "Invalid user UID");
     }
 
     if (!DEV_UIDS.includes(requesterUid)) {
         const reportedUserIsMod = (
-            await db.ref(`userDetails/${userToBanUid}/moderator`).get()
+            await userToBanDetailsRef.child("moderator").get()
         ).val();
 
         if (reportedUserIsMod) {
@@ -223,13 +221,7 @@ const banUserInner = async (
         }
     }
 
-    const userData = (await db.ref(`userDetails/${userToBanUid}`).get()).val();
-
-    if (userData == null) {
-        throw new HttpsError("invalid-argument", "Invalid user UID");
-    }
-
-    db.ref(`bannedUsers/${userToBanUid}`).set(1);
+    db.ref(`bannedUsers/${userToBanUid}`).set(true);
     db.ref("userCount").transaction(count => {
         return count - 1;
     });

@@ -31,49 +31,55 @@
     }
 </script>
 
-<dialog
-    aria-label={label}
-    class={cx({
-        "flex-col w-full h-full gap-4 p-6 overflow-visible text-white bg-transparent pointer-events-auto xs:gap-2 aspect-square open:flex xs:p-4 flex-center": true,
-        flex: isOpen,
-        hidden: !isOpen,
-    })}
-    bind:this={modal}
-    on:close={() => dispatcher("close")}
-    on:cancel={e => {
-        if (canClose) {
-            modal?.close();
-        } else {
-            e.preventDefault();
-        }
-    }}
->
-    <ToastContainer />
+{#if isOpen}
+    <dialog
+        aria-label={label}
+        class={cx({
+            "flex-col w-full h-full gap-4 p-6 overflow-visible text-white bg-transparent pointer-events-auto xs:gap-2 aspect-square open:flex xs:p-4 flex-center": true,
+            flex: isOpen,
+            hidden: !isOpen,
+        })}
+        bind:this={modal}
+        on:close={() => dispatcher("close")}
+        on:cancel={e => {
+            if (canClose) {
+                modal?.close();
+            } else {
+                e.preventDefault();
+            }
+        }}
+    >
+        <ToastContainer />
 
-    <div class={`flex-auto menu-panel w-full h-full relative ${size}`}>
-        {#if state === "loading"}
-            <Loading class="rounded-xl" />
-        {/if}
-        <slot />
-    </div>
-
-    {#if hasCloseButton}
-        <div class="flex items-center h-12 text-white xs:h-10 flex-center">
-            <div class="h-full">
-                <button
-                    disabled={!canClose}
-                    class={cx({
-                        "flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200": true,
-                        "text-disabled-white pointer-events-none": !canClose,
-                    })}
-                    aria-label="Close"
-                    on:click={() => {
-                        isOpen = false;
-                    }}
-                >
-                    <Cross aria-label="Close" class="w-full h-full stroke-1" />
-                </button>
-            </div>
+        <div class={`flex-auto menu-panel w-full h-full relative ${size}`}>
+            {#if state === "loading"}
+                <Loading class="rounded-xl" />
+            {/if}
+            <slot />
         </div>
-    {/if}
-</dialog>
+
+        {#if hasCloseButton}
+            <div class="flex items-center h-12 text-white xs:h-10 flex-center">
+                <div class="h-full">
+                    <button
+                        disabled={!canClose}
+                        class={cx({
+                            "flex-col h-full p-1 rounded-lg flex-center menu-panel hover:brightness-150 active:brightness-200": true,
+                            "text-disabled-white pointer-events-none":
+                                !canClose,
+                        })}
+                        aria-label="Close"
+                        on:click={() => {
+                            isOpen = false;
+                        }}
+                    >
+                        <Cross
+                            aria-label="Close"
+                            class="w-full h-full stroke-1"
+                        />
+                    </button>
+                </div>
+            </div>
+        {/if}
+    </dialog>
+{/if}

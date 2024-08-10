@@ -53,6 +53,8 @@
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        <PlaceMenu bind:state />
+        {#if $loginData.currentUserData?.userDetails != null}
+            <PlaceMenu bind:state />
+        {/if}
     {/if}
 </div>

@@ -78,7 +78,6 @@
 
                     if (maybePlaceData != null) {
                         $loginData.currentUserData.userDetails = maybePlaceData;
-                        $loginData.isLoggedIn = true;
                         $openMenu = null;
                     } else {
                         previousPage = currentPage;
@@ -115,7 +114,6 @@
                         "User successfully created! Thanks for participating!"
                     );
                     $openMenu = null;
-                    $loginData.isLoggedIn = true;
                 })
                 .catch(e => {
                     isInProgress = false;
@@ -374,11 +372,11 @@
                 <div class="w-full gap-2 flex-center">
                     {#if isValidUsername}
                         <Check
-                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
+                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
                         />
                     {:else}
                         <Cross
-                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-1"
+                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
                         />
                     {/if}
                     <form
@@ -424,11 +422,11 @@
             <div class="flex w-full gap-2">
                 {#if hasAgreedToTOS}
                     <Check
-                        class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-1"
+                        class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-[1.5]"
                     />
                 {:else}
                     <Cross
-                        class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-1"
+                        class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-[1.5]"
                     />
                 {/if}
                 <p class="flex-auto m-auto text-base xs:text-sm">

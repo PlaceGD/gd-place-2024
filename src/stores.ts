@@ -101,10 +101,8 @@ export const newReports = persist(
 );
 
 export const loginData = writable<{
-    isLoggedIn: boolean;
     currentUserData: UserData | null;
 }>({
-    isLoggedIn: false,
     currentUserData: null,
 });
 

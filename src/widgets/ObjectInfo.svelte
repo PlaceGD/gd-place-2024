@@ -19,10 +19,8 @@
 
     export let state: wasm.State;
 
-    const cooldown = new SyncedCooldown(
-        `userDetails/${$loginData.currentUserData!.user.uid}`,
-        "epochNextReport",
-        REPORT_COOLDOWN_SECONDS
+    const cooldown = SyncedCooldown.new(
+        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextReport`
     );
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
 
@@ -45,8 +43,6 @@
                 x: cameraPos[0],
                 y: cameraPos[1],
             });
-
-            cooldown.start();
         } catch (e) {
             Toast.showErrorToast(`Failed to report user. (${e})`);
         }
@@ -185,7 +181,9 @@
                         >
                             {#if !$cooldownFinished}
                                 Thanks for reporting!
-                                {$cooldownDisplay}
+                                <span class="proportional-nums"
+                                    >{$cooldownDisplay}</span
+                                >
                             {:else}
                                 Please report inappropriate usernames or alt
                                 accounts.

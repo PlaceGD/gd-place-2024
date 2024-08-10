@@ -29,10 +29,10 @@
     <div
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
     >
-        <div class="flex flex-col px-2 py-1 divide-y divide-white/10">
+        <div class="flex flex-col gap-1 px-2 py-1 divide-y divide-white/10">
             <!-- Faded scroll just for fanciness -->
             <FadedScroll>
-                <ul class="alternating-bg">
+                <ul class="flex flex-col gap-1 alternating-bg">
                     <!-- TODO(sputnix) add the settings here -->
 
                     <li
@@ -147,7 +147,7 @@
                     >
                     <Button
                         type="plain"
-                        class="text-sm text-center p-1 underline transition duration-500 text-white/50 hover:text-white hover:decoration-dashed"
+                        class="p-1 text-sm text-center underline transition duration-500 text-white/50 hover:text-white hover:decoration-dashed"
                         on:click={() => {
                             $openMenu = ExclusiveMenus.Kofi;
                         }}

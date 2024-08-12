@@ -185,9 +185,7 @@
                                     >{$cooldownDisplay}</span
                                 >
                             {:else}
-                                Please report inappropriate usernames or alt
-                                accounts.
-                                <b>Do not falsely report users.</b>
+                                Only report users that break the rules
                             {/if}
                         </p>
                     {:else}

@@ -132,8 +132,7 @@
                     </a>
                 {:else}
                     <p class="text-base">
-                        Want to stand out with a colored name and support the
-                        project? Make a small donation to our kofi!
+                        Get a colored name by making a donation!
                     </p>
 
                     <span title="Support us">
@@ -152,7 +151,7 @@
                             $openMenu = ExclusiveMenus.Kofi;
                         }}
                     >
-                        Submit Transaction Id
+                        Choose your name colors
                     </Button>
                 {/if}
             </div>

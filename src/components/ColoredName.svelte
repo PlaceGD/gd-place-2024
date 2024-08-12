@@ -14,7 +14,7 @@
     `}
     >
         <span
-            class="absolute text-stroke-both"
+            class="absolute text-stroke"
             style={`
                 font-family: inherit;
                 font-weight: inherit;

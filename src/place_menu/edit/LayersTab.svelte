@@ -101,6 +101,7 @@
                 on:click={() => ($menuZLayer = equivalentBottom($menuZLayer))}
                 tabindex={canSelectByTab}
                 aria-label="Layer Below Player"
+                title="Layer Below Player"
             >
                 <Image
                     src={bottomIconUrl}
@@ -121,6 +122,7 @@
                 on:click={() => ($menuZLayer = equivalentTop($menuZLayer))}
                 tabindex={canSelectByTab}
                 aria-label="Layer Above Player"
+                title="Layer Above Player"
             >
                 <Image
                     src={topIconUrl}

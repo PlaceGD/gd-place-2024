@@ -12,7 +12,15 @@ use crate::{
     },
     log, map,
     object::{GDColor, GDObject, GDObjectOpt},
-    render::{data::Globals, pipeline_rect, state::RenderState},
+    render::{
+        data::Globals,
+        pipeline_rect,
+        rectdraw::{
+            billy::{Billy, BlendMode},
+            rect_draw,
+        },
+        state::RenderState,
+    },
     util::{get_max_bounding_box, now, point_in_triangle, Rect},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
     ErrorType, RustError,
@@ -20,32 +28,32 @@ use crate::{
 
 #[wasm_bindgen]
 pub struct State {
-    render: RenderState,
+    pub(crate) render: RenderState,
 
-    time: f32,
+    pub(crate) time: f32,
 
-    width: u32,
-    height: u32,
+    pub(crate) width: u32,
+    pub(crate) height: u32,
 
-    camera_pos: Vec2,
-    zoom: f32,
+    pub(crate) camera_pos: Vec2,
+    pub(crate) zoom: f32,
 
-    level: Level,
+    pub(crate) level: Level,
 
-    bg_color: (u8, u8, u8),
-    ground1_color: (u8, u8, u8),
-    ground2_color: (u8, u8, u8),
+    pub(crate) bg_color: (u8, u8, u8),
+    pub(crate) ground1_color: (u8, u8, u8),
+    pub(crate) ground2_color: (u8, u8, u8),
 
-    preview_object: GDObjectOpt,
-    show_preview: bool,
+    pub(crate) preview_object: GDObjectOpt,
+    pub(crate) show_preview: bool,
 
-    selected_object: Option<DbKey>,
+    pub(crate) selected_object: Option<DbKey>,
     // select_depth: u32,
-    show_collidable: bool,
-    hide_triggers: bool,
-    hide_grid: bool,
-    hide_ground: bool,
-    hide_outline: bool,
+    pub(crate) show_collidable: bool,
+    pub(crate) hide_triggers: bool,
+    pub(crate) hide_grid: bool,
+    pub(crate) hide_ground: bool,
+    pub(crate) hide_outline: bool,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -96,34 +104,6 @@ impl State {
 
         // Affine2::from_scale_angle_translation(vec2(scale, scale), 0.0, -self.camera_pos)
     }
-}
-
-fn obj_transform(obj: &GDObject) -> Affine2 {
-    let scale_x = OBJECT_INFO[obj.id as usize].builtin_scale_x / 4.0;
-    let scale_y = OBJECT_INFO[obj.id as usize].builtin_scale_y / 4.0;
-
-    Affine2::from_mat2_translation(
-        mat2(
-            vec2(obj.ix * scale_x, obj.iy * scale_x),
-            vec2(obj.jx * scale_y, obj.jy * scale_y),
-        ),
-        vec2(obj.x, obj.y),
-    )
-}
-fn padded_obj_rect(obj: &GDObject, pad: f32) -> Rect<f32> {
-    let mut rect_size = get_max_bounding_box(obj.id as u32).unwrap_or((10.0, 10.0));
-    // rect_size.0 *= OBJECT_INFO[obj.id as usize].builtin_scale_x;
-    // rect_size.1 *= OBJECT_INFO[obj.id as usize].builtin_scale_y;
-
-    rect_size.0 += pad;
-    rect_size.1 += pad;
-
-    Rect::new(
-        -rect_size.0 / 2.0,
-        -rect_size.1 / 2.0,
-        rect_size.0,
-        rect_size.1,
-    )
 }
 
 fn chunk_rect_blocks(x: i32, y: i32) -> Rect<i32> {
@@ -202,7 +182,7 @@ impl State {
     //     (1.0 - rem) * (dash_len * 2.0)
     // }
 
-    fn get_camera_world_rect(&self) -> Rect<f32> {
+    pub(crate) fn get_camera_world_rect(&self) -> Rect<f32> {
         let (cx, cy) = (self.camera_pos.x, self.camera_pos.y);
         let s = self.get_zoom_scale();
         let mut gongy = Rect::new(
@@ -406,9 +386,9 @@ impl State {
                 let cy = chunk.y + j;
                 self.level
                     .foreach_obj_in_chunk(ChunkCoord { x: cx, y: cy }, |key, obj| {
-                        let rect = padded_obj_rect(obj, pad);
+                        let rect = obj.padded_rect(pad);
 
-                        let t = obj_transform(obj);
+                        let t = obj.transform();
 
                         let corners_world =
                             rect.corners().map(|(x, y)| t.transform_point2(vec2(x, y)));
@@ -526,22 +506,12 @@ impl State {
         {
             self.time += delta;
 
-            let mut rects: Vec<pipeline_rect::instance::Instance> = vec![];
-            enum BlendMode {
-                Normal,
-                Additive,
-            }
-            struct DrawCall {
-                blend_mode: BlendMode,
-                until_instance: u32,
-            }
-            let mut calls: Vec<DrawCall> = vec![];
+            let mut billy = Billy::new();
 
             // background
             {
-                let mut transform = Affine2::IDENTITY;
-
-                transform *= Affine2::from_translation(-self.camera_pos / 3.0 / 2.0);
+                let old_t = billy.get_transform();
+                billy.translate(-self.camera_pos / 3.0 / 2.0);
 
                 let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
 
@@ -549,438 +519,35 @@ impl State {
 
                 for i in -2i32..=2 {
                     for j in -2i32..=2 {
-                        let mut transform = transform;
-                        transform *=
-                            Affine2::from_translation(offset + scale * vec2(i as f32, j as f32));
-                        // transform *= Affine2::from_scale(vec2(
-                        //     1.0,
-                        //     if j.rem_euclid(2) == 1 { -1.0 } else { 1.0 },
-                        // ));
-
-                        rects.push(pipeline_rect::instance::Instance::new(
-                            transform
-                                * Affine2::from_scale_angle_translation(
-                                    vec2(scale, scale) + 1.0,
-                                    0.0,
-                                    -(vec2(scale, scale) + 1.0) / 2.0,
-                                ),
-                            // transform.transform_point2(-vec2(scale + 1.0, scale + 1.0) / 2.0),
-                            // transform.transform_vector2(vec2(scale + 1.0, scale + 1.0)),
+                        billy.centered_textured_rect(
+                            offset + scale * vec2(i as f32, j as f32),
+                            vec2(scale, scale),
                             vec4(
                                 self.bg_color.0 as f32 / 255.0,
                                 self.bg_color.1 as f32 / 255.0,
                                 self.bg_color.2 as f32 / 255.0,
                                 1.0,
                             ),
-                            1,
-                            vec2(0.0, 0.0),
-                            vec2(1024.0, 1024.0),
-                        ));
-                    }
-                }
-
-                calls.push(DrawCall {
-                    blend_mode: BlendMode::Normal,
-                    until_instance: rects.len() as u32,
-                });
-            };
-
-            // view rect and chunk debug
-            {
-                let transform = self.view_transform();
-                let view_rect = self.get_camera_world_rect();
-
-                let size = vec2(view_rect.w, view_rect.h);
-
-                // rects.push(pipeline_rect::instance::Instance::new(
-                //     transform
-                //         * Affine2::from_scale_angle_translation(
-                //             size,
-                //             0.0,
-                //             vec2(view_rect.x, view_rect.y),
-                //         ),
-                //     vec4(1.0, 0.0, 0.0, 0.5),
-                //     1000,
-                //     vec2(0.0, 0.0),
-                //     size * 4.0,
-                // ));
-
-                // for (x, y) in view_rect.corners() {
-                //     rects.push(pipeline_rect::instance::Instance::new(
-                //         transform
-                //             * Affine2::from_scale_angle_translation(
-                //                 vec2(10.0, 10.0),
-                //                 0.0,
-                //                 vec2(x - 5.0, y - 5.0),
-                //             ),
-                //         vec4(1.0, 0.0, 0.0, 0.5),
-                //         0,
-                //         vec2(0.0, 0.0),
-                //         vec2(0.0, 0.0),
-                //     ));
-                // }
-
-                let now = now();
-
-                // for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
-                //     let size = vec2(20.0 * 30.0, 20.0 * 30.0);
-                //     rects.push(pipeline_rect::instance::Instance::new(
-                //         transform
-                //             * Affine2::from_scale_angle_translation(
-                //                 size,
-                //                 0.0,
-                //                 vec2(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0),
-                //             ),
-                //         vec4(
-                //             0.0,
-                //             1.0,
-                //             0.0,
-                //             map!(
-                //                 now - chunk.last_time_visible,
-                //                 0.0,
-                //                 UNLOAD_CHUNK_TIME * 1000.0,
-                //                 1.0,
-                //                 0.0
-                //             ) as f32,
-                //         ),
-                //         1000,
-                //         vec2(0.0, 0.0),
-                //         size * 4.0,
-                //     ));
-                // }
-
-                calls.push(DrawCall {
-                    blend_mode: BlendMode::Normal,
-                    until_instance: rects.len() as u32,
-                });
-            }
-
-            // objects
-            {
-                let transform = self.view_transform();
-
-                let draw_obj_sprite = |rects: &mut Vec<pipeline_rect::instance::Instance>,
-                                       mut transform: Affine2,
-                                       sprite: SpriteInfo,
-                                       obj: &GDObject,
-                                       color: Vec4| {
-                    if self.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
-                        return;
-                    }
-
-                    let info = OBJECT_INFO[obj.id as usize];
-
-                    transform *= obj_transform(obj);
-
-                    let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
-                        4
-                    } else {
-                        5
-                    };
-
-                    let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
-                    let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
-
-                    let tint_color = if !self.show_collidable {
-                        if info.category == ObjectCategory::Triggers {
-                            vec4(1.0, 1.0, 1.0, 1.0)
-                        } else {
-                            color
-                        }
-                    } else {
-                        match info.hitbox_type {
-                            HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
-                            HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
-                            HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
-                            HitboxType::Special => vec4(0.0, 100.0, 0.0, 0.5),
-                        }
-                    };
-
-                    rects.push(pipeline_rect::instance::Instance::new(
-                        transform
-                            * Affine2::from_scale_angle_translation(
-                                uv_size,
-                                0.0,
-                                vec2(
-                                    -(sprite.size.0 as f32 / 2.0) + sprite.offset.0,
-                                    -(sprite.size.1 as f32 / 2.0) - sprite.offset.1,
-                                ),
-                            ),
-                        tint_color,
-                        tex_idx,
-                        uv_pos,
-                        uv_size,
-                    ));
-                    if special_ids::COLOR_TRIGGERS.contains(&obj.id) {
-                        rects.push(pipeline_rect::instance::Instance::new(
-                            transform
-                                * Affine2::from_scale_angle_translation(
-                                    vec2(128.0, 128.0),
-                                    0.0,
-                                    -vec2(64.0, 64.0) - vec2(0.0, 42.0),
-                                ),
-                            vec4(0.0, 0.0, 0.0, 1.0),
                             0,
                             vec2(0.0, 0.0),
-                            vec2(0.0, 0.0),
-                        ));
-                        if !self.show_collidable {
-                            rects.push(pipeline_rect::instance::Instance::new(
-                                transform
-                                    * Affine2::from_scale_angle_translation(
-                                        vec2(112.0, 112.0),
-                                        0.0,
-                                        -vec2(56.0, 56.0) - vec2(0.0, 42.0),
-                                    ),
-                                color,
-                                0,
-                                vec2(0.0, 0.0),
-                                vec2(0.0, 0.0),
-                            ));
-                        }
-                    }
-                };
-
-                let selected_color = |lighter| {
-                    let c = map!(
-                        (self.time * 10.0).sin(),
-                        -1.0,
-                        1.0,
-                        if lighter {
-                            150.0 / 255.0
-                        } else {
-                            100.0 / 255.0
-                        },
-                        if lighter { 1.0 } else { 200.0 / 255.0 }
-                    );
-                    vec4(1.0, c, c, 1.0)
-                };
-
-                for &layer in Z_LAYERS {
-                    for z_order in -50..=50 {
-                        self.level.foreach_obj_in_z(
-                            layer,
-                            z_order,
-                            |key, obj| {
-                                if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
-                                    if obj.main_color.blending {
-                                        let color = if self.selected_object == Some(key) {
-                                            selected_color(false)
-                                        } else {
-                                            Vec4::from_array(
-                                                [
-                                                    obj.main_color.r,
-                                                    obj.main_color.g,
-                                                    obj.main_color.b,
-                                                    obj.main_color.opacity,
-                                                ]
-                                                .map(|v| v as f32 / 255.0),
-                                            )
-                                        };
-                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
-                                    }
-                                }
-                            },
-                            self.show_preview.then(|| self.preview_object.into_obj()),
-                        )
-                    }
-                    calls.push(DrawCall {
-                        blend_mode: if self.show_collidable {
-                            BlendMode::Normal
-                        } else {
-                            BlendMode::Additive
-                        },
-                        until_instance: rects.len() as u32,
-                    });
-
-                    for z_order in -50..=50 {
-                        self.level.foreach_obj_in_z(
-                            layer,
-                            z_order,
-                            |key, obj| {
-                                if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
-                                    if !obj.main_color.blending {
-                                        let color = if self.selected_object == Some(key) {
-                                            selected_color(false)
-                                        } else {
-                                            Vec4::from_array(
-                                                [
-                                                    obj.main_color.r,
-                                                    obj.main_color.g,
-                                                    obj.main_color.b,
-                                                    obj.main_color.opacity,
-                                                ]
-                                                .map(|v| v as f32 / 255.0),
-                                            )
-                                        };
-                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
-                                    }
-                                }
-                                if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
-                                    if !obj.detail_color.blending {
-                                        let color = if self.selected_object == Some(key) {
-                                            selected_color(true)
-                                        } else {
-                                            Vec4::from_array(
-                                                [
-                                                    obj.detail_color.r,
-                                                    obj.detail_color.g,
-                                                    obj.detail_color.b,
-                                                    obj.detail_color.opacity,
-                                                ]
-                                                .map(|v| v as f32 / 255.0),
-                                            )
-                                        };
-                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
-                                    }
-                                }
-                            },
-                            self.show_preview.then(|| self.preview_object.into_obj()),
-                        )
-                    }
-                    calls.push(DrawCall {
-                        blend_mode: BlendMode::Normal,
-                        until_instance: rects.len() as u32,
-                    });
-
-                    for z_order in -50..=50 {
-                        self.level.foreach_obj_in_z(
-                            layer,
-                            z_order,
-                            |key, obj| {
-                                if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
-                                    if obj.detail_color.blending {
-                                        let color = if self.selected_object == Some(key) {
-                                            selected_color(false)
-                                        } else {
-                                            Vec4::from_array(
-                                                [
-                                                    obj.detail_color.r,
-                                                    obj.detail_color.g,
-                                                    obj.detail_color.b,
-                                                    obj.detail_color.opacity,
-                                                ]
-                                                .map(|v| v as f32 / 255.0),
-                                            )
-                                        };
-                                        draw_obj_sprite(&mut rects, transform, sprite, obj, color);
-                                    }
-                                }
-                            },
-                            self.show_preview.then(|| self.preview_object.into_obj()),
-                        )
-                    }
-                    calls.push(DrawCall {
-                        blend_mode: if self.show_collidable {
-                            BlendMode::Normal
-                        } else {
-                            BlendMode::Additive
-                        },
-                        until_instance: rects.len() as u32,
-                    });
-                }
-            };
-
-            // selection box
-            if !self.hide_outline {
-                let highlight_obj = if self.show_preview {
-                    Some((self.preview_object.into_obj(), (100, 255, 100), None))
-                } else if let Some(d) = self.selected_object {
-                    self.level.get_obj_by_key(d).map(|v| {
-                        (
-                            *v,
-                            (255, 100, 100),
-                            Some(String::from_utf8(d.into()).unwrap()),
-                        )
-                    })
-                } else {
-                    None
-                };
-
-                if let Some((obj, (r, g, b), _)) = highlight_obj {
-                    let transform = self.view_transform() * obj_transform(&obj);
-                    let scale_vec = vec2(
-                        OBJECT_INFO[obj.id as usize].builtin_scale_x,
-                        OBJECT_INFO[obj.id as usize].builtin_scale_y,
-                    );
-
-                    let rect = padded_obj_rect(&obj, 0.0);
-                    let rect_size_vec = vec2(rect.w, rect.h);
-
-                    rects.push(pipeline_rect::instance::Instance::new(
-                        transform
-                            * Affine2::from_translation(
-                                -(rect_size_vec + vec2(30.0, 30.0) / scale_vec) / 2.0,
-                            )
-                            * Affine2::from_scale(rect_size_vec + vec2(30.0, 30.0) / scale_vec),
-                        vec4(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 0.75),
-                        1000,
-                        vec2(0.0, 0.0),
-                        rect_size_vec * scale_vec + 30.0,
-                    ));
-                }
-                calls.push(DrawCall {
-                    blend_mode: BlendMode::Normal,
-                    until_instance: rects.len() as u32,
-                });
-            }
-
-            // ground
-            if !self.hide_ground {
-                const GROUND_SIZE_BLOCKS: f32 = 4.25;
-                const GROUND_SIZE_UNITS: f32 = GROUND_SIZE_BLOCKS * 30.0;
-
-                let transform = self.view_transform();
-
-                let view_rect = self.get_camera_world_rect();
-                let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
-                let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
-
-                for i in min_x..=max_x {
-                    let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
-                    let t = transform
-                        * Affine2::from_scale_angle_translation(
-                            vec2(GROUND_SIZE_UNITS, GROUND_SIZE_UNITS) + 0.2,
-                            0.0,
-                            vec2(x, -GROUND_SIZE_UNITS) - 0.1,
+                            vec2(1024.0, 1024.0),
                         );
-                    rects.push(pipeline_rect::instance::Instance::new(
-                        t,
-                        vec4(
-                            self.ground1_color.0 as f32 / 255.0,
-                            self.ground1_color.1 as f32 / 255.0,
-                            self.ground1_color.2 as f32 / 255.0,
-                            1.0,
-                        ),
-                        2,
-                        vec2(0.0, 0.0),
-                        vec2(256.0, 256.0),
-                    ));
-                    rects.push(pipeline_rect::instance::Instance::new(
-                        t,
-                        vec4(
-                            self.ground2_color.0 as f32 / 255.0,
-                            self.ground2_color.1 as f32 / 255.0,
-                            self.ground2_color.2 as f32 / 255.0,
-                            1.0,
-                        ),
-                        3,
-                        vec2(0.0, 0.0),
-                        vec2(256.0, 256.0),
-                    ));
+                    }
                 }
-
-                calls.push(DrawCall {
-                    blend_mode: BlendMode::Normal,
-                    until_instance: rects.len() as u32,
-                });
+                billy.set_transform(old_t);
             };
+
+            rect_draw(self, &mut billy);
+
+            // this line just commits the previous call
+            billy.set_blend_mode(BlendMode::Additive);
+
             let instance_buffer =
                 self.render
                     .device
                     .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                         label: None,
-                        contents: bytemuck::cast_slice(&rects),
+                        contents: bytemuck::cast_slice(&billy.rects),
                         usage: wgpu::BufferUsages::VERTEX,
                     });
 
@@ -1017,7 +584,7 @@ impl State {
             );
 
             let mut last_instance = 0;
-            for (i, call) in calls.iter().enumerate() {
+            for (i, call) in billy.calls.iter().enumerate() {
                 render_pass.set_pipeline(match call.blend_mode {
                     BlendMode::Normal => &self.render.pipeline_rect,
                     BlendMode::Additive => &self.render.pipeline_rect_additive_sq_alpha,

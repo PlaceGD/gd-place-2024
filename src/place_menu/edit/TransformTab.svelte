@@ -10,6 +10,8 @@
     import * as wasm from "wasm-lib";
     import { menuMinimized, menuOpenWidget } from "../../stores";
     import { onDestroy } from "svelte";
+    import { isValidObject } from "shared-lib/gd";
+    import { setCheckedPreviewObject } from "../../utils/misc";
 
     export let state: wasm.State;
 
@@ -31,7 +33,7 @@
     const modifyObjCb = (cb: (obj: wasm.GDObjectOpt) => void) => () => {
         let obj = state.get_preview_object();
         cb(obj);
-        state.set_preview_object(obj);
+        setCheckedPreviewObject(state, obj);
     };
 
     $: canSelectByTab = $menuMinimized ? -1 : 0;

@@ -4,6 +4,7 @@
     import { clamp, getCenterPos, snap } from "shared-lib/util";
     import * as wasm from "wasm-lib";
     import { isValidObject, objects } from "shared-lib/gd";
+    import { setCheckedPreviewObject } from "../utils/misc";
 
     export let state: wasm.State;
 
@@ -47,11 +48,8 @@
             let obj = state.get_preview_object();
             let xAngle = obj.x_angle;
 
-            console.log(isValidObject(obj));
-
             obj.rotate(newAngle - xAngle);
-            if (isValidObject(obj)) {
-                state.set_preview_object(obj);
+            if (setCheckedPreviewObject(state, obj)) {
                 angle = newAngle;
             }
         }

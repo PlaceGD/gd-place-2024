@@ -7,6 +7,7 @@
     import { onDestroy, onMount } from "svelte";
     import { clamp, remEuclid, round, snap } from "shared-lib/util";
     import { isValidObject, objects } from "shared-lib/gd";
+    import { setCheckedPreviewObject } from "../utils/misc";
 
     let draggingX: [number, number, number, number] | null = null;
     let draggingY: [number, number, number, number] | null = null;
@@ -62,9 +63,8 @@
             );
             obj.x_angle =
                 snap((Math.atan2(ny, nx) * 180) / Math.PI, snapDegrees) / 5;
-            if (isValidObject(obj)) {
+            if (setCheckedPreviewObject(state, obj)) {
                 settem(obj);
-                state.set_preview_object(obj);
             }
         }
         if (draggingY != null) {
@@ -80,9 +80,8 @@
             );
             obj.y_angle =
                 snap((Math.atan2(ny, nx) * 180) / Math.PI, snapDegrees) / 5;
-            if (isValidObject(obj)) {
+            if (setCheckedPreviewObject(state, obj)) {
                 settem(obj);
-                state.set_preview_object(obj);
             }
         }
     }}

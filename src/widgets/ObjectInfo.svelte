@@ -70,8 +70,10 @@
         <li class="object-info-item">
             <span>Type:</span>
 
-            <div class="pr-3">
-                <ObjectButtonImage id={$selectedObject.id ?? 1} />
+            <div class="h-full">
+                {#key $selectedObject.id}
+                    <ObjectButtonImage id={$selectedObject.id ?? 1} />
+                {/key}
             </div>
         </li>
         <li class="object-info-item li-alternating">

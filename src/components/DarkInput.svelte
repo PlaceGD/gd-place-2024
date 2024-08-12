@@ -22,7 +22,7 @@
     {autoTrim}
     bind:value
     {...$$restProps}
-    class="p-2 text-center text-base rounded-lg outline-none text-stroke xs:p-1 bg-black/40 w-full outline-2 outline outline-white/20 -outline-offset-2 {$$restProps[
+    class="p-2 text-center text-base rounded-lg outline-none text-stroke xs:p-1 bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 {$$restProps[
         'class'
     ]}"
 />

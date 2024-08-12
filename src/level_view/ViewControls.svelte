@@ -51,8 +51,9 @@
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
     import { pinch } from "svelte-gestures";
-    import { objects } from "shared-lib/gd";
+    import { isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
+    import { setCheckedPreviewObject } from "../utils/misc";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -142,8 +143,9 @@
         $menuZOrder = 0;
         // $menuZLayer = wasm.ZLayer.B1;
 
-        state.set_preview_object(obj);
-        state.set_preview_visibility(true);
+        if (setCheckedPreviewObject(state, obj)) {
+            state.set_preview_visibility(true);
+        }
     };
 
     let selectDepth = 0;
@@ -411,7 +413,7 @@
                 e.preventDefault();
                 let obj = state.get_preview_object();
                 v.cb(obj);
-                state.set_preview_object(obj);
+                setCheckedPreviewObject(state, obj);
             }
         }
     }}
@@ -435,7 +437,7 @@
         }
     }}
     on:wheel|passive={e => {
-        zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -36, 36);
+        zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -4, 36);
         zoomTween.set(zoomGoal);
     }}
     use:pinch
@@ -495,9 +497,11 @@
             {/if}
         </Widget>
     {/if}
-    <Widget position={originScreen} scale={textZoomScale}>
-        <DeleteTexts />
-    </Widget>
+    {#if !$editorSettings.hideDeleteText}
+        <Widget position={originScreen} scale={textZoomScale}>
+            <DeleteTexts />
+        </Widget>
+    {/if}
     <Widget position={originScreen} scale={textZoomScale}>
         <TriggerRuns />
     </Widget>

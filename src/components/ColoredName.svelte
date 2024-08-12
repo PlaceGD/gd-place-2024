@@ -2,10 +2,22 @@
     import { getUsernameColor } from "../firebase/donations";
 
     export let username: string;
+    export let colorOverride: string | null = null;
+
+    const getOrOverride = async (
+        username: string,
+        override: string | null
+    ): Promise<string> => {
+        if (override != null) {
+            return override;
+        }
+        return await getUsernameColor(username);
+    };
+
     // export let class: string = "";
 </script>
 
-{#await getUsernameColor(username) then color}
+{#await getOrOverride(username, colorOverride) then color}
     <span
         class="relative"
         style={`
@@ -18,6 +30,7 @@
             style={`
                 font-family: inherit;
                 font-weight: inherit;
+                color: black;
             `}
         >
             {username}

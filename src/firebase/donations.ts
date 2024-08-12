@@ -1,4 +1,6 @@
+import { get } from "svelte/store";
 import { db } from "./firebase";
+import { loginData } from "../stores";
 
 let userColorCache: Record<string, string> = {};
 

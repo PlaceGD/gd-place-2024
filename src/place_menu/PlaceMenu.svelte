@@ -59,6 +59,7 @@
     import { onDestroy } from "svelte";
     import RadialCooldown from "../components/RadialCooldown.svelte";
     import OnceButton from "../components/OnceButton.svelte";
+    import { setCheckedPreviewObject } from "../utils/misc";
 
     export let state: wasm.State;
 
@@ -89,7 +90,7 @@
             $menuMainColor.opacity * 255,
             $menuMainColor.blending
         );
-        state.set_preview_object(obj);
+        setCheckedPreviewObject(state, obj);
     }
     $: {
         let obj = state.get_preview_object();
@@ -100,17 +101,17 @@
             $menuDetailColor.opacity * 255,
             $menuDetailColor.blending
         );
-        state.set_preview_object(obj);
+        setCheckedPreviewObject(state, obj);
     }
     $: {
         let obj = state.get_preview_object();
         obj.z_layer = $menuZLayer;
-        state.set_preview_object(obj);
+        setCheckedPreviewObject(state, obj);
     }
     $: {
         let obj = state.get_preview_object();
         obj.z_order = $menuZOrder;
-        state.set_preview_object(obj);
+        setCheckedPreviewObject(state, obj);
     }
     $: {
         let obj = state.get_preview_object();
@@ -122,7 +123,7 @@
         obj.x = obj.x + oldPx - newPx;
         obj.y = obj.y + oldPy - newPy;
 
-        state.set_preview_object(obj);
+        setCheckedPreviewObject(state, obj);
     }
     $: {
         if ($menuTabGroup == TabGroup.Delete) {
@@ -139,6 +140,8 @@
         state.set_show_collidable($editorSettings.showCollidable);
         state.set_hide_triggers($editorSettings.hideTriggers);
         state.set_hide_grid($editorSettings.hideGrid);
+        state.set_hide_ground($editorSettings.hideGround);
+        state.set_hide_outline($editorSettings.hideOutline);
     }
 
     $: {
@@ -220,6 +223,7 @@
         remaining: deleteCooldownRemaining,
     } = deleteCooldown;
 
+    let pdButtonDisabled = false;
     $: pdButtonDisabled =
         $menuTabGroup != TabGroup.Delete
             ? !$placeCooldownFinished

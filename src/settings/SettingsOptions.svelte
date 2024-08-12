@@ -27,14 +27,14 @@
 
 {#if $openMenu == ExclusiveMenus.Settings}
     <div
-        class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
+        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
     >
-        <div class="flex flex-col gap-1 px-2 py-1 divide-y divide-white/10">
+        <div
+            class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
+        >
             <!-- Faded scroll just for fanciness -->
             <FadedScroll>
-                <ul class="flex flex-col gap-1 alternating-bg">
-                    <!-- TODO(sputnix) add the settings here -->
-
+                <ul class="flex flex-col xs:gap-1 gap-2 alternating-bg">
                     <li
                         class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
                     >
@@ -87,7 +87,7 @@
                             class="grid w-full items-center grid-cols-[1fr_min-content]"
                         >
                             <div class="flex flex-col">
-                                <span>Hide grid</span>
+                                <span>Hide Grid</span>
                                 <span class="text-xs text-white/50"
                                     >Hide the editor grid</span
                                 >
@@ -96,6 +96,70 @@
                                 <ToggleSwitch
                                     id="show-triggers"
                                     bind:isToggled={$editorSettings.hideGrid}
+                                ></ToggleSwitch>
+                            </span>
+                        </label>
+                    </li>
+                    <li
+                        class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
+                    >
+                        <label
+                            for="show-triggers"
+                            class="grid w-full items-center grid-cols-[1fr_min-content]"
+                        >
+                            <div class="flex flex-col">
+                                <span>Hide Ground</span>
+                                <span class="text-xs text-white/50"
+                                    >Hides the ground</span
+                                >
+                            </div>
+                            <span>
+                                <ToggleSwitch
+                                    id="show-triggers"
+                                    bind:isToggled={$editorSettings.hideGround}
+                                ></ToggleSwitch>
+                            </span>
+                        </label>
+                    </li>
+                    <li
+                        class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
+                    >
+                        <label
+                            for="show-triggers"
+                            class="grid w-full items-center grid-cols-[1fr_min-content]"
+                        >
+                            <div class="flex flex-col">
+                                <span>Hide Selection Outline</span>
+                                <span class="text-xs text-white/50"
+                                    >Hide the object selection outline</span
+                                >
+                            </div>
+                            <span>
+                                <ToggleSwitch
+                                    id="show-triggers"
+                                    bind:isToggled={$editorSettings.hideOutline}
+                                ></ToggleSwitch>
+                            </span>
+                        </label>
+                    </li>
+                    <li
+                        class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
+                    >
+                        <label
+                            for="show-triggers"
+                            class="grid w-full items-center grid-cols-[1fr_min-content]"
+                        >
+                            <div class="flex flex-col">
+                                <span>Hide Delete Text</span>
+                                <span class="text-xs text-white/50"
+                                    >Hides the text that appears when an object
+                                    is deleted</span
+                                >
+                            </div>
+                            <span>
+                                <ToggleSwitch
+                                    id="show-triggers"
+                                    bind:isToggled={$editorSettings.hideDeleteText}
                                 ></ToggleSwitch>
                             </span>
                         </label>

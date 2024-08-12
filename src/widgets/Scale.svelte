@@ -3,43 +3,15 @@
     import * as wasm from "wasm-lib";
 
     import { onDestroy } from "svelte";
+    import { setCheckedPreviewObject } from "../utils/misc";
 
     export let state: wasm.State;
     let slider: HTMLInputElement;
 
-    // let scale = 1;
-    // let prevScale = 1;
-
     const MIN = 0.5;
     const MAX = 2.0;
 
-    // let cb = addUpdateCallback(state => {
-    //     let obj = state.get_preview_object();
-    //     let xLen = obj.x_scale_exp;
-    //     let yLen = obj.y_scale_exp;
-
-    //     let larger = Math.max(xLen, yLen);
-    //     // let smaller = Math.min(xLen, yLen);
-
-    //     let scaleExp = Math.round(Math.log2(scale) * 12);
-
-    //     if (scale != prevScale) {
-    //         obj.scale(scaleExp - larger);
-    //         state.set_preview_object(obj);
-    //         scale = 2 ** (scaleExp / 12);
-    //         prevScale = scale;
-    //         return;
-    //     }
-    //     if (scaleExp != larger) {
-    //         scale = 2 ** (larger / 12);
-    //         prevScale = scale;
-    //     }
-    // });
-
-    // onDestroy(() => cb.remove());
-
     let scale = 0;
-    // let newAngle = 0;
 
     const loopFn = () => {
         let obj = state.get_preview_object();
@@ -91,7 +63,7 @@
                 let scaleExp = Math.round(Math.log2(newScale) * 12);
 
                 obj.scale(scaleExp - larger);
-                state.set_preview_object(obj);
+                setCheckedPreviewObject(state, obj);
                 scale = 2 ** (scaleExp / 12);
 
                 slider.value = `${scale}`;

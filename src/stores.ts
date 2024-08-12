@@ -11,6 +11,7 @@ import {
 import type { ObjectCategory } from "shared-lib/gd";
 import { tweened, type TweenedOptions } from "svelte/motion";
 import { linear } from "svelte/easing";
+import { db } from "./firebase/firebase";
 
 export enum TabGroup {
     Build,
@@ -74,6 +75,9 @@ export const editorSettings = persist(
         showCollidable: false,
         hideTriggers: false,
         hideGrid: false,
+        hideGround: false,
+        hideOutline: false,
+        hideDeleteText: false,
     }),
     createLocalStorage(),
     "editorSettings"
@@ -207,3 +211,19 @@ export const ground2Color = persistLocalTweened(
     "ground2Color",
     { duration: 500, easing: linear }
 );
+
+export const currentUserColor: Writable<string> = writable("white");
+
+let currentColorUnsub = () => {};
+loginData.subscribe(v => {
+    currentColorUnsub();
+    if (v.currentUserData != null && v.currentUserData.userDetails != null) {
+        currentColorUnsub = db
+            .ref(
+                `userName/${v.currentUserData.userDetails.username.toLowerCase()}/displayColor`
+            )
+            .on("value", v => {
+                currentUserColor.set(v.val() ?? "white");
+            });
+    }
+});

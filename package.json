@@ -6,9 +6,11 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "deploy": "npm run wasm:build-prod && npm run shared:build && npm run build && firebase deploy",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "wasm:build": "cd wasm-lib && npm run random-uuid --silent > ../public/wasm.txt && wasm-pack build --reference-types --weak-refs --target web && cd ..",
+        "wasm:build": "cd wasm-lib && wasm-pack build --no-opt --reference-types --weak-refs --target web && npm run random-uuid --silent > ../public/wasm.txt && cd ..",
+        "wasm:build-prod": "cd wasm-lib && wasm-pack build --reference-types --weak-refs --target web && npm run random-uuid --silent > ../public/wasm.txt && cd ..",
         "shared:build": "cd shared-lib && npm run build && cd ..",
         "nexus:gen": "cd the-nexus && cargo test --release generate_shid && cd ..",
         "nexus:gen_no_sheet": "cd the-nexus && cargo test --release generate_shid_no_sheet && cd ..",

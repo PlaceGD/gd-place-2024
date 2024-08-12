@@ -169,7 +169,7 @@
                         <DarkInput
                             maxLength={3}
                             bind:value={gradientStops[idx]}
-                            class="xs:text-sm"
+                            class="w-full xs:text-sm"
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">

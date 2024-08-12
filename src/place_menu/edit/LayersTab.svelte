@@ -178,7 +178,7 @@
                 </button>
 
                 <DarkInput
-                    class="w-20 text-3xl md:w-16 xs:w-14 md:text-2xl sm:text-xl xs:text-lg font-pusab"
+                    class="w-20 text-3xl md:text-2xl sm:text-xl xs:text-lg font-pusab"
                     maxLength={3}
                     tabIndex={canSelectByTab}
                     hardValidInput={HARD_VALID_INPUT}

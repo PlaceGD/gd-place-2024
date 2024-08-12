@@ -2,7 +2,12 @@
     import ColoredName from "../components/ColoredName.svelte";
     import Image from "../components/Image.svelte";
     import { getUsernameColor } from "../firebase/donations";
-    import { ExclusiveMenus, loginData, openMenu } from "../stores";
+    import {
+        currentUserColor,
+        ExclusiveMenus,
+        loginData,
+        openMenu,
+    } from "../stores";
     import { handleSignOut } from "./login";
 
     import profileInUrl from "./assets/profile_in.png";
@@ -16,6 +21,7 @@
         <h1 class="z-30 text-3xl text-white font-pusab xs:text-2xl">
             <ColoredName
                 username={$loginData.currentUserData.userDetails.username}
+                colorOverride={$currentUserColor}
             />
         </h1>
     {/if}

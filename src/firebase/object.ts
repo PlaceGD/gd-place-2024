@@ -7,7 +7,7 @@ import { encodeString } from "shared-lib/base_util";
 
 export const addObject = (obj: GDObjectOpt) => {
     let v = obj.bytes();
-    console.log(v);
+    // console.log(v);
     let s = encodeString(v, 126);
     placeObject({ object: s }).catch(e => {
         Toast.showErrorToast(e);

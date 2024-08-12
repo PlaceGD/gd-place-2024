@@ -44,6 +44,8 @@ pub struct State {
     show_collidable: bool,
     hide_triggers: bool,
     hide_grid: bool,
+    hide_ground: bool,
+    hide_outline: bool,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -82,6 +84,8 @@ impl State {
             show_collidable: false,
             hide_triggers: false,
             hide_grid: false,
+            hide_ground: false,
+            hide_outline: false,
             render,
         }
     }
@@ -282,7 +286,7 @@ impl State {
         self.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.zoom = v.clamp(-36.0, 36.0);
+        self.zoom = v.clamp(-4.0, 36.0);
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
@@ -478,6 +482,12 @@ impl State {
     }
     pub fn set_hide_grid(&mut self, to: bool) {
         self.hide_grid = to;
+    }
+    pub fn set_hide_outline(&mut self, to: bool) {
+        self.hide_outline = to;
+    }
+    pub fn set_hide_ground(&mut self, to: bool) {
+        self.hide_ground = to;
     }
 
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
@@ -872,7 +882,7 @@ impl State {
             };
 
             // selection box
-            {
+            if !self.hide_outline {
                 let highlight_obj = if self.show_preview {
                     Some((self.preview_object.into_obj(), (100, 255, 100), None))
                 } else if let Some(d) = self.selected_object {
@@ -909,10 +919,14 @@ impl State {
                         rect_size_vec * scale_vec + 30.0,
                     ));
                 }
+                calls.push(DrawCall {
+                    blend_mode: BlendMode::Normal,
+                    until_instance: rects.len() as u32,
+                });
             }
 
             // ground
-            {
+            if !self.hide_ground {
                 const GROUND_SIZE_BLOCKS: f32 = 4.25;
                 const GROUND_SIZE_UNITS: f32 = GROUND_SIZE_BLOCKS * 30.0;
 

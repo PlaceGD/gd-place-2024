@@ -90,6 +90,7 @@ fn generate_shide(sheet: bool) {
 export const BG_TRIGGER: number = {};
 export const GROUND_TRIGGER: number = {};
 export const GROUND_2_TRIGGER: number = {};
+export const ARROW_TRIGGER: number = {};
 
 export const TRIGGERS: number[] = {:?};
 export const COLOR_TRIGGERS: number[] = {:?};
@@ -97,6 +98,7 @@ export const COLOR_TRIGGERS: number[] = {:?};
             special_ids::BG_TRIGGER,
             special_ids::GROUND_TRIGGER,
             special_ids::GROUND_2_TRIGGER,
+            special_ids::ARROW_TRIGGER,
             special_ids::TRIGGERS,
             special_ids::COLOR_TRIGGERS
         ),

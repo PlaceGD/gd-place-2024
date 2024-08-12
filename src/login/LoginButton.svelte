@@ -12,13 +12,11 @@
 
     import profileInUrl from "./assets/profile_in.png";
     import profileOutUrl from "./assets/profile_out.png";
-
-    // TODO: make user gradient update immediately when changed
 </script>
 
-<div class="gap-4 flex-center">
+<div class="gap-4 xs:gap-2 flex-center">
     {#if $loginData.currentUserData != null && $loginData.currentUserData.userDetails != null}
-        <h1 class="z-30 text-3xl text-white font-pusab xs:text-2xl">
+        <h1 class="z-30 text-3xl text-white font-pusab sm:text-2xl xs:text-xl">
             <ColoredName
                 username={$loginData.currentUserData.userDetails.username}
                 colorOverride={$currentUserColor}

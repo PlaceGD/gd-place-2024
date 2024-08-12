@@ -32,7 +32,7 @@
         class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
     >
         <div
-            class="flex flex-row-reverse justify-end gap-4 p-2 pointer-events-all"
+            class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
         >
             <SettingsButton />
             {#if state != null}

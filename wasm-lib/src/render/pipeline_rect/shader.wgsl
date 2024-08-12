@@ -136,7 +136,7 @@ fn fs_color(in: VertexOutput) -> vec4<f32> {
             return textureSampleLevel(t_5, s_5, in.uv, 0.0) * in.color;
         }
         case 1000u: {
-            if !is_within_rect(in.uv, vec2(0.0), in.uv_size, -10.0) && eucl_mod(in.uv.x + in.uv.y - globals.time * 60.0, 40.0) < 20.0 {
+            if !is_within_rect(in.uv, vec2(0.0), in.uv_size, -2.5) && eucl_mod(in.uv.x + in.uv.y - globals.time * 30.0, 10.0) < 5.0 {
                 return in.color;
             } else {
                 return vec4(0.0);

@@ -30,6 +30,9 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             special_ids::BG_TRIGGER => Some("bg_trigger"),
             special_ids::GROUND_TRIGGER => Some("ground_trigger"),
             special_ids::GROUND_2_TRIGGER => Some("ground_2_trigger"),
+            special_ids::ARROW_TRIGGER => Some("arrow_trigger"),
+            special_ids::SFX_TRIGGER => Some("sfx_trigger"),
+            special_ids::SONG_TRIGGER => Some("song_trigger"),
             _ => None,
         };
         if let Some(tex) = special_tex {

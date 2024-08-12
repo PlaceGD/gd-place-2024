@@ -913,7 +913,7 @@ impl State {
                                 -(rect_size_vec + vec2(30.0, 30.0) / scale_vec) / 2.0,
                             )
                             * Affine2::from_scale(rect_size_vec + vec2(30.0, 30.0) / scale_vec),
-                        vec4(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0),
+                        vec4(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 0.75),
                         1000,
                         vec2(0.0, 0.0),
                         rect_size_vec * scale_vec + 30.0,

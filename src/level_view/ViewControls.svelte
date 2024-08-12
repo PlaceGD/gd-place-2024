@@ -81,8 +81,8 @@
     const getWorldMousePos = () => {
         // console.log(mouseX, mouseY);
         return state.get_world_pos(
-            mouseX - canvas.offsetWidth / 2,
-            -(mouseY - canvas.offsetHeight / 2)
+            mouseX - (canvas.offsetWidth * window.devicePixelRatio) / 2,
+            -(mouseY - (canvas.offsetHeight * window.devicePixelRatio) / 2)
         );
     };
 
@@ -370,7 +370,10 @@
         let obj = state.get_preview_object();
 
         let p = state.get_screen_pos(obj.x, obj.y);
-        editWidgetPos = [p[0], p[1]];
+        editWidgetPos = [
+            p[0] / window.devicePixelRatio,
+            p[1] / window.devicePixelRatio,
+        ];
 
         editWidgetScale = 1 + state.get_zoom() / 80;
         editWidgetVisible = state.is_preview_visible();
@@ -393,13 +396,21 @@
         handleShowObjPreview();
     }}
     on:mousemove={e => {
-        handleDrag(e.clientX, e.clientY);
+        handleDrag(
+            e.clientX * window.devicePixelRatio,
+            e.clientY * window.devicePixelRatio
+        );
     }}
     on:resize={() => {
         handleSub(state);
     }}
     on:keydown={e => {
-        if (document.activeElement?.tagName == "INPUT") return;
+        if (
+            document.activeElement instanceof HTMLInputElement &&
+            document.activeElement.type == "text"
+        ) {
+            return;
+        }
 
         for (let v of [
             ...Object.values(TRANSFORM_KEYBINDS),
@@ -428,12 +439,15 @@
     on:focus={() => (isFocused = true)}
     on:blur={() => (isFocused = false)}
     on:mousemove={e => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
+        mouseX = e.clientX * window.devicePixelRatio;
+        mouseY = e.clientY * window.devicePixelRatio;
     }}
     on:mousedown={e => {
         if (e.button == 0) {
-            startDrag(e.clientX, e.clientY);
+            startDrag(
+                e.clientX * window.devicePixelRatio,
+                e.clientY * window.devicePixelRatio
+            );
         }
     }}
     on:wheel|passive={e => {
@@ -506,7 +520,7 @@
         <TriggerRuns />
     </Widget>
     {#if $loginData.currentUserData != null}
-        <Widget position={[60, -60]} scale={1.0} screenCenter={false}>
+        <Widget position={[30, -30]} scale={1.0} screenCenter={false}>
             <ObjectInfo bind:state />
         </Widget>
     {/if}

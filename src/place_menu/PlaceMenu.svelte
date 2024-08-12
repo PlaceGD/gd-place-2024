@@ -8,6 +8,7 @@
         BG_TRIGGER,
         GROUND_TRIGGER,
         GROUND_2_TRIGGER,
+        ARROW_TRIGGER,
     } from "shared-lib/nexusgen";
     import { CATEGORY_ICONS } from "../gd/object";
 
@@ -65,12 +66,21 @@
 
     const minimizeAnimDur = 0.5;
 
+    $: showColorsTab = $menuSelectedObject != ARROW_TRIGGER;
+    $: colorsTabName = "Colors";
     $: {
         if (COLOR_TRIGGERS.includes($menuSelectedObject)) {
             $menuMainColor.blending = false;
             $menuDetailColor.blending = false;
             $menuMainColor.opacity = 1;
             $menuDetailColor.opacity = 1;
+        }
+    }
+    $: {
+        if ($menuSelectedObject == ARROW_TRIGGER) {
+            if ($menuEditTab == EditTab.Colors) {
+                $menuEditTab = EditTab.Transform;
+            }
         }
     }
     $: [mainR, mainG, mainB] =
@@ -235,7 +245,10 @@
     data-minimised={+$menuMinimized}
 >
     <div
-        class="flex justify-end gap-2 text-white sm:flex-col pointer-events-all"
+        class={cx({
+            "flex justify-end text-white sm:flex-col pointer-events-all": true,
+            "gap-2": !$menuMinimized,
+        })}
     >
         <div
             class="grid flex-1 gap-2 menu-grid-container"
@@ -245,7 +258,7 @@
                 class="flex flex-col items-center minimize menu-panel justify-evenly focus:outline focus:outline-1 focus:outline-offset-1"
             >
                 <button
-                    class="absolute w-full p-3"
+                    class="absolute flex w-full p-3 md:p-2 xs:p-1 flex-center"
                     on:click={() => {
                         $menuMinimized = !$menuMinimized;
                     }}
@@ -297,33 +310,35 @@
                         {/each}
                     {:else if $menuTabGroup == TabGroup.Edit}
                         {#each Object.values(EditTab) as value}
-                            <li
-                                class="relative flex-1 h-full cursor-pointer flex-center"
-                            >
-                                <button
-                                    class="w-full h-full px-4 cursor-pointer xs:px-2 flex-center"
-                                    on:click={() => {
-                                        $menuEditTab = value;
-                                    }}
-                                    tabindex={canSelectByTab}
-                                    aria-label={value}
+                            {#if value != EditTab.Colors || (value == EditTab.Colors && showColorsTab)}
+                                <li
+                                    class="relative flex-1 h-full cursor-pointer flex-center"
                                 >
-                                    <h1
-                                        class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
+                                    <button
+                                        class="w-full h-full px-4 cursor-pointer xs:px-2 flex-center"
+                                        on:click={() => {
+                                            $menuEditTab = value;
+                                        }}
+                                        tabindex={canSelectByTab}
+                                        aria-label={value}
                                     >
-                                        {value}
-                                    </h1>
-                                </button>
-                                {#if $menuEditTab == value}
-                                    <div class="sliding-selector"></div>
-                                {/if}
-                            </li>
+                                        <h1
+                                            class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
+                                        >
+                                            {value}
+                                        </h1>
+                                    </button>
+                                    {#if $menuEditTab == value}
+                                        <div class="sliding-selector"></div>
+                                    {/if}
+                                </li>
+                            {/if}
                         {/each}
                     {/if}
                 </ul>
 
                 <div
-                    class="absolute flex justify-around w-24 h-full gap-3 p-2.5 tab-mini-icons"
+                    class="absolute flex justify-around w-24 h-full gap-3 p-2.5 md:p-2 tab-mini-icons"
                     data-minimised={+$menuMinimized}
                 >
                     <RadialCooldown
@@ -345,7 +360,7 @@
                 class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
             >
                 <ul
-                    class="absolute flex flex-col items-center w-full h-full gap-6 px-2 py-2 justify-evenly"
+                    class="absolute flex flex-col items-center w-full h-full gap-6 px-2 md:px-1.5 py-2 justify-evenly"
                 >
                     <li class="w-full flex-center grow-0 shrink-0">
                         <button
@@ -454,8 +469,6 @@
             aria-label={`${$menuTabGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
             data-minimised={+$menuMinimized}
             on:click={() => {
-                pdButtonDisabled = true;
-
                 if ($menuTabGroup != TabGroup.Delete) {
                     addObject(state.get_preview_object());
                     state.set_preview_visibility(false);
@@ -463,6 +476,8 @@
                     let k = state.get_selected_object_key();
                     let coord = state.get_selected_object_chunk();
                     if (k != null && coord != null) {
+                        console.log("CCUCUUJCJK");
+                        pdButtonDisabled = true;
                         removeObject(k, [coord.x, coord.y]);
                     }
                 }
@@ -470,7 +485,7 @@
             disabled={pdButtonDisabled}
         >
             <div
-                class="flex flex-col w-full h-full gap-1 py-4 text-5xl flex-center md:text-4xl sm:text-4xl text-stroke"
+                class="flex flex-col w-full h-full gap-1 py-4 text-5xl sm:flex-row sm:gap-2 flex-center md:text-4xl sm:text-4xl text-stroke"
             >
                 <h1 class="font-pusab tab-text">
                     {#if $menuTabGroup != TabGroup.Delete}
@@ -511,6 +526,7 @@
             "minimize tabs"
             "side-menu buttons";
     }
+
     .menu-grid-container[data-minimised="0"] {
         grid-template-columns: 48px 1fr;
         grid-template-rows: 48px 200px;
@@ -518,6 +534,28 @@
     .menu-grid-container[data-minimised="1"] {
         grid-template-columns: 48px 96px;
         grid-template-rows: 48px 0px;
+    }
+
+    @media screen(md) {
+        .menu-grid-container[data-minimised="0"] {
+            grid-template-columns: 44px 1fr;
+            grid-template-rows: 44px 200px;
+        }
+        .menu-grid-container[data-minimised="1"] {
+            grid-template-columns: 44px 96px;
+            grid-template-rows: 44px 0px;
+        }
+    }
+
+    @media screen(xs) {
+        .menu-grid-container[data-minimised="0"] {
+            grid-template-columns: 42px 1fr;
+            grid-template-rows: 42px 200px;
+        }
+        .menu-grid-container[data-minimised="1"] {
+            grid-template-columns: 42px 96px;
+            grid-template-rows: 42px 0px;
+        }
     }
 
     .tab-mini-icons .minimize {
@@ -622,10 +660,6 @@
         .pd-button {
             width: 180px;
         }
-
-        .menu-grid-container {
-            grid-template-columns: 56px auto;
-        }
     }
 
     @media screen(sm) {
@@ -634,10 +668,6 @@
         }
         .pd-button[data-minimised="0"] {
             height: 64px;
-        }
-
-        .menu-grid-container {
-            grid-template-columns: 44px auto;
         }
     }
 </style>

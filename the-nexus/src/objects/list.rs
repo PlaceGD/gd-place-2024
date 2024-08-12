@@ -15,7 +15,18 @@ pub mod special_ids {
     pub const GROUND_TRIGGER: u16 = 4551;
     pub const GROUND_2_TRIGGER: u16 = 4552;
 
-    pub const TRIGGERS: &[u16] = &[BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER];
+    pub const ARROW_TRIGGER: u16 = 4553;
+
+    pub const SFX_TRIGGER: u16 = 4554;
+    pub const SONG_TRIGGER: u16 = 4555;
+
+    pub const TRIGGERS: &[u16] = &[
+        BG_TRIGGER,
+        GROUND_TRIGGER,
+        GROUND_2_TRIGGER,
+        ARROW_TRIGGER,
+        SFX_TRIGGER,
+    ];
     pub const COLOR_TRIGGERS: &[u16] = &[BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER];
 }
 
@@ -129,6 +140,9 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
                 special_ids::BG_TRIGGER,
                 special_ids::GROUND_TRIGGER,
                 special_ids::GROUND_2_TRIGGER,
+                special_ids::ARROW_TRIGGER,
+                special_ids::SFX_TRIGGER,
+                special_ids::SONG_TRIGGER,
             ]
             .map(|v| {
                 (

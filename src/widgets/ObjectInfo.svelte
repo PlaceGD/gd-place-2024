@@ -65,7 +65,7 @@
 
 {#if $selectedObject != null}
     <ul
-        class="relative flex flex-col gap-2 p-4 text-lg text-white rounded-lg w-96 menu-panel flex-center pointer-events-all"
+        class="relative flex flex-col gap-2 p-4 text-lg text-white rounded-lg xs:p-2 xs:gap-1 w-96 sm:w-80 xs:w-72 menu-panel flex-center pointer-events-all xs:mt-8 sm:mt-12 md:mt-10"
     >
         <li class="object-info-item">
             <span>Type:</span>
@@ -76,7 +76,7 @@
                 {/key}
             </div>
         </li>
-        <li class="object-info-item li-alternating">
+        <li class="object-info-item">
             <span>Main color:</span>
 
             <div
@@ -92,23 +92,23 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item li-alternating">
+        <li class="object-info-item">
             <span>Detail color:</span>
 
             <div
                 class="h-full text-xl rounded-md aspect-square flex-center text-stroke"
                 style={`
-                background: url("static/checker.png");
-                background-size: contain;
-                box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.detailColor.r}, ${$selectedObject.detailColor.g}, ${$selectedObject.detailColor.b}, ${$selectedObject.detailColor.opacity / 255})` : ""};
-            `}
+                    background: url("static/checker.png");
+                    background-size: contain;
+                    box-shadow: 0px 0px 0px 2px white, inset 0px 0px 0px 2px black, ${$selectedObject != null ? `inset 0px 0px 0px 100px rgba(${$selectedObject.detailColor.r}, ${$selectedObject.detailColor.g}, ${$selectedObject.detailColor.b}, ${$selectedObject.detailColor.opacity / 255})` : ""};
+                `}
             >
                 {#if $selectedObject.detailColor.blending ?? false}
                     <span class="text-sm font-pusab">B</span>
                 {/if}
             </div>
         </li>
-        <li class="object-info-item li-alternating">
+        <li class="object-info-item">
             <span>Z Layer:</span>
 
             <span
@@ -117,12 +117,12 @@
                 )}</span
             >
         </li>
-        <li class="object-info-item li-alternating">
+        <li class="object-info-item">
             <span>Z Order:</span>
 
             <span>{$selectedObject.zOrder ?? 0}</span>
         </li>
-        <li class="object-info-item li-alternating">
+        <li class="object-info-item">
             <span>Placed by:</span>
 
             {#if $selectedObject.namePlaced != null}
@@ -156,14 +156,16 @@
             <div class="flex flex-col items-center justify-center">
                 {#if $loginData.currentUserData != null}
                     {#if !isYourself}
-                        <div class="flex items-center justify-center gap-1">
-                            <h1 class="w-full text-lg text-center">
+                        <div
+                            class="flex items-center justify-center gap-1 xs:gap-2"
+                        >
+                            <h1 class="w-full text-lg text-center xs:text-base">
                                 Report User:
                             </h1>
                             <OnceButton
                                 type="plain"
                                 disabled={!$cooldownFinished}
-                                class="h-16 enabled:bounce-active disabled:opacity-40 disabled:cursor-not-allowed"
+                                class="h-16 xs:h-14 enabled:bounce-active disabled:opacity-40 disabled:cursor-not-allowed"
                                 aria-label="Report User"
                                 on:click={() => {
                                     if ($selectedObject?.namePlaced != null) {
@@ -189,7 +191,6 @@
                             {:else}
                                 Please report inappropriate usernames or alt
                                 accounts.
-                                <b>Do not falsely report users.</b>
                             {/if}
                         </p>
                     {:else}
@@ -205,7 +206,7 @@
 
         {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.currentUserData.userDetails.moderator && $selectedObject.namePlaced != null}
             {#if !$bannedUsers.includes($selectedObject.namePlaced.toLowerCase())}
-                <div class="w-full h-10">
+                <div class="w-full h-10 text-base xs:h-8 xs:text-sm">
                     <OnceButton
                         type="decline"
                         class="w-full h-full"
@@ -226,6 +227,6 @@
 
 <style lang="postcss">
     .object-info-item {
-        @apply flex h-10 w-full items-center justify-between rounded-lg p-2;
+        @apply li-alternating flex h-10 w-full items-center justify-between rounded-lg p-2 text-base xs:h-8 xs:text-sm;
     }
 </style>

@@ -36,10 +36,10 @@
 </script>
 
 <div class="absolute text-white">
-    <div class="abs-centered-rel flex flex-col items-center gap-8 bottom-12">
+    <div class="flex flex-col items-center gap-8 abs-centered-rel bottom-12">
         <div class="flex flex-row items-center gap-4 bottom-12">
-            <span class="font-pusab text-3xl text-stroke">Scale:</span>
-            <span class="font-pusab text-3xl text-stroke w-20 text-center"
+            <span class="text-3xl font-pusab text-stroke">Scale:</span>
+            <span class="w-20 text-3xl text-center font-pusab text-stroke"
                 >{round(scale, 3)}</span
             >
         </div>
@@ -52,6 +52,7 @@
             max={MAX}
             min={MIN}
             step={0.0001}
+            tabindex="-1"
             on:input={e => {
                 let newScale = parseFloat(e.currentTarget.value);
 

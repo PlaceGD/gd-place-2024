@@ -37,8 +37,6 @@
 
     $: canSelectByTab = $menuMinimized ? -1 : 0;
 
-    // const canHaveDetail = (id: number) => !COLOR_TRIGGERS.includes(id);
-
     const handleOnBlack = (b: boolean) => {
         if (b) {
             if (selectedTab == ColorTab.Main) {

@@ -62,6 +62,7 @@
                 on:click={() => (selectedTab = ColorTab.Main)}
                 tabindex={canSelectByTab}
                 aria-label="Main Color Channel"
+                title="Main Color Channel"
             >
                 Main
             </button>
@@ -76,6 +77,7 @@
                     on:click={() => (selectedTab = ColorTab.Detail)}
                     tabindex={canSelectByTab}
                     aria-label="Detail Color Channel"
+                    title="Detail Color Channel"
                 >
                     Detail
                 </button>

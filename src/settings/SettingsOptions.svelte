@@ -11,7 +11,6 @@
     import Button from "../components/Button.svelte";
 
     export let editorFocused: boolean;
-
     $: {
         if ($openMenu == ExclusiveMenus.Settings && editorFocused) {
             $openMenu = null;
@@ -20,17 +19,25 @@
 
     const KOFI_ID = "Z8Z410GRY2";
 
-    onMount(() => {
-        window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
-    });
+    window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
+
+    // onMount(() => {
+    //     window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
+    // });
 </script>
 
-{#if $openMenu == ExclusiveMenus.Settings}
+
     <div
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
+        style={`
+                height: ${$openMenu != ExclusiveMenus.Settings ? "0" : "50vh"};
+                opacity: ${$openMenu != ExclusiveMenus.Settings ? "0" : "1"};
+                transition: height 0.2s ease, opacity 0.2s ease-out;
+            `}
     >
         <div
             class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
+            
         >
             <!-- Faded scroll just for fanciness -->
             <FadedScroll>
@@ -152,7 +159,7 @@
                             <div class="flex flex-col">
                                 <span>Hide Delete Text</span>
                                 <span class="text-xs text-white/50"
-                                    >Hides the text that appears when an object
+                                    >Hide the text that appears when an object
                                     is deleted</span
                                 >
                             </div>
@@ -196,8 +203,7 @@
                     </a>
                 {:else}
                     <p class="text-base">
-                        Want to stand out with a colored name and support the
-                        project? Make a small donation to our kofi!
+                        Get a colored name by making a donation!
                     </p>
 
                     <span title="Support us">
@@ -216,10 +222,10 @@
                             $openMenu = ExclusiveMenus.Kofi;
                         }}
                     >
-                        Submit Transaction Id
+                        Choose your username colors
                     </Button>
                 {/if}
             </div>
         </div>
     </div>
-{/if}
+

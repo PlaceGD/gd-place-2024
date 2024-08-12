@@ -23,12 +23,12 @@
     import githubIconUrl from "./assets/github.svg?url";
     import xIconUrl from "./assets/x.svg?url";
 
-    let twitter = false;
+    let twitter = true;
     document.addEventListener("keydown", e => {
-        twitter = e.shiftKey;
+        twitter = !e.shiftKey;
     });
     document.addEventListener("keyup", e => {
-        twitter = e.shiftKey;
+        twitter = !e.shiftKey;
     });
 
     enum Page {

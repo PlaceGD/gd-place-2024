@@ -212,10 +212,10 @@ impl State {
             self.height as f32 / s,
         );
 
-        gongy.w /= 2.0;
-        gongy.h /= 2.0;
-        gongy.x += gongy.w / 2.0;
-        gongy.y += gongy.h / 2.0;
+        // gongy.w /= 2.0;
+        // gongy.h /= 2.0;
+        // gongy.x += gongy.w / 2.0;
+        // gongy.y += gongy.h / 2.0;
 
         gongy
     }
@@ -592,18 +592,18 @@ impl State {
 
                 let size = vec2(view_rect.w, view_rect.h);
 
-                rects.push(pipeline_rect::instance::Instance::new(
-                    transform
-                        * Affine2::from_scale_angle_translation(
-                            size,
-                            0.0,
-                            vec2(view_rect.x, view_rect.y),
-                        ),
-                    vec4(1.0, 0.0, 0.0, 0.5),
-                    1000,
-                    vec2(0.0, 0.0),
-                    size * 4.0,
-                ));
+                // rects.push(pipeline_rect::instance::Instance::new(
+                //     transform
+                //         * Affine2::from_scale_angle_translation(
+                //             size,
+                //             0.0,
+                //             vec2(view_rect.x, view_rect.y),
+                //         ),
+                //     vec4(1.0, 0.0, 0.0, 0.5),
+                //     1000,
+                //     vec2(0.0, 0.0),
+                //     size * 4.0,
+                // ));
 
                 // for (x, y) in view_rect.corners() {
                 //     rects.push(pipeline_rect::instance::Instance::new(
@@ -622,32 +622,32 @@ impl State {
 
                 let now = now();
 
-                for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
-                    let size = vec2(20.0 * 30.0, 20.0 * 30.0);
-                    rects.push(pipeline_rect::instance::Instance::new(
-                        transform
-                            * Affine2::from_scale_angle_translation(
-                                size,
-                                0.0,
-                                vec2(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0),
-                            ),
-                        vec4(
-                            0.0,
-                            1.0,
-                            0.0,
-                            map!(
-                                now - chunk.last_time_visible,
-                                0.0,
-                                UNLOAD_CHUNK_TIME * 1000.0,
-                                1.0,
-                                0.0
-                            ) as f32,
-                        ),
-                        1000,
-                        vec2(0.0, 0.0),
-                        size * 4.0,
-                    ));
-                }
+                // for (&ChunkCoord { x, y }, chunk) in &self.level.chunks {
+                //     let size = vec2(20.0 * 30.0, 20.0 * 30.0);
+                //     rects.push(pipeline_rect::instance::Instance::new(
+                //         transform
+                //             * Affine2::from_scale_angle_translation(
+                //                 size,
+                //                 0.0,
+                //                 vec2(x as f32 * 20.0 * 30.0, y as f32 * 20.0 * 30.0),
+                //             ),
+                //         vec4(
+                //             0.0,
+                //             1.0,
+                //             0.0,
+                //             map!(
+                //                 now - chunk.last_time_visible,
+                //                 0.0,
+                //                 UNLOAD_CHUNK_TIME * 1000.0,
+                //                 1.0,
+                //                 0.0
+                //             ) as f32,
+                //         ),
+                //         1000,
+                //         vec2(0.0, 0.0),
+                //         size * 4.0,
+                //     ));
+                // }
 
                 calls.push(DrawCall {
                     blend_mode: BlendMode::Normal,

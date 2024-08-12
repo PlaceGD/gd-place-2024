@@ -11,7 +11,7 @@
         $openMenu =
             $openMenu == ExclusiveMenus.Settings
                 ? null
-                : ExclusiveMenus.Settings;
+                : ExclusiveMenus.Settings;        
     }}
 >
     <Image src={settingsButtonUrl} class="object-contain aspect-square"></Image>

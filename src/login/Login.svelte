@@ -53,6 +53,7 @@
     let hasScrolledToBottomOfTos = false;
 
     $: {
+        console.log($openMenu);
         if ($openMenu != ExclusiveMenus.Login) {
             currentPage = Page.LOGIN_METHOD;
             isOpen = false;
@@ -145,7 +146,9 @@
     {canClose}
     {isOpen}
     hasCloseButton={true}
-    on:close={() => ($openMenu = null)}
+    on:close={() => {
+        $openMenu = null
+    }}
 >
     <!-- LOGIN METHOD -->
     {#if currentPage == Page.LOGIN_METHOD}

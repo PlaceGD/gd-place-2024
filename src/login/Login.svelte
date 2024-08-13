@@ -13,7 +13,7 @@
     import { Turnstile } from "svelte-turnstile";
     import FadedScroll from "../components/FadedScroll.svelte";
     import Button from "../components/Button.svelte";
-    import { SvelteToast } from "@zerodevx/svelte-toast";
+    import { SvelteToast, toast } from "@zerodevx/svelte-toast";
     import ToastContainer from "../components/ToastContainer.svelte";
     import ScreenModal from "../components/ScreenModal.svelte";
     import DarkInput from "../components/DarkInput.svelte";
@@ -238,121 +238,44 @@
         >
             <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
                 <section class="text">
-                    <!-- svelte-ignore a11y-autofocus -->
-                    <button aria-hidden="true" tabindex="-1" autofocus
-                        ><h1><u><strong>rules</strong></u></h1></button
-                    >
-
-                    <h2>Notice</h2>
-
-                    <p>
-                        Welcome to GD Place! By accessing or using our platform,
-                        you agree to be bound by these Terms of Service. Please
-                        read them carefully before proceeding.
-                    </p>
-
-                    <h2>User Conduct</h2>
+                    <h2>Rules</h2>
 
                     <ul class="bulleted-list">
                         <li>
-                            <strong>Inappropriate Usernames:</strong> Users must
-                            not use inappropriate or offensive usernames when registering
-                            or using our platform.
+                            Only use one account per person.
                         </li>
                         <li>
-                            <strong>Prohibited Activities:</strong> Botting or the
-                            use of alternate accounts (alt accounts) is strictly
-                            prohibited. Any violations may result in the termination
-                            of your account.
-                        </li>
-                    </ul>
-
-                    <h2>Reporting Violations</h2>
-
-                    <p>
-                        Users who notice rule violations are encouraged to
-                        report them. You can report violations within the app or
-                        by contacting us via our contact information provided
-                        below.
-                    </p>
-
-                    <h2>Account Registration</h2>
-
-                    <p>
-                        Users can sign up using one of three external platforms.
-                        By signing up, users also agree to the rules of those
-                        platforms.
-                    </p>
-
-                    <h2>Ownership of User Content</h2>
-
-                    <p>
-                        By using our platform, you grant us (the creators)
-                        permission to use any content created by you on the site
-                        without requiring explicit permission.
-                    </p>
-
-                    <h2>External Services</h2>
-
-                    <p>
-                        Donations and merchandise are handled by external sites.
-                        We are not responsible for transactions made on these
-                        external platforms.
-                    </p>
-
-                    <h2>Termination</h2>
-
-                    <p>
-                        We reserve the right to terminate accounts for any
-                        violations of these Terms of Service.
-                    </p>
-
-                    <h2>Contact Information</h2>
-
-                    <p>
-                        For any inquiries or concerns about these Terms of
-                        Service, please contact us:
-                    </p>
-                    <ul class="bulleted-list">
-                        <li>
-                            Twitter: <a
-                                href="https://twitter.com/<twitter_handle>"
-                                >@TODO</a
-                            >
+                            Do not create inappropriate imagery (or usernames).
                         </li>
                         <li>
-                            Email: <a href="mailto:geometrydash.place@gmail.com"
-                                >geometrydash.place@gmail.com</a
-                            >
+                            Do not exercise hate speech (please)
                         </li>
-                    </ul>
+                        <li>
+                            Only report people who are breaking the rules 
+                            <i style="font-size: small; opacity: 0.5;"> (unless you and another user are both reporting each other for breaking this rule, in which case one of you should break one other rule so that the other one is no longer breaking a rule) </i>
+                        </li>
+                    </ul>   
 
-                    <h2>Acceptance of Privacy Policy</h2>
-
-                    <p>
-                        Our Privacy Policy is presented as a popup on our
-                        website. By using our platform, you agree to our Privacy
-                        Policy.
-                    </p>
+                    <strong> Breaking any of these rules can get your account banned without notice.</strong>
                 </section>
             </FadedScroll>
 
             <div class="flex w-full gap-4">
-                <Button
+                <!-- <Button
                     class="w-full h-full"
                     type="decline"
-                    disabled={!hasScrolledToBottomOfTos}
+                    
                     on:click={() => {
                         hasAgreedToTOS = false;
                         $openMenu = null;
+                        Toast.showInfoToast("You kinda have to agree to the rules...")
                     }}
                 >
                     <p class="xs:text-sm">Disagree</p>
-                </Button>
+                </Button> -->
                 <Button
                     class="w-full h-full"
                     type="accept"
-                    disabled={!hasScrolledToBottomOfTos}
                     on:click={() => {
                         hasAgreedToTOS = true;
                         currentPage = previousPage;

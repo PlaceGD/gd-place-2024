@@ -27,9 +27,9 @@ pub fn rect_draw(state: &State, billy: &mut Billy) {
         billy.apply_transform(obj.transform());
 
         let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
-            3
+            2
         } else {
-            4
+            3
         };
 
         let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
@@ -298,10 +298,19 @@ pub fn rect_draw(state: &State, billy: &mut Billy) {
                     state.ground2_color.2 as f32 / 255.0,
                     1.0,
                 ),
-                2,
-                vec2(0.0, 0.0),
+                1,
+                vec2(0.0, 256.0),
                 vec2(256.0, 256.0),
             );
         }
+        billy.set_blend_mode(BlendMode::Additive);
+        billy.centered_textured_rect(
+            vec2(state.camera_pos.x, -1.0),
+            vec2(GROUND_SIZE_UNITS * 10.0, 2.0),
+            vec4(1.0, 1.0, 1.0, 1.0),
+            1,
+            vec2(0.0, 513.0),
+            vec2(256.0, 1.0),
+        );
     };
 }

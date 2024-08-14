@@ -86,7 +86,7 @@ fn draw_grid(
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    let fade = map(log2(globals.zoom_scale) * 12.0, -24.0, 24.0, 0.0, 1.0);
+    let fade = map(log2(globals.zoom_scale) * 12.0, -8.0, 24.0, 0.0, 1.0);
 
 
     let pos = ((in.pos.xy - globals.screen_size / 2.0) * vec2(1.0, -1.0) + globals.camera_pos * globals.zoom_scale) / globals.zoom_scale;

@@ -41,14 +41,12 @@ fn create_textures_bind_group(
     use image::GenericImageView;
 
     let bg = image::load_from_memory(include_bytes!("../../assets/background.png")).unwrap();
-    let ground1 = image::load_from_memory(include_bytes!("../../assets/ground1.png")).unwrap();
-    let ground2 = image::load_from_memory(include_bytes!("../../assets/ground2.png")).unwrap();
+    let ground = image::load_from_memory(include_bytes!("../../assets/ground.png")).unwrap();
     let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
 
     let list = [
         (&bg, false),
-        (&ground1, false),
-        (&ground2, false),
+        (&ground, false),
         (&spritesheet, false),
         (&spritesheet, true),
     ];

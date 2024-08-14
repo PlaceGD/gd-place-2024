@@ -1,5 +1,17 @@
 <script lang="ts">
     import { colors } from "shared-lib/gd";
+    import {
+        bgColor,
+        ground1Color,
+        ground2Color,
+        mainColorRGB,
+        menuSelectedObject,
+    } from "../stores";
+    import {
+        BG_TRIGGER,
+        GROUND_2_TRIGGER,
+        GROUND_TRIGGER,
+    } from "shared-lib/nexusgen";
 
     export let hue: number;
 
@@ -28,6 +40,30 @@
                     on:click={() => {
                         currentRow = r;
                         currentColumn = c;
+
+                        if ($menuSelectedObject == BG_TRIGGER) {
+                            $bgColor = {
+                                r: $mainColorRGB[0],
+                                g: $mainColorRGB[1],
+                                b: $mainColorRGB[2],
+                            };
+                        }
+
+                        if ($menuSelectedObject == GROUND_TRIGGER) {
+                            $ground1Color = {
+                                r: $mainColorRGB[0],
+                                g: $mainColorRGB[1],
+                                b: $mainColorRGB[2],
+                            };
+                        }
+
+                        if ($menuSelectedObject == GROUND_2_TRIGGER) {
+                            $ground2Color = {
+                                r: $mainColorRGB[0],
+                                g: $mainColorRGB[1],
+                                b: $mainColorRGB[2],
+                            };
+                        }
                     }}
                     tabindex={tabIndex}
                     aria-label={`Color with Red: ${palette[r][c][0]}, Green: ${palette[r][c][1]}, Blue: ${palette[r][c][2]}`}

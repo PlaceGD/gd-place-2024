@@ -1,4 +1,4 @@
-import { writable, type Writable } from "svelte/store";
+import { derived, writable, type Writable } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
@@ -8,7 +8,7 @@ import {
     persist,
     type PersistentStore,
 } from "@macfja/svelte-persistent-store";
-import type { ObjectCategory } from "shared-lib/gd";
+import { colors, type ObjectCategory } from "shared-lib/gd";
 import { tweened, type TweenedOptions } from "svelte/motion";
 import { linear } from "svelte/easing";
 import { db } from "./firebase/firebase";
@@ -58,6 +58,15 @@ export const menuZOrder = persistLocalWritable(0, "menuZOrder");
 export const menuOpenWidget = persistLocalWritable(
     WidgetType.None,
     "menuOpenWidget"
+);
+
+export const mainColorRGB = derived(
+    menuMainColor,
+    c => colors.list[c.hue].palette[c.y][c.x]
+);
+export const detailColorRGB = derived(
+    menuDetailColor,
+    c => colors.list[c.hue].palette[c.y][c.x]
 );
 
 export const editorData = persist(

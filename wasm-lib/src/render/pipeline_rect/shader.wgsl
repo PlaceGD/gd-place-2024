@@ -71,9 +71,9 @@ fn vs_main(
         case 4u: {
             out.uv /= vec2<f32>(textureDimensions(t_4));
         }
-        case 5u: {
-            out.uv /= vec2<f32>(textureDimensions(t_5));
-        }
+        // case 5u: {
+        //     out.uv /= vec2<f32>(textureDimensions(t_5));
+        // }
         default: {}
     }
 
@@ -91,8 +91,8 @@ fn vs_main(
 @group(1) @binding(5) var s_3: sampler;
 @group(1) @binding(6) var t_4: texture_2d<f32>;
 @group(1) @binding(7) var s_4: sampler;
-@group(1) @binding(8) var t_5: texture_2d<f32>;
-@group(1) @binding(9) var s_5: sampler;
+// @group(1) @binding(8) var t_5: texture_2d<f32>;
+// @group(1) @binding(9) var s_5: sampler;
 
 // fn zonky(id: u32) -> texture_2d<f32> {
 //     switch id {
@@ -132,9 +132,9 @@ fn fs_color(in: VertexOutput) -> vec4<f32> {
         case 4u: {
             return textureSampleLevel(t_4, s_4, in.uv, 0.0) * in.color;
         }
-        case 5u: {
-            return textureSampleLevel(t_5, s_5, in.uv, 0.0) * in.color;
-        }
+        // case 5u: {
+        //     return textureSampleLevel(t_5, s_5, in.uv, 0.0) * in.color;
+        // }
         case 1000u: {
             if !is_within_rect(in.uv, vec2(0.0), in.uv_size, -2.5) && eucl_mod(in.uv.x + in.uv.y - globals.time * 30.0, 10.0) < 5.0 {
                 return in.color;

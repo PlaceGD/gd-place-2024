@@ -10,7 +10,7 @@ export {
     reportUser,
     reportedUserOperation,
     banUser,
-    // clearReports,
+    clearReports,
 } from "./user";
 
 export {

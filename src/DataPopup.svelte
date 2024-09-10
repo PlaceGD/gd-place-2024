@@ -19,35 +19,35 @@
             class="flex-col w-full gap-3 p-3 text-center text-white rounded-lg shadow-lg sm:text-sm sm:w-full flex-center bg-menu-gray/90 shadow-black/40 backdrop-blur-md"
         >
             <p>
-                <strong>
-                    This site uses analytics to collect interesting data about the event.
+                <strong class="text-xl sm:text-base">
+                    This site uses analytics to collect interesting data about
+                    the event.
                 </strong>
             </p>
 
-            <div class="flex-row flex-center w-full text-center gap-3">
+            <div class="flex-row w-full gap-3 text-center flex-center">
                 <Button
-                type="accept"
-                class="p-2 w-max"
-                aria-label="Fine by me"
-                on:click={() => {
-                    isOpen = false;
-                    hidePopup = true;
-                    $analytics = true;
-                }}
-            >
-                Fine by me
-            </Button>
-            <Button
-                type="plain"
-                class="p-2 w-max"
-                aria-label="Read More"
-                on:click={() => {
-                    isOpen = true;
-                }}
-            >
-                <u>Read More</u>
-            </Button>
-
+                    type="accept"
+                    class="p-2 w-max"
+                    aria-label="Fine by me"
+                    on:click={() => {
+                        isOpen = false;
+                        hidePopup = true;
+                        $analytics = true;
+                    }}
+                >
+                    Fine by me
+                </Button>
+                <Button
+                    type="plain"
+                    class="p-2 w-max"
+                    aria-label="Read More"
+                    on:click={() => {
+                        isOpen = true;
+                    }}
+                >
+                    <u>Read More</u>
+                </Button>
             </div>
         </div>
     </div>
@@ -64,10 +64,16 @@
             <h2>Analytics</h2>
 
             <div style="margin-bottom: 1rem">
-                <div><b>We use Cloudflare Web analytics to collect some data about the people participating in the event.</b></div>
-                This includes the country you're from, what operating system you are using, etc. 
-                This is literally just out of our own nerdy interest, we probably don't even really need this warning, 
-                but it's better to be safe than to get sued by the EU i guess.
+                <div>
+                    <b
+                        >We use Cloudflare Web analytics to collect some data
+                        about the people participating in the event.</b
+                    >
+                </div>
+                This includes what country you're from, what operating system you
+                are using, etc. This is literally just out of our own nerdy interest,
+                we probably don't even really need this warning, but it's better
+                to be safe than to get sued by the EU i guess.
             </div>
             <div style="margin-bottom: 1rem">
                 <b>
@@ -75,7 +81,8 @@
                         class="underline hover:decoration-dashed"
                         href="https://developers.cloudflare.com/analytics/web-analytics/understanding-web-analytics/dimensions/"
                         >here</a
-                    > and
+                    >
+                    and
                     <a
                         class="underline hover:decoration-dashed"
                         href="https://developers.cloudflare.com/analytics/web-analytics/understanding-web-analytics/high-level-metrics/"
@@ -88,7 +95,6 @@
             <Button
                 type="decline"
                 class="w-full"
-                
                 on:click={() => {
                     isOpen = false;
                     hidePopup = true;

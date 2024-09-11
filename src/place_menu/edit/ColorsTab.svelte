@@ -55,139 +55,142 @@
 <div
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items colors-tab-container md:text-lg sm:text-base"
 >
-    <ul class="flex flex-col h-full buttons">
-        <li class="relative flex-1 w-full h-full flex-center font-pusab">
-            <button
-                class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke xs:text-sm"
-                on:click={() => (selectedTab = ColorTab.Main)}
-                tabindex={canSelectByTab}
-                aria-label="Main Color Channel"
-                title="Main Color Channel"
-            >
-                Main
-            </button>
-            {#if selectedTab == ColorTab.Main}
-                <div class="sliding-selector"></div>
-            {/if}
-        </li>
-        {#if !colorTriggerSelected}
+    <fieldset disabled>
+        <ul class="flex flex-col h-full buttons">
             <li class="relative flex-1 w-full h-full flex-center font-pusab">
                 <button
-                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke xs:text-sm"
-                    on:click={() => (selectedTab = ColorTab.Detail)}
+                    class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke xs:text-sm"
+                    on:click={() => (selectedTab = ColorTab.Main)}
                     tabindex={canSelectByTab}
-                    aria-label="Detail Color Channel"
-                    title="Detail Color Channel"
+                    aria-label="Main Color Channel"
+                    title="Main Color Channel"
                 >
-                    Detail
+                    Main
                 </button>
-                {#if selectedTab == ColorTab.Detail}
+                {#if selectedTab == ColorTab.Main}
                     <div class="sliding-selector"></div>
                 {/if}
             </li>
-        {/if}
-    </ul>
-
-    <div class="flex flex-col justify-center h-full gap-8 xs:gap-6 sliders">
-        {#if !colorTriggerSelected}
-            <div
-                class="flex w-full h-3 md:h-5 opacity opacity-slider-container"
-                style={`
-            --currentColor: rgb(${currentRgb.join(", ")});
-            --currentColorFaded: rgb(${currentRgb.join(", ")}, 0.2);
-        `}
-            >
-                {#if selectedTab == ColorTab.Main}
-                    <RangeSlider
-                        min={0.2}
-                        max={1}
-                        step={0.1}
-                        hoverable={false}
-                        id={"opacity-slider"}
-                        values={[$menuMainColor.opacity]}
-                        on:change={e => {
-                            $menuMainColor.opacity = e.detail.value;
-                        }}
-                        pips
-                        disabled={$menuMinimized}
-                        ariaLabels={["Main Channel Opacity"]}
-                    />
-                {:else}
-                    <RangeSlider
-                        min={0.2}
-                        max={1}
-                        step={0.1}
-                        hoverable={false}
-                        id={"opacity-slider"}
-                        values={[$menuDetailColor.opacity]}
-                        on:change={e => {
-                            $menuDetailColor.opacity = e.detail.value;
-                        }}
-                        pips
-                        disabled={$menuMinimized}
-                        ariaLabels={["Detail Channel Opacity"]}
-                    />
-                {/if}
-            </div>
-        {/if}
-
-        {#if selectedTab == ColorTab.Main}
-            <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider
-                    bind:currentHue={$menuMainColor.hue}
-                    tabIndex={canSelectByTab}
-                ></HueSlider>
-            </div>
-        {:else}
-            <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider
-                    bind:currentHue={$menuDetailColor.hue}
-                    tabIndex={canSelectByTab}
-                ></HueSlider>
-            </div>
-        {/if}
-    </div>
-
-    <div class="flex flex-center blending">
-        <div class="flex flex-col items-center">
-            {#if selectedTab == ColorTab.Main}
-                <ToggleSwitch
-                    id="blending_cb"
-                    bind:isToggled={$menuMainColor.blending}
-                    disabled={isBlack || colorTriggerSelected}
-                    tabIndex={canSelectByTab}
-                    aria-label="Toggle Blending for Main Channel"
-                ></ToggleSwitch>
-            {:else}
-                <ToggleSwitch
-                    id="blending_cb"
-                    bind:isToggled={$menuDetailColor.blending}
-                    disabled={isBlack || colorTriggerSelected}
-                    tabIndex={canSelectByTab}
-                    aria-label="Toggle Blending for Detail Channel"
-                ></ToggleSwitch>
+            {#if !colorTriggerSelected}
+                <li
+                    class="relative flex-1 w-full h-full flex-center font-pusab"
+                >
+                    <button
+                        class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke xs:text-sm"
+                        on:click={() => (selectedTab = ColorTab.Detail)}
+                        tabindex={canSelectByTab}
+                        aria-label="Detail Color Channel"
+                        title="Detail Color Channel"
+                    >
+                        Detail
+                    </button>
+                    {#if selectedTab == ColorTab.Detail}
+                        <div class="sliding-selector"></div>
+                    {/if}
+                </li>
             {/if}
-            <h2 class="font-pusab text-stroke xs:text-sm">Blending</h2>
-        </div>
-    </div>
+        </ul>
 
-    <div class="h-full palette">
-        {#if selectedTab == ColorTab.Main}
-            <PaletteGrid
-                bind:hue={$menuMainColor.hue}
-                bind:currentRow={$menuMainColor.y}
-                bind:currentColumn={$menuMainColor.x}
-                tabIndex={canSelectByTab}
-            />
-        {:else}
-            <PaletteGrid
-                bind:hue={$menuDetailColor.hue}
-                bind:currentRow={$menuDetailColor.y}
-                bind:currentColumn={$menuDetailColor.x}
-                tabIndex={canSelectByTab}
-            />
-        {/if}
-    </div>
+        <div class="flex flex-col justify-center h-full gap-8 xs:gap-6 sliders">
+            {#if !colorTriggerSelected}
+                <div
+                    class="flex w-full h-3 md:h-5 opacity opacity-slider-container"
+                    style={`
+                        --currentColor: rgb(${currentRgb.join(", ")});
+                        --currentColorFaded: rgb(${currentRgb.join(", ")}, 0.2);
+                    `}
+                >
+                    {#if selectedTab == ColorTab.Main}
+                        <RangeSlider
+                            min={0.2}
+                            max={1}
+                            step={0.1}
+                            hoverable={false}
+                            id={"opacity-slider"}
+                            values={[$menuMainColor.opacity]}
+                            on:change={e => {
+                                $menuMainColor.opacity = e.detail.value;
+                            }}
+                            pips
+                            disabled={$menuMinimized}
+                            ariaLabels={["Main Channel Opacity"]}
+                        />
+                    {:else}
+                        <RangeSlider
+                            min={0.2}
+                            max={1}
+                            step={0.1}
+                            hoverable={false}
+                            id={"opacity-slider"}
+                            values={[$menuDetailColor.opacity]}
+                            on:change={e => {
+                                $menuDetailColor.opacity = e.detail.value;
+                            }}
+                            pips
+                            disabled={$menuMinimized}
+                            ariaLabels={["Detail Channel Opacity"]}
+                        />
+                    {/if}
+                </div>
+            {/if}
+            {#if selectedTab == ColorTab.Main}
+                <div class="flex w-full h-3 md:h-5 hue">
+                    <HueSlider
+                        bind:currentHue={$menuMainColor.hue}
+                        tabIndex={canSelectByTab}
+                    ></HueSlider>
+                </div>
+            {:else}
+                <div class="flex w-full h-3 md:h-5 hue">
+                    <HueSlider
+                        bind:currentHue={$menuDetailColor.hue}
+                        tabIndex={canSelectByTab}
+                    ></HueSlider>
+                </div>
+            {/if}
+        </div>
+
+        <div class="flex flex-center blending">
+            <div class="flex flex-col items-center">
+                {#if selectedTab == ColorTab.Main}
+                    <ToggleSwitch
+                        id="blending_cb"
+                        bind:isToggled={$menuMainColor.blending}
+                        disabled={isBlack || colorTriggerSelected}
+                        tabIndex={canSelectByTab}
+                        aria-label="Toggle Blending for Main Channel"
+                    ></ToggleSwitch>
+                {:else}
+                    <ToggleSwitch
+                        id="blending_cb"
+                        bind:isToggled={$menuDetailColor.blending}
+                        disabled={isBlack || colorTriggerSelected}
+                        tabIndex={canSelectByTab}
+                        aria-label="Toggle Blending for Detail Channel"
+                    ></ToggleSwitch>
+                {/if}
+                <h2 class="font-pusab text-stroke xs:text-sm">Blending</h2>
+            </div>
+        </div>
+
+        <div class="h-full palette">
+            {#if selectedTab == ColorTab.Main}
+                <PaletteGrid
+                    bind:hue={$menuMainColor.hue}
+                    bind:currentRow={$menuMainColor.y}
+                    bind:currentColumn={$menuMainColor.x}
+                    tabIndex={canSelectByTab}
+                />
+            {:else}
+                <PaletteGrid
+                    bind:hue={$menuDetailColor.hue}
+                    bind:currentRow={$menuDetailColor.y}
+                    bind:currentColumn={$menuDetailColor.x}
+                    tabIndex={canSelectByTab}
+                />
+            {/if}
+        </div>
+    </fieldset>
 </div>
 
 <style lang="postcss">

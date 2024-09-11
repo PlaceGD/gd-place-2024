@@ -180,8 +180,8 @@ dialog::backdrop {
 
         /* Hide scrollbar for Edge and Firefox */
         .no-scrollbar {
-            -ms-overflow-style: none; /* Edge */
-            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: 0px; /* Edge */
+            scrollbar-width: 0px; /* Firefox */
         }
 
         /* Custom scrollbar for Firefox */
@@ -230,6 +230,6 @@ dialog::backdrop {
 
     outline-width: 2px;
     outline-style: solid;
-    animation: pulse 3s forwards infinite ease-in-out !important;
+    animation: pulse 2s forwards infinite ease-in-out !important;
 }
 

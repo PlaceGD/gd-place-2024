@@ -37,7 +37,7 @@
 </script>
 
 <div
-    class="w-full h-full overflow-auto fadeout xs:text-sm"
+    class="w-full h-full overflow-scroll fadeout xs:text-sm thin-scrollbar"
     bind:this={elem}
     style={`--gradient: ${
         $isOverflowing

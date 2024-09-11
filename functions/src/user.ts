@@ -232,10 +232,21 @@ const banUserInner = async (
 
 // };
 
-// // projects/gd-place-2023/topics/clearOldReports
-// export const clearReports = onMessagePublished("clearOldReports", event => {
+// projects/gd-place-2023/topics/clearOldReports
+export const clearReports = onMessagePublished("clearOldReports", event => {
+    const now = Date.now();
+    const db = smartDatabase();
 
-// });
+    db.ref("reportedUsers")
+        .orderByChild("timestamp")
+        .endAt(now - 15 * 60 * 1000)
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(child => {
+                child.ref().remove();
+            });
+        });
+});
 
 export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
     async request => {
@@ -262,9 +273,6 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
         } else if (data.operation != "ignore") {
             throw new HttpsError("invalid-argument", "Unknown operation");
         }
-
-        // TODO: clear reports
-        //ref(db, `reportedUsers/${data.reportedUserUid}`).remove();
     }
 );
 

@@ -484,7 +484,7 @@
             changeGround2Color(e);
         }}
     /> -->
-    <button
+    <!-- <button
         ><img
             class="h-32"
             src="https://cdn.discordapp.com/attachments/996434758227734661/1268214124186177617/426422705_694498856197195_8206388669893447202_n.jpg?ex=66ab9bf1&is=66aa4a71&hm=7af9776f348ea0c9e65294531c9acbf88a48cf45586e7f299018a827c975cd45&"
@@ -496,7 +496,7 @@
                 //     "https://ih1.redbubble.net/image.2177348283.3648/flat,750x1000,075,f.jpg";
             }}
         /></button
-    >
+    > -->
 </div>
 
 <div class="absolute w-full h-full overflow-visible pointer-events-none">

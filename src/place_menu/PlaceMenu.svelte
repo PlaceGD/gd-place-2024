@@ -37,6 +37,8 @@
         ground1Color,
         ground2Color,
         loginData,
+        mainColorRGB,
+        detailColorRGB,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -83,14 +85,9 @@
             }
         }
     }
-    $: [mainR, mainG, mainB] =
-        colors.list[$menuMainColor.hue].palette[$menuMainColor.y][
-            $menuMainColor.x
-        ];
-    $: [detailR, detailG, detailB] =
-        colors.list[$menuDetailColor.hue].palette[$menuDetailColor.y][
-            $menuDetailColor.x
-        ];
+    $: [mainR, mainG, mainB] = $mainColorRGB;
+    $: [detailR, detailG, detailB] = $detailColorRGB;
+
     $: {
         let obj = state.get_preview_object();
         obj.main_color = new wasm.GDColor(
@@ -170,34 +167,6 @@
             $ground2Color.g,
             $ground2Color.b
         );
-    }
-
-    $: {
-        if ($menuSelectedObject == BG_TRIGGER) {
-            $bgColor = {
-                r: mainR,
-                g: mainG,
-                b: mainB,
-            };
-        }
-    }
-    $: {
-        if ($menuSelectedObject == GROUND_TRIGGER) {
-            $ground1Color = {
-                r: mainR,
-                g: mainG,
-                b: mainB,
-            };
-        }
-    }
-    $: {
-        if ($menuSelectedObject == GROUND_2_TRIGGER) {
-            $ground2Color = {
-                r: mainR,
-                g: mainG,
-                b: mainB,
-            };
-        }
     }
 
     let totalPlaceCooldown = 0;

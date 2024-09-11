@@ -14,7 +14,7 @@
     import Button from "../components/Button.svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import { reportedUserOperation } from "../firebase/cloud_functions";
-    import { IconChevronLeft as Back } from "@tabler/icons-svelte";
+    import Back from "../icons/Back.svelte";
     import { moveCamera } from "../level_view/view_controls";
     import * as wasm from "wasm-lib";
 

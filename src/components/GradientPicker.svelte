@@ -2,7 +2,7 @@
     import RangeSlider from "svelte-range-slider-pips";
     import ColorPicker from "svelte-awesome-color-picker";
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
-    import { IconX as Cross } from "@tabler/icons-svelte";
+    import Cross from "../icons/Cross.svelte";
     import { clamp, remEuclid } from "shared-lib/util";
     import DarkInput from "./DarkInput.svelte";
 

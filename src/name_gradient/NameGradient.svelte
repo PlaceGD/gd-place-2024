@@ -10,8 +10,8 @@
         VALID_KOFI_TRANSACTION_ID_CHARS,
         type KofiTxId,
     } from "shared-lib/kofi";
-    import { IconX as Cross } from "@tabler/icons-svelte";
-    import { IconCheck as Check } from "@tabler/icons-svelte";
+    import Cross from "../icons/Cross.svelte";
+    import Check from "../icons/Check.svelte";
     import {
         changeNameGradient,
         submitKofiTxId,

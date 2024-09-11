@@ -1,8 +1,8 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import { createEventDispatcher } from "svelte";
-    import { IconCheck as Check } from "@tabler/icons-svelte";
-    import { IconX as Cross } from "@tabler/icons-svelte";
+    import Check from "../icons/Check.svelte";
+    import Cross from "../icons/Cross.svelte";
 
     export let type: "accept" | "decline" | "white" | "plain" = "white";
     export let iconClass = "";

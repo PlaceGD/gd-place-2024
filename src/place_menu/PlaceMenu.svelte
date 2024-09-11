@@ -15,10 +15,10 @@
     import Image from "../components/Image.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
 
-    import { IconBox as Build } from "@tabler/icons-svelte";
-    import { IconAdjustmentsHorizontal as Edit } from "@tabler/icons-svelte";
-    import { IconTrash as Delete } from "@tabler/icons-svelte";
-    import { IconCaretDownFilled as Minimize } from "@tabler/icons-svelte";
+    import Build from "../icons/Build.svelte";
+    import Edit from "../icons/Edit.svelte";
+    import Delete from "../icons/Delete.svelte";
+    import Minimize from "../icons/Caret.svelte";
 
     import {
         TabGroup,
@@ -260,7 +260,7 @@
                                 <button
                                     class="z-20 w-full p-1 xs:p-1.5 h-full flex-center"
                                     on:click={() => {
-                                        // @ts-ignore
+                                        // @ts-expect-error its fine
                                         $menuBuildTab = key;
                                     }}
                                     tabindex={canSelectByTab}
@@ -433,6 +433,7 @@
                 "self-end overflow-hidden pd-button cursor-pointer": true,
                 "place-bttn-place": $menuTabGroup != TabGroup.Delete,
                 "place-bttn-delete": $menuTabGroup == TabGroup.Delete,
+                "bounce-active": !pdButtonDisabled,
             })}
             tabindex={canSelectByTab}
             aria-label={`${$menuTabGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
@@ -585,9 +586,6 @@
             -4px -4px 0px 8px #3a6a16 inset,
             4px 4px 0px 8px #b2eb11 inset;
     }
-    .place-bttn-place:not(:disabled) {
-        @apply bounce-active;
-    }
     .place-bttn-place:disabled {
         cursor: not-allowed;
     }
@@ -613,9 +611,6 @@
             0px 0px 0px 8px #000 inset,
             -4px -4px 0px 8px #6a1617 inset,
             4px 4px 0px 8px #eb1158 inset;
-    }
-    .place-bttn-delete:not(:disabled) {
-        @apply bounce-active;
     }
     .place-bttn-delete:disabled {
         cursor: not-allowed;

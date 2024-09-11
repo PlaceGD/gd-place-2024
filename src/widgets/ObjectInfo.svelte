@@ -67,7 +67,7 @@
     <ul
         class="relative flex flex-col gap-2 p-4 text-lg text-white rounded-lg xs:p-2 xs:gap-1 w-96 sm:w-80 xs:w-72 menu-panel flex-center pointer-events-all xs:mt-8 sm:mt-12 md:mt-10"
     >
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Type:</span>
 
             <div class="h-full">
@@ -76,7 +76,7 @@
                 {/key}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Main color:</span>
 
             <div
@@ -92,7 +92,7 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Detail color:</span>
 
             <div
@@ -108,7 +108,7 @@
                 {/if}
             </div>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Z Layer:</span>
 
             <span
@@ -117,12 +117,12 @@
                 )}</span
             >
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Z Order:</span>
 
             <span>{$selectedObject.zOrder ?? 0}</span>
         </li>
-        <li class="object-info-item">
+        <li class="object-info-item li-alternating">
             <span>Placed by:</span>
 
             {#if $selectedObject.namePlaced != null}
@@ -226,6 +226,6 @@
 
 <style lang="postcss">
     .object-info-item {
-        @apply li-alternating flex h-10 w-full items-center justify-between rounded-lg p-2 text-base xs:h-8 xs:text-sm;
+        @apply flex h-10 w-full items-center justify-between rounded-lg p-2 text-base xs:h-8 xs:text-sm;
     }
 </style>

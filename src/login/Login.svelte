@@ -4,8 +4,8 @@
     import Loading from "../components/Loading.svelte";
     import { LoginMethod, handleSignIn } from "./login";
     import { ExclusiveMenus, loginData, openMenu } from "../stores";
-    import { IconX as Cross } from "@tabler/icons-svelte";
-    import { IconCheck as Check } from "@tabler/icons-svelte";
+    import Cross from "../icons/Cross.svelte";
+    import Check from "../icons/Check.svelte";
     import Toast from "../utils/toast";
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib/user";
     import { initUserData } from "../firebase/auth";

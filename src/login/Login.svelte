@@ -147,7 +147,7 @@
     {isOpen}
     hasCloseButton={true}
     on:close={() => {
-        $openMenu = null
+        $openMenu = null;
     }}
 >
     <!-- LOGIN METHOD -->
@@ -241,22 +241,26 @@
                     <h2>Rules</h2>
 
                     <ul class="bulleted-list">
-                        <li>
-                            Only use one account per person.
-                        </li>
+                        <li>Only use one account per person.</li>
                         <li>
                             Do not create inappropriate imagery (or usernames).
                         </li>
+                        <li>Do not exercise hate speech (please)</li>
                         <li>
-                            Do not exercise hate speech (please)
+                            Only report people who are breaking the rules
+                            <i style="font-size: small; opacity: 0.5;">
+                                (unless you and another user are both reporting
+                                each other for breaking this rule, in which case
+                                one of you should break one other rule so that
+                                the other one is no longer breaking a rule)
+                            </i>
                         </li>
-                        <li>
-                            Only report people who are breaking the rules 
-                            <i style="font-size: small; opacity: 0.5;"> (unless you and another user are both reporting each other for breaking this rule, in which case one of you should break one other rule so that the other one is no longer breaking a rule) </i>
-                        </li>
-                    </ul>   
+                    </ul>
 
-                    <strong> Breaking any of these rules can get your account banned without notice.</strong>
+                    <strong>
+                        Breaking any of these rules can get your account banned
+                        without notice.</strong
+                    >
                 </section>
             </FadedScroll>
 
@@ -311,7 +315,7 @@
                         on:submit={e => e.preventDefault()}
                     >
                         <DarkInput
-                            class="w-[inherit] text-2xl xs:text-lg font-pusab"
+                            class="w-[inherit] text-2xl sm:text-xl xs:text-base font-pusab"
                             maxLength={16}
                             hardValidInput={VALID_USERNAME_CHARS}
                             autoTrim

@@ -58,10 +58,6 @@
             sliderKnob.style.left = `${$springPos}px`;
         }
     }
-
-    let test: HTMLInputElement;
-
-    $: console.log(test, test?.attributes);
 </script>
 
 <svelte:window

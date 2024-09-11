@@ -141,8 +141,6 @@
         }
     }
 
-    $: canSelectByTab = $menuMinimized ? -1 : 0;
-
     $: {
         state.set_show_collidable($editorSettings.showCollidable);
         state.set_hide_triggers($editorSettings.hideTriggers);
@@ -242,7 +240,10 @@
                 </button>
             </div>
 
-            <div class="relative overflow-hidden tabs menu-panel">
+            <fieldset
+                class="relative overflow-hidden tabs menu-panel"
+                disabled={$menuMinimized}
+            >
                 <ul
                     class="absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar tab-options"
                     tabindex="-1"
@@ -263,7 +264,6 @@
                                         // @ts-expect-error its fine
                                         $menuBuildTab = key;
                                     }}
-                                    tabindex={canSelectByTab}
                                     aria-label={key}
                                 >
                                     <Image
@@ -288,7 +288,6 @@
                                         on:click={() => {
                                             $menuEditTab = value;
                                         }}
-                                        tabindex={canSelectByTab}
                                         aria-label={value}
                                     >
                                         <h1
@@ -323,10 +322,11 @@
                         <Delete class="w-full h-full stroke-[1.5]" />
                     </RadialCooldown>
                 </div>
-            </div>
+            </fieldset>
 
-            <div
+            <fieldset
                 class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
+                disabled={$menuMinimized}
             >
                 <ul
                     class="absolute flex flex-col items-center w-full h-full gap-6 px-2 md:px-1.5 py-2 justify-evenly"
@@ -337,7 +337,6 @@
                             on:click={() => {
                                 $menuTabGroup = TabGroup.Build;
                             }}
-                            tabindex={canSelectByTab}
                             aria-label="Build Tab"
                         >
                             <RadialCooldown
@@ -360,7 +359,6 @@
                             on:click={() => {
                                 $menuTabGroup = TabGroup.Edit;
                             }}
-                            tabindex={canSelectByTab}
                             aria-label="Edit Tab"
                         >
                             <Edit
@@ -378,7 +376,6 @@
                             on:click={() => {
                                 $menuTabGroup = TabGroup.Delete;
                             }}
-                            tabindex={canSelectByTab}
                             aria-label="Delete Tab"
                         >
                             <RadialCooldown
@@ -396,7 +393,7 @@
                         </button>
                     </li>
                 </ul>
-            </div>
+            </fieldset>
 
             <div
                 class="w-full h-full overflow-hidden rounded-lg buttons menu-panel"
@@ -435,7 +432,6 @@
                 "place-bttn-delete": $menuTabGroup == TabGroup.Delete,
                 "bounce-active": !pdButtonDisabled,
             })}
-            tabindex={canSelectByTab}
             aria-label={`${$menuTabGroup != TabGroup.Delete ? "Place" : "Delete"} Button`}
             data-minimised={+$menuMinimized}
             on:click={() => {
@@ -446,13 +442,12 @@
                     let k = state.get_selected_object_key();
                     let coord = state.get_selected_object_chunk();
                     if (k != null && coord != null) {
-                        console.log("CCUCUUJCJK");
                         pdButtonDisabled = true;
                         removeObject(k, [coord.x, coord.y]);
                     }
                 }
             }}
-            disabled={pdButtonDisabled}
+            disabled={pdButtonDisabled || $menuMinimized}
         >
             <div
                 class="flex flex-col w-full h-full gap-1 py-4 text-5xl sm:flex-row sm:gap-2 flex-center md:text-4xl sm:text-4xl text-stroke"

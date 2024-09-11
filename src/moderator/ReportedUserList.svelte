@@ -108,14 +108,14 @@
     };
 </script>
 
-
-<div
+<fieldset
     class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
     style={`
             height: ${$openMenu != ExclusiveMenus.Moderator ? "0" : "50vh"};
             opacity: ${$openMenu != ExclusiveMenus.Moderator ? "0" : "1"};
             transition: height 0.2s ease, opacity 0.2s ease-out;
         `}
+    disabled={$openMenu != ExclusiveMenus.Moderator}
 >
     <h1
         class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"
@@ -146,9 +146,7 @@
                                     >(x{user.count})</span
                                 >
                             </p>
-                            <div
-                                class="w-8 h-8 col-start-3 justify-self-end"
-                            >
+                            <div class="w-8 h-8 col-start-3 justify-self-end">
                                 <Button
                                     title="View average report location"
                                     class="w-full h-full"
@@ -202,5 +200,4 @@
             <Loading darken={false} />
         </div> -->
     {/if}
-</div>
-
+</fieldset>

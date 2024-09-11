@@ -111,7 +111,7 @@
         <div id="color-picker-portal" />
     </div>
 
-    <div class="flex w-full h-full min-h-0 overflow-hidden">
+    <div class="flex w-full h-full min-h-0">
         <div class="flex flex-col items-center justify-center gap-2 pr-4">
             <div
                 class="relative flex flex-center"
@@ -144,7 +144,7 @@
             <DarkInput
                 maxLength={3}
                 bind:value={gradientAngle}
-                class="w-14 xs:text-sm"
+                class="text-base w-14 xs:text-sm"
             />
         </div>
         <ul
@@ -152,7 +152,7 @@
         >
             {#each gradientStops
                 .map((pos, idx) => [pos, idx])
-                .sort(([a], [b]) => a - b) as [pos, idx]}
+                .sort(([a], [b]) => a - b) as [_, idx]}
                 <li class="grid grid-cols-3">
                     <div
                         class="flex items-center justify-center flex-auto p-1 gradient-picker-color"
@@ -169,7 +169,7 @@
                         <DarkInput
                             maxLength={3}
                             bind:value={gradientStops[idx]}
-                            class="w-full xs:text-sm"
+                            class="w-full text-base xs:text-sm"
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">

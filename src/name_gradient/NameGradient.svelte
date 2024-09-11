@@ -190,7 +190,7 @@
                         on:submit={e => e.preventDefault()}
                     >
                         <DarkInput
-                            class="w-[inherit] h-12 xs:text-sm font-pusab"
+                            class="w-[inherit] h-12 text-2xl sm:text-xl xs:text-base font-pusab"
                             maxLength={36}
                             hardValidInput={VALID_KOFI_TRANSACTION_ID_CHARS}
                             autoTrim

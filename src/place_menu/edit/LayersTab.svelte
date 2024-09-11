@@ -85,12 +85,11 @@
     $: $menuZOrder = clamp($menuZOrder, -50, 50);
 
     // clamp layer count
-
-    $: canSelectByTab = $menuMinimized ? -1 : 0;
 </script>
 
-<div
+<fieldset
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-base"
+    disabled={$menuMinimized}
 >
     <ul class="flex flex-col h-full buttons w-min">
         <li
@@ -99,7 +98,6 @@
             <button
                 class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke flex-center"
                 on:click={() => ($menuZLayer = equivalentBottom($menuZLayer))}
-                tabindex={canSelectByTab}
                 aria-label="Layer Below Player"
                 title="Layer Below Player"
             >
@@ -120,7 +118,6 @@
             <button
                 class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"
                 on:click={() => ($menuZLayer = equivalentTop($menuZLayer))}
-                tabindex={canSelectByTab}
                 aria-label="Layer Above Player"
                 title="Layer Above Player"
             >
@@ -147,7 +144,6 @@
                         class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
                         on:click={() =>
                             ($menuZLayer = layerFrom(isBottom($menuZLayer), i))}
-                        tabindex={canSelectByTab}
                         aria-label={`${isBottom($menuZLayer) ? "B" : "T"}${i + 1}`}
                     >
                         <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
@@ -170,7 +166,6 @@
                     on:click={() => {
                         $menuZOrder -= 1;
                     }}
-                    tabindex={canSelectByTab}
                     aria-label="Decrease Z-Index"
                 >
                     <Image
@@ -180,9 +175,8 @@
                 </button>
 
                 <DarkInput
-                    class="w-20 text-3xl md:text-2xl sm:text-xl xs:text-lg font-pusab"
+                    class="w-20 text-2xl font-pusab sm:text-xl xs:text-base"
                     maxLength={3}
-                    tabIndex={canSelectByTab}
                     hardValidInput={HARD_VALID_INPUT}
                     softValidInput={SOFT_VALID_INPUT}
                     aria-label="Scale input"
@@ -193,7 +187,6 @@
                     on:click={() => {
                         $menuZOrder += 1;
                     }}
-                    tabindex={canSelectByTab}
                     aria-label="Increase Z-Index"
                 >
                     <Image
@@ -207,7 +200,7 @@
             </h1>
         </div>
     </div>
-</div>
+</fieldset>
 
 <style>
     .layers-tab-container {
@@ -227,8 +220,4 @@
     .content {
         grid-area: content;
     }
-    /* 
-    .zindex {
-        grid-area: zindex;
-    } */
 </style>

@@ -27,11 +27,12 @@
     });
 </script>
 
-<div
+<fieldset
     class={cx({
         "w-full h-full": true,
         "!hidden": $menuTabGroup != TabGroup.Build,
     })}
+    disabled={$menuMinimized}
 >
     {#each Object.entries(CATEGORY_ICONS) as [key, path]}
         <ul
@@ -81,7 +82,7 @@
             {/each}
         </ul>
     {/each}
-</div>
+</fieldset>
 
 <style lang="postcss">
     .object-grid-container {

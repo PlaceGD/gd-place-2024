@@ -2,7 +2,7 @@
     import { SFX_TRIGGER_SOUNDS } from "shared-lib/nexusgen";
     import { menuMinimized, menuSelectedSFX } from "../../stores";
     import Image from "../../components/Image.svelte";
-    import { playSound } from "../../utils/misc";
+    import { playSound } from "../../utils/audio";
 </script>
 
 <div class="w-full h-full">
@@ -22,7 +22,8 @@
                         // }
                         playSound(
                             `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[id]}.ogg`,
-                            0.5
+                            0.5,
+                            "sfx buttons"
                         );
                         $menuSelectedSFX = id;
                     }}

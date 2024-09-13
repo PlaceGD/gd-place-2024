@@ -26,7 +26,7 @@
         SFX_TRIGGER,
         SONG_TRIGGER,
     } from "shared-lib/nexusgen";
-    import { playSound } from "../../utils/misc";
+    import { playSound } from "../../utils/audio";
 
     let objects: [number, ObjectInfo][] = [];
 

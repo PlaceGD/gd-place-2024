@@ -56,7 +56,8 @@
     import { pinch } from "svelte-gestures";
     import { isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
-    import { playSound, setCheckedPreviewObject } from "../utils/misc";
+    import { setCheckedPreviewObject } from "../utils/misc";
+    import { playSound } from "../utils/audio";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;

@@ -19,12 +19,23 @@
     import { onMount } from "svelte";
 
     import fireMp3Url from "../assets/fire.mp3?url";
+    import {
+        BG_TRIGGER,
+        GROUND_2_TRIGGER,
+        GROUND_TRIGGER,
+        SFX_TRIGGER,
+        SONG_TRIGGER,
+    } from "shared-lib/nexusgen";
+    import { playSound } from "../../utils/misc";
 
     let objects: [number, ObjectInfo][] = [];
 
     onMount(() => {
         objects = getObjsInOrder();
     });
+
+    const SPECIAL_ICON_TAILWIND =
+        "absolute left-[25%] top-[45%] right-[25%] bottom-[5%]";
 </script>
 
 <div
@@ -48,10 +59,7 @@
                         tabindex={$menuMinimized ? -1 : 0}
                         on:click={() => {
                             if (id == 3854) {
-                                var audio = new Audio(fireMp3Url);
-                                audio.volume = 0.02;
-
-                                audio.play();
+                                playSound(fireMp3Url, 0.02);
                             }
                             $menuSelectedObject = id;
                         }}
@@ -70,6 +78,29 @@
                             </span>
                         {/if}
                         <div class="relative w-full h-full flex-center">
+                            {#if [BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER].includes(id)}
+                                <div
+                                    class={`${SPECIAL_ICON_TAILWIND} bg-white border border-black`}
+                                />
+                            {/if}
+                            {#if id == SFX_TRIGGER}
+                                <div class={SPECIAL_ICON_TAILWIND}>
+                                    <img
+                                        src="/assets/objects/extra/sfx_note.png"
+                                        class="w-full h-full object-contain"
+                                        alt="note"
+                                    />
+                                </div>
+                            {/if}
+                            {#if id == SONG_TRIGGER}
+                                <div class={SPECIAL_ICON_TAILWIND}>
+                                    <img
+                                        src="/assets/objects/extra/song_note.png"
+                                        class="w-full h-full object-contain"
+                                        alt="note"
+                                    />
+                                </div>
+                            {/if}
                             <ObjectButtonImage {id} />
                         </div>
                     </button>

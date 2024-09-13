@@ -1,0 +1,16 @@
+pub const SFX_TRIGGER_SOUNDS: &[&str] = &[
+    "explosion",
+    "fire",
+    "coin",
+    "positive",
+    "negative",
+    "dance",
+    "record",
+    "bell",
+    "cat",
+    "dog",
+    "cow",
+    "cash",
+    "door",
+    "bubble",
+];

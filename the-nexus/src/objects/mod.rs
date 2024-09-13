@@ -1,5 +1,6 @@
 pub mod levelstring;
 pub mod list;
+pub mod sfx;
 
 // make sure to modify ObjectCategory and ObjectHitbox and ObjectInfo in sharedlib gd.ts too!!!!
 // make sure to modify ObjectCategory and ObjectHitbox and ObjectInfo in sharedlib gd.ts too!!!!

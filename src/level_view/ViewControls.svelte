@@ -11,6 +11,8 @@
         BG_TRIGGER,
         GROUND_TRIGGER,
         GROUND_2_TRIGGER,
+        SFX_TRIGGER,
+        SFX_TRIGGER_SOUNDS,
     } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
@@ -32,6 +34,7 @@
         bgColor,
         ground1Color,
         ground2Color,
+        menuSelectedSFX,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -53,7 +56,7 @@
     import { pinch } from "svelte-gestures";
     import { isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
-    import { setCheckedPreviewObject } from "../utils/misc";
+    import { playSound, setCheckedPreviewObject } from "../utils/misc";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -108,23 +111,36 @@
     }, 50);
 
     const placePreview = (mx: number, my: number) => {
-        let obj = new wasm.GDObjectOpt(
-            $menuSelectedObject,
+        let obj = state.get_preview_object();
+        obj.x =
             Math.floor(mx / 30) * 30 +
-                15 +
-                objects[$menuSelectedObject].placeOffsetX,
+            15 +
+            objects[$menuSelectedObject].placeOffsetX;
+        obj.y =
             Math.floor(my / 30) * 30 +
-                15 +
-                objects[$menuSelectedObject].placeOffsetY,
-            0,
-            0,
-            0,
-            18,
-            wasm.ZLayer.B4,
-            0,
-            wasm.GDColor.white(),
-            wasm.GDColor.white()
-        );
+            15 +
+            objects[$menuSelectedObject].placeOffsetY;
+        obj.x_scale_exp = 0;
+        obj.x_angle = 0;
+        obj.y_scale_exp = 0;
+        obj.y_angle = 18;
+        // let obj = new wasm.GDObjectOpt(
+        //     $menuSelectedObject,
+        //     Math.floor(mx / 30) * 30 +
+        //         15 +
+        //         objects[$menuSelectedObject].placeOffsetX,
+        //     Math.floor(my / 30) * 30 +
+        //         15 +
+        //         objects[$menuSelectedObject].placeOffsetY,
+        //     0,
+        //     0,
+        //     0,
+        //     18,
+        //     wasm.ZLayer.B4,
+        //     0,
+        //     wasm.GDColor.white(),
+        //     wasm.GDColor.white()
+        // );
         $menuMainColor = {
             hue: 0,
             x: 0,
@@ -141,6 +157,7 @@
         };
         $menuZLayer = wasm.ZLayer.B4;
         $menuZOrder = 0;
+        $menuSelectedSFX = 0;
         // $menuZLayer = wasm.ZLayer.B1;
 
         if (setCheckedPreviewObject(state, obj)) {
@@ -209,6 +226,15 @@
                         g: i.obj.main_color.g,
                         b: i.obj.main_color.b,
                     };
+                    triggersRun = true;
+                    addTriggerRun(i.obj.x, i.obj.y);
+                    break;
+                }
+                case SFX_TRIGGER: {
+                    playSound(
+                        `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
+                        0.5
+                    );
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;

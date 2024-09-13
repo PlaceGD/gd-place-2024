@@ -5,6 +5,8 @@ import { type GDObjectOpt, convert_opt_transform } from "wasm-lib";
 export enum EditTab {
     Transform = "Transform",
     Layers = "Layers",
+
+    // this is colors for most stuff but it will be sfx and song for the respective triggers! we
     Colors = "Colors",
 }
 

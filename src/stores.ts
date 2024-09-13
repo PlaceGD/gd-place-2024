@@ -55,10 +55,8 @@ export const menuDetailColor = persistLocalWritable(
 );
 export const menuZLayer = persistLocalWritable(ZLayer.B1, "menuZLayer");
 export const menuZOrder = persistLocalWritable(0, "menuZOrder");
-export const menuOpenWidget = persistLocalWritable(
-    WidgetType.None,
-    "menuOpenWidget"
-);
+
+export const menuSelectedSFX = persistLocalWritable(0, "menuSelectedSFX");
 
 export const mainColorRGB = derived(
     menuMainColor,
@@ -67,6 +65,11 @@ export const mainColorRGB = derived(
 export const detailColorRGB = derived(
     menuDetailColor,
     c => colors.list[c.hue].palette[c.y][c.x]
+);
+
+export const menuOpenWidget = persistLocalWritable(
+    WidgetType.None,
+    "menuOpenWidget"
 );
 
 export const editorData = persist(

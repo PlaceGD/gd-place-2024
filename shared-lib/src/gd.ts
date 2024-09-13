@@ -3,6 +3,7 @@ import _objectOrder from "./gd/object_order.json";
 import _spritesheet from "./gd/spritesheet.json";
 import _colors from "./gd/colors.json";
 import { remEuclid } from "./util";
+import { SFX_TRIGGER, SFX_TRIGGER_SOUNDS } from "./nexusgen";
 
 export interface SpriteData {
     pos: [number, number];
@@ -66,10 +67,39 @@ export interface GDObjectOpt {
 }
 export const GD_OBJECT_OPT_BYTE_SIZE = 26;
 
+const paletteContains = (r: number, g: number, b: number): boolean => {
+    for (let { palette } of colors.list) {
+        for (let i of palette) {
+            for (let j of i) {
+                if (r == j[0] && g == j[1] && b == j[2]) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+};
+const isValidColor = (color: GDColor): boolean => {
+    if (color.r == 0 && color.g == 0 && color.b == 0 && color.blending)
+        return false;
+
+    return paletteContains(color.r, color.g, color.b);
+};
+
 export const isValidObject = (obj: GDObjectOpt) => {
     if (obj.z_layer < 0 || obj.z_layer > 8) return false;
 
     if (obj.z_order < -50 || obj.z_order > 50) return false;
+
+    if (obj.id == SFX_TRIGGER) {
+        if (obj.main_color.r >= SFX_TRIGGER_SOUNDS.length) {
+            return false;
+        }
+    } else {
+        if (!isValidColor(obj.main_color)) return false;
+    }
+
+    if (!isValidColor(obj.detail_color)) return false;
 
     if (remEuclid(obj.x_angle - obj.y_angle, 36) == 0) {
         return false;

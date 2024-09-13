@@ -7,7 +7,7 @@ use crate::{
     map,
     object::GDObject,
     state::State,
-    utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
+    utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, SFX_ICON_SPRITES},
 };
 
 pub mod billy;
@@ -67,6 +67,22 @@ pub fn rect_draw(state: &State, billy: &mut Billy) {
             );
             if !state.show_collidable {
                 billy.centered_solid_rect(-vec2(0.0, 42.0), vec2(112.0, 112.0), color);
+            }
+        }
+        if special_ids::SFX_TRIGGER == obj.id {
+            let sfx_id = obj.main_color.r;
+
+            if let Some(sprite) = SFX_ICON_SPRITES.get(sfx_id as usize) {
+                let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
+                let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+                billy.centered_textured_rect(
+                    -vec2(0.0, 42.0),
+                    uv_size * 128.0 / uv_size.max_element(),
+                    Vec4::ONE,
+                    2,
+                    uv_pos,
+                    uv_size,
+                )
             }
         }
 

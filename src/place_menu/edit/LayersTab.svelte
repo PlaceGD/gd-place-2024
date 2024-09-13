@@ -113,7 +113,7 @@
             {/if}
         </li>
         <li
-            class="relative flex-1 w-20 h-full md:w-16 xs:w-12 font-pusab flex-center"
+            class="relative flex-1 w-20 h-full md:w-18 xs:w-12 font-pusab flex-center"
         >
             <button
                 class="z-20 w-full h-full p-2 rounded-lg sm:p-1 detail text-stroke flex-center"

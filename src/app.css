@@ -169,6 +169,9 @@ dialog::backdrop {
         }
     }
     
+    .hover-text-transition {
+        @apply transition duration-500 text-white/50 hover:text-white;
+    }
 }
 
 @layer utilities {

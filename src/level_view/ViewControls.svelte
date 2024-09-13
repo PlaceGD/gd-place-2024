@@ -520,8 +520,8 @@
         <TriggerRuns />
     </Widget>
     {#if $loginData.currentUserData != null}
-        <Widget position={[30, -30]} scale={1.0} screenCenter={false}>
+        <!-- <Widget position={[30, -30]} scale={1.0} screenCenter={false}>
             <ObjectInfo bind:state />
-        </Widget>
+        </Widget> -->
     {/if}
 </div>

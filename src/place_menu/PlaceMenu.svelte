@@ -63,6 +63,7 @@
     import RadialCooldown from "../components/RadialCooldown.svelte";
     import OnceButton from "../components/OnceButton.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
+    import DeleteTab from "./delete/DeleteTab.svelte";
 
     export let state: wasm.State;
 
@@ -416,11 +417,7 @@
                 {/if}
 
                 {#if $menuTabGroup == TabGroup.Delete}
-                    <div
-                        class="w-full h-full p-4 text-4xl text-center md:text-3x sm:text-2x xs:text-xl flex-center font-pusab text-stroke"
-                    >
-                        Select an object to delete it!
-                    </div>
+                    <DeleteTab {state} />
                 {/if}
             </div>
         </div>

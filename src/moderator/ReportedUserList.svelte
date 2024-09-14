@@ -27,62 +27,47 @@
         }
     }
 
-    let reportedUsers: {
-        uid: string;
-        timestamp: number;
-        username: string;
-        sumX: number; // used to get average report position
-        sumY: number;
-        count: number;
-    }[] = [];
+    let reportedUsers: Record<
+        string,
+        {
+            timestamp: number;
+            username: string;
+            avg_x: number; // used to get average report position
+            avg_y: number;
+            count: number;
+        }
+    > = {};
+    // const sortReported = () => {
+    //     reportedUsers.sort((a, b) => (a.timestamp - b.timestamp));
+
+    //     reportedUsers = reportedUsers;
+    // };
 
     onMount(() => {
         db.ref("reportedUsers").on("child_removed", data => {
-            reportedUsers = reportedUsers.filter(
-                user => data.val().uid != user.uid
-            );
+            delete reportedUsers[data.key ?? ""];
+            reportedUsers = reportedUsers;
         });
 
         db.ref("reportedUsers")
             .orderByChild("timestamp")
-            .startAfter(Date.now() - 15 * 60 * 1000)
+            // .startAfter(Date.now() - 15 * 60 * 1000)
             .on("child_added", data => {
-                const reportData = data.val();
-
-                const user = reportedUsers.find(c => c.uid == reportData.uid);
-
-                if (user != undefined) {
-                    user.count += 1;
-                    user.sumX += reportData.x;
-                    user.sumY += reportData.y;
-                } else {
+                if (data.key != undefined) {
+                    reportedUsers[data.key] = data.val();
+                    reportedUsers = reportedUsers;
                     $newReports = true;
-
-                    reportedUsers.push({
-                        count: 1, // TODO: report count
-                        username: reportData.username,
-                        sumX: reportData.x,
-                        sumY: reportData.y,
-                        timestamp: reportData.timestamp,
-                        uid: reportData.uid,
-                    });
-
-                    reportedUsers.sort((a, b) =>
-                        a.timestamp > b.timestamp ? 1 : -1
-                    );
-
+                }
+            });
+        db.ref("reportedUsers")
+            .orderByChild("timestamp")
+            // .startAfter(Date.now() - 15 * 60 * 1000)
+            .on("child_changed", data => {
+                if (data.key != undefined) {
+                    reportedUsers[data.key] = data.val();
                     reportedUsers = reportedUsers;
                 }
             });
-
-        // onChildAdded(ref(db, "bannedUsers"), data => {
-        //     bannedUsers.update(users => {
-        //         if (data.key) {
-        //             users = [...users, data.key]; // key will be the username
-        //         }
-        //         return users;
-        //     });
-        // });
     });
 
     $: {
@@ -94,23 +79,16 @@
     let currentIdx = -1;
 
     const userOp = (op: "ignore" | "ban", userId: string, idx: number) => {
-        // TODO: user op
-        // currentIdx = idx;
-        // reportedUserOperation({
-        //     operation: op,
-        //     reportedUserUid: userId,
-        // })
-        //     .then(() => {
-        //         delete reportedUsers[userId];
-        //         currentIdx = -1;
-        //     })
-        //     .catch(e => {
-        //         Toast.showErrorToast(`Failed to perform operation! (${e})`);
-        //         currentIdx = -1;
-        //     });
+        reportedUserOperation({
+            operation: op,
+            reportedUserUid: userId,
+        }).catch(e => {
+            Toast.showErrorToast(`Failed to perform operation! (${e})`);
+            currentIdx = -1;
+        });
     };
 
-    $: console.log("here", reportedUsers);
+    // $: console.log("here", reportedUsers);
 </script>
 
 <fieldset
@@ -134,35 +112,27 @@
     {:else if reportedUsers != null}
         <FadedScroll>
             <ul
-                class="flex flex-col w-full gap-2 px-6 overflow-y-auto rounded-lg xs:px-4"
+                class="flex flex-col w-full gap-2 px-4 overflow-y-auto rounded-lg xs:px-2"
             >
-                {#each Object.values(reportedUsers) as user, idx}
+                {#each Object.entries(reportedUsers) as [uid, user], idx}
                     <li
                         class="relative flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15"
                     >
-                        <div
-                            class="grid items-center justify-center w-full grid-cols-3 grid-rows-1"
-                        >
-                            <p class="col-start-2">
-                                <span class="text-base xs:text-sm"
-                                    >{user.username}</span
-                                >
-                                <span class="text-sm xs:text-xs"
-                                    >(x{user.count})</span
-                                >
-                            </p>
-                            <div class="w-8 h-8 col-start-3 justify-self-end">
+                        <div class="flex flex-center w-full relative">
+                            <span class="text-base xs:text-sm">
+                                {user.username} (x{user.count})
+                            </span>
+
+                            <div class="w-8 h-8 xs:w-7 xs:h-7 absolute right-0">
                                 <Button
                                     title="View average report location"
                                     class="w-full h-full"
                                     type="plain"
                                     on:click={() => {
-                                        const data = reportedUsers[idx];
-
                                         moveCamera(
                                             state,
-                                            data.sumX / data.count,
-                                            data.sumY / data.count
+                                            user.avg_x,
+                                            user.avg_y
                                         );
                                     }}
                                 >
@@ -176,7 +146,7 @@
                                 type="decline"
                                 class="w-full h-full"
                                 on:click={() => {
-                                    userOp("ignore", user.uid, idx);
+                                    userOp("ignore", uid, idx);
                                 }}
                                 disabled={currentIdx == idx}
                             >
@@ -186,7 +156,7 @@
                                 type="accept"
                                 class="w-full h-full"
                                 on:click={() => {
-                                    userOp("ban", user.uid, idx);
+                                    userOp("ban", uid, idx);
                                 }}
                                 disabled={currentIdx == idx}
                             >

@@ -146,7 +146,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             request.auth.uid
         );
 
-        let transactionResult = await userDetailsRef
+        let transactionResult1 = await userDetailsRef
             .child("epochNextReport")
             .transaction(nextReport => {
                 if (Date.now() < nextReport ?? 0) {
@@ -158,8 +158,8 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
 
                 return Date.now() + REPORT_COOLDOWN_SECONDS * 1000;
             });
-        if (!transactionResult.committed) {
-            logger.debug("Transaction not committed");
+        if (!transactionResult1.committed) {
+            logger.debug("Transaction 1 not committed");
             return;
         }
 
@@ -178,17 +178,39 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
             throw new HttpsError("invalid-argument", "Invalid Y");
         }
 
-        const reported = db.ref("reportedUsers");
+        // const reported = db.ref("reportedUsers");
 
+        let transactionResult2 = await db
+            .ref("reportedUsers")
+            .child(userToReport.uid)
+            .transaction(reportData => {
+                if (reportData == undefined) {
+                    return {
+                        username: data.username,
+                        timestamp: Date.now(),
+                        count: 1,
+                        avg_x: data.x,
+                        avg_y: data.y,
+                    };
+                } else {
+                    return {
+                        username: data.username,
+                        timestamp: Date.now(),
+                        count: reportData.count + 1,
+                        avg_x:
+                            (reportData.avg_x * reportData.count + data.x) /
+                            (reportData.count + 1),
+                        avg_y:
+                            (reportData.avg_y * reportData.count + data.y) /
+                            (reportData.count + 1),
+                    };
+                }
+            });
+        if (!transactionResult2.committed) {
+            logger.debug("Transaction 2 not committed");
+            return;
+        }
         logger.info(`Reported user ${data.username}`);
-
-        reported.push({
-            uid: userToReport.uid,
-            username: data.username,
-            timestamp: Date.now(),
-            x: data.x,
-            y: data.y,
-        });
     }
 );
 
@@ -265,7 +287,9 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
 
         if (data.operation == "ban") {
             await banUserInner(db, request.auth.uid, data.reportedUserUid);
-        } else if (data.operation != "ignore") {
+        } else if (data.operation == "ignore") {
+            await db.ref(`reportedUsers/${data.reportedUserUid}`).remove();
+        } else {
             throw new HttpsError("invalid-argument", "Unknown operation");
         }
     }

@@ -18,22 +18,39 @@ export type UsernameData = { uid: string; displayColor: string };
 export interface DatabaseSchema {
     objects: Record<ChunkID, Record<ObjKey, string>>;
 
+    /**
+     * user uid -> data
+     */
     reportedUsers: Record<
-        string, // randomly generated key by firebase
+        string,
         {
-            uid: string;
             username: string;
             timestamp: number;
-            x: number;
-            y: number;
+            count: number;
+            avg_x: number;
+            avg_y: number;
         }
     >;
+
+    /**
+     * user uid -> data
+     */
     bannedUsers: Record<string, boolean>;
     userCount: number;
+
+    /**
+     * user uid -> data
+     */
     userDetails: Record<string, UserDetails>;
 
+    /**
+     * username -> data
+     */
     userName: Record<string, UsernameData>;
 
+    /**
+     * obj key -> username
+     */
     userPlaced: Record<ObjKey, string>;
 
     activeDonations: Record<KofiTxId, number>;

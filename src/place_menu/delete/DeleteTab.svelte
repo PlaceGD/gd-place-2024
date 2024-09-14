@@ -19,6 +19,7 @@
     import { getNewTurnstileToken } from "../../utils/turnstile";
     import ObjectButtonImage from "../objects/ObjectButtonImage.svelte";
     import checker from "../assets/checker.png?url";
+    import FadedScroll from "../../components/FadedScroll.svelte";
 
     export let state: wasm.State;
 
@@ -67,22 +68,19 @@
 </script>
 
 {#if $selectedObject != null}
-    <fieldset
-        class="flex items-center w-full h-full gap-4 p-4 sm:p-2 sm:flex-col sm:gap-2"
-        disabled={$menuMinimized}
-    >
+    <fieldset class="delete-tab-grid" disabled={$menuMinimized}>
         <div
-            class="grid h-full grid-rows-2 min-w-60 max-w-60 md:min-w-40 md:max-w-40 sm:max-w-full sm:min-w-full sm:w-full sm:h-min sm:grid-rows-1 sm:grid-cols-2 sm:gap-2"
+            class="grid h-full grid-rows-[min-content_1fr] min-w-60 max-w-60 md:min-w-40 md:max-w-40 sm:max-w-full sm:min-w-full sm:w-full sm:h-min sm:grid-rows-none sm:grid-cols-2 sm:gap-2"
         >
             <hgroup
-                class="flex flex-col items-center self-start justify-between overflow-x-scroll overflow-y-hidden thin-scrollbar"
+                class="flex flex-col items-center self-start justify-between overflow-hidden thin-scrollbar sm:self-center md:pt-4 sm:pt-0 text-center"
             >
                 <h1
                     class="text-xl text-center md:text-base font-pusab text-stroke"
                 >
                     Placed By:
                 </h1>
-                <p>
+                <FadedScroll orientation="horizontal" threshold={2}>
                     {#if $selectedObject.namePlaced != null}
                         <button
                             aria-label="Copy Username"
@@ -110,36 +108,42 @@
                             />
                         </button>
                     {:else}
-                        <div class="relative w-9 h-9 max-w-9 max-h-9">
-                            <Loading darken={false} />
+                        <div class="w-full h-full flex flex-center">
+                            <div
+                                class="relative w-9 sm:w-7 h-9 sm:h-7 max-w-9 max-h-9"
+                            >
+                                <Loading darken={false} />
+                            </div>
                         </div>
                     {/if}
-                </p>
+                </FadedScroll>
             </hgroup>
-            <div class="flex flex-col self-end w-full gap-2">
-                <div class="flex flex-col items-center justify-center">
-                    {#if $loginData.currentUserData != null}
-                        <OnceButton
-                            type="decline"
-                            disabled={!$cooldownFinished || isYourself}
-                            class="w-full text-base md:text-sm"
-                            aria-label="Report User"
-                            on:click={() => {
-                                if ($selectedObject?.namePlaced != null) {
-                                    report($selectedObject.namePlaced);
-                                }
-                            }}
-                            bind:reset={resetReportButton}
-                        >
-                            Report
-                        </OnceButton>
-                    {/if}
-                </div>
+            <div class="flex flex-col self-end w-full gap-2 sm:gap-1">
+                <!-- <div class="flex flex-col items-center justify-center"> -->
+                {#if $loginData.currentUserData != null}
+                    <OnceButton
+                        type="decline"
+                        disabled={!$cooldownFinished || isYourself}
+                        class="w-full text-base md:text-sm"
+                        iconClass="sm:w-8 sm:h-8"
+                        aria-label="Report User"
+                        on:click={() => {
+                            if ($selectedObject?.namePlaced != null) {
+                                report($selectedObject.namePlaced);
+                            }
+                        }}
+                        bind:reset={resetReportButton}
+                    >
+                        Report
+                    </OnceButton>
+                {/if}
+                <!-- </div> -->
 
                 {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.currentUserData.userDetails.moderator}
                     <OnceButton
                         type="decline"
                         class="w-full text-base md:text-sm"
+                        iconClass="sm:w-8 sm:h-8"
                         disabled={$bannedUsers.includes(
                             $selectedObject.namePlaced?.toLowerCase() ?? ""
                         ) || isYourself}
@@ -177,10 +181,8 @@
             class="min-w-[1px] max-w-[1px] h-full sm:min-w-full sm:min-h-[1px] sm:max-h-[1px] bg-white/20 flex-1"
         ></span>
 
-        <ul
-            class="max-w-[600px] sm:max-w-full sm:w-full flex-1 text-center h-full object-info-grid"
-        >
-            <li class="object-info-item type">
+        <ul class="object-info-grid">
+            <li class="object-info-item type sm:gap-1">
                 <h1 class="text-xl md:text-base font-pusab text-stroke">
                     Type:
                 </h1>
@@ -309,10 +311,22 @@
 {/if}
 
 <style lang="postcss">
+    .delete-tab-grid {
+        @apply grid h-full w-full items-center gap-4 p-4 md:gap-2 md:p-2 sm:flex-col xs:gap-1;
+        grid-template-columns: min-content min-content 1fr;
+    }
+
+    @media screen(sm) {
+        .delete-tab-grid {
+            grid-template-columns: unset;
+            grid-template-rows: min-content min-content 1fr;
+        }
+    }
+
     .object-info-item {
         @apply grid h-full w-full items-center justify-center;
         grid-auto-rows: 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-rows: 1fr min-content 1fr;
     }
 
     /* this one does not change, the others do */
@@ -323,7 +337,7 @@
     }
 
     .object-info-grid {
-        @apply grid gap-4 md:gap-2 sm:gap-0;
+        @apply grid h-full max-w-[600px] flex-1 content-center gap-2 justify-self-center text-center sm:w-full sm:max-w-full sm:justify-around sm:gap-x-4 sm:gap-y-1 xs:justify-center;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-rows: 1fr;
         grid-template-areas: "type colors zlayer zorder";
@@ -355,8 +369,7 @@
         .object-info-item {
             grid-auto-rows: unset;
             grid-template-rows: unset;
-            grid-auto-columns: 1fr;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 85px 1fr 50px; /* these hardcoded values pain me */
         }
     }
 </style>

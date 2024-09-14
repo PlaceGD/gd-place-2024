@@ -9,6 +9,7 @@
         GROUND_TRIGGER,
         GROUND_2_TRIGGER,
         ARROW_TRIGGER,
+        SFX_TRIGGER,
     } from "shared-lib/nexusgen";
     import { CATEGORY_ICONS } from "../gd/object";
 
@@ -39,6 +40,7 @@
         loginData,
         mainColorRGB,
         detailColorRGB,
+        menuSelectedSFX,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -64,13 +66,22 @@
     import OnceButton from "../components/OnceButton.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
     import DeleteTab from "./delete/DeleteTab.svelte";
+    import SfxTab from "./edit/SFXTab.svelte";
 
     export let state: wasm.State;
 
     const minimizeAnimDur = 0.5;
 
     $: showColorsTab = $menuSelectedObject != ARROW_TRIGGER;
-    $: colorsTabName = "Colors";
+    const editTabName = (tab: EditTab) => {
+        if (tab == EditTab.Colors) {
+            if ($menuSelectedObject == SFX_TRIGGER) {
+                return "SFX";
+            }
+            return EditTab.Colors;
+        }
+        return tab;
+    };
     $: {
         if (COLOR_TRIGGERS.includes($menuSelectedObject)) {
             $menuMainColor.blending = false;
@@ -91,13 +102,43 @@
 
     $: {
         let obj = state.get_preview_object();
-        obj.main_color = new wasm.GDColor(
-            mainR,
-            mainG,
-            mainB,
-            $menuMainColor.opacity * 255,
-            $menuMainColor.blending
-        );
+        let old_id = obj.id;
+
+        let [oldPx, oldPy] = getTransformedPlaceOffset(obj);
+        obj.id = $menuSelectedObject;
+        let [newPx, newPy] = getTransformedPlaceOffset(obj);
+
+        obj.x = obj.x + oldPx - newPx;
+        obj.y = obj.y + oldPy - newPy;
+
+        if (obj.id == SFX_TRIGGER) {
+            obj.main_color = new wasm.GDColor(
+                $menuSelectedSFX,
+                0,
+                0,
+                255,
+                false
+            );
+        } else if (old_id == SFX_TRIGGER) {
+            obj.main_color = wasm.GDColor.white();
+        }
+
+        console.log("c");
+        setCheckedPreviewObject(state, obj);
+    }
+
+    $: {
+        let obj = state.get_preview_object();
+        if ($menuSelectedObject != SFX_TRIGGER) {
+            obj.main_color = new wasm.GDColor(
+                mainR,
+                mainG,
+                mainB,
+                $menuMainColor.opacity * 255,
+                $menuMainColor.blending
+            );
+        }
+        console.log("a");
         setCheckedPreviewObject(state, obj);
     }
     $: {
@@ -111,6 +152,7 @@
         );
         setCheckedPreviewObject(state, obj);
     }
+
     $: {
         let obj = state.get_preview_object();
         obj.z_layer = $menuZLayer;
@@ -121,18 +163,22 @@
         obj.z_order = $menuZOrder;
         setCheckedPreviewObject(state, obj);
     }
-    $: {
-        let obj = state.get_preview_object();
 
-        let [oldPx, oldPy] = getTransformedPlaceOffset(obj);
-        obj.id = $menuSelectedObject;
-        let [newPx, newPy] = getTransformedPlaceOffset(obj);
+    // $: {
+    //     if ($menuSelectedObject == SFX_TRIGGER) {
+    //         let obj = state.get_preview_object();
+    //         obj.main_color = new wasm.GDColor(
+    //             $menuSelectedSFX,
+    //             0,
+    //             0,
+    //             255,
+    //             false
+    //         );
+    //         console.log("b");
+    //         setCheckedPreviewObject(state, obj);
+    //     }
+    // }
 
-        obj.x = obj.x + oldPx - newPx;
-        obj.y = obj.y + oldPy - newPy;
-
-        setCheckedPreviewObject(state, obj);
-    }
     $: {
         if ($menuTabGroup == TabGroup.Delete) {
             state.set_preview_visibility(false);
@@ -294,7 +340,7 @@
                                         <h1
                                             class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
                                         >
-                                            {value}
+                                            {editTabName(value)}
                                         </h1>
                                     </button>
                                     {#if $menuEditTab == value}
@@ -412,7 +458,11 @@
                     {:else if $menuEditTab == EditTab.Layers}
                         <LayersTab></LayersTab>
                     {:else if $menuEditTab == EditTab.Colors}
-                        <ColorsTab></ColorsTab>
+                        {#if $menuSelectedObject == SFX_TRIGGER}
+                            <SfxTab></SfxTab>
+                        {:else}
+                            <ColorsTab></ColorsTab>
+                        {/if}
                     {/if}
                 {/if}
 

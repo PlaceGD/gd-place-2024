@@ -151,6 +151,9 @@ impl GDObjectOpt {
         self.x_scale_exp = self.x_scale_exp.clamp(-12, 12);
         self.y_scale_exp = self.y_scale_exp.clamp(-12, 12);
     }
+    // pub fn debug_str(&self) -> String {
+    //     format!("{:?}", self)
+    // }
 }
 
 #[wasm_bindgen]

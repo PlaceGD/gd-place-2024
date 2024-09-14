@@ -4,25 +4,37 @@ use std::{
 };
 
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
+use itertools::Itertools;
 use texture_packer::{exporter::ImageExporter, importer::ImageImporter, TexturePacker};
 
 use crate::{
-    objects::list::{special_ids, AVAILABLE_OBJECTS},
+    objects::{
+        list::{special_ids, AVAILABLE_OBJECTS},
+        sfx::SFX_TRIGGER_SOUNDS,
+    },
     sprites::SpriteInfo,
     util::is_fully_transparent,
 };
 
 use super::config::PACKER_CONFIG;
 
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SpritesheetData {
     main_sprites: HashMap<u16, SpriteInfo>,
     detail_sprites: HashMap<u16, SpriteInfo>,
+    sfx_icons: HashMap<&'static str, SpriteInfo>,
 }
 
 pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
-    let mut packer: TexturePacker<'_, image::DynamicImage, (u16, bool)> =
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+    enum SpriteKey {
+        Main(u16),
+        Detail(u16),
+        Sfx(&'static str),
+    }
+
+    let mut packer: TexturePacker<'_, image::DynamicImage, SpriteKey> =
         TexturePacker::new_skyline(PACKER_CONFIG);
 
     for &(i, _) in AVAILABLE_OBJECTS.iter() {
@@ -38,7 +50,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
         if let Some(tex) = special_tex {
             packer
                 .pack_own(
-                    (i, false),
+                    SpriteKey::Main(i),
                     ImageImporter::import_from_file(&PathBuf::from(format!(
                         "textures/special/{}.png",
                         tex
@@ -57,39 +69,60 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             .unwrap();
 
             if !is_fully_transparent(&main) {
-                packer.pack_own((i, false), main).unwrap();
+                packer.pack_own(SpriteKey::Main(i), main).unwrap();
             }
             if !is_fully_transparent(&detail) {
-                packer.pack_own((i, true), detail).unwrap();
+                packer.pack_own(SpriteKey::Detail(i), detail).unwrap();
             }
         }
+    }
+    for i in SFX_TRIGGER_SOUNDS {
+        packer
+            .pack_own(
+                SpriteKey::Sfx(i),
+                ImageImporter::import_from_file(&PathBuf::from(format!(
+                    "../public/assets/objects/sfx_icons/{}.png",
+                    i
+                )))
+                .unwrap(),
+            )
+            .unwrap();
     }
 
     let sheet = ImageExporter::export(&packer).unwrap();
 
     let mut main = HashMap::new();
     let mut detail = HashMap::new();
+    let mut sfx_icons = HashMap::new();
 
-    for (&(id, is_detail), f) in packer.get_frames() {
-        let map = if is_detail { &mut detail } else { &mut main };
+    for (&key, f) in packer.get_frames() {
+        let sprite_info = SpriteInfo {
+            pos: (f.frame.x, f.frame.y),
+            size: (f.frame.w, f.frame.h),
+            rotated: f.rotated,
+            offset: (
+                (f.source.x as f32 + f.frame.w as f32 / 2.0) - f.source.w as f32 / 2.0,
+                (f.source.y as f32 + f.frame.h as f32 / 2.0) - f.source.h as f32 / 2.0,
+            ),
+        };
 
-        map.insert(
-            id,
-            SpriteInfo {
-                pos: (f.frame.x, f.frame.y),
-                size: (f.frame.w, f.frame.h),
-                rotated: f.rotated,
-                offset: (
-                    (f.source.x as f32 + f.frame.w as f32 / 2.0) - f.source.w as f32 / 2.0,
-                    (f.source.y as f32 + f.frame.h as f32 / 2.0) - f.source.h as f32 / 2.0,
-                ),
-            },
-        );
+        match key {
+            SpriteKey::Main(id) => {
+                main.insert(id, sprite_info);
+            }
+            SpriteKey::Detail(id) => {
+                detail.insert(id, sprite_info);
+            }
+            SpriteKey::Sfx(s) => {
+                sfx_icons.insert(s, sprite_info);
+            }
+        }
     }
 
     let data = SpritesheetData {
         main_sprites: main,
         detail_sprites: detail,
+        sfx_icons,
     };
 
     (sheet, data)
@@ -158,21 +191,6 @@ pub fn make_get_main_sprite_fn(data: &SpritesheetData) -> String {
 pub const MAIN_SPRITES: [Option<SpriteInfo>; 4600] = {ongy:?};
     "
     )
-
-    //     format!(
-    //         "
-    // pub fn get_main_sprite(id: u32) -> Option<SpriteInfo> {{
-    //     Some(match id {{
-    //         {},
-    //         _ => return None,
-    //     }})
-    // }}
-    //     ",
-    //         data.main_sprites
-    //             .iter()
-    //             .map(|(id, info)| { format!("{id} => {info:#?}") })
-    //             .join(",")
-    //     )
 }
 
 pub fn make_get_detail_sprite_fn(data: &SpritesheetData) -> String {
@@ -186,19 +204,17 @@ pub fn make_get_detail_sprite_fn(data: &SpritesheetData) -> String {
 pub const DETAIL_SPRITES: [Option<SpriteInfo>; 4600] = {ongy:?};
     "
     )
+}
 
-    //     format!(
-    //         "
-    // pub fn get_detail_sprite(id: u32) -> Option<SpriteInfo> {{
-    //     Some(match id {{
-    //         {},
-    //         _ => return None,
-    //     }})
-    // }}
-    //     ",
-    //         data.detail_sprites
-    //             .iter()
-    //             .map(|(id, info)| { format!("{id} => {info:#?}") })
-    //             .join(",")
-    //     )
+pub fn make_get_sfx_icon_sprite_fn(data: &SpritesheetData) -> String {
+    let ongy = SFX_TRIGGER_SOUNDS
+        .iter()
+        .map(|s| data.sfx_icons[s])
+        .collect_vec();
+
+    format!(
+        "
+pub const SFX_ICON_SPRITES: &[SpriteInfo] = &{ongy:?};
+    "
+    )
 }

@@ -11,6 +11,8 @@
         BG_TRIGGER,
         GROUND_TRIGGER,
         GROUND_2_TRIGGER,
+        SFX_TRIGGER,
+        SFX_TRIGGER_SOUNDS,
     } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
@@ -32,6 +34,8 @@
         bgColor,
         ground1Color,
         ground2Color,
+        menuSelectedSFX,
+        placedByHover,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -54,6 +58,8 @@
     import { isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
+    import { playSound } from "../utils/audio";
+    import PlacedByText from "../widgets/PlacedByText.svelte";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -100,6 +106,7 @@
             lerp(mx, cx, 1 / zoom_scale_change),
             lerp(my, cy, 1 / zoom_scale_change)
         );
+        placedByHover.set(null);
     };
 
     setInterval(() => {
@@ -108,23 +115,36 @@
     }, 50);
 
     const placePreview = (mx: number, my: number) => {
-        let obj = new wasm.GDObjectOpt(
-            $menuSelectedObject,
+        let obj = state.get_preview_object();
+        obj.x =
             Math.floor(mx / 30) * 30 +
-                15 +
-                objects[$menuSelectedObject].placeOffsetX,
+            15 +
+            objects[$menuSelectedObject].placeOffsetX;
+        obj.y =
             Math.floor(my / 30) * 30 +
-                15 +
-                objects[$menuSelectedObject].placeOffsetY,
-            0,
-            0,
-            0,
-            18,
-            wasm.ZLayer.B4,
-            0,
-            wasm.GDColor.white(),
-            wasm.GDColor.white()
-        );
+            15 +
+            objects[$menuSelectedObject].placeOffsetY;
+        obj.x_scale_exp = 0;
+        obj.x_angle = 0;
+        obj.y_scale_exp = 0;
+        obj.y_angle = 18;
+        // let obj = new wasm.GDObjectOpt(
+        //     $menuSelectedObject,
+        //     Math.floor(mx / 30) * 30 +
+        //         15 +
+        //         objects[$menuSelectedObject].placeOffsetX,
+        //     Math.floor(my / 30) * 30 +
+        //         15 +
+        //         objects[$menuSelectedObject].placeOffsetY,
+        //     0,
+        //     0,
+        //     0,
+        //     18,
+        //     wasm.ZLayer.B4,
+        //     0,
+        //     wasm.GDColor.white(),
+        //     wasm.GDColor.white()
+        // );
         $menuMainColor = {
             hue: 0,
             x: 0,
@@ -141,6 +161,7 @@
         };
         $menuZLayer = wasm.ZLayer.B4;
         $menuZOrder = 0;
+        $menuSelectedSFX = 0;
         // $menuZLayer = wasm.ZLayer.B1;
 
         if (setCheckedPreviewObject(state, obj)) {
@@ -180,6 +201,8 @@
 
     const tryRunTriggers = (hit: wasm.HitObjectInfo[]): boolean => {
         let triggersRun = false;
+        let sfx_hits_count = hit.filter(i => i.obj.id == SFX_TRIGGER).length;
+        let sfx_hit_idx = 0;
         for (let i of hit) {
             switch (i.obj.id) {
                 case BG_TRIGGER: {
@@ -213,6 +236,29 @@
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;
                 }
+                case SFX_TRIGGER: {
+                    let rand =
+                        Math.sin(Math.sin(sfx_hit_idx * 6.97) * 6.97) / 2 + 1;
+                    playSound(
+                        `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
+                        0.5 / Math.sqrt(sfx_hits_count),
+                        undefined,
+                        a => (a.currentTime = (rand * 80) / 1000)
+                    );
+                    sfx_hit_idx += 1;
+                    // setTimeout(
+                    //     () => {
+                    //         playSound(
+                    //             `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
+                    //             0.5 / Math.sqrt(sfx_hits)
+                    //         );
+                    //     },
+                    //     Math.random() * 30 + 30
+                    // );
+                    triggersRun = true;
+                    addTriggerRun(i.obj.x, i.obj.y);
+                    break;
+                }
             }
         }
         return triggersRun;
@@ -239,7 +285,7 @@
         handleSub(state);
     });
 
-    const handleShowObjPreview = () => {
+    const handleMouseUp = () => {
         if (!dragging) return;
 
         if (!dragging.thresholdReached) {
@@ -316,6 +362,22 @@
         }
     };
 
+    const checkHover = debounce(() => {
+        let [mx, my] = getWorldMousePos();
+        let hit = state.objects_hit_at(mx, my, 0.0);
+
+        if (hit.length == 0) {
+            placedByHover.set(null);
+            return;
+        }
+
+        let top = hit[hit.length - 1];
+
+        getPlacedUsername(top.key(), v => {
+            placedByHover.set({ username: v, x: top.obj.x, y: top.obj.y });
+        });
+    }, 200);
+
     // const dpr = window.devicePixelRatio;
 
     // onMount(() => {
@@ -366,20 +428,24 @@
     let originScreen: [number, number] = [0, 0];
     let textZoomScale = 0;
 
+    const getScreenPosZoomCorrected = (
+        x: number,
+        y: number
+    ): [number, number] =>
+        [
+            ...state.get_screen_pos(x, y).map(v => v / window.devicePixelRatio),
+        ] as any;
+
     const loopFn = () => {
         let obj = state.get_preview_object();
 
-        let p = state.get_screen_pos(obj.x, obj.y);
-        editWidgetPos = [
-            p[0] / window.devicePixelRatio,
-            p[1] / window.devicePixelRatio,
-        ];
+        editWidgetPos = getScreenPosZoomCorrected(obj.x, obj.y);
 
         editWidgetScale = 1 + state.get_zoom() / 80;
         editWidgetVisible = state.is_preview_visible();
 
         textZoomScale = state.get_zoom_scale();
-        p = state.get_screen_pos(0, 0);
+        let p = state.get_screen_pos(0, 0);
         originScreen = [p[0], p[1]];
 
         loop = requestAnimationFrame(loopFn);
@@ -393,13 +459,19 @@
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
     on:mouseup={e => {
-        handleShowObjPreview();
+        handleMouseUp();
     }}
     on:mousemove={e => {
         handleDrag(
             e.clientX * window.devicePixelRatio,
             e.clientY * window.devicePixelRatio
         );
+        if (dragging == null) {
+            checkHover();
+        } else {
+            placedByHover.set(null);
+            checkHover.cancel();
+        }
     }}
     on:resize={() => {
         handleSub(state);
@@ -523,5 +595,16 @@
         <!-- <Widget position={[30, -30]} scale={1.0} screenCenter={false}>
             <ObjectInfo bind:state />
         </Widget> -->
+    {/if}
+    {#if $placedByHover != null}
+        <Widget
+            position={getScreenPosZoomCorrected(
+                $placedByHover.x,
+                $placedByHover.y
+            )}
+            scale={1.0}
+        >
+            <PlacedByText username={$placedByHover.username} />
+        </Widget>
     {/if}
 </div>

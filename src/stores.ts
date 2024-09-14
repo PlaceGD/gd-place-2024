@@ -55,10 +55,8 @@ export const menuDetailColor = persistLocalWritable(
 );
 export const menuZLayer = persistLocalWritable(ZLayer.B1, "menuZLayer");
 export const menuZOrder = persistLocalWritable(0, "menuZOrder");
-export const menuOpenWidget = persistLocalWritable(
-    WidgetType.None,
-    "menuOpenWidget"
-);
+
+export const menuSelectedSFX = persistLocalWritable(0, "menuSelectedSFX");
 
 export const mainColorRGB = derived(
     menuMainColor,
@@ -67,6 +65,11 @@ export const mainColorRGB = derived(
 export const detailColorRGB = derived(
     menuDetailColor,
     c => colors.list[c.hue].palette[c.y][c.x]
+);
+
+export const menuOpenWidget = persistLocalWritable(
+    WidgetType.None,
+    "menuOpenWidget"
 );
 
 export const editorData = persist(
@@ -159,33 +162,6 @@ export const addDeleteText = (name: string, x: number, y: number) => {
     }, 1500);
 };
 
-let triggerRunCount = 0;
-export const triggerRuns = writable<
-    Record<
-        number,
-        {
-            x: number;
-            y: number;
-        }
-    >
->({});
-export const addTriggerRun = (x: number, y: number) => {
-    let id = triggerRunCount++;
-
-    triggerRuns.update(v => {
-        v[id] = { x, y };
-
-        return v;
-    });
-
-    setTimeout(() => {
-        triggerRuns.update(v => {
-            delete v[id];
-            return v;
-        });
-    }, 1500);
-};
-
 export const selectedObject = writable<{
     id: number;
     mainColor: GDColor;
@@ -236,3 +212,36 @@ loginData.subscribe(v => {
             });
     }
 });
+
+let triggerRunCount = 0;
+export const triggerRuns = writable<
+    Record<
+        number,
+        {
+            x: number;
+            y: number;
+        }
+    >
+>({});
+export const addTriggerRun = (x: number, y: number) => {
+    let id = triggerRunCount++;
+
+    triggerRuns.update(v => {
+        v[id] = { x, y };
+
+        return v;
+    });
+
+    setTimeout(() => {
+        triggerRuns.update(v => {
+            delete v[id];
+            return v;
+        });
+    }, 1500);
+};
+
+export const placedByHover = writable<{
+    username: string;
+    x: number;
+    y: number;
+} | null>(null);

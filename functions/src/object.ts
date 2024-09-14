@@ -109,23 +109,6 @@ const deserializeColor = (
 
     const blending = reader.readBool();
 
-    if (r == 0 && g == 0 && b == 0 && blending) return null;
-
-    const colorsContain = (r: number, g: number, b: number): boolean => {
-        for (let { palette } of colors.list) {
-            for (let i of palette) {
-                for (let j of i) {
-                    if (r == j[0] && g == j[1] && b == j[2]) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    };
-
-    if (!colorsContain(r, g, b)) return null;
-
     return {
         r,
         g,

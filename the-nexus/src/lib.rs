@@ -7,13 +7,16 @@ mod util;
 
 pub use objects::{
     list::{special_ids, AVAILABLE_OBJECTS},
+    sfx::SFX_TRIGGER_SOUNDS,
     HitboxType, ObjectCategory, ObjectInfo,
 };
 
 pub use sprites::SpriteInfo;
 
 fn make_wasm_lib_utilgen(sheet_data: &gen::sprites::SpritesheetData) -> String {
-    use crate::gen::sprites::{make_get_detail_sprite_fn, make_get_main_sprite_fn};
+    use crate::gen::sprites::{
+        make_get_detail_sprite_fn, make_get_main_sprite_fn, make_get_sfx_icon_sprite_fn,
+    };
 
     format!(
         "
@@ -25,10 +28,13 @@ use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
 
 {}
 
+{}
+
     ",
         make_get_object_info_fn(),
         make_get_main_sprite_fn(sheet_data),
         make_get_detail_sprite_fn(sheet_data),
+        make_get_sfx_icon_sprite_fn(sheet_data),
     )
 }
 
@@ -91,16 +97,23 @@ export const BG_TRIGGER: number = {};
 export const GROUND_TRIGGER: number = {};
 export const GROUND_2_TRIGGER: number = {};
 export const ARROW_TRIGGER: number = {};
+export const SFX_TRIGGER: number = {};
+export const SONG_TRIGGER: number = {};
 
 export const TRIGGERS: number[] = {:?};
 export const COLOR_TRIGGERS: number[] = {:?};
+
+export const SFX_TRIGGER_SOUNDS: number[] = {:?};
     ",
             special_ids::BG_TRIGGER,
             special_ids::GROUND_TRIGGER,
             special_ids::GROUND_2_TRIGGER,
             special_ids::ARROW_TRIGGER,
+            special_ids::SFX_TRIGGER,
+            special_ids::SONG_TRIGGER,
             special_ids::TRIGGERS,
-            special_ids::COLOR_TRIGGERS
+            special_ids::COLOR_TRIGGERS,
+            SFX_TRIGGER_SOUNDS,
         ),
     )
     .unwrap();

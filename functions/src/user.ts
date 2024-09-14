@@ -133,7 +133,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
         const data = request.data;
 
         await validateTurnstile(
-            process.env["TURNSTILE_LOGIN_PRIV_KEY"],
+            process.env["TURNSTILE_GENERAL_PRIV_KEY"],
             data.turnstileResp,
             request.rawRequest,
             logger
@@ -227,13 +227,8 @@ const banUserInner = async (
     });
 };
 
-// TODO: schedule delete old reports!!
-// const clearReportsOfUser = (db: Database, reportedUserUid: string) => {
-
-// };
-
 // projects/gd-place-2023/topics/clearOldReports
-export const clearReports = onMessagePublished("clearOldReports", event => {
+export const clearReports = onMessagePublished("clearOldReports", _ => {
     const now = Date.now();
     const db = smartDatabase();
 

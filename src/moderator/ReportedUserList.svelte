@@ -59,7 +59,7 @@
                     $newReports = true;
 
                     reportedUsers.push({
-                        count: 1,
+                        count: 1, // TODO: report count
                         username: reportData.username,
                         sumX: reportData.x,
                         sumY: reportData.y,
@@ -70,6 +70,8 @@
                     reportedUsers.sort((a, b) =>
                         a.timestamp > b.timestamp ? 1 : -1
                     );
+
+                    reportedUsers = reportedUsers;
                 }
             });
 
@@ -92,6 +94,7 @@
     let currentIdx = -1;
 
     const userOp = (op: "ignore" | "ban", userId: string, idx: number) => {
+        // TODO: user op
         // currentIdx = idx;
         // reportedUserOperation({
         //     operation: op,
@@ -106,6 +109,8 @@
         //         currentIdx = -1;
         //     });
     };
+
+    $: console.log("here", reportedUsers);
 </script>
 
 <fieldset

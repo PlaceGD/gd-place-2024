@@ -51,7 +51,6 @@
     import Scale from "../widgets/Scale.svelte";
     import Warp from "../widgets/Warp.svelte";
     import DeleteTexts from "../widgets/DeleteTexts.svelte";
-    import ObjectInfo from "../widgets/ObjectInfo.svelte";
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
     import { pinch } from "svelte-gestures";

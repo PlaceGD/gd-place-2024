@@ -8,7 +8,7 @@
     } from "./utils/turnstile";
     import { reportUser } from "./firebase/cloud_functions";
 
-    const SITE_KEY = __TURNSTILE_REPORT_SITE_KEY;
+    const SITE_KEY = __TURNSTILE_GENERAL_KEY;
     let turnstileReset: () => void;
 
     $: {
@@ -18,18 +18,10 @@
     }
 </script>
 
-<!-- <Turnstile
+<Turnstile
     siteKey={SITE_KEY}
     on:turnstile-callback={e => {
-        console.log("HERE", e);
-
-        reportUser({
-            username: "Fow",
-            turnstileResp: e.detail.token,
-            x: 0,
-            y: 0,
-        });
-        // setTurnstileToken(e.detail.token);
+        setTurnstileToken(e.detail.token);
         // turnstileToken = e.detail.token;
     }}
     on:turnstile-error={() => {
@@ -40,4 +32,4 @@
         setTurnstileToken(TokenStatus.NoToken);
     }}
     bind:reset={turnstileReset}
-/> -->
+/>

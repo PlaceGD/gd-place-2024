@@ -1,7 +1,7 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import ToastContainer from "./ToastContainer.svelte";
-    import { IconX as Cross } from "@tabler/icons-svelte";
+    import Cross from "../icons/Cross.svelte";
     import Loading from "../components/Loading.svelte";
     import { createEventDispatcher, onMount } from "svelte";
 

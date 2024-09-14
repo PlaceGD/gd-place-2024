@@ -35,11 +35,9 @@
         cb(obj);
         setCheckedPreviewObject(state, obj);
     };
-
-    $: canSelectByTab = $menuMinimized ? -1 : 0;
 </script>
 
-<div class="transform-container">
+<fieldset class="transform-container" disabled={$menuMinimized}>
     <div
         class="flex items-center gap-2 grow-1 shrink-0 md:gap-4 xs:gap-1 move md:flex-center"
     >
@@ -52,7 +50,6 @@
             >
                 <button
                     class="z-20 w-12 rounded-md shrink-0 up flex-center aspect-square md:w-9 sm:w-7 white-button"
-                    tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} up"
                     on:click={modifyObjCb(MOVE_BUTTONS[button].keybinds.up.cb)}
                 >
@@ -64,7 +61,6 @@
                 </button>
                 <button
                     class="z-20 w-12 rounded-md shrink-0 down flex-center aspect-square md:w-9 sm:w-7 white-button"
-                    tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} down"
                     on:click={modifyObjCb(
                         MOVE_BUTTONS[button].keybinds.down.cb
@@ -77,7 +73,6 @@
                 </button>
                 <button
                     class="z-20 w-12 rounded-md shrink-0 right flex-center aspect-square md:w-9 sm:w-7 white-button"
-                    tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} right"
                     on:click={modifyObjCb(
                         MOVE_BUTTONS[button].keybinds.right.cb
@@ -91,7 +86,6 @@
                 </button>
                 <button
                     class="z-20 w-12 rounded-md shrink-0 left flex-center aspect-square md:w-9 sm:w-7 white-button"
-                    tabindex={canSelectByTab}
                     aria-label="{MOVE_BUTTONS[button].name} left"
                     on:click={modifyObjCb(
                         MOVE_BUTTONS[button].keybinds.left.cb
@@ -119,7 +113,6 @@
                 <button
                     class="flex-center w-full h-full p-2 md:p-1.5 sm:p-0 xs:p-0 z-20 rounded-md bg-button-green active:bg-button-green-dark bounce-active"
                     on:click={modifyObjCb(button.cb)}
-                    tabindex={canSelectByTab}
                     aria-label={button.name}
                 >
                     <Image
@@ -144,7 +137,6 @@
                 "bg-button-cyan active:bg-button-cyan-dark":
                     selectedWidget === WidgetType.Rotate,
             })}
-            tabindex={canSelectByTab}
             aria-label="Rotate Object"
             on:click={() => changeWidget(WidgetType.Rotate)}
             role="checkbox"
@@ -153,7 +145,8 @@
             <p class="font-pusab text-stroke">Rotate</p>
             <Image
                 src="/assets/ui/edit/rotate.svg"
-                class="aspect-square md:w-10 xs:hidden"
+                alt="&nbsp;"
+                class="md:w-10 xs:hidden"
             />
         </button>
         <button
@@ -164,7 +157,6 @@
                 "bg-button-cyan active:bg-button-cyan-dark":
                     selectedWidget === WidgetType.Scale,
             })}
-            tabindex={canSelectByTab}
             aria-label="Scale Object"
             on:click={() => changeWidget(WidgetType.Scale)}
             role="checkbox"
@@ -173,7 +165,8 @@
             <p class="font-pusab text-stroke">Scale</p>
             <Image
                 src="/assets/ui/edit/scale.svg"
-                class="aspect-square md:w-10 xs:hidden"
+                alt="&nbsp;"
+                class="md:w-10 xs:hidden"
             />
         </button>
         <button
@@ -184,7 +177,6 @@
                 "bg-button-cyan active:bg-button-cyan-dark":
                     selectedWidget === WidgetType.Warp,
             })}
-            tabindex={canSelectByTab}
             aria-label="Warp Object"
             on:click={() => changeWidget(WidgetType.Warp)}
             role="checkbox"
@@ -193,11 +185,12 @@
             <p class="font-pusab text-stroke">Warp</p>
             <Image
                 src="/assets/ui/edit/warp.svg"
-                class="aspect-square md:w-10 xs:hidden"
+                alt="&nbsp;"
+                class="md:w-10 xs:hidden"
             />
         </button>
     </div>
-</div>
+</fieldset>
 
 <style lang="postcss">
     .transform-container {

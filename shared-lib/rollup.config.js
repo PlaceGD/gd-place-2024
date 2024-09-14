@@ -60,7 +60,6 @@ export default [
         plugins: [
             typescript({ tsconfig: "./tsconfig.json" }),
             jsonPlugin(),
-            // json({ compact: true, preferConst: true }),
             terser(),
         ],
     },

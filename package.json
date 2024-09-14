@@ -26,7 +26,6 @@
         "@types/postcss-import": "^14.0.3",
         "@types/svelte-range-slider-pips": "^2.0.2",
         "@types/uuid": "^10.0.0",
-        "@zerodevx/svelte-toast": "^0.9.5",
         "autoprefixer": "^10.4.16",
         "cssnano": "^7.0.4",
         "eslint": "^8.57.0",
@@ -39,7 +38,6 @@
         "svelte": "^4.0.5",
         "svelte-check": "^3.4.6",
         "svelte-turnstile": "^0.5.0",
-        "svgo": "^3.3.2",
         "tailwindcss": "^3.3.5",
         "tslib": "^2.6.0",
         "typescript": "^5.0.2",
@@ -53,7 +51,6 @@
     "dependencies": {
         "@macfja/svelte-persistent-store": "^2.4.1",
         "@smart-firebase/client": "^0.1.3",
-        "@tabler/icons-svelte": "^3.11.0",
         "classnames": "^2.3.2",
         "devtools-fps": "^2.0.2",
         "firebase": "10.12.5",
@@ -64,6 +61,7 @@
         "svelte-gestures": "^4.0.0",
         "svelte-portal": "^2.2.1",
         "svelte-range-slider-pips": "^2.2.3",
-        "wasm-lib": "file:wasm-lib/pkg"
+        "wasm-lib": "file:wasm-lib/pkg",
+        "@zerodevx/svelte-toast": "^0.9.5"
     }
 }

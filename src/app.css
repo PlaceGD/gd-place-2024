@@ -27,13 +27,28 @@ body {
     --toastContainerLeft: calc(50vw - 8rem);
 }
 
+.text > h1 {
+    @apply mb-6 text-2xl xs:text-xl;
+}
 
 .text > h2 {
-    @apply my-6 text-xl xs:text-lg;
+    @apply mb-5 text-xl xs:text-lg;
 }
 
 .text > h3 {
-    @apply my-4 text-lg xs:text-base;
+    @apply mb-4 text-lg xs:text-base;
+}
+
+.text > p {
+    @apply mb-2 text-base xs:text-sm;
+}
+
+.bulleted-list {
+    @apply flex flex-col gap-2 mb-2 list-disc alternating-bg;
+
+    & > li {
+        @apply p-2 ml-6 rounded-lg xs:ml-4;
+    }
 }
 
 dialog::backdrop {
@@ -159,14 +174,6 @@ dialog::backdrop {
 
     .alternating-bg > * {
         @apply odd:bg-black/25 even:bg-white/5;
-    }
-
-    .bulleted-list {
-        @apply flex flex-col gap-2 my-2 list-disc alternating-bg;
-
-        & > li {
-            @apply p-2 ml-6 rounded-lg xs:ml-4;
-        }
     }
     
     .hover-text-transition {

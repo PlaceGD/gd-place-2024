@@ -355,7 +355,7 @@
     }
 
     .object-info-grid {
-        @apply grid h-full max-w-[600px] flex-1 content-center gap-2 justify-self-center text-center sm:w-full sm:max-w-full sm:justify-around sm:gap-x-4 sm:gap-y-1 xs:justify-center;
+        @apply grid h-full max-w-[600px] flex-1 content-center gap-4 justify-self-center text-center sm:w-full sm:max-w-full sm:justify-around sm:gap-x-4 sm:gap-y-1 xs:justify-center;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-rows: 1fr;
         grid-template-areas: "type colors zlayer zorder";

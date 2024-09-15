@@ -74,7 +74,7 @@
                 This includes what country you're from, what operating system
                 you are using, etc. This is literally just out of our own nerdy
                 interest, we probably don't even really need this warning, but
-                it's better to be safe than to get sued by the EU i guess.
+                it's better to be safe than to get sued by the EU I guess.
             </p>
 
             <p>

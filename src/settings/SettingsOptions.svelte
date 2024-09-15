@@ -30,33 +30,33 @@
     const settings = [
         {
             name: "Show Collidable Objects",
-            description:
-                "Highlights the objects in the level that you can collide with.",
+            // description:
+            //     "Highlights the objects in the level that you can collide with.",
             bind: "showCollidable",
         },
         {
             name: "Hide Triggers",
-            description: "Hide triggers in the editor",
+            // description: "Hide triggers in the editor",
             bind: "hideTriggers",
         },
         {
             name: "Hide Grid",
-            description: "Hide the editor grid",
+            // description: "Hide the editor grid",
             bind: "hideGrid",
         },
         {
             name: "Hide Ground",
-            description: "Hides the ground",
+            // description: "Hides the ground",
             bind: "hideGround",
         },
         {
             name: "Hide Selection Outline",
-            description: "Hide the object selection outline",
+            // description: "Hide the object selection outline",
             bind: "hideOutline",
         },
         {
             name: "Hide Delete Text",
-            description: "Hide the text that appears when an object is deleted",
+            // description: "Hide the text that appears when an object is deleted",
             bind: "hideDeleteText",
         },
     ];
@@ -93,9 +93,9 @@
                         >
                             <div class="flex flex-col">
                                 <span>{setting.name}</span>
-                                <span class="text-xs text-white/50"
+                                <!-- <span class="text-xs text-white/50"
                                     >{setting.description}</span
-                                >
+                                > -->
                             </div>
                             <span>
                                 <ToggleSwitch
@@ -110,14 +110,6 @@
                 {/each}
             </ul>
         </FadedScroll>
-        <!-- TODO: get stream link from database -->
-        {#if false}
-            <div class="flex flex-col items-center justify-center p-2">
-                <p class="text-base">Watch the official stream live!</p>
-
-                <a href="sd" title="Support us"> STREAM LINKT</a>
-            </div>
-        {/if}
         <div
             class="flex flex-col items-center justify-center gap-2 p-2 pb-0 text-center"
         >

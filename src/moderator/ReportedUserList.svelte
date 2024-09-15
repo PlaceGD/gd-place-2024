@@ -59,6 +59,7 @@
                     $newReports = true;
                 }
             });
+
         db.ref("reportedUsers")
             .orderByChild("timestamp")
             // .startAfter(Date.now() - 15 * 60 * 1000)
@@ -68,6 +69,15 @@
                     reportedUsers = reportedUsers;
                 }
             });
+
+        db.ref("bannedUsers").on("child_removed", data => {
+            delete $bannedUsers[data.val().username];
+            $bannedUsers = $bannedUsers;
+        });
+
+        db.ref("bannedUsers").on("child_added", data => {
+            $bannedUsers[data.val().username] = true;
+        });
     });
 
     $: {
@@ -78,17 +88,25 @@
 
     let currentIdx = -1;
 
-    const userOp = (op: "ignore" | "ban", userId: string, idx: number) => {
-        reportedUserOperation({
-            operation: op,
-            reportedUserUid: userId,
-        }).catch(e => {
+    const userOp = async (
+        op: "ignore" | "ban",
+        userId: string,
+        reason: string,
+        idx: number
+    ) => {
+        try {
+            currentIdx = idx;
+
+            await reportedUserOperation({
+                reason,
+                operation: op,
+                reportedUserUid: userId,
+            });
+        } catch (e) {
             Toast.showErrorToast(`Failed to perform operation! (${e})`);
             currentIdx = -1;
-        });
+        }
     };
-
-    // $: console.log("here", reportedUsers);
 </script>
 
 <fieldset
@@ -118,12 +136,12 @@
                     <li
                         class="relative flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15"
                     >
-                        <div class="flex flex-center w-full relative">
+                        <div class="relative flex w-full flex-center">
                             <span class="text-base xs:text-sm">
                                 {user.username} (x{user.count})
                             </span>
 
-                            <div class="w-8 h-8 xs:w-7 xs:h-7 absolute right-0">
+                            <div class="absolute right-0 w-8 h-8 xs:w-7 xs:h-7">
                                 <Button
                                     title="View average report location"
                                     class="w-full h-full"
@@ -146,7 +164,7 @@
                                 type="decline"
                                 class="w-full h-full"
                                 on:click={() => {
-                                    userOp("ignore", uid, idx);
+                                    userOp("ignore", uid, "", idx);
                                 }}
                                 disabled={currentIdx == idx}
                             >
@@ -156,7 +174,13 @@
                                 type="accept"
                                 class="w-full h-full"
                                 on:click={() => {
-                                    userOp("ban", uid, idx);
+                                    const reason = prompt(
+                                        "Reason for banning (inappropriate username / alt account / etc):"
+                                    );
+
+                                    if (reason != null) {
+                                        userOp("ban", uid, reason, idx);
+                                    }
                                 }}
                                 disabled={currentIdx == idx}
                             >

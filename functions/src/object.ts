@@ -17,6 +17,7 @@ import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { smartDatabase } from "src";
 import { getCheckedUserDetails } from "./utils/utils";
 
+// #region deserializeObject
 const deserializeObject = (
     data: string,
     logger: LogGroup
@@ -87,6 +88,7 @@ const deserializeObject = (
     return obj;
 };
 
+// #region deserializeColor
 const deserializeColor = (
     reader: Reader<Uint8Array>,
     logger: LogGroup
@@ -118,6 +120,7 @@ const deserializeColor = (
     };
 };
 
+// #region placeObject
 export const placeObject = onCallAuthLogger<PlaceReq>(
     "placeObject",
     async (request, logger) => {
@@ -171,6 +174,7 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
     }
 );
 
+// #region deleteObject
 export const deleteObject = onCallAuthLogger<DeleteReq>(
     "deleteObject",
     async (request, logger) => {

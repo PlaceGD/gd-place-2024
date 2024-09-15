@@ -15,8 +15,8 @@ export const getCheckedUserDetails = async (
         throw new HttpsError("invalid-argument", "Missing user data");
     }
 
-    let banned = (await db.ref(`bannedUsers/${uid}`).get()).val();
-    if (banned === true) {
+    let banned = (await db.ref(`bannedUsers/${uid}`).get()).exists();
+    if (banned) {
         throw new HttpsError("permission-denied", "Banned");
     }
 

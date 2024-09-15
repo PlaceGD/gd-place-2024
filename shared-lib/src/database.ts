@@ -35,7 +35,14 @@ export interface DatabaseSchema {
     /**
      * user uid -> data
      */
-    bannedUsers: Record<string, boolean>;
+    bannedUsers: Record<
+        string,
+        {
+            username: string;
+            modName: string;
+            reason: string;
+        }
+    >;
     userCount: number;
 
     /**

@@ -14,6 +14,7 @@ import { UserDetails } from "shared-lib/database";
 import { smartDatabase } from "src";
 import { getCheckedUserDetails } from "./utils/utils";
 
+// #region validateTurnstile
 const validateTurnstile = async (
     key: string | undefined,
     token: string,
@@ -52,6 +53,7 @@ const validateTurnstile = async (
     }
 };
 
+// #region initUserWithUsername
 export const initUserWithUsername = onCallAuthLogger<
     InitWithUsernameReq,
     Promise<UserDetails>
@@ -95,8 +97,8 @@ export const initUserWithUsername = onCallAuthLogger<
     //     throw new HttpsError("already-exists", "User data already exists");
     // }
 
-    const isBanned = (await db.ref(`bannedUsers/${data.uid}`).get()).val();
-    if (isBanned === true) {
+    const isBanned = (await db.ref(`bannedUsers/${data.uid}`).get()).exists();
+    if (isBanned) {
         throw new HttpsError("permission-denied", "Banned");
     }
 
@@ -127,6 +129,7 @@ export const initUserWithUsername = onCallAuthLogger<
     return user;
 });
 
+// #region reportUser
 export const reportUser = onCallAuthLogger<ReportUserReq>(
     "reportUser",
     async (request, logger) => {
@@ -141,7 +144,7 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
 
         const db = smartDatabase();
 
-        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
+        const { userDetailsRef } = await getCheckedUserDetails(
             db,
             request.auth.uid
         );
@@ -214,13 +217,18 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
     }
 );
 
+// #region banUserInner
 const banUserInner = async (
     db: ReturnType<typeof smartDatabase>,
     requesterUid: string,
-    userToBanUid: string
+    userToBanUid: string,
+    reason: string,
+    modUsername: string
 ) => {
-    const isBanned = (await db.ref(`bannedUsers/${requesterUid}`).get()).val();
-    if (isBanned === true) {
+    const isBanned = (
+        await db.ref(`bannedUsers/${requesterUid}`).get()
+    ).exists();
+    if (isBanned) {
         throw new HttpsError("permission-denied", "Banned");
     }
 
@@ -243,7 +251,11 @@ const banUserInner = async (
         }
     }
 
-    db.ref(`bannedUsers/${userToBanUid}`).set(true);
+    db.ref(`bannedUsers/${userToBanUid}`).set({
+        username: userToBanDetails.username.toLowerCase(),
+        modName: modUsername,
+        reason,
+    });
     db.ref("userCount").transaction(count => {
         return count - 1;
     });
@@ -251,6 +263,7 @@ const banUserInner = async (
     await db.ref(`reportedUsers/${userToBanUid}`).remove();
 };
 
+// #region clearReports
 // projects/gd-place-2023/topics/clearOldReports
 export const clearReports = onMessagePublished("clearOldReports", _ => {
     const now = Date.now();
@@ -267,6 +280,7 @@ export const clearReports = onMessagePublished("clearOldReports", _ => {
         });
 });
 
+// #region reportedUserOperation
 export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
     async request => {
         const db = smartDatabase();
@@ -288,7 +302,13 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
         const data = request.data;
 
         if (data.operation == "ban") {
-            await banUserInner(db, request.auth.uid, data.reportedUserUid);
+            await banUserInner(
+                db,
+                request.auth.uid,
+                data.reportedUserUid,
+                data.reason,
+                modData.username
+            );
         } else if (data.operation == "ignore") {
             await db.ref(`reportedUsers/${data.reportedUserUid}`).remove();
         } else {
@@ -297,6 +317,7 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
     }
 );
 
+// #region banUser
 export const banUser = onCallAuthLogger<BanReq>(
     "banUser",
     async (request, logger) => {
@@ -331,6 +352,12 @@ export const banUser = onCallAuthLogger<BanReq>(
 
         logger.info("User id:", userToBanUid);
 
-        await banUserInner(db, request.auth.uid, userToBanUid);
+        await banUserInner(
+            db,
+            request.auth.uid,
+            userToBanUid,
+            data.reason,
+            modData.username
+        );
     }
 );

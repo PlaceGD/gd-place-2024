@@ -95,7 +95,7 @@ export const editorSettings = persist(
     "editorSettings"
 );
 
-export const bannedUsers = writable<string[]>([]);
+export const bannedUsers = writable<Record<string, boolean>>({});
 
 export enum ExclusiveMenus {
     Moderator,

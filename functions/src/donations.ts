@@ -59,6 +59,7 @@ export type KofiDonation = {
       }
 );
 
+// #region onKofiDonation
 export const onKofiDonation = onRequest(
     { cors: ["ko-fi.com"] },
     (request, response) => {
@@ -143,6 +144,7 @@ export const onKofiDonation = onRequest(
     }
 );
 
+// #region submitKofiTxId
 export const submitKofiTxId = onCallAuthLogger<KofiReq>(
     "submitKofiTxId",
     async (request, logger) => {
@@ -176,6 +178,7 @@ const VALID_GRADIENT = new RegExp(
     `linear-gradient\\(\\d+deg((,\\s*)?#[a-fA-F0-9]{6} \\d{1,3}%){2,${MAX_GRADIENT_STOPS}}\\)`
 );
 
+// #region changeNameGradient
 export const changeNameGradient = onCallAuthLogger<GradientReq>(
     "changeNameGradient",
     async (request, logger) => {

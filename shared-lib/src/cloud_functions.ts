@@ -15,9 +15,11 @@ export type ReportUserReq = {
 };
 export type ReportedUserOperationReq = {
     operation: "ignore" | "ban";
+    reason: string;
     reportedUserUid: string;
 };
 export type BanReq = {
+    reason: string;
     username: string;
 };
 export type KofiReq = {

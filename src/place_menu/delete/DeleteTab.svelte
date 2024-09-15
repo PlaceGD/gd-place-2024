@@ -20,6 +20,8 @@
     import ObjectButtonImage from "../objects/ObjectButtonImage.svelte";
     import checker from "../assets/checker.png?url";
     import FadedScroll from "../../components/FadedScroll.svelte";
+    import { onMount } from "svelte";
+    import { db } from "../../firebase/firebase";
 
     export let state: wasm.State;
 
@@ -56,9 +58,16 @@
 
     const ban = async (name: string) => {
         try {
-            await banUser({
-                username: name,
-            });
+            const reason = prompt(
+                "Reason for banning (inappropriate username / alt account / etc):"
+            );
+
+            if (reason != null) {
+                await banUser({
+                    reason,
+                    username: name,
+                });
+            }
         } catch (e) {
             Toast.showErrorToast(`Failed to ban user! (${e})`);
         }
@@ -73,7 +82,7 @@
             class="grid h-full grid-rows-[min-content_1fr] min-w-60 max-w-60 md:min-w-40 md:max-w-40 sm:max-w-full sm:min-w-full sm:w-full sm:h-min sm:grid-rows-none sm:grid-cols-2 sm:gap-2"
         >
             <hgroup
-                class="flex flex-col items-center self-start justify-between overflow-hidden thin-scrollbar sm:self-center md:pt-4 sm:pt-0 text-center"
+                class="flex flex-col items-center self-start justify-between overflow-hidden text-center thin-scrollbar sm:self-center md:pt-4 sm:pt-0"
             >
                 <h1
                     class="text-xl text-center md:text-base font-pusab text-stroke"
@@ -108,7 +117,7 @@
                             />
                         </button>
                     {:else}
-                        <div class="w-full h-full flex flex-center">
+                        <div class="flex w-full h-full flex-center">
                             <div
                                 class="relative w-9 sm:w-7 h-9 sm:h-7 max-w-9 max-h-9"
                             >
@@ -123,7 +132,9 @@
                 {#if $loginData.currentUserData != null}
                     <OnceButton
                         type="decline"
-                        disabled={!$cooldownFinished || isYourself}
+                        disabled={!$cooldownFinished ||
+                            isYourself ||
+                            $selectedObject?.namePlaced == null}
                         class="w-full text-base md:text-sm"
                         iconClass="sm:w-8 sm:h-8"
                         aria-label="Report User"
@@ -140,22 +151,29 @@
                 <!-- </div> -->
 
                 {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.currentUserData.userDetails.moderator}
-                    <OnceButton
-                        type="decline"
-                        class="w-full text-base md:text-sm"
-                        iconClass="sm:w-8 sm:h-8"
-                        disabled={$bannedUsers.includes(
-                            $selectedObject.namePlaced?.toLowerCase() ?? ""
-                        ) || isYourself}
-                        on:click={() => {
-                            if ($selectedObject?.namePlaced != null) {
-                                ban($selectedObject.namePlaced);
-                            }
-                        }}
-                        bind:reset={resetBanButton}
-                    >
-                        Ban
-                    </OnceButton>
+                    {#if $bannedUsers[$selectedObject.namePlaced?.toLowerCase() ?? ""]}
+                        <p
+                            class="text-sm text-center sm:text-xs hover-text-transition"
+                        >
+                            User is banned
+                        </p>
+                    {:else}
+                        <OnceButton
+                            type="decline"
+                            class="w-full text-base md:text-sm"
+                            iconClass="sm:w-8 sm:h-8"
+                            disabled={isYourself ||
+                                $selectedObject?.namePlaced == null}
+                            on:click={() => {
+                                if ($selectedObject?.namePlaced != null) {
+                                    ban($selectedObject.namePlaced);
+                                }
+                            }}
+                            bind:reset={resetBanButton}
+                        >
+                            Ban
+                        </OnceButton>
+                    {/if}
                 {:else}
                     <p
                         class="text-sm text-center sm:text-xs hover-text-transition"

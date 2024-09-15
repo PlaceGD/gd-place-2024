@@ -13,28 +13,36 @@
         }
         return await getUsernameColor(username);
     };
-
-    // export let class: string = "";
 </script>
 
-{#await getOrOverride(username, colorOverride) then color}
-    <span
-        class="relative"
-        style={`
+<span
+    class="relative"
+    style={`
         font-family: inherit;
         font-weight: inherit;
     `}
-    >
-        <span
-            class="absolute text-stroke"
-            style={`
+>
+    <span
+        class="absolute text-stroke"
+        style={`
                 font-family: inherit;
                 font-weight: inherit;
                 color: black;
             `}
+    >
+        {username}
+    </span>
+    {#await getOrOverride(username, colorOverride)}
+        <span
+            class="relative"
+            style={`
+                font-family: inherit;
+                font-weight: inherit;
+            `}
         >
             {username}
         </span>
+    {:then color}
         <span
             class="relative"
             style={`
@@ -48,5 +56,5 @@
         >
             {username}
         </span>
-    </span>
-{/await}
+    {/await}
+</span>

@@ -247,6 +247,8 @@ const banUserInner = async (
     db.ref("userCount").transaction(count => {
         return count - 1;
     });
+
+    await db.ref(`reportedUsers/${userToBanUid}`).remove();
 };
 
 // projects/gd-place-2023/topics/clearOldReports

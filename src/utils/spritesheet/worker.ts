@@ -196,7 +196,14 @@ onmessage = (ev: MessageEvent<Message>) => {
                     width: png.width,
                 };
 
-                postMessage({ type: "loaded_sheet" } as Message);
+                postMessage({
+                    type: "loaded_sheet",
+                    data: {
+                        width: png.width,
+                        height: png.height,
+                        data: new Uint8Array(png.data.buffer),
+                    },
+                } as Message);
             }
         });
     }

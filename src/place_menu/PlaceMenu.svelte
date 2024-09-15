@@ -446,10 +446,10 @@
                 class="w-full h-full overflow-hidden rounded-lg buttons menu-panel"
             >
                 <!-- 
-                            the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 
-                            object tab as it has to add all the elements back to the dom
-                            its more efficient to just set them to not be visible
-                        -->
+                    the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 
+                    object tab as it has to add all the elements back to the dom
+                    its more efficient to just set them to not be visible
+                -->
                 <ObjectsTab></ObjectsTab>
                 <!-- EDIT TAB TRANSFORM + LAYERS -->
                 {#if $menuTabGroup == TabGroup.Edit}

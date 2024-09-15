@@ -6,6 +6,7 @@
     import { DEBUG } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
     import Widget from "../widgets/Widget.svelte";
+    import { rawSpritesheetData } from "../stores";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -20,7 +21,9 @@
             console.time("create_view");
             state = await wasm.create_view(
                 canvas,
-                $spritesheetProgress.arrayBuffer!
+                $rawSpritesheetData!.data,
+                $rawSpritesheetData!.width,
+                $rawSpritesheetData!.height
             );
             console.timeEnd("create_view");
 

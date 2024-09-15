@@ -17,8 +17,21 @@ use state::State;
 use web_sys::HtmlCanvasElement;
 
 #[wasm_bindgen]
-pub async fn create_view(canvas: HtmlCanvasElement, spritesheet_data: &[u8]) -> State {
-    State::new(RenderState::new_canvas(canvas, spritesheet_data).await)
+pub async fn create_view(
+    canvas: HtmlCanvasElement,
+    spritesheet_data: &[u8],
+    spritesheet_width: u32,
+    spritesheet_height: u32,
+) -> State {
+    State::new(
+        RenderState::new_canvas(
+            canvas,
+            spritesheet_data,
+            spritesheet_width,
+            spritesheet_height,
+        )
+        .await,
+    )
 
     // StateWrapper::new(desen::new_app_canvas(canvas, |app| {
     //     State::init(app, spritesheet_data)

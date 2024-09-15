@@ -1,7 +1,10 @@
 import { writable } from "svelte/store";
 import initWasmInner from "wasm-lib";
 import Toast from "./utils/toast";
-import { Spritesheet } from "./utils/spritesheet/spritesheet";
+import {
+    Spritesheet,
+    type RawSpritesheetData,
+} from "./utils/spritesheet/spritesheet";
 import { downloadWithProgress } from "./utils/download";
 import { PlaceDB } from "./utils/indexdb";
 
@@ -91,67 +94,79 @@ export const initWasm = async () => {
         });
 };
 
-const startSpritesheet = (data: Blob) => {
-    data.arrayBuffer()
-        .then((ab: ArrayBuffer) => {
-            Spritesheet.waitForWorkerLoad().then(() => {
-                Spritesheet.loadSheet(ab).then(() => {
-                    spritesheetProgress.update(v => ({
-                        ...v,
-                        arrayBuffer: new Uint8Array(ab),
-                        blobURL: URL.createObjectURL(data),
-                    }));
+const startSpritesheet = (data: Blob): Promise<RawSpritesheetData> => {
+    return new Promise(res => {
+        data.arrayBuffer()
+            .then((ab: ArrayBuffer) => {
+                Spritesheet.waitForWorkerLoad().then(() => {
+                    Spritesheet.loadSheet(ab).then(rawData => {
+                        spritesheetProgress.update(v => ({
+                            ...v,
+                            arrayBuffer: new Uint8Array(ab),
+                            blobURL: URL.createObjectURL(data),
+                        }));
+
+                        res(rawData);
+                    });
                 });
+            })
+            .catch((e: unknown) => {
+                console.error(e, "(failed in `blob.arrayBuffer`)");
+                Toast.showErrorToast(`Failed to get spritesheet. (${e})`);
             });
-        })
-        .catch((e: unknown) => {
-            console.error(e, "(failed in `blob.arrayBuffer`)");
-            Toast.showErrorToast(`Failed to get spritesheet. (${e})`);
-        });
+    });
 };
 
-export const loadSpritesheet = async () => {
-    console.debug(spritesheetUrl);
+export const fetchAndParseSpritesheet =
+    async (): Promise<RawSpritesheetData> => {
+        console.debug(spritesheetUrl);
 
-    try {
-        if (db != null) {
-            const spritesheet = await db.getSpritesheetCache();
+        return new Promise(async res => {
+            try {
+                if (db != null) {
+                    const spritesheet = await db.getSpritesheetCache();
 
-            if (spritesheet != undefined) {
+                    if (spritesheet != undefined) {
+                        spritesheetProgress.set({
+                            max: 100,
+                            progress: 100,
+                            arrayBuffer: null,
+                            blobURL: null,
+                        });
+
+                        let data = startSpritesheet(spritesheet);
+                        res(data);
+
+                        return;
+                    }
+                }
+            } catch {
+                Toast.showWarningToast(
+                    "Database is null, cache will not be used"
+                );
+            }
+
+            downloadWithProgress(spritesheetUrl, "blob", progress => {
+                console.info(
+                    `downloading spritesheet: ${progress.loaded}/${progress.total}`
+                );
                 spritesheetProgress.set({
-                    max: 100,
-                    progress: 100,
+                    max: progress.total,
+                    progress: progress.loaded,
                     arrayBuffer: null,
                     blobURL: null,
                 });
+            })
+                .then(result => {
+                    db?.putSpritesheetCache(result);
 
-                startSpritesheet(spritesheet);
-                return;
-            }
-        }
-    } catch {
-        Toast.showWarningToast("Database is null, cache will not be used");
-    }
-
-    downloadWithProgress(spritesheetUrl, "blob", progress => {
-        console.info(
-            `downloading spritesheet: ${progress.loaded}/${progress.total}`
-        );
-        spritesheetProgress.set({
-            max: progress.total,
-            progress: progress.loaded,
-            arrayBuffer: null,
-            blobURL: null,
+                    let data = startSpritesheet(result);
+                    res(data);
+                })
+                .catch(() => {
+                    Toast.showErrorToast(
+                        "Failed to download spritesheet. This is usually a network related issue. Please refresh and try again."
+                    );
+                });
         });
-    })
-        .then(result => {
-            db?.putSpritesheetCache(result);
-
-            startSpritesheet(result);
-        })
-        .catch(() => {
-            Toast.showErrorToast(
-                "Failed to download spritesheet. This is usually a network related issue. Please refresh and try again."
-            );
-        });
-};
+    };

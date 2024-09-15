@@ -12,6 +12,7 @@ import { colors, type ObjectCategory } from "shared-lib/gd";
 import { tweened, type TweenedOptions } from "svelte/motion";
 import { linear } from "svelte/easing";
 import { db } from "./firebase/firebase";
+import type { RawSpritesheetData } from "./utils/spritesheet/spritesheet";
 
 export enum TabGroup {
     Build,
@@ -245,3 +246,5 @@ export const placedByHover = writable<{
     x: number;
     y: number;
 } | null>(null);
+
+export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);

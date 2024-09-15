@@ -11,13 +11,14 @@
     import {
         wasmProgress,
         initWasm,
-        loadSpritesheet,
+        fetchAndParseSpritesheet,
         spritesheetProgress,
     } from "./load_wasm";
     import { writable } from "svelte/store";
     import ReportedUserList from "./moderator/ReportedUserList.svelte";
     import ToastContainer from "./components/ToastContainer.svelte";
     import Turnstiles from "./Turnstiles.svelte";
+    import { rawSpritesheetData } from "./stores";
     // import { getTurnstileToken, resetTurnstile } from "./utils/turnstile";
 
     alertHasDarkReader();
@@ -31,10 +32,14 @@
     // });
 
     initWasm();
-    loadSpritesheet();
+    fetchAndParseSpritesheet().then(data => {
+        $rawSpritesheetData = data;
+    });
 
     $: loaded =
-        $wasmProgress.hasLoaded && $spritesheetProgress.arrayBuffer != null;
+        $wasmProgress.hasLoaded &&
+        $spritesheetProgress.arrayBuffer != null &&
+        $rawSpritesheetData != null;
 
     $: max = $wasmProgress.max + $spritesheetProgress.max;
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;

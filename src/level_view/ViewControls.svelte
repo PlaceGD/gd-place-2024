@@ -53,12 +53,13 @@
     import DeleteTexts from "../widgets/DeleteTexts.svelte";
     import { getPlacedUsername } from "../firebase/object";
     import { handleSub, handleUnsub, moveCamera } from "./view_controls";
-    import { pinch } from "svelte-gestures";
+    import { pinch, pan } from "svelte-gestures";
     import { isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
     import { playSound } from "../utils/audio";
     import PlacedByText from "../widgets/PlacedByText.svelte";
+    import { scale } from "svelte/transition";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -72,7 +73,7 @@
         thresholdReached: boolean;
     } = null;
 
-    let [mouseX, mouseY] = [0, 0];
+    let pinchZooming: null | number = null;
 
     let zoomGoal = state.get_zoom();
     const zoomTween = tweened(0, {
@@ -83,6 +84,7 @@
         changeZoom($zoomTween);
     }
 
+    let [mouseX, mouseY] = [0, 0];
     const getWorldMousePos = () => {
         // console.log(mouseX, mouseY);
         return state.get_world_pos(
@@ -245,15 +247,6 @@
                         a => (a.currentTime = (rand * 80) / 1000)
                     );
                     sfx_hit_idx += 1;
-                    // setTimeout(
-                    //     () => {
-                    //         playSound(
-                    //             `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
-                    //             0.5 / Math.sqrt(sfx_hits)
-                    //         );
-                    //     },
-                    //     Math.random() * 30 + 30
-                    // );
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;
@@ -293,26 +286,6 @@
             if ($menuTabGroup == TabGroup.Delete) {
                 // console.log(hit);
                 trySelectAt(mx, my, hit);
-
-                // let selected = state.try_select_at(mx, my);
-                // if (selected != undefined) {
-                //     // console.log(selected.key());
-                //     $selectedObject = {
-                //         id: selected.id,
-                //         mainColor: selected.main_color,
-                //         detailColor: selected.detail_color,
-                //         namePlaced: null,
-                //         zLayer: selected.z_layer,
-                //         zOrder: selected.z_order,
-                //     };
-                //     getPlacedUsername(selected.key(), v => {
-                //         if ($selectedObject != null) {
-                //             $selectedObject.namePlaced = v;
-                //         }
-                //     });
-                // } else {
-                //     $selectedObject = null;
-                // }
             } else {
                 if (!tryRunTriggers(hit)) {
                     placePreview(mx, my);
@@ -323,14 +296,18 @@
         dragging = null;
     };
 
-    const startDrag = (x: number, y: number) => {
+    const startDrag = (
+        x: number,
+        y: number,
+        thresholdReached: boolean = false
+    ) => {
         let [prevX, prevY] = state.get_camera_pos();
         dragging = {
             prevCameraX: prevX,
             prevCameraY: prevY,
             prevMouseX: x,
             prevMouseY: y,
-            thresholdReached: false,
+            thresholdReached,
         };
     };
 
@@ -377,49 +354,6 @@
         });
     }, 200);
 
-    // const dpr = window.devicePixelRatio;
-
-    // onMount(() => {
-    //     // svelte-gestures is not updated for svelte 4.0
-    //     if (isMobile()) {
-    //         const gestures = new TinyGesture(
-    //             document.getElementById("gesture-target")!,
-    //             {
-    //                 mouseSupport: false,
-    //             }
-    //         );
-
-    //         // TODO: make these numbers better on different screens?
-    //         gestures.on("pinch", () => {
-    //             console.log(gestures.scale!);
-    //             //zoomGoal = clamp(zoomGoal - gestures.scale! / 100, -36, 36);
-
-    //             zoomTween.set(gestures.scale!);
-    //             //savePos();
-    //         });
-
-    //         gestures.on("panstart", () => {
-    //             startDrag(
-    //                 gestures.touchMoveX! * dpr,
-    //                 gestures.touchMoveY! * dpr
-    //             );
-    //         });
-
-    //         gestures.on("panmove", () => {
-    //             handleDrag(
-    //                 gestures.touchMoveX! * dpr,
-    //                 gestures.touchMoveY! * dpr
-    //             );
-    //         });
-
-    //         gestures.on("tap", () => {
-    //             mouseX = gestures.touchStartX!;
-    //             mouseY = gestures.touchStartY!;
-    //             handleShowObjPreview();
-    //         });
-    //     }
-    // });
-
     let editWidgetPos: [number, number] = [0, 0];
     let editWidgetScale = 1;
     let editWidgetVisible = false;
@@ -457,19 +391,25 @@
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
-    on:mouseup={e => {
+    on:pointerup={e => {
+        // if (e.pointerType === "touch") return;
+
         handleMouseUp();
     }}
-    on:mousemove={e => {
-        handleDrag(
-            e.clientX * window.devicePixelRatio,
-            e.clientY * window.devicePixelRatio
-        );
-        if (dragging == null) {
-            checkHover();
-        } else {
-            placedByHover.set(null);
-            checkHover.cancel();
+    on:pointerdown={() => {
+        console.log("poop. I pooped. That's what i did.");
+    }}
+    on:pointermove={e => {
+        if (pinchZooming == null) {
+            mouseX = e.clientX * window.devicePixelRatio;
+            mouseY = e.clientY * window.devicePixelRatio;
+            handleDrag(mouseX, mouseY);
+            if (dragging == null) {
+                checkHover();
+            } else {
+                placedByHover.set(null);
+                checkHover.cancel();
+            }
         }
     }}
     on:resize={() => {
@@ -509,11 +449,8 @@
     tabindex="0"
     on:focus={() => (isFocused = true)}
     on:blur={() => (isFocused = false)}
-    on:mousemove={e => {
-        mouseX = e.clientX * window.devicePixelRatio;
-        mouseY = e.clientY * window.devicePixelRatio;
-    }}
-    on:mousedown={e => {
+    on:pointerdown={e => {
+        console.log("mousedown");
         if (e.button == 0) {
             startDrag(
                 e.clientX * window.devicePixelRatio,
@@ -524,51 +461,29 @@
     on:wheel|passive={e => {
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -4, 36);
         zoomTween.set(zoomGoal);
+        console.log(zoomGoal);
     }}
     use:pinch
     on:pinch={e => {
-        console.log(e.detail.scale);
-        alert(`cock ${e.detail.scale}`);
+        dragging = null;
+        mouseX = e.detail.center.x * window.devicePixelRatio;
+        mouseY = e.detail.center.y * window.devicePixelRatio;
+        if (pinchZooming == null) {
+            pinchZooming = $zoomTween;
+        } else {
+            console.log(pinchZooming, e.detail.scale);
+            zoomGoal = clamp(
+                pinchZooming + (Math.log(e.detail.scale) / Math.log(2)) * 6,
+                -4,
+                36
+            );
+            zoomTween.set(zoomGoal);
+        }
     }}
-    on:pinchup={e => {}}
+    on:pinchup={() => {
+        pinchZooming = null;
+    }}
 />
-
-<div class="absolute flex flex-col">
-    <!-- <input
-        type="color"
-        tabindex="-1"
-        on:input={e => {
-            changeBgColor(e);
-        }}
-    />
-    <input
-        type="color"
-        tabindex="-1"
-        on:input={e => {
-            changeGround1Color(e);
-        }}
-    />
-    <input
-        type="color"
-        tabindex="-1"
-        on:input={e => {
-            changeGround2Color(e);
-        }}
-    /> -->
-    <!-- <button
-        ><img
-            class="h-32"
-            src="https://cdn.discordapp.com/attachments/996434758227734661/1268214124186177617/426422705_694498856197195_8206388669893447202_n.jpg?ex=66ab9bf1&is=66aa4a71&hm=7af9776f348ea0c9e65294531c9acbf88a48cf45586e7f299018a827c975cd45&"
-            alt=""
-            on:click={() => {
-                // window.app.textContent = " ";
-                // window.app.appendChild(document.createElement("img"));
-                // window.app.children[0].src =
-                //     "https://ih1.redbubble.net/image.2177348283.3648/flat,750x1000,075,f.jpg";
-            }}
-        /></button
-    > -->
-</div>
 
 <div class="absolute w-full h-full overflow-visible pointer-events-none">
     {#if editWidgetVisible}
@@ -583,11 +498,23 @@
         </Widget>
     {/if}
     {#if !$editorSettings.hideDeleteText}
-        <Widget position={originScreen} scale={textZoomScale}>
+        <Widget
+            position={[
+                originScreen[0] / window.devicePixelRatio,
+                originScreen[1] / window.devicePixelRatio,
+            ]}
+            scale={textZoomScale}
+        >
             <DeleteTexts />
         </Widget>
     {/if}
-    <Widget position={originScreen} scale={textZoomScale}>
+    <Widget
+        position={[
+            originScreen[0] / window.devicePixelRatio,
+            originScreen[1] / window.devicePixelRatio,
+        ]}
+        scale={textZoomScale}
+    >
         <TriggerRuns />
     </Widget>
     {#if $loginData.currentUserData != null}

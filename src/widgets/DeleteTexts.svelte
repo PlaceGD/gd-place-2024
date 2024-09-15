@@ -11,7 +11,7 @@
             class="text-nowrap"
             style={`
                 position: absolute;
-                transform: translate(${x}px, ${-y}px);
+                transform: translate(${x / window.devicePixelRatio}px, ${-y / window.devicePixelRatio}px);
             `}
         >
             <span

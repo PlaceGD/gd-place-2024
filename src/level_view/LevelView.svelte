@@ -17,10 +17,12 @@
 
     onMount(async () => {
         try {
+            console.time("create_view");
             state = await wasm.create_view(
                 canvas,
                 $spritesheetProgress.arrayBuffer!
             );
+            console.timeEnd("create_view");
 
             // loadState(state);
         } catch (e: unknown) {

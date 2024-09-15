@@ -144,8 +144,8 @@ impl RenderState {
                     label: None,
                     required_features: wgpu::Features::empty(),
                     required_limits: wgpu::Limits {
-                        max_texture_dimension_1d: 8192,
-                        max_texture_dimension_2d: 8192,
+                        max_texture_dimension_1d: 4096,
+                        max_texture_dimension_2d: 4096,
                         ..wgpu::Limits::downlevel_webgl2_defaults()
                     },
                 },

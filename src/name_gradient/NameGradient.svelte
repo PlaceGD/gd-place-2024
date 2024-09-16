@@ -2,7 +2,7 @@
     import { default as cx } from "classnames";
     import { onMount } from "svelte";
     import ToastContainer from "../components/ToastContainer.svelte";
-    import OnceButton from "../components/OnceButton.svelte";
+    import OnceButton from "../components/Buttons/OnceButton.svelte";
     import Loading from "../components/Loading.svelte";
     import {
         MAX_GRADIENT_STOPS,
@@ -32,6 +32,7 @@
     import { SyncedCooldown } from "../utils/cooldown";
     import type { Readable } from "svelte/store";
     import type { UserData } from "../firebase/auth";
+    import WhiteButton from "../components/Buttons/WhiteButton.svelte";
 
     enum Page {
         SUBMIT_TX_ID,
@@ -171,7 +172,6 @@
                 <p class="text-sm text-center xs:text-xs text-white/55">
                     EX.: 00000000-1111-2222-<wbr />3333-444444444444
                 </p>
-                <!-- TODO: add turnstile + cooldown? -->
             </hgroup>
             <div class="flex-col h-full gap-2 flex-center">
                 <div class="w-full gap-2 flex-center">
@@ -200,14 +200,20 @@
                 </div>
             </div>
             <OnceButton
-                form="kofi-tx-id-form"
-                disabled={!isValidKofiTxId}
-                class="w-full p-2 h-11 xs:h-10"
-                type="white"
-                on:click={onSubmitTxId}
+                userDisabled={!isValidKofiTxId}
+                let:click
+                let:disabled
                 bind:reset={resetSubmitButton}
             >
-                <p class="text-lg xs:text-base">Submit</p>
+                <WhiteButton
+                    {disabled}
+                    form="kofi-tx-id-form"
+                    class="w-full"
+                    on:click={click}
+                    on:click={onSubmitTxId}
+                >
+                    <p class="text-lg xs:text-base">Submit</p>
+                </WhiteButton>
             </OnceButton>
         </div>
     {:else if currentPage === Page.SELECT_GRADIENT}
@@ -246,18 +252,22 @@
                 ></GradientPicker>
             </div>
             <OnceButton
-                class="w-full p-2 h-11 xs:h-10"
-                type="white"
-                disabled={!$gradientCooldownFinished ?? true}
-                on:click={onUpdateGradient}
+                userDisabled={!$gradientCooldownFinished ?? true}
+                let:click
+                let:disabled
                 bind:reset={resetGradientButton}
             >
-                <p class="text-lg xs:text-base">Update</p>
+                <WhiteButton
+                    {disabled}
+                    class="w-full"
+                    on:click={click}
+                    on:click={onUpdateGradient}
+                >
+                    <p class="text-lg xs:text-base">Update</p>
+                </WhiteButton>
             </OnceButton>
             {#if !$gradientCooldownFinished ?? false}
-                <p
-                    class="text-sm text-center transition duration-500 text-white/50 hover:text-white"
-                >
+                <p class="text-sm text-center transition hover-text-transition">
                     You changed your gradient recently! Please wait <span
                         class="proportional-nums"
                         >{$gradientCooldownDisplay ?? "--:--"}</span

@@ -59,17 +59,6 @@
     {/if}
 </div>
 
-<!-- <script lang="ts">
-    import { penis } from "./stores";
-</script>
-
-<button
-    class="text-black bg-white"
-    on:click={() => {
-        $penis[0] += 1;
-    }}>Cummy {JSON.stringify($penis)}</button
-> -->
-
 <style lang="postcss">
     :global(._toastContainer) {
         font-family: Saira;

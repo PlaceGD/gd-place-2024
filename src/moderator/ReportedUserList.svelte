@@ -18,6 +18,8 @@
     import Back from "../icons/Back.svelte";
     import { moveCamera } from "../level_view/view_controls";
     import * as wasm from "wasm-lib";
+    import AcceptButton from "../components/Buttons/AcceptButton.svelte";
+    import DeclineButton from "../components/Buttons/DeclineButton.svelte";
 
     export let state: wasm.State;
     export let editorFocused: boolean;
@@ -114,7 +116,7 @@
 
 <fieldset
     class={cx({
-        "z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]": true,
+        "absolute top-24 z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]": true,
         "pointer-events-auto": isOpen,
         "pointer-events-none": !isOpen,
     })}
@@ -149,10 +151,9 @@
                             </span>
 
                             <div class="absolute right-0 w-8 h-8 xs:w-7 xs:h-7">
-                                <Button
+                                <button
                                     title="View average report location"
                                     class="w-full h-full"
-                                    type="plain"
                                     on:click={() => {
                                         moveCamera(
                                             state,
@@ -163,23 +164,21 @@
                                 >
                                     <Back class="rotate-180 stroke-[1.5]"
                                     ></Back>
-                                </Button>
+                                </button>
                             </div>
                         </div>
                         <div class="flex w-full h-10 gap-2 xs:h-9">
-                            <Button
-                                type="decline"
-                                class="w-full h-full"
+                            <DeclineButton
+                                class="w-full"
                                 on:click={() => {
                                     userOp("ignore", uid, "", idx);
                                 }}
                                 disabled={currentIdx == idx}
                             >
                                 <span class="text-sm">Ignore</span>
-                            </Button>
-                            <Button
-                                type="accept"
-                                class="w-full h-full"
+                            </DeclineButton>
+                            <AcceptButton
+                                class="w-full"
                                 on:click={() => {
                                     const reason = prompt(
                                         "Reason for banning (inappropriate username / alt account / etc):"
@@ -192,7 +191,7 @@
                                 disabled={currentIdx == idx}
                             >
                                 <span class="text-sm">Ban</span>
-                            </Button>
+                            </AcceptButton>
                         </div>
                         {#if currentIdx == idx}
                             <Loading class="rounded-lg" />

@@ -61,6 +61,7 @@
         "svelte-gestures": "^4.0.0",
         "svelte-portal": "^2.2.1",
         "svelte-range-slider-pips": "^2.2.3",
+        "svelte-tiny-virtual-list": "^2.1.2",
         "svelte-turnstile": "^0.8.0",
         "wasm-lib": "file:wasm-lib/pkg"
     }

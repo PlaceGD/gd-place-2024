@@ -15,7 +15,33 @@ export type UserDetails = {
 
 export type UsernameData = { uid: string; displayColor: string };
 
+export type HistoryItem =
+    | {
+          // PLACEMENT
+          objKey: ObjKey;
+          object: string;
+          time: number;
+          username: string;
+      }
+    | {
+          // DELETION
+          objKey: ObjKey;
+          chunk: ChunkID;
+          username: string;
+          time: number;
+      };
+
 export interface DatabaseSchema {
+    /**
+     * unix timesamp
+     */
+    eventStartTime: number;
+
+    /**
+     * unix timesamp
+     */
+    eventEndTime: number;
+
     objects: Record<ChunkID, Record<ObjKey, string>>;
 
     /**
@@ -66,4 +92,9 @@ export interface DatabaseSchema {
         placeCooldown: number;
         deleteCooldown: number;
     };
+
+    /**
+     * random uid -> data
+     */
+    history: Record<string, HistoryItem>;
 }

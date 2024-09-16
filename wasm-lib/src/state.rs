@@ -17,7 +17,8 @@ use crate::{
         pipeline_rect,
         rectdraw::{
             billy::{Billy, BlendMode},
-            rect_draw,
+            countdown::draw as countdown_draw,
+            level::draw as level_draw,
         },
         state::RenderState,
     },
@@ -54,6 +55,9 @@ pub struct State {
     pub(crate) hide_grid: bool,
     pub(crate) hide_ground: bool,
     pub(crate) hide_outline: bool,
+
+    /// unix time, negative before event starts
+    pub(crate) event_elapsed: f64,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -94,6 +98,7 @@ impl State {
             hide_grid: false,
             hide_ground: false,
             hide_outline: false,
+            event_elapsed: f64::NEG_INFINITY,
             render,
         }
     }
@@ -470,6 +475,10 @@ impl State {
         self.hide_ground = to;
     }
 
+    pub fn set_event_elapsed(&mut self, to: f64) {
+        self.event_elapsed = to;
+    }
+
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
         let output_view = output
@@ -537,7 +546,13 @@ impl State {
                 billy.set_transform(old_t);
             };
 
-            rect_draw(self, &mut billy);
+            billy.set_blend_mode(BlendMode::Normal);
+            {
+                let old_t = billy.get_transform();
+                countdown_draw(self, &mut billy);
+                billy.set_transform(old_t);
+            }
+            level_draw(self, &mut billy);
 
             // this line just commits the previous call
             billy.set_blend_mode(BlendMode::Additive);

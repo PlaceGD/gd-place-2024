@@ -9,7 +9,7 @@
     import LoginButton from "./login/LoginButton.svelte";
     import SettingsButton from "./settings/SettingsButton.svelte";
     import SettingsOptions from "./settings/SettingsOptions.svelte";
-    import { loginData } from "./stores";
+    import { eventElapsed, eventStartTime, loginData } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
 
     // const dick = (v: wasm.Gliberal) => {

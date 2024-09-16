@@ -36,6 +36,7 @@
         ground2Color,
         menuSelectedSFX,
         placedByHover,
+        eventElapsed,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -117,6 +118,7 @@
 
     const placePreview = (mx: number, my: number) => {
         let obj = state.get_preview_object();
+
         obj.x =
             Math.floor(mx / 30) * 30 +
             15 +
@@ -160,9 +162,22 @@
             opacity: 1,
             blending: false,
         };
-        $menuZLayer = wasm.ZLayer.B4;
+        $menuZLayer = wasm.ZLayer.B2;
         $menuZOrder = 0;
         $menuSelectedSFX = 0;
+
+        if (obj.id == SFX_TRIGGER) {
+            $menuSelectedSFX = Math.floor(
+                Math.random() * SFX_TRIGGER_SOUNDS.length
+            );
+            playSound(
+                `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[$menuSelectedSFX]}.ogg`,
+                0.5,
+                "place preview"
+                // a => (a.currentTime = (rand * 80) / 1000)
+            );
+        }
+
         // $menuZLayer = wasm.ZLayer.B1;
 
         if (setCheckedPreviewObject(state, obj)) {
@@ -242,9 +257,8 @@
                         Math.sin(Math.sin(sfx_hit_idx * 6.97) * 6.97) / 2 + 1;
                     playSound(
                         `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
-                        0.5 / Math.sqrt(sfx_hits_count),
-                        undefined,
-                        a => (a.currentTime = (rand * 80) / 1000)
+                        0.5 / Math.sqrt(sfx_hits_count)
+                        // a => (a.currentTime = (rand * 80) / 1000)
                     );
                     sfx_hit_idx += 1;
                     triggersRun = true;
@@ -412,6 +426,9 @@
             $ground2Color.g,
             $ground2Color.b
         );
+    }
+    $: {
+        state.set_event_elapsed($eventElapsed);
     }
 </script>
 

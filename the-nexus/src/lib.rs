@@ -103,7 +103,7 @@ export const SONG_TRIGGER: number = {};
 export const TRIGGERS: number[] = {:?};
 export const COLOR_TRIGGERS: number[] = {:?};
 
-export const SFX_TRIGGER_SOUNDS: number[] = {:?};
+export const SFX_TRIGGER_SOUNDS: string[] = {:?};
     ",
             special_ids::BG_TRIGGER,
             special_ids::GROUND_TRIGGER,

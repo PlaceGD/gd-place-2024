@@ -137,17 +137,19 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         const placeTimerCooldown =
             (await db.ref("metaVariables/placeCooldown").get()).val() ?? 5 * 60;
 
+        const now = Date.now();
+
         let transactionResult = await userDetailsRef
             .child("epochNextPlace")
             .transaction(nextPlace => {
-                if (Date.now() < nextPlace ?? 0) {
+                if (now < nextPlace ?? 0) {
                     throw new HttpsError(
                         "permission-denied",
                         "Cannot place before timer expired"
                     );
                 }
 
-                return Date.now() + placeTimerCooldown * 1000;
+                return now + placeTimerCooldown * 1000;
             });
         if (!transactionResult.committed) {
             logger.debug("Transaction not committed");
@@ -171,6 +173,13 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
             .push(objectString);
 
         db.ref(`userPlaced/${objRef.key}`).set(userDetails.username);
+
+        db.ref(`history`).push({
+            object: objectString,
+            objKey: objRef.key!,
+            username: userDetails.username,
+            time: now,
+        });
     }
 );
 
@@ -196,18 +205,19 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         const deleteTimerCooldown =
             (await db.ref("metaVariables/deleteCooldown").get()).val() ??
             5 * 60;
+        const now = Date.now();
 
         let transactionResult = await userDetailsRef
             .child("epochNextDelete")
             .transaction(nextDelete => {
-                if (Date.now() < nextDelete ?? 0) {
+                if (now < nextDelete ?? 0) {
                     throw new HttpsError(
                         "permission-denied",
                         "Cannot delete before timer expired"
                     );
                 }
 
-                return Date.now() + deleteTimerCooldown * 1000;
+                return now + deleteTimerCooldown * 1000;
             });
         if (!transactionResult.committed) {
             logger.debug("Transaction not committed");
@@ -218,5 +228,12 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         obj.set(userDetails.username).then(() => obj.remove());
 
         db.ref(`/userPlaced/${data.objId}`).remove();
+
+        db.ref(`history`).push({
+            objKey: data.objId,
+            username: userDetails.username,
+            time: now,
+            chunk: data.chunkId as ChunkID,
+        });
     }
 );

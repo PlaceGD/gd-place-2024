@@ -14,7 +14,7 @@ use crate::{
 };
 
 // IF THIS IS EVER CHANGED MAKE SURE TO CHANGE THE TYPESCRIPT TYPE IN SHAREDLIB
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 #[wasm_bindgen]
 #[repr(C, packed)]
 pub struct GDColor {
@@ -50,7 +50,7 @@ impl GDColor {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 #[wasm_bindgen(js_name = "GDObjectUnopt")]
 pub struct GDObject {
     pub id: u16,

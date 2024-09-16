@@ -1,4 +1,4 @@
-import { derived, writable, type Writable } from "svelte/store";
+import { derived, get, writable, type Writable } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
@@ -54,7 +54,7 @@ export const menuDetailColor = persistLocalWritable(
     },
     "menuDetailColor"
 );
-export const menuZLayer = persistLocalWritable(ZLayer.B1, "menuZLayer");
+export const menuZLayer = persistLocalWritable(ZLayer.B2, "menuZLayer");
 export const menuZOrder = persistLocalWritable(0, "menuZOrder");
 
 export const menuSelectedSFX = persistLocalWritable(0, "menuSelectedSFX");
@@ -254,3 +254,20 @@ export const penis = persist(
     createLocalStorage(),
     "agina"
 );
+
+export const eventStartTime = writable(Number.POSITIVE_INFINITY);
+export const eventEndTime = writable(Number.POSITIVE_INFINITY);
+
+export const eventElapsed = writable(Number.NEGATIVE_INFINITY);
+
+setInterval(() => {
+    eventElapsed.set(Date.now() - get(eventStartTime));
+}, 500);
+
+db.ref(`eventStartTime`).on("value", v => {
+    console.log(v.val());
+    eventStartTime.set(v.val());
+});
+db.ref(`eventEndTime`).on("value", v => {
+    eventEndTime.set(v.val());
+});

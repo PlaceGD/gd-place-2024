@@ -22,6 +22,8 @@
     import googleIconUrl from "./assets/google.svg?url";
     import githubIconUrl from "./assets/github.svg?url";
     import xIconUrl from "./assets/x.svg?url";
+    import AcceptButton from "../components/Buttons/AcceptButton.svelte";
+    import WhiteButton from "../components/Buttons/WhiteButton.svelte";
 
     let twitter = true;
     document.addEventListener("keydown", e => {
@@ -162,59 +164,50 @@
         </h1>
         <ul class="grid w-full grid-cols-3 gap-4 xs:gap-2">
             <li>
-                <Button
-                    type="white"
-                    class="flex-col w-full h-full p-2"
+                <WhiteButton
+                    class="flex-col w-full h-full gap-2"
                     aria-label="Login with Twitter"
                     on:click={() => signInWith(LoginMethod.Google)}
                 >
-                    <span class="flex flex-col h-full gap-2 flex-center">
-                        <Image
-                            src={googleIconUrl}
-                            alt="Login with Google"
-                            class="w-11 xs:w-10 aspect-square"
-                            tabindex="-1"
-                        />
-                        <p>Google</p>
-                    </span>
-                </Button>
+                    <Image
+                        src={googleIconUrl}
+                        alt="Login with Google"
+                        class="w-11 xs:w-10 aspect-square"
+                        tabindex="-1"
+                    />
+                    <p>Google</p>
+                </WhiteButton>
             </li>
             <li>
-                <Button
-                    type="white"
-                    class="flex-col w-full h-full p-2"
+                <WhiteButton
+                    class="flex-col w-full h-full gap-2"
                     aria-label="Login with GitHub"
                     on:click={() => signInWith(LoginMethod.GitHub)}
                 >
-                    <span class="flex flex-col h-full gap-2 flex-center">
-                        <Image
-                            src={githubIconUrl}
-                            alt="Login with GitHub"
-                            class="w-11 xs:w-10 aspect-square"
-                            tabindex="-1"
-                        />
-                        <p>GitHub</p>
-                    </span>
-                </Button>
+                    <Image
+                        src={githubIconUrl}
+                        alt="Login with GitHub"
+                        class="w-11 xs:w-10 aspect-square"
+                        tabindex="-1"
+                    />
+                    <p>GitHub</p>
+                </WhiteButton>
             </li>
             <li>
-                <Button
-                    type="white"
-                    class="flex-col w-full h-full p-2"
+                <WhiteButton
+                    class="flex-col w-full h-full gap-2"
                     on:click={() => signInWith(LoginMethod.X)}
                 >
-                    <span class="flex flex-col h-full gap-2 flex-center">
-                        <Image
-                            src={twitter ? twitterIconUrl : xIconUrl}
-                            alt="Login with X (Twitter)"
-                            class="w-11 xs:w-10 aspect-square"
-                            tabindex="-1"
-                        />
-                        <p>
-                            {twitter ? "Twitter" : "the everything app"}
-                        </p>
-                    </span>
-                </Button>
+                    <Image
+                        src={twitter ? twitterIconUrl : xIconUrl}
+                        alt="Login with X (Twitter)"
+                        class="w-11 xs:w-10 aspect-square"
+                        tabindex="-1"
+                    />
+                    <p>
+                        {twitter ? "Twitter" : "the everything app"}
+                    </p>
+                </WhiteButton>
             </li>
         </ul>
         <p class="text-sm text-center">
@@ -264,28 +257,15 @@
         </FadedScroll>
 
         <div class="flex w-full gap-4">
-            <!-- <Button
-                    class="w-full h-full"
-                    type="decline"
-                    
-                    on:click={() => {
-                        hasAgreedToTOS = false;
-                        $openMenu = null;
-                        Toast.showInfoToast("You kinda have to agree to the rules...")
-                    }}
-                >
-                    <p class="xs:text-sm">Disagree</p>
-                </Button> -->
-            <Button
-                class="w-full h-full"
-                type="accept"
+            <AcceptButton
+                class="w-full"
                 on:click={() => {
                     hasAgreedToTOS = true;
                     currentPage = previousPage;
                 }}
             >
                 <p class="xs:text-sm">Agree</p>
-            </Button>
+            </AcceptButton>
         </div>
     </div>
 
@@ -338,7 +318,10 @@
             <Turnstile
                 siteKey={SITE_KEY}
                 bind:reset={turnstileReset}
-                on:callback={e => (turnstileToken = e.detail.token)}
+                on:callback={e => {
+                    console.log(e);
+                    turnstileToken = e.detail.token;
+                }}
                 on:error={e => {
                     console.error(
                         "Turnstile login error. Code:",
@@ -375,16 +358,15 @@
                 </button>
             </p>
         </div>
-        <Button
+        <WhiteButton
             form="username-form"
             disabled={!hasAgreedToTOS ||
                 !isValidUsername ||
                 turnstileToken == null}
-            class="w-full p-2 h-min"
+            class="w-full"
             on:click={initNewUser}
-            type="white"
         >
             <p class="text-lg xs:text-base">Submit</p>
-        </Button>
+        </WhiteButton>
     </div>
 </ScreenModal>

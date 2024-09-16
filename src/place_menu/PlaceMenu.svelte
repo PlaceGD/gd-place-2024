@@ -64,7 +64,6 @@
     import { db } from "../firebase/firebase";
     import { onDestroy, onMount } from "svelte";
     import RadialCooldown from "../components/RadialCooldown.svelte";
-    import OnceButton from "../components/OnceButton.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
     import DeleteTab from "./delete/DeleteTab.svelte";
     import SfxTab from "./edit/SFXTab.svelte";

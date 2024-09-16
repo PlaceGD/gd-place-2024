@@ -8,7 +8,7 @@
         selectedObject,
     } from "../../stores";
 
-    import OnceButton from "../../components/OnceButton.svelte";
+    import OnceButton from "../../components/Buttons/OnceButton.svelte";
     import Toast from "../../utils/toast";
     import Image from "../../components/Image.svelte";
     import { banUser, reportUser } from "../../firebase/cloud_functions";
@@ -24,6 +24,10 @@
     import { onMount } from "svelte";
     import { db } from "../../firebase/firebase";
     import { SFX_TRIGGER, SFX_TRIGGER_SOUNDS } from "shared-lib/nexusgen";
+    import DeclineButton from "../../components/Buttons/DeclineButton.svelte";
+    import AcceptButton from "../../components/Buttons/AcceptButton.svelte";
+    import IconButton from "../../components/Buttons/IconButton.svelte";
+    import reportButtonimage from "../../moderator/assets/report_button.png?url";
 
     export let state: wasm.State;
 
@@ -130,28 +134,33 @@
                 </FadedScroll>
             </hgroup>
             <div class="flex flex-col self-end w-full gap-2 sm:gap-1">
-                <!-- <div class="flex flex-col items-center justify-center"> -->
                 {#if $loginData.currentUserData != null}
                     <OnceButton
-                        type="decline"
-                        disabled={!$cooldownFinished ||
+                        userDisabled={!$cooldownFinished ||
                             isYourself ||
                             $selectedObject?.namePlaced == null}
-                        class="w-full text-base md:text-sm"
-                        iconClass="sm:w-8 sm:h-8"
-                        aria-label="Report User"
-                        on:click={() => {
-                            if ($selectedObject?.namePlaced != null) {
-                                report($selectedObject.namePlaced);
-                            }
-                        }}
                         bind:reset={resetReportButton}
+                        let:disabled
+                        let:click
                     >
-                        Report
+                        <IconButton
+                            {disabled}
+                            class="w-full"
+                            aria-label="Report User"
+                            on:click={() => {
+                                click();
+                                if ($selectedObject?.namePlaced != null) {
+                                    report($selectedObject.namePlaced);
+                                }
+                            }}
+                        >
+                            <Image slot="left" src={reportButtonimage}></Image>
+                            <span slot="children" class="text-base md:text-sm"
+                                >Report</span
+                            >
+                        </IconButton>
                     </OnceButton>
                 {/if}
-                <!-- </div> -->
-
                 {#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.currentUserData.userDetails.moderator}
                     {#if $bannedUsers[$selectedObject.namePlaced?.toLowerCase() ?? ""]}
                         <p
@@ -161,19 +170,24 @@
                         </p>
                     {:else}
                         <OnceButton
-                            type="decline"
-                            class="w-full text-base md:text-sm"
-                            iconClass="sm:w-8 sm:h-8"
-                            disabled={isYourself ||
+                            userDisabled={isYourself ||
                                 $selectedObject?.namePlaced == null}
-                            on:click={() => {
-                                if ($selectedObject?.namePlaced != null) {
-                                    ban($selectedObject.namePlaced);
-                                }
-                            }}
+                            let:click
+                            let:disabled
                             bind:reset={resetBanButton}
                         >
-                            Ban
+                            <DeclineButton
+                                {disabled}
+                                on:click={() => {
+                                    click();
+                                    if ($selectedObject?.namePlaced != null) {
+                                        ban($selectedObject.namePlaced);
+                                    }
+                                }}
+                                class="w-full"
+                            >
+                                <span class="text-base md:text-sm">Ban</span>
+                            </DeclineButton>
                         </OnceButton>
                     {/if}
                 {:else}

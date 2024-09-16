@@ -10,6 +10,7 @@
         openMenu,
     } from "../stores";
     import Button from "../components/Button.svelte";
+    import WhiteButton from "../components/Buttons/WhiteButton.svelte";
 
     export let editorFocused: boolean;
     $: {
@@ -63,7 +64,7 @@
 
 <fieldset
     class={cx({
-        "z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center max-h-[75%]": true,
+        "absolute top-24 z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center max-h-[75%]": true,
         "pointer-events-auto": isOpen,
         "pointer-events-none": !isOpen,
     })}
@@ -117,19 +118,20 @@
             class="flex flex-col items-center justify-center gap-2 p-2 pb-0 text-center"
         >
             {#if $loginData.currentUserData?.userDetails?.hasDonated}
-                <Button
-                    type="white"
-                    class="p-2 text-base xs:text-sm"
+                <WhiteButton
+                    class="text-base xs:text-sm"
                     on:click={() => {
                         $openMenu = ExclusiveMenus.Kofi;
-                    }}>Update Name Gradient</Button
+                    }}
                 >
+                    Update Name Gradient
+                </WhiteButton>
 
                 <a
                     href={`https://www.ko-fi.com/${KOFI_ID}`}
                     target="_blank"
                     rel="noreffer"
-                    class="text-sm text-center underline transition duration-500 text-white/50 hover:text-white hover:decoration-dashed"
+                    class="text-sm text-center underline hover-text-transition hover:decoration-dashed"
                 >
                     Donate!
                 </a>
@@ -138,23 +140,36 @@
                     Get a colored name by making a donation!
                 </p>
 
-                <span title="Support us">
-                    {#if isOpen}
-                        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                        {@html window.kofiwidget2
-                            .getHTML()
-                            .replace("Support me on ko-fi.com", "Support us!")}
-                    {/if}
-                </span>
-                <Button
-                    type="plain"
-                    class="p-1 text-sm text-center underline transition duration-500 text-white/50 hover:text-white hover:decoration-dashed"
-                    on:click={() => {
-                        $openMenu = ExclusiveMenus.Kofi;
-                    }}
-                >
-                    Choose your username colors
-                </Button>
+                {#if $loginData?.currentUserData?.userDetails != null}
+                    <span title="Support us">
+                        {#if isOpen}
+                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                            {@html window.kofiwidget2
+                                .getHTML()
+                                .replace(
+                                    "Support me on ko-fi.com",
+                                    "Support us!"
+                                )}
+                        {/if}
+                    </span>
+                    <button
+                        class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
+                        on:click={() => {
+                            $openMenu = ExclusiveMenus.Kofi;
+                        }}
+                    >
+                        Choose your username colors
+                    </button>
+                {:else}
+                    <button
+                        class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
+                        on:click={() => {
+                            $openMenu = ExclusiveMenus.Login;
+                        }}
+                    >
+                        You must login first!
+                    </button>
+                {/if}
             {/if}
         </div>
     </div>

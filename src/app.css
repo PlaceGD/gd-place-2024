@@ -110,7 +110,7 @@ dialog::backdrop {
     }
 
     .white-button {
-        @apply bg-white/5 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed;
+        @apply bg-white/5 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed outline-2 outline outline-white/20 -outline-offset-2;
     }
 
     .li-alternating {

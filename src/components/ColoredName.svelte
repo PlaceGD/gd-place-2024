@@ -26,7 +26,7 @@
     `}
     >
         <span
-            class="absolute text-stroke"
+            class="absolute text-stroke animateGgaga"
             style={`
                 font-family: inherit;
                 font-weight: inherit;
@@ -50,3 +50,19 @@
         </span>
     </span>
 {/await}
+
+<style>
+    /* firefox */
+    .animateGgaga {
+        animation: 0.02s animate-fade;
+    }
+
+    @keyframes animate-fade {
+        0% {
+            margin: 1px;
+        }
+        100% {
+            margin: 0;
+        }
+    }
+</style>

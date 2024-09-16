@@ -15,7 +15,11 @@ import { Level, LogGroup } from "./utils/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { smartDatabase } from "src";
-import { getCheckedUserDetails } from "./utils/utils";
+import {
+    checkedTransaction,
+    getCheckedUserDetails,
+    refAllGet,
+} from "./utils/utils";
 
 // #region deserializeObject
 const deserializeObject = (
@@ -127,47 +131,40 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         const db = smartDatabase();
 
         const data = request.data;
-        const uid = request.auth.uid;
+        const authUID = request.auth.uid;
 
-        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
-            db,
-            uid
-        );
+        const userDetails = await getCheckedUserDetails(db, authUID);
 
         const now = Date.now();
 
-        const eventStartTime = (await db.ref("eventStartTime").get()).val();
-        if (now < eventStartTime) {
+        let [eventStartTime, placeCooldown, chunkObjectLimit] = await refAllGet(
+            db,
+            "metaVariables/eventStartTime",
+            "metaVariables/placeCooldown",
+            "metaVariables/chunkObjectLimit"
+        );
+
+        if (now < eventStartTime.val()) {
             throw new HttpsError(
                 "permission-denied",
                 "Cannot place before event starts"
             );
         }
 
-        const placeTimerCooldown =
-            (await db.ref("metaVariables/placeCooldown").get()).val() ?? 5 * 60;
-
-        let transactionResult1 = await userDetailsRef
-            .child("epochNextPlace")
-            .transaction(nextPlace => {
-                if (now < nextPlace ?? 0) {
-                    throw new HttpsError(
-                        "permission-denied",
-                        "Cannot place before timer expired"
-                    );
-                }
-
-                return now + placeTimerCooldown * 1000;
-            });
-        if (!transactionResult1.committed) {
-            logger.debug("Transaction not committed");
-            return;
-        }
+        await checkedTransaction(
+            userDetails.ref.child("epochNextPlace"),
+            nextPlace => now >= nextPlace,
+            () =>
+                new HttpsError(
+                    "permission-denied",
+                    "Cannot place before timer expired"
+                ),
+            () => now + placeCooldown.val() * 1000
+        );
 
         if (!data.object) {
             throw new HttpsError("invalid-argument", "Missing object string");
         }
-        const objectString = data.object.toString();
 
         const object = deserializeObject(data.object, logger);
         if (object === null) {
@@ -178,40 +175,28 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
         let chunkID: ChunkID = `${chunkX},${chunkY}`;
 
-        let chunkObjectLimit = (
-            await db.ref("metaVariables/chunkObjectLimit").get()
-        ).val();
+        await checkedTransaction(
+            db.ref(`objectCount/${chunkID}`),
+            count => (count ?? 0) < chunkObjectLimit.val(),
+            () =>
+                new HttpsError(
+                    "permission-denied",
+                    "Too many objects in chunk"
+                ),
+            c => (c ?? 0) + 1
+        );
 
-        let transactionResult2 = await db
-            .ref(`objectCount/${chunkID}`)
-            .transaction(count => {
-                if (count == undefined) {
-                    return 1;
-                }
-                if (count >= chunkObjectLimit) {
-                    throw new HttpsError(
-                        "permission-denied",
-                        "Too many objects in chunk"
-                    );
-                }
-                return count + 1;
-            });
+        const objRef = await db.ref(`objects/${chunkID}`).push(data.object);
 
-        if (!transactionResult2.committed) {
-            logger.debug("Transaction not committed");
-            return;
-        }
-
-        const objRef = await db.ref(`objects/${chunkID}`).push(objectString);
-
-        db.ref(`userPlaced/${objRef.key}`).set(userDetails.username);
-
-        db.ref(`history`).push({
-            object: objectString,
-            objKey: objRef.key!,
-            username: userDetails.username,
-            time: now,
-        });
+        await Promise.all([
+            db.ref(`userPlaced/${objRef.key}`).set(userDetails.val.username),
+            db.ref(`history`).push({
+                object: data.object,
+                objKey: objRef.key!,
+                username: userDetails.val.username,
+                time: now,
+            }),
+        ]);
     }
 );
 
@@ -223,10 +208,7 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         const data = request.data;
         const uid = request.auth.uid;
 
-        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
-            db,
-            uid
-        );
+        const userDetails = await getCheckedUserDetails(db, uid);
 
         if (!data.chunkId) {
             throw new HttpsError("invalid-argument", "Missing chunk id");
@@ -234,47 +216,47 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         if (!data.objId) {
             throw new HttpsError("invalid-argument", "Missing object id");
         }
-        const deleteTimerCooldown =
-            (await db.ref("metaVariables/deleteCooldown").get()).val() ??
-            5 * 60;
+
+        let [deleteCooldown, eventStartTime] = await refAllGet(
+            db,
+            "metaVariables/deleteCooldown",
+            "metaVariables/eventStartTime"
+        );
+
         const now = Date.now();
 
-        const eventStartTime = (await db.ref("eventStartTime").get()).val();
-        if (now < eventStartTime) {
+        if (now < eventStartTime.val()) {
             throw new HttpsError(
                 "permission-denied",
                 "Cannot delete before event starts"
             );
         }
 
-        let transactionResult = await userDetailsRef
-            .child("epochNextDelete")
-            .transaction(nextDelete => {
-                if (now < nextDelete ?? 0) {
-                    throw new HttpsError(
-                        "permission-denied",
-                        "Cannot delete before timer expired"
-                    );
-                }
-
-                return now + deleteTimerCooldown * 1000;
-            });
-        if (!transactionResult.committed) {
-            logger.debug("Transaction not committed");
-            return;
-        }
+        await checkedTransaction(
+            userDetails.ref.child("epochNextDelete"),
+            nextDelete => now >= nextDelete,
+            () =>
+                new HttpsError(
+                    "permission-denied",
+                    "Cannot delete before timer expired"
+                ),
+            () => now + deleteCooldown.val() * 1000
+        );
 
         const obj = db.ref(`objects/${data.chunkId}/${data.objId}`);
-        obj.set(userDetails.username).then(() => obj.remove());
 
-        db.ref(`/userPlaced/${data.objId}`).remove();
-
-        db.ref(`history`).push({
-            objKey: data.objId,
-            username: userDetails.username,
-            time: now,
-            chunk: data.chunkId,
-        });
-        db.ref(`objectCount/${data.chunkId}`).transaction(v => (v ?? 1) - 1);
+        await Promise.all([
+            obj.set(userDetails.val.username).then(() => obj.remove()),
+            db.ref(`/userPlaced/${data.objId}`).remove(),
+            db.ref(`history`).push({
+                objKey: data.objId,
+                username: userDetails.val.username,
+                time: now,
+                chunk: data.chunkId,
+            }),
+            db
+                .ref(`objectCount/${data.chunkId}`)
+                .transaction(v => (v ?? 1) - 1),
+        ]);
     }
 );

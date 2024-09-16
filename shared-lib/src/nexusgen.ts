@@ -9,5 +9,5 @@ export const SONG_TRIGGER: number = 4555;
 export const TRIGGERS: number[] = [4550, 4551, 4552, 4553, 4554];
 export const COLOR_TRIGGERS: number[] = [4550, 4551, 4552];
 
-export const SFX_TRIGGER_SOUNDS: string[] = ["explosion", "fire", "coin", "positive", "negative", "dance", "record", "bell", "cat", "dog", "cow", "cash", "door", "bubble", "wind"];
+export const SFX_TRIGGER_SOUNDS: string[] = ["explosion", "fire", "coin", "positive", "negative", "dance", "record", "bell", "cat", "dog", "cow", "cash", "door", "bubble", "wind", "boing"];
     

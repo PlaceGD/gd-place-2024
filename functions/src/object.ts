@@ -134,12 +134,20 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
             uid
         );
 
+        const now = Date.now();
+
+        const eventStartTime = (await db.ref("eventStartTime").get()).val();
+        if (now < eventStartTime) {
+            throw new HttpsError(
+                "permission-denied",
+                "Cannot place before event starts"
+            );
+        }
+
         const placeTimerCooldown =
             (await db.ref("metaVariables/placeCooldown").get()).val() ?? 5 * 60;
 
-        const now = Date.now();
-
-        let transactionResult = await userDetailsRef
+        let transactionResult1 = await userDetailsRef
             .child("epochNextPlace")
             .transaction(nextPlace => {
                 if (now < nextPlace ?? 0) {
@@ -151,7 +159,7 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
 
                 return now + placeTimerCooldown * 1000;
             });
-        if (!transactionResult.committed) {
+        if (!transactionResult1.committed) {
             logger.debug("Transaction not committed");
             return;
         }
@@ -168,9 +176,32 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
 
         let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
         let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
-        const objRef = await db
-            .ref(`objects/${chunkX},${chunkY}`)
-            .push(objectString);
+        let chunkID: ChunkID = `${chunkX},${chunkY}`;
+
+        let chunkObjectLimit = (
+            await db.ref("metaVariables/chunkObjectLimit").get()
+        ).val();
+
+        let transactionResult2 = await db
+            .ref(`objectCount/${chunkID}`)
+            .transaction(count => {
+                if (count == undefined) {
+                    return 1;
+                }
+                if (count >= chunkObjectLimit) {
+                    throw new HttpsError(
+                        "permission-denied",
+                        "Too many objects in chunk"
+                    );
+                }
+                return count + 1;
+            });
+        if (!transactionResult2.committed) {
+            logger.debug("Transaction not committed");
+            return;
+        }
+
+        const objRef = await db.ref(`objects/${chunkID}`).push(objectString);
 
         db.ref(`userPlaced/${objRef.key}`).set(userDetails.username);
 
@@ -207,6 +238,14 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
             5 * 60;
         const now = Date.now();
 
+        const eventStartTime = (await db.ref("eventStartTime").get()).val();
+        if (now < eventStartTime) {
+            throw new HttpsError(
+                "permission-denied",
+                "Cannot delete before event starts"
+            );
+        }
+
         let transactionResult = await userDetailsRef
             .child("epochNextDelete")
             .transaction(nextDelete => {
@@ -224,7 +263,7 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
             return;
         }
 
-        const obj = db.ref(`objects/${data.chunkId as ChunkID}/${data.objId}`);
+        const obj = db.ref(`objects/${data.chunkId}/${data.objId}`);
         obj.set(userDetails.username).then(() => obj.remove());
 
         db.ref(`/userPlaced/${data.objId}`).remove();
@@ -233,7 +272,8 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
             objKey: data.objId,
             username: userDetails.username,
             time: now,
-            chunk: data.chunkId as ChunkID,
+            chunk: data.chunkId,
         });
+        db.ref(`objectCount/${data.chunkId}`).transaction(v => (v ?? 1) - 1);
     }
 );

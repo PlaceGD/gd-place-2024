@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { default as cx } from "classnames";
     import { onMount } from "svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
@@ -22,10 +23,6 @@
     const KOFI_ID = "Z8Z410GRY2";
 
     window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
-
-    // onMount(() => {
-    //     window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
-    // });
 
     const settings = [
         {
@@ -60,21 +57,27 @@
             bind: "hideDeleteText",
         },
     ];
+
+    $: console.log(isOpen);
 </script>
 
 <fieldset
-    class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
+    class={cx({
+        "z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center max-h-[75%]": true,
+        "pointer-events-auto": isOpen,
+        "pointer-events-none": !isOpen,
+    })}
     style={`
-            height: ${$openMenu != ExclusiveMenus.Settings ? "0" : "50vh"};
-            opacity: ${$openMenu != ExclusiveMenus.Settings ? "0" : "1"};
+            height: ${!isOpen ? "0" : "50vh"};
+            opacity: ${!isOpen ? "0" : "1"};
             transition: height 0.2s ease, opacity 0.2s ease-out;
         `}
-    disabled={$openMenu != ExclusiveMenus.Settings}
+    disabled={!isOpen}
 >
     <div
         class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
         style={`
-                opacity: ${$openMenu != ExclusiveMenus.Settings ? "0" : "1"};
+                opacity: ${!isOpen ? "0" : "1"};
                 transition: opacity 0.1s;
                 transition-delay: 0.1s;
             `}

@@ -8,8 +8,16 @@ interface KofiWidget {
 declare global {
     interface Window {
         kofiwidget2: KofiWidget;
+
+        clearAllTheStuff: () => void;
     }
 }
+
+window.clearAllTheStuff = () => {
+    localStorage.clear();
+    indexedDB.deleteDatabase("PlaceDB");
+    window.location.reload();
+};
 
 import "./app.css";
 // import "../public/Pusab.otf";

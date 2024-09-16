@@ -26,7 +26,7 @@ export const remEuclid = (a: number, b: number): number => {
 };
 
 export const hexToRgb = (hex: string) => {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
               r: parseInt(result[1], 16),
@@ -91,3 +91,5 @@ export const timerDisplay = (time?: number) => {
     const secs = Math.floor(time - mins * 60);
     return `${mins >= 10 ? "" : "0"}${mins}:${secs >= 10 ? "" : "0"}${secs}`;
 };
+
+export const semitonesToFactor = (s: number) => Math.pow(2, s / 12);

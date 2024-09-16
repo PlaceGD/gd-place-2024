@@ -6,7 +6,7 @@
 
     import * as wasm from "wasm-lib";
 
-    import { clamp, hexToRgb, lerp } from "shared-lib/util";
+    import { clamp, hexToRgb, lerp, semitonesToFactor } from "shared-lib/util";
     import {
         BG_TRIGGER,
         GROUND_TRIGGER,
@@ -37,6 +37,8 @@
         menuSelectedSFX,
         placedByHover,
         eventElapsed,
+        canPlaceEditDelete,
+        menuSpeed,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -165,17 +167,17 @@
         $menuZLayer = wasm.ZLayer.B2;
         $menuZOrder = 0;
         $menuSelectedSFX = 0;
+        $menuSpeed = 0;
 
         if (obj.id == SFX_TRIGGER) {
             $menuSelectedSFX = Math.floor(
                 Math.random() * SFX_TRIGGER_SOUNDS.length
             );
-            playSound(
-                `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[$menuSelectedSFX]}.ogg`,
-                0.5,
-                "place preview"
-                // a => (a.currentTime = (rand * 80) / 1000)
-            );
+            playSound({
+                url: `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[$menuSelectedSFX]}.ogg`,
+                exclusive_channel: "preview sfx",
+                speed: semitonesToFactor($menuSpeed),
+            });
         }
 
         // $menuZLayer = wasm.ZLayer.B1;
@@ -255,11 +257,12 @@
                 case SFX_TRIGGER: {
                     let rand =
                         Math.sin(Math.sin(sfx_hit_idx * 6.97) * 6.97) / 2 + 1;
-                    playSound(
-                        `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
-                        0.5 / Math.sqrt(sfx_hits_count)
-                        // a => (a.currentTime = (rand * 80) / 1000)
-                    );
+
+                    playSound({
+                        url: `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
+                        volume: 1.0 / Math.sqrt(sfx_hits_count),
+                        speed: semitonesToFactor(i.obj.main_color.g - 12),
+                    });
                     sfx_hit_idx += 1;
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
@@ -294,7 +297,7 @@
     const handleMouseUp = () => {
         if (!dragging) return;
 
-        if (!dragging.thresholdReached) {
+        if (!dragging.thresholdReached && $canPlaceEditDelete) {
             let [mx, my] = getWorldMousePos();
             let hit = state.objects_hit_at(mx, my, 0.0);
             if ($menuTabGroup == TabGroup.Delete) {

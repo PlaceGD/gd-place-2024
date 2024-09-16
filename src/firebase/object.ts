@@ -9,6 +9,7 @@ export const addObject = (obj: GDObjectOpt) => {
     let v = obj.bytes();
     // console.log(v);
     let s = encodeString(v, 126);
+    console.log("Habubbty");
     placeObject({ object: s }).catch(e => {
         Toast.showErrorToast(e);
     });

@@ -41,6 +41,7 @@
         mainColorRGB,
         detailColorRGB,
         menuSelectedSFX,
+        menuSpeed,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -61,12 +62,13 @@
     import { timerDisplay } from "shared-lib/util";
     import { SyncedCooldown } from "../utils/cooldown";
     import { db } from "../firebase/firebase";
-    import { onDestroy } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import RadialCooldown from "../components/RadialCooldown.svelte";
     import OnceButton from "../components/OnceButton.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
     import DeleteTab from "./delete/DeleteTab.svelte";
     import SfxTab from "./edit/SFXTab.svelte";
+    import { playSound } from "../utils/audio";
 
     export let state: wasm.State;
 
@@ -114,7 +116,7 @@
         if (obj.id == SFX_TRIGGER) {
             obj.main_color = new wasm.GDColor(
                 $menuSelectedSFX,
-                0,
+                $menuSpeed + 12,
                 0,
                 255,
                 false
@@ -226,6 +228,29 @@
         $menuTabGroup != TabGroup.Delete
             ? !$placeCooldownFinished
             : !$deleteCooldownFinished;
+
+    let playPlaceCooldownSound = !$placeCooldownFinished;
+    $: {
+        if ($placeCooldownFinished) {
+            if (playPlaceCooldownSound) {
+                playSound({ url: "/assets/audio/ui/place_timer_finished.ogg" });
+            } else {
+                playPlaceCooldownSound = true;
+            }
+        }
+    }
+    let playDeleteCooldownSound = !$deleteCooldownFinished;
+    $: {
+        if ($deleteCooldownFinished) {
+            if (playDeleteCooldownSound) {
+                playSound({
+                    url: "/assets/audio/ui/delete_timer_finished.ogg",
+                });
+            } else {
+                playDeleteCooldownSound = true;
+            }
+        }
+    }
 </script>
 
 <div
@@ -457,6 +482,7 @@
             data-minimised={+$menuMinimized}
             on:click={() => {
                 if ($menuTabGroup != TabGroup.Delete) {
+                    console.log("abuga", state.get_preview_object().debug());
                     addObject(state.get_preview_object());
                     state.set_preview_visibility(false);
                 } else {

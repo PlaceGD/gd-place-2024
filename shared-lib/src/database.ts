@@ -43,6 +43,7 @@ export interface DatabaseSchema {
     eventEndTime: number;
 
     objects: Record<ChunkID, Record<ObjKey, string>>;
+    objectCount: Record<ChunkID, number>;
 
     /**
      * user uid -> data
@@ -91,6 +92,7 @@ export interface DatabaseSchema {
     metaVariables: {
         placeCooldown: number;
         deleteCooldown: number;
+        chunkObjectLimit: number;
     };
 
     /**

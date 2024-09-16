@@ -19,25 +19,12 @@
     import ToastContainer from "./components/ToastContainer.svelte";
     import Turnstiles from "./Turnstiles.svelte";
     import { rawSpritesheetData } from "./stores";
-    // import { getTurnstileToken, resetTurnstile } from "./utils/turnstile";
 
     alertHasDarkReader();
 
-    // import { onMount } from "svelte";
-    // import { SITE_KEY } from "./grecaptcha";
-    // onMount(() => {
-    //     grecaptcha.execute(SITE_KEY, { action: "page_load" }).then(t => {
-    //         console.log(t);
-    //     });
-    // });
-
     initWasm();
-    console.time("gaga");
     fetchAndParseSpritesheet().then(data => {
-        console.timeEnd("gaga");
         $rawSpritesheetData = data;
-
-        console.log(data.data.byteLength);
     });
 
     $: loaded =
@@ -49,7 +36,7 @@
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
 </script>
 
-<Turnstiles />
+<!-- <Turnstiles /> -->
 
 <ToastContainer />
 

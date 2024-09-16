@@ -1,5 +1,7 @@
 <script lang="ts">
-    // import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher } from "svelte";
+
+    const dispatcher = createEventDispatcher();
 
     type Validator = ((value: string) => boolean) | RegExp | null;
 
@@ -23,6 +25,7 @@
         if (checkIfValid(innerValue, hardValidInput)) {
             if (checkIfValid(innerValue, softValidInput)) {
                 value = innerValue;
+                dispatcher("change");
             }
             prevTypeableValue = innerValue;
         } else {

@@ -151,120 +151,120 @@
     }}
 >
     <!-- LOGIN METHOD -->
-    {#if currentPage == Page.LOGIN_METHOD}
-        <div
-            class="flex flex-col items-center justify-between gap-2 modal-panel"
-        >
-            <h1 class="text-3xl text-center xs:text-2xl font-pusab text-stroke">
-                Login or Sign Up
-            </h1>
-            <ul class="grid w-full grid-cols-3 gap-4 xs:gap-2">
-                <li>
-                    <Button
-                        type="white"
-                        class="flex-col w-full h-full p-2"
-                        aria-label="Login with Twitter"
-                        on:click={() => signInWith(LoginMethod.Google)}
-                    >
-                        <span class="flex flex-col h-full gap-2 flex-center">
-                            <Image
-                                src={googleIconUrl}
-                                alt="Login with Google"
-                                class="w-11 xs:w-10 aspect-square"
-                                tabindex="-1"
-                            />
-                            <p>Google</p>
-                        </span>
-                    </Button>
-                </li>
-                <li>
-                    <Button
-                        type="white"
-                        class="flex-col w-full h-full p-2"
-                        aria-label="Login with GitHub"
-                        on:click={() => signInWith(LoginMethod.GitHub)}
-                    >
-                        <span class="flex flex-col h-full gap-2 flex-center">
-                            <Image
-                                src={githubIconUrl}
-                                alt="Login with GitHub"
-                                class="w-11 xs:w-10 aspect-square"
-                                tabindex="-1"
-                            />
-                            <p>GitHub</p>
-                        </span>
-                    </Button>
-                </li>
-                <li>
-                    <Button
-                        type="white"
-                        class="flex-col w-full h-full p-2"
-                        on:click={() => signInWith(LoginMethod.X)}
-                    >
-                        <span class="flex flex-col h-full gap-2 flex-center">
-                            <Image
-                                src={twitter ? twitterIconUrl : xIconUrl}
-                                alt="Login with X (Twitter)"
-                                class="w-11 xs:w-10 aspect-square"
-                                tabindex="-1"
-                            />
-                            <p>
-                                {twitter ? "Twitter" : "the everything app"}
-                            </p>
-                        </span>
-                    </Button>
-                </li>
-            </ul>
-            <p class="text-sm text-center">
-                Don't forget to the read the
-                <button
-                    class="underline hover:decoration-dashed"
-                    aria-label="Terms of Service"
-                    on:click={() => {
-                        previousPage = currentPage;
-                        currentPage = Page.SHOW_TOS;
-                    }}
+    <div
+        class="absolute flex flex-col items-center justify-between gap-2 modal-panel"
+        style:visibility={currentPage === Page.LOGIN_METHOD
+            ? "visible"
+            : "hidden"}
+    >
+        <h1 class="text-3xl text-center xs:text-2xl font-pusab text-stroke">
+            Login or Sign Up
+        </h1>
+        <ul class="grid w-full grid-cols-3 gap-4 xs:gap-2">
+            <li>
+                <Button
+                    type="white"
+                    class="flex-col w-full h-full p-2"
+                    aria-label="Login with Twitter"
+                    on:click={() => signInWith(LoginMethod.Google)}
                 >
-                    rules
-                </button>!
-            </p>
-        </div>
-    {/if}
+                    <span class="flex flex-col h-full gap-2 flex-center">
+                        <Image
+                            src={googleIconUrl}
+                            alt="Login with Google"
+                            class="w-11 xs:w-10 aspect-square"
+                            tabindex="-1"
+                        />
+                        <p>Google</p>
+                    </span>
+                </Button>
+            </li>
+            <li>
+                <Button
+                    type="white"
+                    class="flex-col w-full h-full p-2"
+                    aria-label="Login with GitHub"
+                    on:click={() => signInWith(LoginMethod.GitHub)}
+                >
+                    <span class="flex flex-col h-full gap-2 flex-center">
+                        <Image
+                            src={githubIconUrl}
+                            alt="Login with GitHub"
+                            class="w-11 xs:w-10 aspect-square"
+                            tabindex="-1"
+                        />
+                        <p>GitHub</p>
+                    </span>
+                </Button>
+            </li>
+            <li>
+                <Button
+                    type="white"
+                    class="flex-col w-full h-full p-2"
+                    on:click={() => signInWith(LoginMethod.X)}
+                >
+                    <span class="flex flex-col h-full gap-2 flex-center">
+                        <Image
+                            src={twitter ? twitterIconUrl : xIconUrl}
+                            alt="Login with X (Twitter)"
+                            class="w-11 xs:w-10 aspect-square"
+                            tabindex="-1"
+                        />
+                        <p>
+                            {twitter ? "Twitter" : "the everything app"}
+                        </p>
+                    </span>
+                </Button>
+            </li>
+        </ul>
+        <p class="text-sm text-center">
+            Don't forget to the read the
+            <button
+                class="underline hover:decoration-dashed"
+                aria-label="Terms of Service"
+                on:click={() => {
+                    previousPage = currentPage;
+                    currentPage = Page.SHOW_TOS;
+                }}
+            >
+                rules
+            </button>!
+        </p>
+    </div>
+
     <!-- TERMS OF SERVICE -->
-    {#if currentPage == Page.SHOW_TOS}
-        <div
-            class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content]"
-        >
-            <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
-                <section class="text">
-                    <h2>Rules</h2>
+    <div
+        class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content] absolute"
+        style:visibility={currentPage === Page.SHOW_TOS ? "visible" : "hidden"}
+    >
+        <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
+            <section class="text">
+                <h2>Rules</h2>
 
-                    <ul class="bulleted-list">
-                        <li>Only use one account per person.</li>
-                        <li>
-                            Do not create inappropriate imagery (or usernames).
-                        </li>
-                        <li>Do not exercise hate speech (please)</li>
-                        <li>
-                            Only report people who are breaking the rules
-                            <i style="font-size: small; opacity: 0.5;">
-                                (unless you and another user are both reporting
-                                each other for breaking this rule, in which case
-                                one of you should break one other rule so that
-                                the other one is no longer breaking a rule)
-                            </i>
-                        </li>
-                    </ul>
+                <ul class="bulleted-list">
+                    <li>Only use one account per person.</li>
+                    <li>Do not create inappropriate imagery (or usernames).</li>
+                    <li>Do not exercise hate speech (please)</li>
+                    <li>
+                        Only report people who are breaking the rules
+                        <i style="font-size: small; opacity: 0.5;">
+                            (unless you and another user are both reporting each
+                            other for breaking this rule, in which case one of
+                            you should break one other rule so that the other
+                            one is no longer breaking a rule)
+                        </i>
+                    </li>
+                </ul>
 
-                    <strong>
-                        Breaking any of these rules can get your account banned
-                        without notice.</strong
-                    >
-                </section>
-            </FadedScroll>
+                <strong>
+                    Breaking any of these rules can get your account banned
+                    without notice.</strong
+                >
+            </section>
+        </FadedScroll>
 
-            <div class="flex w-full gap-4">
-                <!-- <Button
+        <div class="flex w-full gap-4">
+            <!-- <Button
                     class="w-full h-full"
                     type="decline"
                     
@@ -276,113 +276,115 @@
                 >
                     <p class="xs:text-sm">Disagree</p>
                 </Button> -->
-                <Button
-                    class="w-full h-full"
-                    type="accept"
-                    on:click={() => {
-                        hasAgreedToTOS = true;
-                        currentPage = previousPage;
-                    }}
-                >
-                    <p class="xs:text-sm">Agree</p>
-                </Button>
-            </div>
-        </div>
-    {/if}
-    <!-- CREATE USER -->
-    {#if currentPage == Page.CREATE_USER}
-        <div
-            class="flex flex-col items-center justify-between text-center modal-panel"
-        >
-            <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
-                Enter a Username
-            </h1>
-            <div class="flex-col gap-2 flex-center">
-                <div class="w-full gap-2 flex-center">
-                    {#if isValidUsername}
-                        <Check
-                            class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
-                        />
-                    {:else}
-                        <Cross
-                            class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
-                        />
-                    {/if}
-                    <form
-                        class="w-full"
-                        id="username-form"
-                        on:submit={e => e.preventDefault()}
-                    >
-                        <DarkInput
-                            class="w-[inherit] text-2xl sm:text-xl xs:text-base font-pusab"
-                            maxLength={16}
-                            hardValidInput={VALID_USERNAME_CHARS}
-                            autoTrim
-                            bind:value={userName}
-                        />
-                    </form>
-                </div>
-                <p
-                    class="text-xs transition duration-500 text-white/50 hover:text-white"
-                >
-                    Usernames can only be 3 to 16 characters in length, and only
-                    contain alphanumeric characters, - and _. Usernames are case
-                    insensitive.
-                </p>
-            </div>
-            <span
-                class="flex items-center justify-center w-full h-auto xs:scale-90"
+            <Button
+                class="w-full h-full"
+                type="accept"
+                on:click={() => {
+                    hasAgreedToTOS = true;
+                    currentPage = previousPage;
+                }}
             >
-                <Turnstile
-                    siteKey={SITE_KEY}
-                    bind:reset={turnstileReset}
-                    on:turnstile-callback={e =>
-                        (turnstileToken = e.detail.token)}
-                    on:turnstile-error={e => {
-                        console.error(e);
-                        Toast.showErrorToast(
-                            `There was an error with the Turnstile. (${e})`
-                        );
-                    }}
-                    on:turnstile-expired={() =>
-                        turnstileReset && turnstileReset()}
-                />
-            </span>
-            <div class="flex w-full gap-2">
-                {#if hasAgreedToTOS}
+                <p class="xs:text-sm">Agree</p>
+            </Button>
+        </div>
+    </div>
+
+    <!-- CREATE USER -->
+    <div
+        class="absolute flex flex-col items-center justify-between text-center modal-panel"
+        style:visibility={currentPage === Page.CREATE_USER
+            ? "visible"
+            : "hidden"}
+    >
+        <h1 class="text-3xl xs:text-2xl font-pusab text-stroke">
+            Enter a Username
+        </h1>
+        <div class="flex-col gap-2 flex-center">
+            <div class="w-full gap-2 flex-center">
+                {#if isValidUsername}
                     <Check
-                        class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-[1.5]"
+                        class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
                     />
                 {:else}
                     <Cross
-                        class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-[1.5]"
+                        class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 ml-auto stroke-[1.5]"
                     />
                 {/if}
-                <p class="flex-auto m-auto text-base xs:text-sm">
-                    I have read and agreed to the
-                    <button
-                        class="underline hover:decoration-dashed text-nowrap"
-                        aria-label="Terms of Service"
-                        on:click={() => {
-                            previousPage = currentPage;
-                            currentPage = Page.SHOW_TOS;
-                        }}
-                    >
-                        rules
-                    </button>
-                </p>
+                <form
+                    class="w-full"
+                    id="username-form"
+                    on:submit={e => e.preventDefault()}
+                >
+                    <DarkInput
+                        class="w-[inherit] text-2xl sm:text-xl xs:text-base font-pusab"
+                        maxLength={16}
+                        hardValidInput={VALID_USERNAME_CHARS}
+                        autoTrim
+                        bind:value={userName}
+                    />
+                </form>
             </div>
-            <Button
-                form="username-form"
-                disabled={!hasAgreedToTOS ||
-                    !isValidUsername ||
-                    turnstileToken == null}
-                class="w-full p-2 h-min"
-                on:click={initNewUser}
-                type="white"
+            <p
+                class="text-xs transition duration-500 text-white/50 hover:text-white"
             >
-                <p class="text-lg xs:text-base">Submit</p>
-            </Button>
+                Usernames can only be 3 to 16 characters in length, and only
+                contain alphanumeric characters, - and _. Usernames are case
+                insensitive.
+            </p>
         </div>
-    {/if}
+        <span
+            class="flex items-center justify-center w-full h-auto xs:scale-90"
+        >
+            <Turnstile
+                siteKey={SITE_KEY}
+                bind:reset={turnstileReset}
+                on:callback={e => (turnstileToken = e.detail.token)}
+                on:error={e => {
+                    console.error(
+                        "Turnstile login error. Code:",
+                        e.detail.code
+                    );
+                    Toast.showErrorToast(
+                        `There was an error with the Turnstile. Code: ${e.detail.code}`
+                    );
+                }}
+                on:expired={() => turnstileReset && turnstileReset()}
+            />
+        </span>
+        <div class="flex w-full gap-2">
+            {#if hasAgreedToTOS}
+                <Check
+                    class="text-[#47ff47] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-[1.5]"
+                />
+            {:else}
+                <Cross
+                    class="text-[#ff4747] xs:w-7 xs:h-7 w-8 h-8 shrink-0 stroke-[1.5]"
+                />
+            {/if}
+            <p class="flex-auto m-auto text-base xs:text-sm">
+                I have read and agreed to the
+                <button
+                    class="underline hover:decoration-dashed text-nowrap"
+                    aria-label="Terms of Service"
+                    on:click={() => {
+                        previousPage = currentPage;
+                        currentPage = Page.SHOW_TOS;
+                    }}
+                >
+                    rules
+                </button>
+            </p>
+        </div>
+        <Button
+            form="username-form"
+            disabled={!hasAgreedToTOS ||
+                !isValidUsername ||
+                turnstileToken == null}
+            class="w-full p-2 h-min"
+            on:click={initNewUser}
+            type="white"
+        >
+            <p class="text-lg xs:text-base">Submit</p>
+        </Button>
+    </div>
 </ScreenModal>

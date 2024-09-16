@@ -11,16 +11,19 @@ import FullReload from "vite-plugin-full-reload";
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
-const TURNSTILE_LOGIN_SITE_KEY = "'0x4AAAAAAARPU_AxoWb2X1wE'";
-const TURNSTILE_GENERAL_KEY = "'0x4AAAAAAAj7CfBC8p9bV3_v'";
+const TURNSTILE_DEV_KEY = "'1x00000000000000000000AA'";
+
+const TURNSTILE_LOGIN_SITE_KEY = "'0x4AAAAAAAkCQrZbhWcKuz_T'";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
     define: {
         __DEBUG: mode == "development",
         // __HAS_OPT_WASM: existsSync("wasm-lib/pkg/wasm_lib_bg.wasm-opt.wasm"),
-        __TURNSTILE_LOGIN_SITE_KEY: TURNSTILE_LOGIN_SITE_KEY,
-        __TURNSTILE_GENERAL_KEY: TURNSTILE_GENERAL_KEY,
+        __TURNSTILE_LOGIN_SITE_KEY:
+            mode == "development"
+                ? TURNSTILE_DEV_KEY
+                : TURNSTILE_LOGIN_SITE_KEY,
     },
     json: {
         stringify: true,

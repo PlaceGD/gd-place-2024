@@ -1,7 +1,8 @@
+import { ChunkID } from "./database.js";
 import { type KofiTxId } from "./kofi.js";
 
 export type PlaceReq = { object: string };
-export type DeleteReq = { chunkId: string; objId: string };
+export type DeleteReq = { chunkId: ChunkID; objId: string };
 export type InitWithUsernameReq = {
     username: string;
     uid: string;
@@ -9,7 +10,7 @@ export type InitWithUsernameReq = {
 };
 export type ReportUserReq = {
     username: string;
-    turnstileResp: string;
+    // turnstileResp: string;
     x: number;
     y: number;
 };

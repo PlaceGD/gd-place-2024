@@ -21,6 +21,11 @@ const validateTurnstile = async (
     request: Request,
     logger: LogGroup
 ) => {
+    key =
+        process.env["NODE_ENV"] == "development"
+            ? "1x0000000000000000000000000000000AA"
+            : key;
+
     if (key == undefined) {
         throw new HttpsError(
             "permission-denied",
@@ -135,12 +140,12 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
     async (request, logger) => {
         const data = request.data;
 
-        await validateTurnstile(
-            process.env["TURNSTILE_GENERAL_PRIV_KEY"],
-            data.turnstileResp,
-            request.rawRequest,
-            logger
-        );
+        // await validateTurnstile(
+        //     process.env["TURNSTILE_GENERAL_PRIV_KEY"],
+        //     data.turnstileResp,
+        //     request.rawRequest,
+        //     logger
+        // );
 
         const db = smartDatabase();
 

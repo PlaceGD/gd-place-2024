@@ -58,6 +58,7 @@ export const menuZLayer = persistLocalWritable(ZLayer.B2, "menuZLayer");
 export const menuZOrder = persistLocalWritable(0, "menuZOrder");
 
 export const menuSelectedSFX = persistLocalWritable(0, "menuSelectedSFX");
+export const menuSpeed = persistLocalWritable(0, "menuSpeed");
 
 export const mainColorRGB = derived(
     menuMainColor,
@@ -133,6 +134,11 @@ export const currentNameGradient = persist(
     }),
     createLocalStorage(),
     "nameGradient"
+);
+
+export const canPlaceEditDelete = derived(
+    [loginData],
+    ([l]) => l.currentUserData?.userDetails != null
 );
 
 let deleteTextCounter = 0;
@@ -264,10 +270,10 @@ setInterval(() => {
     eventElapsed.set(Date.now() - get(eventStartTime));
 }, 500);
 
-db.ref(`eventStartTime`).on("value", v => {
+db.ref("eventStartTime").on("value", v => {
     console.log(v.val());
     eventStartTime.set(v.val());
 });
-db.ref(`eventEndTime`).on("value", v => {
+db.ref("eventEndTime").on("value", v => {
     eventEndTime.set(v.val());
 });

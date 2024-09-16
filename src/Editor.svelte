@@ -9,7 +9,12 @@
     import LoginButton from "./login/LoginButton.svelte";
     import SettingsButton from "./settings/SettingsButton.svelte";
     import SettingsOptions from "./settings/SettingsOptions.svelte";
-    import { eventElapsed, eventStartTime, loginData } from "./stores";
+    import {
+        canPlaceEditDelete,
+        eventElapsed,
+        eventStartTime,
+        loginData,
+    } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
@@ -53,7 +58,7 @@
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        {#if $loginData.currentUserData?.userDetails != null}
+        {#if $canPlaceEditDelete}
             <PlaceMenu bind:state />
         {/if}
     {/if}

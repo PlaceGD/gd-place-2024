@@ -248,3 +248,9 @@ export const placedByHover = writable<{
 } | null>(null);
 
 export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
+
+export const penis = persist(
+    writable([1, 2, 3]),
+    createLocalStorage(),
+    "agina"
+);

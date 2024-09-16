@@ -188,32 +188,6 @@
         }
     }
 
-    $: {
-        state.set_show_collidable($editorSettings.showCollidable);
-        state.set_hide_triggers($editorSettings.hideTriggers);
-        state.set_hide_grid($editorSettings.hideGrid);
-        state.set_hide_ground($editorSettings.hideGround);
-        state.set_hide_outline($editorSettings.hideOutline);
-    }
-
-    $: {
-        state.set_bg_color($bgColor.r, $bgColor.g, $bgColor.b);
-    }
-    $: {
-        state.set_ground1_color(
-            $ground1Color.r,
-            $ground1Color.g,
-            $ground1Color.b
-        );
-    }
-    $: {
-        state.set_ground2_color(
-            $ground2Color.r,
-            $ground2Color.g,
-            $ground2Color.b
-        );
-    }
-
     let totalPlaceCooldown = 0;
     let totalDeleteCooldown = 0;
     let totalPlaceListener = db

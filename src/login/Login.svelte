@@ -226,8 +226,7 @@
                     }}
                 >
                     rules
-                </button>
-                !
+                </button>!
             </p>
         </div>
     {/if}

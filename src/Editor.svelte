@@ -34,7 +34,7 @@
         <div
             class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
         >
-            <SettingsButton/>
+            <SettingsButton />
             {#if state != null}
                 <ModButton />
             {/if}

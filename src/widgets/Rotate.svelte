@@ -34,10 +34,10 @@
 </script>
 
 <svelte:window
-    on:mouseup={() => {
+    on:pointerup={() => {
         rotating = null;
     }}
-    on:mousemove={e => {
+    on:pointermove={e => {
         if (rotating != null) {
             let snapDegrees =
                 objects[state.get_preview_object().id].hitboxType == "Solid"
@@ -69,7 +69,7 @@
         style={`
             transform: translate(${(Math.cos((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px)
         `}
-        on:mousedown={e => {
+        on:pointerdown={e => {
             rotating = getMouseAngle(e) - angle * 5;
         }}
     />

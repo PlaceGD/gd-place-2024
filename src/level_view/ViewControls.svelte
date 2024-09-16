@@ -374,7 +374,7 @@
 
         editWidgetPos = getScreenPosZoomCorrected(obj.x, obj.y);
 
-        editWidgetScale = 1 + state.get_zoom() / 80;
+        editWidgetScale = (1 + state.get_zoom() / 80) / window.devicePixelRatio;
         editWidgetVisible = state.is_preview_visible();
 
         textZoomScale = state.get_zoom_scale();
@@ -387,6 +387,32 @@
     let loop = requestAnimationFrame(loopFn);
 
     onDestroy(() => cancelAnimationFrame(loop));
+
+    $: {
+        state.set_show_collidable($editorSettings.showCollidable);
+        state.set_hide_triggers($editorSettings.hideTriggers);
+        state.set_hide_grid($editorSettings.hideGrid);
+        state.set_hide_ground($editorSettings.hideGround);
+        state.set_hide_outline($editorSettings.hideOutline);
+    }
+
+    $: {
+        state.set_bg_color($bgColor.r, $bgColor.g, $bgColor.b);
+    }
+    $: {
+        state.set_ground1_color(
+            $ground1Color.r,
+            $ground1Color.g,
+            $ground1Color.b
+        );
+    }
+    $: {
+        state.set_ground2_color(
+            $ground2Color.r,
+            $ground2Color.g,
+            $ground2Color.b
+        );
+    }
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
@@ -458,10 +484,11 @@
             );
         }
     }}
-    on:wheel|passive={e => {
+    on:wheel={e => {
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -4, 36);
         zoomTween.set(zoomGoal);
         console.log(zoomGoal);
+        // e.preventDefault();
     }}
     use:pinch
     on:pinch={e => {

@@ -32,8 +32,12 @@
     // });
 
     initWasm();
+    console.time("gaga");
     fetchAndParseSpritesheet().then(data => {
+        console.timeEnd("gaga");
         $rawSpritesheetData = data;
+
+        console.log(data.data.byteLength);
     });
 
     $: loaded =
@@ -67,6 +71,17 @@
         </div>
     {/if}
 </div>
+
+<!-- <script lang="ts">
+    import { penis } from "./stores";
+</script>
+
+<button
+    class="text-black bg-white"
+    on:click={() => {
+        $penis[0] += 1;
+    }}>Cummy {JSON.stringify($penis)}</button
+> -->
 
 <style lang="postcss">
     :global(._toastContainer) {

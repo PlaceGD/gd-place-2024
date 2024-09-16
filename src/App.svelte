@@ -1,12 +1,7 @@
 <script lang="ts">
     import Editor from "./Editor.svelte";
-    import { SvelteToast } from "@zerodevx/svelte-toast";
-    import Toast from "./utils/toast";
     import { alertHasDarkReader } from "./utils/document";
-    import Login from "./login/Login.svelte";
-    import LoginButton from "./login/LoginButton.svelte";
     import DataPopup from "./DataPopup.svelte";
-    import ModButton from "./moderator/ModButton.svelte";
 
     import {
         wasmProgress,
@@ -14,10 +9,7 @@
         fetchAndParseSpritesheet,
         spritesheetProgress,
     } from "./load_wasm";
-    import { writable } from "svelte/store";
-    import ReportedUserList from "./moderator/ReportedUserList.svelte";
     import ToastContainer from "./components/ToastContainer.svelte";
-    import Turnstiles from "./Turnstiles.svelte";
     import { rawSpritesheetData } from "./stores";
 
     alertHasDarkReader();

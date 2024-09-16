@@ -42,6 +42,8 @@
     let currentPage = Page.LOGIN_METHOD;
     let previousPage = Page.LOGIN_METHOD;
 
+    $: console.log("current:", currentPage, "previous:", previousPage);
+
     let hasAgreedToTOS = false;
 
     let isValidUsername = false;

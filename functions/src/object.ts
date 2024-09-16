@@ -137,12 +137,13 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
 
         const now = Date.now();
 
-        let [eventStartTime, placeCooldown, chunkObjectLimit] = await refAllGet(
-            db,
-            "metaVariables/eventStartTime",
-            "metaVariables/placeCooldown",
-            "metaVariables/chunkObjectLimit"
-        );
+        const [eventStartTime, placeCooldown, chunkObjectLimit] =
+            await refAllGet(
+                db,
+                "metaVariables/eventStartTime",
+                "metaVariables/placeCooldown",
+                "metaVariables/chunkObjectLimit"
+            );
 
         if (now < eventStartTime.val()) {
             throw new HttpsError(
@@ -171,9 +172,9 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
             throw new HttpsError("invalid-argument", "Invalid object string");
         }
 
-        let chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
-        let chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
-        let chunkID: ChunkID = `${chunkX},${chunkY}`;
+        const chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
+        const chunkY = Math.floor(object.y / CHUNK_SIZE_UNITS);
+        const chunkID: ChunkID = `${chunkX},${chunkY}`;
 
         await checkedTransaction(
             db.ref(`objectCount/${chunkID}`),
@@ -217,7 +218,7 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
             throw new HttpsError("invalid-argument", "Missing object id");
         }
 
-        let [deleteCooldown, eventStartTime] = await refAllGet(
+        const [deleteCooldown, eventStartTime] = await refAllGet(
             db,
             "metaVariables/deleteCooldown",
             "metaVariables/eventStartTime"

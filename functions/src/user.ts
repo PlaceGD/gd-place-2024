@@ -93,10 +93,12 @@ export const initUserWithUsername = onCallAuthLogger<
         throw new HttpsError("already-exists", "Username already exists");
     }
 
-    // if ((await maybeUserData.get()) != null) {
-    //     logger.error("User data already exists");
-    //     throw new HttpsError("already-exists", "User data already exists");
-    // }
+    const userDetailsRef = db.ref(`userDetails/${data.uid}`);
+
+    if ((await userDetailsRef.get()).exists()) {
+        logger.error("User data already exists");
+        throw new HttpsError("already-exists", "User data already exists");
+    }
 
     const isBanned = (await db.ref(`bannedUsers/${data.uid}`).get()).exists();
     if (isBanned) {
@@ -116,7 +118,7 @@ export const initUserWithUsername = onCallAuthLogger<
     logger.info("User created sucessfully");
 
     await Promise.all([
-        db.ref(`userDetails/${data.uid}`).set(user),
+        userDetailsRef.set(user),
         usernameDataRef.set({
             uid: data.uid,
             displayColor: "white",

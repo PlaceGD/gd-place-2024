@@ -4,7 +4,6 @@ import {
     signInGoogle,
     signInTwitter,
     signOut,
-    type UserData,
 } from "../firebase/auth";
 import Toast from "../utils/toast";
 import { loginData } from "../stores";
@@ -20,8 +19,6 @@ export enum LoginMethod {
     GitHub = "GitHub",
     X = "X",
 }
-
-let currentUser: UserData | null = null;
 
 const logInSuccess = (user: any): boolean => {
     Toast.showSuccessToast("Signed in successfully!");

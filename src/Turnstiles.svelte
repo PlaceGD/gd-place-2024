@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import { Turnstile } from "svelte-turnstile";
     import Toast from "./utils/toast";
     import {
@@ -45,4 +45,4 @@
     }}
     bind:reset={turnstileReset}
     retry="never"
-/>
+/> -->

@@ -13,6 +13,7 @@ import { tweened, type TweenedOptions } from "svelte/motion";
 import { linear } from "svelte/easing";
 import { db } from "./firebase/firebase";
 import type { RawSpritesheetData } from "./utils/spritesheet/spritesheet";
+import type { SmartReference } from "@smart-firebase/client";
 
 export enum TabGroup {
     Build,
@@ -277,3 +278,23 @@ db.ref("eventStartTime").on("value", v => {
 db.ref("eventEndTime").on("value", v => {
     eventEndTime.set(v.val());
 });
+
+window["penileExplosion"] = async () => {
+    let ref = db.ref("zozza") as any as SmartReference<{
+        count: number;
+        next: number;
+    }>;
+
+    ref.child("next").transaction(next => {
+        throw "Fuck fuck";
+        // if (next < Date.now()) {
+        //     ref.child("count").transaction(v => v + 1);
+        // }
+        // return Date.now() + 5 * 1000;
+    });
+
+    // if ((await ref.child("next").get()).val() < Date.now()) {
+    //     ref.child("next").set(Date.now() + 5 * 1000);
+    //     ref.child("count").transaction(v => v + 1);
+    // }
+};

@@ -196,6 +196,7 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
                 }
                 return count + 1;
             });
+
         if (!transactionResult2.committed) {
             logger.debug("Transaction not committed");
             return;

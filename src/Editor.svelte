@@ -9,7 +9,12 @@
     import LoginButton from "./login/LoginButton.svelte";
     import SettingsButton from "./settings/SettingsButton.svelte";
     import SettingsOptions from "./settings/SettingsOptions.svelte";
-    import { loginData } from "./stores";
+    import {
+        canPlaceEditDelete,
+        eventElapsed,
+        eventStartTime,
+        loginData,
+    } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
@@ -34,7 +39,7 @@
         <div
             class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
         >
-            <SettingsButton/>
+            <SettingsButton />
             {#if state != null}
                 <ModButton />
             {/if}
@@ -53,7 +58,7 @@
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        {#if $loginData.currentUserData?.userDetails != null}
+        {#if $canPlaceEditDelete}
             <PlaceMenu bind:state />
         {/if}
     {/if}

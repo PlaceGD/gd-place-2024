@@ -1,25 +1,31 @@
 let channels: Record<string, HTMLAudioElement> = {};
 
+type SoundPlayOptions = {
+    url: string;
+    volume?: number;
+    speed?: number;
+    exclusive_channel?: string;
+};
 export const playSound = (
-    url: string,
-    volume: number,
-    exclusive_channel?: string,
-    extra_cb?: (audio: HTMLAudioElement) => void
+    options: SoundPlayOptions
+    // extra_cb?: (audio: HTMLAudioElement) => void
 ) => {
-    console.log("Bro", exclusive_channel);
-    var audio = new Audio(url);
-    audio.volume = volume;
-    if (extra_cb != undefined) {
-        extra_cb(audio);
-    }
+    let audio = new Audio(options.url);
+    audio.volume = (options.volume ?? 1) / 2;
+    audio.preservesPitch = false;
+    audio.playbackRate = options.speed ?? 1;
 
-    if (exclusive_channel != undefined) {
+    // if (extra_cb != undefined) {
+    //     extra_cb(audio);
+    // }
+
+    if (options.exclusive_channel != undefined) {
         // console.log("boing1");
-        if (channels[exclusive_channel] != undefined) {
+        if (channels[options.exclusive_channel] != undefined) {
             // console.log("boing2");
-            channels[exclusive_channel].pause();
+            channels[options.exclusive_channel].pause();
         }
-        channels[exclusive_channel] = audio;
+        channels[options.exclusive_channel] = audio;
     }
 
     audio.play();

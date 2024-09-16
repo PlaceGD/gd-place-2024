@@ -13,4 +13,6 @@ pub const SFX_TRIGGER_SOUNDS: &[&str] = &[
     "cash",
     "door",
     "bubble",
+    "wind",
+    "boing",
 ];

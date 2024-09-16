@@ -1,4 +1,4 @@
-import { derived, writable, type Writable } from "svelte/store";
+import { derived, get, writable, type Writable } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
@@ -12,6 +12,8 @@ import { colors, type ObjectCategory } from "shared-lib/gd";
 import { tweened, type TweenedOptions } from "svelte/motion";
 import { linear } from "svelte/easing";
 import { db } from "./firebase/firebase";
+import type { RawSpritesheetData } from "./utils/spritesheet/spritesheet";
+import type { SmartReference } from "@smart-firebase/client";
 
 export enum TabGroup {
     Build,
@@ -53,10 +55,11 @@ export const menuDetailColor = persistLocalWritable(
     },
     "menuDetailColor"
 );
-export const menuZLayer = persistLocalWritable(ZLayer.B1, "menuZLayer");
+export const menuZLayer = persistLocalWritable(ZLayer.B2, "menuZLayer");
 export const menuZOrder = persistLocalWritable(0, "menuZOrder");
 
 export const menuSelectedSFX = persistLocalWritable(0, "menuSelectedSFX");
+export const menuSpeed = persistLocalWritable(0, "menuSpeed");
 
 export const mainColorRGB = derived(
     menuMainColor,
@@ -132,6 +135,11 @@ export const currentNameGradient = persist(
     }),
     createLocalStorage(),
     "nameGradient"
+);
+
+export const canPlaceEditDelete = derived(
+    [loginData],
+    ([l]) => l.currentUserData?.userDetails != null
 );
 
 let deleteTextCounter = 0;
@@ -245,3 +253,48 @@ export const placedByHover = writable<{
     x: number;
     y: number;
 } | null>(null);
+
+export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
+
+export const penis = persist(
+    writable([1, 2, 3]),
+    createLocalStorage(),
+    "agina"
+);
+
+export const eventStartTime = writable(Number.POSITIVE_INFINITY);
+export const eventEndTime = writable(Number.POSITIVE_INFINITY);
+
+export const eventElapsed = writable(Number.NEGATIVE_INFINITY);
+
+setInterval(() => {
+    eventElapsed.set(Date.now() - get(eventStartTime));
+}, 500);
+
+db.ref("eventStartTime").on("value", v => {
+    console.log(v.val());
+    eventStartTime.set(v.val());
+});
+db.ref("eventEndTime").on("value", v => {
+    eventEndTime.set(v.val());
+});
+
+window["penileExplosion"] = async () => {
+    let ref = db.ref("zozza") as any as SmartReference<{
+        count: number;
+        next: number;
+    }>;
+
+    ref.child("next").transaction(next => {
+        throw "Fuck fuck";
+        // if (next < Date.now()) {
+        //     ref.child("count").transaction(v => v + 1);
+        // }
+        // return Date.now() + 5 * 1000;
+    });
+
+    // if ((await ref.child("next").get()).val() < Date.now()) {
+    //     ref.child("next").set(Date.now() + 5 * 1000);
+    //     ref.child("count").transaction(v => v + 1);
+    // }
+};

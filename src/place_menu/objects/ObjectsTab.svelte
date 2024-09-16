@@ -45,7 +45,7 @@
     })}
     disabled={$menuMinimized}
 >
-    {#each Object.entries(CATEGORY_ICONS) as [key, path]}
+    {#each Object.entries(CATEGORY_ICONS) as [key, path] (key)}
         <ul
             class={cx({
                 "w-full h-full overflow-x-hidden overflow-y-scroll rounded-lg thin-scrollbar object-grid-container": true,
@@ -53,14 +53,14 @@
             })}
             tabindex="-1"
         >
-            {#each objects.filter(([_, obj]) => obj.category == key) as [id, _]}
+            {#each objects.filter(([_, obj]) => obj.category == key) as [id, _] (id)}
                 <li class="relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10">
                     <button
                         class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
                         tabindex={$menuMinimized ? -1 : 0}
                         on:click={() => {
                             if (id == 3854) {
-                                playSound(fireMp3Url, 0.02);
+                                playSound({ url: fireMp3Url, volume: 0.04 });
                             }
                             $menuSelectedObject = id;
                         }}

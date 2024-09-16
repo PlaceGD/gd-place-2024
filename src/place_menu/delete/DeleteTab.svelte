@@ -10,6 +10,7 @@
 
     import OnceButton from "../../components/OnceButton.svelte";
     import Toast from "../../utils/toast";
+    import Image from "../../components/Image.svelte";
     import { banUser, reportUser } from "../../firebase/cloud_functions";
     import ColoredName from "../../components/ColoredName.svelte";
     import Loading from "../../components/Loading.svelte";
@@ -22,6 +23,7 @@
     import FadedScroll from "../../components/FadedScroll.svelte";
     import { onMount } from "svelte";
     import { db } from "../../firebase/firebase";
+    import { SFX_TRIGGER, SFX_TRIGGER_SOUNDS } from "shared-lib/nexusgen";
 
     export let state: wasm.State;
 
@@ -41,11 +43,11 @@
         try {
             const cameraPos = getCameraPos(state);
 
-            const token = await getNewTurnstileToken();
+            // const token = await getNewTurnstileToken();
 
             await reportUser({
                 username: name,
-                turnstileResp: token,
+                // turnstileResp: token,
                 x: cameraPos[0],
                 y: cameraPos[1],
             });
@@ -215,18 +217,48 @@
                     ({$selectedObject.id ?? 1})
                 </p>
             </li>
+
+            <!-- {#if $selectedObject.id == SFX_TRIGGER}
+                <li class="object-info-item colors">
+                    <h1
+                        class="text-xl md:text-base font-pusab text-stroke sm:whitespace-nowrap"
+                    >
+                        Speed:
+                    </h1>
+                    <span
+                        class="font-pusab text-stroke text-[40px] md:text-[25px] sm:text-[20px]"
+                    >
+                        {$selectedObject.mainColor.g - 12}
+                    </span>
+                </li>
+            {:else} -->
             <li class="object-info-item-colors colors">
                 <h1 class="text-xl md:text-base font-pusab text-stroke">
-                    Colors:
+                    {#if $selectedObject.id == SFX_TRIGGER}
+                        Sound:
+                    {:else}
+                        Colors:
+                    {/if}
                 </h1>
                 <ul class="flex w-full gap-4 md:gap-2 flex-center">
                     <li
                         class="flex flex-col-reverse gap-1 flex-center"
                         aria-labelledby="main-color-label"
                     >
-                        <div
-                            class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
-                            style={`
+                        {#if $selectedObject.id == SFX_TRIGGER}
+                            <div
+                                class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
+                            >
+                                <Image
+                                    src={`/assets/objects/sfx_icons/${SFX_TRIGGER_SOUNDS[$selectedObject.mainColor.r]}.png`}
+                                    lazyLoad
+                                    class="object-contain w-full h-full"
+                                />
+                            </div>
+                        {:else}
+                            <div
+                                class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
+                                style={`
                                     background: url(${checker});
                                     background-size: contain;
                                     box-shadow: 
@@ -242,56 +274,82 @@
                                                 : ""
                                         };
                                 `}
-                        >
-                            {#if $selectedObject.mainColor.blending ?? false}
-                                <span
-                                    class="text-lg font-pusab"
-                                    title="Blending"
-                                >
-                                    B
-                                </span>
-                            {/if}
-                        </div>
+                            >
+                                {#if $selectedObject.mainColor.blending ?? false}
+                                    <span
+                                        class="text-lg font-pusab"
+                                        title="Blending"
+                                    >
+                                        B
+                                    </span>
+                                {/if}
+                            </div>
+                        {/if}
                     </li>
                     <li
                         class="flex flex-col-reverse gap-1 flex-center"
                         aria-labelledby="detail-color-label"
                     >
-                        <div
-                            class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
-                            style={`
-                                    background: url(${checker});
-                                    background-size: contain;
-                                    box-shadow: 
-                                        0px 0px 0px 2px white, 
-                                        inset 0px 0px 0px 2px black, 
-                                        ${
-                                            $selectedObject != null
-                                                ? `inset 0px 0px 0px 100px rgba(
-                                                    ${$selectedObject.detailColor.r}, 
-                                                    ${$selectedObject.detailColor.g}, 
-                                                    ${$selectedObject.detailColor.b}, 
-                                                    ${$selectedObject.detailColor.opacity / 255})`
-                                                : ""
-                                        };
-                                `}
-                        >
-                            {#if $selectedObject.detailColor.blending ?? false}
+                        {#if $selectedObject.id == SFX_TRIGGER}
+                            <div
+                                class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
+                            >
                                 <span
-                                    class="text-lg font-pusab"
-                                    title="Blending"
+                                    class="font-pusab text-stroke text-[40px] md:text-[25px] sm:text-[20px]"
                                 >
-                                    B
+                                    {$selectedObject.mainColor.g - 12}
                                 </span>
-                            {/if}
-                        </div>
+                            </div>
+                        {:else}
+                            <div
+                                class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
+                                style={`
+                        background: url(${checker});
+                        background-size: contain;
+                        box-shadow: 
+                            0px 0px 0px 2px white, 
+                            inset 0px 0px 0px 2px black, 
+                            ${
+                                $selectedObject != null
+                                    ? `inset 0px 0px 0px 100px rgba(
+                                        ${$selectedObject.detailColor.r}, 
+                                        ${$selectedObject.detailColor.g}, 
+                                        ${$selectedObject.detailColor.b}, 
+                                        ${$selectedObject.detailColor.opacity / 255})`
+                                    : ""
+                            };
+                    `}
+                            >
+                                {#if $selectedObject.detailColor.blending ?? false}
+                                    <span
+                                        class="text-lg font-pusab"
+                                        title="Blending"
+                                    >
+                                        B
+                                    </span>
+                                {/if}
+                            </div>
+                        {/if}
                     </li>
                 </ul>
                 <div class="flex w-full gap-4 md:gap-2 flex-center sm:text-sm">
-                    <h2 class="flex-1" id="main-color-label">Main</h2>
-                    <h2 class="flex-1" id="detail-color-label">Detail</h2>
+                    <h2 class="flex-1" id="main-color-label">
+                        {#if $selectedObject.id == SFX_TRIGGER}
+                            SFX
+                        {:else}
+                            Main
+                        {/if}
+                    </h2>
+                    <h2 class="flex-1" id="detail-color-label">
+                        {#if $selectedObject.id == SFX_TRIGGER}
+                            Speed
+                        {:else}
+                            Detail
+                        {/if}
+                    </h2>
                 </div>
             </li>
+            <!-- {/if} -->
             <li class="object-info-item zlayer">
                 <h1
                     class="text-xl md:text-base font-pusab text-stroke sm:whitespace-nowrap"
@@ -301,9 +359,7 @@
                 <span
                     class="font-pusab text-stroke text-[40px] md:text-[25px] sm:text-[20px]"
                 >
-                    {wasm.z_layer_name(
-                        $selectedObject.zLayer ?? wasm.ZLayer.B1
-                    )}
+                    {wasm.z_layer_name($selectedObject.zLayer)}
                 </span>
             </li>
             <li class="object-info-item zorder">

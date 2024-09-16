@@ -95,6 +95,9 @@ export const isValidObject = (obj: GDObjectOpt) => {
         if (obj.main_color.r >= SFX_TRIGGER_SOUNDS.length) {
             return false;
         }
+        if (obj.main_color.g > 12 + 12) {
+            return false;
+        }
     } else {
         if (!isValidColor(obj.main_color)) return false;
     }

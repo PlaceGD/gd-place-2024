@@ -51,6 +51,11 @@ impl FromStr for ZLayer {
         Ok(Z_LAYERS[id])
     }
 }
+impl Default for ZLayer {
+    fn default() -> Self {
+        Self::B3
+    }
+}
 
 z_layers! {
     B5,

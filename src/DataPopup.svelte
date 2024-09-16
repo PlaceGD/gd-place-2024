@@ -100,7 +100,7 @@
                 on:click={() => {
                     isOpen = false;
                     hidePopup = true;
-                    $analytics = true;
+                    $analytics = false;
                 }}
             >
                 <p class="xs:text-sm">Disable Analytics</p>
@@ -111,7 +111,7 @@
                 on:click={() => {
                     isOpen = false;
                     hidePopup = true;
-                    $analytics = false;
+                    $analytics = true;
                 }}
             >
                 <p class="xs:text-sm">Continue</p>

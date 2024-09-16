@@ -11,36 +11,32 @@
     import {
         wasmProgress,
         initWasm,
-        loadSpritesheet,
+        fetchAndParseSpritesheet,
         spritesheetProgress,
     } from "./load_wasm";
     import { writable } from "svelte/store";
     import ReportedUserList from "./moderator/ReportedUserList.svelte";
     import ToastContainer from "./components/ToastContainer.svelte";
     import Turnstiles from "./Turnstiles.svelte";
-    // import { getTurnstileToken, resetTurnstile } from "./utils/turnstile";
+    import { rawSpritesheetData } from "./stores";
 
     alertHasDarkReader();
 
-    // import { onMount } from "svelte";
-    // import { SITE_KEY } from "./grecaptcha";
-    // onMount(() => {
-    //     grecaptcha.execute(SITE_KEY, { action: "page_load" }).then(t => {
-    //         console.log(t);
-    //     });
-    // });
-
     initWasm();
-    loadSpritesheet();
+    fetchAndParseSpritesheet().then(data => {
+        $rawSpritesheetData = data;
+    });
 
     $: loaded =
-        $wasmProgress.hasLoaded && $spritesheetProgress.arrayBuffer != null;
+        $wasmProgress.hasLoaded &&
+        $spritesheetProgress.arrayBuffer != null &&
+        $rawSpritesheetData != null;
 
     $: max = $wasmProgress.max + $spritesheetProgress.max;
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
 </script>
 
-<Turnstiles />
+<!-- <Turnstiles /> -->
 
 <ToastContainer />
 
@@ -62,6 +58,17 @@
         </div>
     {/if}
 </div>
+
+<!-- <script lang="ts">
+    import { penis } from "./stores";
+</script>
+
+<button
+    class="text-black bg-white"
+    on:click={() => {
+        $penis[0] += 1;
+    }}>Cummy {JSON.stringify($penis)}</button
+> -->
 
 <style lang="postcss">
     :global(._toastContainer) {

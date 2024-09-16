@@ -10,6 +10,7 @@ import {
     setPersistence,
     browserLocalPersistence,
     type Unsubscribe,
+    signInWithRedirect,
 } from "firebase/auth";
 
 import type { HttpsCallableResult } from "firebase/functions";

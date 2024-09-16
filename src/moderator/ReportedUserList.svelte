@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { default as cx } from "classnames";
     import { onMount } from "svelte";
     import {
         bannedUsers,
@@ -26,6 +27,8 @@
             $openMenu = null;
         }
     }
+
+    $: isOpen = $openMenu == ExclusiveMenus.Moderator;
 
     let reportedUsers: Record<
         string,
@@ -110,13 +113,17 @@
 </script>
 
 <fieldset
-    class="z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]"
+    class={cx({
+        "z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]": true,
+        "pointer-events-auto": isOpen,
+        "pointer-events-none": !isOpen,
+    })}
     style={`
-            height: ${$openMenu != ExclusiveMenus.Moderator ? "0" : "50vh"};
-            opacity: ${$openMenu != ExclusiveMenus.Moderator ? "0" : "1"};
+            height: ${!isOpen ? "0" : "50vh"};
+            opacity: ${!isOpen ? "0" : "1"};
             transition: height 0.2s ease, opacity 0.2s ease-out;
         `}
-    disabled={$openMenu != ExclusiveMenus.Moderator}
+    disabled={!isOpen}
 >
     <h1
         class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"

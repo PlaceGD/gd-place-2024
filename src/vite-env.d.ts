@@ -5,7 +5,7 @@ declare module "*.svg" {
 
 declare const __DEBUG: boolean;
 declare const __TURNSTILE_LOGIN_SITE_KEY: string;
-declare const __TURNSTILE_GENERAL_KEY: string;
+// declare const __TURNSTILE_GENERAL_KEY: string;
 
 /// <reference types="svelte" />
 /// <reference types="vite/client" />

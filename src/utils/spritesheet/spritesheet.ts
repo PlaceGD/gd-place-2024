@@ -5,9 +5,16 @@ export type SpritesheetData = {
     width: number;
 };
 
+export type RawSpritesheetData = {
+    data: Uint8Array;
+    width: number;
+    height: number;
+};
+
 export type Message =
     | {
           type: "loaded_sheet";
+          data: RawSpritesheetData;
       }
     | {
           type: "loaded_sprite";
@@ -29,7 +36,7 @@ export type Message =
 export class Spritesheet {
     static worker: Worker;
     static promiseResList: Record<number, ((v: string) => void)[]> = {};
-    static sheetLoadRes: () => void;
+    static sheetLoadRes: (data: RawSpritesheetData) => void;
 
     // constructor(public worker: Worker)
 
@@ -47,7 +54,7 @@ export class Spritesheet {
                         e.data.blobUrl
                     );
                 } else if (e.data.type == "loaded_sheet") {
-                    Spritesheet.sheetLoadRes();
+                    Spritesheet.sheetLoadRes(e.data.data);
                 } else if (e.data.type == "worker_loaded") {
                     workerLoadRes();
                 }
@@ -55,7 +62,9 @@ export class Spritesheet {
         });
     }
 
-    static async loadSheet(spritesheetData: ArrayBuffer): Promise<void> {
+    static async loadSheet(
+        spritesheetData: ArrayBuffer
+    ): Promise<RawSpritesheetData> {
         return new Promise(loadRes => {
             Spritesheet.sheetLoadRes = loadRes;
 

@@ -63,6 +63,16 @@ impl Texture {
         let rgba = img.to_rgba8();
         let dimensions = img.dimensions();
 
+        Self::from_raw(device, queue, filter, dimensions, &rgba)
+    }
+
+    pub fn from_raw(
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        filter: wgpu::FilterMode,
+        dimensions: (u32, u32),
+        data: &[u8],
+    ) -> Self {
         let size = wgpu::Extent3d {
             width: dimensions.0,
             height: dimensions.1,
@@ -87,7 +97,7 @@ impl Texture {
                 mip_level: 0,
                 origin: wgpu::Origin3d::ZERO,
             },
-            &rgba,
+            &data,
             wgpu::ImageDataLayout {
                 offset: 0,
                 bytes_per_row: Some(4 * dimensions.0),

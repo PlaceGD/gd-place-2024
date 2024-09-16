@@ -43,7 +43,8 @@ export const onCallAuthLogger = <T, Return = Promise<void>>(
             const ret = handler(request as AuthedCallableRequest<T>, logger);
             logger.finish();
             return ret;
-        } catch (e: unknown) {
+        } catch (e: any) {
+            logger.error("Captured exception", e);
             logger.finish(Level.ERROR);
             throw e;
         }

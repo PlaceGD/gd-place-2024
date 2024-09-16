@@ -37,64 +37,112 @@ fn create_textures_bind_group(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     spritesheet_data: &[u8],
+    spritesheet_width: u32,
+    spritesheet_height: u32,
 ) -> (wgpu::BindGroupLayout, wgpu::BindGroup) {
     use image::GenericImageView;
 
     let bg = image::load_from_memory(include_bytes!("../../assets/background.png")).unwrap();
     let ground = image::load_from_memory(include_bytes!("../../assets/ground.png")).unwrap();
-    let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
+    // let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
 
-    let list = [
-        (&bg, false),
-        (&ground, false),
-        (&spritesheet, false),
-        (&spritesheet, true),
-    ];
+    // let list = [
+    //     (&bg, false),
+    //     (&ground, false),
+    //     (&spritesheet, false),
+    //     (&spritesheet, true),
+    // ];
 
     let textures_bind_group_layout =
         device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-            entries: &list
-                .iter()
-                .enumerate()
-                .flat_map(|(i, (img, nearest))| {
-                    [
-                        wgpu::BindGroupLayoutEntry {
-                            binding: 2 * i as u32,
-                            visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                            ty: wgpu::BindingType::Texture {
-                                multisampled: false,
-                                view_dimension: wgpu::TextureViewDimension::D2,
-                                sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                            },
-                            count: None,
-                        },
-                        wgpu::BindGroupLayoutEntry {
-                            binding: 2 * i as u32 + 1,
-                            visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                            ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                            count: None,
-                        },
-                    ]
-                })
-                .collect::<Vec<_>>(),
+            entries: &[
+                wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Texture {
+                        multisampled: false,
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                    },
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 2,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Texture {
+                        multisampled: false,
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                    },
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 3,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 4,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Texture {
+                        multisampled: false,
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                    },
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 5,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 6,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Texture {
+                        multisampled: false,
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                    },
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 7,
+                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                    count: None,
+                },
+            ],
             label: None,
         });
 
-    let mut textures = list
-        .iter()
-        .map(|(img, nearest)| {
-            Texture::from_image(
-                device,
-                queue,
-                img,
-                if *nearest {
-                    wgpu::FilterMode::Nearest
-                } else {
-                    wgpu::FilterMode::Linear
-                },
-            )
-        })
-        .collect::<Vec<_>>();
+    let textures = vec![
+        Texture::from_image(device, queue, &bg, wgpu::FilterMode::Linear),
+        Texture::from_image(device, queue, &ground, wgpu::FilterMode::Linear),
+        Texture::from_raw(
+            device,
+            queue,
+            wgpu::FilterMode::Linear,
+            (spritesheet_width, spritesheet_height),
+            spritesheet_data,
+        ),
+        Texture::from_raw(
+            device,
+            queue,
+            wgpu::FilterMode::Nearest,
+            (spritesheet_width, spritesheet_height),
+            spritesheet_data,
+        ),
+    ];
+
     let mut entries = vec![];
 
     for (i, t) in textures.iter().enumerate() {
@@ -128,6 +176,8 @@ impl RenderState {
         size: UVec2,
         instance: wgpu::Instance,
         spritesheet_data: &[u8],
+        spritesheet_width: u32,
+        spritesheet_height: u32,
     ) -> Self {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptionsBase {
@@ -144,8 +194,8 @@ impl RenderState {
                     label: None,
                     required_features: wgpu::Features::empty(),
                     required_limits: wgpu::Limits {
-                        max_texture_dimension_1d: 8192,
-                        max_texture_dimension_2d: 8192,
+                        max_texture_dimension_1d: 4096,
+                        max_texture_dimension_2d: 4096,
                         ..wgpu::Limits::downlevel_webgl2_defaults()
                     },
                 },
@@ -183,8 +233,13 @@ impl RenderState {
                 wgpu::BufferBindingType::Uniform,
             );
 
-        let (textures_bind_group_layout, textures_bind_group) =
-            create_textures_bind_group(&device, &queue, spritesheet_data);
+        let (textures_bind_group_layout, textures_bind_group) = create_textures_bind_group(
+            &device,
+            &queue,
+            spritesheet_data,
+            spritesheet_width,
+            spritesheet_height,
+        );
 
         let multisampled_frame_descriptor = wgpu::TextureDescriptor {
             label: Some("Multisampled frame descriptor"),
@@ -327,7 +382,12 @@ impl RenderState {
         }
     }
 
-    pub async fn new_canvas(canvas: web_sys::HtmlCanvasElement, spritesheet_data: &[u8]) -> Self {
+    pub async fn new_canvas(
+        canvas: web_sys::HtmlCanvasElement,
+        spritesheet_data: &[u8],
+        spritesheet_width: u32,
+        spritesheet_height: u32,
+    ) -> Self {
         let size = uvec2(canvas.width(), canvas.height());
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -339,7 +399,15 @@ impl RenderState {
             .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
             .unwrap();
 
-        Self::new(surface, size, instance, spritesheet_data).await
+        Self::new(
+            surface,
+            size,
+            instance,
+            spritesheet_data,
+            spritesheet_width,
+            spritesheet_height,
+        )
+        .await
     }
 
     pub fn resize(&mut self, width: u32, height: u32) {

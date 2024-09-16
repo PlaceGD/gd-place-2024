@@ -53,7 +53,9 @@ export const useIsOverflowing = () => {
             passive: true,
         });
 
-        if (element) updateElement();
+        if (element) {
+            updateElement();
+        }
     };
 
     return {

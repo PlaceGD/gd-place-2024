@@ -7,6 +7,11 @@
     import DarkInput from "../../components/DarkInput.svelte";
     import FadedScroll from "../../components/FadedScroll.svelte";
     import { semitonesToFactor } from "shared-lib/util";
+    import { onDestroy, onMount } from "svelte";
+
+    let isMounted = false;
+    onMount(() => (isMounted = true));
+    onDestroy(() => (isMounted = false));
 
     const HARD_VALID_INPUT = /^-?\d*$/;
     const SOFT_VALID_INPUT = (s: string) => {
@@ -62,30 +67,32 @@
         ></DarkInput>
     </div>
 
-    <ul class="rounded-lg sfx-grid-container">
-        {#each SFX_TRIGGER_SOUNDS as sfx_name, id}
-            <li class="relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10">
-                <button
-                    class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
-                    tabindex={$menuMinimized ? -1 : 0}
-                    on:click={() => {
-                        $menuSelectedSFX = id;
-                        playTheSound();
-                    }}
-                >
-                    <Image
-                        src={`/assets/objects/sfx_icons/${sfx_name}.png`}
-                        lazyLoad
-                        class="object-contain w-full h-full"
-                    />
-                </button>
-                {#if $menuSelectedSFX == id}
-                    <span class="absolute w-full h-full sliding-selector"
-                    ></span>
-                {/if}
-            </li>
-        {/each}
-    </ul>
+    <FadedScroll update={isMounted} threshold={1}>
+        <ul class="rounded-lg sfx-grid-container">
+            {#each SFX_TRIGGER_SOUNDS as sfx_name, id}
+                <li class="relative w-16 h-16 md:w-12 md:h-12 xs:w-10 xs:h-10">
+                    <button
+                        class={"absolute w-full h-full p-3 md:p-2 xs:p-1 z-20"}
+                        tabindex={$menuMinimized ? -1 : 0}
+                        on:click={() => {
+                            $menuSelectedSFX = id;
+                            playTheSound();
+                        }}
+                    >
+                        <Image
+                            src={`/assets/objects/sfx_icons/${sfx_name}.png`}
+                            lazyLoad
+                            class="object-contain w-full h-full"
+                        />
+                    </button>
+                    {#if $menuSelectedSFX == id}
+                        <span class="absolute w-full h-full sliding-selector"
+                        ></span>
+                    {/if}
+                </li>
+            {/each}
+        </ul>
+    </FadedScroll>
 </div>
 
 <style lang="postcss">

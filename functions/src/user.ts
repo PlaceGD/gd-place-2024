@@ -65,12 +65,12 @@ export const initUserWithUsername = onCallAuthLogger<
 >("initUserWithUsername", async (request, logger) => {
     const data = request.data;
 
-    await validateTurnstile(
-        process.env["TURNSTILE_LOGIN_PRIV_KEY"],
-        data.turnstileResp,
-        request.rawRequest,
-        logger
-    );
+    // await validateTurnstile(
+    //     process.env["TURNSTILE_LOGIN_PRIV_KEY"],
+    //     data.turnstileResp,
+    //     request.rawRequest,
+    //     logger
+    // );
 
     logger.debug("Username:", data.username);
     if (!data.username.match(VALID_USERNAME)) {

@@ -5,6 +5,8 @@
     export let reachedBottom = false;
     export let orientation: "horizontal" | "vertical" = "vertical";
 
+    export let update: any = null;
+
     let elem: HTMLDivElement | null = null;
 
     const { isOverflowing, element: overflowElem } = useIsOverflowing();
@@ -31,6 +33,11 @@
         if (elem != null) {
             elem.addEventListener("scroll", onScrollElem, { passive: true });
         }
+    }
+
+    $: {
+        update;
+        overflowElem(elem);
     }
 
     onDestroy(() => {

@@ -136,7 +136,7 @@
         }
     };
 
-    let turnstileToken: string | null = null;
+    let turnstileToken: string | null = "";
     const SITE_KEY = __TURNSTILE_LOGIN_SITE_KEY;
     let turnstileReset: () => void | undefined;
 </script>
@@ -230,9 +230,12 @@
         class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content] absolute"
         style:visibility={currentPage === Page.SHOW_TOS ? "visible" : "hidden"}
     >
-        <FadedScroll bind:reachedBottom={hasScrolledToBottomOfTos}>
+        <FadedScroll
+            bind:reachedBottom={hasScrolledToBottomOfTos}
+            update={currentPage}
+        >
             <section class="text">
-                <h2>Rules</h2>
+                <h1>Rules</h1>
 
                 <ul class="bulleted-list">
                     <li>Only use one account per person.</li>
@@ -251,8 +254,8 @@
 
                 <strong>
                     Breaking any of these rules can get your account banned
-                    without notice.</strong
-                >
+                    without notice.
+                </strong>
             </section>
         </FadedScroll>
 
@@ -312,7 +315,7 @@
                 insensitive.
             </p>
         </div>
-        <span
+        <!-- <span
             class="flex items-center justify-center w-full h-auto xs:scale-90"
         >
             <Turnstile
@@ -333,7 +336,7 @@
                 }}
                 on:expired={() => turnstileReset && turnstileReset()}
             />
-        </span>
+        </span> -->
         <div class="flex w-full gap-2">
             {#if hasAgreedToTOS}
                 <Check

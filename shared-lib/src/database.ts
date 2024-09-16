@@ -32,16 +32,6 @@ export type HistoryItem =
       };
 
 export interface DatabaseSchema {
-    /**
-     * unix timesamp
-     */
-    eventStartTime: number;
-
-    /**
-     * unix timesamp
-     */
-    eventEndTime: number;
-
     objects: Record<ChunkID, Record<ObjKey, string>>;
     objectCount: Record<ChunkID, number>;
 
@@ -93,6 +83,16 @@ export interface DatabaseSchema {
         placeCooldown: number;
         deleteCooldown: number;
         chunkObjectLimit: number;
+
+        /**
+         * unix timesamp
+         */
+        eventStartTime: number;
+
+        /**
+         * unix timesamp
+         */
+        eventEndTime: number;
     };
 
     /**

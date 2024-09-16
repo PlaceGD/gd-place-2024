@@ -62,7 +62,7 @@ export type KofiDonation = {
 // #region onKofiDonation
 export const onKofiDonation = onRequest(
     { cors: ["ko-fi.com"] },
-    (request, response) => {
+    async (request, response) => {
         const logger = new LogGroup("onKofiDonation");
 
         if (
@@ -137,7 +137,7 @@ export const onKofiDonation = onRequest(
         }
 
         const db = smartDatabase();
-        db.ref(`activeDonations/${txId}`).set(1);
+        await db.ref(`activeDonations/${txId}`).set(1);
 
         // TODO: why does kofi call this function twice
         response.status(200);
@@ -151,10 +151,7 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
         const db = smartDatabase();
         const txId = request.data.txId;
 
-        const { userDetailsRef } = await getCheckedUserDetails(
-            db,
-            request.auth.uid
-        );
+        const userDetails = await getCheckedUserDetails(db, request.auth.uid);
 
         if (!VALID_KOFI_TRANSACTION_ID.test(txId)) {
             logger.error(`Invalid transaction id format: ${txId}`);
@@ -170,7 +167,7 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
             throw new HttpsError("invalid-argument", "Invalid transaction ID");
         }
 
-        userDetailsRef.child("hasDonated").set(true);
+        await userDetails.ref.child("hasDonated").set(true);
     }
 );
 
@@ -192,12 +189,9 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         //     logger
         // );
 
-        const { userDetails, userDetailsRef } = await getCheckedUserDetails(
-            db,
-            request.auth.uid
-        );
+        const userDetails = await getCheckedUserDetails(db, request.auth.uid);
 
-        const timeNextGradient = userDetails.epochNextGradient;
+        const timeNextGradient = userDetails.val.epochNextGradient;
         if (Date.now() < timeNextGradient ?? 0) {
             throw new HttpsError(
                 "permission-denied",
@@ -205,7 +199,7 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
             );
         }
 
-        if (!userDetails.hasDonated) {
+        if (!userDetails.val.hasDonated) {
             throw new HttpsError(
                 "permission-denied",
                 "Cannot change gradient of user without donation"
@@ -220,10 +214,14 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
 
         let nextGradient = Date.now();
         nextGradient += GRADIENT_COOLDOWN_SECONDS * 1000;
-        userDetailsRef.child("epochNextGradient").set(nextGradient);
 
-        db.ref(
-            `userName/${userDetails.username.toLowerCase()}/displayColor`
-        ).set(grad);
+        await Promise.all([
+            userDetails.ref.child("epochNextGradient").set(nextGradient),
+            db
+                .ref(
+                    `userName/${userDetails.val.username.toLowerCase()}/displayColor`
+                )
+                .set(grad),
+        ]);
     }
 );

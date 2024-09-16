@@ -12,7 +12,7 @@ import { DEV_UIDS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
 import { smartDatabase } from "src";
-import { getCheckedUserDetails } from "./utils/utils";
+import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 
 // #region validateTurnstile
 const validateTurnstile = async (
@@ -86,16 +86,12 @@ export const initUserWithUsername = onCallAuthLogger<
     //     }
     // });
 
-    const usernameExists = (
-        await db.ref(`userName/${data.username.toLowerCase()}`).get()
-    ).val();
+    const usernameDataRef = db.ref(`userName/${data.username.toLowerCase()}`);
 
-    if (usernameExists != undefined) {
+    if ((await usernameDataRef.get()).exists()) {
         logger.error("Username already exists");
         throw new HttpsError("already-exists", "Username already exists");
     }
-
-    const maybeUserData = db.ref(`userDetails/${data.uid}`);
 
     // if ((await maybeUserData.get()) != null) {
     //     logger.error("User data already exists");
@@ -119,17 +115,16 @@ export const initUserWithUsername = onCallAuthLogger<
 
     logger.info("User created sucessfully");
 
-    // make new user
-    maybeUserData.set(user);
-
-    db.ref(`userName/${data.username.toLowerCase()}`).set({
-        uid: data.uid,
-        displayColor: "white",
-    });
-
-    db.ref("userCount").transaction(count => {
-        return count + 1;
-    });
+    await Promise.all([
+        db.ref(`userDetails/${data.uid}`).set(user),
+        usernameDataRef.set({
+            uid: data.uid,
+            displayColor: "white",
+        }),
+        db.ref("userCount").transaction(count => {
+            return count + 1;
+        }),
+    ]);
 
     return user;
 });
@@ -149,31 +144,26 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
 
         const db = smartDatabase();
 
-        const { userDetailsRef } = await getCheckedUserDetails(
-            db,
-            request.auth.uid
-        );
+        const now = Date.now();
 
-        let transactionResult1 = await userDetailsRef
-            .child("epochNextReport")
-            .transaction(nextReport => {
-                if (Date.now() < nextReport ?? 0) {
-                    throw new HttpsError(
+        const userDetails = await getCheckedUserDetails(db, request.auth.uid);
+
+        const [_, userToReport] = await Promise.all([
+            checkedTransaction(
+                userDetails.ref.child("epochNextReport"),
+                nextReport => now >= nextReport,
+                () =>
+                    new HttpsError(
                         "permission-denied",
                         "Cannot report before timer expired"
-                    );
-                }
-
-                return Date.now() + REPORT_COOLDOWN_SECONDS * 1000;
-            });
-        if (!transactionResult1.committed) {
-            logger.debug("Transaction 1 not committed");
-            return;
-        }
-
-        const userToReport = (
-            await db.ref(`userName/${data.username.toLowerCase()}`).get()
-        ).val();
+                    ),
+                () => now + REPORT_COOLDOWN_SECONDS * 1000
+            ),
+            db
+                .ref(`userName/${data.username.toLowerCase()}`)
+                .get()
+                .then(v => v.val()),
+        ]);
 
         if (userToReport == undefined) {
             throw new HttpsError("invalid-argument", "Invalid username");
@@ -188,10 +178,11 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
 
         // const reported = db.ref("reportedUsers");
 
-        let transactionResult2 = await db
-            .ref("reportedUsers")
-            .child(userToReport.uid)
-            .transaction(reportData => {
+        await checkedTransaction(
+            db.ref("reportedUsers").child(userToReport.uid),
+            () => true,
+            () => 0,
+            reportData => {
                 if (reportData == undefined) {
                     return {
                         username: data.username,
@@ -213,11 +204,9 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
                             (reportData.count + 1),
                     };
                 }
-            });
-        if (!transactionResult2.committed) {
-            logger.debug("Transaction 2 not committed");
-            return;
-        }
+            }
+        );
+
         logger.info(`Reported user ${data.username}`);
     }
 );
@@ -256,16 +245,18 @@ const banUserInner = async (
         }
     }
 
-    db.ref(`bannedUsers/${userToBanUid}`).set({
-        username: userToBanDetails.username.toLowerCase(),
-        modName: modUsername,
-        reason,
-    });
-    db.ref("userCount").transaction(count => {
-        return count - 1;
-    });
+    await Promise.all([
+        db.ref(`bannedUsers/${userToBanUid}`).set({
+            username: userToBanDetails.username.toLowerCase(),
+            modName: modUsername,
+            reason,
+        }),
 
-    await db.ref(`reportedUsers/${userToBanUid}`).remove();
+        db.ref("userCount").transaction(count => {
+            return count - 1;
+        }),
+        db.ref(`reportedUsers/${userToBanUid}`).remove(),
+    ]);
 };
 
 // #region clearReports

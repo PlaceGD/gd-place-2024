@@ -442,9 +442,6 @@
 
         handleMouseUp();
     }}
-    on:pointerdown={() => {
-        console.log("poop. I pooped. That's what i did.");
-    }}
     on:pointermove={e => {
         if (pinchZooming == null) {
             mouseX = e.clientX * window.devicePixelRatio;
@@ -466,6 +463,23 @@
             document.activeElement instanceof HTMLInputElement &&
             document.activeElement.type == "text"
         ) {
+            return;
+        }
+
+        if (e.ctrlKey || e.metaKey) {
+            // TODO: zoom to center
+            if (e.key === "=") {
+                e.preventDefault();
+                zoomGoal = clamp(zoomGoal + 4, -4, 36);
+            } else if (e.key === "-") {
+                e.preventDefault();
+                zoomGoal = clamp(zoomGoal - 4, -4, 36);
+            } else {
+                return;
+            }
+
+            zoomTween.set(zoomGoal);
+
             return;
         }
 
@@ -496,7 +510,6 @@
     on:focus={() => (isFocused = true)}
     on:blur={() => (isFocused = false)}
     on:pointerdown={e => {
-        console.log("mousedown");
         if (e.button == 0) {
             startDrag(
                 e.clientX * window.devicePixelRatio,
@@ -505,9 +518,12 @@
         }
     }}
     on:wheel={e => {
+        // TODO: improve zoom ratio on devices
+        // feels like it should be *15 on my laptop
+        e.preventDefault();
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -4, 36);
         zoomTween.set(zoomGoal);
-        console.log(zoomGoal);
+        // console.log(zoomGoal);
         // e.preventDefault();
     }}
     use:pinch

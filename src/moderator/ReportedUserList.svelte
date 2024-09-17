@@ -20,6 +20,7 @@
     import * as wasm from "wasm-lib";
     import AcceptButton from "../components/Buttons/AcceptButton.svelte";
     import DeclineButton from "../components/Buttons/DeclineButton.svelte";
+    import { menuHeight } from "../utils/transitions";
 
     export let state: wasm.State;
     export let editorFocused: boolean;
@@ -114,95 +115,91 @@
     };
 </script>
 
-<fieldset
-    class={cx({
-        "absolute top-24 z-50 flex flex-col py-2 gap-2 mr-6 text-lg text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center pointer-events-all max-h-[75%]": true,
-        "pointer-events-auto": isOpen,
-        "pointer-events-none": !isOpen,
-    })}
-    style={`
-            height: ${!isOpen ? "0" : "50vh"};
-            opacity: ${!isOpen ? "0" : "1"};
-            transition: height 0.2s ease, opacity 0.2s ease-out;
-        `}
-    disabled={!isOpen}
->
-    <h1
-        class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"
+{#if isOpen}
+    <fieldset
+        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center max-h-[75%] pointer-events-auto"
+        disabled={!isOpen}
+        transition:menuHeight={{ duration: 200 }}
     >
-        Reported Users:
-    </h1>
-    {#if reportedUsers != null && Object.keys(reportedUsers).length == 0}
-        <p class="text-lg sm:text-sm xs:text-sm">
-            No users have been reported!
-        </p>
-    {:else if reportedUsers != null}
-        <FadedScroll>
-            <ul
-                class="flex flex-col w-full gap-2 px-4 overflow-y-auto rounded-lg xs:px-2"
-            >
-                {#each Object.entries(reportedUsers) as [uid, user], idx}
-                    <li
-                        class="relative flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15"
-                    >
-                        <div class="relative flex w-full flex-center">
-                            <span class="text-base xs:text-sm">
-                                {user.username} (x{user.count})
-                            </span>
+        <h1
+            class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"
+        >
+            Reported Users:
+        </h1>
+        {#if reportedUsers != null && Object.keys(reportedUsers).length == 0}
+            <p class="text-lg sm:text-sm xs:text-sm">
+                No users have been reported!
+            </p>
+        {:else if reportedUsers != null}
+            <FadedScroll>
+                <ul
+                    class="flex flex-col w-full gap-2 px-4 overflow-y-auto rounded-lg xs:px-2"
+                >
+                    {#each Object.entries(reportedUsers) as [uid, user], idx}
+                        <li
+                            class="relative flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15"
+                        >
+                            <div class="relative flex w-full flex-center">
+                                <span class="text-base xs:text-sm">
+                                    {user.username} (x{user.count})
+                                </span>
 
-                            <div class="absolute right-0 w-8 h-8 xs:w-7 xs:h-7">
-                                <button
-                                    title="View average report location"
-                                    class="w-full h-full"
-                                    on:click={() => {
-                                        moveCamera(
-                                            state,
-                                            user.avg_x,
-                                            user.avg_y
-                                        );
-                                    }}
+                                <div
+                                    class="absolute right-0 w-8 h-8 xs:w-7 xs:h-7"
                                 >
-                                    <Back class="rotate-180 stroke-[1.5]"
-                                    ></Back>
-                                </button>
+                                    <button
+                                        title="View average report location"
+                                        class="w-full h-full"
+                                        on:click={() => {
+                                            moveCamera(
+                                                state,
+                                                user.avg_x,
+                                                user.avg_y
+                                            );
+                                        }}
+                                    >
+                                        <Back class="rotate-180 stroke-[1.5]"
+                                        ></Back>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex w-full h-10 gap-2 xs:h-9">
-                            <DeclineButton
-                                class="w-full"
-                                on:click={() => {
-                                    userOp("ignore", uid, "", idx);
-                                }}
-                                disabled={currentIdx == idx}
-                            >
-                                <span class="text-sm">Ignore</span>
-                            </DeclineButton>
-                            <AcceptButton
-                                class="w-full"
-                                on:click={() => {
-                                    const reason = prompt(
-                                        "Reason for banning (inappropriate username / alt account / etc):"
-                                    );
+                            <div class="flex w-full h-10 gap-2 xs:h-9">
+                                <DeclineButton
+                                    class="w-full"
+                                    on:click={() => {
+                                        userOp("ignore", uid, "", idx);
+                                    }}
+                                    disabled={currentIdx == idx}
+                                >
+                                    <span class="text-sm">Ignore</span>
+                                </DeclineButton>
+                                <AcceptButton
+                                    class="w-full"
+                                    on:click={() => {
+                                        const reason = prompt(
+                                            "Reason for banning (inappropriate username / alt account / etc):"
+                                        );
 
-                                    if (reason != null) {
-                                        userOp("ban", uid, reason, idx);
-                                    }
-                                }}
-                                disabled={currentIdx == idx}
-                            >
-                                <span class="text-sm">Ban</span>
-                            </AcceptButton>
-                        </div>
-                        {#if currentIdx == idx}
-                            <Loading class="rounded-lg" />
-                        {/if}
-                    </li>
-                {/each}
-            </ul>
-        </FadedScroll>
-        <!-- {:else}
+                                        if (reason != null) {
+                                            userOp("ban", uid, reason, idx);
+                                        }
+                                    }}
+                                    disabled={currentIdx == idx}
+                                >
+                                    <span class="text-sm">Ban</span>
+                                </AcceptButton>
+                            </div>
+                            {#if currentIdx == idx}
+                                <Loading class="rounded-lg" />
+                            {/if}
+                        </li>
+                    {/each}
+                </ul>
+            </FadedScroll>
+            <!-- {:else}
         <div class="relative w-12 h-12">
             <Loading darken={false} />
         </div> -->
-    {/if}
-</fieldset>
+        {/if}
+    </fieldset>
+{/if}

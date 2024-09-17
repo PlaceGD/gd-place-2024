@@ -94,6 +94,7 @@ export const editorSettings = persist(
         hideGround: false,
         hideOutline: false,
         hideDeleteText: false,
+        hidePlacedTooltip: false,
     }),
     createLocalStorage(),
     "editorSettings"

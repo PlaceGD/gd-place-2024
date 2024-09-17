@@ -55,7 +55,16 @@
     import Warp from "../widgets/Warp.svelte";
     import DeleteTexts from "../widgets/DeleteTexts.svelte";
     import { getPlacedUsername } from "../firebase/object";
-    import { handleSub, handleUnsub, moveCamera } from "./view_controls";
+    import {
+        handleSub,
+        handleUnsub,
+        mouseX,
+        mouseY,
+        moveCamera,
+        zoomCentral,
+        zoomGoal,
+        zoomTween,
+    } from "./view_controls";
     import { pinch, pan } from "svelte-gestures";
     import { isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
@@ -78,22 +87,21 @@
 
     let pinchZooming: null | number = null;
 
-    let zoomGoal = state.get_zoom();
-    const zoomTween = tweened(0, {
-        duration: 100,
-        easing: cubicOut,
-    });
+    $zoomGoal = state.get_zoom();
     $: {
         changeZoom($zoomTween);
     }
 
-    let [mouseX, mouseY] = [0, 0];
     const getWorldMousePos = () => {
-        // console.log(mouseX, mouseY);
+        // console.log($mouseX, $mouseY);
         return state.get_world_pos(
-            mouseX - (canvas.offsetWidth * window.devicePixelRatio) / 2,
-            -(mouseY - (canvas.offsetHeight * window.devicePixelRatio) / 2)
+            $mouseX - (canvas.offsetWidth * window.devicePixelRatio) / 2,
+            -($mouseY - (canvas.offsetHeight * window.devicePixelRatio) / 2)
         );
+    };
+    const setMousePos = (e: { clientX: number; clientY: number }) => {
+        $mouseX = e.clientX * window.devicePixelRatio;
+        $mouseY = e.clientY * window.devicePixelRatio;
     };
 
     const changeZoom = (z: number) => {
@@ -286,8 +294,7 @@
             $editorData.zoom = parseFloat(data.get("zoom")!);
         }
 
-        zoomGoal = $editorData.zoom;
-        zoomTween.set(zoomGoal);
+        $zoomGoal = $editorData.zoom;
         state.set_zoom($editorData.zoom);
         state.set_camera_pos($editorData.x, $editorData.y);
 
@@ -329,8 +336,8 @@
     };
 
     const handleDrag = (x: number, y: number) => {
-        mouseX = x;
-        mouseY = y;
+        $mouseX = x;
+        $mouseY = y;
         if (dragging != null) {
             if (dragging.thresholdReached) {
                 let z = state.get_zoom_scale();
@@ -438,15 +445,15 @@
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
     on:pointerup={e => {
+        setMousePos(e);
         // if (e.pointerType === "touch") return;
 
         handleMouseUp();
     }}
     on:pointermove={e => {
         if (pinchZooming == null) {
-            mouseX = e.clientX * window.devicePixelRatio;
-            mouseY = e.clientY * window.devicePixelRatio;
-            handleDrag(mouseX, mouseY);
+            setMousePos(e);
+            handleDrag($mouseX, $mouseY);
             if (dragging == null) {
                 checkHover();
             } else {
@@ -467,18 +474,15 @@
         }
 
         if (e.ctrlKey || e.metaKey) {
-            // TODO: zoom to center
             if (e.key === "=") {
                 e.preventDefault();
-                zoomGoal = clamp(zoomGoal + 4, -4, 36);
+                zoomCentral($zoomGoal + 4, canvas);
             } else if (e.key === "-") {
                 e.preventDefault();
-                zoomGoal = clamp(zoomGoal - 4, -4, 36);
+                zoomCentral($zoomGoal - 4, canvas);
             } else {
                 return;
             }
-
-            zoomTween.set(zoomGoal);
 
             return;
         }
@@ -510,6 +514,7 @@
     on:focus={() => (isFocused = true)}
     on:blur={() => (isFocused = false)}
     on:pointerdown={e => {
+        setMousePos(e);
         if (e.button == 0) {
             startDrag(
                 e.clientX * window.devicePixelRatio,
@@ -518,29 +523,21 @@
         }
     }}
     on:wheel={e => {
-        // TODO: improve zoom ratio on devices
-        // feels like it should be *15 on my laptop
+        setMousePos(e);
         e.preventDefault();
-        zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -4, 36);
-        zoomTween.set(zoomGoal);
-        // console.log(zoomGoal);
-        // e.preventDefault();
+        $zoomGoal = $zoomGoal - e.deltaY / Math.max(Math.abs(e.deltaY), 1);
     }}
     use:pinch
     on:pinch={e => {
         dragging = null;
-        mouseX = e.detail.center.x * window.devicePixelRatio;
-        mouseY = e.detail.center.y * window.devicePixelRatio;
+        $mouseX = e.detail.center.x * window.devicePixelRatio;
+        $mouseY = e.detail.center.y * window.devicePixelRatio;
         if (pinchZooming == null) {
             pinchZooming = $zoomTween;
         } else {
             console.log(pinchZooming, e.detail.scale);
-            zoomGoal = clamp(
-                pinchZooming + (Math.log(e.detail.scale) / Math.log(2)) * 6,
-                -4,
-                36
-            );
-            zoomTween.set(zoomGoal);
+            $zoomGoal =
+                pinchZooming + (Math.log(e.detail.scale) / Math.log(2)) * 6;
         }
     }}
     on:pinchup={() => {
@@ -585,7 +582,7 @@
             <ObjectInfo bind:state />
         </Widget> -->
     {/if}
-    {#if $placedByHover != null}
+    {#if $placedByHover != null && !$editorSettings.hidePlacedTooltip}
         <Widget
             position={getScreenPosZoomCorrected(
                 $placedByHover.x,

@@ -247,7 +247,15 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         const obj = db.ref(`objects/${data.chunkId}/${data.objId}`);
 
         await Promise.all([
-            obj.set(userDetails.val.username).then(() => obj.remove()),
+            // do not remove the %%
+            // do not remove the %%
+            // do not remove the %%
+            // do not remove the %%
+            // do not remove the %%
+            // do not remove the %%
+            // do not remove the %%
+            // do not remove the %%
+            obj.set(`%%${userDetails.val.username}`).then(() => obj.remove()),
             db.ref(`/userPlaced/${data.objId}`).remove(),
             db.ref(`history`).push({
                 objKey: data.objId,

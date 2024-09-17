@@ -11,7 +11,7 @@
 
     const { isOverflowing, element: overflowElem } = useIsOverflowing();
 
-    export let threshold = 20;
+    export let threshold = 5;
     let scrollTop = 0;
     let elemBottom = threshold + 1;
 

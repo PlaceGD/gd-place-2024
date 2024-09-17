@@ -1,5 +1,5 @@
-import { ChunkID } from "./database.js";
-import { type KofiTxId } from "./kofi.js";
+import { HttpsError } from "firebase-functions/v2/https";
+import { type FirebaseError as FirebaseErrors } from "shared-lib/cloud_functions";
 
 export const FIREBASE_ERRORS = {
     [100]: {
@@ -103,8 +103,9 @@ export const FIREBASE_ERRORS = {
         code: 500,
         message: "Unknown user operation",
     },
-    [501]: {
-        code: 501,
+    // 600 - exhausted
+    [600]: {
+        code: 600,
         message: "Too many objects in chunk",
     },
 } as const;
@@ -118,31 +119,18 @@ export type FirebaseError = {
     error: (typeof FIREBASE_ERRORS)[keyof typeof FIREBASE_ERRORS];
 };
 
-export type PlaceReq = { object: string };
-export type DeleteReq = { chunkId: ChunkID; objId: string };
-export type InitWithUsernameReq = {
-    username: string;
-    uid: string;
-    turnstileResp: string;
-};
-export type ReportUserReq = {
-    username: string;
-    // turnstileResp: string;
-    x: number;
-    y: number;
-};
-export type ReportedUserOperationReq = {
-    operation: "ignore" | "ban";
-    reason: string;
-    reportedUserUid: string;
-};
-export type BanReq = {
-    reason: string;
-    username: string;
-};
-export type KofiReq = {
-    txId: KofiTxId;
-};
-export type GradientReq = {
-    grad: string;
-};
+export class Error {
+    static code<T extends keyof typeof FIREBASE_ERRORS>(
+        code: T,
+        kind: FirebaseError["kind"]
+    ): HttpsError {
+        // return new HttpsError(kind, {
+        //     code: code as any,
+        //     message: FIREBASE_ERRORS[code].message,
+        // });
+    }
+}
+
+// const x = () => {
+//     FirebaseError.code(x);
+// };

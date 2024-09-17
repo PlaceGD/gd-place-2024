@@ -145,7 +145,7 @@
                     >
                         <IconButton
                             {disabled}
-                            class="w-full"
+                            class="w-full gap-2"
                             aria-label="Report User"
                             on:click={() => {
                                 click();
@@ -154,10 +154,14 @@
                                 }
                             }}
                         >
-                            <Image slot="left" src={reportButtonimage}></Image>
-                            <span slot="children" class="text-base md:text-sm"
-                                >Report</span
-                            >
+                            <Image
+                                slot="left"
+                                src={reportButtonimage}
+                                class="w-6 h-6 my-2 xs:w-5 xs:h-5"
+                            ></Image>
+                            <span slot="children" class="text-base md:text-sm">
+                                Report
+                            </span>
                         </IconButton>
                     </OnceButton>
                 {/if}
@@ -204,7 +208,7 @@
                                 Only report rulebreakers.
                             {/if}
                         {:else}
-                            You can't report yourself 😜
+                            You can't report yourself 😛
                         {/if}
                     </p>
                 {/if}
@@ -318,21 +322,21 @@
                             <div
                                 class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
                                 style={`
-                        background: url(${checker});
-                        background-size: contain;
-                        box-shadow: 
-                            0px 0px 0px 2px white, 
-                            inset 0px 0px 0px 2px black, 
-                            ${
-                                $selectedObject != null
-                                    ? `inset 0px 0px 0px 100px rgba(
-                                        ${$selectedObject.detailColor.r}, 
-                                        ${$selectedObject.detailColor.g}, 
-                                        ${$selectedObject.detailColor.b}, 
-                                        ${$selectedObject.detailColor.opacity / 255})`
-                                    : ""
-                            };
-                    `}
+                                    background: url(${checker});
+                                    background-size: contain;
+                                    box-shadow: 
+                                    0px 0px 0px 2px white, 
+                                    inset 0px 0px 0px 2px black, 
+                                    ${
+                                        $selectedObject != null
+                                            ? `inset 0px 0px 0px 100px rgba(
+                                                ${$selectedObject.detailColor.r}, 
+                                                ${$selectedObject.detailColor.g}, 
+                                                ${$selectedObject.detailColor.b}, 
+                                                ${$selectedObject.detailColor.opacity / 255})`
+                                            : ""
+                                    };
+                            `}
                             >
                                 {#if $selectedObject.detailColor.blending ?? false}
                                     <span

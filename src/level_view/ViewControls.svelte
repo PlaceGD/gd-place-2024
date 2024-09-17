@@ -442,9 +442,6 @@
 
         handleMouseUp();
     }}
-    on:pointerdown={() => {
-        console.log("poop. I pooped. That's what i did.");
-    }}
     on:pointermove={e => {
         if (pinchZooming == null) {
             mouseX = e.clientX * window.devicePixelRatio;
@@ -466,6 +463,23 @@
             document.activeElement instanceof HTMLInputElement &&
             document.activeElement.type == "text"
         ) {
+            return;
+        }
+
+        if (e.ctrlKey || e.metaKey) {
+            // TODO: zoom to center
+            if (e.key === "=") {
+                e.preventDefault();
+                zoomGoal = clamp(zoomGoal + 4, -4, 36);
+            } else if (e.key === "-") {
+                e.preventDefault();
+                zoomGoal = clamp(zoomGoal - 4, -4, 36);
+            } else {
+                return;
+            }
+
+            zoomTween.set(zoomGoal);
+
             return;
         }
 

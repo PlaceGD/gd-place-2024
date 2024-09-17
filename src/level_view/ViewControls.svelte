@@ -496,7 +496,6 @@
     on:focus={() => (isFocused = true)}
     on:blur={() => (isFocused = false)}
     on:pointerdown={e => {
-        console.log("mousedown");
         if (e.button == 0) {
             startDrag(
                 e.clientX * window.devicePixelRatio,
@@ -505,9 +504,12 @@
         }
     }}
     on:wheel={e => {
+        // TODO: improve zoom ratio on devices
+        // feels like it should be *15 on my laptop
+        e.preventDefault();
         zoomGoal = clamp(zoomGoal - (e.deltaY / 100) * 2, -4, 36);
         zoomTween.set(zoomGoal);
-        console.log(zoomGoal);
+        // console.log(zoomGoal);
         // e.preventDefault();
     }}
     use:pinch

@@ -34,10 +34,12 @@
 </script>
 
 <svelte:window
-    on:pointerup={() => {
+    on:pointerup={e => {
+        e.preventDefault();
         rotating = null;
     }}
     on:pointermove={e => {
+        e.preventDefault();
         if (rotating != null) {
             let snapDegrees =
                 objects[state.get_preview_object().id].hitboxType == "Solid"
@@ -67,9 +69,11 @@
             ? 'bg-button-cyan'
             : 'bg-button-green'} rounded-full pointer-events-all cursor-pointer"
         style={`
-            transform: translate(${(Math.cos((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px)
+            transform: translate(${(Math.cos((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px);
+            touch-action: none;
         `}
         on:pointerdown={e => {
+            e.preventDefault();
             rotating = getMouseAngle(e) - angle * 5;
         }}
     />

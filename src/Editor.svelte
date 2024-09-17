@@ -33,26 +33,28 @@
 </script>
 
 <div class="absolute w-full h-full">
-    <div
-        class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
-    >
+    {#if state != null}
         <div
-            class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
+            class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
         >
-            <SettingsButton />
-            {#if state != null}
-                <ModButton />
-            {/if}
-            <LoginButton />
-        </div>
-        <Login />
-        <NameGradient />
+            <div
+                class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
+            >
+                <SettingsButton />
+                {#if state != null}
+                    <ModButton />
+                {/if}
+                <LoginButton />
+            </div>
+            <Login />
+            <NameGradient />
 
-        {#if state != null}
-            <ReportedUserList bind:state {editorFocused} />
-        {/if}
-        <SettingsOptions {editorFocused} />
-    </div>
+            {#if state != null}
+                <ReportedUserList bind:state {editorFocused} />
+            {/if}
+            <SettingsOptions {editorFocused} />
+        </div>
+    {/if}
     {#if wasmLoaded}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}

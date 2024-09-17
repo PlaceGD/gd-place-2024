@@ -216,6 +216,9 @@ impl GDObjectOpt {
     pub fn debug(&self) -> String {
         format!("{:#?}", self)
     }
+    pub fn lmao_clone(&self) -> Self {
+        self.clone()
+    }
 
     pub fn get_chunk_coord(&self) -> ChunkCoord {
         ChunkCoord::get_from_pos(self.x, self.y)

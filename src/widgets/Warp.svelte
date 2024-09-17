@@ -40,11 +40,13 @@
 </script>
 
 <svelte:window
-    on:mouseup={() => {
+    on:pointerup={e => {
+        e.preventDefault();
         draggingX = null;
         draggingY = null;
     }}
-    on:mousemove={e => {
+    on:pointermove={e => {
+        e.preventDefault();
         let snapDegrees =
             objects[state.get_preview_object().id].hitboxType == "Solid"
                 ? 90
@@ -63,7 +65,7 @@
             );
             obj.x_angle =
                 snap((Math.atan2(ny, nx) * 180) / Math.PI, snapDegrees) / 5;
-            if (setCheckedPreviewObject(state, obj)) {
+            if (setCheckedPreviewObject(state, obj.lmao_clone())) {
                 settem(obj);
             }
         }
@@ -80,7 +82,9 @@
             );
             obj.y_angle =
                 snap((Math.atan2(ny, nx) * 180) / Math.PI, snapDegrees) / 5;
-            if (setCheckedPreviewObject(state, obj)) {
+            // let guh = obj.;
+            // obj.
+            if (setCheckedPreviewObject(state, obj.lmao_clone())) {
                 settem(obj);
             }
         }
@@ -123,10 +127,12 @@
         style={`
             left: ${100 * ix}px;
             top: ${-100 * iy}px;
+            touch-action: none;
         `}
         tabindex="-1"
         bind:this={xElement}
-        on:mousedown={e => {
+        on:pointerdown={e => {
+            e.preventDefault();
             draggingX = [e.clientX, e.clientY, ix, iy];
         }}
     >
@@ -150,10 +156,12 @@
         style={`
         left: ${100 * jx}px;
         top: ${-100 * jy}px;
+        touch-action: none;
     `}
         tabindex="-1"
         bind:this={yElement}
-        on:mousedown={e => {
+        on:pointerdown={e => {
+            e.preventDefault();
             draggingY = [e.clientX, e.clientY, jx, jy];
         }}
     >

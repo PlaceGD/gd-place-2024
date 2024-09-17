@@ -13,6 +13,7 @@ import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
 import { smartDatabase } from "src";
 import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
+import { FILTERS } from "./utils/username_filter";
 
 // #region validateTurnstile
 const validateTurnstile = async (
@@ -79,14 +80,14 @@ export const initUserWithUsername = onCallAuthLogger<
 
     const db = smartDatabase();
 
-    // TODO: check username for bad words
-    // BAD_WORDS.forEach(word => {
-    //     if (data.username.toLowerCase().includes(word)) {
-    //         throw new HttpsError("invalid-argument", "Invalid username");
-    //     }
-    // });
+    const usernameLower = data.username.toLowerCase();
+    FILTERS.forEach(regFilter => {
+        if (regFilter.test(usernameLower)) {
+            throw new HttpsError("invalid-argument", "Invalid username");
+        }
+    });
 
-    const usernameDataRef = db.ref(`userName/${data.username.toLowerCase()}`);
+    const usernameDataRef = db.ref(`userName/${usernameLower}`);
 
     if ((await usernameDataRef.get()).exists()) {
         logger.error("Username already exists");

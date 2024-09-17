@@ -252,7 +252,7 @@
                 ></GradientPicker>
             </div>
             <OnceButton
-                userDisabled={!$gradientCooldownFinished ?? true}
+                userDisabled={!($gradientCooldownFinished ?? true)}
                 let:click
                 let:disabled
                 bind:reset={resetGradientButton}
@@ -266,7 +266,7 @@
                     <p class="text-lg xs:text-base">Update</p>
                 </WhiteButton>
             </OnceButton>
-            {#if !$gradientCooldownFinished ?? false}
+            {#if !($gradientCooldownFinished ?? false)}
                 <p class="text-sm text-center transition hover-text-transition">
                     You changed your gradient recently! Please wait <span
                         class="proportional-nums"

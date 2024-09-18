@@ -2,9 +2,9 @@ import {
     getFunctions,
     httpsCallable as fHttpsCallable,
     type HttpsCallable,
-    type FFirebaseError,
     type FunctionsErrorCode,
 } from "firebase/functions";
+import { type FirebaseError as FFirebaseError } from "firebase/app";
 import type {
     ReportUserReq,
     DeleteReq,

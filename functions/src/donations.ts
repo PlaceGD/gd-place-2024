@@ -10,6 +10,7 @@ import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
 import { smartDatabase } from "src";
 import { getCheckedUserDetails } from "./utils/utils";
+import Error from "./utils/errors";
 
 export type KofiDonation = {
     verification_token: string;
@@ -155,16 +156,13 @@ export const submitKofiTxId = onCallAuthLogger<KofiReq>(
 
         if (!VALID_KOFI_TRANSACTION_ID.test(txId)) {
             logger.error(`Invalid transaction id format: ${txId}`);
-            throw new HttpsError(
-                "invalid-argument",
-                "Invalid transaction ID format"
-            );
+            throw Error.code(104, "invalid-argument");
         }
 
         const data = (await db.ref(`activeDonations/${txId}`).get()).val();
         if (data == null || data !== 1) {
             logger.error(`Invalid transaction id: ${txId}`);
-            throw new HttpsError("invalid-argument", "Invalid transaction ID");
+            throw Error.code(104, "invalid-argument");
         }
 
         await userDetails.ref.child("hasDonated").set(true);
@@ -193,23 +191,17 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
 
         const timeNextGradient = userDetails.val.epochNextGradient;
         if (Date.now() < timeNextGradient ?? 0) {
-            throw new HttpsError(
-                "permission-denied",
-                "Cannot update before timer expired"
-            );
+            throw Error.code(205, "permission-denied");
         }
 
         if (!userDetails.val.hasDonated) {
-            throw new HttpsError(
-                "permission-denied",
-                "Cannot change gradient of user without donation"
-            );
+            throw Error.code(207, "permission-denied");
         }
 
         const grad = data.grad;
 
         if (!VALID_GRADIENT.test(grad)) {
-            throw new HttpsError("permission-denied", "Invalid gradient");
+            throw Error.code(105, "invalid-argument");
         }
 
         let nextGradient = Date.now();

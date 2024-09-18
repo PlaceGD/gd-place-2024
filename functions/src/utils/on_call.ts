@@ -5,6 +5,7 @@ import {
     HttpsError,
 } from "firebase-functions/v2/https";
 import { Level, LogGroup } from "./logger";
+import Error from "./errors";
 
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 
@@ -16,10 +17,7 @@ export const onCallAuth = <T, Return = Promise<void>>(
 ): CallableFunction<T, Return> => {
     return onCallF(request => {
         if (!request.auth) {
-            throw new HttpsError(
-                "unauthenticated",
-                "User is not authenticated"
-            );
+            throw Error.code(210, "unauthenticated");
         }
         return handler(request as AuthedCallableRequest<T>);
     });
@@ -33,10 +31,7 @@ export const onCallAuthLogger = <T, Return = Promise<void>>(
     return onCallF(request => {
         if (!request.auth) {
             logger.finish(Level.ERROR);
-            throw new HttpsError(
-                "unauthenticated",
-                "User is not authenticated"
-            );
+            throw Error.code(210, "unauthenticated");
         }
 
         try {
@@ -44,7 +39,7 @@ export const onCallAuthLogger = <T, Return = Promise<void>>(
             logger.finish();
             return ret;
         } catch (e: any) {
-            logger.error("Captured exception", e);
+            logger.error("Captured exception", e.details.message ?? e);
             logger.finish(Level.ERROR);
             throw e;
         }

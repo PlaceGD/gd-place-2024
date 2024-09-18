@@ -28,6 +28,7 @@
     import AcceptButton from "../../components/Buttons/AcceptButton.svelte";
     import IconButton from "../../components/Buttons/IconButton.svelte";
     import reportButtonimage from "../../moderator/assets/report_button.png?url";
+    import type { FirebaseError } from "shared-lib/cloud_functions";
 
     export let state: wasm.State;
 
@@ -55,8 +56,9 @@
                 x: cameraPos[0],
                 y: cameraPos[1],
             });
-        } catch (e) {
-            Toast.showErrorToast(`Failed to report user. (${e})`);
+        } catch (e: any) {
+            console.error("Failed to report user", e.details.message);
+            Toast.showErrorToast(`Failed to report user. (${e.details.code})`);
         }
 
         resetReportButton();
@@ -74,8 +76,9 @@
                     username: name,
                 });
             }
-        } catch (e) {
-            Toast.showErrorToast(`Failed to ban user! (${e})`);
+        } catch (e: any) {
+            console.error("Failed to ban user", e.details.message);
+            Toast.showErrorToast(`Failed to ban user. (${e.details.code})`);
         }
 
         resetBanButton();

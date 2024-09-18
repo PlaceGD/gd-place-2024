@@ -6,6 +6,7 @@ import {
 } from "@smart-firebase/admin";
 import { DatabaseSchema, UserDetails } from "shared-lib/database";
 import { HttpsError } from "firebase-functions/v2/https";
+import Error from "./errors";
 
 export const getCheckedUserDetails = async (
     db: SmartDatabase<DatabaseSchema>,
@@ -17,12 +18,12 @@ export const getCheckedUserDetails = async (
     let userDetailsRef = db.ref(`userDetails/${uid}`);
     let userDetails = (await userDetailsRef.get()).val();
     if (userDetails == undefined) {
-        throw new HttpsError("invalid-argument", "Missing user data");
+        throw Error.code(404, "invalid-argument");
     }
 
     let banned = (await db.ref(`bannedUsers/${uid}`).get()).exists();
     if (banned) {
-        throw new HttpsError("permission-denied", "Banned");
+        throw Error.code(201, "permission-denied");
     }
 
     return {
@@ -79,6 +80,6 @@ export const checkedTransaction = async <T, E>(
         throw err();
     }
     if (!result.committed) {
-        throw new HttpsError("unknown", "Transaction not committed");
+        throw Error.code(501, "aborted");
     }
 };

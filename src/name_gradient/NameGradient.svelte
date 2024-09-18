@@ -84,10 +84,13 @@
             Toast.showSuccessToast(
                 "Transaction ID recieved successfully. Thanks for keeping this project going! <3"
             );
-        } catch (e) {
-            console.error(`Failed to submit tx id: ${e}`);
+        } catch (e: any) {
+            console.error(
+                "Failed to submit kofi transaction ID",
+                e.details.message
+            );
             Toast.showErrorToast(
-                "There was an issue submitting transaction ID. Please try again."
+                `Failed to submit kofi transaction ID. (${e.details.code})`
             );
         }
 
@@ -141,9 +144,9 @@
 
             Toast.showSuccessToast("Successfully updated gradient!");
         } catch (e) {
-            console.error(`Failed to update gradient: ${e}`);
+            console.error("Failed to update name gradient", e.details.message);
             Toast.showErrorToast(
-                "There was error an updating your gradient. Please try again."
+                `Failed to update gradient. (${e.details.code})`
             );
         }
 

@@ -45,7 +45,7 @@ export const initUserData = (
         uid,
         username,
         turnstileResp: turnstile,
-    }) as Promise<HttpsCallableResult<UserDetails>>;
+    });
 };
 
 let userDataUnsub: Unsubscribe | null = null;

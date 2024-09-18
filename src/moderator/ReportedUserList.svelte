@@ -108,8 +108,11 @@
                 operation: op,
                 reportedUserUid: userId,
             });
-        } catch (e) {
-            Toast.showErrorToast(`Failed to perform operation! (${e})`);
+        } catch (e: any) {
+            console.error("Failed to perform operation", e.details.message);
+            Toast.showErrorToast(
+                `Failed to perform operation. (${e.details.code})`
+            );
             currentIdx = -1;
         }
     };

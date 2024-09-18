@@ -20,6 +20,7 @@ import {
     getCheckedUserDetails,
     refAllGet,
 } from "./utils/utils";
+import Error from "./utils/errors";
 
 // #region deserializeObject
 const deserializeObject = (
@@ -35,7 +36,7 @@ const deserializeObject = (
         reader = new Reader(bytes, GD_OBJECT_OPT_BYTE_SIZE);
     } catch (e: unknown) {
         logger.error("Reader failed:", e as string);
-        throw new HttpsError("invalid-argument", "Invalid object string");
+        throw Error.code(106, "invalid-argument");
     }
 
     const id = reader.readU16();
@@ -146,30 +147,23 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
             );
 
         if (now < eventStartTime.val()) {
-            throw new HttpsError(
-                "permission-denied",
-                "Cannot place before event starts"
-            );
+            Error.code(209, "permission-denied");
         }
 
         await checkedTransaction(
             userDetails.ref.child("epochNextPlace"),
             nextPlace => now >= nextPlace,
-            () =>
-                new HttpsError(
-                    "permission-denied",
-                    "Cannot place before timer expired"
-                ),
+            () => Error.code(202, "permission-denied"),
             () => now + placeCooldown.val() * 1000
         );
 
         if (!data.object) {
-            throw new HttpsError("invalid-argument", "Missing object string");
+            throw Error.code(400, "invalid-argument");
         }
 
         const object = deserializeObject(data.object, logger);
         if (object === null) {
-            throw new HttpsError("invalid-argument", "Invalid object string");
+            throw Error.code(106, "invalid-argument");
         }
 
         const chunkX = Math.floor(object.x / CHUNK_SIZE_UNITS);
@@ -179,11 +173,7 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
         await checkedTransaction(
             db.ref(`objectCount/${chunkID}`),
             count => (count ?? 0) < chunkObjectLimit.val(),
-            () =>
-                new HttpsError(
-                    "permission-denied",
-                    "Too many objects in chunk"
-                ),
+            () => Error.code(600, "resource-exhausted"),
             c => (c ?? 0) + 1
         );
 
@@ -212,10 +202,10 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         const userDetails = await getCheckedUserDetails(db, uid);
 
         if (!data.chunkId) {
-            throw new HttpsError("invalid-argument", "Missing chunk id");
+            throw Error.code(403, "invalid-argument");
         }
         if (!data.objId) {
-            throw new HttpsError("invalid-argument", "Missing object id");
+            throw Error.code(401, "invalid-argument");
         }
 
         const [deleteCooldown, eventStartTime] = await refAllGet(
@@ -227,20 +217,13 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         const now = Date.now();
 
         if (now < eventStartTime.val()) {
-            throw new HttpsError(
-                "permission-denied",
-                "Cannot delete before event starts"
-            );
+            throw Error.code(209, "permission-denied");
         }
 
         await checkedTransaction(
             userDetails.ref.child("epochNextDelete"),
             nextDelete => now >= nextDelete,
-            () =>
-                new HttpsError(
-                    "permission-denied",
-                    "Cannot delete before timer expired"
-                ),
+            () => Error.code(203, "permission-denied"),
             () => now + deleteCooldown.val() * 1000
         );
 

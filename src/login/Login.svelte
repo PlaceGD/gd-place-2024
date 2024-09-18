@@ -122,8 +122,16 @@
                 })
                 .catch(e => {
                     isInProgress = false;
-                    console.error(e);
-                    Toast.showErrorToast("Username already taken!");
+
+                    console.error("Failed to create user", e.details.message);
+
+                    if (e.details.code === 300 || e.details.code === 301) {
+                        Toast.showErrorToast("Username is taken!");
+                    } else {
+                        Toast.showErrorToast(
+                            `Failed to create user. (${e.details.code})`
+                        );
+                    }
                 });
 
             turnstileReset && turnstileReset();

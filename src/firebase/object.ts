@@ -7,17 +7,27 @@ import { encodeString } from "shared-lib/base_util";
 
 export const addObject = (obj: GDObjectOpt) => {
     let v = obj.bytes();
-    // console.log(v);
+
     let s = encodeString(v, 126);
-    console.log("Habubbty");
+
     placeObject({ object: s }).catch(e => {
-        Toast.showErrorToast(e);
+        if (e.details.code === 600) {
+            Toast.showInfoToast(
+                "There are too many objects in this chunk! Try deleting a few!"
+            );
+        } else {
+            console.error("Failed to place object", e.details.message);
+            Toast.showErrorToast(`Failed to place object. (${e.details.code})`);
+        }
     });
 };
 export const removeObject = (key: string, chunk: [number, number]) => {
     deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key }).catch(
         e => {
-            Toast.showErrorToast(e);
+            console.error("Failed to delete object", e.details.message);
+            Toast.showErrorToast(
+                `Failed to delete object. (${e.details.code})`
+            );
         }
     );
 };

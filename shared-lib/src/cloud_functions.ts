@@ -76,6 +76,10 @@ export const FIREBASE_ERRORS = {
         code: 209,
         message: "Cannot delete before event starts",
     },
+    [210]: {
+        code: 210,
+        message: "User is not authenticated",
+    },
     // 300 - already exists
     [300]: {
         code: 300,
@@ -92,11 +96,19 @@ export const FIREBASE_ERRORS = {
     },
     [401]: {
         code: 401,
-        message: "Missing object id",
+        message: "Missing object ID",
     },
     [402]: {
         code: 402,
         message: "Missing object key",
+    },
+    [403]: {
+        code: 403,
+        message: "Missing chunk ID",
+    },
+    [404]: {
+        code: 403,
+        message: "Missing user data",
     },
     // 500 - other
     [500]: {
@@ -105,18 +117,17 @@ export const FIREBASE_ERRORS = {
     },
     [501]: {
         code: 501,
+        message: "Transaction not commited",
+    },
+    // 600 - exhausted
+    [600]: {
+        code: 600,
         message: "Too many objects in chunk",
     },
 } as const;
 
-export type FirebaseError = {
-    kind:
-        | "invalid-argument"
-        | "permission-denied"
-        | "already-exists"
-        | "unknown";
-    error: (typeof FIREBASE_ERRORS)[keyof typeof FIREBASE_ERRORS];
-};
+export type FirebaseError =
+    (typeof FIREBASE_ERRORS)[keyof typeof FIREBASE_ERRORS];
 
 export type PlaceReq = { object: string };
 export type DeleteReq = { chunkId: ChunkID; objId: string };

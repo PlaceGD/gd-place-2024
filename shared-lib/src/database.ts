@@ -32,6 +32,8 @@ export type HistoryItem =
       };
 
 export interface DatabaseSchema {
+    announcement: string;
+
     objects: Record<ChunkID, Record<ObjKey, string>>;
     objectCount: Record<ChunkID, number>;
 

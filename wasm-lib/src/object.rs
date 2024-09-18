@@ -242,6 +242,8 @@ impl GDObjectOpt {
     }
 }
 
+
+
 pub fn convert_opt_transform(
     x_scale_exp: i8,
     x_angle: i8,

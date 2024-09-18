@@ -8,7 +8,7 @@ export const menuHeight = (
         duration,
         easing: sineInOut,
         css: (t: number) => {
-            return `max-height: ${t * 75}%;`;
+            return `height: ${t * 50}%;`;
         },
     };
 };

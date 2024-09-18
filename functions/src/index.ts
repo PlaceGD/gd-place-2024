@@ -19,8 +19,7 @@ export {
     changeNameGradient,
 } from "./donations";
 
-// TODO: add our uids
-export const DEV_UIDS: string[] = [];
+export { setMeta } from "./mod";
 
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED

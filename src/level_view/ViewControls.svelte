@@ -376,7 +376,7 @@
         getPlacedUsername(top.key(), v => {
             placedByHover.set({ username: v, x: top.obj.x, y: top.obj.y });
         });
-    }, 200);
+    }, 100);
 
     let editWidgetPos: [number, number] = [0, 0];
     let editWidgetScale = 1;

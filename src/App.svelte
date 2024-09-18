@@ -35,7 +35,6 @@
 <DataPopup />
 
 <div class="relative w-screen h-screen overflow-hidden">
-    <Editor bind:wasmLoaded={loaded} />
     {#if !loaded}
         <div class="absolute">
             <input
@@ -49,6 +48,7 @@
             />
         </div>
     {/if}
+    <Editor bind:wasmLoaded={loaded} />
 </div>
 
 <style lang="postcss">

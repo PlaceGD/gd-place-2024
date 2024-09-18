@@ -10,7 +10,7 @@
     import { VALID_USERNAME, VALID_USERNAME_CHARS } from "shared-lib/user";
     import { initUserData } from "../firebase/auth";
     import { db } from "../firebase/firebase";
-    import { Turnstile } from "svelte-turnstile";
+    // import { Turnstile } from "svelte-turnstile";
     import FadedScroll from "../components/FadedScroll.svelte";
     import Button from "../components/Button.svelte";
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";

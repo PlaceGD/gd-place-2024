@@ -14,9 +14,12 @@
         eventElapsed,
         eventStartTime,
         loginData,
+        openMenu,
     } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
     import ZoomButton from "./level_view/ZoomButton.svelte";
+    import MetaButton from "./meta/MetaButton.svelte";
+    import MetaMenu from "./meta/MetaMenu.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -24,7 +27,13 @@
 
     export let wasmLoaded: boolean;
 
-    let editorFocused: boolean;
+    let editorFocused: boolean = false;
+
+    $: {
+        if (editorFocused) {
+            $openMenu = null;
+        }
+    }
 
     let state: wasm.State | null = null;
 
@@ -45,15 +54,17 @@
                 {#if state != null}
                     <ModButton />
                 {/if}
+                <MetaButton />
                 <LoginButton />
             </div>
             <Login />
             <NameGradient />
 
             {#if state != null}
-                <ReportedUserList bind:state {editorFocused} />
+                <ReportedUserList bind:state />
             {/if}
-            <SettingsOptions {editorFocused} />
+            <SettingsOptions />
+            <MetaMenu />
         </div>
         <div
             class="absolute top-0 right-0 flex flex-col items-start w-full h-full gap-4 pointer-events-none sm:gap-2"

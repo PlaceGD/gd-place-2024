@@ -107,6 +107,7 @@ export enum ExclusiveMenus {
     Login,
     Settings,
     Kofi,
+    Meta,
 }
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 

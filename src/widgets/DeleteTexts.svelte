@@ -15,11 +15,11 @@
             `}
         >
             <span
-                class="absolute letext text-black text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
+                class="absolute letext text-black font-bold text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
                 >Deleted by {name}</span
             >
             <span
-                class="absolute letext text-saira text-3xl text-nowrap w-[500px] text-center"
+                class="absolute letext text-saira font-bold text-3xl text-nowrap w-[500px] text-center"
                 >Deleted by <ColoredName username={name}></ColoredName></span
             >
         </div>

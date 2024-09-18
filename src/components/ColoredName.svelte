@@ -62,7 +62,7 @@
 <style>
     /* firefox */
     .animateGgaga {
-        animation: 0.02s animate-fade;
+        animation: 0.1s animate-fade;
     }
 
     @keyframes animate-fade {

@@ -42,7 +42,7 @@
 <DataPopup />
 
 <div class="relative w-screen h-screen overflow-hidden">
-    <!-- {#if !loaded} -->
+    {#if !loaded}
     <!-- <div class="absolute">
             <input
                 type="range"
@@ -61,8 +61,8 @@
     >
         <div class="bg-black w-full h-full rounded-[6px]"></div>
     </div>
-    <!-- {/if} -->
-    <!-- <Editor bind:wasmLoaded={loaded} /> -->
+    {/if}
+    <Editor bind:wasmLoaded={loaded} />
 </div>
 
 <style lang="postcss">

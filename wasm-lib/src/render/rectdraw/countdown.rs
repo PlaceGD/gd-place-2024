@@ -10,7 +10,7 @@ use super::{billy::Billy, draw_obj_simple};
 
 use crate::utilgen::COUNTDOWN_DIGITS;
 
-pub fn draw(state: &State, billy: &mut Billy) {
+pub fn draw(state: &mut State, billy: &mut Billy) {
     if state.event_elapsed >= 0.0 {
         return;
     }
@@ -25,17 +25,29 @@ pub fn draw(state: &State, billy: &mut Billy) {
     let seconds =
         (time_until - (days as f64 * 86400.0) - (hours as f64 * 3600.0) - (minutes as f64 * 60.0))
             .floor() as i32;
+    let line1 = format!("{:02}", days);
+    let line2 = format!("{:02}:{:02}:{:02}", hours, minutes, seconds);
 
-    let text = format!("{:02}:{:02}:{:02}:{:02}", days, hours, minutes, seconds);
-    let mut offset = glam::vec2(450.0, 450.0);
-    for c in text.chars() {
-        if c == ':' {
-            offset.x += 120.0;
-            continue;
-        }
+    let mut offset = glam::vec2(450.0 + 30.0 * 7.0 * 2.0 + 120.0, 450.0 + 14.0 * 30.0);
+    let mut index = 0;
+    for c in line1.chars() {
         let digit = c.to_digit(10).unwrap() as usize;
         draw_digit(1, digit, state, billy, offset);
         offset.x += 30.0 * 7.0;
+        index += 1;
+    }
+    let mut offset = glam::vec2(450.0, 450.0);
+    let mut set = 0;
+    for c in line2.chars() {
+        if c == ':' {
+            offset.x += 120.0;
+            set += 1;
+            continue;
+        }
+        let digit = c.to_digit(10).unwrap() as usize;
+        draw_digit(set % 3, digit, state, billy, offset);
+        offset.x += 30.0 * 7.0;
+        index += 1;
     }
 }
 
@@ -76,6 +88,18 @@ pub fn draw_digit(set: usize, digit: usize, state: &State, billy: &mut Billy, of
                 ),
                 obj.main_color.blending,
             );
+        }
+    }
+}
+
+pub struct CountdownDigit {
+    pub objects: Vec<Vec<GDObject>>,
+}
+
+impl Default for CountdownDigit {
+    fn default() -> Self {
+        Self {
+            objects: Vec::new(),
         }
     }
 }

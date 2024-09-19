@@ -4,7 +4,7 @@ use std::{array, collections::HashMap};
 use crate::objects::list::{parse_gmd_file, GDColor, GDObject};
 
 const DIGIT_WIDTH: f32 = 30.0 * 10.0;
-const DIGIT_HEIGHT: f32 = 30.0 * 14.0;
+const DIGIT_HEIGHT: f32 = 30.0 * 15.0;
 const DIGIT_SETS: usize = 3;
 
 struct CompactObjectList(Vec<Vec<GDObject>>);

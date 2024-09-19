@@ -17,7 +17,7 @@ use crate::{
         pipeline_rect,
         rectdraw::{
             billy::{Billy, BlendMode},
-            countdown::draw as countdown_draw,
+            countdown::{draw as countdown_draw, CountdownDigit},
             level::draw as level_draw,
         },
         state::RenderState,
@@ -58,6 +58,8 @@ pub struct State {
 
     /// unix time, negative before event starts
     pub(crate) event_elapsed: f64,
+
+    pub(crate) countdown_digits: [CountdownDigit; 8],
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -100,6 +102,7 @@ impl State {
             hide_outline: false,
             event_elapsed: f64::NEG_INFINITY,
             render,
+            countdown_digits: Default::default(),
         }
     }
     pub fn view_transform(&self) -> Affine2 {

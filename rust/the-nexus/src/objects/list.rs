@@ -5,30 +5,11 @@ use flate2::read::GzDecoder;
 use itertools::Itertools;
 use once_cell::sync::Lazy;
 use regex::Regex;
+use rust_shared::gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo};
 
-use super::{levelstring::parse_obj, ObjectInfo};
+use crate::objects::levelstring::ObjectMap;
 
-use crate::objects::{levelstring::ObjectMap, HitboxType, ObjectCategory};
-
-pub mod special_ids {
-    pub const BG_TRIGGER: u16 = 4550;
-    pub const GROUND_TRIGGER: u16 = 4551;
-    pub const GROUND_2_TRIGGER: u16 = 4552;
-
-    pub const ARROW_TRIGGER: u16 = 4553;
-
-    pub const SFX_TRIGGER: u16 = 4554;
-    pub const SONG_TRIGGER: u16 = 4555;
-
-    pub const TRIGGERS: &[u16] = &[
-        BG_TRIGGER,
-        GROUND_TRIGGER,
-        GROUND_2_TRIGGER,
-        ARROW_TRIGGER,
-        SFX_TRIGGER,
-    ];
-    pub const COLOR_TRIGGERS: &[u16] = &[BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER];
-}
+use super::levelstring::parse_obj;
 
 pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
     let objects = {

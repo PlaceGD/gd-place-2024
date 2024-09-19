@@ -5,21 +5,17 @@ use std::{
 
 use image::{DynamicImage, GenericImage, GenericImageView, Rgba};
 use itertools::Itertools;
+use rust_shared::util::is_fully_transparent;
+use rust_shared::{gd::special_ids, sprite::SpriteInfo};
+use serde::Serialize;
 use texture_packer::{exporter::ImageExporter, importer::ImageImporter, TexturePacker};
 
-use crate::{
-    objects::{
-        list::{special_ids, AVAILABLE_OBJECTS},
-        sfx::SFX_TRIGGER_SOUNDS,
-    },
-    sprites::SpriteInfo,
-    util::is_fully_transparent,
-};
+use crate::objects::{list::AVAILABLE_OBJECTS, sfx::SFX_TRIGGER_SOUNDS};
 
 use super::config::PACKER_CONFIG;
 
-#[derive(Debug, Clone, serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug, Clone, Serialize)]
+// #[serde(rename_all = "camelCase")]
 pub struct SpritesheetData {
     main_sprites: HashMap<u16, SpriteInfo>,
     detail_sprites: HashMap<u16, SpriteInfo>,
@@ -34,7 +30,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
         Sfx(&'static str),
     }
 
-    let mut packer: TexturePacker<'_, image::DynamicImage, SpriteKey> =
+    let mut packer: TexturePacker<'_, DynamicImage, SpriteKey> =
         TexturePacker::new_skyline(PACKER_CONFIG);
 
     for &(i, _) in AVAILABLE_OBJECTS.iter() {
@@ -81,7 +77,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             .pack_own(
                 SpriteKey::Sfx(i),
                 ImageImporter::import_from_file(&PathBuf::from(format!(
-                    "../public/assets/objects/sfx_icons/{}.png",
+                    "../../public/assets/objects/sfx_icons/{}.png",
                     i
                 )))
                 .unwrap(),
@@ -89,7 +85,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             .unwrap();
     }
 
-    let sheet = ImageExporter::export(&packer).unwrap();
+    let sheet = ImageExporter::export(&packer, None).unwrap();
 
     let mut main = HashMap::new();
     let mut detail = HashMap::new();

@@ -1,17 +1,21 @@
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
-use the_nexus::{special_ids, HitboxType, ObjectCategory, SpriteInfo};
+
+use rust_shared::{
+    gd::{
+        layer::ZLayer,
+        level::{
+            ChunkCoord, ChunkInfo, DbKey, Level, CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS,
+            LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_UNITS,
+        },
+        object::{GDColor, GDObject},
+    },
+    util::{now, point_in_triangle, Rect},
+};
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
 use crate::{
-    layer::{ZLayer, Z_LAYERS},
-    level::{
-        ChunkCoord, ChunkInfo, DbKey, Level, CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS,
-        LEVEL_HEIGHT_BLOCKS, LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_BLOCKS,
-        LEVEL_WIDTH_UNITS,
-    },
-    log, map,
-    object::{GDColor, GDObject, GDObjectOpt},
+    object::{GDObjectExt, GDObjectOpt},
     render::{
         data::Globals,
         pipeline_rect,
@@ -22,7 +26,7 @@ use crate::{
         },
         state::RenderState,
     },
-    util::{get_max_bounding_box, now, point_in_triangle, Rect},
+    util::get_max_bounding_box,
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
     ErrorType, RustError,
 };
@@ -87,7 +91,7 @@ impl State {
                 x_angle: 0,
                 y_scale_exp: 0,
                 y_angle: 18,
-                z_layer: crate::layer::ZLayer::T1,
+                z_layer: ZLayer::T1,
                 z_order: 1,
                 main_color: GDColor::white(),
                 detail_color: GDColor::white(),

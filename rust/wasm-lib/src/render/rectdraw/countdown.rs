@@ -1,10 +1,7 @@
 use glam::vec4;
+use rust_shared::gd::object::GDObject;
 
-use crate::{
-    log,
-    object::{GDColor, GDObject},
-    state::State,
-};
+use crate::state::State;
 
 use super::{billy::Billy, draw_obj_simple};
 

@@ -1,7 +1,10 @@
 use core::fmt;
 use std::{array, collections::HashMap};
 
-use crate::objects::list::{parse_gmd_file, GDColor, GDObject};
+use rust_shared::gd::{object::{GDObject, GDColor}, layer::ZLayer};
+
+
+use crate::objects::list::parse_gmd_file;
 
 const DIGIT_WIDTH: f32 = 30.0 * 10.0;
 const DIGIT_HEIGHT: f32 = 30.0 * 15.0;
@@ -40,7 +43,8 @@ fn compact_object(obj: &GDObject, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         obj.iy,
         obj.jx,
         obj.jy,
-        obj.z_layer,
+        // obj.z_layer, 
+        69,
         obj.z_order,
         obj.main_color.r,
         obj.main_color.g,
@@ -148,11 +152,12 @@ pub fn make_get_countdown_digits_fn() -> String {
                         iy,
                         jx,
                         jy,
-                        z_layer: o
-                            .get(&24)
-                            .unwrap_or(&String::from("0"))
-                            .parse::<i8>()
-                            .unwrap(),
+                        // z_layer: o
+                        //     .get(&24)
+                        //     .unwrap_or(&String::from("0"))
+                        //     .parse::<i8>()
+                        //     .unwrap(),
+                        z_layer: ZLayer::B3,
                         z_order: o
                             .get(&25)
                             .unwrap_or(&String::from("0"))
@@ -176,7 +181,9 @@ pub fn make_get_countdown_digits_fn() -> String {
             let mut grouped = HashMap::<i8, Vec<GDObject>>::new();
 
             for obj in obj_list.iter() {
-                grouped.entry(obj.z_layer).or_default().push(obj.clone());
+                // grouped.entry(obj.z_layer).or_default().push(obj.clone());
+                grouped.entry(69).or_default().push(obj.clone());
+
             }
 
             let mut grouped = grouped.into_iter().collect::<Vec<_>>();

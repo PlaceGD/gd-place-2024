@@ -8,7 +8,7 @@ import {
 import { downloadWithProgress } from "./utils/download";
 import { PlaceDB } from "./utils/indexdb";
 
-import wasmUrl from "../wasm-lib/pkg/wasm_lib_bg.wasm?url";
+import wasmUrl from "../rust/wasm-lib/pkg/wasm_lib_bg.wasm?url";
 import wasmVersionUrl from "../public/wasm.txt?url";
 import spritesheetUrl from "../public/assets/spritesheet.png?url";
 

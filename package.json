@@ -9,11 +9,11 @@
         "deploy": "npm run wasm:build-prod && npm run shared:build && npm run build && firebase deploy",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
-        "wasm:build": "cd wasm-lib && wasm-pack build --no-opt --reference-types --weak-refs --target web && npm run random-uuid --silent > ../public/wasm.txt && cd ..",
-        "wasm:build-prod": "cd wasm-lib && wasm-pack build --reference-types --weak-refs --target web && npm run random-uuid --silent > ../public/wasm.txt && cd ..",
+        "wasm:build": "cd rust/wasm-lib && wasm-pack build --no-opt --reference-types --weak-refs --target web && npm run random-uuid --silent > ../../public/wasm.txt && cd ../..",
+        "wasm:build-prod": "cd rust/wasm-lib && wasm-pack build --reference-types --weak-refs --target web && npm run random-uuid --silent > ../../public/wasm.txt && cd ../..",
         "shared:build": "cd shared-lib && npm run build && cd ..",
-        "nexus:gen": "cd the-nexus && cargo test --release generate_shid -- --nocapture && cd ..",
-        "nexus:gen_no_sheet": "cd the-nexus && cargo test --release generate_shid_no_sheet && cd ..",
+        "nexus:gen": "cd rust/the-nexus && cargo test --release generate_shid -- --nocapture && cd ../..",
+        "nexus:gen_no_sheet": "cd rust/the-nexus && cargo test --release generate_shid_no_sheet && cd ../..",
         "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib",
         "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\""
     },
@@ -63,6 +63,6 @@
         "svelte-range-slider-pips": "^2.2.3",
         "svelte-tiny-virtual-list": "^2.1.2",
         "svelte-turnstile": "^0.8.0",
-        "wasm-lib": "file:wasm-lib/pkg"
+        "wasm-lib": "file:rust/wasm-lib/pkg"
     }
 }

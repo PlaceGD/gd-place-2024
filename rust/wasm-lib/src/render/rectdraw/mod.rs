@@ -1,9 +1,12 @@
 use billy::Billy;
 use glam::{uvec2, vec2, vec4, Vec4};
-use the_nexus::{special_ids, HitboxType, ObjectCategory, SpriteInfo};
+use rust_shared::{
+    gd::{object::GDObject, special_ids, HitboxType, ObjectCategory},
+    sprite::SpriteInfo,
+};
 
 use crate::{
-    object::GDObject,
+    object::GDObjectExt,
     state::State,
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, SFX_ICON_SPRITES},
 };

@@ -3,7 +3,7 @@ use std::str::FromStr;
 // use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
-use crate::ErrorType;
+// use crate::ErrorType;
 
 macro_rules! z_layers {
     ($($name:ident,)*) => {
@@ -37,20 +37,20 @@ impl ToString for ZLayer {
     }
 }
 
-impl FromStr for ZLayer {
-    type Err = ErrorType;
+// impl FromStr for ZLayer {
+//     type Err = ErrorType;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let id = s
-            .parse::<usize>()
-            .map_err(|_| ErrorType::InvalidObjectString("leayer2"))?;
+//     fn from_str(s: &str) -> Result<Self, Self::Err> {
+//         let id = s
+//             .parse::<usize>()
+//             .map_err(|_| ErrorType::InvalidObjectString("leayer2"))?;
 
-        if id >= Z_LAYERS.len() {
-            return Err(ErrorType::InvalidObjectString("leayer"));
-        }
-        Ok(Z_LAYERS[id])
-    }
-}
+//         if id >= Z_LAYERS.len() {
+//             return Err(ErrorType::InvalidObjectString("leayer"));
+//         }
+//         Ok(Z_LAYERS[id])
+//     }
+// }
 impl Default for ZLayer {
     fn default() -> Self {
         Self::B3

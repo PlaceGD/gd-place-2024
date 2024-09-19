@@ -1,4 +1,6 @@
-use crate::objects::{list::AVAILABLE_OBJECTS, HitboxType, ObjectCategory, ObjectInfo};
+use rust_shared::gd::{HitboxType, ObjectCategory, ObjectInfo};
+
+use crate::objects::list::AVAILABLE_OBJECTS;
 
 pub fn make_get_object_info_fn() -> String {
     let mut ongy = [ObjectInfo {

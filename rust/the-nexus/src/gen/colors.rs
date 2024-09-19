@@ -1,10 +1,8 @@
 use itertools::Itertools;
+use rust_shared::util::hsv_to_rgb;
 use serde_json::json;
 
-use crate::{
-    gen::config::{available_hues, PICKER_COLUMNS, PICKER_ROWS},
-    util::hsv_to_rgb,
-};
+use crate::gen::config::{available_hues, PICKER_COLUMNS, PICKER_ROWS};
 
 pub fn get_available_colors() -> serde_json::Value {
     json!({

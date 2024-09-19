@@ -95,9 +95,9 @@
         // state.
     }
 
-    setInterval(() => {
-        console.log("vagooby", [...state.get_world_pos(0, 0)]);
-    }, 1000);
+    // setInterval(() => {
+    //     console.log("vagooby", [...state.get_world_pos(0, 0)]);
+    // }, 1000);
 
     const getWorldMousePos = () => {
         // console.log($mouseX, $mouseY);

@@ -2,19 +2,12 @@ use gen::{
     colors::get_available_colors, countdown_digits::make_get_countdown_digits_fn,
     objects::make_get_object_info_fn,
 };
+use objects::sfx::SFX_TRIGGER_SOUNDS;
+use rust_shared::gd::special_ids;
+use serde_json::json;
 
 mod gen;
 mod objects;
-mod sprites;
-mod util;
-
-pub use objects::{
-    list::{special_ids, AVAILABLE_OBJECTS},
-    sfx::SFX_TRIGGER_SOUNDS,
-    HitboxType, ObjectCategory, ObjectInfo,
-};
-
-pub use sprites::SpriteInfo;
 
 fn make_wasm_lib_utilgen(sheet_data: &gen::sprites::SpritesheetData) -> String {
     use crate::gen::sprites::{
@@ -23,7 +16,8 @@ fn make_wasm_lib_utilgen(sheet_data: &gen::sprites::SpritesheetData) -> String {
 
     format!(
         "
-use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
+use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectInfo}}, sprite::SpriteInfo}};
+// use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
 
 {}
 
@@ -61,15 +55,14 @@ fn generate_shide(sheet: bool) {
     use crate::objects::list::AVAILABLE_OBJECTS;
     use gen::sprites::make_spritesheet;
     use itertools::Itertools;
-    use serde_json::json;
     use std::fs;
     if sheet {
         let (mut img, data) = make_spritesheet();
         color_bleed(&mut img);
 
-        img.save("../public/assets/spritesheet.png").unwrap();
+        img.save("../../public/assets/spritesheet.png").unwrap();
         fs::write(
-            "../shared-lib/src/gd/spritesheet.json",
+            "../../shared-lib/src/gd/spritesheet.json",
             serde_json::to_string(&json!(data)).unwrap(),
         )
         .unwrap();
@@ -77,7 +70,7 @@ fn generate_shide(sheet: bool) {
     }
 
     fs::write(
-        "../shared-lib/src/gd/objects.json",
+        "../../shared-lib/src/gd/objects.json",
         serde_json::to_string(&json!(AVAILABLE_OBJECTS
             .iter()
             .copied()
@@ -86,17 +79,17 @@ fn generate_shide(sheet: bool) {
     )
     .unwrap();
     fs::write(
-        "../shared-lib/src/gd/object_order.json",
+        "../../shared-lib/src/gd/object_order.json",
         serde_json::to_string(&json!(AVAILABLE_OBJECTS.iter().map(|v| v.0).collect_vec())).unwrap(),
     )
     .unwrap();
     fs::write(
-        "../shared-lib/src/gd/colors.json",
+        "../../shared-lib/src/gd/colors.json",
         serde_json::to_string(&get_available_colors()).unwrap(),
     )
     .unwrap();
     fs::write(
-        "../shared-lib/src/nexusgen.ts",
+        "../../shared-lib/src/nexusgen.ts",
         format!(
             "
 export const BG_TRIGGER: number = {};

@@ -1,5 +1,5 @@
 use desen::frame::FrameTransformMatrix;
-use wasm_bindgen::prelude::*;
+use rust_shared::wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 #[derive(Debug, Clone, PartialEq)]

@@ -15,30 +15,36 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2.92"
-wasm-bindgen-futures = "0.4.42"
+
 web-sys = { version = "0.3.69", features = [
     "Document",
     "Element",
     "HtmlCanvasElement",
     "Window",
 ] }
-js-sys = "0.3.69"
 wgpu = { version = "0.20.1", features = ["webgl"] }
 
 env_logger = "0.11.3"
 log = "0.4.22"
 
+glam = { workspace = true, features = ["bytemuck"] }
 console_error_panic_hook = { version = "0.1.7", optional = true }
 
+
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+bytemuck = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+js-sys = { workspace = true }
+image = { workspace = true }
 # desen = { git = "https://github.com/FlowVix/desen.git", features = [
 #     "html-canvas",
 # ] }
 
 
 #desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
-glam = { version = "0.28.0", features = ["bytemuck"] }
-bytemuck = { version = "1.16.1", features = ["derive"] }
+
 
 # base64 = "0.21.5"
 # base-encode = "0.3.1"
@@ -47,11 +53,11 @@ bytemuck = { version = "1.16.1", features = ["derive"] }
 # serde = { version = "1.0.190", features = ["derive"] }
 # bincode = "1.3.3"
 
-the-nexus = { path = "../the-nexus" }
+rust-shared = { path = "../rust-shared" }
+# the-nexus = { path = "../the-nexus" }
 
 # colored = "2.0.4"
-indexmap = "2.2.6"
-image = "0.25.1"
+
 specta = "1.0.5"
 
 [build]

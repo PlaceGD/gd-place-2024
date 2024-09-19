@@ -1,8 +1,8 @@
 use glam::{vec2, vec4, Vec4};
+use rust_shared::{gd::layer::Z_LAYERS, map};
 
 use crate::{
-    layer::Z_LAYERS,
-    map,
+    object::GDObjectExt,
     state::State,
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
 };

@@ -9,6 +9,7 @@ pub const PACKER_CONFIG: TexturePackerConfig = TexturePackerConfig {
     texture_extrusion: 2,
     trim: true,
     texture_outlines: false,
+    force_max_dimensions: false,
 };
 
 // 0-360

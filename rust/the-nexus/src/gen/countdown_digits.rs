@@ -1,70 +1,27 @@
 use core::fmt;
-use std::{array, collections::HashMap};
+use std::{array, collections::HashMap, io::Cursor};
 
-use rust_shared::gd::{object::{GDObject, GDColor}, layer::ZLayer};
-
+use binrw::BinWrite;
+use itertools::Itertools;
+use rust_shared::{
+    countdown::{
+        CountdownDigitSets, DigitLayerObjects, DigitLayers, DigitSet, DIGIT_HEIGHT, DIGIT_SETS,
+        DIGIT_WIDTH,
+    },
+    gd::{
+        layer::ZLayer,
+        object::{GDColor, GDObject},
+    },
+};
 
 use crate::objects::list::parse_gmd_file;
 
-const DIGIT_WIDTH: f32 = 30.0 * 10.0;
-const DIGIT_HEIGHT: f32 = 30.0 * 15.0;
-const DIGIT_SETS: usize = 3;
-
-struct CompactObjectList(Vec<Vec<GDObject>>);
-
-impl fmt::Debug for CompactObjectList {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "&[")?;
-        for (l, layer) in self.0.iter().enumerate() {
-            if l != 0 {
-                write!(f, ",")?;
-            }
-            write!(f, "\"")?;
-            for (i, obj) in layer.iter().enumerate() {
-                if i != 0 {
-                    write!(f, ";")?;
-                }
-                compact_object(obj, f)?;
-            }
-            write!(f, "\"")?;
-        }
-        write!(f, "]")
-    }
-}
-
-fn compact_object(obj: &GDObject, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(
-        f,
-        "{:X},{:.3},{:.3},{:.3},{:.3},{:.3},{:.3},{:X},{:X},{:X},{:X},{:X},{:X},{:X},{:X},{:X},{:X},{:X},{:X}",
-        obj.id,
-        obj.x,
-        obj.y,
-        obj.ix,
-        obj.iy,
-        obj.jx,
-        obj.jy,
-        // obj.z_layer, 
-        69,
-        obj.z_order,
-        obj.main_color.r,
-        obj.main_color.g,
-        obj.main_color.b,
-        obj.main_color.opacity,
-        obj.main_color.blending as u8,
-        obj.detail_color.r,
-        obj.detail_color.g,
-        obj.detail_color.b,
-        obj.detail_color.opacity,
-        obj.detail_color.blending as u8,
-    )
-}
-
-pub fn make_get_countdown_digits_fn() -> String {
+pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let mut parsed = parse_gmd_file(include_str!("../objects/countdowndigits.gmd"));
 
     parsed
         .objects
-        .retain(|o| o.get(&20).map(|v| v.parse::<u16>().unwrap() >= 10) == Some(true));
+        .retain(|o| o.get(&20).map(|v| v.parse::<u16>().unwrap() >= 8) == Some(true));
 
     let x_offset = 8.0 * 30.0;
     let y_offset = 85.0 * 30.0;
@@ -72,10 +29,8 @@ pub fn make_get_countdown_digits_fn() -> String {
     let h_radius = DIGIT_WIDTH / 2.0;
     let v_radius = DIGIT_HEIGHT / 2.0;
 
-    let mut sets = Vec::new();
-
-    for digit_set in 0..DIGIT_SETS {
-        let digits: [CompactObjectList; 10] = array::from_fn(|digit| {
+    let mut sets: [[DigitLayers; 10]; DIGIT_SETS] = array::from_fn(|digit_set| {
+        array::from_fn(|digit| {
             let x = x_offset + digit as f32 * DIGIT_WIDTH;
             let y = y_offset + digit_set as f32 * DIGIT_HEIGHT;
 
@@ -95,7 +50,7 @@ pub fn make_get_countdown_digits_fn() -> String {
                 })
                 .collect::<Vec<_>>();
 
-            let obj_list: Vec<GDObject> = objects
+            let mut obj_list: Vec<GDObject> = objects
                 .iter()
                 .map(|o| {
                     let rotation = o
@@ -152,12 +107,13 @@ pub fn make_get_countdown_digits_fn() -> String {
                         iy,
                         jx,
                         jy,
-                        // z_layer: o
-                        //     .get(&24)
-                        //     .unwrap_or(&String::from("0"))
-                        //     .parse::<i8>()
-                        //     .unwrap(),
-                        z_layer: ZLayer::B3,
+                        z_layer: ZLayer::from_gd_num(
+                            o.get(&24)
+                                .unwrap_or(&String::from("0"))
+                                .parse::<i8>()
+                                .unwrap(),
+                        ),
+                        // z_layer: ZLayer::B3,
                         z_order: o
                             .get(&25)
                             .unwrap_or(&String::from("0"))
@@ -177,37 +133,41 @@ pub fn make_get_countdown_digits_fn() -> String {
 
             println!("{} ({}): {} objs", digit_set, digit, obj_list.len());
 
+            // obj_list.sort_by_key(|obj| obj.z_layer as i32 * 10000 + obj.z_order as i32);
+
+            // obj_list
+
             // group by z_layer
-            let mut grouped = HashMap::<i8, Vec<GDObject>>::new();
+            let mut grouped = HashMap::<u8, Vec<GDObject>>::new();
 
             for obj in obj_list.iter() {
-                // grouped.entry(obj.z_layer).or_default().push(obj.clone());
-                grouped.entry(69).or_default().push(obj.clone());
-
+                grouped
+                    .entry(obj.z_layer as u8)
+                    .or_default()
+                    .push(obj.clone());
+                // grouped.entry(69).or_default().push(obj.clone());
             }
 
             let mut grouped = grouped.into_iter().collect::<Vec<_>>();
             grouped.sort_by_key(|(layer, _)| *layer);
 
-            CompactObjectList(
-                grouped
+            DigitLayers {
+                layers: grouped
                     .into_iter()
                     .map(|(_, mut objs)| {
                         objs.sort_by_key(|o| o.z_order);
-                        objs
+                        DigitLayerObjects { objs }
                     })
                     .collect(),
-            )
-        });
+            }
+        })
+    });
 
-        sets.push(digits);
-    }
-
-    format!(
-        "
-pub const COUNTDOWN_DIGITS: [[&[&str];10]; {DIGIT_SETS}] = {sets:?};
-    "
-    )
+    let mut writer = Cursor::new(Vec::new());
+    CountdownDigitSets(sets.map(|v| DigitSet(v)))
+        .write(&mut writer)
+        .unwrap();
+    writer.into_inner()
 }
 
 pub fn get_transform(x_scale: f32, x_angle: f32, y_scale: f32, y_angle: f32) -> [f32; 4] {

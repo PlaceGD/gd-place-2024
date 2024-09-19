@@ -27,14 +27,11 @@ use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectInfo}}, sprite:
 
 {}
 
-{}
-
     ",
         make_get_object_info_fn(),
         make_get_main_sprite_fn(sheet_data),
         make_get_detail_sprite_fn(sheet_data),
         make_get_sfx_icon_sprite_fn(sheet_data),
-        make_get_countdown_digits_fn(),
     )
 }
 
@@ -68,6 +65,11 @@ fn generate_shide(sheet: bool) {
         .unwrap();
         fs::write("../wasm-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
     }
+    fs::write(
+        "../wasm-lib/src/countdown_digits",
+        make_get_countdown_digits_fn(),
+    )
+    .unwrap();
 
     fs::write(
         "../../shared-lib/src/gd/objects.json",

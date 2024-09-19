@@ -1,11 +1,19 @@
+use std::{io::Cursor, sync::LazyLock};
+
+use binrw::BinRead;
 use glam::vec4;
-use rust_shared::gd::object::GDObject;
+use rust_shared::{console_log, countdown::CountdownDigitSets, gd::object::GDObject};
 
 use crate::state::State;
 
 use super::{billy::Billy, draw_obj_simple};
 
-use crate::utilgen::COUNTDOWN_DIGITS;
+pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
+    console_log!("JONK");
+    let bytes = include_bytes!("../../countdown_digits");
+
+    CountdownDigitSets::read(&mut Cursor::new(bytes)).unwrap()
+});
 
 pub fn draw(state: &mut State, billy: &mut Billy) {
     if state.event_elapsed >= 0.0 {
@@ -49,18 +57,12 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
 }
 
 pub fn draw_digit(set: usize, digit: usize, state: &State, billy: &mut Billy, offset: glam::Vec2) {
-    let layers = COUNTDOWN_DIGITS[set][digit];
+    let digit = &COUNTDOWN_DIGITS.0[set].0[digit];
 
-    for layer in layers {
-        let objects = layer
-            .split(";")
-            .filter(|a| !a.is_empty())
-            .map(|t| GDObject::from_str(t))
-            .collect::<Vec<_>>();
-
+    for layer in &digit.layers {
         //log!("layer: {:?}", objects.len());
 
-        for obj in objects {
+        for obj in &layer.objs {
             draw_obj_simple(
                 billy,
                 &obj.offset(offset),

@@ -1,14 +1,16 @@
 use std::str::FromStr;
 
 // use serde::{Deserialize, Serialize};
+use binrw::{BinRead, BinWrite};
 use wasm_bindgen::prelude::*;
 
 // use crate::ErrorType;
 
 macro_rules! z_layers {
     ($($name:ident,)*) => {
-        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, BinRead, BinWrite)]
         #[wasm_bindgen]
+        #[brw(little, repr = u8)]
         pub enum ZLayer {
             $(
                 $name,
@@ -59,6 +61,7 @@ impl Default for ZLayer {
 
 impl ZLayer {
     pub fn from_gd_num(num: i8) -> ZLayer {
+        // println!("Sex p[enis {}", num);
         // BG, MG, B5, B4, B3, B2, B1, P, T1, T2, T2, T4, G, UI, Max
         match num {
             -5 => ZLayer::B5,
@@ -71,6 +74,7 @@ impl ZLayer {
             9 => ZLayer::T3,
             11 => ZLayer::T4,
             _ => ZLayer::B1,
+            // _ => panic!("i will eat your balls"),
         }
     }
 }

@@ -1,9 +1,8 @@
-use std::{collections::HashMap, io::Read};
+use std::{collections::HashMap, io::Read, sync::LazyLock};
 
 use base64::Engine;
 use flate2::read::GzDecoder;
 use itertools::Itertools;
-use once_cell::sync::Lazy;
 use regex::Regex;
 use rust_shared::gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo};
 
@@ -11,7 +10,7 @@ use crate::objects::levelstring::ObjectMap;
 
 use super::levelstring::parse_obj;
 
-pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
+pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new(|| {
     let objects = {
         let lvl = include_str!("placeobjs.gmd");
         parse_gmd_file(lvl).objects

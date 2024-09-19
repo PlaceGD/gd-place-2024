@@ -1,17 +1,33 @@
 use crate::gd::layer::ZLayer;
+use binrw::{BinRead, BinResult, BinWrite};
 use wasm_bindgen::prelude::*;
 
 use super::level::ChunkCoord;
 
+#[binrw::parser(reader, endian)]
+fn bool_parse() -> BinResult<bool> {
+    let r: u8 = <_>::read_options(reader, endian, ())?;
+    Ok(r == 1)
+}
+#[binrw::writer(writer, endian)]
+fn bool_write(map: &bool) -> BinResult<()> {
+    (if *map { 1u8 } else { 0u8 }).write_options(writer, endian, ())?;
+    Ok(())
+}
+
 // IF THIS IS EVER CHANGED MAKE SURE TO CHANGE THE TYPESCRIPT TYPE IN SHAREDLIB
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, BinRead, BinWrite)]
 #[wasm_bindgen]
 #[repr(C, packed)]
+#[brw(little)]
 pub struct GDColor {
     pub r: u8,
     pub g: u8,
     pub b: u8,
     pub opacity: u8,
+
+    #[br(parse_with = bool_parse)]
+    #[bw(write_with = bool_write)]
     pub blending: bool,
 }
 
@@ -39,8 +55,11 @@ impl GDColor {
         }
     }
 }
-#[derive(Debug, Clone, Copy, Default)]
+
+#[derive(Debug, Clone, Copy, Default, BinRead, BinWrite)]
 #[wasm_bindgen(js_name = "GDObjectUnopt")]
+#[brw(little)]
+
 pub struct GDObject {
     pub id: u16,
     pub x: f32,

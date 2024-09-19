@@ -139,7 +139,6 @@
                 $menuMainColor.blending
             );
         }
-        console.log("a");
         setCheckedPreviewObject(state, obj);
     }
     $: {
@@ -459,7 +458,7 @@
                         {#if $menuSelectedObject == SFX_TRIGGER}
                             <SfxTab></SfxTab>
                         {:else}
-                            <ColorsTab></ColorsTab>
+                            <ColorsTab bind:state />
                         {/if}
                     {/if}
                 {/if}

@@ -15,6 +15,7 @@ import type {
     KofiReq,
     GradientReq,
     FirebaseError,
+    MetaReq,
 } from "shared-lib/cloud_functions";
 
 interface TypedPromise<ResolveType, RejectType> extends Promise<ResolveType> {
@@ -79,3 +80,4 @@ export const changeNameGradient = httpsCallable<GradientReq>(
     functions,
     "changeNameGradient"
 );
+export const setMeta = httpsCallable<MetaReq>(functions, "setMeta");

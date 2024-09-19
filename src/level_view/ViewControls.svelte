@@ -39,6 +39,8 @@
         eventElapsed,
         canPlaceEditDelete,
         menuSpeed,
+        lastRunColorTrigger,
+        setLevelColor,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -90,7 +92,12 @@
     $zoomGoal = state.get_zoom();
     $: {
         changeZoom($zoomTween);
+        // state.
     }
+
+    setInterval(() => {
+        console.log("vagooby", [...state.get_world_pos(0, 0)]);
+    }, 1000);
 
     const getWorldMousePos = () => {
         // console.log($mouseX, $mouseY);
@@ -232,32 +239,33 @@
         for (let i of hit) {
             switch (i.obj.id) {
                 case BG_TRIGGER: {
-                    $bgColor = {
-                        r: i.obj.main_color.r,
-                        g: i.obj.main_color.g,
-                        b: i.obj.main_color.b,
-                    };
+                    setLevelColor(state, BG_TRIGGER, [
+                        i.obj.main_color.r,
+                        i.obj.main_color.g,
+                        i.obj.main_color.b,
+                    ]);
 
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
+
                     break;
                 }
                 case GROUND_TRIGGER: {
-                    $ground1Color = {
-                        r: i.obj.main_color.r,
-                        g: i.obj.main_color.g,
-                        b: i.obj.main_color.b,
-                    };
+                    setLevelColor(state, GROUND_TRIGGER, [
+                        i.obj.main_color.r,
+                        i.obj.main_color.g,
+                        i.obj.main_color.b,
+                    ]);
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;
                 }
                 case GROUND_2_TRIGGER: {
-                    $ground2Color = {
-                        r: i.obj.main_color.r,
-                        g: i.obj.main_color.g,
-                        b: i.obj.main_color.b,
-                    };
+                    setLevelColor(state, GROUND_2_TRIGGER, [
+                        i.obj.main_color.r,
+                        i.obj.main_color.g,
+                        i.obj.main_color.b,
+                    ]);
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;
@@ -376,7 +384,7 @@
         getPlacedUsername(top.key(), v => {
             placedByHover.set({ username: v, x: top.obj.x, y: top.obj.y });
         });
-    }, 200);
+    }, 100);
 
     let editWidgetPos: [number, number] = [0, 0];
     let editWidgetScale = 1;
@@ -384,6 +392,8 @@
 
     let originScreen: [number, number] = [0, 0];
     let textZoomScale = 0;
+
+    let buh: [number, number] = [0, 0];
 
     const getScreenPosZoomCorrected = (
         x: number,
@@ -400,6 +410,11 @@
 
         editWidgetScale = (1 + state.get_zoom() / 80) / window.devicePixelRatio;
         editWidgetVisible = state.is_preview_visible();
+
+        buh = getScreenPosZoomCorrected(
+            $lastRunColorTrigger.bg?.x ?? 0,
+            $lastRunColorTrigger.bg?.y ?? 0
+        );
 
         textZoomScale = state.get_zoom_scale();
         let p = state.get_screen_pos(0, 0);
@@ -439,6 +454,10 @@
     }
     $: {
         state.set_event_elapsed($eventElapsed);
+    }
+
+    $: {
+        console.log($bgColor, $ground1Color, $ground2Color);
     }
 </script>
 

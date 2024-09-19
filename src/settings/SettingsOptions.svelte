@@ -11,13 +11,6 @@
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
     import { menuHeight } from "../utils/transitions";
 
-    export let editorFocused: boolean;
-    $: {
-        if ($openMenu == ExclusiveMenus.Settings && editorFocused) {
-            $openMenu = null;
-        }
-    }
-
     $: isOpen = $openMenu == ExclusiveMenus.Settings;
 
     const KOFI_ID = "Z8Z410GRY2";
@@ -62,19 +55,24 @@
             bind: "hidePlacedTooltip",
         },
     ];
+
+    // just here so the faded scroll correctly updates with the animating height
+    let transitionVal = 0;
 </script>
 
 {#if isOpen}
     <fieldset
-        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center max-h-[75%] pointer-events-auto"
+        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center h-[50%] pointer-events-auto"
         disabled={!isOpen}
         transition:menuHeight={{ duration: 200 }}
+        on:introend={() => (transitionVal = 1)}
+        on:outroend={() => (transitionVal = 0)}
     >
         <div
             class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
         >
             <!-- Faded scroll just for fanciness -->
-            <FadedScroll>
+            <FadedScroll update={transitionVal} scrollY="overflow-y-scroll">
                 <ul class="flex flex-col gap-2 xs:gap-1 alternating-bg">
                     {#each settings as setting}
                         <li

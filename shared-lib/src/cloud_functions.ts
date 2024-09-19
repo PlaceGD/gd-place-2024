@@ -113,7 +113,7 @@ export const FIREBASE_ERRORS = {
     // 500 - other
     [500]: {
         code: 500,
-        message: "Unknown user operation",
+        message: "Unknown operation",
     },
     [501]: {
         code: 501,
@@ -128,6 +128,9 @@ export const FIREBASE_ERRORS = {
 
 export type FirebaseError =
     (typeof FIREBASE_ERRORS)[keyof typeof FIREBASE_ERRORS];
+
+// TODO: add our uids
+export const DEV_UIDS: string[] = [];
 
 export type PlaceReq = { object: string };
 export type DeleteReq = { chunkId: ChunkID; objId: string };
@@ -156,4 +159,35 @@ export type KofiReq = {
 };
 export type GradientReq = {
     grad: string;
+};
+
+export type MetaOperation =
+    | {
+          type: "place_timer";
+          to: number;
+      }
+    | {
+          type: "delete_timer";
+          to: number;
+      }
+    | {
+          type: "event_start";
+          to: number;
+      }
+    | {
+          type: "event_end";
+          to: number;
+      }
+    | {
+          type: "change_mod_status";
+          user: string;
+          to: "mod" | "unmod";
+      }
+    | {
+          type: "unban";
+          user: string;
+      };
+
+export type MetaReq = {
+    op: MetaOperation;
 };

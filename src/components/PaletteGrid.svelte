@@ -6,6 +6,7 @@
         ground2Color,
         mainColorRGB,
         menuSelectedObject,
+        setLevelColor,
     } from "../stores";
     import {
         BG_TRIGGER,
@@ -19,6 +20,9 @@
     export let currentColumn: number;
 
     export let tabIndex: number = 0;
+
+    import * as wasm from "wasm-lib";
+    export let state: wasm.State;
 
     $: palette = colors.list[hue].palette;
 </script>
@@ -41,29 +45,11 @@
                         currentRow = r;
                         currentColumn = c;
 
-                        if ($menuSelectedObject == BG_TRIGGER) {
-                            $bgColor = {
-                                r: $mainColorRGB[0],
-                                g: $mainColorRGB[1],
-                                b: $mainColorRGB[2],
-                            };
-                        }
-
-                        if ($menuSelectedObject == GROUND_TRIGGER) {
-                            $ground1Color = {
-                                r: $mainColorRGB[0],
-                                g: $mainColorRGB[1],
-                                b: $mainColorRGB[2],
-                            };
-                        }
-
-                        if ($menuSelectedObject == GROUND_2_TRIGGER) {
-                            $ground2Color = {
-                                r: $mainColorRGB[0],
-                                g: $mainColorRGB[1],
-                                b: $mainColorRGB[2],
-                            };
-                        }
+                        setLevelColor(
+                            state,
+                            $menuSelectedObject,
+                            $mainColorRGB
+                        );
                     }}
                     tabindex={tabIndex}
                     aria-label={`Color with Red: ${palette[r][c][0]}, Green: ${palette[r][c][1]}, Blue: ${palette[r][c][2]}`}

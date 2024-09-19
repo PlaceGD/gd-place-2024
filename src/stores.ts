@@ -1,6 +1,6 @@
 import { derived, get, writable, type Writable } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
-import { ZLayer, GDColor } from "wasm-lib";
+import { ZLayer, GDColor, State } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
 import {
     createIndexedDBStorage,
@@ -15,6 +15,11 @@ import { db } from "./firebase/firebase";
 import type { RawSpritesheetData } from "./utils/spritesheet/spritesheet";
 import type { SmartReference } from "@smart-firebase/client";
 import { runTransaction } from "firebase/database";
+import {
+    BG_TRIGGER,
+    GROUND_2_TRIGGER,
+    GROUND_TRIGGER,
+} from "shared-lib/nexusgen";
 
 export enum TabGroup {
     Build,
@@ -107,6 +112,7 @@ export enum ExclusiveMenus {
     Login,
     Settings,
     Kofi,
+    Meta,
 }
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
@@ -191,21 +197,73 @@ export const selectedObject = writable<{
 //     "colors"
 // );
 
-export const bgColor = persistLocalTweened(
-    { r: 40, g: 125, b: 255 },
-    "bgColor",
+export const DEFAULT_BG_COLOR = { r: 0, g: 15, b: 31 };
+export const DEFAULT_GROUND_1_COLOR = { r: 0, g: 15, b: 31 };
+export const DEFAULT_GROUND_2_COLOR = { r: 0, g: 82, b: 165 };
+
+export const bgColor = tweened(
+    structuredClone(DEFAULT_BG_COLOR),
+    // "bgColor",
     { duration: 500, easing: linear }
 );
-export const ground1Color = persistLocalTweened(
-    { r: 40, g: 125, b: 255 },
-    "ground1Color",
+export const ground1Color = tweened(
+    structuredClone(DEFAULT_GROUND_1_COLOR),
+    // "ground1Color",
     { duration: 500, easing: linear }
 );
-export const ground2Color = persistLocalTweened(
-    { r: 127, g: 178, b: 255 },
-    "ground2Color",
+export const ground2Color = tweened(
+    structuredClone(DEFAULT_GROUND_2_COLOR),
+    // "ground2Color",
     { duration: 500, easing: linear }
 );
+export const setLevelColor = (
+    state: State,
+    obj_id: number,
+    rgb: [number, number, number]
+) => {
+    let obj = state.get_preview_object();
+    if (obj_id == BG_TRIGGER) {
+        bgColor.set({
+            r: rgb[0],
+            g: rgb[1],
+            b: rgb[2],
+        });
+        lastRunColorTrigger.update(v => {
+            v.bg = { x: obj.x, y: obj.y, time: Date.now() };
+            return v;
+        });
+    }
+
+    if (obj_id == GROUND_TRIGGER) {
+        ground1Color.set({
+            r: rgb[0],
+            g: rgb[1],
+            b: rgb[2],
+        });
+        lastRunColorTrigger.update(v => {
+            v.ground1 = { x: obj.x, y: obj.y, time: Date.now() };
+            return v;
+        });
+    }
+
+    if (obj_id == GROUND_2_TRIGGER) {
+        ground2Color.set({
+            r: rgb[0],
+            g: rgb[1],
+            b: rgb[2],
+        });
+        lastRunColorTrigger.update(v => {
+            v.ground2 = { x: obj.x, y: obj.y, time: Date.now() };
+            return v;
+        });
+    }
+};
+
+export const lastRunColorTrigger = writable<{
+    bg: { x: number; y: number; time: number } | null;
+    ground1: { x: number; y: number; time: number } | null;
+    ground2: { x: number; y: number; time: number } | null;
+}>({ bg: null, ground1: null, ground2: null });
 
 export const currentUserColor: Writable<string> = writable("white");
 

@@ -2,7 +2,17 @@ import * as wasm from "wasm-lib";
 import { subChunk, unsubChunk } from "../firebase/chunks";
 import { decodeString } from "shared-lib/base_util";
 import Toast from "../utils/toast";
-import { addDeleteText, editorData } from "../stores";
+import {
+    addDeleteText,
+    bgColor,
+    DEFAULT_BG_COLOR,
+    DEFAULT_GROUND_1_COLOR,
+    DEFAULT_GROUND_2_COLOR,
+    editorData,
+    ground1Color,
+    ground2Color,
+    lastRunColorTrigger,
+} from "../stores";
 import debounce from "lodash.debounce";
 import { tweened } from "svelte/motion";
 import { cubicOut } from "svelte/easing";
@@ -25,6 +35,7 @@ export const zoomCentral = (to: number, canvas: HTMLCanvasElement) => {
     mouseX.set((canvas.offsetWidth / 2) * window.devicePixelRatio);
     mouseY.set((canvas.offsetHeight / 2) * window.devicePixelRatio);
     zoomGoal.set(to);
+    zoomTween.set(to, { duration: 0 });
 };
 
 export const handleSub = (state: wasm.State) => {
@@ -85,8 +96,39 @@ const savePos = debounce((state: wasm.State) => {
     });
 }, 200);
 
+const RESET_COLOR_TRIGGER_MIN_COOLDOWN_SECS_HAHA = 10;
 export const moveCamera = (state: wasm.State, x: number, y: number) => {
     state.set_camera_pos(x, y);
+
+    let reset_milis = RESET_COLOR_TRIGGER_MIN_COOLDOWN_SECS_HAHA * 1000;
+
+    lastRunColorTrigger.update(v => {
+        if (
+            v.bg != null &&
+            Date.now() > v.bg.time + reset_milis &&
+            Math.hypot(v.bg.x - x, v.bg.y - y) >= 3000
+        ) {
+            v.bg = null;
+            bgColor.set(structuredClone(DEFAULT_BG_COLOR));
+        }
+        if (
+            v.ground1 != null &&
+            Date.now() > v.ground1.time + reset_milis &&
+            Math.hypot(v.ground1.x - x, v.ground1.y - y) >= 3000
+        ) {
+            v.ground1 = null;
+            ground1Color.set(structuredClone(DEFAULT_GROUND_1_COLOR));
+        }
+        if (
+            v.ground2 != null &&
+            Date.now() > v.ground2.time + reset_milis &&
+            Math.hypot(v.ground2.x - x, v.ground2.y - y) >= 3000
+        ) {
+            v.ground2 = null;
+            ground2Color.set(structuredClone(DEFAULT_GROUND_2_COLOR));
+        }
+        return v;
+    });
 
     savePos(state);
     handleSub(state);

@@ -20,6 +20,9 @@
     } from "../../stores";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
 
+    import * as wasm from "wasm-lib";
+    export let state: wasm.State;
+
     enum ColorTab {
         Main,
         Detail,
@@ -129,11 +132,11 @@
         {/if}
         {#if selectedTab == ColorTab.Main}
             <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider bind:currentHue={$menuMainColor.hue}></HueSlider>
+                <HueSlider bind:currentHue={$menuMainColor.hue} bind:state />
             </div>
         {:else}
             <div class="flex w-full h-3 md:h-5 hue">
-                <HueSlider bind:currentHue={$menuDetailColor.hue}></HueSlider>
+                <HueSlider bind:currentHue={$menuDetailColor.hue} bind:state />
             </div>
         {/if}
     </div>
@@ -165,12 +168,14 @@
                 bind:hue={$menuMainColor.hue}
                 bind:currentRow={$menuMainColor.y}
                 bind:currentColumn={$menuMainColor.x}
+                bind:state
             />
         {:else}
             <PaletteGrid
                 bind:hue={$menuDetailColor.hue}
                 bind:currentRow={$menuDetailColor.y}
                 bind:currentColumn={$menuDetailColor.x}
+                bind:state
             />
         {/if}
     </div>

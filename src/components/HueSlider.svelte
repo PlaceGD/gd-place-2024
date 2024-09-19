@@ -4,6 +4,10 @@
     import { clamp } from "shared-lib/util";
     import { colors } from "shared-lib/gd";
     import { spring, type Spring } from "svelte/motion";
+    import { mainColorRGB, menuSelectedObject, setLevelColor } from "../stores";
+
+    import * as wasm from "wasm-lib";
+    export let state: wasm.State;
 
     export let currentHue: number;
 
@@ -50,6 +54,8 @@
             let color = clamp(Math.floor(ex / colorLen), 0, colors.hues - 1);
 
             currentHue = color;
+            console.log("bruh");
+            setLevelColor(state, $menuSelectedObject, $mainColorRGB);
         }
     };
 
@@ -88,6 +94,7 @@
                 class="w-full h-full"
                 on:click={() => {
                     currentHue = i;
+                    setLevelColor(state, $menuSelectedObject, $mainColorRGB);
                 }}
                 tabindex={tabIndex}
                 aria-label={`Color with Hue ${currentHue}`}

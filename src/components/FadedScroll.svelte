@@ -7,6 +7,9 @@
 
     export let update: any = null;
 
+    export let scrollX = "overflow-x-auto";
+    export let scrollY = "overflow-y-auto";
+
     let elem: HTMLDivElement | null = null;
 
     const { isOverflowing, element: overflowElem } = useIsOverflowing();
@@ -49,7 +52,7 @@
 </script>
 
 <div
-    class={`w-full h-full ${orientation === "vertical" ? "overflow-y-auto overflow-x-hidden" : "overflow-x-auto overflow-y-hidden"} fadeout xs:text-sm thin-scrollbar`}
+    class={`w-full h-full ${orientation === "vertical" ? `${scrollY} overflow-x-hidden` : `${scrollX} overflow-y-hidden`} fadeout xs:text-sm thin-scrollbar`}
     bind:this={elem}
     style={`--gradient: ${
         $isOverflowing

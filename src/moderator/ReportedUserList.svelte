@@ -21,15 +21,9 @@
     import AcceptButton from "../components/Buttons/AcceptButton.svelte";
     import DeclineButton from "../components/Buttons/DeclineButton.svelte";
     import { menuHeight } from "../utils/transitions";
+    import { fly } from "svelte/transition";
 
     export let state: wasm.State;
-    export let editorFocused: boolean;
-
-    $: {
-        if ($openMenu == ExclusiveMenus.Moderator && editorFocused) {
-            $openMenu = null;
-        }
-    }
 
     $: isOpen = $openMenu == ExclusiveMenus.Moderator;
 
@@ -120,7 +114,7 @@
 
 {#if isOpen}
     <fieldset
-        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center max-h-[75%] pointer-events-auto"
+        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel overflow-hidden flex-center h-[50%] pointer-events-auto"
         disabled={!isOpen}
         transition:menuHeight={{ duration: 200 }}
     >

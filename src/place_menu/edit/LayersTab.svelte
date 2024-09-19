@@ -65,13 +65,35 @@
                 return layer;
         }
     };
-    const BOTTOMS = [ZLayer.B1, ZLayer.B2, ZLayer.B3, ZLayer.B4, ZLayer.B5];
-    const isBottom = (layer: ZLayer) => BOTTOMS.includes(layer);
+    const BOTTOMS_ORDERED = [
+        ZLayer.B5,
+        ZLayer.B4,
+        ZLayer.B3,
+        ZLayer.B2,
+        ZLayer.B1,
+    ];
+    const TOPS_ORDERED = [ZLayer.T1, ZLayer.T2, ZLayer.T3, ZLayer.T4];
+    const isBottom = (layer: ZLayer) => BOTTOMS_ORDERED.includes(layer);
     const layerCount = (bottom: boolean) => (bottom ? 5 : 4);
-    const layerFrom = (bottom: boolean, idx: number) =>
-        (bottom ? (v: ZLayer) => v : equivalentTop)(BOTTOMS[idx]);
-    const layerIdx = (layer: ZLayer) =>
-        isBottom(layer) ? -layer + 5 : layer - 4;
+    // const layerFrom = (bottom: boolean, idx: number) =>
+    //     (bottom ? (v: ZLayer) => v : equivalentTop)(BOTTOMS[idx]);
+    // const layerIdx = (layer: ZLayer) =>
+    //     isBottom(layer) ? -layer + 5 : layer - 4;
+
+    // console.log("junky", [
+    //     layerIdx(ZLayer.B5),
+    //     layerIdx(ZLayer.B4),
+    //     layerIdx(ZLayer.B3),
+    //     layerIdx(ZLayer.B2),
+    //     layerIdx(ZLayer.B1),
+    //     layerIdx(ZLayer.T1),
+    //     layerIdx(ZLayer.T2),
+    //     layerIdx(ZLayer.T3),
+    //     layerIdx(ZLayer.T4),
+    // ]);
+    // console.log("junky", layerFrom(true, 1));
+    // console.log("junky", layerFrom(true, 2));
+    // console.log("junky", layerFrom(true, 3));
 
     const HARD_VALID_INPUT = /^-?\d*$/;
     const SOFT_VALID_INPUT = (s: string) => {
@@ -136,23 +158,26 @@
 
     <div class="flex flex-col w-full h-full gap-2 content">
         <ul class="flex h-full ids">
-            {#each Array(layerCount(isBottom($menuZLayer))).fill(0) as _, i}
+            {#each Array(layerCount(isBottom($menuZLayer))).fill(0) as _, idx}
+                {@const layer = (
+                    isBottom($menuZLayer) ? BOTTOMS_ORDERED : TOPS_ORDERED
+                )[idx]}
+
                 <li
                     class="relative flex-1 w-full h-full flex-center font-pusab"
                 >
                     <button
                         class="z-20 w-full h-full p-2 rounded-lg sm:p-1 main text-stroke"
-                        on:click={() =>
-                            ($menuZLayer = layerFrom(isBottom($menuZLayer), i))}
-                        aria-label={`${isBottom($menuZLayer) ? "B" : "T"}${i + 1}`}
+                        on:click={() => {
+                            $menuZLayer = layer;
+                        }}
+                        aria-label={layerName(layer)}
                     >
-                        <h1 class="font-pusab lg:text-2xl">{i + 1}</h1>
-
-                        <h2 class="opacity-50 font-pusab xs:text-sm">
-                            {`${isBottom($menuZLayer) ? "B" : "T"}${i + 1}`}
+                        <h2 class="font-pusab lg:text-2xl xs:text-sm">
+                            {layerName(layer)}
                         </h2>
                     </button>
-                    {#if layerIdx($menuZLayer) == i + 1}
+                    {#if $menuZLayer == layer}
                         <div class="sliding-selector"></div>
                     {/if}
                 </li>

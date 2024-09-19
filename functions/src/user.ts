@@ -8,9 +8,10 @@ import type {
     BanReq,
 } from "shared-lib/cloud_functions";
 import { Level, LogGroup } from "./utils/logger";
-import { DEV_UIDS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
+import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
+import { DEV_UIDS } from "shared-lib/cloud_functions";
 import { smartDatabase } from "src";
 import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 import { FILTERS } from "./utils/username_filter";

@@ -130,7 +130,7 @@ export type FirebaseError =
     (typeof FIREBASE_ERRORS)[keyof typeof FIREBASE_ERRORS];
 
 // TODO: add our uids
-export const DEV_UIDS: string[] = [];
+export const DEV_UIDS: string[] = ["0Tx6aES3myM8DYW495SLfiC2Rpu2"];
 
 export type PlaceReq = { object: string };
 export type DeleteReq = { chunkId: ChunkID; objId: string };
@@ -186,6 +186,10 @@ export type MetaOperation =
     | {
           type: "unban";
           user: string;
+      }
+    | {
+          type: "announcement";
+          text: string;
       };
 
 export type MetaReq = {

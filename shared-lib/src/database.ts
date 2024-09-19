@@ -32,7 +32,10 @@ export type HistoryItem =
       };
 
 export interface DatabaseSchema {
-    announcement: string;
+    announcement: {
+        text: string;
+        time: number;
+    };
 
     objects: Record<ChunkID, Record<ObjKey, string>>;
     objectCount: Record<ChunkID, number>;

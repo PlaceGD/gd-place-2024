@@ -73,8 +73,13 @@ export default class Toast {
         _toast.push(message.join(" "), toastThemes.INFO);
     };
 
-    static showAnnouncementToast = (...message: string[]) => {
-        console.info(...message);
-        _toast.push(message.join(" "), toastThemes.ANNOUNCEMENT);
+    static showAnnouncementToast = (
+        message: string,
+        onClose: () => void = () => {}
+    ) => {
+        _toast.push(message, {
+            ...toastThemes.ANNOUNCEMENT,
+            onpop: onClose,
+        });
     };
 }

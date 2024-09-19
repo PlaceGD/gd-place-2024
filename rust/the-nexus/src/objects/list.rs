@@ -153,42 +153,42 @@ pub struct LevelParseResult {
     pub colors: HashMap<u16, GDColor>,
 }
 
-#[derive(Debug, Clone)]
-pub struct GDColor {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8,
-    pub opacity: u8,
-    pub blending: bool,
-}
-impl GDColor {
-    pub(crate) fn default() -> GDColor {
-        GDColor {
-            r: 255,
-            g: 255,
-            b: 255,
-            opacity: 255,
-            blending: false,
-        }
-    }
-}
+// #[derive(Debug, Clone)]
+// pub struct GDColor {
+//     pub r: u8,
+//     pub g: u8,
+//     pub b: u8,
+//     pub opacity: u8,
+//     pub blending: bool,
+// }
+// impl GDColor {
+//     pub(crate) fn default() -> GDColor {
+//         GDColor {
+//             r: 255,
+//             g: 255,
+//             b: 255,
+//             opacity: 255,
+//             blending: false,
+//         }
+//     }
+// }
 
-#[derive(Debug, Clone)]
-pub struct GDObject {
-    pub id: u16,
-    pub x: f32,
-    pub y: f32,
+// #[derive(Debug, Clone)]
+// pub struct GDObject {
+//     pub id: u16,
+//     pub x: f32,
+//     pub y: f32,
 
-    pub ix: f32,
-    pub iy: f32,
-    pub jx: f32,
-    pub jy: f32,
+//     pub ix: f32,
+//     pub iy: f32,
+//     pub jx: f32,
+//     pub jy: f32,
 
-    pub z_layer: i8,
-    pub z_order: i8,
-    pub main_color: GDColor,
-    pub detail_color: GDColor,
-}
+//     pub z_layer: i8,
+//     pub z_order: i8,
+//     pub main_color: GDColor,
+//     pub detail_color: GDColor,
+// }
 
 pub fn parse_gmd_file(lvl: &str) -> LevelParseResult {
     let r = Regex::new(r##"H4sIAAA[A-Za-z0-9-_=]+"##).unwrap();

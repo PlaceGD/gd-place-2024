@@ -71,7 +71,7 @@ pub fn make_get_countdown_digits_fn() -> String {
     let mut sets = Vec::new();
 
     for digit_set in 0..DIGIT_SETS {
-        let digits: [CompactObjectList; 10] = array::from_fn(|a| a).map(|digit| {
+        let digits: [CompactObjectList; 10] = array::from_fn(|digit| {
             let x = x_offset + digit as f32 * DIGIT_WIDTH;
             let y = y_offset + digit_set as f32 * DIGIT_HEIGHT;
 
@@ -168,7 +168,6 @@ pub fn make_get_countdown_digits_fn() -> String {
                             .unwrap_or(GDColor::default()),
                     }
                 })
-                .into_iter()
                 .collect();
 
             println!("{} ({}): {} objs", digit_set, digit, obj_list.len());
@@ -177,10 +176,7 @@ pub fn make_get_countdown_digits_fn() -> String {
             let mut grouped = HashMap::<i8, Vec<GDObject>>::new();
 
             for obj in obj_list.iter() {
-                grouped
-                    .entry(obj.z_layer)
-                    .or_insert_with(Vec::new)
-                    .push(obj.clone());
+                grouped.entry(obj.z_layer).or_default().push(obj.clone());
             }
 
             let mut grouped = grouped.into_iter().collect::<Vec<_>>();

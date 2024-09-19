@@ -19,7 +19,7 @@ export {
     changeNameGradient,
 } from "./donations";
 
-export { setMeta } from "./mod";
+export { setMeta } from "./meta";
 
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED
 /// MAKE SURE YOU CHCNAGE THIS WHEVERRE  IT IS USED

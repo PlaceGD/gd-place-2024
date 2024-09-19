@@ -22,6 +22,7 @@
         modChangeUsername: "",
         unbanUsername: "",
         usernameOrID: "",
+        announcementText: "",
     };
 
     const meta = (data: MetaReq["op"]) => {
@@ -40,78 +41,97 @@
         disabled={!isOpen}
         transition:menuHeight={{ duration: 200 }}
     >
-        <div class="flex gap-2 flex-center">
-            <div class="flex flex-col gap-2 flex-center">
-                <div class="flex w-full gap-2 flex-center">
-                    <h1 class="w-32 font-pusab text-stroke">Place</h1>
-                    <DarkInput
-                        maxLength={1000}
-                        bind:value={inputValues.placeTimer}
-                        hardValidInput={/^-?\d*$/}
-                    ></DarkInput>
-                    <WhiteButton
-                        on:click={() =>
-                            meta({
-                                type: "place_timer",
-                                to: inputValues.placeTimer,
-                            })}
-                    >
-                        Set
-                    </WhiteButton>
-                </div>
-                <div class="flex w-full gap-2 flex-center">
-                    <h1 class="w-32 font-pusab text-stroke">Delete</h1>
-                    <DarkInput
-                        maxLength={1000}
-                        bind:value={inputValues.deleteTimer}
-                        hardValidInput={/^-?\d*$/}
-                    ></DarkInput>
-                    <WhiteButton
-                        on:click={() =>
-                            meta({
-                                type: "delete_timer",
-                                to: inputValues.deleteTimer,
-                            })}
-                    >
-                        Set
-                    </WhiteButton>
-                </div>
-                <div class="flex w-full gap-2 flex-center">
-                    <h1 class="w-32 font-pusab text-stroke">Event Start</h1>
-                    <DarkInput
-                        maxLength={1000}
-                        bind:value={inputValues.eventStart}
-                        hardValidInput={/^-?\d*$/}
-                    ></DarkInput>
-                    <WhiteButton
-                        on:click={() =>
-                            meta({
-                                type: "event_start",
-                                to: inputValues.eventStart,
-                            })}
-                    >
-                        Set
-                    </WhiteButton>
-                </div>
-                <div class="flex w-full gap-2 flex-center">
-                    <h1 class="w-32 font-pusab text-stroke">Event End</h1>
-                    <DarkInput
-                        maxLength={1000}
-                        bind:value={inputValues.eventEnd}
-                        hardValidInput={/^-?\d*$/}
-                    ></DarkInput>
-                    <WhiteButton
-                        on:click={() =>
-                            meta({
-                                type: "event_end",
-                                to: inputValues.eventEnd,
-                            })}
-                    >
-                        Set
-                    </WhiteButton>
-                </div>
+        <div class="flex flex-col w-full gap-2 flex-center">
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="font-pusab text-stroke">Announce</h1>
+                <DarkInput
+                    maxLength={5000}
+                    class="w-full"
+                    bind:value={inputValues.announcementText}
+                ></DarkInput>
+            </div>
+
+            <WhiteButton
+                class="w-full"
+                on:click={() => {
+                    meta({
+                        type: "announcement",
+                        text: inputValues.announcementText,
+                    });
+                }}>Send</WhiteButton
+            >
+        </div>
+        <div class="flex flex-col gap-2 flex-center">
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Place</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.placeTimer}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() =>
+                        meta({
+                            type: "place_timer",
+                            to: inputValues.placeTimer,
+                        })}
+                >
+                    Set
+                </WhiteButton>
+            </div>
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Delete</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.deleteTimer}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() =>
+                        meta({
+                            type: "delete_timer",
+                            to: inputValues.deleteTimer,
+                        })}
+                >
+                    Set
+                </WhiteButton>
+            </div>
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Event Start</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.eventStart}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() =>
+                        meta({
+                            type: "event_start",
+                            to: inputValues.eventStart,
+                        })}
+                >
+                    Set
+                </WhiteButton>
+            </div>
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Event End</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.eventEnd}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() =>
+                        meta({
+                            type: "event_end",
+                            to: inputValues.eventEnd,
+                        })}
+                >
+                    Set
+                </WhiteButton>
             </div>
         </div>
+
         <div class="flex flex-col w-full gap-2 flex-center">
             <div class="flex w-full gap-2 flex-center">
                 <h1 class="font-pusab text-stroke">Mod</h1>

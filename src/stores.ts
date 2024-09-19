@@ -81,6 +81,11 @@ export const menuOpenWidget = persistLocalWritable(
     "menuOpenWidget"
 );
 
+export const lastClosedAnnouncement = persistLocalWritable<number>(
+    0,
+    "lastClosedAnnouncement"
+);
+
 export const editorData = persist(
     writable({
         x: 0,
@@ -315,12 +320,6 @@ export const placedByHover = writable<{
 } | null>(null);
 
 export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
-
-export const penis = persist(
-    writable([1, 2, 3]),
-    createLocalStorage(),
-    "agina"
-);
 
 export const eventStartTime = writable(Number.POSITIVE_INFINITY);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);

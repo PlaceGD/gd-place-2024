@@ -2,9 +2,22 @@
     import { db } from "./firebase/firebase";
     import { SvelteToast } from "@zerodevx/svelte-toast";
     import Toast from "./utils/toast";
+    import { lastClosedAnnouncement } from "./stores";
 
     db.ref("announcement").on("value", s => {
-        Toast.showAnnouncementToast(s.val());
+        const data = s.val();
+
+        if (
+            data == null ||
+            data.text.length === 0 ||
+            data.time < $lastClosedAnnouncement
+        ) {
+            return;
+        }
+
+        Toast.showAnnouncementToast(data.text, () => {
+            $lastClosedAnnouncement = Date.now();
+        });
     });
 
     //

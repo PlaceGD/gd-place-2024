@@ -47,6 +47,13 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
             });
             break;
 
+        case "announcement":
+            db.ref("announcement").set({
+                text: data.op.text,
+                time: Date.now(),
+            });
+            break;
+
         default:
             throw Error.code(500, "aborted");
     }

@@ -17,7 +17,7 @@ export const onCallAuth = <T, Return = Promise<void>>(
 ): CallableFunction<T, Return> => {
     return onCallF(request => {
         if (!request.auth) {
-            throw Error.code(210, "unauthenticated");
+            throw Error.code(210, "permission-denied");
         }
         return handler(request as AuthedCallableRequest<T>);
     });
@@ -31,7 +31,7 @@ export const onCallAuthLogger = <T, Return = Promise<void>>(
     return onCallF(request => {
         if (!request.auth) {
             logger.finish(Level.ERROR);
-            throw Error.code(210, "unauthenticated");
+            throw Error.code(210, "permission-denied");
         }
 
         try {

@@ -273,10 +273,10 @@ setInterval(() => {
     eventElapsed.set(Date.now() - get(eventStartTime));
 }, 500);
 
-db.ref("eventStartTime").on("value", v => {
+db.ref("metaVariables/eventStartTime").on("value", v => {
     console.log(v.val());
     eventStartTime.set(v.val());
 });
-db.ref("eventEndTime").on("value", v => {
+db.ref("metaVariables/eventEndTime").on("value", v => {
     eventEndTime.set(v.val());
 });

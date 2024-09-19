@@ -12,7 +12,13 @@ pub mod billy;
 pub mod countdown;
 pub mod level;
 
-pub fn draw_obj_simple(billy: &mut Billy, obj: &GDObject, detail: bool, color: Vec4) {
+pub fn draw_obj_simple(
+    billy: &mut Billy,
+    obj: &GDObject,
+    detail: bool,
+    color: Vec4,
+    blending: bool,
+) {
     if let Some(sprite) = if detail {
         &DETAIL_SPRITES
     } else {
@@ -29,6 +35,12 @@ pub fn draw_obj_simple(billy: &mut Billy, obj: &GDObject, detail: bool, color: V
         } else {
             3
         };
+
+        if blending {
+            billy.set_blend_mode(billy::BlendMode::Additive);
+        } else {
+            billy.set_blend_mode(billy::BlendMode::Normal);
+        }
 
         let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
         let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();

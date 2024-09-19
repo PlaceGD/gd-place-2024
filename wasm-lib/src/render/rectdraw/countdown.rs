@@ -8,6 +8,8 @@ use crate::{
 
 use super::{billy::Billy, draw_obj_simple};
 
+use crate::utilgen::COUNTDOWN_DIGITS;
+
 pub fn draw(state: &State, billy: &mut Billy) {
     if state.event_elapsed >= 0.0 {
         return;
@@ -25,20 +27,55 @@ pub fn draw(state: &State, billy: &mut Billy) {
             .floor() as i32;
 
     let text = format!("{:02}:{:02}:{:02}:{:02}", days, hours, minutes, seconds);
+    let mut offset = glam::vec2(450.0, 450.0);
+    for c in text.chars() {
+        if c == ':' {
+            offset.x += 120.0;
+            continue;
+        }
+        let digit = c.to_digit(10).unwrap() as usize;
+        draw_digit(1, digit, state, billy, offset);
+        offset.x += 30.0 * 7.0;
+    }
+}
 
-    draw_obj_simple(
-        billy,
-        &GDObject {
-            id: 1597,
-            x: 300.0,
-            y: 300.0,
-            ix: 1.0,
-            iy: 0.0,
-            jx: 0.0,
-            jy: 1.0,
-            ..Default::default()
-        },
-        false,
-        vec4(0.0, 1.0, 0.0, 1.0),
-    );
+pub fn draw_digit(set: usize, digit: usize, state: &State, billy: &mut Billy, offset: glam::Vec2) {
+    let layers = COUNTDOWN_DIGITS[set][digit];
+
+    for layer in layers {
+        let objects = layer
+            .split(";")
+            .filter(|a| !a.is_empty())
+            .map(|t| GDObject::from_str(t))
+            .collect::<Vec<_>>();
+
+        //log!("layer: {:?}", objects.len());
+
+        for obj in objects {
+            draw_obj_simple(
+                billy,
+                &obj.offset(offset),
+                true,
+                vec4(
+                    obj.detail_color.r as f32 / 255.0,
+                    obj.detail_color.g as f32 / 255.0,
+                    obj.detail_color.b as f32 / 255.0,
+                    obj.detail_color.opacity as f32 / 255.0,
+                ),
+                obj.detail_color.blending,
+            );
+            draw_obj_simple(
+                billy,
+                &obj.offset(offset),
+                false,
+                vec4(
+                    obj.main_color.r as f32 / 255.0,
+                    obj.main_color.g as f32 / 255.0,
+                    obj.main_color.b as f32 / 255.0,
+                    obj.main_color.opacity as f32 / 255.0,
+                ),
+                obj.main_color.blending,
+            );
+        }
+    }
 }

@@ -1,4 +1,7 @@
-use gen::{colors::get_available_colors, objects::make_get_object_info_fn};
+use gen::{
+    colors::get_available_colors, countdown_digits::make_get_countdown_digits_fn,
+    objects::make_get_object_info_fn,
+};
 
 mod gen;
 mod objects;
@@ -30,11 +33,14 @@ use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
 
 {}
 
+{}
+
     ",
         make_get_object_info_fn(),
         make_get_main_sprite_fn(sheet_data),
         make_get_detail_sprite_fn(sheet_data),
         make_get_sfx_icon_sprite_fn(sheet_data),
+        make_get_countdown_digits_fn(),
     )
 }
 

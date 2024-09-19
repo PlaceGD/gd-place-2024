@@ -33,23 +33,7 @@ pub mod special_ids {
 pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
     let objects = {
         let lvl = include_str!("placeobjs.gmd");
-        let r = Regex::new(r##"H4sIAAA[A-Za-z0-9-_=]+"##).unwrap();
-
-        let lvl = r.find(lvl).unwrap().as_str().as_bytes();
-
-        let decoded = base64::engine::general_purpose::URL_SAFE
-            .decode(lvl)
-            .unwrap();
-
-        let mut d = GzDecoder::new(&decoded[..]);
-        let mut lvl = String::new();
-        d.read_to_string(&mut lvl).unwrap();
-
-        lvl.split(';')
-            .filter(|v| !v.is_empty())
-            .skip(1)
-            .map(parse_obj)
-            .collect_vec()
+        parse_gmd_file(lvl).objects
     };
     let object_hitbox_types = include_str!("object_types.txt")
         .lines()
@@ -163,6 +147,96 @@ pub static AVAILABLE_OBJECTS: Lazy<Box<[(u16, ObjectInfo)]>> = Lazy::new(|| {
 
     objects
 });
+
+pub struct LevelParseResult {
+    pub objects: Vec<ObjectMap>,
+    pub colors: HashMap<u16, GDColor>,
+}
+
+#[derive(Debug, Clone)]
+pub struct GDColor {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+    pub opacity: u8,
+    pub blending: bool,
+}
+impl GDColor {
+    pub(crate) fn default() -> GDColor {
+        GDColor {
+            r: 255,
+            g: 255,
+            b: 255,
+            opacity: 255,
+            blending: false,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct GDObject {
+    pub id: u16,
+    pub x: f32,
+    pub y: f32,
+
+    pub ix: f32,
+    pub iy: f32,
+    pub jx: f32,
+    pub jy: f32,
+
+    pub z_layer: i8,
+    pub z_order: i8,
+    pub main_color: GDColor,
+    pub detail_color: GDColor,
+}
+
+pub fn parse_gmd_file(lvl: &str) -> LevelParseResult {
+    let r = Regex::new(r##"H4sIAAA[A-Za-z0-9-_=]+"##).unwrap();
+
+    let lvl = r.find(lvl).unwrap().as_str().as_bytes();
+
+    let decoded = base64::engine::general_purpose::URL_SAFE
+        .decode(lvl)
+        .unwrap();
+
+    let mut d = GzDecoder::new(&decoded[..]);
+    let mut lvl = String::new();
+    d.read_to_string(&mut lvl).unwrap();
+
+    let mut iter = lvl.split(';');
+
+    let colors = iter
+        .next()
+        .unwrap()
+        .split(',')
+        .tuples()
+        .find(|(k, _)| *k == "kS38")
+        .unwrap()
+        .1
+        .split('|')
+        .map(|c| {
+            let map = c
+                .split('_')
+                .tuples()
+                .map(|(k, v)| (k.parse().unwrap(), v))
+                .collect::<HashMap<u16, &str>>();
+            (
+                map.get(&6).unwrap_or(&"1").parse().unwrap(),
+                GDColor {
+                    r: map.get(&1).unwrap_or(&"0").parse().unwrap(),
+                    g: map.get(&2).unwrap_or(&"0").parse().unwrap(),
+                    b: map.get(&3).unwrap_or(&"0").parse().unwrap(),
+                    opacity: (map.get(&7).unwrap_or(&"1.0").parse::<f32>().unwrap() * 255.0) as u8,
+                    blending: map.get(&5) == Some(&"1"),
+                },
+            )
+        })
+        .collect();
+
+    let objects = iter.filter(|v| !v.is_empty()).map(parse_obj).collect_vec();
+
+    LevelParseResult { objects, colors }
+}
 
 fn game_object_type_to_hitbox_type(typ: u16) -> HitboxType {
     match typ {

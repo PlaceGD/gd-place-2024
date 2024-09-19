@@ -57,6 +57,24 @@ impl Default for ZLayer {
     }
 }
 
+impl ZLayer {
+    pub fn from_gd_num(num: i8) -> ZLayer {
+        // BG, MG, B5, B4, B3, B2, B1, P, T1, T2, T2, T4, G, UI, Max
+        match num {
+            -5 => ZLayer::B5,
+            -3 => ZLayer::B4,
+            -1 => ZLayer::B3,
+            1 => ZLayer::B2,
+            3 => ZLayer::B1,
+            5 => ZLayer::T1,
+            7 => ZLayer::T2,
+            9 => ZLayer::T3,
+            11 => ZLayer::T4,
+            _ => ZLayer::B1,
+        }
+    }
+}
+
 z_layers! {
     B5,
     B4,

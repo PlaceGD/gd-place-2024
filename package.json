@@ -15,7 +15,8 @@
         "nexus:gen": "cd rust/the-nexus && cargo test --release generate_shid -- --nocapture && cd ../..",
         "nexus:gen_no_sheet": "cd rust/the-nexus && cargo test --release generate_shid_no_sheet && cd ../..",
         "symlink": "cd functions && mklink /D shared-lib ..\\shared-lib",
-        "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\""
+        "random-uuid": "POWERSHELL -c \"[guid]::NewGuid().ToString().ToUpper()\"",
+        "rust:cleanall": "cd rust/the-nexus && cargo clean && cd ../wasm-lib && cargo clean && cd .."
     },
     "devDependencies": {
         "@jill64/eslint-config-svelte": "^1.2.20",

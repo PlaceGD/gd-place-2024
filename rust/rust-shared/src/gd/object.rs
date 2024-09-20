@@ -16,7 +16,7 @@ fn bool_write(map: &bool) -> BinResult<()> {
 }
 
 // IF THIS IS EVER CHANGED MAKE SURE TO CHANGE THE TYPESCRIPT TYPE IN SHAREDLIB
-#[derive(Debug, Clone, Copy, Default, BinRead, BinWrite)]
+#[derive(Debug, Clone, Copy, Default, BinRead, BinWrite, PartialEq)]
 #[wasm_bindgen]
 #[repr(C, packed)]
 #[brw(little)]
@@ -87,6 +87,20 @@ impl GDObject {
             y: self.y + offset.y,
             ..self
         }
+    }
+
+    pub fn tint(mut self, r: f32, g: f32, b: f32, opacity: f32) -> Self {
+        self.main_color.r = (self.main_color.r as f32 * r) as u8;
+        self.main_color.g = (self.main_color.g as f32 * g) as u8;
+        self.main_color.b = (self.main_color.b as f32 * b) as u8;
+        self.main_color.opacity = (self.main_color.opacity as f32 * opacity) as u8;
+
+        self.detail_color.r = (self.detail_color.r as f32 * r) as u8;
+        self.detail_color.g = (self.detail_color.g as f32 * g) as u8;
+        self.detail_color.b = (self.detail_color.b as f32 * b) as u8;
+        self.detail_color.opacity = (self.detail_color.opacity as f32 * opacity) as u8;
+
+        self
     }
 
     pub fn from_str(s: &str) -> Self {

@@ -18,10 +18,9 @@ use crate::{
     object::{GDObjectExt, GDObjectOpt},
     render::{
         data::Globals,
-        pipeline_rect,
         rectdraw::{
             billy::{Billy, BlendMode},
-            countdown::{draw as countdown_draw, CountdownDigit},
+            countdown::Countdown,
             level::draw as level_draw,
         },
         state::RenderState,
@@ -63,7 +62,7 @@ pub struct State {
     /// unix time, negative before event starts
     pub(crate) event_elapsed: f64,
 
-    pub(crate) countdown_digits: [CountdownDigit; 8],
+    pub(crate) countdown: Countdown,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -106,7 +105,7 @@ impl State {
             hide_outline: false,
             event_elapsed: f64::NEG_INFINITY,
             render,
-            countdown_digits: Default::default(),
+            countdown: Countdown::new(),
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -554,9 +553,11 @@ impl State {
             };
 
             billy.set_blend_mode(BlendMode::Normal);
-            {
+            if self.event_elapsed < 0.0 {
                 let old_t = billy.get_transform();
-                countdown_draw(self, &mut billy);
+                billy.apply_transform(self.view_transform());
+                self.countdown.update_state(self.event_elapsed);
+                self.countdown.draw(&mut billy); // neg time because its just used for animation, not actually relative to anything
                 billy.set_transform(old_t);
             }
             level_draw(self, &mut billy);

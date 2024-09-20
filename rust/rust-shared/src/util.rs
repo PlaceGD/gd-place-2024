@@ -150,6 +150,10 @@ pub fn now() -> f64 {
     js_sys::Date::now()
 }
 
+pub fn random() -> f64 {
+    js_sys::Math::random()
+}
+
 fn sign(p1: Vec2, p2: Vec2, p3: Vec2) -> f32 {
     (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y)
 }

@@ -8,7 +8,7 @@ pub const DIGIT_SETS: usize = 3;
 
 #[binrw]
 #[brw(little)]
-pub struct DigitLayerObjects {
+pub struct DigitObjects {
     #[bw(calc(objs.len() as u32))]
     count: u32,
     #[br(count = count)]
@@ -17,16 +17,7 @@ pub struct DigitLayerObjects {
 
 #[binrw]
 #[brw(little)]
-pub struct DigitLayers {
-    #[bw(calc(layers.len() as u32))]
-    count: u32,
-    #[br(count = count)]
-    pub layers: Vec<DigitLayerObjects>,
-}
-
-#[binrw]
-#[brw(little)]
-pub struct DigitSet(pub [DigitLayers; 10]);
+pub struct DigitSet(pub [DigitObjects; 10]);
 
 #[binrw]
 #[brw(little)]

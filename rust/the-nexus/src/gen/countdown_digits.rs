@@ -5,8 +5,7 @@ use binrw::BinWrite;
 use itertools::Itertools;
 use rust_shared::{
     countdown::{
-        CountdownDigitSets, DigitLayerObjects, DigitLayers, DigitSet, DIGIT_HEIGHT, DIGIT_SETS,
-        DIGIT_WIDTH,
+        CountdownDigitSets, DigitObjects, DigitSet, DIGIT_HEIGHT, DIGIT_SETS, DIGIT_WIDTH,
     },
     gd::{
         layer::ZLayer,
@@ -29,7 +28,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let h_radius = DIGIT_WIDTH / 2.0;
     let v_radius = DIGIT_HEIGHT / 2.0;
 
-    let mut sets: [[DigitLayers; 10]; DIGIT_SETS] = array::from_fn(|digit_set| {
+    let sets: [[DigitObjects; 10]; DIGIT_SETS] = array::from_fn(|digit_set| {
         array::from_fn(|digit| {
             let x = x_offset + digit as f32 * DIGIT_WIDTH;
             let y = y_offset + digit_set as f32 * DIGIT_HEIGHT;
@@ -99,6 +98,14 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                     let [ix, iy, jx, jy] =
                         get_transform(x_scale, x_warp_angle, y_scale, y_warp_angle);
 
+                    let default_color = GDColor {
+                        r: 255,
+                        g: 255,
+                        b: 255,
+                        opacity: 255,
+                        blending: false,
+                    };
+
                     GDObject {
                         id: o[&1].parse().unwrap(),
                         x: o[&2].parse::<f32>().unwrap() - x,
@@ -122,44 +129,36 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                         main_color: o
                             .get(&21)
                             .map(|c| parsed.colors[&c.parse().unwrap()].clone())
-                            .unwrap_or(GDColor::default()),
+                            .unwrap_or(default_color),
                         detail_color: o
                             .get(&22)
                             .map(|c| parsed.colors[&c.parse().unwrap()].clone())
-                            .unwrap_or(GDColor::default()),
+                            .unwrap_or(default_color),
                     }
                 })
                 .collect();
 
             println!("{} ({}): {} objs", digit_set, digit, obj_list.len());
 
-            // obj_list.sort_by_key(|obj| obj.z_layer as i32 * 10000 + obj.z_order as i32);
+            // sorting happens at runtime because animations
+            // obj_list.sort_by(|a, b| {
+            //     // place blending objects at bottom of layer (dont care about detail color for this)
+            //     let a_z = if a.main_color.blending {
+            //         i8::MIN
+            //     } else {
+            //         a.z_order
+            //     };
+            //     let b_z = if b.main_color.blending {
+            //         i8::MIN
+            //     } else {
+            //         b.z_order
+            //     };
+            //     (a.z_layer as u8)
+            //         .cmp(&(b.z_layer as u8))
+            //         .then(a_z.cmp(&b_z))
+            // });
 
-            // obj_list
-
-            // group by z_layer
-            let mut grouped = HashMap::<u8, Vec<GDObject>>::new();
-
-            for obj in obj_list.iter() {
-                grouped
-                    .entry(obj.z_layer as u8)
-                    .or_default()
-                    .push(obj.clone());
-                // grouped.entry(69).or_default().push(obj.clone());
-            }
-
-            let mut grouped = grouped.into_iter().collect::<Vec<_>>();
-            grouped.sort_by_key(|(layer, _)| *layer);
-
-            DigitLayers {
-                layers: grouped
-                    .into_iter()
-                    .map(|(_, mut objs)| {
-                        objs.sort_by_key(|o| o.z_order);
-                        DigitLayerObjects { objs }
-                    })
-                    .collect(),
-            }
+            DigitObjects { objs: obj_list }
         })
     });
 

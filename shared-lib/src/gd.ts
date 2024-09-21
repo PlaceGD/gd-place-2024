@@ -33,8 +33,8 @@ export interface ObjectInfo {
 
 export const objects: Record<string, ObjectInfo> = _objects as any;
 export const spritesheet: {
-    mainSprites: Record<string, SpriteData>;
-    detailSprites: Record<string, SpriteData>;
+    main_sprites: Record<string, SpriteData>;
+    detail_sprites: Record<string, SpriteData>;
 } = _spritesheet as any;
 export const objectOrder: number[] = _objectOrder;
 export const colors: {

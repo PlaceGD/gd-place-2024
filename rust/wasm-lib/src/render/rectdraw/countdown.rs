@@ -2,7 +2,13 @@ use std::{array, io::Cursor, sync::LazyLock, time::Instant};
 
 use binrw::BinRead;
 use glam::{vec2, vec4, Affine2, Vec2};
-use rust_shared::{console_log, countdown::CountdownDigitSets, gd::object::GDObject, util::random};
+use rust_shared::{
+    console_log,
+    countdown::CountdownDigitSets,
+    gd::object::{GDColor, GDObject},
+    lerp,
+    util::random,
+};
 
 use crate::state::State;
 
@@ -17,11 +23,10 @@ pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
 fn now() -> f64 {
     rust_shared::util::now() / 1000.0
 }
-const SETS_SIZE: usize = 8; // change this to 4 to get big error
 pub struct Countdown {
     pub digits: [CountdownDigit; 8],
     pub state: [Option<u8>; 8],
-    pub sets: [usize; SETS_SIZE],
+    pub sets: [usize; 4],
 }
 
 impl Countdown {
@@ -31,11 +36,15 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [0; SETS_SIZE], //array::from_fn(|_| (random() * COUNTDOWN_DIGITS.0.len() as f64) as usize),
+            sets: [1, 0, 1, 2],
         }
     }
     pub fn update_state(&mut self, event_elapsed: f64) {
         let time_until = -event_elapsed / 1000.0;
+
+        if time_until.is_nan() || time_until.is_infinite() {
+            return;
+        }
 
         let days = (time_until / 86400.0).floor();
         let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
@@ -65,16 +74,15 @@ impl Countdown {
                 // } else {
                 //     self.sets[i]
                 // };
-                let new_set = 0;
+                //let new_set = 0;
                 self.digits[i].transition_between(
                     self.state[i],
                     state[i],
-                    self.sets[0],
-                    self.sets[0],
-                    0.8,
+                    self.sets[i / 2],
+                    self.sets[i / 2],
                 );
                 self.state[i] = state[i];
-                self.sets[i] = new_set;
+                //self.sets[i / 2] = new_set;
             }
         }
     }
@@ -152,7 +160,7 @@ impl CountdownDigit {
     fn set_to(&mut self, set: usize, digit: u8, duration: f64) {
         self.objects = Self::get_set(set, digit)
             .iter()
-            .map(|o| TransitioningObject::new(AnimType::Appear(*o), duration))
+            .map(|o| TransitioningObject::new(AnimType::Appear(*o, vec2(0.0, 0.0)), duration, true))
             .collect();
     }
 
@@ -166,7 +174,6 @@ impl CountdownDigit {
         digit2: Option<u8>,
         set1: usize,
         set2: usize,
-        duration: f64,
     ) {
         self.objects.clear(); // so it dont reallocate :)
 
@@ -182,30 +189,120 @@ impl CountdownDigit {
 
         let mut trans_out = setup(digit1, set1);
         let mut trans_in = setup(digit2, set2);
+        let mut static_objs = Vec::new();
 
-        // transitions (WIP)
-        for obj_out in &mut trans_out {
-            for obj_in in &mut trans_in {
-                if is_equivalent(obj_out.0, obj_in.0) {
+        // unchanging objects
+        for obj_out in trans_out.iter_mut().filter(|o| o.1) {
+            for obj_in in trans_in.iter_mut().filter(|o| o.1) {
+                if obj_in.0.id == obj_out.0.id
+                    && same_pos(obj_out.0, obj_in.0)
+                    && same_colors(obj_out.0, obj_in.0)
+                    && same_transform(obj_out.0, obj_in.0)
+                {
                     obj_out.1 = false;
                     obj_in.1 = false;
+                    static_objs.push(obj_out.0);
                     self.objects.push(TransitioningObject::new(
                         AnimType::Static(obj_out.0),
-                        duration,
+                        0.8,
+                        false,
                     ));
                 }
-                // if obj_out.0.id == obj_in.0.id {
-                //     //  ...
-                // }
+            }
+        }
+
+        trans_out.retain(|o| o.1);
+        trans_in.retain(|o| o.1);
+
+        // // changing but just barely
+        // for obj_out in &mut trans_out {
+        //     if !obj_out.1 {
+        //         continue;
+        //     }
+        //     for obj_in in &mut trans_in {
+        //         if !obj_in.1 {
+        //             continue;
+        //         }
+        //         if obj_in.0.id == obj_out.0.id
+        //             && same_pos(obj_out.0, obj_in.0)
+        //             && same_colors(obj_out.0, obj_in.0)
+        //             && symmetrical_transform(obj_out.0, obj_in.0)
+        //         {
+        //             obj_out.1 = false;
+        //             obj_in.1 = false;
+        //             static_objs.push(obj_in.0);
+        //             self.objects.push(TransitioningObject::new(
+        //                 AnimType::TinyTransition(obj_out.0, obj_in.0),
+        //                 0.8,
+        //                 false,
+        //             ));
+        //         }
+        //     }
+        // }
+
+        // trans_out.retain(|o| o.1);
+        // trans_in.retain(|o| o.1);
+
+        // copied from static objects
+
+        for obj_in in trans_in.iter_mut().filter(|o| o.1) {
+            for obj_static in &static_objs {
+                if obj_in.0.id == obj_static.id
+                    && obj_chebyshev_dist(obj_in.0, *obj_static) < 45.0
+                    && same_colors(obj_in.0, *obj_static)
+                    && obj_angle_dist(obj_in.0, *obj_static) <= std::f32::consts::PI / 2.0
+                {
+                    obj_in.1 = false;
+                    self.objects.push(TransitioningObject::new(
+                        AnimType::Copy(*obj_static, obj_in.0, random() < 0.5),
+                        0.8,
+                        false,
+                    ));
+                    break;
+                }
+            }
+        }
+
+        trans_in.retain(|o| o.1);
+
+        // transitioning from a to b
+        for obj_out in trans_out.iter_mut().filter(|o| o.1) {
+            for obj_in in trans_in.iter_mut().filter(|o| o.1) {
+                if obj_in.0.id == obj_out.0.id
+                    && obj_chebyshev_dist(obj_out.0, obj_in.0) < 60.0
+                    && same_colors(obj_out.0, obj_in.0)
+                    && same_transform(obj_out.0, obj_in.0)
+                {
+                    obj_in.1 = false;
+                    obj_out.1 = false;
+                    self.objects.push(TransitioningObject::new(
+                        AnimType::Transition(obj_out.0, obj_in.0, random() < 0.5),
+                        0.7,
+                        false,
+                    ));
+                }
             }
         }
 
         self.objects.extend(trans_out.iter().filter_map(|o| {
-            o.1.then(|| TransitioningObject::new(AnimType::Disappear(o.0), duration))
+            o.1.then(|| TransitioningObject::new(AnimType::Disappear(o.0), 0.8, true))
         }));
 
         self.objects.extend(trans_in.iter().filter_map(|o| {
-            o.1.then(|| TransitioningObject::new(AnimType::Appear(o.0), duration))
+            o.1.then(|| {
+                TransitioningObject::new(
+                    AnimType::Appear(
+                        o.0,
+                        if random() < 0.5 {
+                            vec2(random() as f32 - 0.5, 0.0)
+                        } else {
+                            vec2(0.0, random() as f32 - 0.5)
+                        } * 30.0,
+                    ),
+                    0.8,
+                    true,
+                )
+            })
         }));
 
         // resort (dw this only happens once a second to like 200 objects at a time)
@@ -230,35 +327,99 @@ impl CountdownDigit {
     }
 }
 
-pub fn is_equivalent(obj1: GDObject, obj2: GDObject) -> bool {
-    if obj1.id != obj2.id {
-        return false;
-    }
-    let same_pos = (obj1.x - obj2.x).abs() < 0.01 && (obj1.y - obj2.y).abs() < 0.01;
-    let same_transform = (obj1.ix - obj2.ix).abs() < 0.001
-        && (obj1.iy - obj2.iy).abs() < 0.001
-        && (obj1.jx - obj2.jx).abs() < 0.001
-        && (obj1.jy - obj2.jy).abs() < 0.001;
+// pub fn is_equivalent(obj1: GDObject, obj2: GDObject, allow_more: bool) -> bool {
+//     if obj1.id != obj2.id {
+//         return false;
+//     }
+//     let same_pos = obj_chebyshev_dist(obj1, obj2) < 0.1;
+//     let same_transform = if allow_more {
+//         symmetrical_transform(obj1, obj2)
+//     } else {
+//         same_transform(obj1, obj2)
+//     };
 
-    let same_colors = obj1.main_color == obj2.main_color && obj1.detail_color == obj2.detail_color;
+//     let same_colors = if allow_more {
+//         obj1.main_color.blending == obj2.main_color.blending
+//             && obj1.detail_color.blending == obj2.detail_color.blending
+//     } else {
+//         same_colors(obj1, obj2)
+//     };
 
-    same_pos && same_transform && same_colors
+//     same_pos && same_transform && same_colors
+// }
+
+fn same_pos(obj1: GDObject, obj2: GDObject) -> bool {
+    obj_chebyshev_dist(obj1, obj2) < 0.1
+}
+
+fn same_colors(obj1: GDObject, obj2: GDObject) -> bool {
+    obj1.main_color == obj2.main_color && obj1.detail_color == obj2.detail_color
+}
+
+fn same_transform(obj1: GDObject, obj2: GDObject) -> bool {
+    (obj1.ix - obj2.ix).abs() < 0.02
+        && (obj1.iy - obj2.iy).abs() < 0.02
+        && (obj1.jx - obj2.jx).abs() < 0.02
+        && (obj1.jy - obj2.jy).abs() < 0.02
+}
+
+fn symmetrical_transform(obj1: GDObject, obj2: GDObject) -> bool {
+    // symmetry
+    ((obj1.ix + obj2.ix).abs() < 0.02 || (obj1.ix - obj2.ix).abs() < 0.02)
+        && ((obj1.iy + obj2.iy).abs() < 0.02 || (obj1.iy - obj2.iy).abs() < 0.02)
+        && ((obj1.jx + obj2.jx).abs() < 0.02 || (obj1.jx - obj2.jx).abs() < 0.02)
+        && ((obj1.jy + obj2.jy).abs() < 0.02 || (obj1.jy - obj2.jy).abs() < 0.02)
+        // rotation 90 deg
+    || ((obj1.ix + obj2.iy).abs() < 0.02 || (obj1.ix - obj2.iy).abs() < 0.02)
+        && ((obj1.iy + obj2.ix).abs() < 0.02 || (obj1.iy - obj2.ix).abs() < 0.02)
+        && ((obj1.jx + obj2.jy).abs() < 0.02 || (obj1.jx - obj2.jy).abs() < 0.02)
+        && ((obj1.jy + obj2.jx).abs() < 0.02 || (obj1.jy - obj2.jx).abs() < 0.02)
+}
+
+fn obj_chebyshev_dist(obj1: GDObject, obj2: GDObject) -> f32 {
+    (obj1.x - obj2.x).abs().max((obj1.y - obj2.y).abs())
+}
+
+fn obj_angle_dist(obj1: GDObject, obj2: GDObject) -> f32 {
+    let angle1 = vec2(obj1.ix, obj1.iy).angle_to(vec2(obj2.ix, obj2.iy));
+    let angle2 = vec2(obj1.jx, obj1.jy).angle_to(vec2(obj2.jx, obj2.jy));
+    let angle1 = if angle1 > std::f32::consts::PI {
+        angle1 - std::f32::consts::PI * 2.0
+    } else {
+        angle1
+    };
+    let angle2 = if angle2 > std::f32::consts::PI {
+        angle2 - std::f32::consts::PI * 2.0
+    } else {
+        angle2
+    };
+    angle1.abs().max(angle2.abs())
+}
+
+fn ease_out_quart(t: f32) -> f32 {
+    1.0 - (1.0 - t).powi(4)
 }
 
 enum AnimType {
-    Appear(GDObject),
+    Appear(GDObject, Vec2), // Vec2: offset
     Disappear(GDObject),
-    Transition(GDObject, GDObject),
+    Transition(GDObject, GDObject, bool), // bool: prefer x axis
+
+    Copy(GDObject, GDObject, bool), // bool: prefer x axis
+
+    TinyTransition(GDObject, GDObject),
     Static(GDObject),
 }
 
 impl AnimType {
     fn repr_obj(&self) -> GDObject {
         *match self {
-            AnimType::Appear(obj) => obj,
+            AnimType::Appear(obj, _) => obj,
             AnimType::Disappear(obj) => obj,
-            AnimType::Transition(obj, _) => obj,
+            AnimType::Transition(obj, _, _) => obj,
             AnimType::Static(obj) => obj,
+            AnimType::TinyTransition(obj, _) => obj,
+            AnimType::Copy(_, obj, _) => obj,
         }
     }
 }
@@ -272,46 +433,234 @@ struct TransitioningObject {
 impl TransitioningObject {
     fn get(&self) -> Option<GDObject> {
         let time = now();
-        let d = if time <= self.start_time {
-            0.0
-        } else if time > self.start_time && time < self.start_time + self.duration {
-            (time - self.start_time) / self.duration
-        } else {
-            1.0
-        };
+        let d = (time - self.start_time) / self.duration;
 
-        // WIP
+        fn lerp_color(c1: GDColor, c2: GDColor, d: f64) -> GDColor {
+            GDColor {
+                r: lerp!(c1.r as f64, c2.r as f64, d) as u8,
+                g: lerp!(c1.g as f64, c2.g as f64, d) as u8,
+                b: lerp!(c1.b as f64, c2.b as f64, d) as u8,
+                opacity: lerp!(c1.opacity as f64, c2.opacity as f64, d) as u8,
+                blending: c1.blending,
+            }
+        }
+
         match self.typ {
             AnimType::Static(obj) => Some(obj),
-            AnimType::Appear(obj) => {
-                if d < 0.3 {
+            AnimType::TinyTransition(obj1, obj2) => {
+                let main_color = lerp_color(obj1.main_color, obj2.main_color, d);
+                let detail_color = lerp_color(obj1.detail_color, obj2.detail_color, d);
+
+                let mut obj = if d < 0.5 { obj1 } else { obj2 };
+                obj.main_color = main_color;
+                obj.detail_color = detail_color;
+                Some(obj)
+            }
+            AnimType::Appear(obj, offset) => {
+                if d < 0.4 {
                     None
-                } else if d < 0.6 {
-                    Some(obj.tint(0.0, 1.0, 0.0, 1.0))
+                } else if d < 0.8 {
+                    let mut edited_obj = obj;
+                    {
+                        let d = ((d - 0.4) / 0.4).max(0.0).min(1.0);
+                        let div = 3.0;
+                        let i = 1.0 - (d as f32 * div).floor() / div;
+
+                        edited_obj.x = obj.x + offset.x * i;
+                        edited_obj.y = obj.y + offset.y * i;
+                    }
+
+                    {
+                        edited_obj.ix = 1.0;
+                        edited_obj.iy = 0.0;
+                        edited_obj.jx = 0.0;
+                        edited_obj.jy = 1.0;
+                        let d = ((d - 0.45) / 0.3).max(0.0).min(1.0);
+                        if let Some(value) = transform_animation(&mut edited_obj, obj, d) {
+                            return Some(value);
+                        }
+                    }
+                    Some(edited_obj.select_tint())
                 } else {
                     Some(obj)
                 }
             }
             AnimType::Disappear(obj) => {
-                if d < 0.4 {
+                if d < 0.3 {
                     Some(obj)
-                } else if d < 0.7 {
-                    Some(obj.tint(0.0, 1.0, 0.0, 1.0))
+                } else if d < 0.45 {
+                    Some(obj.select_tint())
                 } else {
                     None
                 }
             }
-            AnimType::Transition(gdobject, gdobject1) => todo!(),
+            AnimType::Copy(mut obj, target, prefer_x_axis) => {
+                if let Some(value) = move_obj_animation(&mut obj, target, d, prefer_x_axis) {
+                    return Some(value);
+                }
+
+                Some(obj.copypaste_tint())
+            }
+            AnimType::Transition(mut obj, target, prefer_x_axis) => {
+                if let Some(value) = move_obj_animation(&mut obj, target, d, prefer_x_axis) {
+                    return Some(value);
+                }
+
+                Some(obj.select_tint())
+            }
         }
     }
 
-    fn new(typ: AnimType, duration: f64) -> TransitioningObject {
+    fn new(typ: AnimType, duration: f64, y_delay: bool) -> TransitioningObject {
         let time = now();
-        let delay = typ.repr_obj().y / 300.0 * 0.2;
+        let delay = if !y_delay {
+            0.0
+        } else {
+            typ.repr_obj().y / 300.0 * 0.2
+        };
         TransitioningObject {
             typ,
-            start_time: time + random() * duration * 0.2 + delay as f64,
-            duration: duration * 0.8,
+            start_time: time + random() * duration * 0.1 + delay as f64,
+            duration: duration * 0.9,
         }
     }
+}
+
+fn move_obj_animation(
+    obj: &mut GDObject,
+    target: GDObject,
+    d: f64,
+    prefer_x_axis: bool,
+) -> Option<GDObject> {
+    if d >= 0.999 {
+        return Some(target);
+    } else if d < 0.001 {
+        return Some(*obj);
+    }
+    let move_x = target.x - obj.x;
+    let move_y = target.y - obj.y;
+
+    if move_x != 0.0 || move_y != 0.0 {
+        let first_axis =
+            if (prefer_x_axis && move_x.abs() == move_y.abs()) || move_x.abs() > move_y.abs() {
+                let (a, b) = (obj.x, obj.y);
+                (
+                    &mut obj.x,
+                    &mut obj.y,
+                    a / 30.0,
+                    b / 30.0,
+                    move_x / 30.0,
+                    move_y / 30.0,
+                )
+            } else {
+                let (a, b) = (obj.y, obj.x);
+                (
+                    &mut obj.y,
+                    &mut obj.x,
+                    a / 30.0,
+                    b / 30.0,
+                    move_y / 30.0,
+                    move_x / 30.0,
+                )
+            };
+
+        let first_axis_time =
+            0.6 * (move_x.abs() as f64 / (move_x.abs() as f64 + move_y.abs() as f64));
+        let second_axis_time =
+            0.6 * (move_y.abs() as f64 / (move_x.abs() as f64 + move_y.abs() as f64));
+
+        if d < first_axis_time {
+            // fractional move first axis
+            let div = first_axis.4.floor().max(1.0) * 5.0;
+
+            let d = (d) / first_axis_time;
+            let i = (d as f32 * div).floor() / div;
+            *first_axis.0 = (first_axis.2 + first_axis.4 * i) * 30.0;
+        } else if d < first_axis_time + second_axis_time {
+            // fractional move second axis
+            let div = first_axis.5.floor().max(1.0) * 5.0;
+
+            let d = (d - first_axis_time) / second_axis_time;
+            let i = (d as f32 * div).floor() / div;
+            *first_axis.1 = (first_axis.3 + first_axis.5 * i) * 30.0;
+        } else {
+            *first_axis.0 = (first_axis.2 + first_axis.4) * 30.0;
+            *first_axis.1 = (first_axis.3 + first_axis.5) * 30.0;
+        }
+    }
+
+    if d > 0.2 && obj_angle_dist(*obj, target).abs() - std::f32::consts::PI < 0.1 {
+        let mut i1 = vec2(obj.ix, obj.iy);
+        let i2 = vec2(target.ix, target.iy);
+        let mut j1 = vec2(obj.jx, obj.jy);
+        let j2 = vec2(target.jx, target.jy);
+        i1 = (vec2(target.ix, target.iy) / i2.length()) * i1.length();
+        j1 = (vec2(target.jx, target.jy) / j2.length()) * j1.length();
+
+        obj.ix = i1.x;
+        obj.iy = i1.y;
+        obj.jx = j1.x;
+        obj.jy = j1.y;
+    }
+
+    if d >= 0.5 {
+        if same_transform(*obj, target) {
+            return Some(target);
+        }
+        if let Some(value) = transform_animation(obj, target, (d - 0.5) / 0.5) {
+            return Some(value);
+        }
+    }
+    None
+}
+
+fn transform_animation(obj: &mut GDObject, target: GDObject, d: f64) -> Option<GDObject> {
+    let mut i1 = vec2(obj.ix, obj.iy);
+    let i2 = vec2(target.ix, target.iy);
+    let mut j1 = vec2(obj.jx, obj.jy);
+    let j2 = vec2(target.jx, target.jy);
+    let i1len = i1.length();
+    let i2len = i2.length();
+    let j1len = j1.length();
+    let j2len = j2.length();
+    if obj_angle_dist(*obj, target).abs() - std::f32::consts::PI < 0.1 {
+        if (i1len - i2len).abs() < 0.01 && (j1len - j2len).abs() < 0.01 {
+            return Some(target);
+        }
+        i1 = (i2 / i2len) * i1len;
+        j1 = (j2 / j2len) * j1len;
+        let scale = (((d as f32) / 0.6).max(0.0).min(1.0));
+
+        i1 *= lerp!(i1len, i2len, scale);
+        j1 *= lerp!(j1len, j2len, scale);
+    } else {
+        let rot = ease_out_quart(((d as f32) / 0.4).max(0.0).min(1.0));
+
+        i1 = rotate_between(i1 / i1len, i2 / i2len, rot);
+        j1 = rotate_between(j1 / j1len, j2 / j2len, rot);
+
+        let scale = ease_out_quart(((d as f32 - 0.3) / 0.2).max(0.0).min(1.0));
+
+        i1 *= lerp!(i1len, i2len, scale);
+        j1 *= lerp!(j1len, j2len, scale);
+    }
+    obj.ix = i1.x;
+    obj.iy = i1.y;
+    obj.jx = j1.x;
+    obj.jy = j1.y;
+    // rotate
+
+    None
+}
+
+fn rotate_between(a: Vec2, b: Vec2, d: f32) -> Vec2 {
+    let angle = a.angle_to(b);
+    let angle = if angle > std::f32::consts::PI {
+        angle - std::f32::consts::PI * 2.0
+    } else {
+        angle
+    };
+    let angle = angle * d;
+    let rot = Affine2::from_angle(angle);
+    rot.transform_vector2(a)
 }

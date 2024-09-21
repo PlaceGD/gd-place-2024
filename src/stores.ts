@@ -328,7 +328,7 @@ export const eventElapsed = writable(Number.NEGATIVE_INFINITY);
 
 setInterval(() => {
     eventElapsed.set(Date.now() - get(eventStartTime));
-}, 500);
+}, 1000);
 
 db.ref("metaVariables/eventStartTime").on("value", v => {
     console.log(v.val());

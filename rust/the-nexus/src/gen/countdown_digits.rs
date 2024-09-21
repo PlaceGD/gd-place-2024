@@ -23,7 +23,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
         .retain(|o| o.get(&20).map(|v| v.parse::<u16>().unwrap() >= 8) == Some(true));
 
     let x_offset = 8.0 * 30.0;
-    let y_offset = 85.0 * 30.0;
+    let y_offset = 15.0 * 30.0;
 
     let h_radius = DIGIT_WIDTH / 2.0;
     let v_radius = DIGIT_HEIGHT / 2.0;
@@ -49,7 +49,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                 })
                 .collect::<Vec<_>>();
 
-            let mut obj_list: Vec<GDObject> = objects
+            let obj_list: Vec<GDObject> = objects
                 .iter()
                 .map(|o| {
                     let rotation = o

@@ -93,13 +93,39 @@ impl GDObject {
         self.main_color.r = (self.main_color.r as f32 * r) as u8;
         self.main_color.g = (self.main_color.g as f32 * g) as u8;
         self.main_color.b = (self.main_color.b as f32 * b) as u8;
-        self.main_color.opacity = (self.main_color.opacity as f32 * opacity) as u8;
+        self.main_color.opacity = (opacity * 256.0).floor() as u8; //(self.main_color.opacity as f32 * opacity) as u8;
 
         self.detail_color.r = (self.detail_color.r as f32 * r) as u8;
         self.detail_color.g = (self.detail_color.g as f32 * g) as u8;
         self.detail_color.b = (self.detail_color.b as f32 * b) as u8;
-        self.detail_color.opacity = (self.detail_color.opacity as f32 * opacity) as u8;
+        self.detail_color.opacity = (opacity * 256.0).floor() as u8; //(self.detail_color.opacity as f32 * opacity) as u8;
 
+        self
+    }
+
+    pub fn select_tint(mut self) -> Self {
+        self.main_color.r = 0;
+        self.main_color.g = 255;
+        self.main_color.b = 0;
+        self.main_color.opacity = 255;
+
+        self.detail_color.r = 0;
+        self.detail_color.g = 255;
+        self.detail_color.b = 0;
+        self.detail_color.opacity = 255;
+        self
+    }
+
+    pub fn copypaste_tint(mut self) -> Self {
+        self.main_color.r = 0;
+        self.main_color.g = 255;
+        self.main_color.b = 255;
+        self.main_color.opacity = 255;
+
+        self.detail_color.r = 0;
+        self.detail_color.g = 255;
+        self.detail_color.b = 255;
+        self.detail_color.opacity = 255;
         self
     }
 

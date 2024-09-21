@@ -51,10 +51,6 @@ body {
     }
 }
 
-dialog::backdrop {
-    @apply backdrop-blur-lg brightness-[65%]
-}
-
 @keyframes scale-easeOutBounce {
 	0% {
         transform: scale3d(1.0, 1.0, 1);

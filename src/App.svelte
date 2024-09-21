@@ -9,9 +9,9 @@
         fetchAndParseSpritesheet,
         spritesheetProgress,
     } from "./load_wasm";
-    import ToastContainer from "./components/ToastContainer.svelte";
+    import ToastContainers from "./components/ToastContainers.svelte";
     import { rawSpritesheetData } from "./stores";
-    import Announcement from "./Announcement.svelte";
+    // import Announcement from "./Announcement.svelte";
 
     alertHasDarkReader();
 
@@ -36,14 +36,14 @@
 
 <!-- <Turnstiles /> -->
 
-<ToastContainer />
-<Announcement />
+<ToastContainers />
+<!-- <Announcement /> -->
 
 <DataPopup />
 
 <div class="relative w-screen h-screen overflow-hidden">
     {#if !loaded}
-    <!-- <div class="absolute">
+        <!-- <div class="absolute">
             <input
                 type="range"
                 min={0}
@@ -55,12 +55,12 @@
             />
         </div> -->
 
-    <div
-        class="w-[500px] h-[30px] p-[2px] m-16 rounded-[8px]"
-        style={`background: conic-gradient(from ${gay / 3}turn, black 0%, lime 2%, black 10%);`}
-    >
-        <div class="bg-black w-full h-full rounded-[6px]"></div>
-    </div>
+        <div
+            class="w-[500px] h-[30px] p-[2px] m-16 rounded-[8px]"
+            style={`background: conic-gradient(from ${gay / 3}turn, black 0%, lime 2%, black 10%);`}
+        >
+            <div class="bg-black w-full h-full rounded-[6px]"></div>
+        </div>
     {/if}
     <Editor bind:wasmLoaded={loaded} />
 </div>

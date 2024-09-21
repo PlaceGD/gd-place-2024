@@ -14,7 +14,7 @@
     import FadedScroll from "../components/FadedScroll.svelte";
     import Button from "../components/Button.svelte";
     import { SvelteToast, toast } from "@zerodevx/svelte-toast";
-    import ToastContainer from "../components/ToastContainer.svelte";
+    import ToastContainers from "../components/ToastContainers.svelte";
     import ScreenModal from "../components/ScreenModal.svelte";
     import DarkInput from "../components/DarkInput.svelte";
 

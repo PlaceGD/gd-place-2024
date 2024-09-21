@@ -20,16 +20,6 @@ export const addObject = (obj: GDObjectOpt) => {
             Toast.showErrorToast(`Failed to place object. (${e.details.code})`);
         }
     });
-    placeObject({ object: s }).catch(e => {
-        if (e.details.code === 600) {
-            Toast.showInfoToast(
-                "There are too many objects in this chunk! Try deleting a few!"
-            );
-        } else {
-            console.error("Failed to place object", e.details.message);
-            Toast.showErrorToast(`Failed to place object. (${e.details.code})`);
-        }
-    });
 };
 export const removeObject = (key: string, chunk: [number, number]) => {
     deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key }).catch(

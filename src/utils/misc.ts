@@ -13,12 +13,10 @@ export const setCheckedPreviewObject = (
         obj.y_angle = 18;
     }
 
-    // console.log("gaa", obj.debug());
-
     if (isValidObject(obj)) {
         state.set_preview_object(obj);
         return true;
     }
-    console.log("objedct not MValid.");
+
     return false;
 };

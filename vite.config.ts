@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     define: {
         __DEBUG: mode == "development",
         // __HAS_OPT_WASM: existsSync("wasm-lib/pkg/wasm_lib_bg.wasm-opt.wasm"),
-        __TURNSTILE_LOGIN_SITE_KEY: TURNSTILE_LOGIN_SITE_KEY
+        __TURNSTILE_LOGIN_SITE_KEY: TURNSTILE_LOGIN_SITE_KEY,
     },
     json: {
         stringify: true,
@@ -108,5 +108,6 @@ export default defineConfig(({ mode }) => ({
                 },
             },
         },
+        target: ["es6"],
     },
 }));

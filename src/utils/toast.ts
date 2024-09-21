@@ -1,4 +1,7 @@
 import { toast as _toast } from "@zerodevx/svelte-toast";
+import { writable } from "svelte/store";
+
+export const toastPortals = writable<HTMLElement[]>([]);
 
 const toastThemes = {
     SUCCESS: {

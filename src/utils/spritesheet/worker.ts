@@ -106,8 +106,8 @@ const loadSprite = async (
         }
     } catch {}
 
-    let mSprite = spritesheet.mainSprites[id] as SpriteData | null;
-    let dSprite = spritesheet.detailSprites[id] as SpriteData | null;
+    let mSprite = spritesheet.main_sprites[id] as SpriteData | null;
+    let dSprite = spritesheet.detail_sprites[id] as SpriteData | null;
 
     const dest = new PNG({
         width:
@@ -133,8 +133,8 @@ const loadSprite = async (
         bitBlt(
             spritesheetData,
             dest,
-            spritesheet.mainSprites[id].pos[0],
-            spritesheet.mainSprites[id].pos[1],
+            spritesheet.main_sprites[id].pos[0],
+            spritesheet.main_sprites[id].pos[1],
             mSprite.size[0],
             mSprite.size[1],
             mTLX,
@@ -147,8 +147,8 @@ const loadSprite = async (
         copyOverlay(
             spritesheetData,
             dest,
-            spritesheet.detailSprites[id].pos[0],
-            spritesheet.detailSprites[id].pos[1],
+            spritesheet.detail_sprites[id].pos[0],
+            spritesheet.detail_sprites[id].pos[1],
             dSprite.size[0],
             dSprite.size[1],
             dTLX,

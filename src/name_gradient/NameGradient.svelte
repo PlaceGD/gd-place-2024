@@ -1,7 +1,7 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import { onMount } from "svelte";
-    import ToastContainer from "../components/ToastContainer.svelte";
+    import ToastContainers from "../components/ToastContainers.svelte";
     import OnceButton from "../components/Buttons/OnceButton.svelte";
     import Loading from "../components/Loading.svelte";
     import {

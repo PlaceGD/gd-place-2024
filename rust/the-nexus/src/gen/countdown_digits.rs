@@ -5,7 +5,8 @@ use binrw::BinWrite;
 use itertools::Itertools;
 use rust_shared::{
     countdown::{
-        CountdownDigitSets, DigitObjects, DigitSet, DIGIT_HEIGHT, DIGIT_SETS, DIGIT_WIDTH,
+        get_countdown_sets, CountdownDigitSets, DigitObjects, DigitSet, DIGIT_HEIGHT, DIGIT_SETS,
+        DIGIT_WIDTH,
     },
     gd::{
         layer::ZLayer,
@@ -16,11 +17,7 @@ use rust_shared::{
 use crate::objects::list::parse_gmd_file;
 
 pub fn make_get_countdown_digits_fn() -> Vec<u8> {
-    let mut parsed = parse_gmd_file(include_str!("../objects/countdowndigits.gmd"));
-
-    parsed
-        .objects
-        .retain(|o| o.get(&20).map(|v| v.parse::<u16>().unwrap() >= 8) == Some(true));
+    let (files, sets) = get_countdown_sets(parse_gmd_file);
 
     let x_offset = 8.0 * 30.0;
     let y_offset = 15.0 * 30.0;
@@ -28,7 +25,9 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let h_radius = DIGIT_WIDTH / 2.0;
     let v_radius = DIGIT_HEIGHT / 2.0;
 
-    let sets: [[DigitObjects; 10]; DIGIT_SETS] = array::from_fn(|digit_set| {
+    let sets: [[DigitObjects; 10]; DIGIT_SETS] = sets.map(|set_ptr| {
+        let parsed = &files[set_ptr.file];
+        let digit_set = set_ptr.set;
         array::from_fn(|digit| {
             let x = x_offset + digit as f32 * DIGIT_WIDTH;
             let y = y_offset + digit_set as f32 * DIGIT_HEIGHT;
@@ -60,6 +59,8 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
 
                     let h_flip = o.get(&4).map(|a| a.as_ref()) == Some("1");
                     let v_flip = o.get(&5).map(|a| a.as_ref()) == Some("1");
+
+                    let id = o[&1].parse().unwrap();
 
                     let x_scale = o
                         .get(&128)
@@ -107,7 +108,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                     };
 
                     GDObject {
-                        id: o[&1].parse().unwrap(),
+                        id,
                         x: o[&2].parse::<f32>().unwrap() - x,
                         y: o[&3].parse::<f32>().unwrap() - y,
                         ix,
@@ -128,11 +129,23 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                             .unwrap(),
                         main_color: o
                             .get(&21)
-                            .map(|c| parsed.colors[&c.parse().unwrap()].clone())
+                            .map(|c| {
+                                parsed
+                                    .colors
+                                    .get(&c.parse().unwrap())
+                                    .unwrap_or(&default_color)
+                                    .clone()
+                            })
                             .unwrap_or(default_color),
                         detail_color: o
                             .get(&22)
-                            .map(|c| parsed.colors[&c.parse().unwrap()].clone())
+                            .map(|c| {
+                                parsed
+                                    .colors
+                                    .get(&c.parse().unwrap())
+                                    .unwrap_or(&default_color)
+                                    .clone()
+                            })
                             .unwrap_or(default_color),
                     }
                 })

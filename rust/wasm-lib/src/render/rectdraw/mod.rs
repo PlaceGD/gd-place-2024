@@ -31,7 +31,18 @@ pub fn draw_obj_simple(
         let info = OBJECT_INFO[obj.id as usize];
 
         let old_t = billy.get_transform();
-        billy.apply_transform(obj.transform());
+        billy.apply_transform({
+            // let scale_x = OBJECT_INFO[this.id as usize].builtin_scale_x / 4.0;
+            // let scale_y = OBJECT_INFO[this.id as usize].builtin_scale_y / 4.0;
+
+            glam::Affine2::from_mat2_translation(
+                glam::mat2(
+                    vec2(obj.ix / 4.0, obj.iy / 4.0),
+                    vec2(obj.jx / 4.0, obj.jy / 4.0),
+                ),
+                vec2(obj.x, obj.y),
+            )
+        });
 
         let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
             2

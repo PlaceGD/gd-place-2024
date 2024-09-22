@@ -4,7 +4,10 @@ use base64::Engine;
 use flate2::read::GzDecoder;
 use itertools::Itertools;
 use regex::Regex;
-use rust_shared::gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo};
+use rust_shared::{
+    countdown::LevelParseResult,
+    gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo},
+};
 
 use crate::objects::levelstring::ObjectMap;
 
@@ -128,10 +131,10 @@ pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new
     objects
 });
 
-pub struct LevelParseResult {
-    pub objects: Vec<ObjectMap>,
-    pub colors: HashMap<u16, GDColor>,
-}
+// pub struct LevelParseResult {
+//     pub objects: Vec<ObjectMap>,
+//     pub colors: HashMap<u16, GDColor>,
+// }
 
 // #[derive(Debug, Clone)]
 // pub struct GDColor {

@@ -36,7 +36,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [1, 0, 1, 2],
+            sets: [3, 0, 1, 1],
         }
     }
     pub fn update_state(&mut self, event_elapsed: f64) {
@@ -103,19 +103,6 @@ impl Countdown {
 }
 
 fn draw_obj(obj: &GDObject, billy: &mut Billy) {
-    // detail
-    draw_obj_simple(
-        billy,
-        &obj,
-        true,
-        vec4(
-            obj.detail_color.r as f32 / 255.0,
-            obj.detail_color.g as f32 / 255.0,
-            obj.detail_color.b as f32 / 255.0,
-            obj.detail_color.opacity as f32 / 255.0,
-        ),
-        obj.detail_color.blending,
-    );
     // main
     draw_obj_simple(
         billy,
@@ -128,6 +115,19 @@ fn draw_obj(obj: &GDObject, billy: &mut Billy) {
             obj.main_color.opacity as f32 / 255.0,
         ),
         obj.main_color.blending,
+    );
+    // detail
+    draw_obj_simple(
+        billy,
+        &obj,
+        true,
+        vec4(
+            obj.detail_color.r as f32 / 255.0,
+            obj.detail_color.g as f32 / 255.0,
+            obj.detail_color.b as f32 / 255.0,
+            obj.detail_color.opacity as f32 / 255.0,
+        ),
+        obj.detail_color.blending,
     );
 }
 
@@ -207,6 +207,7 @@ impl CountdownDigit {
                         0.8,
                         false,
                     ));
+                    break;
                 }
             }
         }
@@ -280,6 +281,7 @@ impl CountdownDigit {
                         0.7,
                         false,
                     ));
+                    break;
                 }
             }
         }
@@ -564,10 +566,10 @@ fn move_obj_animation(
                 )
             };
 
-        let first_axis_time =
-            0.6 * (move_x.abs() as f64 / (move_x.abs() as f64 + move_y.abs() as f64));
-        let second_axis_time =
-            0.6 * (move_y.abs() as f64 / (move_x.abs() as f64 + move_y.abs() as f64));
+        let first_axis_time = 0.6
+            * (first_axis.4.abs() as f64 / (first_axis.4.abs() as f64 + first_axis.5.abs() as f64));
+        let second_axis_time = 0.6
+            * (first_axis.5.abs() as f64 / (first_axis.5.abs() as f64 + first_axis.4.abs() as f64));
 
         if d < first_axis_time {
             // fractional move first axis

@@ -58,6 +58,7 @@ parse_countdown_files! {
     "flow": [3],
     "galva": [3],
     "fungi": [3],
+    "thomartin": [3],
 }
 #[binrw]
 #[brw(little)]

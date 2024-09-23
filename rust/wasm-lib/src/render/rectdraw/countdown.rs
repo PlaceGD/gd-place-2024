@@ -36,7 +36,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [4, 3, 6, 7],
+            sets: [3, 7, 8, 6],
         }
     }
     pub fn update_state(&mut self, event_elapsed: f64) {

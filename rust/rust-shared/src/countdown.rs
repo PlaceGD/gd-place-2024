@@ -59,6 +59,7 @@ parse_countdown_files! {
     "galva": [3],
     "fungi": [3],
     "thomartin": [3],
+    "dreaminginsanity": [3],
 }
 #[binrw]
 #[brw(little)]

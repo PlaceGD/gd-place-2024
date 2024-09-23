@@ -20,19 +20,19 @@ try {
 }
 
 export const wasmProgress = writable({
-    progress: -1,
-    max: 0,
+    progress: 0,
+    // max: 0,
     hasLoaded: false,
 });
 
 export const spritesheetProgress = writable<{
     progress: number;
-    max: number;
+    // max: number;
     arrayBuffer: Uint8Array | null;
     blobURL: string | null;
 }>({
-    progress: -1,
-    max: 0,
+    progress: 0,
+    // max: 0,
     arrayBuffer: null,
     blobURL: null,
 });
@@ -60,8 +60,8 @@ export const initWasm = async () => {
 
             if (wasm != undefined) {
                 wasmProgress.set({
-                    max: 100,
-                    progress: 100,
+                    // max: 100,
+                    progress: 1,
                     hasLoaded: false,
                 });
 
@@ -78,8 +78,8 @@ export const initWasm = async () => {
     downloadWithProgress(wasmUrl, "arraybuffer", p => {
         console.info(`downloading wasm: ${p.loaded}/${p.total}`);
         wasmProgress.set({
-            max: p.total,
-            progress: p.loaded,
+            // max: p.total,
+            progress: p.loaded / p.total,
             hasLoaded: false,
         });
     })
@@ -128,8 +128,8 @@ export const fetchAndParseSpritesheet =
 
                     if (spritesheet != undefined) {
                         spritesheetProgress.set({
-                            max: 100,
-                            progress: 100,
+                            // max: 100,
+                            progress: 1,
                             arrayBuffer: null,
                             blobURL: null,
                         });
@@ -151,8 +151,8 @@ export const fetchAndParseSpritesheet =
                     `downloading spritesheet: ${progress.loaded}/${progress.total}`
                 );
                 spritesheetProgress.set({
-                    max: progress.total,
-                    progress: progress.loaded,
+                    // max: progress.total,
+                    progress: progress.loaded / progress.total,
                     arrayBuffer: null,
                     blobURL: null,
                 });

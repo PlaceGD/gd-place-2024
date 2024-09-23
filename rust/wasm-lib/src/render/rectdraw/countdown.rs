@@ -36,7 +36,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [3, 7, 8, 6],
+            sets: [3, 7, 8, 9],
         }
     }
     pub fn update_state(&mut self, event_elapsed: f64) {
@@ -318,6 +318,7 @@ impl CountdownDigit {
         }));
 
         // resort (dw this only happens once a second to like 200 objects at a time)
+        console_log!("FUCK FART");
         self.objects.sort_by(|a, b| {
             let a = a.typ.output_obj();
             let b = b.typ.output_obj();

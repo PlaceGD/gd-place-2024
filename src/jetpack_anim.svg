@@ -1,0 +1,76 @@
+<svg id="eYs5xlHMJpf1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 -7 80 100" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+    <style><![CDATA[
+#eYs5xlHMJpf2_to {animation: eYs5xlHMJpf2_to__to 3000ms linear infinite normal forwards}@keyframes eYs5xlHMJpf2_to__to { 0% {transform: translate(40px,48.802309px);animation-timing-function: cubic-bezier(0.445,0,0.55,1)} 50% {transform: translate(40px,24.005675px);animation-timing-function: cubic-bezier(0.445,0,0.55,1)} 100% {transform: translate(40px,48.8px)}} #eYs5xlHMJpf2_tr {animation: eYs5xlHMJpf2_tr__tr 3000ms linear infinite normal forwards}@keyframes eYs5xlHMJpf2_tr__tr { 0% {transform: rotate(15.03027deg);animation-timing-function: cubic-bezier(0.279432,0.480289,0.546124,1)} 26.666667% {transform: rotate(4.41234deg);animation-timing-function: cubic-bezier(0.445,0,0.55,1)} 76.666667% {transform: rotate(23.48deg);animation-timing-function: cubic-bezier(0.44062,0,0.725681,0.481729)} 100% {transform: rotate(15.028822deg)}} #eYs5xlHMJpf11_ts {animation: eYs5xlHMJpf11_ts__ts 3000ms linear infinite normal forwards}@keyframes eYs5xlHMJpf11_ts__ts { 0% {transform: translate(8.814992px,37.231195px) skewX(0deg) skewY(-8deg) scale(0.911917,1.73575);animation-timing-function: cubic-bezier(0.280235,0.594382,0.59903,1)} 10% {transform: translate(8.814992px,37.231195px) skewX(0deg) skewY(-8deg) scale(1,2);animation-timing-function: cubic-bezier(0.445,0,0.55,1)} 26.666667% {transform: translate(8.814992px,37.231195px) skewX(0deg) skewY(-8deg) scale(1,2);animation-timing-function: cubic-bezier(0.445,0,0.55,1)} 60% {transform: translate(8.814992px,37.231195px) skewX(0deg) skewY(-8deg) scale(0.5,0.5);animation-timing-function: cubic-bezier(0.445,0,0.55,1)} 76.666667% {transform: translate(8.814992px,37.231195px) skewX(0deg) skewY(-8deg) scale(0.5,0.5);animation-timing-function: cubic-bezier(0.465779,0,0.670813,0.651625)} 100% {transform: translate(8.814992px,37.231195px) skewX(0deg) skewY(-8deg) scale(0.911917,1.73575)}} #eYs5xlHMJpf27_tr {animation: eYs5xlHMJpf27_tr__tr 3000ms linear infinite normal forwards}@keyframes eYs5xlHMJpf27_tr__tr { 0% {transform: translate(135.33781px,207.03926px) rotate(720deg);animation-timing-function: cubic-bezier(0.415,0.08,0.115,0.955)} 100% {transform: translate(135.33781px,207.03926px) rotate(439.480519deg)}} #eYs5xlHMJpf28_tr {animation: eYs5xlHMJpf28_tr__tr 3000ms linear infinite normal forwards}@keyframes eYs5xlHMJpf28_tr__tr { 0% {transform: translate(11.12px,29.9px) rotate(-720deg);animation-timing-function: cubic-bezier(0.415,0.08,0.115,0.955)} 100% {transform: translate(11.12px,29.9px) rotate(-439.480519deg)}}
+]]></style>
+    <defs>
+        <linearGradient id="eYs5xlHMJpf10-fill" x1="23.5547" y1="0.000488" x2="23.9227" y2="33.8536"
+            spreadMethod="pad" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 0)">
+            <stop id="eYs5xlHMJpf10-fill-0" offset="55%" stop-color="rgba(255,255,255,0.5)" />
+            <stop id="eYs5xlHMJpf10-fill-1" offset="55.0368%" stop-color="rgba(255,255,255,0.35)" />
+        </linearGradient>
+        <linearGradient id="eYs5xlHMJpf21-fill" x1="0.5" y1="0" x2="0.5" y2="1" spreadMethod="pad"
+            gradientUnits="objectBoundingBox" gradientTransform="translate(0 0)">
+            <stop id="eYs5xlHMJpf21-fill-0" offset="0%" stop-color="rgba(255,255,255,0)" />
+            <stop id="eYs5xlHMJpf21-fill-1" offset="100%" stop-color="#010022" />
+        </linearGradient>
+    </defs>
+    <g id="eYs5xlHMJpf2_to" transform="translate(40,48.802309)">
+        <g id="eYs5xlHMJpf2_tr" transform="rotate(15.03027)">
+            <g transform="translate(-21.230109,-18.010176)">
+                <g mask="url(#eYs5xlHMJpf8)">
+                    <g>
+                        <rect width="58" height="43" rx="0" ry="0"
+                            transform="matrix(.965926-.258819 0.258819 0.965926-9.517581-.150396)"
+                            fill="#01ff22" />
+                        <rect width="8" height="8" rx="0" ry="0"
+                            transform="matrix(.965926-.258819 0.258819 0.965926 23.670403 11.662598)"
+                            fill="#01ffee" />
+                        <path
+                            d="M22.6953,4.15896L15.6404,2.9435L11.1321,30.551l33.5926-.2012.2148-8.8574-21.225-.0068-1.8718-3.122.8526-14.20464Z"
+                            fill="#15b053" />
+                    </g>
+                    <mask id="eYs5xlHMJpf8" x="-150%" y="-150%" height="400%"
+                        width="400%">
+                        <path
+                            d="M17.395,3.39502h2.7059h1.3529h14.8824v4.05882h-14.8824v18.94116h-4.0588v-22.99998ZM39.0421,26.395h1.3529v-18.94116h-4.0588v14.88236h-9.4706v4.0588h9.4706h2.7059ZM26.8656,12.8656h4.0588v4.0588h-4.0588v-4.0588Z"
+                            clip-rule="evenodd" fill="#fff" fill-rule="evenodd" />
+                    </mask>
+                </g>
+                <path
+                    d="M17.3953,4.79566v-1.40027h18.9412v4.05882h-14.8824v16.57489l.5529.8328h4.8589v-2.5253h9.4706v-14.88239h4.0588v17.40769h1.584l-4.7832,8.5035h-20.9883l-.1859,1.2993-2.5151-.3601-.5232,3.6549-7.59659-1.0874.52317-3.6549-2.51486-.36L7.61265,3.39532L17.3953,4.79566ZM2.37365,36.7518c.07826-.5467-.30149-1.0534-.8482-1.1316l-.535053-.0766c-.546712-.0783-.926467-.5849-.848208-1.1316L4.92632,0.990398c.07826-.546712.5849-.926468,1.13161-.848209L13.8968,1.26428c.2631.03767.4985-.16647.4985-.43224c0-.241156.1955-.436651.4367-.436651h23.5045c.5523,0,1,.447715,1,1.000001v2.05882c0,.55229.4477,1,1,1h2.0588c.5523,0,1,.44772,1,1v15.40769c0,.5523.4477,1,1,1h1.0037c.7648,0,1.2466.8237.8716,1.4903L39.2374,35.8557c-.1771.3149-.5103.5097-.8716.5097h-18.7621c-.456,0-.8427.3353-.9073.7867-.0718.5012-.5362.8493-1.0373.7775l-.6178-.0884c-.5467-.0783-1.0533.3015-1.1316.8482l-.2398,1.675c-.0782.5467-.5849.9265-1.1316.8482L2.98209,39.5584c-.54671-.0782-.92647-.5849-.84821-1.1316l.23977-1.675ZM30.9247,12.866v4.0588h-4.0588v-4.0588h4.0588Z"
+                    clip-rule="evenodd" fill="url(#eYs5xlHMJpf10-fill)" fill-rule="evenodd" />
+                <g id="eYs5xlHMJpf11_ts"
+                    transform="translate(8.814992,37.231195) skewX(0) skewY(-8) scale(0.911917,1.73575)">
+                    <g transform="translate(-8.96886,-38.5)">
+                        <path
+                            d="M5.27358,40.2917l1.48921-1.6754l4.41501.6581.9359,2.0368-4.35643,5.7726-2.48369-6.7921Z"
+                            fill="#fff" stroke="#ffd43e" stroke-width="2" />
+                        <path
+                            d="M4.70138,40.1828l1.86748-2.1009l4.95034.7378l1.1736,2.5542-5.08969,6.7442-2.90173-7.9353Z"
+                            fill="none" stroke="#ff553e" />
+                    </g>
+                </g>
+                <g mask="url(#eYs5xlHMJpf18)">
+                    <g>
+                        <rect width="62" height="53" rx="0" ry="0"
+                            transform="matrix(.965926-.258819 0.258819 0.965926-15.572301 0.436525)"
+                            fill="#fff" />
+                        <path
+                            d="M6.83625,20.3141L9.32722,2.56457L-2.532,-3.05761L-7.24583,41.1694L32.8587,45.9526l8.037-12.5063-25.4169-4.06-8.64255-9.0722Z"
+                            fill="#c0c6de" />
+                    </g>
+                    <mask id="eYs5xlHMJpf18" x="-150%" y="-150%" height="400%"
+                        width="400%">
+                        <path
+                            d="M20.2389,5.20245L7.61235,3.39502L3.39502,32.8569l2.51487.36-.52318,3.6549l7.59659,1.0874.5232-3.6549l2.5151.3601.1859-1.2993h20.9883l4.7832-8.5035h-19.9723l-3.7691-5.678L20.2389,5.20245Z"
+                            clip-rule="evenodd" fill="#fff" fill-rule="evenodd" />
+                    </mask>
+                </g>
+                <path
+                    d="M17.3951,4.7954v-1.40034h18.9411v4.05882h-14.8823v16.57492l.5528.8329h4.8589v-2.5255h9.4706v-14.88232h4.0589v17.40782h1.584l-4.7832,8.5035h-20.9883l-.186,1.2992-2.5151-.36-.5232,3.6548-7.59655-1.0874.52317-3.6548-2.51486-.36L7.61239,3.39506L17.3951,4.7954ZM3.6467,34.9134l-2.51486-.36L5.91597,1.13184L15.3951,2.48872v-1.09366h22.9411v4.05882h4.0589v17.40782h3.0037L38.3655,35.3652h-20.4238l-.2237,1.5624-2.5151-.36-.5232,3.6549L3.12353,38.5682l.52317-3.6548ZM34.3362,9.45388h-10.8823v13.40782h1.4117v-2.5255h9.4706v-10.88232ZM24.8656,10.8656h8.0589v8.0589h-8.0589v-8.0589Zm6.0589,2v4.0589h-4.0589v-4.0589h4.0589Z"
+                    clip-rule="evenodd" fill-rule="evenodd" />
+            </g>
+        </g>
+    </g>
+</svg>

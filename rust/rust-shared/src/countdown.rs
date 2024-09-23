@@ -20,15 +20,10 @@ pub struct DigitSetPtr {
 }
 
 macro_rules! parse_countdown_files {
-    ($($creator:literal: [$($index:expr),*]),*) => {
+    ($($creator:literal: [$($index:expr),*]),*$(,)?) => {
 
-        pub const DIGIT_SETS: usize = $(
-            [$($index),*].len() +
-        )* 0;
-
-        pub const DIGIT_FILES: usize = $(
-            [$creator].len() +
-        )* 0;
+        pub const DIGIT_SETS: usize = [$($($index,)*)*].len();
+        pub const DIGIT_FILES: usize = [$($creator),*].len();
 
         pub fn get_countdown_sets(parse_gmd_file: fn(&str) -> LevelParseResult) -> ([LevelParseResult; DIGIT_FILES], [DigitSetPtr; DIGIT_SETS]) {
             let files = [$({
@@ -58,7 +53,11 @@ macro_rules! parse_countdown_files {
 
 parse_countdown_files! {
     "spu7nix": [0, 1, 2],
-    "viprin": [3]
+    "viprin": [3],
+    "deffie": [3],
+    "flow": [3],
+    "galva": [3],
+    "fungi": [3],
 }
 #[binrw]
 #[brw(little)]

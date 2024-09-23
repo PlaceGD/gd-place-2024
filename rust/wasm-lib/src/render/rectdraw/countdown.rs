@@ -36,7 +36,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [3, 0, 1, 1],
+            sets: [4, 3, 6, 7],
         }
     }
     pub fn update_state(&mut self, event_elapsed: f64) {
@@ -46,25 +46,30 @@ impl Countdown {
             return;
         }
 
-        let days = (time_until / 86400.0).floor();
-        let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
-        let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
-        let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
+        let state = if time_until < 0.0 {
+            [None; 8]
+        } else {
+            let days = (time_until / 86400.0).floor();
+            let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
+            let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
+            let seconds =
+                (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
 
-        fn digits(num: u8, display_zero: bool) -> (Option<u8>, Option<u8>) {
-            if num == 0 && !display_zero {
-                (None, None)
-            } else {
-                (Some(num / 10), Some(num % 10))
+            fn digits(num: u8, display_zero: bool) -> (Option<u8>, Option<u8>) {
+                if num == 0 && !display_zero {
+                    (None, None)
+                } else {
+                    (Some(num / 10), Some(num % 10))
+                }
             }
-        }
 
-        let (dayd1, dayd2) = digits(days as u8, false);
-        let (hourd1, hourd2) = digits(hours as u8, true);
-        let (mind1, mind2) = digits(minutes as u8, true);
-        let (secd1, secd2) = digits(seconds as u8, true);
+            let (dayd1, dayd2) = digits(days as u8, false);
+            let (hourd1, hourd2) = digits(hours as u8, true);
+            let (mind1, mind2) = digits(minutes as u8, true);
+            let (secd1, secd2) = digits(seconds as u8, true);
 
-        let state = [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2];
+            [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2]
+        };
 
         for i in 0..8 {
             if self.state[i] != state[i] {
@@ -251,7 +256,8 @@ impl CountdownDigit {
                 if obj_in.0.id == obj_static.id
                     && obj_chebyshev_dist(obj_in.0, *obj_static) < 45.0
                     && same_colors(obj_in.0, *obj_static)
-                    && obj_angle_dist(obj_in.0, *obj_static) <= std::f32::consts::PI / 2.0
+                    && obj_angle_dist(obj_in.0, *obj_static) <= std::f32::consts::PI / 2.0 + 0.1
+                    && obj_scale_difference(obj_in.0, *obj_static) <= 3.0
                 {
                     obj_in.1 = false;
                     self.objects.push(TransitioningObject::new(
@@ -269,10 +275,14 @@ impl CountdownDigit {
         // transitioning from a to b
         for obj_out in trans_out.iter_mut().filter(|o| o.1) {
             for obj_in in trans_in.iter_mut().filter(|o| o.1) {
+                // if obj_in.0.id == 3810 {
+                //     console_log!("{} {}", obj_chebyshev_dist(obj_out.0, obj_in.0), obj_in.0.y);
+                // }
                 if obj_in.0.id == obj_out.0.id
                     && obj_chebyshev_dist(obj_out.0, obj_in.0) < 60.0
                     && same_colors(obj_out.0, obj_in.0)
-                    && same_transform(obj_out.0, obj_in.0)
+                    && obj_scale_difference(obj_out.0, obj_in.0) <= 3.0
+                //&& same_transform(obj_out.0, obj_in.0)
                 {
                     obj_in.1 = false;
                     obj_out.1 = false;
@@ -309,8 +319,8 @@ impl CountdownDigit {
 
         // resort (dw this only happens once a second to like 200 objects at a time)
         self.objects.sort_by(|a, b| {
-            let a = a.typ.repr_obj();
-            let b = b.typ.repr_obj();
+            let a = a.typ.output_obj();
+            let b = b.typ.output_obj();
             // place blending objects at bottom of layer (dont care about detail color for this)
             let a_z = if a.main_color.blending {
                 i8::MIN
@@ -378,6 +388,18 @@ fn symmetrical_transform(obj1: GDObject, obj2: GDObject) -> bool {
         && ((obj1.jy + obj2.jx).abs() < 0.02 || (obj1.jy - obj2.jx).abs() < 0.02)
 }
 
+fn obj_scale_difference(obj1: GDObject, obj2: GDObject) -> f32 {
+    let scalex1 = vec2(obj1.ix, obj1.iy).length();
+    let scalex2 = vec2(obj2.ix, obj2.iy).length();
+    let scaley1 = vec2(obj1.jx, obj1.jy).length();
+    let scaley2 = vec2(obj2.jx, obj2.jy).length();
+
+    (scalex1 / scalex2)
+        .max(scalex2 / scalex1)
+        .max(scaley1 / scaley2)
+        .max(scaley2 / scaley1)
+}
+
 fn obj_chebyshev_dist(obj1: GDObject, obj2: GDObject) -> f32 {
     (obj1.x - obj2.x).abs().max((obj1.y - obj2.y).abs())
 }
@@ -414,13 +436,13 @@ enum AnimType {
 }
 
 impl AnimType {
-    fn repr_obj(&self) -> GDObject {
+    fn output_obj(&self) -> GDObject {
         *match self {
             AnimType::Appear(obj, _) => obj,
             AnimType::Disappear(obj) => obj,
-            AnimType::Transition(obj, _, _) => obj,
+            AnimType::Transition(_, obj, _) => obj,
             AnimType::Static(obj) => obj,
-            AnimType::TinyTransition(obj, _) => obj,
+            AnimType::TinyTransition(_, obj) => obj,
             AnimType::Copy(_, obj, _) => obj,
         }
     }
@@ -518,7 +540,7 @@ impl TransitioningObject {
         let delay = if !y_delay {
             0.0
         } else {
-            typ.repr_obj().y / 300.0 * 0.2
+            typ.output_obj().y / 300.0 * 0.2
         };
         TransitioningObject {
             typ,
@@ -573,25 +595,27 @@ fn move_obj_animation(
 
         if d < first_axis_time {
             // fractional move first axis
-            let div = first_axis.4.floor().max(1.0) * 5.0;
+            let div = first_axis.4.floor().max(1.0) * 4.0;
 
             let d = (d) / first_axis_time;
             let i = (d as f32 * div).floor() / div;
             *first_axis.0 = (first_axis.2 + first_axis.4 * i) * 30.0;
         } else if d < first_axis_time + second_axis_time {
             // fractional move second axis
-            let div = first_axis.5.floor().max(1.0) * 5.0;
+            let div = first_axis.5.floor().max(1.0) * 4.0;
 
             let d = (d - first_axis_time) / second_axis_time;
             let i = (d as f32 * div).floor() / div;
             *first_axis.1 = (first_axis.3 + first_axis.5 * i) * 30.0;
+
+            *first_axis.0 = (first_axis.2 + first_axis.4) * 30.0;
         } else {
             *first_axis.0 = (first_axis.2 + first_axis.4) * 30.0;
             *first_axis.1 = (first_axis.3 + first_axis.5) * 30.0;
         }
     }
 
-    if d > 0.2 && obj_angle_dist(*obj, target).abs() - std::f32::consts::PI < 0.1 {
+    if d > 0.2 && within_90_deg(*obj, target) {
         let mut i1 = vec2(obj.ix, obj.iy);
         let i2 = vec2(target.ix, target.iy);
         let mut j1 = vec2(obj.jx, obj.jy);
@@ -625,23 +649,23 @@ fn transform_animation(obj: &mut GDObject, target: GDObject, d: f64) -> Option<G
     let i2len = i2.length();
     let j1len = j1.length();
     let j2len = j2.length();
-    if obj_angle_dist(*obj, target).abs() - std::f32::consts::PI < 0.1 {
-        if (i1len - i2len).abs() < 0.01 && (j1len - j2len).abs() < 0.01 {
+    if within_90_deg(*obj, target) {
+        if d > 0.8 || ((i1len - i2len).abs() < 0.01 && (j1len - j2len).abs() < 0.01) {
             return Some(target);
         }
-        i1 = (i2 / i2len) * i1len;
-        j1 = (j2 / j2len) * j1len;
+        i1 = i2 / i2len;
+        j1 = j2 / j2len;
         let scale = (((d as f32) / 0.6).max(0.0).min(1.0));
 
         i1 *= lerp!(i1len, i2len, scale);
         j1 *= lerp!(j1len, j2len, scale);
     } else {
-        let rot = ease_out_quart(((d as f32) / 0.4).max(0.0).min(1.0));
+        let rot = ((d as f32) / 0.4).max(0.0).min(1.0);
 
         i1 = rotate_between(i1 / i1len, i2 / i2len, rot);
         j1 = rotate_between(j1 / j1len, j2 / j2len, rot);
 
-        let scale = ease_out_quart(((d as f32 - 0.3) / 0.2).max(0.0).min(1.0));
+        let scale = ease_out_quart(((d as f32 - 0.4) / 0.5).max(0.0).min(1.0));
 
         i1 *= lerp!(i1len, i2len, scale);
         j1 *= lerp!(j1len, j2len, scale);
@@ -653,6 +677,11 @@ fn transform_animation(obj: &mut GDObject, target: GDObject, d: f64) -> Option<G
     // rotate
 
     None
+}
+
+fn within_90_deg(obj: GDObject, target: GDObject) -> bool {
+    (obj_angle_dist(obj, target).abs() - std::f32::consts::PI / 2.0).abs() < 0.1
+        || (obj_angle_dist(obj, target).abs() - std::f32::consts::PI).abs() < 0.1
 }
 
 fn rotate_between(a: Vec2, b: Vec2, d: f32) -> Vec2 {

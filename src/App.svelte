@@ -23,7 +23,7 @@
         $rawSpritesheetData = data;
     });
 
-    const TOTAL_OPS = 2.5;
+    const TOTAL_OPS = 2.2;
 
     $: loaded =
         $wasmProgress.hasLoaded &&
@@ -31,8 +31,6 @@
         $rawSpritesheetData != null;
 
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
-
-    let bgContainerSize: [number, number] = [0, 0];
 </script>
 
 <ToastContainers />
@@ -41,26 +39,14 @@
 <div class="relative w-screen h-screen overflow-hidden">
     {#if !loaded}
         <div
-            class="relative flex flex-col w-full h-full gap-8 p-4 flex-center xs:p-2 bg-[#00368a]"
+            class="relative flex flex-col w-full h-full gap-8 flex-center p-4 xs:p-2 bg-[#00368a]"
         >
             <div
-                class="absolute flex w-full h-full bg-transparent silly-background flex-center"
+                class="infinite-scroll"
                 style={`
-                transform: scale(${Math.max(...bgContainerSize) / 1024});
+                --bg: url(${loadingBgImageUrl});
             `}
-                bind:offsetWidth={bgContainerSize[0]}
-                bind:offsetHeight={bgContainerSize[1]}
-            >
-                {#each [0, 1, 2] as _}
-                    <img
-                        src={loadingBgImageUrl}
-                        alt="Default Geometry Dash Background"
-                        class="min-w-[1024px] min-h-[1024px] silly-bg-image"
-                        draggable="false"
-                        style:scale="1.001"
-                    />
-                {/each}
-            </div>
+            ></div>
             <div class="relative w-60 h-60 sm:h-56 sm:w-56 xs:h-48 xs:w-48">
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html jetpackAnimText}
@@ -100,16 +86,23 @@
 </div>
 
 <style>
-    .silly-bg-image {
-        animation: moob 20s linear infinite;
+    .infinite-scroll {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-image: var(--bg);
+        background-size: cover;
+        background-repeat: repeat-x;
+        animation: scroll-background 20s linear infinite;
     }
-
-    @keyframes moob {
+    @keyframes scroll-background {
         from {
-            transform: translateX(0);
+            background-position: 0 50%;
         }
         to {
-            transform: translateX(-1024px);
+            background-position: -100vw 50%;
         }
     }
 </style>

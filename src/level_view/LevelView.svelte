@@ -14,7 +14,12 @@
     export let canvas: HTMLCanvasElement;
     export let canvasWidth: number;
     export let canvasHeight: number;
-    // let text_draws: wasm.TextDraw[] = [];
+
+    const WASM_ERROR = `
+        A fatal error occured in the WASM.\nPlease report this bug to the developers!
+            <span style="color:white;text-decoration:underline;cursor:pointer;pointer-events:all;" onclick='navigator.clipboard.writeText(window.consoleErrors.join("\\n"));'>
+                (click this text to copy the errors and include this in the report)
+            </span>`;
 
     onMount(async () => {
         try {
@@ -30,9 +35,7 @@
             // loadState(state);
         } catch (e: unknown) {
             console.error(e, "(Failed in `wasm.create_view`)");
-            Toast.showErrorToast(
-                `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`
-            );
+            Toast.showErrorToast(WASM_ERROR);
         }
     });
 
@@ -47,9 +50,7 @@
                 // runCallbacks();
             } catch (e: unknown) {
                 console.error(e, "(Failed in `state.render`)");
-                Toast.showErrorToast(
-                    `A fatal error occured in the WASM.\nPlease report this bug to the developers (the error can be found in the console by pressing \`F12\` or \`CTRL+SHIFT+I\`.\nRefresh the page and try again. (${e})`
-                );
+                Toast.showErrorToast(WASM_ERROR);
                 return;
             }
         }

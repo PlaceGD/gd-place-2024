@@ -1,6 +1,5 @@
 #![deny(unused_must_use)]
 
-mod level;
 mod object;
 mod render;
 mod state;

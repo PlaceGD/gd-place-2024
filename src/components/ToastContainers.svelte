@@ -10,6 +10,7 @@
     <SvelteToast
         options={{
             intro: { y: -64 },
+            classes: ["log"],
         }}
     />
 </Portal>

@@ -8,10 +8,12 @@ interface KofiWidget {
 declare global {
     interface Window {
         kofiwidget2: KofiWidget;
-
         clearAllTheStuff: () => void;
+        consoleErrors: string[];
     }
 }
+
+window.consoleErrors = [];
 
 window.clearAllTheStuff = () => {
     localStorage.clear();
@@ -19,9 +21,16 @@ window.clearAllTheStuff = () => {
     window.location.reload();
 };
 
+const oldError = window.console.error;
+window.console.error = function (...args) {
+    window.consoleErrors.push(args.join(" "));
+
+    return oldError(...args);
+};
+
 import "./app.css";
-// import "../public/Pusab.otf";
 import App from "./App.svelte";
+// import "../public/Pusab.otf";
 
 // export const HAS_OPT_WASM = __HAS_OPT_WASM ?? false; // replaced by the `__HAS_OPT_WASM` define in vite config
 

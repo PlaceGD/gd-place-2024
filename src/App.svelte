@@ -52,17 +52,17 @@
                 {@html jetpackAnimText}
             </div>
             <div
-                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-1/2 max-w-[550px] rounded-full mt-16 xs:mt-12 overflow-hidden"
+                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-2/3 max-w-[750px] rounded-full mt-16 xs:mt-12 overflow-hidden"
                 style={`box-shadow: 0 0 0 3px black, 0 0 0 9px white, 0 0 0 12px black, 0 0 50px 16px #0006;`}
             >
                 <div
                     class="h-full bg-[#01B2FF]"
                     style={`
-                    width: ${(progress / TOTAL_OPS) * 100}%;
-                    background-image: repeating-linear-gradient(-67deg, #0003 0px, #0003 30px, #0000 30px, #0000 90px, #0003 90px, #0003 120px);
-                    background-size: 130px 100px;
-                    background-position: 0% 100%;
-                `}
+                        width: ${(progress / TOTAL_OPS) * 100}%;
+                        background-image: repeating-linear-gradient(-67deg, #0003 0px, #0003 30px, #0000 30px, #0000 90px, #0003 90px, #0003 120px);
+                        background-size: 130px 100px;
+                        background-position: 0% 100%;
+                    `}
                 ></div>
             </div>
             <div class="flex flex-col gap-2 flex-center">

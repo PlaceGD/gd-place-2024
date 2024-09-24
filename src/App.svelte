@@ -30,25 +30,21 @@
         $spritesheetProgress.arrayBuffer != null &&
         $rawSpritesheetData != null;
 
-    // $: max = $wasmProgress.max + $spritesheetProgress.max;
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
 
     let bgContainerSize: [number, number] = [0, 0];
-
-    // $: console.log("JUNK: ", (progress / (max == 0 ? Infinity : max)) * 100);
 </script>
 
 <ToastContainers />
 <DataPopup />
 
-<!-- style={`
-background-image: url(${loadingBgImageUrl});
-`} -->
 <div class="relative w-screen h-screen overflow-hidden">
     {#if !loaded}
-        <div class="relative flex flex-col w-full h-full gap-8 flex-center">
+        <div
+            class="relative flex flex-col w-full h-full gap-8 p-4 flex-center xs:p-2 bg-[#00368a]"
+        >
             <div
-                class="absolute flex w-full h-full silly-background flex-center"
+                class="absolute flex w-full h-full bg-transparent silly-background flex-center"
                 style={`
                 transform: scale(${Math.max(...bgContainerSize) / 1024});
             `}
@@ -58,18 +54,19 @@ background-image: url(${loadingBgImageUrl});
                 {#each [0, 1, 2] as _}
                     <img
                         src={loadingBgImageUrl}
-                        alt="background"
+                        alt="Default Geometry Dash Background"
                         class="min-w-[1024px] min-h-[1024px] silly-bg-image"
                         draggable="false"
                         style:scale="1.001"
                     />
                 {/each}
             </div>
-            <div class="relative w-60 h-60">
+            <div class="relative w-60 h-60 sm:h-56 sm:w-56 xs:h-48 xs:w-48">
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html jetpackAnimText}
             </div>
             <div
-                class="relative h-[20px] w-1/3 rounded-full mt-16 overflow-hidden"
+                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-1/2 max-w-[550px] rounded-full mt-16 xs:mt-12 overflow-hidden"
                 style={`box-shadow: 0 0 0 3px black, 0 0 0 9px white, 0 0 0 12px black, 0 0 50px 16px #0006;`}
             >
                 <div
@@ -83,14 +80,18 @@ background-image: url(${loadingBgImageUrl});
                 ></div>
             </div>
             <div class="flex flex-col gap-2 flex-center">
-                <div class="relative text-6xl font-pusab">
+                <div
+                    class="relative text-6xl md:text-5xl sm:text-4xl xs:text-3xl font-pusab"
+                >
                     <ColoredName
                         username="Loading"
                         colorOverride="linear-gradient(180deg, #fea20d 20%, #fee348 80%)"
                     ></ColoredName>
                 </div>
-                <div class="relative text-xl text-white font-pusab text-stroke">
-                    Created by Flow, Spu7Nix, DreamingInsanity
+                <div
+                    class="relative text-xl text-center text-white xs:text-base font-pusab text-stroke"
+                >
+                    Created with ❤ by Flow, Spu7Nix, DreamingInsanity
                 </div>
             </div>
         </div>

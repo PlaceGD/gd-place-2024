@@ -76,4 +76,10 @@ pub struct DigitSet(pub [DigitObjects; 10]);
 
 #[binrw]
 #[brw(little)]
-pub struct CountdownDigitSets(pub [DigitSet; DIGIT_SETS]);
+pub struct CountdownDigitSets(
+    pub [DigitSet; DIGIT_SETS],
+    pub DigitObjects,
+    pub DigitObjects,
+    pub DigitObjects,
+); // days marker, hours colon, minutes colon
+   // should probably be a struct maybe now

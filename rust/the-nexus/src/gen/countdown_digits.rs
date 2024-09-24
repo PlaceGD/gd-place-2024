@@ -107,6 +107,28 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                         blending: false,
                     };
 
+                    fn parse_hsv(hsv: &str) -> (f64, f64, f64) {
+                        let mut parts = hsv.split("a");
+
+                        let h = parts.next().unwrap().parse::<f64>().unwrap();
+                        let s = parts.next().unwrap().parse::<f64>().unwrap();
+                        let v = parts.next().unwrap().parse::<f64>().unwrap();
+
+                        let s_checked = parts.next().unwrap() == "1";
+                        let v_checked = parts.next().unwrap() == "1";
+                        if s_checked || v_checked {
+                            panic!("hsv feature not supported");
+                        }
+
+                        (h, s, v)
+                    }
+
+                    let hsv1 = (o.get(&41).map(String::as_ref) == Some("1"))
+                        .then(|| parse_hsv(o.get(&43).unwrap()));
+
+                    let hsv2 = (o.get(&42).map(String::as_ref) == Some("1"))
+                        .then(|| parse_hsv(o.get(&44).unwrap()));
+
                     GDObject {
                         id,
                         x: o[&2].parse::<f32>().unwrap() - x,
@@ -130,21 +152,27 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                         main_color: o
                             .get(&21)
                             .map(|c| {
-                                parsed
-                                    .colors
-                                    .get(&c.parse().unwrap())
-                                    .unwrap_or(&default_color)
-                                    .clone()
+                                apply_hsv(
+                                    parsed
+                                        .colors
+                                        .get(&c.parse().unwrap())
+                                        .unwrap_or(&default_color)
+                                        .clone(),
+                                    hsv1,
+                                )
                             })
                             .unwrap_or(default_color),
                         detail_color: o
                             .get(&22)
                             .map(|c| {
-                                parsed
-                                    .colors
-                                    .get(&c.parse().unwrap())
-                                    .unwrap_or(&default_color)
-                                    .clone()
+                                apply_hsv(
+                                    parsed
+                                        .colors
+                                        .get(&c.parse().unwrap())
+                                        .unwrap_or(&default_color)
+                                        .clone(),
+                                    hsv2,
+                                )
                             })
                             .unwrap_or(default_color),
                     }
@@ -180,6 +208,27 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
         .write(&mut writer)
         .unwrap();
     writer.into_inner()
+}
+
+fn apply_hsv(color: GDColor, hsv: Option<(f64, f64, f64)>) -> GDColor {
+    if let Some((h, s, v)) = hsv {
+        use color_space::{Hsv, Rgb};
+
+        let rgb = Rgb::new(color.r as f64, color.g as f64, color.b as f64);
+        let hsv = Hsv::from(rgb);
+        let modified = Hsv::new((hsv.h + h).rem_euclid(360.0), hsv.s * s, hsv.v * v);
+        let rgb_m = Rgb::from(modified);
+        // dbg!(rgb, rgb_m);
+        GDColor::new(
+            rgb_m.r as u8,
+            rgb_m.g as u8,
+            rgb_m.b as u8,
+            color.opacity,
+            color.blending,
+        )
+    } else {
+        return color;
+    }
 }
 
 pub fn get_transform(x_scale: f32, x_angle: f32, y_scale: f32, y_angle: f32) -> [f32; 4] {

@@ -4,7 +4,7 @@ use binrw::BinRead;
 use glam::{vec2, vec4, Affine2, Vec2};
 use rust_shared::{
     console_log,
-    countdown::CountdownDigitSets,
+    countdown::{CountdownDigitSets, DigitObjects},
     gd::object::{GDColor, GDObject},
     lerp,
     util::random,
@@ -27,6 +27,11 @@ pub struct Countdown {
     pub digits: [CountdownDigit; 8],
     pub state: [Option<u8>; 8],
     pub sets: [usize; 4],
+
+    pub days_marker: Vec<TransitioningObject>,
+    pub hours_marker: Vec<TransitioningObject>,
+    pub minutes_marker: Vec<TransitioningObject>,
+    pub bg_state: [bool; 3],
 }
 
 impl Countdown {
@@ -36,7 +41,12 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [3, 7, 8, 6],
+            sets: [6, 3, 0, 2],
+
+            days_marker: Vec::new(),
+            hours_marker: Vec::new(),
+            minutes_marker: Vec::new(),
+            bg_state: [false; 3],
         }
     }
     pub fn update_state(&mut self, event_elapsed: f64) {
@@ -46,8 +56,8 @@ impl Countdown {
             return;
         }
 
-        let state = if time_until < 0.0 {
-            [None; 8]
+        let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
+            ([None; 8], false, false, false)
         } else {
             let days = (time_until / 86400.0).floor();
             let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
@@ -55,20 +65,29 @@ impl Countdown {
             let seconds =
                 (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
 
-            fn digits(num: u8, display_zero: bool) -> (Option<u8>, Option<u8>) {
-                if num == 0 && !display_zero {
+            let show_days = days != 0.0;
+            let show_hours = true; //show_days || hours != 0.0;
+            let show_minutes = true; //show_hours || minutes != 0.0;
+
+            fn digits(num: u8, display: bool) -> (Option<u8>, Option<u8>) {
+                if !display {
                     (None, None)
                 } else {
                     (Some(num / 10), Some(num % 10))
                 }
             }
 
-            let (dayd1, dayd2) = digits(days as u8, false);
-            let (hourd1, hourd2) = digits(hours as u8, true);
-            let (mind1, mind2) = digits(minutes as u8, true);
+            let (dayd1, dayd2) = digits(days as u8, show_days);
+            let (hourd1, hourd2) = digits(hours as u8, show_hours);
+            let (mind1, mind2) = digits(minutes as u8, show_minutes);
             let (secd1, secd2) = digits(seconds as u8, true);
 
-            [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2]
+            (
+                [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2],
+                show_days,
+                show_hours,
+                show_minutes,
+            )
         };
 
         for i in 0..8 {
@@ -90,9 +109,65 @@ impl Countdown {
                 //self.sets[i / 2] = new_set;
             }
         }
+
+        // colons, days marker
+        {
+            let appear = |a: &DigitObjects| {
+                a.objs
+                    .iter()
+                    .map(|o| {
+                        TransitioningObject::new(
+                            AnimType::Appear(*o, random_axis_offset()),
+                            0.8,
+                            false,
+                        )
+                        .offset(0.2)
+                    })
+                    .collect()
+            };
+
+            let dissapear = |a: &DigitObjects| {
+                a.objs
+                    .iter()
+                    .map(|o| TransitioningObject::new(AnimType::Disappear(*o), 0.8, false))
+                    .collect()
+            };
+
+            let new_bg_state = [show_days, show_hours, show_minutes];
+
+            for i in 0..3 {
+                if self.bg_state[i] != new_bg_state[i] {
+                    let (state, bg) = match i {
+                        0 => (&mut self.days_marker, &COUNTDOWN_DIGITS.1),
+                        1 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
+                        2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
+                        _ => unreachable!(),
+                    };
+                    *state = if new_bg_state[i] {
+                        appear(&bg)
+                    } else {
+                        dissapear(&bg)
+                    };
+
+                    self.bg_state[i] = new_bg_state[i];
+                }
+            }
+        }
     }
 
     pub fn draw(&self, billy: &mut Billy) {
+        self.days_marker.iter().for_each(|o| {
+            o.get().inspect(|o| draw_obj(o, billy));
+        });
+
+        self.hours_marker.iter().for_each(|o| {
+            o.get().inspect(|o| draw_obj(o, billy));
+        });
+
+        self.minutes_marker.iter().for_each(|o| {
+            o.get().inspect(|o| draw_obj(o, billy));
+        });
+
         billy.translate(Self::OFFSET);
 
         for (i, digit) in self.digits.iter().enumerate() {
@@ -302,18 +377,7 @@ impl CountdownDigit {
 
         self.objects.extend(trans_in.iter().filter_map(|o| {
             o.1.then(|| {
-                TransitioningObject::new(
-                    AnimType::Appear(
-                        o.0,
-                        if random() < 0.5 {
-                            vec2(random() as f32 - 0.5, 0.0)
-                        } else {
-                            vec2(0.0, random() as f32 - 0.5)
-                        } * 30.0,
-                    ),
-                    0.8,
-                    true,
-                )
+                TransitioningObject::new(AnimType::Appear(o.0, random_axis_offset()), 0.8, true)
             })
         }));
 
@@ -337,6 +401,14 @@ impl CountdownDigit {
                 .cmp(&(b.z_layer as u8))
                 .then(a_z.cmp(&b_z))
         });
+    }
+}
+
+fn random_axis_offset() -> Vec2 {
+    if random() < 0.5 {
+        vec2(random() as f32 - 0.5, 0.0) * 30.0
+    } else {
+        vec2(0.0, random() as f32 - 0.5) * 30.0
     }
 }
 
@@ -548,6 +620,11 @@ impl TransitioningObject {
             start_time: time + random() * duration * 0.1 + delay as f64,
             duration: duration * 0.9,
         }
+    }
+
+    fn offset(mut self, s: f64) -> Self {
+        self.start_time += s;
+        self
     }
 }
 

@@ -23,53 +23,36 @@
         $rawSpritesheetData = data;
     });
 
-    const TOTAL_OPS = 2.5;
+    const TOTAL_OPS = 2.2;
 
     $: loaded =
         $wasmProgress.hasLoaded &&
         $spritesheetProgress.arrayBuffer != null &&
         $rawSpritesheetData != null;
 
-    // $: max = $wasmProgress.max + $spritesheetProgress.max;
     $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
-
-    let bgContainerSize: [number, number] = [0, 0];
-
-    // $: console.log("JUNK: ", (progress / (max == 0 ? Infinity : max)) * 100);
 </script>
 
 <ToastContainers />
 <DataPopup />
 
-<!-- style={`
-background-image: url(${loadingBgImageUrl});
-`} -->
 <div class="relative w-screen h-screen overflow-hidden">
     {#if !loaded}
-        <div class="relative flex flex-col w-full h-full gap-8 flex-center">
+        <div
+            class="relative flex flex-col w-full h-full gap-8 flex-center p-4 xs:p-2 bg-[#00368a]"
+        >
             <div
-                class="absolute flex w-full h-full silly-background flex-center"
+                class="infinite-scroll"
                 style={`
-                transform: scale(${Math.max(...bgContainerSize) / 1024});
+                --bg: url(${loadingBgImageUrl});
             `}
-                bind:offsetWidth={bgContainerSize[0]}
-                bind:offsetHeight={bgContainerSize[1]}
-            >
-                {#each [0, 1, 2] as _}
-                    <img
-                        src={loadingBgImageUrl}
-                        alt="background"
-                        class="min-w-[1024px] min-h-[1024px] silly-bg-image"
-                        draggable="false"
-                        style:scale="1.001"
-                    />
-                {/each}
-            </div>
-            <div class="relative w-60 h-60">
+            ></div>
+            <div class="relative w-60 h-60 sm:h-56 sm:w-56 xs:h-48 xs:w-48">
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html jetpackAnimText}
             </div>
             <div
-                class="relative h-[20px] w-1/3 rounded-full mt-16 overflow-hidden"
+                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-1/2 max-w-[550px] rounded-full mt-16 xs:mt-12 overflow-hidden"
                 style={`box-shadow: 0 0 0 3px black, 0 0 0 9px white, 0 0 0 12px black, 0 0 50px 16px #0006;`}
             >
                 <div
@@ -83,14 +66,18 @@ background-image: url(${loadingBgImageUrl});
                 ></div>
             </div>
             <div class="flex flex-col gap-2 flex-center">
-                <div class="relative text-6xl font-pusab">
+                <div
+                    class="relative text-6xl md:text-5xl sm:text-4xl xs:text-3xl font-pusab"
+                >
                     <ColoredName
                         username="Loading"
                         colorOverride="linear-gradient(180deg, #fea20d 20%, #fee348 80%)"
                     ></ColoredName>
                 </div>
-                <div class="relative text-xl text-white font-pusab text-stroke">
-                    Created by Flow, Spu7Nix, DreamingInsanity
+                <div
+                    class="relative text-xl text-center text-white xs:text-base font-pusab text-stroke"
+                >
+                    Created with ❤ by Flow, Spu7Nix, DreamingInsanity
                 </div>
             </div>
         </div>
@@ -99,16 +86,23 @@ background-image: url(${loadingBgImageUrl});
 </div>
 
 <style>
-    .silly-bg-image {
-        animation: moob 20s linear infinite;
+    .infinite-scroll {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        background-image: var(--bg);
+        background-size: cover;
+        background-repeat: repeat-x;
+        animation: scroll-background 20s linear infinite;
     }
-
-    @keyframes moob {
+    @keyframes scroll-background {
         from {
-            transform: translateX(0);
+            background-position: 0 50%;
         }
         to {
-            transform: translateX(-1024px);
+            background-position: -100vw 50%;
         }
     }
 </style>

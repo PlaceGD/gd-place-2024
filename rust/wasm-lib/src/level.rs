@@ -1,4 +1,7 @@
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::{
+    collections::{BTreeMap, HashMap, HashSet},
+    hash::Hash,
+};
 
 use indexmap::IndexMap;
 use rust_shared::{
@@ -37,16 +40,22 @@ pub enum ObjectDraw {
     Detail,
 }
 
-#[derive(Default)]
-pub struct LevelLayer {
-    pub sheet_batches: [[BTreeMap<i8, IndexMap<DbKey, (GDObject, ObjectDraw)>>; 2]; 5],
+pub struct LevelLayer<K> {
+    pub sheet_batches: [[BTreeMap<i8, IndexMap<K, (GDObject, ObjectDraw)>>; 2]; 5],
+}
+impl<K: Default> Default for LevelLayer<K> {
+    fn default() -> Self {
+        Self {
+            sheet_batches: Default::default(),
+        }
+    }
 }
 
-pub struct LevelChunk {
-    pub layers: [LevelLayer; Z_LAYERS.len() + 1],
+pub struct LevelChunk<K> {
+    pub layers: [LevelLayer<K>; Z_LAYERS.len() + 1],
     pub last_time_visible: f64,
 }
-impl LevelChunk {
+impl<K: Default> LevelChunk<K> {
     pub fn new() -> Self {
         Self {
             layers: Default::default(),
@@ -56,15 +65,15 @@ impl LevelChunk {
 }
 
 #[derive(Default)]
-pub struct Level {
-    pub chunks: BTreeMap<ChunkCoord, LevelChunk>,
+pub struct Level<K> {
+    pub chunks: BTreeMap<ChunkCoord, LevelChunk<K>>,
 }
 
-impl Level {
+impl<K: Default + Hash + Eq + Copy> Level<K> {
     // pub fn test() -> &'static [bool] {
     //     todo!()
     // }
-    pub fn add_object(&mut self, obj: GDObject, key: DbKey) {
+    pub fn add_object(&mut self, obj: GDObject, key: K) {
         let chunk = ChunkCoord::get_from_pos(obj.x, obj.y);
         let sheet_idx = OBJECT_INFO[obj.id as usize].sheet as usize;
 
@@ -110,7 +119,7 @@ impl Level {
             }
         }
     }
-    pub fn remove_object(&mut self, key: DbKey) -> Option<GDObject> {
+    pub fn remove_object(&mut self, key: K) -> Option<GDObject> {
         for c in self.chunks.values_mut() {
             for layer_idx in 0..(c.layers.len() - 1) {
                 for [blending_sheet, normal_sheet] in c.layers[layer_idx].sheet_batches.iter_mut() {
@@ -155,9 +164,15 @@ impl Level {
         }
         None
     }
+    pub fn modify_object<F: FnOnce(&mut GDObject)>(&mut self, key: K, cb: F) {
+        if let Some(mut o) = self.remove_object(key) {
+            cb(&mut o);
+            self.add_object(o, key);
+        }
+    }
     pub fn foreach_obj_in_chunk<F>(&self, chunk: ChunkCoord, mut f: F)
     where
-        F: FnMut(DbKey, &GDObject),
+        F: FnMut(K, &GDObject),
     {
         let mut visited = HashSet::new();
         if let Some(chunk) = self.chunks.get(&chunk) {
@@ -176,7 +191,7 @@ impl Level {
             }
         }
     }
-    pub fn get_obj_by_key(&self, key: DbKey) -> Option<&GDObject> {
+    pub fn get_obj_by_key(&self, key: K) -> Option<&GDObject> {
         for chunk in self.chunks.values() {
             for (_, m) in chunk
                 .layers

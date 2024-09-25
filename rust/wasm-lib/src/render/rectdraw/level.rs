@@ -9,12 +9,18 @@ use crate::{
 
 use super::{
     billy::{Billy, BlendMode},
-    draw_level_obj_sprite,
+    draw_level, draw_level_obj_sprite,
 };
 
 // draw everything after the background and grid here (those rdone separately for REASONS .)
 pub fn draw(state: &mut State, billy: &mut Billy) {
     billy.apply_transform(state.view_transform());
+
+    if state.show_preview {
+        state
+            .level
+            .add_object(state.preview_object.into_obj(), [255; 20]);
+    }
 
     let selected_color = |lighter| {
         let c = map!(
@@ -31,56 +37,9 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         vec4(1.0, c, c, 1.0)
     };
 
-    if state.show_preview {
-        state
-            .level
-            .add_object(state.preview_object.into_obj(), [255; 20]);
-    }
-
-    for layer in 0..(Z_LAYERS.len() + 1) {
-        for sheet_batch_idx in 0..5 {
-            for batch_idx in 0..2 {
-                for (_, chunk) in &state.level.chunks {
-                    let sheet_batch = &chunk.layers[layer].sheet_batches[sheet_batch_idx];
-                    let batch = &sheet_batch[batch_idx];
-                    billy.set_blend_mode(if state.show_collidable {
-                        BlendMode::Normal
-                    } else {
-                        [BlendMode::Additive, BlendMode::Normal][batch_idx]
-                    });
-                    // console_log!("bend {}", i);
-                    for (_, m) in batch {
-                        for (key, (obj, draw)) in m {
-                            for &detail in match draw {
-                                crate::level::ObjectDraw::Both => &[false, true] as &[bool],
-                                crate::level::ObjectDraw::Main => &[false],
-                                crate::level::ObjectDraw::Detail => &[true],
-                            } {
-                                let (sprites, color) = if detail {
-                                    (&DETAIL_SPRITES, obj.detail_color)
-                                } else {
-                                    (&MAIN_SPRITES, obj.main_color)
-                                };
-                                if let Some(sprite) = sprites[obj.id as usize] {
-                                    if color.blending == (batch_idx == 0) {
-                                        let color = if state.selected_object == Some(*key) {
-                                            selected_color(detail)
-                                        } else {
-                                            Vec4::from_array(
-                                                [color.r, color.g, color.b, color.opacity]
-                                                    .map(|v| v as f32 / 255.0),
-                                            )
-                                        };
-                                        draw_level_obj_sprite(state, billy, sprite, obj, color);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+    draw_level(state, billy, &state.level, |k, _, detail| {
+        (state.selected_object == Some(k)).then(|| selected_color(detail))
+    });
 
     if state.show_preview {
         state.level.remove_object([255; 20]);

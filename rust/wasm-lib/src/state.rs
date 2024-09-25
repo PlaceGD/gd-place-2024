@@ -1,6 +1,7 @@
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 
 use rust_shared::{
+    console_log,
     gd::{
         layer::ZLayer,
         level::{
@@ -43,7 +44,7 @@ pub struct State {
     pub(crate) camera_pos: Vec2,
     pub(crate) zoom: f32,
 
-    pub(crate) level: Level,
+    pub(crate) level: Level<DbKey>,
 
     pub(crate) bg_color: (u8, u8, u8),
     pub(crate) ground1_color: (u8, u8, u8),
@@ -557,7 +558,7 @@ impl State {
             self.countdown.draw(&mut billy); // neg time because its just used for animation, not actually relative to anything
             billy.set_transform(old_t);
             //}
-            level_draw(self, &mut billy);
+            // level_draw(self, &mut billy);
 
             // this line just commits the previous call
             billy.set_blend_mode(BlendMode::Additive);
@@ -604,6 +605,7 @@ impl State {
             );
 
             let mut last_instance = 0;
+            console_log!("CALLS {}", billy.calls.len());
             for (i, call) in billy.calls.iter().enumerate() {
                 render_pass.set_pipeline(match call.blend_mode {
                     BlendMode::Normal => &self.render.pipeline_rect,

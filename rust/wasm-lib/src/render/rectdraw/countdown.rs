@@ -41,7 +41,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [6, 3, 0, 9],
+            sets: [6, 3, 0, 6],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -156,6 +156,55 @@ impl Countdown {
     }
 
     pub fn draw(&self, billy: &mut Billy) {
+        // let mut level = Level::default();
+        // let mut idx = 0usize;
+
+        // let mut add_object = |mut obj: GDObject| {
+        //     let info = OBJECT_INFO[obj.id as usize];
+        //     obj.ix /= info.builtin_scale_x;
+        //     obj.iy /= info.builtin_scale_x;
+        //     obj.jx /= info.builtin_scale_y;
+        //     obj.jy /= info.builtin_scale_y;
+        //     level.add_object(obj, idx);
+        //     idx += 1;
+        // };
+
+        // self.days_marker
+        //     .iter()
+        //     .chain(self.hours_marker.iter())
+        //     .chain(self.minutes_marker.iter())
+        //     .for_each(|o| {
+        //         o.get().inspect(|o| {
+        //             add_object(*o);
+        //             // level.add_object(*o, idx);
+        //             // idx += 1;
+        //         });
+        //     });
+        // let mut offset = Self::OFFSET;
+
+        // for (i, digit) in self.digits.iter().enumerate() {
+        //     if i == 2 {
+        //         offset += vec2(-30.0 * 14.0, -30.0 * 14.0); // line break
+        //     } else if i != 0 && i % 2 == 0 {
+        //         offset += vec2(30.0 * 3.0, 0.0); // colons
+        //     }
+        //     // digit.draw(billy);
+
+        //     for obj in &digit.objects {
+        //         obj.get().inspect(|o| {
+        //             // level.add_object(o.offset(offset), idx);
+        //             // idx += 1;
+        //             add_object(o.offset(offset));
+        //         });
+        //     }
+
+        //     offset += vec2(30.0 * 7.0, 0.0);
+
+        //     // billy.translate(vec2(30.0 * 7.0, 0.0));
+        // }
+
+        // draw_level(state, billy, &level, |_, _, _| None);
+
         self.days_marker.iter().for_each(|o| {
             o.get().inspect(|o| draw_obj(o, billy));
         });

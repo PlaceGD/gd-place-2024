@@ -2,7 +2,7 @@ use glam::{vec2, Affine2, Vec2, Vec4};
 
 use crate::render::pipeline_rect;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BlendMode {
     Normal,
     Additive,
@@ -113,10 +113,12 @@ impl Billy {
     }
     #[inline]
     pub fn set_blend_mode(&mut self, blend_mode: BlendMode) {
-        self.calls.push(DrawCall {
-            blend_mode: self.blend_mode,
-            until_instance: self.rects.len() as u32,
-        });
-        self.blend_mode = blend_mode;
+        if blend_mode != self.blend_mode {
+            self.calls.push(DrawCall {
+                blend_mode: self.blend_mode,
+                until_instance: self.rects.len() as u32,
+            });
+            self.blend_mode = blend_mode;
+        }
     }
 }

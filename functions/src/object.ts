@@ -150,12 +150,12 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
             Error.code(209, "permission-denied");
         }
 
-        // await checkedTransaction(
-        //     userDetails.ref.child("epochNextPlace"),
-        //     nextPlace => now >= nextPlace,
-        //     () => Error.code(202, "permission-denied"),
-        //     () => now + placeCooldown.val() * 1000
-        // );
+        await checkedTransaction(
+            userDetails.ref.child("epochNextPlace"),
+            nextPlace => now >= nextPlace,
+            () => Error.code(202, "permission-denied"),
+            () => now + placeCooldown.val() * 1000
+        );
 
         if (!data.object) {
             throw Error.code(400, "invalid-argument");

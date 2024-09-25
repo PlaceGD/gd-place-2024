@@ -1,11 +1,14 @@
-use billy::Billy;
+use billy::{Billy, BlendMode};
 use glam::{uvec2, vec2, vec4, Vec4};
 use rust_shared::{
-    gd::{object::GDObject, special_ids, HitboxType, ObjectCategory},
+    gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
+    map,
     sprite::SpriteInfo,
 };
+use std::hash::Hash;
 
 use crate::{
+    level::Level,
     object::GDObjectExt,
     state::State,
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, SFX_ICON_SPRITES},
@@ -149,4 +152,63 @@ pub fn draw_level_obj_sprite(
     }
 
     billy.set_transform(old_t);
+}
+
+pub fn draw_level<K: Default + Hash + Eq + Copy>(
+    state: &State,
+    billy: &mut Billy,
+    level: &Level<K>,
+    mut color_override: impl FnMut(K, &GDObject, bool) -> Option<Vec4>,
+) {
+    for layer in 0..(Z_LAYERS.len() + 1) {
+        for sheet_batch_idx in 0..5 {
+            for batch_idx in 0..2 {
+                billy.set_blend_mode(if state.show_collidable {
+                    BlendMode::Normal
+                } else {
+                    [BlendMode::Additive, BlendMode::Normal][batch_idx]
+                });
+                for (_, chunk) in &level.chunks {
+                    let sheet_batch = &chunk.layers[layer].sheet_batches[sheet_batch_idx];
+                    let batch = &sheet_batch[batch_idx];
+
+                    // console_log!("bend {}", i);
+                    for (_, m) in batch {
+                        for (key, (obj, draw)) in m {
+                            for &detail in match draw {
+                                crate::level::ObjectDraw::Both => &[false, true] as &[bool],
+                                crate::level::ObjectDraw::Main => &[false],
+                                crate::level::ObjectDraw::Detail => &[true],
+                            } {
+                                let (sprites, color) = if detail {
+                                    (&DETAIL_SPRITES, obj.detail_color)
+                                } else {
+                                    (&MAIN_SPRITES, obj.main_color)
+                                };
+                                if let Some(sprite) = sprites[obj.id as usize] {
+                                    if color.blending == (batch_idx == 0) {
+                                        let color = color_override(*key, obj, detail).unwrap_or(
+                                            Vec4::from_array(
+                                                [color.r, color.g, color.b, color.opacity]
+                                                    .map(|v| v as f32 / 255.0),
+                                            ),
+                                        );
+                                        // let color = if state.selected_object == Some(*key) {
+                                        //     selected_color(detail)
+                                        // } else {
+                                        //     Vec4::from_array(
+                                        //         [color.r, color.g, color.b, color.opacity]
+                                        //             .map(|v| v as f32 / 255.0),
+                                        //     )
+                                        // };
+                                        draw_level_obj_sprite(state, billy, sprite, obj, color);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

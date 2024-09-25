@@ -555,13 +555,14 @@ impl State {
             let old_t = billy.get_transform();
             billy.apply_transform(self.view_transform());
             self.countdown.update_state(self.event_elapsed);
-            self.countdown.draw(&mut billy); // neg time because its just used for animation, not actually relative to anything
+            self.countdown.draw(self, &mut billy); // neg time because its just used for animation, not actually relative to anything
             billy.set_transform(old_t);
             //}
             // level_draw(self, &mut billy);
 
-            // this line just commits the previous call
+            // these lines just commit the previous call
             billy.set_blend_mode(BlendMode::Additive);
+            billy.set_blend_mode(BlendMode::Normal);
 
             let instance_buffer =
                 self.render

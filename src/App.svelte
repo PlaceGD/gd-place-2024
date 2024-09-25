@@ -16,6 +16,17 @@
     import ColoredName from "./components/ColoredName.svelte";
     import loadingBgImageUrl from "./bg.png?url";
 
+    import { fade } from "svelte/transition";
+    import { tweened } from "svelte/motion";
+    import { cubicIn, linear, sineIn } from "svelte/easing";
+    import { map } from "shared-lib/util";
+
+    let openTrans = tweened(
+        0,
+        // "bgColor",
+        { duration: 500, easing: cubicIn }
+    );
+
     alertHasDarkReader();
 
     initWasm();
@@ -29,34 +40,57 @@
         $wasmProgress.hasLoaded &&
         $spritesheetProgress.arrayBuffer != null &&
         $rawSpritesheetData != null;
+    $: if (loaded) {
+        setTimeout(() => {
+            $openTrans = 1;
+        }, 500);
+    }
 
-    $: progress = $wasmProgress.progress + $spritesheetProgress.progress;
+    $: progress =
+        $wasmProgress.progress +
+        $spritesheetProgress.progress +
+        ($rawSpritesheetData != null ? 0.2 : 0.0);
+
+    let viewSize = [1000, 1000];
 </script>
 
 <ToastContainers />
 <DataPopup />
 
-<div class="relative w-screen h-screen overflow-hidden">
-    {#if !loaded}
+<div
+    class="relative w-screen h-screen overflow-hidden"
+    bind:offsetWidth={viewSize[0]}
+    bind:offsetHeight={viewSize[1]}
+>
+    {#if $openTrans < 1}
         <div
-            class="relative flex flex-col w-full h-full gap-8 flex-center p-4 xs:p-2 bg-[#00368a]"
+            class="absolute flex flex-col w-full h-full gap-8 flex-center p-4 pb-20 xs:p-2 z-50"
         >
             <div
                 class="infinite-scroll"
                 style={`
-                --bg: url(${loadingBgImageUrl});
-            `}
+                    --bg: url(${loadingBgImageUrl});
+                    --bg-pos-x: -${Math.max(...viewSize)}px;
+                    opacity: ${1 - $openTrans};
+                `}
             ></div>
-            <div class="relative w-60 h-60 sm:h-56 sm:w-56 xs:h-48 xs:w-48">
+            <div
+                class="relative w-60 h-60 sm:h-56 sm:w-56 xs:h-48 xs:w-48"
+                style={`
+                    transform: translateY(${-$openTrans * 1 * viewSize[1]}px);
+                    opacity: ${map($openTrans, 0, 0.3, 1, 0)};
+                `}
+            >
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html jetpackAnimText}
             </div>
             <div
-                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-2/3 max-w-[850px] rounded-full mt-16 xs:mt-12 overflow-hidden"
+                class="relative min-h-[20px] md:min-h-[18px] xs:min-h-[15px] w-2/3 max-w-[850px] rounded-full mt-16 xs:mt-12 overflow-hidden"
                 style={`
-                box-shadow: 0 0 0 3px black, 0 0 0 9px #FED83E, 0 0 0 12px black, 0 0 50px 16px #0006;
-                // outline: 3px solid black, 9px solid white;
-            `}
+                    box-shadow: 0 0 0 3px black, 0 0 0 9px #FED83E, 0 0 0 12px black, 0 0 50px 16px #0006;
+                    transform: translateY(${$openTrans * 1 * viewSize[1]}px);
+                    opacity: ${map($openTrans, 0, 0.3, 1, 0)};
+                `}
             >
                 <div
                     class="h-full bg-[#01B2FF]"
@@ -68,7 +102,13 @@
                     `}
                 ></div>
             </div>
-            <div class="flex flex-col gap-2 flex-center">
+            <div
+                class="flex flex-col gap-2 flex-center"
+                style={`
+                    transform: translateY(${$openTrans * 1 * viewSize[1]}px);
+                    opacity: ${map($openTrans, 0, 0.3, 1, 0)};
+                `}
+            >
                 <div
                     class="relative text-6xl md:text-5xl sm:text-4xl xs:text-3xl font-pusab"
                 >
@@ -95,6 +135,7 @@
         left: 0;
         height: 100vh;
         width: 100vw;
+        background-color: #00368a;
         background-image: var(--bg);
         background-size: cover;
         background-repeat: repeat-x;
@@ -105,7 +146,7 @@
             background-position: 0 50%;
         }
         to {
-            background-position: -100vw 50%;
+            background-position: var(--bg-pos-x) 50%;
         }
     }
 </style>

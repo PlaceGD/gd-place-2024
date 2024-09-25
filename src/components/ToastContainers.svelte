@@ -16,14 +16,57 @@
 </Portal>
 
 <div class="announcement-wrapper">
-    <SvelteToast target="announcement" options={{ intro: { y: -50 } }} />
+    <SvelteToast
+        target="announcement"
+        options={{ intro: { y: -50 }, classes: ["announcement"] }}
+    />
 </div>
 
 <style lang="postcss">
+    :global(.log.info) {
+        --toastBackground: #396196b2;
+        --toastBarBackground: #5b82b5;
+    }
+    :global(.log.success) {
+        --toastBackground: #449639b2;
+        --toastBarBackground: #6ab55b;
+    }
+    :global(.log.warning) {
+        --toastBackground: #966e39b2;
+        --toastBarBackground: #b58d5b;
+    }
+    :global(.log.error) {
+        --toastBackground: #963939b2;
+        --toastBarBackground: #b55f5b;
+    }
+
+    .announcement-wrapper {
+        --toastContainerTop: 2rem;
+        --toastContainerLeft: 0;
+        --toastWidth: min(max-content, 50%);
+    }
+
+    .announcement-wrapper > :global(._toastContainer) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    :global(.announcement) {
+        --toastBackground: #2d597bb2;
+        --toastBarBackground: #234863;
+        padding: 8px;
+    }
+
     :global(._toastContainer) {
-        font-family: Saira;
-        color: white;
-        border-radius: 8px;
+        --toastColor: white;
+        --toastBorderRadius: 0.5rem;
+        --toastPadding: 8px;
+    }
+
+    :global(._toastItem) {
+        backdrop-filter: blur(10px);
+        pointer-events: all;
     }
 
     @media screen(lg) {
@@ -37,7 +80,10 @@
             font-size: 12px;
         }
     }
-    :global(._toastItem) {
-        backdrop-filter: blur(10px);
+
+    @media screen(xs) {
+        :global(._toastContainer) {
+            font-size: 10px;
+        }
     }
 </style>

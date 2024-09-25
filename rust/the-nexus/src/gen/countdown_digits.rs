@@ -3,6 +3,7 @@ use std::{array, collections::HashMap, io::Cursor};
 
 use binrw::BinWrite;
 use itertools::Itertools;
+use palette::FromColor;
 use rust_shared::{
     countdown::{
         get_countdown_sets, CountdownDigitSets, DigitObjects, DigitSet, DIGIT_HEIGHT, DIGIT_SETS,
@@ -235,17 +236,21 @@ fn to_gdobject(
 
 fn apply_hsv(color: GDColor, hsv: Option<(f64, f64, f64)>) -> GDColor {
     if let Some((h, s, v)) = hsv {
-        use color_space::{Hsv, Rgb};
+        use palette::{Hsv, Srgb};
 
-        let rgb = Rgb::new(color.r as f64, color.g as f64, color.b as f64);
-        let hsv = Hsv::from(rgb);
-        let modified = Hsv::new((hsv.h + h).rem_euclid(360.0), hsv.s * s, hsv.v * v);
-        let rgb_m = Rgb::from(modified);
+        let rgb = Srgb::new(color.r as f64, color.g as f64, color.b as f64);
+        let hsv = Hsv::from_color(rgb);
+        let modified = Hsv::new(
+            (hsv.hue + h).into_inner().rem_euclid(360.0),
+            hsv.saturation * s,
+            hsv.value * v,
+        );
+        let rgb_m = Srgb::from_color(modified);
         // dbg!(rgb, rgb_m);
         GDColor::new(
-            rgb_m.r as u8,
-            rgb_m.g as u8,
-            rgb_m.b as u8,
+            rgb_m.red as u8,
+            rgb_m.green as u8,
+            rgb_m.blue as u8,
             color.opacity,
             color.blending,
         )

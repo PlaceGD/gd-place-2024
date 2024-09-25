@@ -1,5 +1,5 @@
 use glam::{vec2, vec4, Vec4};
-use rust_shared::{gd::layer::Z_LAYERS, map};
+use rust_shared::{console_log, gd::layer::Z_LAYERS, map};
 
 use crate::{
     object::GDObjectExt,
@@ -13,7 +13,7 @@ use super::{
 };
 
 // draw everything after the background and grid here (those rdone separately for REASONS .)
-pub fn draw(state: &State, billy: &mut Billy) {
+pub fn draw(state: &mut State, billy: &mut Billy) {
     billy.apply_transform(state.view_transform());
 
     let selected_color = |lighter| {
@@ -31,120 +31,175 @@ pub fn draw(state: &State, billy: &mut Billy) {
         vec4(1.0, c, c, 1.0)
     };
 
-    for &layer in Z_LAYERS {
-        billy.set_blend_mode(if state.show_collidable {
-            BlendMode::Normal
-        } else {
-            BlendMode::Additive
-        });
-        for z_order in -50..=50 {
-            state.level.foreach_obj_in_z(
-                layer,
-                z_order,
-                |key, obj| {
-                    if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
-                        if obj.main_color.blending {
-                            let color = if state.selected_object == Some(key) {
-                                selected_color(false)
-                            } else {
-                                Vec4::from_array(
-                                    [
-                                        obj.main_color.r,
-                                        obj.main_color.g,
-                                        obj.main_color.b,
-                                        obj.main_color.opacity,
-                                    ]
-                                    .map(|v| v as f32 / 255.0),
-                                )
-                            };
-                            draw_level_obj_sprite(state, billy, sprite, obj, color);
-                        }
-                    }
-                },
-                state.show_preview.then(|| state.preview_object.into_obj()),
-            )
-        }
+    if state.show_preview {
+        state
+            .level
+            .add_object(state.preview_object.into_obj(), [255; 20]);
+    }
 
-        billy.set_blend_mode(BlendMode::Normal);
-        for z_order in -50..=50 {
-            state.level.foreach_obj_in_z(
-                layer,
-                z_order,
-                |key, obj| {
-                    if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
-                        if !obj.main_color.blending {
-                            let color = if state.selected_object == Some(key) {
-                                selected_color(false)
-                            } else {
-                                Vec4::from_array(
-                                    [
-                                        obj.main_color.r,
-                                        obj.main_color.g,
-                                        obj.main_color.b,
-                                        obj.main_color.opacity,
-                                    ]
-                                    .map(|v| v as f32 / 255.0),
-                                )
-                            };
-                            draw_level_obj_sprite(state, billy, sprite, obj, color);
+    for layer in 0..(Z_LAYERS.len() + 1) {
+        for sheet_batch_idx in 0..5 {
+            for batch_idx in 0..2 {
+                for (_, chunk) in &state.level.chunks {
+                    let sheet_batch = &chunk.layers[layer].sheet_batches[sheet_batch_idx];
+                    let batch = &sheet_batch[batch_idx];
+                    billy.set_blend_mode(if state.show_collidable {
+                        BlendMode::Normal
+                    } else {
+                        [BlendMode::Additive, BlendMode::Normal][batch_idx]
+                    });
+                    // console_log!("bend {}", i);
+                    for (_, m) in batch {
+                        for (key, (obj, draw)) in m {
+                            for &detail in match draw {
+                                crate::level::ObjectDraw::Both => &[false, true] as &[bool],
+                                crate::level::ObjectDraw::Main => &[false],
+                                crate::level::ObjectDraw::Detail => &[true],
+                            } {
+                                let (sprites, color) = if detail {
+                                    (&DETAIL_SPRITES, obj.detail_color)
+                                } else {
+                                    (&MAIN_SPRITES, obj.main_color)
+                                };
+                                if let Some(sprite) = sprites[obj.id as usize] {
+                                    if color.blending == (batch_idx == 0) {
+                                        let color = if state.selected_object == Some(*key) {
+                                            selected_color(detail)
+                                        } else {
+                                            Vec4::from_array(
+                                                [color.r, color.g, color.b, color.opacity]
+                                                    .map(|v| v as f32 / 255.0),
+                                            )
+                                        };
+                                        draw_level_obj_sprite(state, billy, sprite, obj, color);
+                                    }
+                                }
+                            }
                         }
                     }
-                    if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
-                        if !obj.detail_color.blending {
-                            let color = if state.selected_object == Some(key) {
-                                selected_color(true)
-                            } else {
-                                Vec4::from_array(
-                                    [
-                                        obj.detail_color.r,
-                                        obj.detail_color.g,
-                                        obj.detail_color.b,
-                                        obj.detail_color.opacity,
-                                    ]
-                                    .map(|v| v as f32 / 255.0),
-                                )
-                            };
-                            draw_level_obj_sprite(state, billy, sprite, obj, color);
-                        }
-                    }
-                },
-                state.show_preview.then(|| state.preview_object.into_obj()),
-            )
-        }
-
-        billy.set_blend_mode(if state.show_collidable {
-            BlendMode::Normal
-        } else {
-            BlendMode::Additive
-        });
-        for z_order in -50..=50 {
-            state.level.foreach_obj_in_z(
-                layer,
-                z_order,
-                |key, obj| {
-                    if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
-                        if obj.detail_color.blending {
-                            let color = if state.selected_object == Some(key) {
-                                selected_color(false)
-                            } else {
-                                Vec4::from_array(
-                                    [
-                                        obj.detail_color.r,
-                                        obj.detail_color.g,
-                                        obj.detail_color.b,
-                                        obj.detail_color.opacity,
-                                    ]
-                                    .map(|v| v as f32 / 255.0),
-                                )
-                            };
-                            draw_level_obj_sprite(state, billy, sprite, obj, color);
-                        }
-                    }
-                },
-                state.show_preview.then(|| state.preview_object.into_obj()),
-            )
+                }
+            }
         }
     }
+
+    if state.show_preview {
+        state.level.remove_object([255; 20]);
+    }
+
+    // for &layer in Z_LAYERS {
+    //     billy.set_blend_mode(if state.show_collidable {
+    //         BlendMode::Normal
+    //     } else {
+    //         BlendMode::Additive
+    //     });
+    //     for z_order in -50..=50 {
+    //         state.level.foreach_obj_in_z(
+    //             layer,
+    //             z_order,
+    //             |key, obj| {
+    //                 if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
+    //                     if obj.main_color.blending {
+    //                         let color = if state.selected_object == Some(key) {
+    //                             selected_color(false)
+    //                         } else {
+    //                             Vec4::from_array(
+    //                                 [
+    //                                     obj.main_color.r,
+    //                                     obj.main_color.g,
+    //                                     obj.main_color.b,
+    //                                     obj.main_color.opacity,
+    //                                 ]
+    //                                 .map(|v| v as f32 / 255.0),
+    //                             )
+    //                         };
+    //                         draw_level_obj_sprite(state, billy, sprite, obj, color);
+    //                     }
+    //                 }
+    //             },
+    //             state.show_preview.then(|| state.preview_object.into_obj()),
+    //         )
+    //     }
+
+    //     billy.set_blend_mode(BlendMode::Normal);
+    //     for z_order in -50..=50 {
+    //         state.level.foreach_obj_in_z(
+    //             layer,
+    //             z_order,
+    //             |key, obj| {
+    //                 if let Some(sprite) = MAIN_SPRITES[obj.id as usize] {
+    //                     if !obj.main_color.blending {
+    //                         let color = if state.selected_object == Some(key) {
+    //                             selected_color(false)
+    //                         } else {
+    //                             Vec4::from_array(
+    //                                 [
+    //                                     obj.main_color.r,
+    //                                     obj.main_color.g,
+    //                                     obj.main_color.b,
+    //                                     obj.main_color.opacity,
+    //                                 ]
+    //                                 .map(|v| v as f32 / 255.0),
+    //                             )
+    //                         };
+    //                         draw_level_obj_sprite(state, billy, sprite, obj, color);
+    //                     }
+    //                 }
+    //                 if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
+    //                     if !obj.detail_color.blending {
+    //                         let color = if state.selected_object == Some(key) {
+    //                             selected_color(true)
+    //                         } else {
+    //                             Vec4::from_array(
+    //                                 [
+    //                                     obj.detail_color.r,
+    //                                     obj.detail_color.g,
+    //                                     obj.detail_color.b,
+    //                                     obj.detail_color.opacity,
+    //                                 ]
+    //                                 .map(|v| v as f32 / 255.0),
+    //                             )
+    //                         };
+    //                         draw_level_obj_sprite(state, billy, sprite, obj, color);
+    //                     }
+    //                 }
+    //             },
+    //             state.show_preview.then(|| state.preview_object.into_obj()),
+    //         )
+    //     }
+
+    //     billy.set_blend_mode(if state.show_collidable {
+    //         BlendMode::Normal
+    //     } else {
+    //         BlendMode::Additive
+    //     });
+    //     for z_order in -50..=50 {
+    //         state.level.foreach_obj_in_z(
+    //             layer,
+    //             z_order,
+    //             |key, obj| {
+    //                 if let Some(sprite) = DETAIL_SPRITES[obj.id as usize] {
+    //                     if obj.detail_color.blending {
+    //                         let color = if state.selected_object == Some(key) {
+    //                             selected_color(false)
+    //                         } else {
+    //                             Vec4::from_array(
+    //                                 [
+    //                                     obj.detail_color.r,
+    //                                     obj.detail_color.g,
+    //                                     obj.detail_color.b,
+    //                                     obj.detail_color.opacity,
+    //                                 ]
+    //                                 .map(|v| v as f32 / 255.0),
+    //                             )
+    //                         };
+    //                         draw_level_obj_sprite(state, billy, sprite, obj, color);
+    //                     }
+    //                 }
+    //             },
+    //             state.show_preview.then(|| state.preview_object.into_obj()),
+    //         )
+    //     }
+    // }
 
     // selection box
     if !state.hide_outline {

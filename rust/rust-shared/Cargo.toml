@@ -14,3 +14,4 @@ serde_json = { workspace = true }
 js-sys = { workspace = true }
 indexmap = { workspace = true }
 binrw = { workspace = true }
+slab = { workspace = true }

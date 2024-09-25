@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use gen::{
     colors::get_available_colors, countdown_digits::make_get_countdown_digits_fn,
     objects::make_get_object_info_fn,
@@ -16,7 +18,7 @@ fn make_wasm_lib_utilgen(sheet_data: &gen::sprites::SpritesheetData) -> String {
 
     format!(
         "
-use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectInfo}}, sprite::SpriteInfo}};
+use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectSheet::*, ObjectInfo}}, sprite::SpriteInfo}};
 // use the_nexus::{{ObjectCategory::*, HitboxType::*, ObjectInfo, SpriteInfo}};
 
 {}

@@ -16,7 +16,7 @@
     export let canvasHeight: number;
 
     const WASM_ERROR = `
-        A fatal error occured in the WASM.\nPlease report this bug to the developers!
+        <strong>A fatal error occured in the WASM.</strong><br/>Please report this bug to the developers!
             <span style="color:white;text-decoration:underline;cursor:pointer;pointer-events:all;" onclick='navigator.clipboard.writeText(window.consoleErrors.join("\\n"));'>
                 (click this text to copy the errors and include this in the report)
             </span>`;

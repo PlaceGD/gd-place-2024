@@ -20,7 +20,7 @@ base64 = "0.21.0"
 
 flate2 = "1.0.30"
 # specta = "1.0.5"
-color_space = "0.5.4"
+palette = { workspace = true }
 
 rust-shared = { path = "../rust-shared" }
 

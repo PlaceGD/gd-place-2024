@@ -22,6 +22,12 @@ export type ObjectCategory =
     | "Saws"
     | "Triggers";
 export type HitboxType = "NoHitbox" | "Solid" | "Hazard" | "Special";
+export type ObjectSheet =
+    | "GJParticleSheet"
+    | "PixelSheet01"
+    | "GJGameSheet02"
+    | "FireSheet01"
+    | "GJGameSheet";
 export interface ObjectInfo {
     placeOffsetX: number;
     placeOffsetY: number;
@@ -29,6 +35,7 @@ export interface ObjectInfo {
     builtinScaleX: number;
     builtinScaleY: number;
     category: ObjectCategory; // CATEGORY_ICONS key
+    sheet: ObjectSheet;
 }
 
 export const objects: Record<string, ObjectInfo> = _objects as any;

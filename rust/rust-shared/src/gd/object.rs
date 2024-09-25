@@ -2,8 +2,6 @@ use crate::gd::layer::ZLayer;
 use binrw::{BinRead, BinResult, BinWrite};
 use wasm_bindgen::prelude::*;
 
-use super::level::ChunkCoord;
-
 #[binrw::parser(reader, endian)]
 fn bool_parse() -> BinResult<bool> {
     let r: u8 = <_>::read_options(reader, endian, ())?;
@@ -77,10 +75,6 @@ pub struct GDObject {
 }
 
 impl GDObject {
-    pub fn get_chunk_coord(&self) -> ChunkCoord {
-        ChunkCoord::get_from_pos(self.x, self.y)
-    }
-
     pub fn offset(self, offset: glam::Vec2) -> Self {
         Self {
             x: self.x + offset.x,

@@ -6,7 +6,7 @@ use itertools::Itertools;
 use regex::Regex;
 use rust_shared::{
     countdown::LevelParseResult,
-    gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo},
+    gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo, ObjectSheet},
 };
 
 use crate::objects::levelstring::ObjectMap;
@@ -28,6 +28,20 @@ pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new
                 .unwrap()
         })
         .map(|(a, b)| (a, game_object_type_to_hitbox_type(b)))
+        .collect::<HashMap<_, _>>();
+    let object_sheets = include_str!("object_sheets.txt")
+        .lines()
+        .map(|v| {
+            let (id, sheet) = v.split(':').map(|s| s.trim()).next_tuple().unwrap();
+            (id.parse::<u16>().unwrap(), match sheet {
+                "GJ_ParticleSheet" => ObjectSheet::GJParticleSheet,
+                "PixelSheet_01" => ObjectSheet::PixelSheet01,
+                "GJ_GameSheet02" => ObjectSheet::GJGameSheet02,
+                "FireSheet_01" => ObjectSheet::FireSheet01,
+                "GJ_GameSheet" => ObjectSheet::GJGameSheet,
+                _ => ObjectSheet::GJGameSheet,
+            })
+        })
         .collect::<HashMap<_, _>>();
 
     let categories: Vec<((f32, f32), ObjectCategory)> = objects
@@ -99,6 +113,7 @@ pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new
                     builtin_scale_x: scale * scale_x,
                     builtin_scale_y: scale * scale_y,
                     category,
+                    sheet: object_sheets[&id],
                 },
             )
         })
@@ -121,6 +136,7 @@ pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new
                         builtin_scale_x: 0.5,
                         builtin_scale_y: 0.5,
                         category: ObjectCategory::Triggers,
+                        sheet: ObjectSheet::GJGameSheet02,
                     },
                 )
             }),

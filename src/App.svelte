@@ -52,8 +52,11 @@
                 {@html jetpackAnimText}
             </div>
             <div
-                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-2/3 max-w-[750px] rounded-full mt-16 xs:mt-12 overflow-hidden"
-                style={`box-shadow: 0 0 0 3px black, 0 0 0 9px white, 0 0 0 12px black, 0 0 50px 16px #0006;`}
+                class="relative h-[20px] md:h-[18px] xs:h-[15px] w-2/3 max-w-[850px] rounded-full mt-16 xs:mt-12 overflow-hidden"
+                style={`
+                box-shadow: 0 0 0 3px black, 0 0 0 9px #FED83E, 0 0 0 12px black, 0 0 50px 16px #0006;
+                // outline: 3px solid black, 9px solid white;
+            `}
             >
                 <div
                     class="h-full bg-[#01B2FF]"

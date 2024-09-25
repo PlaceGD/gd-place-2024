@@ -17,6 +17,9 @@ import type {
     FirebaseError,
     MetaReq,
 } from "shared-lib/cloud_functions";
+import { GDColor, GDObjectOpt } from "wasm-lib";
+import { isValidObject, objects } from "shared-lib/gd";
+import { encodeString } from "shared-lib/base_util";
 
 interface TypedPromise<ResolveType, RejectType> extends Promise<ResolveType> {
     catch<TResult = never>(
@@ -81,3 +84,41 @@ export const changeNameGradient = httpsCallable<GradientReq>(
     "changeNameGradient"
 );
 export const setMeta = httpsCallable<MetaReq>(functions, "setMeta");
+
+let randomKey = obj => {
+    let keys = Object.keys(obj);
+    return keys[Math.floor(keys.length * Math.random())];
+};
+let randInt = (min: number, max: number) => {
+    let range = max - min + 1;
+    return Math.floor(Math.random() * range) + min;
+};
+console.log("GUH", randomKey(objects));
+
+window.honkyPonky = () => {
+    let total = 0;
+    while (total < 4000) {
+        let obj = new GDObjectOpt(
+            parseInt(randomKey(objects)),
+            Math.random() * 40 * 30,
+            Math.random() * 40 * 30,
+            0,
+            randInt(0, 72),
+            0,
+            randInt(0, 72),
+            randInt(0, 8),
+            randInt(-50, 50),
+            new GDColor(255, 0, 0, 255, Math.random() >= 0.5),
+            new GDColor(255, 0, 0, 255, Math.random() >= 0.5)
+        );
+        if (isValidObject(obj)) {
+            total += 1;
+            let v = obj.bytes();
+
+            let s = encodeString(v, 126);
+
+            placeObject({ object: s });
+        }
+        // console.log();
+    }
+};

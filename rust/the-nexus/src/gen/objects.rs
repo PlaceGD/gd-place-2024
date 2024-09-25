@@ -1,4 +1,4 @@
-use rust_shared::gd::{HitboxType, ObjectCategory, ObjectInfo};
+use rust_shared::gd::{HitboxType, ObjectCategory, ObjectInfo, ObjectSheet};
 
 use crate::objects::list::AVAILABLE_OBJECTS;
 
@@ -11,6 +11,7 @@ pub fn make_get_object_info_fn() -> String {
         hitbox_type: HitboxType::NoHitbox,
         builtin_scale_x: 1.0,
         builtin_scale_y: 1.0,
+        sheet: ObjectSheet::GJGameSheet,
     }; 4600];
     for &(k, v) in AVAILABLE_OBJECTS.iter() {
         ongy[k as usize] = v;

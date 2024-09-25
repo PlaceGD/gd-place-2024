@@ -6,13 +6,14 @@ use glam::{mat2, vec2, Affine2};
 use rust_shared::{
     gd::{
         layer::ZLayer,
-        level::ChunkCoord,
         object::{GDColor, GDObject},
     },
     util::Rect,
 };
 
-use crate::{util::get_max_bounding_box, utilgen::OBJECT_INFO, ErrorType, RustError};
+use crate::{
+    level::ChunkCoord, util::get_max_bounding_box, utilgen::OBJECT_INFO, ErrorType, RustError,
+};
 
 pub type ObjectTupleForm = (
     u16,

@@ -1,0 +1,290 @@
+use std::collections::{BTreeMap, HashMap, HashSet};
+
+use indexmap::IndexMap;
+use rust_shared::{
+    gd::{layer::Z_LAYERS, level::CHUNK_SIZE_UNITS, object::GDObject},
+    util::now,
+};
+use wasm_bindgen::prelude::*;
+
+use crate::utilgen::OBJECT_INFO;
+
+pub type DbKey = [u8; 20];
+
+#[wasm_bindgen]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ChunkCoord {
+    pub x: i32,
+    pub y: i32,
+}
+impl ChunkCoord {
+    pub fn get_from_pos(x: f32, y: f32) -> Self {
+        Self {
+            x: (x / CHUNK_SIZE_UNITS as f32).floor() as i32,
+            y: (y / CHUNK_SIZE_UNITS as f32).floor() as i32,
+        }
+    }
+}
+// impl Ord for ChunkCoord {
+//     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+//         self.x.cmp(&other.x).then(self.y.cmp(&other.y))
+//     }
+// }
+
+pub enum ObjectDraw {
+    Both,
+    Main,
+    Detail,
+}
+
+#[derive(Default)]
+pub struct LevelLayer {
+    pub sheet_batches: [[BTreeMap<i8, IndexMap<DbKey, (GDObject, ObjectDraw)>>; 2]; 5],
+}
+
+pub struct LevelChunk {
+    pub layers: [LevelLayer; Z_LAYERS.len() + 1],
+    pub last_time_visible: f64,
+}
+impl LevelChunk {
+    pub fn new() -> Self {
+        Self {
+            layers: Default::default(),
+            last_time_visible: now(),
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct Level {
+    pub chunks: BTreeMap<ChunkCoord, LevelChunk>,
+}
+
+impl Level {
+    // pub fn test() -> &'static [bool] {
+    //     todo!()
+    // }
+    pub fn add_object(&mut self, obj: GDObject, key: DbKey) {
+        let chunk = ChunkCoord::get_from_pos(obj.x, obj.y);
+        let sheet_idx = OBJECT_INFO[obj.id as usize].sheet as usize;
+
+        let chunk = self.chunks.entry(chunk).or_insert_with(LevelChunk::new);
+        let [blending_batch, normal_batch] =
+            &mut chunk.layers[obj.z_layer as usize].sheet_batches[sheet_idx];
+
+        match (obj.main_color.blending, obj.detail_color.blending) {
+            (true, true) => {
+                blending_batch
+                    .entry(obj.z_order)
+                    .or_default()
+                    .insert(key, (obj, ObjectDraw::Both));
+            }
+            (true, false) => {
+                blending_batch
+                    .entry(obj.z_order)
+                    .or_default()
+                    .insert(key, (obj, ObjectDraw::Main));
+                normal_batch
+                    .entry(obj.z_order)
+                    .or_default()
+                    .insert(key, (obj, ObjectDraw::Detail));
+            }
+            (false, true) => {
+                normal_batch
+                    .entry(obj.z_order)
+                    .or_default()
+                    .insert(key, (obj, ObjectDraw::Main));
+
+                let [next_blending_batch, _] =
+                    &mut chunk.layers[obj.z_layer as usize + 1].sheet_batches[sheet_idx];
+                next_blending_batch
+                    .entry(obj.z_order)
+                    .or_default()
+                    .insert(key, (obj, ObjectDraw::Detail));
+            }
+            (false, false) => {
+                normal_batch
+                    .entry(obj.z_order)
+                    .or_default()
+                    .insert(key, (obj, ObjectDraw::Both));
+            }
+        }
+    }
+    pub fn remove_object(&mut self, key: DbKey) -> Option<GDObject> {
+        for c in self.chunks.values_mut() {
+            for layer_idx in 0..(c.layers.len() - 1) {
+                for [blending_sheet, normal_sheet] in c.layers[layer_idx].sheet_batches.iter_mut() {
+                    for order_map in blending_sheet.values_mut() {
+                        if let Some((obj, draw)) = order_map.shift_remove(&key) {
+                            match draw {
+                                ObjectDraw::Both => return Some(obj),
+                                ObjectDraw::Main => {
+                                    for order_map in normal_sheet.values_mut() {
+                                        if order_map.shift_remove(&key).is_some() {
+                                            break;
+                                        }
+                                    }
+                                    return Some(obj);
+                                }
+                                ObjectDraw::Detail => panic!("The shouldnt happen"),
+                            }
+                        }
+                    }
+                    for order_map in normal_sheet.values_mut() {
+                        if let Some((obj, draw)) = order_map.shift_remove(&key) {
+                            match draw {
+                                ObjectDraw::Both => return Some(obj),
+                                ObjectDraw::Main => {
+                                    'out: for [blending_sheet, _] in
+                                        c.layers[layer_idx + 1].sheet_batches.iter_mut()
+                                    {
+                                        for order_map in blending_sheet.values_mut() {
+                                            if order_map.shift_remove(&key).is_some() {
+                                                break 'out;
+                                            }
+                                        }
+                                    }
+                                    return Some(obj);
+                                }
+                                ObjectDraw::Detail => panic!("The shouldnt happen"),
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        None
+    }
+    pub fn foreach_obj_in_chunk<F>(&self, chunk: ChunkCoord, mut f: F)
+    where
+        F: FnMut(DbKey, &GDObject),
+    {
+        let mut visited = HashSet::new();
+        if let Some(chunk) = self.chunks.get(&chunk) {
+            for (key, (obj, _)) in chunk
+                .layers
+                .iter()
+                .take(Z_LAYERS.len())
+                .flat_map(|l| l.sheet_batches.iter())
+                .flat_map(|s| s.iter())
+                .flat_map(|m| m.iter())
+                .flat_map(|(_, v)| v.iter())
+            {
+                if visited.insert(*key) {
+                    f(*key, obj)
+                }
+            }
+        }
+    }
+    pub fn get_obj_by_key(&self, key: DbKey) -> Option<&GDObject> {
+        for chunk in self.chunks.values() {
+            for (_, m) in chunk
+                .layers
+                .iter()
+                .take(Z_LAYERS.len())
+                .flat_map(|l| l.sheet_batches.iter())
+                .flat_map(|s| s.iter())
+                .flat_map(|m| m.iter())
+            {
+                if let Some((o, _)) = m.get(&key) {
+                    return Some(o);
+                }
+            }
+        }
+        None
+    }
+}
+
+// pub type DbKey = [u8; 20];
+
+// #[derive(Debug, Default)]
+// pub struct ObjectList {
+//     pub objects: BTreeMap<i8, IndexMap<DbKey, GDObject>>,
+// }
+
+// #[wasm_bindgen]
+// #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+// pub struct ChunkCoord {
+//     pub x: i32,
+//     pub y: i32,
+// }
+// impl ChunkCoord {
+//     pub fn get_from_pos(x: f32, y: f32) -> Self {
+//         Self {
+//             x: (x / CHUNK_SIZE_UNITS as f32).floor() as i32,
+//             y: (y / CHUNK_SIZE_UNITS as f32).floor() as i32,
+//         }
+//     }
+// }
+
+// #[derive(Debug)]
+// pub struct ChunkInfo {
+//     pub objects: ZLayerMap<ObjectList>,
+//     pub last_time_visible: f64,
+// }
+
+// impl ChunkInfo {
+//     pub fn new() -> Self {
+//         Self {
+//             last_time_visible: now(),
+//             objects: Default::default(),
+//         }
+//     }
+// }
+
+// #[derive(Debug, Default)]
+// pub struct Level {
+//     pub chunks: HashMap<ChunkCoord, ChunkInfo>,
+// }
+
+// impl Level {
+//     pub fn foreach_obj_in_z<F>(
+//         &self,
+//         layer: ZLayer,
+//         z_order: i8,
+//         mut f: F,
+//         preview: Option<GDObject>,
+//     ) where
+//         F: FnMut(DbKey, &GDObject),
+//     {
+//         for (&coord, chunk) in &self.chunks {
+//             if let Some(v) = chunk.objects.get(layer).objects.get(&z_order) {
+//                 for (&key, obj) in v {
+//                     f(key, obj)
+//                 }
+//             }
+//             if let Some(o) = preview {
+//                 if o.z_layer == layer && o.z_order == z_order && o.get_chunk_coord() == coord {
+//                     f([0; 20], &o)
+//                 }
+//             }
+//         }
+//     }
+//     pub fn foreach_obj_in_chunk<F>(&self, chunk: ChunkCoord, mut f: F)
+//     where
+//         F: FnMut(DbKey, &GDObject),
+//     {
+//         if let Some(chunk) = self.chunks.get(&chunk) {
+//             for (&key, obj) in chunk
+//                 .objects
+//                 .iter()
+//                 .flat_map(|(list, _)| list.objects.iter())
+//                 .flat_map(|(_, map)| map.iter())
+//             {
+//                 f(key, obj)
+//             }
+//         }
+//     }
+//     pub fn get_obj_by_key(&self, key: DbKey) -> Option<&GDObject> {
+//         for c in self.chunks.values() {
+//             for (list, _) in c.objects.iter() {
+//                 for m in list.objects.values() {
+//                     if let Some(o) = m.get(&key) {
+//                         return Some(o);
+//                     }
+//                 }
+//             }
+//         }
+//         None
+//     }
+// }

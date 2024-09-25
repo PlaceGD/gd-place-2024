@@ -39,6 +39,7 @@ serde_json = { workspace = true }
 js-sys = { workspace = true }
 image = { workspace = true }
 binrw = { workspace = true }
+indexmap = { workspace = true }
 # desen = { git = "https://github.com/FlowVix/desen.git", features = [
 #     "html-canvas",
 # ] }

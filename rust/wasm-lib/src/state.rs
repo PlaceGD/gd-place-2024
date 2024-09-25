@@ -4,8 +4,8 @@ use rust_shared::{
     gd::{
         layer::ZLayer,
         level::{
-            ChunkCoord, ChunkInfo, DbKey, Level, CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS,
-            LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS, LEVEL_WIDTH_UNITS,
+            CHUNK_SIZE_BLOCKS, CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_RECT_BLOCKS,
+            LEVEL_WIDTH_UNITS,
         },
         object::{GDColor, GDObject},
     },
@@ -15,6 +15,7 @@ use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
 use crate::{
+    level::{ChunkCoord, DbKey, Level, LevelChunk},
     object::{GDObjectExt, GDObjectOpt},
     render::{
         data::Globals,
@@ -301,18 +302,7 @@ impl State {
         if let Ok(key) = key.into_bytes().try_into() {
             // let key: DbKey = key;
 
-            let chunk = obj.get_chunk_coord();
-
-            self.level
-                .chunks
-                .entry(chunk)
-                .or_insert_with(ChunkInfo::new)
-                .objects
-                .get_mut(obj.z_layer)
-                .objects
-                .entry(obj.z_order)
-                .or_default()
-                .insert(key, obj.into_obj());
+            self.level.add_object(obj.into_obj(), key);
         }
         Ok(())
     }
@@ -324,15 +314,19 @@ impl State {
                 self.selected_object = None;
             }
 
-            for c in self.level.chunks.values_mut() {
-                for (list, _) in c.objects.iter_mut() {
-                    for m in list.objects.values_mut() {
-                        if let Some(obj) = m.shift_remove(&key) {
-                            return Some(vec![obj.x, obj.y]);
-                        }
-                    }
-                }
+            if let Some(obj) = self.level.remove_object(key) {
+                return Some(vec![obj.x, obj.y]);
             }
+
+            // for c in self.level.chunks.values_mut() {
+            //     for (list, _) in c.objects.iter_mut() {
+            //         for m in list.objects.values_mut() {
+            //             if let Some(obj) = m.shift_remove(&key) {
+            //                 return Some(vec![obj.x, obj.y]);
+            //             }
+            //         }
+            //     }
+            // }
         }
         None
     }
@@ -348,7 +342,7 @@ impl State {
             match self.level.chunks.get_mut(&v) {
                 Some(chunk) => chunk.last_time_visible = now(),
                 None => {
-                    self.level.chunks.insert(v, ChunkInfo::new());
+                    self.level.chunks.insert(v, LevelChunk::new());
                     out.push(v);
                 }
             }
@@ -458,8 +452,11 @@ impl State {
             .and_then(|v| String::from_utf8(v.into()).ok())
     }
     pub fn get_selected_object_chunk(&mut self) -> Option<ChunkCoord> {
-        self.selected_object
-            .and_then(|k| self.level.get_obj_by_key(k).map(|o| o.get_chunk_coord()))
+        self.selected_object.and_then(|k| {
+            self.level
+                .get_obj_by_key(k)
+                .map(|o| ChunkCoord::get_from_pos(o.x, o.y))
+        })
     }
     // pub fn get_text_draws(&self) -> Vec<TextDraw> {
     //     self.bundle.state.text_draws.clone()

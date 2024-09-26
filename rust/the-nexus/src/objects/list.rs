@@ -6,12 +6,38 @@ use itertools::Itertools;
 use regex::Regex;
 use rust_shared::{
     countdown::LevelParseResult,
-    gd::{object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo, ObjectSheet},
+    gd::{
+        layer::ZLayer, object::GDColor, special_ids, HitboxType, ObjectCategory, ObjectInfo,
+        ObjectSheet,
+    },
 };
 
 use crate::objects::levelstring::ObjectMap;
 
 use super::levelstring::parse_obj;
+
+pub static OBJECT_DEFAULT_Z: LazyLock<HashMap<u16, (ZLayer, i8)>> = LazyLock::new(|| {
+    let mut out = HashMap::new();
+
+    for i in include_str!("object_default_z.txt")
+        .lines()
+        .map(|v| v.trim())
+    {
+        let (id, layer, order) = i.split(' ').map(|s| s.trim()).next_tuple().unwrap();
+        let Ok(layer) = layer.parse::<i8>() else {
+            continue;
+        };
+        let Ok(order) = order.parse::<i8>() else {
+            continue;
+        };
+        out.insert(
+            id.parse::<u16>().unwrap(),
+            (ZLayer::from_gd_num(layer), order),
+        );
+    }
+
+    out
+});
 
 pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new(|| {
     let objects = {
@@ -33,14 +59,17 @@ pub static AVAILABLE_OBJECTS: LazyLock<Box<[(u16, ObjectInfo)]>> = LazyLock::new
         .lines()
         .map(|v| {
             let (id, sheet) = v.split(':').map(|s| s.trim()).next_tuple().unwrap();
-            (id.parse::<u16>().unwrap(), match sheet {
-                "GJ_ParticleSheet" => ObjectSheet::GJParticleSheet,
-                "PixelSheet_01" => ObjectSheet::PixelSheet01,
-                "GJ_GameSheet02" => ObjectSheet::GJGameSheet02,
-                "FireSheet_01" => ObjectSheet::FireSheet01,
-                "GJ_GameSheet" => ObjectSheet::GJGameSheet,
-                _ => ObjectSheet::GJGameSheet,
-            })
+            (
+                id.parse::<u16>().unwrap(),
+                match sheet {
+                    "GJ_ParticleSheet" => ObjectSheet::GJParticleSheet,
+                    "PixelSheet_01" => ObjectSheet::PixelSheet01,
+                    "GJ_GameSheet02" => ObjectSheet::GJGameSheet02,
+                    "FireSheet_01" => ObjectSheet::FireSheet01,
+                    "GJ_GameSheet" => ObjectSheet::GJGameSheet,
+                    _ => ObjectSheet::GJGameSheet,
+                },
+            )
         })
         .collect::<HashMap<_, _>>();
 

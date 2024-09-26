@@ -15,7 +15,7 @@ use rust_shared::{
     },
 };
 
-use crate::objects::list::parse_gmd_file;
+use crate::objects::list::{parse_gmd_file, OBJECT_DEFAULT_Z};
 
 pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let (files, sets) = get_countdown_sets(parse_gmd_file);
@@ -193,18 +193,15 @@ fn to_gdobject(
         iy,
         jx,
         jy,
-        z_layer: ZLayer::from_gd_num(
-            o.get(&24)
-                .unwrap_or(&String::from("0"))
-                .parse::<i8>()
-                .unwrap(),
-        ),
+        z_layer: o
+            .get(&24)
+            .map(|v| ZLayer::from_gd_num(v.parse::<i8>().unwrap()))
+            .unwrap_or_else(|| OBJECT_DEFAULT_Z.get(&id).map(|v| v.0).unwrap_or(ZLayer::B1)),
         // z_layer: ZLayer::B3,
         z_order: o
             .get(&25)
-            .unwrap_or(&String::from("0"))
-            .parse::<i8>()
-            .unwrap(),
+            .map(|v| v.parse::<i8>().unwrap())
+            .unwrap_or_else(|| OBJECT_DEFAULT_Z.get(&id).map(|v| v.1).unwrap_or(0)),
         main_color: o
             .get(&21)
             .map(|c| {

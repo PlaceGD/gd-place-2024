@@ -303,7 +303,7 @@ impl State {
         if let Ok(key) = key.into_bytes().try_into() {
             // let key: DbKey = key;
 
-            self.level.add_object(obj.into_obj(), key);
+            self.level.add_object(obj.into_obj(), key, None);
         }
         Ok(())
     }

@@ -73,8 +73,8 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
     // pub fn test() -> &'static [bool] {
     //     todo!()
     // }
-    pub fn add_object(&mut self, obj: GDObject, key: K) {
-        let chunk = ChunkCoord::get_from_pos(obj.x, obj.y);
+    pub fn add_object(&mut self, obj: GDObject, key: K, chunk_override: Option<ChunkCoord>) {
+        let chunk = chunk_override.unwrap_or(ChunkCoord::get_from_pos(obj.x, obj.y));
         let sheet_idx = OBJECT_INFO[obj.id as usize].sheet as usize;
 
         let chunk = self.chunks.entry(chunk).or_insert_with(LevelChunk::new);
@@ -164,12 +164,12 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
         }
         None
     }
-    pub fn modify_object<F: FnOnce(&mut GDObject)>(&mut self, key: K, cb: F) {
-        if let Some(mut o) = self.remove_object(key) {
-            cb(&mut o);
-            self.add_object(o, key);
-        }
-    }
+    // pub fn modify_object<F: FnOnce(&mut GDObject)>(&mut self, key: K, cb: F) {
+    //     if let Some(mut o) = self.remove_object(key) {
+    //         cb(&mut o);
+    //         self.add_object(o, key);
+    //     }
+    // }
     pub fn foreach_obj_in_chunk<F>(&self, chunk: ChunkCoord, mut f: F)
     where
         F: FnMut(K, &GDObject),

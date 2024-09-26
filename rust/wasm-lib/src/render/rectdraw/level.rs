@@ -19,7 +19,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
     if state.show_preview {
         state
             .level
-            .add_object(state.preview_object.into_obj(), [255; 20]);
+            .add_object(state.preview_object.into_obj(), [255; 20], None);
     }
 
     let selected_color = |lighter| {

@@ -73,7 +73,7 @@ impl ZLayer {
             7 => ZLayer::T2,
             9 => ZLayer::T3,
             11 => ZLayer::T4,
-            _ => ZLayer::B2,
+            _ => ZLayer::B1,
             // _ => panic!("i will eat your balls"),
         }
     }

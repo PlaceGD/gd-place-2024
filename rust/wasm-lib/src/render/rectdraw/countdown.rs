@@ -10,7 +10,11 @@ use rust_shared::{
     util::random,
 };
 
-use crate::{level::Level, state::State, utilgen::OBJECT_INFO};
+use crate::{
+    level::{ChunkCoord, Level},
+    state::State,
+    utilgen::OBJECT_INFO,
+};
 
 use super::{billy::Billy, draw_level, draw_obj_simple};
 
@@ -41,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [6, 3, 10, 11],
+            sets: [6, 3, 9, 11],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -165,7 +169,7 @@ impl Countdown {
             obj.iy /= info.builtin_scale_x;
             obj.jx /= info.builtin_scale_y;
             obj.jy /= info.builtin_scale_y;
-            level.add_object(obj, idx);
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }));
             idx += 1;
         };
 

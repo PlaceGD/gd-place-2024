@@ -606,7 +606,7 @@ impl State {
             );
 
             let mut last_instance = 0;
-            console_log!("CALLS {}", billy.calls.len());
+            //console_log!("CALLS {}", billy.calls.len());
             for (i, call) in billy.calls.iter().enumerate() {
                 render_pass.set_pipeline(match call.blend_mode {
                     BlendMode::Normal => &self.render.pipeline_rect,

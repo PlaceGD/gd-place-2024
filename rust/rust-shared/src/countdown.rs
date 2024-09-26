@@ -60,6 +60,7 @@ parse_countdown_files! {
     "fungi": [3],
     "thomartin": [3],
     "dreaminginsanity": [3],
+    "echonox": [3],
 }
 #[binrw]
 #[brw(little)]

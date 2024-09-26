@@ -195,14 +195,14 @@ fn to_gdobject(
         jy,
         z_layer: ZLayer::from_gd_num(
             o.get(&24)
-                .unwrap_or(&String::from("0"))
+                .unwrap_or(&String::from("3"))
                 .parse::<i8>()
                 .unwrap(),
         ),
         // z_layer: ZLayer::B3,
         z_order: o
             .get(&25)
-            .unwrap_or(&String::from("0"))
+            .unwrap_or(&String::from("2"))
             .parse::<i8>()
             .unwrap(),
         main_color: o

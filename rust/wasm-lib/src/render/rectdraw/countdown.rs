@@ -41,7 +41,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [6, 3, 0, 2],
+            sets: [6, 6, 10, 10],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -431,7 +431,7 @@ impl CountdownDigit {
         }));
 
         // resort (dw this only happens once a second to like 200 objects at a time)
-        console_log!("FUCK FART");
+        // console_log!("FUCK FART");
         self.objects.sort_by(|a, b| {
             let a = a.typ.output_obj();
             let b = b.typ.output_obj();

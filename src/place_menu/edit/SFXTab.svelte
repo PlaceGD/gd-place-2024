@@ -8,6 +8,7 @@
     import FadedScroll from "../../components/FadedScroll.svelte";
     import { semitonesToFactor } from "shared-lib/util";
     import { onDestroy, onMount } from "svelte";
+    import { SFX_ICONS, SFX_SOUNDS } from "./sfx_tab";
 
     let isMounted = false;
     onMount(() => (isMounted = true));
@@ -24,7 +25,7 @@
 
     const playTheSound = () => {
         playSound({
-            url: `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[$menuSelectedSFX]}.ogg`,
+            url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[$menuSelectedSFX]],
             exclusive_channel: "preview sfx",
             speed: semitonesToFactor($menuSpeed),
         });
@@ -80,7 +81,7 @@
                         }}
                     >
                         <Image
-                            src={`/assets/objects/sfx_icons/${sfx_name}.png`}
+                            src={SFX_ICONS[sfx_name]}
                             lazyLoad
                             class="object-contain w-full h-full"
                         />

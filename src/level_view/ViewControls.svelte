@@ -74,6 +74,7 @@
     import { playSound } from "../utils/audio";
     import PlacedByText from "../widgets/PlacedByText.svelte";
     import { scale } from "svelte/transition";
+    import { SFX_SOUNDS } from "../place_menu/edit/sfx_tab";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -189,7 +190,7 @@
                 Math.random() * SFX_TRIGGER_SOUNDS.length
             );
             playSound({
-                url: `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[$menuSelectedSFX]}.ogg`,
+                url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[$menuSelectedSFX]],
                 exclusive_channel: "preview sfx",
                 speed: semitonesToFactor($menuSpeed),
             });
@@ -275,7 +276,7 @@
                         Math.sin(Math.sin(sfx_hit_idx * 6.97) * 6.97) / 2 + 1;
 
                     playSound({
-                        url: `/assets/audio/sfx/${SFX_TRIGGER_SOUNDS[i.obj.main_color.r]}.ogg`,
+                        url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[i.obj.main_color.r]],
                         volume: 1.0 / Math.sqrt(sfx_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
                     });
@@ -392,8 +393,6 @@
 
     let originScreen: [number, number] = [0, 0];
     let textZoomScale = 0;
-
-    let buh: [number, number] = [0, 0];
 
     const getScreenPosZoomCorrected = (
         x: number,

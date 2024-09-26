@@ -2,6 +2,7 @@ import {
     defineConfig,
     Plugin,
     PluginOption,
+    searchForWorkspaceRoot,
     splitVendorChunk,
     splitVendorChunkPlugin,
 } from "vite";
@@ -10,6 +11,7 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import FullReload from "vite-plugin-full-reload";
 import UnpluginInjectPreload from "unplugin-inject-preload/vite";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import { sveltekit } from "@sveltejs/kit/vite";
 
 const TURNSTILE_LOGIN_SITE_KEY = "'0x4AAAAAAAkCQrZbhWcKuz_T'";
 
@@ -22,6 +24,27 @@ export default defineConfig(({ mode }) => ({
     },
     json: {
         stringify: true,
+    },
+    server: {
+        fs: {
+            allow: [
+                // search up for workspace root
+                searchForWorkspaceRoot(process.cwd()),
+                // your custom rules
+                "/shared-lib",
+            ],
+        },
+    },
+    optimizeDeps: {
+        esbuildOptions: {
+            target: "esnext",
+            define: {
+                global: "globalThis",
+            },
+            supported: {
+                bigint: true,
+            },
+        },
     },
     worker: {
         format: "es",
@@ -45,7 +68,7 @@ export default defineConfig(({ mode }) => ({
         legalComments: "none",
     },
     plugins: [
-        svelte(),
+        sveltekit(),
         topLevelAwait(),
         // preload image assets (only works on `vite build`)
         UnpluginInjectPreload({
@@ -108,6 +131,6 @@ export default defineConfig(({ mode }) => ({
                 },
             },
         },
-        target: ["es6"],
+        target: ["esnext"],
     },
 }));

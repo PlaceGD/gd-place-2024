@@ -1,6 +1,17 @@
+interface Window {
+    kofiwidget2: KofiWidget;
+    clearAllTheStuff: () => void;
+    consoleErrors: string[];
+}
+
 declare module "*.svg" {
     import { SvelteComponent } from "svelte";
     export default SvelteComponent;
+}
+
+interface KofiWidget {
+    init: (a: string, b: string, c: string) => void;
+    getHTML: () => string;
 }
 
 declare const __DEBUG: boolean;

@@ -86,7 +86,7 @@
                             {/if}
                             {#if id == SFX_TRIGGER}
                                 <div class={SPECIAL_ICON_TAILWIND}>
-                                    <img
+                                    <Image
                                         src="/assets/objects/extra/sfx_note.png"
                                         class="object-contain w-full h-full"
                                         alt="note"
@@ -95,7 +95,7 @@
                             {/if}
                             {#if id == SONG_TRIGGER}
                                 <div class={SPECIAL_ICON_TAILWIND}>
-                                    <img
+                                    <Image
                                         src="/assets/objects/extra/song_note.png"
                                         class="object-contain w-full h-full"
                                         alt="note"

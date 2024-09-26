@@ -16,7 +16,7 @@
 <button
     class={cx({
         [`rounded-lg relative flex flex-center ${$$restProps["class"]}`]: true,
-        "white-button outline-2 outline outline-white/20 -outline-offset-2 ":
+        "white-button outline-2 outline outline-white/20 -outline-offset-2 gap-1 px-2":
             type !== "plain",
         "grid-cols-[min-content_1fr]": type === "accept" || type === "decline",
         "grid-cols-[1fr]": type === "plain" || type === "white",

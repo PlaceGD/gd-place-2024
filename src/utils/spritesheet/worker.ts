@@ -14,7 +14,9 @@ import { PlaceDB } from "../indexdb";
 
 let db: PlaceDB | null = null;
 try {
-    db = await PlaceDB.open();
+    if (typeof window !== "undefined") {
+        db = await PlaceDB.open();
+    }
 } catch (e) {
     console.warn(
         `Worker failed to open database, falling back to no cache (${e})`

@@ -1,20 +1,21 @@
 <script lang="ts">
-    import Editor from "./Editor.svelte";
-    import { alertHasDarkReader } from "./utils/document";
-    import DataPopup from "./DataPopup.svelte";
+    import { onMount } from "svelte";
+    import Editor from "../Editor.svelte";
+    import { alertHasDarkReader } from "../utils/document";
+    import DataPopup from "../DataPopup.svelte";
 
     import {
         wasmProgress,
         initWasm,
         fetchAndParseSpritesheet,
         spritesheetProgress,
-    } from "./load_wasm";
-    import ToastContainers from "./components/ToastContainers.svelte";
-    import { rawSpritesheetData } from "./stores";
+    } from "../load_wasm";
+    import ToastContainers from "../components/ToastContainers.svelte";
+    import { rawSpritesheetData } from "../stores";
     // import JetpackAnim from "./JetpackAnim.svelte";
-    import jetpackAnimText from "./jetpack_anim.svg?raw";
-    import ColoredName from "./components/ColoredName.svelte";
-    import loadingBgImageUrl from "./bg.png?url";
+    import jetpackAnimText from "./assets/jetpack_anim.svg?raw";
+    import ColoredName from "../components/ColoredName.svelte";
+    import loadingBgImageUrl from "./assets/bg.png?url";
 
     import { fade } from "svelte/transition";
     import { tweened } from "svelte/motion";
@@ -27,11 +28,13 @@
         { duration: 500, easing: cubicIn }
     );
 
-    alertHasDarkReader();
+    onMount(() => {
+        alertHasDarkReader();
 
-    initWasm();
-    fetchAndParseSpritesheet().then(data => {
-        $rawSpritesheetData = data;
+        initWasm();
+        fetchAndParseSpritesheet().then(data => {
+            $rawSpritesheetData = data;
+        });
     });
 
     const TOTAL_OPS = 2.2;

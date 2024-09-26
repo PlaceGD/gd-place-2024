@@ -11,6 +11,8 @@
     import bottomIconUrl from "../assets/layer_tab/bottom.svg?url";
     import topIconUrl from "../assets/layer_tab/top.svg?url";
 
+    import moveSmallIconUrl from "../assets/edit_tab/move_small.svg?url";
+
     const layerName = (layer: ZLayer) => {
         switch (layer) {
             case ZLayer.B1:
@@ -193,10 +195,7 @@
                     }}
                     aria-label="Decrease Z-Index"
                 >
-                    <Image
-                        src="/assets/ui/edit/move_small.svg"
-                        class="rotate-90"
-                    />
+                    <Image src={moveSmallIconUrl} class="rotate-90" />
                 </button>
 
                 <DarkInput
@@ -214,10 +213,7 @@
                     }}
                     aria-label="Increase Z-Index"
                 >
-                    <Image
-                        src="/assets/ui/edit/move_small.svg"
-                        class="-rotate-90"
-                    />
+                    <Image src={moveSmallIconUrl} class="-rotate-90" />
                 </button>
             </div>
             <h1 class="text-2xl md:text-xl xs:text-lg font-pusab text-stroke">

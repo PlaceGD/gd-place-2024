@@ -410,11 +410,6 @@
         editWidgetScale = (1 + state.get_zoom() / 80) / window.devicePixelRatio;
         editWidgetVisible = state.is_preview_visible();
 
-        buh = getScreenPosZoomCorrected(
-            $lastRunColorTrigger.bg?.x ?? 0,
-            $lastRunColorTrigger.bg?.y ?? 0
-        );
-
         textZoomScale = state.get_zoom_scale();
         let p = state.get_screen_pos(0, 0);
         originScreen = [p[0], p[1]];
@@ -455,9 +450,9 @@
         state.set_event_elapsed($eventElapsed);
     }
 
-    $: {
-        console.log($bgColor, $ground1Color, $ground2Color);
-    }
+    // $: {
+    //     console.log($bgColor, $ground1Color, $ground2Color);
+    // }
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->

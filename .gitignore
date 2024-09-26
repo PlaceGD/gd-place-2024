@@ -30,6 +30,11 @@ dist-ssr
 *.sln
 *.sw?
 
+.svelte-kit
+.svelte-kit/*
+build/*
+build
+
 public/wasm.txt
 
 .firebase/*

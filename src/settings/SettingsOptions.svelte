@@ -10,12 +10,19 @@
     } from "../stores";
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
     import { menuHeight } from "../utils/transitions";
+    import { onMount } from "svelte";
 
     $: isOpen = $openMenu == ExclusiveMenus.Settings;
 
     const KOFI_ID = "Z8Z410GRY2";
 
-    window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
+    let widgetString = "";
+    onMount(() => {
+        window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
+        widgetString = window.kofiwidget2
+            .getHTML()
+            .replace("Support me on ko-fi.com", "Support us!");
+    });
 
     const settings: { bind: keyof typeof $editorSettings; name: string }[] = [
         {
@@ -131,12 +138,7 @@
                         <span title="Support us">
                             {#if isOpen}
                                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                                {@html window.kofiwidget2
-                                    .getHTML()
-                                    .replace(
-                                        "Support me on ko-fi.com",
-                                        "Support us!"
-                                    )}
+                                {@html widgetString}
                             {/if}
                         </span>
                         <button

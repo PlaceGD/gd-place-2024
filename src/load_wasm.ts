@@ -9,12 +9,14 @@ import { downloadWithProgress } from "./utils/download";
 import { PlaceDB } from "./utils/indexdb";
 
 import wasmUrl from "../rust/wasm-lib/pkg/wasm_lib_bg.wasm?url";
-import wasmVersionUrl from "../public/wasm.txt?url";
-import spritesheetUrl from "../public/assets/spritesheet.png?url";
+import wasmVersionUrl from "./assets/wasm.txt?url";
+import spritesheetUrl from "./assets/spritesheet.png?url";
 
 let db: PlaceDB | null = null;
 try {
-    db = await PlaceDB.open();
+    if (typeof window !== "undefined") {
+        db = await PlaceDB.open();
+    }
 } catch (e) {
     Toast.showWarningToast("Failed to open database, falling back to no cache");
 }

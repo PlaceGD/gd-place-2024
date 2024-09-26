@@ -77,7 +77,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             .pack_own(
                 SpriteKey::Sfx(i),
                 ImageImporter::import_from_file(&PathBuf::from(format!(
-                    "../../public/assets/objects/sfx_icons/{}.png",
+                    "../../src/place_menu/assets/sfx/icons/{}.png",
                     i
                 )))
                 .unwrap(),

@@ -41,7 +41,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [6, 6, 10, 10],
+            sets: [6, 3, 10, 11],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -311,6 +311,7 @@ impl CountdownDigit {
                 .map(|d| Self::get_set(set, d))
                 .unwrap_or(&[])
                 .into_iter()
+                //.filter(|o| matches!(o.z_layer, rust_shared::gd::layer::ZLayer::B1))
                 .copied()
                 .map(|o| (o, true))
                 .collect::<Vec<_>>()

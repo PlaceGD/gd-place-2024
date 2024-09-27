@@ -2,7 +2,11 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/public/favicon.png" />
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="%sveltekit.assets%/favicon.png"
+        />
         <meta
             name="viewport"
             content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
@@ -16,9 +20,9 @@
             type="text/javascript"
             src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"
         ></script>
+        %sveltekit.head%
     </head>
-    <body>
-        <div id="app"></div>
-        <script type="module" src="/src/main.ts"></script>
+    <body data-sveltekit-preload-data="hover">
+        <div style="display: contents">%sveltekit.body%</div>
     </body>
 </html>

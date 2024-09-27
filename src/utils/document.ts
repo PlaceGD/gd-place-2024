@@ -1,25 +1,25 @@
 import { writable } from "svelte/store";
 import Toast from "./toast";
 
-// fixes safari toolbar blocking content
-// https://www.reddit.com/r/nextjs/comments/11g3znz/comment/janib69/?utm_source=share&utm_medium=web2x&context=3
-const fixHeight = () => {
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-};
-fixHeight();
+// // fixes safari toolbar blocking content
+// // https://www.reddit.com/r/nextjs/comments/11g3znz/comment/janib69/?utm_source=share&utm_medium=web2x&context=3
+// const fixHeight = () => {
+//     const vh = window.innerHeight * 0.01;
+//     document.documentElement.style.setProperty("--vh", `${vh}px`);
+// };
+// fixHeight();
 
-let oldHeight = 0;
-window.addEventListener(
-    "resize",
-    () => {
-        if (oldHeight != window.innerHeight) {
-            oldHeight = window.innerHeight;
-            fixHeight();
-        }
-    },
-    { passive: true }
-);
+// let oldHeight = 0;
+// window.addEventListener(
+//     "resize",
+//     () => {
+//         if (oldHeight != window.innerHeight) {
+//             oldHeight = window.innerHeight;
+//             fixHeight();
+//         }
+//     },
+//     { passive: true }
+// );
 
 export const isOverflowing = (element: HTMLElement): boolean => {
     if (!element) return false;

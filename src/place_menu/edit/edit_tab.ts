@@ -1,6 +1,15 @@
 import { objects } from "shared-lib/gd";
 import { rotateVec } from "shared-lib/util";
 import { type GDObjectOpt, convert_opt_transform } from "wasm-lib";
+import { extractFilenames } from "../../utils/misc";
+
+const EDIT_TAB_ICONS = extractFilenames<string>(
+    import.meta.glob("../assets/edit_tab/*.svg", {
+        eager: true,
+        query: "?url",
+        import: "default",
+    })
+);
 
 export enum EditTab {
     Transform = "Transform",
@@ -228,26 +237,26 @@ interface MoveButton {
 export const MOVE_BUTTONS: Record<string, MoveButton> = {
     MOVE_TINY: {
         name: "Move 1/60th",
-        image: "move_mini",
+        image: EDIT_TAB_ICONS["move_mini"],
         amount: "1/60",
         keybinds: MOVE_KEYBINDS.MOVE_TINY,
     },
     MOVE_SMALL: {
         name: "Move 1/15th",
-        image: "move_small",
+        image: EDIT_TAB_ICONS["move_small"],
         amount: "1/15",
         keybinds: MOVE_KEYBINDS.MOVE_SMALL,
         class: "hide-small",
     },
     MOVE_NORMAL: {
         name: "Move 1",
-        image: "move_normal",
+        image: EDIT_TAB_ICONS["move_normal"],
         amount: "1",
         keybinds: MOVE_KEYBINDS.MOVE_NORMAL,
     },
     MOVE_BIG: {
         name: "Move 5",
-        image: "move_big",
+        image: EDIT_TAB_ICONS["move_big"],
         amount: "5",
         keybinds: MOVE_KEYBINDS.MOVE_BIG,
         class: "hide-big",
@@ -397,14 +406,14 @@ export const TRANSFORM_KEYBINDS = {
 export const TRANSFORM_BUTTONS: TransformButton[] = [
     {
         name: "Flip Horizontally",
-        image: "flip",
+        image: EDIT_TAB_ICONS["flip"],
         cb: TRANSFORM_KEYBINDS.flip_horiz.cb,
         flipped: false,
         angle: 0,
     },
     {
         name: "Flip Vertically",
-        image: "flip",
+        image: EDIT_TAB_ICONS["flip"],
         cb: TRANSFORM_KEYBINDS.flip_vert.cb,
         flipped: false,
         angle: 90,
@@ -412,14 +421,14 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
 
     {
         name: "Rotate Counter-Clockwise",
-        image: "rotate",
+        image: EDIT_TAB_ICONS["rotate"],
         cb: TRANSFORM_KEYBINDS.rotate_ccw.cb,
         flipped: false,
         angle: 0,
     },
     {
         name: "Rotate Clockwise",
-        image: "rotate",
+        image: EDIT_TAB_ICONS["rotate"],
         cb: TRANSFORM_KEYBINDS.rotate_cw.cb,
         flipped: true,
         angle: 0,
@@ -427,14 +436,14 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
 
     {
         name: "Scale Up",
-        image: "scale_up",
+        image: EDIT_TAB_ICONS["scale_up"],
         cb: TRANSFORM_KEYBINDS.scale_up.cb,
         flipped: false,
         angle: 0,
     },
     {
         name: "Scale Down",
-        image: "scale_down",
+        image: EDIT_TAB_ICONS["scale_down"],
         cb: TRANSFORM_KEYBINDS.scale_down.cb,
         flipped: false,
         angle: 0,

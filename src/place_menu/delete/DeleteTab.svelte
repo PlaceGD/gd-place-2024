@@ -29,6 +29,7 @@
     import IconButton from "../../components/Buttons/IconButton.svelte";
     import reportButtonimage from "../../moderator/assets/report_button.png?url";
     import type { FirebaseError } from "shared-lib/cloud_functions";
+    import { SFX_ICONS } from "../edit/sfx_tab";
 
     export let state: wasm.State;
 
@@ -271,7 +272,11 @@
                                 class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
                             >
                                 <Image
-                                    src={`/assets/objects/sfx_icons/${SFX_TRIGGER_SOUNDS[$selectedObject.mainColor.r]}.png`}
+                                    src={SFX_ICONS[
+                                        SFX_TRIGGER_SOUNDS[
+                                            $selectedObject.mainColor.r
+                                        ]
+                                    ]}
                                     lazyLoad
                                     class="object-contain w-full h-full"
                                 />

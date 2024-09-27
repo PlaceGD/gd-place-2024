@@ -5,6 +5,7 @@ import type { UserData } from "./firebase/auth";
 import {
     createIndexedDBStorage,
     createLocalStorage,
+    createNoopStorage,
     persist,
     type PersistentStore,
 } from "@macfja/svelte-persistent-store";
@@ -28,12 +29,19 @@ export enum TabGroup {
 }
 
 const persistLocalWritable = <T>(v: T, key: string) =>
-    persist(writable(v), createLocalStorage(), key);
-const persistLocalTweened = <T>(
-    v: T,
-    key: string,
-    options: TweenedOptions<T>
-) => persist(tweened(v, options), createLocalStorage(), key);
+    persist(
+        writable(v),
+        // avoids errors in sveltekit
+        typeof window === "undefined"
+            ? createNoopStorage()
+            : createLocalStorage(),
+        key
+    );
+// const persistLocalTweened = <T>(
+//     v: T,
+//     key: string,
+//     options: TweenedOptions<T>
+// ) => persist(tweened(v, options), createLocalStorage(), key);
 
 export const menuMinimized = persistLocalWritable(false, "menuMinimized");
 export const menuTabGroup = persistLocalWritable(
@@ -86,18 +94,17 @@ export const lastClosedAnnouncement = persistLocalWritable<number>(
     "lastClosedAnnouncement"
 );
 
-export const editorData = persist(
-    writable({
+export const editorData = persistLocalWritable(
+    {
         x: 0,
         y: 0,
         zoom: 0,
-    }),
-    createLocalStorage(),
+    },
     "editorData"
 );
 
-export const editorSettings = persist(
-    writable({
+export const editorSettings = persistLocalWritable(
+    {
         showCollidable: false,
         hideTriggers: false,
         hideGrid: false,
@@ -105,8 +112,7 @@ export const editorSettings = persist(
         hideOutline: false,
         hideDeleteText: false,
         hidePlacedTooltip: false,
-    }),
-    createLocalStorage(),
+    },
     "editorSettings"
 );
 
@@ -121,16 +127,11 @@ export enum ExclusiveMenus {
 }
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
-export const analytics = persist(
-    writable<boolean | null>(null),
-    createLocalStorage(),
+export const analytics = persistLocalWritable<boolean | null>(
+    null,
     "analytics"
 );
-export const newReports = persist(
-    writable(false),
-    createLocalStorage(),
-    "newReports"
-);
+export const newReports = persistLocalWritable(false, "newReports");
 
 export const loginData = writable<{
     currentUserData: UserData | null;
@@ -138,15 +139,11 @@ export const loginData = writable<{
     currentUserData: null,
 });
 
-export const currentNameGradient = persist(
-    writable<{
-        positions: number[] | null;
-        colors: string[] | null;
-    }>({
+export const currentNameGradient = persistLocalWritable(
+    {
         positions: null,
         colors: null,
-    }),
-    createLocalStorage(),
+    },
     "nameGradient"
 );
 

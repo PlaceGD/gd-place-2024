@@ -27,6 +27,8 @@
         SONG_TRIGGER,
     } from "shared-lib/nexusgen";
     import { playSound } from "../../utils/audio";
+    import sfxNoteIconUrl from "../assets/objects_tab/sfx_note.png";
+    import songNoteIconUrl from "../assets/objects_tab/song_note.png";
 
     let objects: [number, ObjectInfo][] = [];
 
@@ -86,8 +88,8 @@
                             {/if}
                             {#if id == SFX_TRIGGER}
                                 <div class={SPECIAL_ICON_TAILWIND}>
-                                    <img
-                                        src="/assets/objects/extra/sfx_note.png"
+                                    <Image
+                                        src={sfxNoteIconUrl}
                                         class="object-contain w-full h-full"
                                         alt="note"
                                     />
@@ -95,8 +97,8 @@
                             {/if}
                             {#if id == SONG_TRIGGER}
                                 <div class={SPECIAL_ICON_TAILWIND}>
-                                    <img
-                                        src="/assets/objects/extra/song_note.png"
+                                    <Image
+                                        src={songNoteIconUrl}
                                         class="object-contain w-full h-full"
                                         alt="note"
                                     />

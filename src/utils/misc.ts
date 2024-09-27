@@ -20,3 +20,19 @@ export const setCheckedPreviewObject = (
 
     return false;
 };
+
+export const extractFilenames = <T>(
+    glob: Record<string, T>
+): Record<string, T> => {
+    return Object.entries(glob).reduce<Record<string, T>>(
+        (prev, [path, data]) => {
+            const fname = path.split("/").at(-1)?.split(".")[0];
+
+            if (fname == null) return prev;
+
+            prev[fname] = data;
+            return prev;
+        },
+        {}
+    );
+};

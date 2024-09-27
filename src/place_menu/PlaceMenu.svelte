@@ -68,6 +68,8 @@
     import DeleteTab from "./delete/DeleteTab.svelte";
     import SfxTab from "./edit/SFXTab.svelte";
     import { playSound } from "../utils/audio";
+    import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
+    import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
 
     export let state: wasm.State;
 
@@ -231,7 +233,7 @@
     $: {
         if ($placeCooldownFinished) {
             if (playPlaceCooldownSound) {
-                playSound({ url: "/assets/audio/ui/place_timer_finished.ogg" });
+                playSound({ url: placeTimerFinishedSoundUrl });
             } else {
                 playPlaceCooldownSound = true;
             }
@@ -241,9 +243,7 @@
     $: {
         if ($deleteCooldownFinished) {
             if (playDeleteCooldownSound) {
-                playSound({
-                    url: "/assets/audio/ui/delete_timer_finished.ogg",
-                });
+                playSound({ url: deleteTimerFinishedSoundUrl });
             } else {
                 playDeleteCooldownSound = true;
             }
@@ -480,7 +480,6 @@
             data-minimised={+$menuMinimized}
             on:click={() => {
                 if ($menuTabGroup != TabGroup.Delete) {
-                    console.log("abuga", state.get_preview_object().debug());
                     addObject(state.get_preview_object());
                     state.set_preview_visibility(false);
                 } else {

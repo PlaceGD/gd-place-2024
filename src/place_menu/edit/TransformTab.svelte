@@ -13,6 +13,10 @@
     import { isValidObject } from "shared-lib/gd";
     import { setCheckedPreviewObject } from "../../utils/misc";
 
+    import rotateIconUrl from "../assets/edit_tab/rotate.svg?url";
+    import warpIconUrl from "../assets/edit_tab/warp.svg?url";
+    import scaleIconUrl from "../assets/edit_tab/scale.svg?url";
+
     export let state: wasm.State;
 
     let selectedWidget = WidgetType.None;
@@ -54,8 +58,8 @@
                     on:click={modifyObjCb(MOVE_BUTTONS[button].keybinds.up.cb)}
                 >
                     <Image
-                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
-                        alt="^"
+                        src={MOVE_BUTTONS[button].image}
+                        alt="V"
                         class="rotate-180"
                     />
                 </button>
@@ -66,10 +70,7 @@
                         MOVE_BUTTONS[button].keybinds.down.cb
                     )}
                 >
-                    <Image
-                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
-                        alt="V"
-                    />
+                    <Image src={MOVE_BUTTONS[button].image} alt="V" />
                 </button>
                 <button
                     class="z-20 w-12 rounded-md shrink-0 right flex-center aspect-square md:w-9 sm:w-7 white-button"
@@ -79,9 +80,9 @@
                     )}
                 >
                     <Image
-                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        src={MOVE_BUTTONS[button].image}
                         class="-rotate-90"
-                        alt=">"
+                        alt="V"
                     />
                 </button>
                 <button
@@ -92,9 +93,9 @@
                     )}
                 >
                     <Image
-                        src="/assets/ui/edit/{MOVE_BUTTONS[button].image}.svg"
+                        src={MOVE_BUTTONS[button].image}
                         class="rotate-90"
-                        alt="<"
+                        alt="V"
                     />
                 </button>
                 <p
@@ -117,12 +118,13 @@
                 >
                     <Image
                         class="object-contain max-w-full max-h-full"
-                        src={`/assets/ui/edit/${button.image}.svg`}
+                        src={button.image}
                         style={`transform: rotate(${button.angle}deg)${
                             button.flipped ? " scaleX(-1)" : ""
                         }`}
                         lazyLoad
                         skeleton
+                        alt={button.name}
                     />
                 </button>
             </li>
@@ -143,11 +145,7 @@
             aria-checked={selectedWidget == WidgetType.Rotate}
         >
             <p class="font-pusab text-stroke">Rotate</p>
-            <Image
-                src="/assets/ui/edit/rotate.svg"
-                alt="&nbsp;"
-                class="md:w-10 xs:hidden"
-            />
+            <Image src={rotateIconUrl} alt="&nbsp;" class="md:w-10 xs:hidden" />
         </button>
         <button
             class={cx({
@@ -163,11 +161,7 @@
             aria-checked={selectedWidget == WidgetType.Scale}
         >
             <p class="font-pusab text-stroke">Scale</p>
-            <Image
-                src="/assets/ui/edit/scale.svg"
-                alt="&nbsp;"
-                class="md:w-10 xs:hidden"
-            />
+            <Image src={scaleIconUrl} alt="&nbsp;" class="md:w-10 xs:hidden" />
         </button>
         <button
             class={cx({
@@ -183,11 +177,7 @@
             aria-checked={selectedWidget == WidgetType.Warp}
         >
             <p class="font-pusab text-stroke">Warp</p>
-            <Image
-                src="/assets/ui/edit/warp.svg"
-                alt="&nbsp;"
-                class="md:w-10 xs:hidden"
-            />
+            <Image src={warpIconUrl} alt="&nbsp;" class="md:w-10 xs:hidden" />
         </button>
     </div>
 </fieldset>

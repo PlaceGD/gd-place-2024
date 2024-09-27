@@ -45,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [6, 3, 9, 11],
+            sets: [6, 11, 3, 10],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -121,7 +121,11 @@ impl Countdown {
                     .iter()
                     .map(|o| {
                         TransitioningObject::new(
-                            AnimType::Appear(*o, random_axis_offset()),
+                            if get_alpha(*o) < 0.3 {
+                                AnimType::FadeIn(*o)
+                            } else {
+                                AnimType::Appear(*o, random_axis_offset())
+                            },
                             0.8,
                             false,
                         )
@@ -133,7 +137,17 @@ impl Countdown {
             let dissapear = |a: &DigitObjects| {
                 a.objs
                     .iter()
-                    .map(|o| TransitioningObject::new(AnimType::Disappear(*o), 0.8, false))
+                    .map(|o| {
+                        TransitioningObject::new(
+                            if get_alpha(*o) < 0.3 {
+                                AnimType::FadeOut(*o)
+                            } else {
+                                AnimType::Disappear(*o)
+                            },
+                            0.8,
+                            false,
+                        )
+                    })
                     .collect()
             };
 
@@ -233,6 +247,10 @@ impl Countdown {
         //     billy.translate(vec2(30.0 * 7.0, 0.0));
         // }
     }
+}
+
+fn get_alpha(o: GDObject) -> f32 {
+    (o.main_color.opacity as f32).min(o.detail_color.opacity as f32) / 255.0
 }
 
 fn draw_obj(obj: &GDObject, billy: &mut Billy) {
@@ -553,7 +571,9 @@ fn ease_out_quart(t: f32) -> f32 {
 
 enum AnimType {
     Appear(GDObject, Vec2), // Vec2: offset
+    FadeIn(GDObject),
     Disappear(GDObject),
+    FadeOut(GDObject),
     Transition(GDObject, GDObject, bool), // bool: prefer x axis
 
     Copy(GDObject, GDObject, bool), // bool: prefer x axis
@@ -571,6 +591,8 @@ impl AnimType {
             AnimType::Static(obj) => obj,
             AnimType::TinyTransition(_, obj) => obj,
             AnimType::Copy(_, obj, _) => obj,
+            AnimType::FadeIn(obj) => obj,
+            AnimType::FadeOut(obj) => obj,
         }
     }
 }
@@ -658,6 +680,19 @@ impl TransitioningObject {
                 }
 
                 Some(obj.select_tint())
+            }
+            AnimType::FadeIn(mut obj) => {
+                let d = d.max(0.0).min(1.0);
+                obj.main_color.opacity = (obj.main_color.opacity as f64 * d as f64) as u8;
+                obj.detail_color.opacity = (obj.detail_color.opacity as f64 * d as f64) as u8;
+                Some(obj)
+            }
+            AnimType::FadeOut(mut obj) => {
+                let d = d.max(0.0).min(1.0);
+                obj.main_color.opacity = (obj.main_color.opacity as f64 * (1.0 - d) as f64) as u8;
+                obj.detail_color.opacity =
+                    (obj.detail_color.opacity as f64 * (1.0 - d) as f64) as u8;
+                Some(obj)
             }
         }
     }

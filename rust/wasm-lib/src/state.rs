@@ -558,7 +558,7 @@ impl State {
             self.countdown.draw(self, &mut billy); // neg time because its just used for animation, not actually relative to anything
             billy.set_transform(old_t);
             //}
-            // level_draw(self, &mut billy);
+            level_draw(self, &mut billy);
 
             // these lines just commit the previous call
             billy.set_blend_mode(BlendMode::Additive);

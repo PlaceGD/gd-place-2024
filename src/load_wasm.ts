@@ -9,9 +9,9 @@ import { downloadWithProgress } from "./utils/download";
 import { PlaceDB } from "./utils/indexdb";
 
 import wasmUrl from "../rust/wasm-lib/pkg/wasm_lib_bg.wasm?url";
-import spritesheetUrl from "./assets/spritesheet.png?url";
-import wasmVersionUrl from "./assets/wasm.ver?url";
-import spritesheetVersionUrl from "./assets/spritesheet.ver?url";
+// import spritesheetUrl from "./assets/spritesheet.png?url";
+// import wasmVersionUrl from "./assets/wasm.ver?url";
+// import spritesheetVersionUrl from "./assets/spritesheet.ver?url";
 
 let db: PlaceDB | null = null;
 try {
@@ -52,7 +52,7 @@ const startWasm = (data: ArrayBuffer) => {
 };
 
 export const initWasm = async () => {
-    const currVer = await (await fetch(wasmVersionUrl)).text();
+    const currVer = await (await fetch("/wasm.ver")).text();
 
     try {
         const prevVer = localStorage.getItem("wasmVer");
@@ -121,7 +121,7 @@ const startSpritesheet = (data: Blob): Promise<RawSpritesheetData> => {
 
 export const fetchAndParseSpritesheet =
     async (): Promise<RawSpritesheetData> => {
-        const currVer = await (await fetch(spritesheetVersionUrl)).text();
+        const currVer = await (await fetch("/spritesheet.ver")).text();
 
         return new Promise(async res => {
             try {
@@ -150,7 +150,7 @@ export const fetchAndParseSpritesheet =
                 );
             }
 
-            downloadWithProgress(spritesheetUrl, "blob", progress => {
+            downloadWithProgress("/spritesheet.png", "blob", progress => {
                 console.info(
                     `downloading spritesheet: ${progress.loaded}/${progress.total}`
                 );

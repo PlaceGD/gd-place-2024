@@ -15,3 +15,7 @@ js-sys = { workspace = true }
 indexmap = { workspace = true }
 binrw = { workspace = true }
 slab = { workspace = true }
+
+
+[build-dependencies]
+uuid = { workspace = true }

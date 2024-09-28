@@ -1,7 +1,7 @@
 {
     "extends": [
-        "@tsconfig/svelte/tsconfig.json",
         "./.svelte-kit/tsconfig.json",
+        "@tsconfig/svelte/tsconfig.json"
     ],
     "compilerOptions": {
         "target": "ESNext",
@@ -33,13 +33,13 @@
         "allowUnusedLabels": true /* Disable error reporting for unused labels. */,
         "allowUnreachableCode": true /* Disable error reporting for unreachable code. */,
 
-        "types": ["vite/client"],
+        "types": ["vite/client"]
     },
     "include": [
         "src/**/*.d.ts",
         "src/**/*.ts",
         "src/**/*.js",
-        "src/**/*.svelte",
+        "src/**/*.svelte"
     ],
-    "references": [{ "path": "./tsconfig.node.json" }],
+    "references": [{ "path": "./tsconfig.node.json" }]
 }

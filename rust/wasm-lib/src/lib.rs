@@ -9,7 +9,6 @@ mod util;
 mod utilgen;
 
 use render::state::RenderState;
-// use colored::control::set_override;
 use wasm_bindgen::prelude::*;
 
 use state::State;

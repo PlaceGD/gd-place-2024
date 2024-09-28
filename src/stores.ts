@@ -327,6 +327,8 @@ setInterval(() => {
     eventElapsed.set(Date.now() - get(eventStartTime));
 }, 1000);
 
+export const eventStarted = derived(eventElapsed, v => v > 0);
+
 db.ref("metaVariables/eventStartTime").on("value", v => {
     console.log(v.val());
     eventStartTime.set(v.val());

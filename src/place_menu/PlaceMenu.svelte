@@ -516,10 +516,8 @@
 </div>
 
 <style lang="postcss">
-    /* https://www.reddit.com/r/nextjs/comments/11g3znz/comment/janib69/?utm_source=share&utm_medium=web2x&context=3 */
     .place-menu {
-        height: 100vh;
-        height: calc(var(--vh, 1vh) * 100);
+        height: 100svh;
         padding: 8px;
     }
     .place-menu[data-minimised="0"] {

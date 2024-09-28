@@ -12,6 +12,7 @@
     import {
         canPlaceEditDelete,
         eventElapsed,
+        eventStarted,
         eventStartTime,
         loginData,
         openMenu,
@@ -20,6 +21,7 @@
     import ZoomButton from "./level_view/ZoomButton.svelte";
     import MetaButton from "./meta/MetaButton.svelte";
     import MetaMenu from "./meta/MetaMenu.svelte";
+    import EventMenu from "./place_menu/EventMenu.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -72,8 +74,8 @@
             <div
                 class="flex flex-col justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
             >
-                <ZoomButton zoom={"in"} {canvas} />
-                <ZoomButton zoom={"out"} {canvas} />
+                <ZoomButton zoom="in" {canvas} />
+                <ZoomButton zoom="out" {canvas} />
             </div>
         </div>
     {/if}
@@ -82,8 +84,13 @@
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        {#if $canPlaceEditDelete}
+
+        {#if !$eventStarted}
+            <EventMenu kind="pre-event" />
+        {:else if $canPlaceEditDelete}
             <PlaceMenu bind:state />
+        {:else}
+            <EventMenu kind="login-to-place" />
         {/if}
     {/if}
 </div>

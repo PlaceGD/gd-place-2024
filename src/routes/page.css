@@ -5,7 +5,6 @@
     src: url("./assets/Pusab.otf");
 }
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -44,16 +43,16 @@ body {
 }
 
 .bulleted-list {
-    @apply flex flex-col gap-2 mb-2 list-disc alternating-bg;
+    @apply alternating-bg mb-2 flex list-disc flex-col gap-2;
 
     & > li {
-        @apply p-2 ml-6 rounded-lg xs:ml-4;
+        @apply ml-6 rounded-lg p-2 xs:ml-4;
     }
 }
 
 @keyframes scale-easeOutBounce {
-	0% {
-        transform: scale3d(1.0, 1.0, 1);
+    0% {
+        transform: scale3d(1, 1, 1);
     }
     12% {
         transform: scale3d(1.022, 1.022, 1);
@@ -82,19 +81,19 @@ body {
     100% {
         transform: scale3d(1.2, 1.2, 1);
     }
-} 
+}
 
 @layer components {
     .menu-panel {
-        @apply relative shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
+        @apply relative rounded-xl bg-menu-gray/80 shadow-lg shadow-black/40 backdrop-blur-md;
     }
 
     .modal-panel {
-        @apply w-full h-full p-6 overflow-hidden xs:p-4;
+        @apply h-full w-full overflow-hidden p-6 xs:p-4;
     }
 
     .sliding-selector {
-        @apply absolute w-full h-full overflow-hidden rounded-lg bg-white/20;
+        @apply absolute h-full w-full overflow-hidden rounded-lg bg-white/20;
     }
 
     .flex-center {
@@ -106,7 +105,7 @@ body {
     }
 
     .white-button {
-        @apply bg-white/5 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:opacity-30 disabled:cursor-not-allowed outline-2 outline outline-white/20 -outline-offset-2;
+        @apply bg-white/5 outline outline-2 -outline-offset-2 outline-white/20 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:cursor-not-allowed disabled:opacity-30;
     }
 
     .li-alternating {
@@ -161,7 +160,6 @@ body {
 
     .bounce-active:active {
         animation: scale-easeOutBounce forwards linear 0.5s;
-        
     }
 
     .abs-centered-rel {
@@ -171,9 +169,9 @@ body {
     .alternating-bg > * {
         @apply odd:bg-black/25 even:bg-white/5;
     }
-    
+
     .hover-text-transition {
-        @apply transition duration-500 text-white/50 hover:text-white;
+        @apply text-white/50 transition duration-500 hover:text-white;
     }
 }
 
@@ -218,16 +216,15 @@ body {
     }
 }
 
-
 @keyframes pulse {
     0% {
-        outline-color: #7FFAFF;
+        outline-color: #7ffaff;
     }
-    50%  {
-        outline-color: #0074A3;
+    50% {
+        outline-color: #0074a3;
     }
-    100%  {
-        outline-color: #7FFAFF;
+    100% {
+        outline-color: #7ffaff;
     }
 }
 
@@ -238,4 +235,3 @@ body {
     outline-style: solid;
     animation: pulse 2s forwards infinite ease-in-out !important;
 }
-

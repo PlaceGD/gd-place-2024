@@ -9,15 +9,16 @@ import { downloadWithProgress } from "./utils/download";
 import { PlaceDB } from "./utils/indexdb";
 
 import wasmUrl from "../rust/wasm-lib/pkg/wasm_lib_bg.wasm?url";
-import wasmVersionUrl from "./assets/wasm.txt?url";
 import spritesheetUrl from "./assets/spritesheet.png?url";
+// import wasmVersionUrl from "./assets/wasm.ver?url";
+// import spritesheetVersionUrl from "./assets/spritesheet.ver?url";
 
 let db: PlaceDB | null = null;
 try {
     if (typeof window !== "undefined") {
         db = await PlaceDB.open();
     }
-} catch (e) {
+} catch {
     Toast.showWarningToast("Failed to open database, falling back to no cache");
 }
 
@@ -51,13 +52,14 @@ const startWasm = (data: ArrayBuffer) => {
 };
 
 export const initWasm = async () => {
-    console.debug(wasmUrl, wasmVersionUrl);
+    const currEtag = (await fetch(wasmUrl, { method: "OPTIONS" })).headers.get(
+        "ETag"
+    )!;
 
     try {
-        const newVersion = (await (await fetch(wasmVersionUrl)).text()).trim();
-        const currentVersion = localStorage.getItem("wasmVersion");
+        const prevEtag = localStorage.getItem("wasmETag");
 
-        if (db != null && newVersion === currentVersion) {
+        if (db != null && prevEtag === currEtag) {
             const wasm = await db.getWasmCache();
 
             if (wasm != undefined) {
@@ -70,8 +72,6 @@ export const initWasm = async () => {
                 startWasm(wasm);
                 return;
             }
-        } else if (newVersion !== currentVersion) {
-            localStorage.setItem("wasmVersion", newVersion);
         }
     } catch {
         Toast.showWarningToast("Database is null, cache will not be used");
@@ -86,6 +86,8 @@ export const initWasm = async () => {
         });
     })
         .then(result => {
+            localStorage.setItem("wasmETag", currEtag);
+
             db?.putWasmCache(result);
             startWasm(result);
         })
@@ -121,11 +123,17 @@ const startSpritesheet = (data: Blob): Promise<RawSpritesheetData> => {
 
 export const fetchAndParseSpritesheet =
     async (): Promise<RawSpritesheetData> => {
-        console.debug(spritesheetUrl);
+        // console.debug(spritesheetUrl, spritesheetVersionUrl);
+
+        const currEtag = (
+            await fetch(spritesheetUrl, { method: "OPTIONS" })
+        ).headers.get("ETag")!;
 
         return new Promise(async res => {
             try {
-                if (db != null) {
+                const prevETag = localStorage.getItem("spritesheetETag");
+
+                if (db != null && currEtag === prevETag) {
                     const spritesheet = await db.getSpritesheetCache();
 
                     if (spritesheet != undefined) {
@@ -160,6 +168,8 @@ export const fetchAndParseSpritesheet =
                 });
             })
                 .then(result => {
+                    localStorage.setItem("spritesheetETag", currEtag);
+
                     db?.putSpritesheetCache(result);
 
                     let data = startSpritesheet(result);

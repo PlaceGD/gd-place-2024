@@ -62,6 +62,7 @@ parse_countdown_files! {
     "dreaminginsanity": [3],
     "echonox": [3],
     "taman": [3],
+    "srguillester": [3],
 }
 #[binrw]
 #[brw(little)]

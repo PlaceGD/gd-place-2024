@@ -1,0 +1,9 @@
+use uuid::Uuid;
+
+fn main() {
+    std::fs::write(
+        "../../src/assets/spritesheet.ver",
+        Uuid::new_v4().to_string(),
+    )
+    .expect("failed to write spritesheet ver");
+}

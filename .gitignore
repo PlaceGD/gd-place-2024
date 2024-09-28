@@ -35,4 +35,6 @@ dist-ssr
 build/*
 build
 
+src/assets/*.ver
+
 .firebase/*

@@ -30,3 +30,6 @@ serde_json = { workspace = true }
 image = { workspace = true }
 
 binrw = { workspace = true }
+
+[build-dependencies]
+uuid = { workspace = true }

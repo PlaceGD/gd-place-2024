@@ -10,8 +10,8 @@ import { PlaceDB } from "./utils/indexdb";
 
 import wasmUrl from "../rust/wasm-lib/pkg/wasm_lib_bg.wasm?url";
 import spritesheetUrl from "./assets/spritesheet.png?url";
-// import wasmVersionUrl from "./assets/wasm.ver?url";
-// import spritesheetVersionUrl from "./assets/spritesheet.ver?url";
+import wasmVersionUrl from "./assets/wasm.ver?url";
+import spritesheetVersionUrl from "./assets/spritesheet.ver?url";
 
 let db: PlaceDB | null = null;
 try {
@@ -52,14 +52,12 @@ const startWasm = (data: ArrayBuffer) => {
 };
 
 export const initWasm = async () => {
-    const currEtag = (await fetch(wasmUrl, { method: "OPTIONS" })).headers.get(
-        "ETag"
-    )!;
+    const currVer = await (await fetch(wasmVersionUrl)).text();
 
     try {
-        const prevEtag = localStorage.getItem("wasmETag");
+        const prevVer = localStorage.getItem("wasmVer");
 
-        if (db != null && prevEtag === currEtag) {
+        if (db != null && prevVer === currVer) {
             const wasm = await db.getWasmCache();
 
             if (wasm != undefined) {
@@ -86,7 +84,7 @@ export const initWasm = async () => {
         });
     })
         .then(result => {
-            localStorage.setItem("wasmETag", currEtag);
+            localStorage.setItem("wasmVer", currVer);
 
             db?.putWasmCache(result);
             startWasm(result);
@@ -123,17 +121,13 @@ const startSpritesheet = (data: Blob): Promise<RawSpritesheetData> => {
 
 export const fetchAndParseSpritesheet =
     async (): Promise<RawSpritesheetData> => {
-        // console.debug(spritesheetUrl, spritesheetVersionUrl);
-
-        const currEtag = (
-            await fetch(spritesheetUrl, { method: "OPTIONS" })
-        ).headers.get("ETag")!;
+        const currVer = await (await fetch(spritesheetVersionUrl)).text();
 
         return new Promise(async res => {
             try {
-                const prevETag = localStorage.getItem("spritesheetETag");
+                const prevVer = localStorage.getItem("spritesheetVer");
 
-                if (db != null && currEtag === prevETag) {
+                if (db != null && currVer === prevVer) {
                     const spritesheet = await db.getSpritesheetCache();
 
                     if (spritesheet != undefined) {
@@ -168,7 +162,7 @@ export const fetchAndParseSpritesheet =
                 });
             })
                 .then(result => {
-                    localStorage.setItem("spritesheetETag", currEtag);
+                    localStorage.setItem("spritesheetVer", currVer);
 
                     db?.putSpritesheetCache(result);
 

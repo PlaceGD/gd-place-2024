@@ -61,5 +61,8 @@ rust-shared = { path = "../rust-shared" }
 
 specta = "1.0.5"
 
+[build-dependencies]
+uuid = { workspace = true }
+
 [build]
 target = "wasm32-unknown-unknown"

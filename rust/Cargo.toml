@@ -15,3 +15,8 @@ indexmap = "2.5.0"
 binrw = "0.14.0"
 slab = "0.4.9"
 color_space = "0.5.4"
+uuid = { version = "1.10.0", features = [
+    "v4",
+    "fast-rng",
+    "macro-diagnostics",
+] }

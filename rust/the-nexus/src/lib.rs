@@ -5,7 +5,7 @@ use gen::{
     objects::make_get_object_info_fn, sprites::make_get_song_icon_sprite_fn,
 };
 use objects::{sfx::SFX_TRIGGER_SOUNDS, song::SONG_TRIGGER_SONGS};
-use rust_shared::gd::special_ids;
+use rust_shared::{countdown::generate_set_switches, gd::special_ids};
 use serde_json::json;
 
 mod gen;
@@ -31,12 +31,15 @@ use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectSheet::*, Objec
 
 {}
 
+{}
+
     ",
         make_get_object_info_fn(),
         make_get_main_sprite_fn(sheet_data),
         make_get_detail_sprite_fn(sheet_data),
         make_get_sfx_icon_sprite_fn(sheet_data),
         make_get_song_icon_sprite_fn(sheet_data),
+        make_get_set_switches_fn(),
     )
 }
 
@@ -125,4 +128,10 @@ export const SONG_TRIGGER_SONGS: string[] = {:?};
         ),
     )
     .unwrap();
+}
+
+fn make_get_set_switches_fn() -> String {
+    let switches = generate_set_switches(512);
+
+    format!("pub const SET_SWITCHES: &[[usize; 4]] = &{:?};", switches)
 }

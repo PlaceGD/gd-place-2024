@@ -37,5 +37,6 @@ export const playSound = (
 export const stopSound = (channel: string) => {
     if (channels[channel] != undefined) {
         channels[channel].pause();
+        delete channels[channel];
     }
 };

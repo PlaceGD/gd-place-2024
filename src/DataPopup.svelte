@@ -21,7 +21,7 @@
                 "https://static.cloudflareinsights.com/beacon.min.js";
             cfScript.setAttribute(
                 "data-cf-beacon",
-                '{"token": "40434fd06b964477af3fff8117d13e1b"}'
+                '{"token": "2b489995378347ae8c4e92ae57fb515e"}'
             );
             document.head.appendChild(cfScript);
         } else {

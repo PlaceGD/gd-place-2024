@@ -86,7 +86,7 @@
                 </div>
 
                 <div 
-                    class="flex flex-col items-center gap-5 w-full h-[90%] menu-panel p-6 sm:w-[90%] sm:h-full sm:p-6 col-span-1 sm:hidden max-h-min"
+                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-4 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end"
                     style={`
                         opacity: ${creator_names? 1 : 0};
                         scale: ${creator_names? 1 : 0.7};
@@ -105,7 +105,7 @@
                         {creator_names}
                     </div>
                     {#if seconds_left > 600}
-                        <div class="text-white opacity-50 text-md md:text-sm text-center italic">
+                        <div class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs text-center italic">
                             Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}

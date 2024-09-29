@@ -6,11 +6,27 @@
     import AcceptButton from "./components/Buttons/AcceptButton.svelte";
     import DeclineButton from "./components/Buttons/DeclineButton.svelte";
 
-    let hasScrolledToBottom = false;
-
     let isOpen = false;
 
     let hidePopup = $analytics != null ? true : false;
+
+    $: {
+        if ($analytics != null) {
+            hidePopup = true;
+        }
+
+        if ($analytics === true) {
+            const cfScript = document.createElement("script");
+            cfScript.src =
+                "https://static.cloudflareinsights.com/beacon.min.js";
+            cfScript.setAttribute(
+                "data-cf-beacon",
+                '{"token": "40434fd06b964477af3fff8117d13e1b"}'
+            );
+            document.head.appendChild(cfScript);
+        } else {
+        }
+    }
 </script>
 
 {#if !hidePopup}

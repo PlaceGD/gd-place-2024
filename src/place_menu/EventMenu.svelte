@@ -1,12 +1,17 @@
 <script lang="ts">
     import { get } from "svelte/store";
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
-    import { eventElapsed, ExclusiveMenus, openMenu, userCount } from "../stores";
+    import {
+        eventElapsed,
+        ExclusiveMenus,
+        openMenu,
+        userCount,
+    } from "../stores";
 
     export let kind: "pre-event" | "login-to-place";
 
     import profileInUrl from "../login/assets/profile_in.png";
-    import loadingAnimSvg from "./assets/loadinganimcss.svg";
+    // import loadingAnimSvg from "./assets/loadinganimcss.svg";
     import Image from "../components/Image.svelte";
 
     let seconds_left = 0;
@@ -30,8 +35,6 @@
             creator_names = `${names[0]}, ${names[1]}, ${names[2]}, and ${names[3]}`;
         }
 
-        
-        
         // if u change this also change it in the wasm :3
         const next_switch = (seconds_left - 1800) % 3600;
 
@@ -40,9 +43,15 @@
             switch_minutes = "00";
             switch_seconds = "00";
         } else {
-            switch_hours = Math.floor(next_switch / 3600).toFixed(0).padStart(2, "0");
-            switch_minutes = Math.floor((next_switch % 3600) / 60).toFixed(0).padStart(2, "0");
-            switch_seconds = Math.floor(next_switch % 60).toFixed(0).padStart(2, "0");
+            switch_hours = Math.floor(next_switch / 3600)
+                .toFixed(0)
+                .padStart(2, "0");
+            switch_minutes = Math.floor((next_switch % 3600) / 60)
+                .toFixed(0)
+                .padStart(2, "0");
+            switch_seconds = Math.floor(next_switch % 60)
+                .toFixed(0)
+                .padStart(2, "0");
         }
     }
 </script>
@@ -50,11 +59,13 @@
 <div
     class="absolute flex flex-col justify-end items-center w-full pointer-events-none pre-event-menu"
 >
-    
     {#if kind === "pre-event"}
-
-        <div class="flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[90rem]">
-            <div class="grid flex-row grid-cols-4 justify-evenly items-center w-full h-full sm:flex-col px-5">
+        <div
+            class="flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[90rem]"
+        >
+            <div
+                class="grid grid-cols-[1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-4"
+            >
                 <!-- temporary loading animation -->
                 <!-- <div class="loading_icon sm:hidden max-h-[170px] max-w-sm">
                     <Image
@@ -63,36 +74,48 @@
                         style="max-height: inherit;"
                     ></Image>
                 </div> -->
-                <div class="flex flex-row justify-center items-center gap-5 col-span-3 sm:col-span-4">
-                    <h1 class="text-white text-6xl xs:text-4xl">
-                        {$userCount}
+                <div>
+                    <h1
+                        class="text-white text-3xl xs:text-xl flex flex-center gap-4"
+                    >
+                        <span class="text-white text-6xl xs:text-4xl">
+                            {$userCount}
+                        </span>
+                        <span>creators have signed up</span>
                     </h1>
-                    <h1 class="text-white text-3xl xs:text-xl">creators have signed up</h1>
                 </div>
 
-                <div 
-                    class="flex flex-col items-center gap-5 w-full h-[90%] menu-panel p-6 sm:w-[90%] sm:h-full sm:p-6 col-span-1 sm:hidden max-h-min"
+                <div
+                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-4 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end"
                 >
-                    <h1 class="text-white text-xl md:text-xl font-bold">
+                    <h1
+                        class="text-white text-xl md:text-lg sm:text-base xs:text-sm font-bold"
+                    >
                         Countdown designs by:
                     </h1>
-                    
-                    <div class="text-white opacity-80 text-lg md:text-md text-center">
+
+                    <div
+                        class="text-white opacity-80 text-lg md:text-base sm:text-sm xs:text-xs"
+                    >
                         {creator_names}
                     </div>
                     {#if seconds_left > 1800}
-                        <div class="text-white opacity-50 text-md md:text-sm text-center italic">
+                        <div
+                            class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs italic tabular-nums"
+                        >
                             Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}
                 </div>
             </div>
         </div>
-
-    
     {:else if kind === "login-to-place"}
-        <div class="flex flex-col items-center justify-center w-full h-[200px] pointer-events-none">
-            <div class="flex flex-col items-center menu-panel justify-evenly w-2/3 sm:w-3/4 h-[150px]">
+        <div
+            class="flex flex-col items-center justify-center w-full h-[200px] pointer-events-none"
+        >
+            <div
+                class="flex flex-col items-center menu-panel justify-evenly w-2/3 sm:w-3/4 h-[150px]"
+            >
                 <div class="flex flex-col gap-2 pointer-events-auto h-full">
                     <button
                         class="flex flex-row justify-items-evenly items-center gap-5 sm:gap-2 text-white w-full h-full p-4 text-4xl text-center md:text-3xl sm:text-2xl xs:text-xl flex-center font-pusab"
@@ -104,7 +127,7 @@
                             src={profileInUrl}
                             class="object-contain aspect-square h-3/4"
                         ></Image>
-                    
+
                         Sign in to participate!
                     </button>
                 </div>

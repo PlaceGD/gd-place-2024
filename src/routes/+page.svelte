@@ -120,11 +120,15 @@
                         colorOverride="linear-gradient(180deg, #fea20d 20%, #fee348 80%)"
                     ></ColoredName>
                 </div>
-                <div
-                    class="relative text-xl text-center text-white xs:text-base font-pusab text-stroke"
-                >
-                    Created with ❤ by Flow, Spu7Nix, DreamingInsanity
-                </div>
+            </div>
+            <div
+                class="absolute bottom-4 w-full text-xl text-center text-white xs:text-base font-pusab text-stroke"
+                style={`
+                    transform: translateY(${$openTrans * 100}px);
+                    opacity: ${map($openTrans, 0, 0.3, 1, 0)};
+                `}
+            >
+                Created by Flow, Spu7Nix, DreamingInsanity ❤ 
             </div>
         </div>
     {/if}

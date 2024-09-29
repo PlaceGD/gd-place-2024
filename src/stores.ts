@@ -351,3 +351,5 @@ db.ref("userCount").on("value", v => {
     console.log(v.val());
     userCount.set(v.val());
 });
+
+export const songPlaying = writable(false);

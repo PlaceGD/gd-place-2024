@@ -22,6 +22,7 @@
     import MetaButton from "./meta/MetaButton.svelte";
     import MetaMenu from "./meta/MetaMenu.svelte";
     import EventMenu from "./place_menu/EventMenu.svelte";
+    import SongStopButton from "./level_view/SongStopButton.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -76,6 +77,7 @@
             >
                 <ZoomButton zoom="in" {canvas} />
                 <ZoomButton zoom="out" {canvas} />
+                <SongStopButton/>
             </div>
         </div>
     {/if}

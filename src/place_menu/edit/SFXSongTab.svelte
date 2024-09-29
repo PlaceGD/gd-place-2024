@@ -8,6 +8,7 @@
         menuSelectedSFX,
         menuSelectedSong,
         menuSpeed,
+        songPlaying,
     } from "../../stores";
     import Image from "../../components/Image.svelte";
     import { playSound } from "../../utils/audio";
@@ -48,6 +49,10 @@
             exclusive_channel: `preview ${tabType}`,
             speed: semitonesToFactor($menuSpeed),
         });
+
+        if (tabType == "song") {
+            songPlaying.set(true);
+        }
     };
 </script>
 

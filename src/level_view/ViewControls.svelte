@@ -44,6 +44,7 @@
         lastRunColorTrigger,
         setLevelColor,
         menuSelectedSong,
+        songPlaying,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -206,7 +207,11 @@
                 url: SONG_SOUNDS[SONG_TRIGGER_SONGS[$menuSelectedSong]],
                 exclusive_channel: "preview song",
                 speed: semitonesToFactor($menuSpeed),
+                end_cb: () => {
+                    songPlaying.set(false);
+                },
             });
+            songPlaying.set(true);
         }
 
         // $menuZLayer = wasm.ZLayer.B1;
@@ -310,7 +315,9 @@
                         ],
                         volume: 1.0 / Math.sqrt(audio_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
+                        exclusive_channel: "preview song", // because honestly 2 songs should never play on top of eachother
                     });
+                    songPlaying.set(true);
                     audio_hit_idx += 1;
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);

@@ -5,6 +5,7 @@ type SoundPlayOptions = {
     volume?: number;
     speed?: number;
     exclusive_channel?: string;
+    end_cb?: () => void;
 };
 export const playSound = (
     options: SoundPlayOptions
@@ -27,6 +28,14 @@ export const playSound = (
         }
         channels[options.exclusive_channel] = audio;
     }
-
+    if (options.end_cb != undefined) {
+        audio.onended = options.end_cb;
+    }
     audio.play();
+};
+
+export const stopSound = (channel: string) => {
+    if (channels[channel] != undefined) {
+        channels[channel].pause();
+    }
 };

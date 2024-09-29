@@ -85,7 +85,6 @@
                     </h1>
                 </div>
 
-<<<<<<< HEAD
                 <div 
                     class="flex flex-col items-center gap-5 w-full h-[90%] menu-panel p-6 sm:w-[90%] sm:h-full sm:p-6 col-span-1 sm:hidden max-h-min"
                     style={`
@@ -93,10 +92,6 @@
                         scale: ${creator_names? 1 : 0.7};
                         transition: opacity 0.5s, scale 0.5s;
                     `}
-=======
-                <div
-                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-4 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end"
->>>>>>> f48a38b4a0a733922fa51448a8281afc550eaa10
                 >
                     <h1
                         class="text-white text-xl md:text-lg sm:text-base xs:text-sm font-bold"
@@ -109,15 +104,8 @@
                     >
                         {creator_names}
                     </div>
-<<<<<<< HEAD
                     {#if seconds_left > 600}
                         <div class="text-white opacity-50 text-md md:text-sm text-center italic">
-=======
-                    {#if seconds_left > 1800}
-                        <div
-                            class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs italic tabular-nums"
-                        >
->>>>>>> f48a38b4a0a733922fa51448a8281afc550eaa10
                             Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}

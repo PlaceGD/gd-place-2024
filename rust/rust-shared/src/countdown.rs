@@ -115,12 +115,14 @@ impl DeterministicRandom {
     }
 }
 
-pub static SET_SWITCHES: LazyLock<Vec<[usize; 4]>> = LazyLock::new(|| {
-    let mut switches = vec![[0; 4]];
+// runs in nexus gen
+pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
+    let mut switches = vec![[0, 5, 9, 2]]; // final sets
 
-    for i in 0..255 {
+    for i in 0..n {
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev
         let mut sets = [0; 4];
+        let mut names = [""; 4];
         let mut j = 0;
         let mut r = 0;
         let prev = &switches[i];
@@ -128,8 +130,10 @@ pub static SET_SWITCHES: LazyLock<Vec<[usize; 4]>> = LazyLock::new(|| {
         while j < 4 {
             let random = DeterministicRandom(i + 6, r).random();
             let set = (random * DIGIT_SETS as f64) as usize;
-            if !prev.contains(&set) && !sets.contains(&set) {
+            let name = get_creator_name(set);
+            if !prev.contains(&set) && !sets.contains(&set) && !names.contains(&name) {
                 sets[j] = set;
+                names[j] = name;
                 j += 1;
             }
             r += 1;
@@ -139,9 +143,4 @@ pub static SET_SWITCHES: LazyLock<Vec<[usize; 4]>> = LazyLock::new(|| {
     }
 
     switches
-});
-
-pub fn choose_random_sets(num: usize) -> [usize; 4] {
-    //console_log!("{:?}", SET_SWITCHES);
-    SET_SWITCHES[num]
 }

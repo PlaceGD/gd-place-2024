@@ -200,8 +200,8 @@ export const selectedObject = writable<{
 //     "colors"
 // );
 
-export const DEFAULT_BG_COLOR = { r: 0, g: 15, b: 31 };
-export const DEFAULT_GROUND_1_COLOR = { r: 0, g: 15, b: 31 };
+export const DEFAULT_BG_COLOR = { r: 4, g: 24, b: 46 };
+export const DEFAULT_GROUND_1_COLOR = { r: 5, g: 40, b: 77 };
 export const DEFAULT_GROUND_2_COLOR = { r: 0, g: 82, b: 165 };
 
 export const bgColor = tweened(

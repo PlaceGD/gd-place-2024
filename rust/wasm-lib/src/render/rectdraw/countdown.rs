@@ -4,7 +4,7 @@ use binrw::BinRead;
 use glam::{vec2, vec4, Affine2, Vec2};
 use rust_shared::{
     console_log,
-    countdown::{choose_random_sets, CountdownDigitSets, DigitObjects},
+    countdown::{CountdownDigitSets, DigitObjects},
     gd::object::{GDColor, GDObject},
     lerp,
     util::random,
@@ -13,7 +13,7 @@ use rust_shared::{
 use crate::{
     level::{ChunkCoord, Level},
     state::State,
-    utilgen::OBJECT_INFO,
+    utilgen::{OBJECT_INFO, SET_SWITCHES},
 };
 
 use super::{billy::Billy, draw_level, draw_obj_simple};
@@ -45,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [12, 13, 4, 16],
+            sets: [0, 0, 0, 0],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -61,9 +61,9 @@ impl Countdown {
         }
 
         // if u change this also change it in the wasm :3
-        let switch_id = ((time_until - 1800.0).max(0.0) / 3600.0).floor() as usize;
+        let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
 
-        let sets = choose_random_sets(switch_id);
+        let sets = SET_SWITCHES[switch_id];
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)

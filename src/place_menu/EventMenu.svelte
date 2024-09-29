@@ -24,7 +24,13 @@
 
         const names = state.get_countdown_creator_names();
 
-        creator_names = `${names[0]}, ${names[1]}, ${names[2]}, and ${names[3]}`;
+        if (seconds_left < 3600 * 24) {
+            creator_names = `${names[1]}, ${names[2]}, and ${names[3]}`;
+        } else {
+            creator_names = `${names[0]}, ${names[1]}, ${names[2]}, and ${names[3]}`;
+        }
+
+        
         
         // if u change this also change it in the wasm :3
         const next_switch = (seconds_left - 1800) % 3600;

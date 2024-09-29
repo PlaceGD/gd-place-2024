@@ -73,6 +73,7 @@ export const menuZLayer = persistLocalWritable(ZLayer.B2, "menuZLayer");
 export const menuZOrder = persistLocalWritable(0, "menuZOrder");
 
 export const menuSelectedSFX = persistLocalWritable(0, "menuSelectedSFX");
+export const menuSelectedSong = persistLocalWritable(0, "menuSelectedSong");
 export const menuSpeed = persistLocalWritable(0, "menuSpeed");
 
 export const mainColorRGB = derived(

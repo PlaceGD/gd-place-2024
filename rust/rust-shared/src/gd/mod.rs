@@ -19,6 +19,7 @@ pub mod special_ids {
         GROUND_2_TRIGGER,
         ARROW_TRIGGER,
         SFX_TRIGGER,
+        SONG_TRIGGER,
     ];
     pub const COLOR_TRIGGERS: &[u16] = &[BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER];
 }

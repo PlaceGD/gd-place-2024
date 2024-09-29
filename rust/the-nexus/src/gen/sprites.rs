@@ -10,7 +10,7 @@ use rust_shared::{gd::special_ids, sprite::SpriteInfo};
 use serde::Serialize;
 use texture_packer::{exporter::ImageExporter, importer::ImageImporter, TexturePacker};
 
-use crate::objects::{list::AVAILABLE_OBJECTS, sfx::SFX_TRIGGER_SOUNDS};
+use crate::objects::{list::AVAILABLE_OBJECTS, sfx::SFX_TRIGGER_SOUNDS, song::SONG_TRIGGER_SONGS};
 
 use super::config::PACKER_CONFIG;
 
@@ -20,6 +20,7 @@ pub struct SpritesheetData {
     main_sprites: HashMap<u16, SpriteInfo>,
     detail_sprites: HashMap<u16, SpriteInfo>,
     sfx_icons: HashMap<&'static str, SpriteInfo>,
+    song_icons: HashMap<&'static str, SpriteInfo>,
 }
 
 pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
@@ -28,6 +29,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
         Main(u16),
         Detail(u16),
         Sfx(&'static str),
+        Song(&'static str),
     }
 
     let mut packer: TexturePacker<'_, DynamicImage, SpriteKey> =
@@ -84,12 +86,25 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             )
             .unwrap();
     }
+    for i in SONG_TRIGGER_SONGS {
+        packer
+            .pack_own(
+                SpriteKey::Song(i),
+                ImageImporter::import_from_file(&PathBuf::from(format!(
+                    "../../src/place_menu/assets/song_tab/icons/{}.png",
+                    i
+                )))
+                .unwrap(),
+            )
+            .unwrap();
+    }
 
     let sheet = ImageExporter::export(&packer, None).unwrap();
 
     let mut main = HashMap::new();
     let mut detail = HashMap::new();
     let mut sfx_icons = HashMap::new();
+    let mut song_icons = HashMap::new();
 
     for (&key, f) in packer.get_frames() {
         let sprite_info = SpriteInfo {
@@ -112,6 +127,9 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
             SpriteKey::Sfx(s) => {
                 sfx_icons.insert(s, sprite_info);
             }
+            SpriteKey::Song(s) => {
+                song_icons.insert(s, sprite_info);
+            }
         }
     }
 
@@ -119,6 +137,7 @@ pub fn make_spritesheet() -> (DynamicImage, SpritesheetData) {
         main_sprites: main,
         detail_sprites: detail,
         sfx_icons,
+        song_icons,
     };
 
     (sheet, data)
@@ -211,6 +230,19 @@ pub fn make_get_sfx_icon_sprite_fn(data: &SpritesheetData) -> String {
     format!(
         "
 pub const SFX_ICON_SPRITES: &[SpriteInfo] = &{ongy:?};
+    "
+    )
+}
+
+pub fn make_get_song_icon_sprite_fn(data: &SpritesheetData) -> String {
+    let ongy = SONG_TRIGGER_SONGS
+        .iter()
+        .map(|s| data.song_icons[s])
+        .collect_vec();
+
+    format!(
+        "
+pub const SONG_ICON_SPRITES: &[SpriteInfo] = &{ongy:?};
     "
     )
 }

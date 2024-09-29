@@ -10,6 +10,7 @@
         GROUND_2_TRIGGER,
         ARROW_TRIGGER,
         SFX_TRIGGER,
+        SONG_TRIGGER,
     } from "shared-lib/nexusgen";
     import { CATEGORY_ICONS } from "../gd/object";
 
@@ -42,6 +43,7 @@
         detailColorRGB,
         menuSelectedSFX,
         menuSpeed,
+        menuSelectedSong,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -66,7 +68,7 @@
     import RadialCooldown from "../components/RadialCooldown.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
     import DeleteTab from "./delete/DeleteTab.svelte";
-    import SfxTab from "./edit/SFXTab.svelte";
+    import SFXSongTab from "./edit/SFXSongTab.svelte";
     import { playSound } from "../utils/audio";
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
@@ -80,6 +82,8 @@
         if (tab == EditTab.Colors) {
             if ($menuSelectedObject == SFX_TRIGGER) {
                 return "SFX";
+            } else if ($menuSelectedObject == SONG_TRIGGER) {
+                return "Song";
             }
             return EditTab.Colors;
         }
@@ -122,7 +126,15 @@
                 255,
                 false
             );
-        } else if (old_id == SFX_TRIGGER) {
+        } else if (obj.id == SONG_TRIGGER) {
+            obj.main_color = new wasm.GDColor(
+                $menuSelectedSong,
+                $menuSpeed + 12,
+                0,
+                255,
+                false
+            );
+        } else if (old_id == SFX_TRIGGER || old_id == SONG_TRIGGER) {
             obj.main_color = wasm.GDColor.white();
         }
 
@@ -132,7 +144,10 @@
 
     $: {
         let obj = state.get_preview_object();
-        if ($menuSelectedObject != SFX_TRIGGER) {
+        if (
+            $menuSelectedObject != SFX_TRIGGER &&
+            $menuSelectedObject != SONG_TRIGGER
+        ) {
             obj.main_color = new wasm.GDColor(
                 mainR,
                 mainG,
@@ -456,7 +471,9 @@
                         <LayersTab></LayersTab>
                     {:else if $menuEditTab == EditTab.Colors}
                         {#if $menuSelectedObject == SFX_TRIGGER}
-                            <SfxTab></SfxTab>
+                            <SFXSongTab tabType="sfx"></SFXSongTab>
+                        {:else if $menuSelectedObject == SONG_TRIGGER}
+                            <SFXSongTab tabType="song"></SFXSongTab>
                         {:else}
                             <ColorsTab bind:state />
                         {/if}

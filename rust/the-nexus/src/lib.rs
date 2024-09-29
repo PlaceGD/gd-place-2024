@@ -2,9 +2,9 @@ use std::collections::HashSet;
 
 use gen::{
     colors::get_available_colors, countdown_digits::make_get_countdown_digits_fn,
-    objects::make_get_object_info_fn,
+    objects::make_get_object_info_fn, sprites::make_get_song_icon_sprite_fn,
 };
-use objects::sfx::SFX_TRIGGER_SOUNDS;
+use objects::{sfx::SFX_TRIGGER_SOUNDS, song::SONG_TRIGGER_SONGS};
 use rust_shared::gd::special_ids;
 use serde_json::json;
 
@@ -29,11 +29,14 @@ use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectSheet::*, Objec
 
 {}
 
+{}
+
     ",
         make_get_object_info_fn(),
         make_get_main_sprite_fn(sheet_data),
         make_get_detail_sprite_fn(sheet_data),
         make_get_sfx_icon_sprite_fn(sheet_data),
+        make_get_song_icon_sprite_fn(sheet_data),
     )
 }
 
@@ -107,6 +110,7 @@ export const TRIGGERS: number[] = {:?};
 export const COLOR_TRIGGERS: number[] = {:?};
 
 export const SFX_TRIGGER_SOUNDS: string[] = {:?};
+export const SONG_TRIGGER_SONGS: string[] = {:?};
     ",
             special_ids::BG_TRIGGER,
             special_ids::GROUND_TRIGGER,
@@ -117,6 +121,7 @@ export const SFX_TRIGGER_SOUNDS: string[] = {:?};
             special_ids::TRIGGERS,
             special_ids::COLOR_TRIGGERS,
             SFX_TRIGGER_SOUNDS,
+            SONG_TRIGGER_SONGS,
         ),
     )
     .unwrap();

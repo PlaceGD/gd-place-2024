@@ -13,6 +13,8 @@
         GROUND_2_TRIGGER,
         SFX_TRIGGER,
         SFX_TRIGGER_SOUNDS,
+        SONG_TRIGGER,
+        SONG_TRIGGER_SONGS,
     } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
@@ -41,6 +43,7 @@
         menuSpeed,
         lastRunColorTrigger,
         setLevelColor,
+        menuSelectedSong,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -74,7 +77,7 @@
     import { playSound } from "../utils/audio";
     import PlacedByText from "../widgets/PlacedByText.svelte";
     import { scale } from "svelte/transition";
-    import { SFX_SOUNDS } from "../place_menu/edit/sfx_tab";
+    import { SFX_SOUNDS, SONG_SOUNDS } from "../place_menu/edit/sfx_tab";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -183,6 +186,7 @@
         $menuZLayer = wasm.ZLayer.B2;
         $menuZOrder = 0;
         $menuSelectedSFX = 0;
+        $menuSelectedSong = 0;
         $menuSpeed = 0;
 
         if (obj.id == SFX_TRIGGER) {
@@ -192,6 +196,15 @@
             playSound({
                 url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[$menuSelectedSFX]],
                 exclusive_channel: "preview sfx",
+                speed: semitonesToFactor($menuSpeed),
+            });
+        } else if (obj.id == SONG_TRIGGER) {
+            $menuSelectedSong = Math.floor(
+                Math.random() * SONG_TRIGGER_SONGS.length
+            );
+            playSound({
+                url: SONG_SOUNDS[SONG_TRIGGER_SONGS[$menuSelectedSong]],
+                exclusive_channel: "preview song",
                 speed: semitonesToFactor($menuSpeed),
             });
         }
@@ -235,8 +248,10 @@
 
     const tryRunTriggers = (hit: wasm.HitObjectInfo[]): boolean => {
         let triggersRun = false;
-        let sfx_hits_count = hit.filter(i => i.obj.id == SFX_TRIGGER).length;
-        let sfx_hit_idx = 0;
+        let audio_hits_count = hit.filter(
+            i => i.obj.id == SFX_TRIGGER || i.obj.id == SONG_TRIGGER
+        ).length;
+        let audio_hit_idx = 0;
         for (let i of hit) {
             switch (i.obj.id) {
                 case BG_TRIGGER: {
@@ -273,14 +288,30 @@
                 }
                 case SFX_TRIGGER: {
                     let rand =
-                        Math.sin(Math.sin(sfx_hit_idx * 6.97) * 6.97) / 2 + 1;
+                        Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
 
                     playSound({
                         url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[i.obj.main_color.r]],
-                        volume: 1.0 / Math.sqrt(sfx_hits_count),
+                        volume: 1.0 / Math.sqrt(audio_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
                     });
-                    sfx_hit_idx += 1;
+                    audio_hit_idx += 1;
+                    triggersRun = true;
+                    addTriggerRun(i.obj.x, i.obj.y);
+                    break;
+                }
+                case SONG_TRIGGER: {
+                    let rand =
+                        Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
+
+                    playSound({
+                        url: SONG_SOUNDS[
+                            SONG_TRIGGER_SONGS[i.obj.main_color.r]
+                        ],
+                        volume: 1.0 / Math.sqrt(audio_hits_count),
+                        speed: semitonesToFactor(i.obj.main_color.g - 12),
+                    });
+                    audio_hit_idx += 1;
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
                     break;

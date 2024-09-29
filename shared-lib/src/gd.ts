@@ -3,7 +3,12 @@ import _objectOrder from "./gd/object_order.json";
 import _spritesheet from "./gd/spritesheet.json";
 import _colors from "./gd/colors.json";
 import { remEuclid } from "./util";
-import { SFX_TRIGGER, SFX_TRIGGER_SOUNDS } from "./nexusgen";
+import {
+    SFX_TRIGGER,
+    SFX_TRIGGER_SOUNDS,
+    SONG_TRIGGER,
+    SONG_TRIGGER_SONGS,
+} from "./nexusgen";
 
 export interface SpriteData {
     pos: [number, number];
@@ -100,6 +105,13 @@ export const isValidObject = (obj: GDObjectOpt) => {
 
     if (obj.id == SFX_TRIGGER) {
         if (obj.main_color.r >= SFX_TRIGGER_SOUNDS.length) {
+            return false;
+        }
+        if (obj.main_color.g > 12 + 12) {
+            return false;
+        }
+    } else if (obj.id == SONG_TRIGGER) {
+        if (obj.main_color.r >= SONG_TRIGGER_SONGS.length) {
             return false;
         }
         if (obj.main_color.g > 12 + 12) {

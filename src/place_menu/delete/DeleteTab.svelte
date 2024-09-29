@@ -23,13 +23,18 @@
     import FadedScroll from "../../components/FadedScroll.svelte";
     import { onMount } from "svelte";
     import { db } from "../../firebase/firebase";
-    import { SFX_TRIGGER, SFX_TRIGGER_SOUNDS } from "shared-lib/nexusgen";
+    import {
+        SFX_TRIGGER,
+        SFX_TRIGGER_SOUNDS,
+        SONG_TRIGGER,
+        SONG_TRIGGER_SONGS,
+    } from "shared-lib/nexusgen";
     import DeclineButton from "../../components/Buttons/DeclineButton.svelte";
     import AcceptButton from "../../components/Buttons/AcceptButton.svelte";
     import IconButton from "../../components/Buttons/IconButton.svelte";
     import reportButtonimage from "../../moderator/assets/report_button.png?url";
     import type { FirebaseError } from "shared-lib/cloud_functions";
-    import { SFX_ICONS } from "../edit/sfx_tab";
+    import { SFX_ICONS, SONG_ICONS } from "../edit/sfx_tab";
 
     export let state: wasm.State;
 
@@ -258,6 +263,8 @@
                 <h1 class="text-xl md:text-base font-pusab text-stroke">
                     {#if $selectedObject.id == SFX_TRIGGER}
                         Sound:
+                    {:else if $selectedObject.id == SONG_TRIGGER}
+                        Song:
                     {:else}
                         Colors:
                     {/if}
@@ -274,6 +281,20 @@
                                 <Image
                                     src={SFX_ICONS[
                                         SFX_TRIGGER_SOUNDS[
+                                            $selectedObject.mainColor.r
+                                        ]
+                                    ]}
+                                    lazyLoad
+                                    class="object-contain w-full h-full"
+                                />
+                            </div>
+                        {:else if $selectedObject.id == SONG_TRIGGER}
+                            <div
+                                class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
+                            >
+                                <Image
+                                    src={SONG_ICONS[
+                                        SONG_TRIGGER_SONGS[
                                             $selectedObject.mainColor.r
                                         ]
                                     ]}
@@ -316,7 +337,7 @@
                         class="flex flex-col-reverse gap-1 flex-center"
                         aria-labelledby="detail-color-label"
                     >
-                        {#if $selectedObject.id == SFX_TRIGGER}
+                        {#if $selectedObject.id == SFX_TRIGGER || $selectedObject.id == SONG_TRIGGER}
                             <div
                                 class="rounded-md w-14 h-14 md:w-10 md:h-10 sm:w-8 sm:h-8 flex-center text-stroke"
                             >
@@ -362,12 +383,14 @@
                     <h2 class="flex-1" id="main-color-label">
                         {#if $selectedObject.id == SFX_TRIGGER}
                             SFX
+                        {:else if $selectedObject.id == SONG_TRIGGER}
+                            Song
                         {:else}
                             Main
                         {/if}
                     </h2>
                     <h2 class="flex-1" id="detail-color-label">
-                        {#if $selectedObject.id == SFX_TRIGGER}
+                        {#if $selectedObject.id == SFX_TRIGGER || $selectedObject.id == SONG_TRIGGER}
                             Speed
                         {:else}
                             Detail

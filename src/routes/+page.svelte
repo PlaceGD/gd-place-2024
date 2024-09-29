@@ -43,6 +43,7 @@
         $wasmProgress.hasLoaded &&
         $spritesheetProgress.arrayBuffer != null &&
         $rawSpritesheetData != null;
+
     $: if (loaded) {
         setTimeout(() => {
             $openTrans = 1;

@@ -23,7 +23,7 @@
     `}
 >
     <span
-        class="absolute text-stroke animateGgaga"
+        class="absolute text-stroke fix-stroke"
         style={`
                 font-family: inherit;
                 font-weight: inherit;
@@ -61,7 +61,7 @@
 
 <style>
     /* firefox */
-    .animateGgaga {
+    .fix-stroke {
         animation: 0.1s animate-fade;
     }
 

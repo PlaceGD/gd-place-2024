@@ -4,7 +4,7 @@ use binrw::BinRead;
 use glam::{vec2, vec4, Affine2, Vec2};
 use rust_shared::{
     console_log,
-    countdown::{CountdownDigitSets, DigitObjects},
+    countdown::{choose_random_sets, CountdownDigitSets, DigitObjects},
     gd::object::{GDColor, GDObject},
     lerp,
     util::random,
@@ -39,13 +39,13 @@ pub struct Countdown {
 }
 
 impl Countdown {
-    const OFFSET: Vec2 = vec2(450.0, 450.0 + 30.0 * 14.0);
+    const OFFSET: Vec2 = vec2(450.0, 390.0 + 30.0 * 14.0);
 
     pub fn new() -> Self {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [6, 11, 3, 12],
+            sets: [12, 13, 4, 16],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -59,6 +59,11 @@ impl Countdown {
         if time_until.is_nan() || time_until.is_infinite() {
             return;
         }
+
+        // if u change this also change it in the wasm :3
+        let switch_id = ((time_until - 1800.0).max(0.0) / 3600.0).floor() as usize;
+
+        let sets = choose_random_sets(switch_id);
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)
@@ -95,24 +100,36 @@ impl Countdown {
         };
 
         for i in 0..8 {
-            if self.state[i] != state[i] {
-                // let num_sets = COUNTDOWN_DIGITS.0.len();
-                // let new_set = if random() < 0.2 {
-                //     (random() * num_sets as f64) as usize
-                // } else {
-                //     self.sets[i]
-                // };
-                //let new_set = 0;
+            if sets != self.sets {
                 self.digits[i].transition_between(
                     self.state[i],
                     state[i],
                     self.sets[i / 2],
-                    self.sets[i / 2],
+                    sets[i / 2],
                 );
                 self.state[i] = state[i];
-                //self.sets[i / 2] = new_set;
+            } else {
+                if self.state[i] != state[i] {
+                    // let num_sets = COUNTDOWN_DIGITS.0.len();
+                    // let new_set = if random() < 0.2 {
+                    //     (random() * num_sets as f64) as usize
+                    // } else {
+                    //     self.sets[i]
+                    // };
+                    //let new_set = 0;
+                    self.digits[i].transition_between(
+                        self.state[i],
+                        state[i],
+                        self.sets[i / 2],
+                        self.sets[i / 2],
+                    );
+                    self.state[i] = state[i];
+                    //self.sets[i / 2] = new_set;
+                }
             }
         }
+
+        self.sets = sets;
 
         // colons, days marker
         {
@@ -187,18 +204,19 @@ impl Countdown {
             idx += 1;
         };
 
+        let mut offset = Self::OFFSET;
+
         self.days_marker
             .iter()
             .chain(self.hours_marker.iter())
             .chain(self.minutes_marker.iter())
             .for_each(|o| {
                 o.get().inspect(|o| {
-                    add_object(*o);
+                    add_object(o.offset(offset - vec2(450.0, 450.0 + 30.0 * 14.0)));
                     // level.add_object(*o, idx);
                     // idx += 1;
                 });
             });
-        let mut offset = Self::OFFSET;
 
         for (i, digit) in self.digits.iter().enumerate() {
             if i == 2 {

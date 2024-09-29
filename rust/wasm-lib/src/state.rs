@@ -631,6 +631,14 @@ impl State {
     pub fn render(&mut self, delta: f32) {
         self.render_inner(delta).unwrap()
     }
+
+    pub fn get_countdown_creator_names(&self) -> Vec<String> {
+        self.countdown
+            .sets
+            .map(|i| rust_shared::countdown::get_creator_name(i).into())
+            .into_iter()
+            .collect()
+    }
 }
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;

@@ -86,11 +86,11 @@
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
 
         {#if !$eventStarted}
-            <EventMenu kind="pre-event" />
+            <EventMenu kind="pre-event" bind:state />
         {:else if $canPlaceEditDelete}
             <PlaceMenu bind:state />
         {:else}
-            <EventMenu kind="login-to-place" />
+            <EventMenu kind="login-to-place" bind:state />
         {/if}
     {/if}
 </div>

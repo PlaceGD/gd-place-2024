@@ -324,9 +324,16 @@ export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 
 export const eventElapsed = writable(Number.NEGATIVE_INFINITY);
 
-setInterval(() => {
-    eventElapsed.set(Date.now() - get(eventStartTime));
-}, 1000);
+export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
+
+setTimeout(
+    () => {
+        setInterval(() => {
+            eventElapsed.set(Date.now() - get(eventStartTime));
+        }, 1000);
+    },
+    1000 - (Date.now() % 1000)
+);
 
 export const eventStarted = derived(eventElapsed, v => v > 0);
 
@@ -336,4 +343,11 @@ db.ref("metaVariables/eventStartTime").on("value", v => {
 });
 db.ref("metaVariables/eventEndTime").on("value", v => {
     eventEndTime.set(v.val());
+});
+
+export const userCount = writable(0);
+
+db.ref("userCount").on("value", v => {
+    console.log(v.val());
+    userCount.set(v.val());
 });

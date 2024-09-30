@@ -9,7 +9,11 @@ import {
 } from "shared-lib/gd";
 import { ChunkID } from "shared-lib/database";
 import { PlaceReq, DeleteReq } from "shared-lib/cloud_functions";
-import { CHUNK_SIZE_UNITS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
+import {
+    CHUNK_SIZE_UNITS,
+    LEVEL_HEIGHT_UNITS,
+    LEVEL_WIDTH_UNITS,
+} from "shared-lib/nexusgen";
 import { Reader } from "./utils/reader";
 import { Level, LogGroup } from "./utils/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
@@ -136,8 +140,6 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
 
         const userDetails = await getCheckedUserDetails(db, authUID);
 
-        const now = Date.now();
-
         const [eventStartTime, placeCooldown, chunkObjectLimit] =
             await refAllGet(
                 db,
@@ -145,6 +147,8 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
                 "metaVariables/placeCooldown",
                 "metaVariables/chunkObjectLimit"
             );
+
+        const now = Date.now();
 
         if (now < eventStartTime.val()) {
             Error.code(209, "permission-denied");

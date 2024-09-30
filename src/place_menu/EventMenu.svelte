@@ -20,6 +20,7 @@
     let switch_seconds = "";
 
     import * as wasm from "wasm-lib";
+    import { moveCamera } from "../level_view/view_controls";
     export let state: wasm.State;
 
     let creator_names = "";
@@ -27,10 +28,16 @@
     $: {
         if ($eventElapsed != Number.NEGATIVE_INFINITY) {
             seconds_left = -($eventElapsed / 1000);
-            
 
             const names = state.get_countdown_creator_names();
-            if (!(names[0] === "Spu7Nix" && names[1] === "Spu7Nix" && names[2] === "Spu7Nix" && names[3] === "Spu7Nix")) {
+            if (
+                !(
+                    names[0] === "Spu7Nix" &&
+                    names[1] === "Spu7Nix" &&
+                    names[2] === "Spu7Nix" &&
+                    names[3] === "Spu7Nix"
+                )
+            ) {
                 if (seconds_left < 3600 * 24) {
                     creator_names = `${names[1]}, ${names[2]}, and ${names[3]}`;
                 } else {
@@ -38,8 +45,6 @@
                 }
             }
 
-            
-            
             // if u change this also change it in the wasm :3
             const next_switch = (seconds_left - 600) % 1200;
 
@@ -48,9 +53,15 @@
                 switch_minutes = "00";
                 switch_seconds = "00";
             } else {
-                switch_hours = Math.floor(next_switch / 3600).toFixed(0).padStart(2, "0");
-                switch_minutes = Math.floor((next_switch % 3600) / 60).toFixed(0).padStart(2, "0");
-                switch_seconds = Math.floor(next_switch % 60).toFixed(0).padStart(2, "0");
+                switch_hours = Math.floor(next_switch / 3600)
+                    .toFixed(0)
+                    .padStart(2, "0");
+                switch_minutes = Math.floor((next_switch % 3600) / 60)
+                    .toFixed(0)
+                    .padStart(2, "0");
+                switch_seconds = Math.floor(next_switch % 60)
+                    .toFixed(0)
+                    .padStart(2, "0");
             }
         }
     }
@@ -85,13 +96,21 @@
                     </h1>
                 </div>
 
-                <div 
-                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-4 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end"
+                <button
+                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-4 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end pointer-events-auto"
                     style={`
-                        opacity: ${creator_names? 1 : 0};
-                        scale: ${creator_names? 1 : 0.7};
+                        opacity: ${creator_names ? 1 : 0};
+                        scale: ${creator_names ? 1 : 0.7};
                         transition: opacity 0.5s, scale 0.5s;
+                        background-color: #ffffff06;
                     `}
+                    on:click={() => {
+                        moveCamera(
+                            state,
+                            450 + 30 * 20.5,
+                            seconds_left < 3600 * 24 ? 300 : 450
+                        );
+                    }}
                 >
                     <h1
                         class="text-white text-xl md:text-lg sm:text-base xs:text-sm font-bold"
@@ -105,11 +124,13 @@
                         {creator_names}
                     </div>
                     {#if seconds_left > 600}
-                        <div class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs text-center italic">
+                        <div
+                            class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs text-center italic tabular-nums"
+                        >
                             Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}
-                </div>
+                </button>
             </div>
         </div>
     {:else if kind === "login-to-place"}

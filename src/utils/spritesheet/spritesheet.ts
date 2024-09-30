@@ -41,7 +41,6 @@ export class Spritesheet {
     // constructor(public worker: Worker)
 
     static async waitForWorkerLoad(): Promise<void> {
-        console.log(spritesheetWorkerUrl);
         return new Promise(workerLoadRes => {
             Spritesheet.worker = new Worker(
                 new URL(spritesheetWorkerUrl, import.meta.url),

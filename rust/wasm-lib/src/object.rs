@@ -6,6 +6,7 @@ use glam::{mat2, vec2, Affine2};
 use rust_shared::{
     gd::{
         layer::ZLayer,
+        level::{LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS},
         object::{GDColor, GDObject},
     },
     util::Rect,
@@ -113,6 +114,9 @@ impl GDObjectOpt {
         self.y_angle = self.y_angle.rem_euclid(72);
         self.x_scale_exp = self.x_scale_exp.clamp(-12, 12);
         self.y_scale_exp = self.y_scale_exp.clamp(-12, 12);
+
+        self.x = self.x.clamp(0.0, LEVEL_WIDTH_UNITS as f32 - 0.001);
+        self.y = self.y.clamp(0.0, LEVEL_HEIGHT_UNITS as f32 - 0.001);
     }
     // pub fn debug_str(&self) -> String {
     //     format!("{:?}", self)

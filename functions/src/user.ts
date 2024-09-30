@@ -8,7 +8,7 @@ import type {
     BanReq,
 } from "shared-lib/cloud_functions";
 import { Level, LogGroup } from "./utils/logger";
-import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from ".";
+import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
 import { DEV_UIDS } from "shared-lib/cloud_functions";

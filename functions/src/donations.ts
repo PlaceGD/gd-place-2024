@@ -190,7 +190,7 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         const userDetails = await getCheckedUserDetails(db, request.auth.uid);
 
         const timeNextGradient = userDetails.val.epochNextGradient;
-        if (Date.now() < timeNextGradient ?? 0) {
+        if (Date.now() < timeNextGradient) {
             throw Error.code(205, "permission-denied");
         }
 

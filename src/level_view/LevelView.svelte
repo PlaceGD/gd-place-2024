@@ -23,16 +23,12 @@
 
     onMount(async () => {
         try {
-            console.time("create_view");
             state = await wasm.create_view(
                 canvas,
                 $rawSpritesheetData!.data,
                 $rawSpritesheetData!.width,
                 $rawSpritesheetData!.height
             );
-            console.timeEnd("create_view");
-
-            // loadState(state);
         } catch (e: unknown) {
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(WASM_ERROR);
@@ -46,8 +42,6 @@
             try {
                 state.render((time - prevTime) / 1000);
                 prevTime = time;
-
-                // runCallbacks();
             } catch (e: unknown) {
                 console.error(e, "(Failed in `state.render`)");
                 Toast.showErrorToast(WASM_ERROR);

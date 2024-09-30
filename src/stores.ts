@@ -97,8 +97,8 @@ export const lastClosedAnnouncement = persistLocalWritable<number>(
 
 export const editorData = persistLocalWritable(
     {
-        x: 0,
-        y: 0,
+        x: 450 + 30 * 20.5,
+        y: 360,
         zoom: 0,
     },
     "editorData"
@@ -338,7 +338,6 @@ setTimeout(
 export const eventStarted = derived(eventElapsed, v => v > 0);
 
 db.ref("metaVariables/eventStartTime").on("value", v => {
-    console.log(v.val());
     eventStartTime.set(v.val());
 });
 db.ref("metaVariables/eventEndTime").on("value", v => {
@@ -348,7 +347,6 @@ db.ref("metaVariables/eventEndTime").on("value", v => {
 export const userCount = writable(0);
 
 db.ref("userCount").on("value", v => {
-    console.log(v.val());
     userCount.set(v.val());
 });
 

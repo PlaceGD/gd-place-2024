@@ -5,7 +5,13 @@ use gen::{
     objects::make_get_object_info_fn, sprites::make_get_song_icon_sprite_fn,
 };
 use objects::{sfx::SFX_TRIGGER_SOUNDS, song::SONG_TRIGGER_SONGS};
-use rust_shared::{countdown::generate_set_switches, gd::special_ids};
+use rust_shared::{
+    countdown::generate_set_switches,
+    gd::{
+        level::{CHUNK_SIZE_BLOCKS, LEVEL_HEIGHT_BLOCKS, LEVEL_WIDTH_BLOCKS},
+        special_ids,
+    },
+};
 use serde_json::json;
 
 mod gen;
@@ -65,7 +71,7 @@ fn generate_shide(sheet: bool) {
         let (mut img, data) = make_spritesheet();
         color_bleed(&mut img);
 
-        img.save("../../static/spritesheet.png").unwrap();
+        img.save("../../src/assets/spritesheet.png").unwrap();
         fs::write(
             "../../shared-lib/src/gd/spritesheet.json",
             serde_json::to_string(&json!(data)).unwrap(),
@@ -114,6 +120,14 @@ export const COLOR_TRIGGERS: number[] = {:?};
 
 export const SFX_TRIGGER_SOUNDS: string[] = {:?};
 export const SONG_TRIGGER_SONGS: string[] = {:?};
+
+export const CHUNK_SIZE_BLOCKS = {};
+export const CHUNK_SIZE_UNITS = CHUNK_SIZE_BLOCKS * 30;
+
+export const LEVEL_WIDTH_BLOCKS = {};
+export const LEVEL_HEIGHT_BLOCKS = {};
+export const LEVEL_WIDTH_UNITS = LEVEL_WIDTH_BLOCKS * 30;
+export const LEVEL_HEIGHT_UNITS = LEVEL_HEIGHT_BLOCKS * 30;
     ",
             special_ids::BG_TRIGGER,
             special_ids::GROUND_TRIGGER,
@@ -125,6 +139,9 @@ export const SONG_TRIGGER_SONGS: string[] = {:?};
             special_ids::COLOR_TRIGGERS,
             SFX_TRIGGER_SOUNDS,
             SONG_TRIGGER_SONGS,
+            CHUNK_SIZE_BLOCKS,
+            LEVEL_WIDTH_BLOCKS,
+            LEVEL_HEIGHT_BLOCKS
         ),
     )
     .unwrap();

@@ -42,8 +42,6 @@
     let currentPage = Page.LOGIN_METHOD;
     let previousPage = Page.LOGIN_METHOD;
 
-    $: console.log("current:", currentPage, "previous:", previousPage);
-
     let hasAgreedToTOS = false;
 
     let isValidUsername = false;
@@ -57,14 +55,11 @@
     let hasScrolledToBottomOfTos = false;
 
     $: {
-        console.log($openMenu);
         if ($openMenu != ExclusiveMenus.Login) {
             currentPage = Page.LOGIN_METHOD;
             isOpen = false;
-            // modal?.close();
         } else if ($openMenu == ExclusiveMenus.Login) {
             isOpen = true;
-            // modal.showModal();
         }
     }
 
@@ -325,28 +320,6 @@
                 insensitive.
             </p>
         </div>
-        <!-- <span
-            class="flex items-center justify-center w-full h-auto xs:scale-90"
-        >
-            <Turnstile
-                siteKey={SITE_KEY}
-                bind:reset={turnstileReset}
-                on:callback={e => {
-                    console.log(e);
-                    turnstileToken = e.detail.token;
-                }}
-                on:error={e => {
-                    console.error(
-                        "Turnstile login error. Code:",
-                        e.detail.code
-                    );
-                    Toast.showErrorToast(
-                        `There was an error with the Turnstile. Code: ${e.detail.code}`
-                    );
-                }}
-                on:expired={() => turnstileReset && turnstileReset()}
-            />
-        </span> -->
         <div class="flex w-full gap-2">
             {#if hasAgreedToTOS}
                 <Check

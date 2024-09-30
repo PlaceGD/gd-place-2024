@@ -2,6 +2,7 @@ use glam::{vec2, vec4, Vec4};
 use rust_shared::{console_log, gd::layer::Z_LAYERS, map};
 
 use crate::{
+    level::ChunkCoord,
     object::GDObjectExt,
     state::State,
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
@@ -16,10 +17,15 @@ use super::{
 pub fn draw(state: &mut State, billy: &mut Billy) {
     billy.apply_transform(state.view_transform());
 
+    let preview_obj = state.preview_object.into_obj();
+    let preview_chunk = ChunkCoord::get_from_pos(preview_obj.x, preview_obj.y);
+    let preview_chunk_exists = state.level.chunks.contains_key(&preview_chunk);
     if state.show_preview {
-        state
-            .level
-            .add_object(state.preview_object.into_obj(), [255; 20], None);
+        state.level.add_object(
+            state.preview_object.into_obj(),
+            [255; 20],
+            Some(preview_chunk),
+        );
     }
 
     let selected_color = |lighter| {
@@ -43,6 +49,9 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
 
     if state.show_preview {
         state.level.remove_object([255; 20]);
+        if !preview_chunk_exists {
+            state.level.chunks.remove(&preview_chunk);
+        }
     }
 
     // for &layer in Z_LAYERS {

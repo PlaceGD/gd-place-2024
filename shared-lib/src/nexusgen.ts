@@ -11,4 +11,12 @@ export const COLOR_TRIGGERS: number[] = [4550, 4551, 4552];
 
 export const SFX_TRIGGER_SOUNDS: string[] = ["explosion", "fire", "coin", "positive", "negative", "dance", "record", "bell", "cat", "dog", "cow", "cash", "door", "bubble", "wind", "boing"];
 export const SONG_TRIGGER_SONGS: string[] = ["hitman", "sneaky_snitch", "scheming_weasel", "darkest_child", "merry_go", "ice_flow", "monkeys_spinning_monkeys", "meatball_parade", "local_forecast"];
+
+export const CHUNK_SIZE_BLOCKS = 20;
+export const CHUNK_SIZE_UNITS = CHUNK_SIZE_BLOCKS * 30;
+
+export const LEVEL_WIDTH_BLOCKS = 800;
+export const LEVEL_HEIGHT_BLOCKS = 800;
+export const LEVEL_WIDTH_UNITS = LEVEL_WIDTH_BLOCKS * 30;
+export const LEVEL_HEIGHT_UNITS = LEVEL_HEIGHT_BLOCKS * 30;
     

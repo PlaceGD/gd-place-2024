@@ -1,8 +1,6 @@
 <script lang="ts">
     import ColoredName from "../components/ColoredName.svelte";
     import { deleteTexts } from "../stores";
-
-    // $: console.log($deleteTexts);
 </script>
 
 <div class="absolute text-white">

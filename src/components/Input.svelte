@@ -48,7 +48,6 @@
             return validator.test(v);
         }
     };
-    // const dispatcher = createEventDispatcher();
 </script>
 
 <input

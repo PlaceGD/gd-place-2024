@@ -5,6 +5,9 @@
     import { onDestroy } from "svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
 
+    import flipIconUrl from "../place_menu/assets/edit_tab/flip.svg?url";
+    import { EDIT_TAB_ICONS } from "../place_menu/edit/edit_tab";
+
     export let state: wasm.State;
     let slider: HTMLInputElement;
 
@@ -19,13 +22,9 @@
         let yLen = obj.y_scale_exp;
 
         let larger = Math.max(xLen, yLen);
-        // let smaller = Math.min(xLen, yLen);
-
-        // let scaleExp = Math.round(Math.log2(scale) * 12);
 
         scale = 2 ** (larger / 12);
         slider.value = `${scale}`;
-        console.log(scale);
 
         loop = requestAnimationFrame(loopFn);
     };
@@ -48,7 +47,7 @@
             type="range"
             bind:this={slider}
             class="pointer-events-all scale-slider w-[400px] cursor-pointer appearance-none bg-transparent focus:outline-none"
-            style:width="500px"
+            style={`width: 500px; --flip: url("${EDIT_TAB_ICONS["flip"]}");`}
             max={MAX}
             min={MIN}
             step={0.0001}
@@ -87,7 +86,7 @@
     input[type="range"]::-webkit-slider-thumb {
         @apply appearance-none rounded-full border-none bg-button-green bg-center bg-no-repeat outline-none;
         margin-top: -27px;
-        background-image: url("/assets/ui/edit/flip.svg");
+        background-image: var(--flip);
         background-size: 70px;
 
         box-shadow:
@@ -120,7 +119,7 @@
 
     input[type="range"]::-moz-range-thumb {
         @apply appearance-none rounded-full border-none bg-button-green bg-center bg-no-repeat outline-none;
-        background-image: url("/assets/ui/edit/flip.svg");
+        background-image: var(--flip);
         background-size: 70px;
         box-shadow:
             0px 0px 0px 3px #fff,

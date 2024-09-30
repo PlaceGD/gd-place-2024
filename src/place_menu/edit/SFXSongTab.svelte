@@ -124,6 +124,14 @@
             {/each}
         </ul>
     </FadedScroll>
+
+    {#if tabType == "song"}
+        <div class="w-full text-center hover-text-transition text-sm">
+            <a href="https://incompetech.com" target="_blank">
+                Music by Kevin MacLeod
+            </a>
+        </div>
+    {/if}
 </div>
 
 <style lang="postcss">

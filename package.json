@@ -10,7 +10,7 @@
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "wasm:build": "cd rust/wasm-lib && wasm-pack build --no-opt --reference-types --weak-refs --target web",
-        "wasm:build-prod": "cd rust/wasm-lib && wasm-pack build --reference-types --weak-refs --target web",
+        "wasm:build-prod": "cd rust/wasm-lib && wasm-pack build --release --reference-types --weak-refs --target web",
         "shared:build": "cd shared-lib && npm run build && cd ..",
         "nexus:gen": "cd rust/the-nexus && cargo test --release generate_shid -- --nocapture && cd ../..",
         "nexus:gen_no_sheet": "cd rust/the-nexus && cargo test --release generate_shid_no_sheet -- --nocapture && cd ../..",

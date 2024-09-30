@@ -15,10 +15,9 @@ export class SyncedCooldown {
     finished = derived(this.remaining, v => v <= 0);
     display = derived(this.remaining, v => timerDisplay(v));
 
-    private constructor(path: string) {
+    private constructor(path: string, constExtra: number = 0) {
         let interval: NodeJS.Timeout | null = null;
         let onValue = db.ref(path).on("value", v => {
-            // console.log("ballsack");
             this.epoch = v.val() as number;
 
             if (interval != null) {
@@ -26,16 +25,13 @@ export class SyncedCooldown {
             }
             const setRemaining = () => {
                 let remaining = this.epoch - Date.now();
-                this.remaining.set(remaining / 1000);
+                this.remaining.set(remaining / 1000 + constExtra);
             };
             setRemaining();
             interval = setInterval(() => {
                 setRemaining();
-                // console.log(remaining);
-                // cb((this.epoch - Date.now()) / 1000);
-            }, 200);
+            }, 1000);
         });
-        // console.log("ogoge", path);
         this.unsub = () => {
             onValue();
 
@@ -46,9 +42,9 @@ export class SyncedCooldown {
     }
 
     static new<P extends string>(
-        path: number extends PathType<P, DatabaseSchema> ? P : never
-        // cb: (remaining: number) => void
+        path: number extends PathType<P, DatabaseSchema> ? P : never,
+        constExtra: number = 0
     ) {
-        return new this(path);
+        return new this(path, constExtra);
     }
 }

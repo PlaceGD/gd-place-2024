@@ -28,6 +28,7 @@ export const onCallAuthLogger = <T, Return = Promise<void>>(
     handler: (request: AuthedCallableRequest<T>, logger: LogGroup) => Return
 ): CallableFunction<T, Return> => {
     const logger = new LogGroup(id);
+
     return onCallF(request => {
         if (!request.auth) {
             logger.finish(Level.ERROR);

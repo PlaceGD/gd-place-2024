@@ -138,7 +138,6 @@
             obj.main_color = wasm.GDColor.white();
         }
 
-        console.log("c");
         setCheckedPreviewObject(state, obj);
     }
 
@@ -181,21 +180,6 @@
         setCheckedPreviewObject(state, obj);
     }
 
-    // $: {
-    //     if ($menuSelectedObject == SFX_TRIGGER) {
-    //         let obj = state.get_preview_object();
-    //         obj.main_color = new wasm.GDColor(
-    //             $menuSelectedSFX,
-    //             0,
-    //             0,
-    //             255,
-    //             false
-    //         );
-    //         console.log("b");
-    //         setCheckedPreviewObject(state, obj);
-    //     }
-    // }
-
     $: {
         if ($menuTabGroup == TabGroup.Delete) {
             state.set_preview_visibility(false);
@@ -221,7 +205,8 @@
     });
 
     const placeCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextPlace`
+        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextPlace`,
+        1.5
     );
     let {
         display: placeCooldownDisplay,
@@ -230,7 +215,8 @@
     } = placeCooldown;
 
     const deleteCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextDelete`
+        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextDelete`,
+        1.5
     );
     let {
         display: deleteCooldownDisplay,
@@ -499,6 +485,7 @@
                 if ($menuTabGroup != TabGroup.Delete) {
                     addObject(state.get_preview_object());
                     state.set_preview_visibility(false);
+                    pdButtonDisabled = true;
                 } else {
                     let k = state.get_selected_object_key();
                     let coord = state.get_selected_object_chunk();

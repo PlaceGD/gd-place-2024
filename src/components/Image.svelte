@@ -26,23 +26,7 @@
     }
     $: if (src != null && hasBeenVisible) {
         imgElement.src = src;
-        // const onLoad = imgElement.addEventListener("load", () => {
-        //     console.log("gonga");
-        //     onLoad
-        // });
     }
-
-    // $: {
-    //     if (currentImage != null && src != null) {
-    //         currentImage.src = src;
-    //     }
-    // }
-
-    // const loaded = () => {
-    //     if (src != null) {
-    //         hasLoaded = true;
-    //     }
-    // };
 
     const useLazyLoad = (image: HTMLImageElement) => {
         observer = new IntersectionObserver(entries => {
@@ -53,11 +37,7 @@
         }, options);
         observer.observe(image);
 
-        return {
-            destroy() {
-                // image.removeEventListener("load", loaded);
-            },
-        };
+        return {};
     };
 
     // ignores the source for the lazy loading otherwise ...$$restProps will
@@ -89,7 +69,6 @@
 <style>
     .placeholder {
         border-radius: 4px;
-        /* background: rgb(255, 255, 255); */
         background: linear-gradient(
             135deg,
             rgba(255, 255, 255, 0.3) 0%,

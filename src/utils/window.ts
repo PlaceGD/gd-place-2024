@@ -9,7 +9,11 @@ if (typeof window !== "undefined") {
 
     const oldError = window.console.error;
     window.console.error = function (...args) {
-        window.consoleErrors.push(args.join(" "));
+        const message = args.join(" ");
+
+        if (!message.includes("recursive use of an object")) {
+            window.consoleErrors.push();
+        }
 
         return oldError(...args);
     };

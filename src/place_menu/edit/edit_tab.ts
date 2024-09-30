@@ -3,7 +3,7 @@ import { rotateVec } from "shared-lib/util";
 import { type GDObjectOpt, convert_opt_transform } from "wasm-lib";
 import { extractFilenames } from "../../utils/misc";
 
-const EDIT_TAB_ICONS = extractFilenames<string>(
+export const EDIT_TAB_ICONS = extractFilenames<string>(
     import.meta.glob("../assets/edit_tab/*.svg", {
         eager: true,
         query: "?url",

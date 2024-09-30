@@ -130,7 +130,11 @@ export type FirebaseError =
     (typeof FIREBASE_ERRORS)[keyof typeof FIREBASE_ERRORS];
 
 // TODO: add our uids
-export const DEV_UIDS: string[] = ["0Tx6aES3myM8DYW495SLfiC2Rpu2"];
+export const DEV_UIDS: string[] = [
+    "mPjKp1BVO2T5sIZa0sesbP9izde2",
+    "ePRWGbc6NtW5opp0T3n8xQVr8TW2",
+    "LtbULkrh8sRas6y52oieUlApCLo1",
+];
 
 export type PlaceReq = { object: string };
 export type DeleteReq = { chunkId: ChunkID; objId: string };
@@ -190,6 +194,10 @@ export type MetaOperation =
     | {
           type: "announcement";
           text: string;
+      }
+    | {
+          type: "log_donation";
+          uid: string;
       };
 
 export type MetaReq = {

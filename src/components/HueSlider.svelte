@@ -54,7 +54,7 @@
             let color = clamp(Math.floor(ex / colorLen), 0, colors.hues - 1);
 
             currentHue = color;
-            console.log("bruh");
+
             setLevelColor(state, $menuSelectedObject, $mainColorRGB);
         }
     };

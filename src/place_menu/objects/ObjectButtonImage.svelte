@@ -7,15 +7,12 @@
     let src: string | null = null;
 
     const onImageVisible = () => {
-        // console.log(objButtonSize);
-
         Spritesheet.spriteImageStringFromId(id).then(bSrc => {
             src = bSrc;
         });
     };
 </script>
 
-<!-- <div class="relative flex-center"> -->
 <Image
     bind:src
     lazyLoad
@@ -23,4 +20,3 @@
     skeleton
     class="object-contain w-full h-full"
 />
-<!-- </div> -->

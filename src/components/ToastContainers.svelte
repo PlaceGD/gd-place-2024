@@ -7,15 +7,17 @@
 <div bind:this={$toastPortals[$toastPortals.length]}></div>
 
 <Portal target={$toastPortals.at(-1) ?? undefined}>
-    <SvelteToast
-        options={{
-            intro: { y: -64 },
-            classes: ["log"],
-        }}
-    />
+    <div class="toast-wrapper">
+        <SvelteToast
+            options={{
+                intro: { y: -64 },
+                classes: ["log"],
+            }}
+        />
+    </div>
 </Portal>
 
-<div class="announcement-wrapper">
+<div class="toast-wrapper">
     <SvelteToast
         target="announcement"
         options={{ intro: { y: -50 }, classes: ["announcement"] }}
@@ -40,16 +42,17 @@
         --toastBarBackground: #b55f5b;
     }
 
-    .announcement-wrapper {
+    .toast-wrapper {
         --toastContainerTop: 2rem;
         --toastContainerLeft: 0;
         --toastWidth: min(max-content, 50%);
     }
 
-    .announcement-wrapper > :global(._toastContainer) {
+    .toast-wrapper > :global(._toastContainer) {
         width: 100%;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
 
     :global(.announcement) {

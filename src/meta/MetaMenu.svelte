@@ -22,6 +22,7 @@
         modChangeUsername: "",
         unbanUsername: "",
         usernameOrID: "",
+        donatorID: "",
         announcementText: "",
     };
 
@@ -61,6 +62,7 @@
                 }}>Send</WhiteButton
             >
         </div>
+        <div class="w-full min-h-[1px] bg-white/50" />
         <div class="flex flex-col gap-2 flex-center">
             <div class="flex w-full gap-2 flex-center">
                 <h1 class="w-32 font-pusab text-stroke">Place</h1>
@@ -132,6 +134,8 @@
             </div>
         </div>
 
+        <div class="w-full min-h-[1px] bg-white/50" />
+
         <div class="flex flex-col w-full gap-2 flex-center">
             <div class="flex w-full gap-2 flex-center">
                 <h1 class="font-pusab text-stroke">Mod</h1>
@@ -164,6 +168,7 @@
                 >
             </div>
         </div>
+        <div class="w-full min-h-[1px] bg-white/50" />
         <div class="flex flex-col w-full gap-2 flex-center">
             <div class="flex w-full gap-2 flex-center">
                 <h1 class="font-pusab text-stroke">Unban</h1>
@@ -184,6 +189,31 @@
                 }}>Unban</WhiteButton
             >
         </div>
+        <div class="w-full min-h-[1px] bg-white/50" />
+
+        <div class="flex flex-col w-full gap-2 flex-center">
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="font-pusab text-stroke">UID</h1>
+                <DarkInput
+                    maxLength={100}
+                    class="w-full"
+                    bind:value={inputValues.donatorID}
+                ></DarkInput>
+            </div>
+            <div class="flex w-full gap-2">
+                <WhiteButton
+                    class="w-full"
+                    on:click={async () => {
+                        meta({
+                            type: "log_donation",
+                            uid: inputValues.donatorID,
+                        });
+                    }}>Make Donator</WhiteButton
+                >
+            </div>
+        </div>
+        <div class="w-full min-h-[1px] bg-white/50" />
+
         <div class="flex flex-col w-full gap-2 flex-center">
             <div class="flex w-full gap-2 flex-center">
                 <h1 class="font-pusab text-stroke">Username or ID</h1>
@@ -205,7 +235,7 @@
                                         `userName/${inputValues.usernameOrID.toLowerCase()}/uid`
                                     )
                                     .get()
-                            ).val() ?? "%% UNDEFINED!!! %% 😨";
+                            ).val() ?? "<unknown>";
                     }}
                 >
                     To ID
@@ -220,7 +250,7 @@
                                         `userDetails/${inputValues.usernameOrID}/username`
                                     )
                                     .get()
-                            ).val() ?? "%% UNDEFINED!!! %% 😨";
+                            ).val() ?? "<unknown>";
                     }}>To username</WhiteButton
                 >
             </div>

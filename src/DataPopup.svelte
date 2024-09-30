@@ -31,7 +31,7 @@
 
 {#if !hidePopup}
     <div
-        class="absolute bottom-0 z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 xs:w-full left-1/2"
+        class="absolute top-0 z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 xs:w-full left-1/2"
     >
         <div
             class="flex-col w-full gap-3 p-3 text-center text-white rounded-lg shadow-lg sm:text-sm sm:w-full flex-center bg-menu-gray/90 shadow-black/40 backdrop-blur-md"

@@ -77,25 +77,6 @@
     const TOPS_ORDERED = [ZLayer.T1, ZLayer.T2, ZLayer.T3, ZLayer.T4];
     const isBottom = (layer: ZLayer) => BOTTOMS_ORDERED.includes(layer);
     const layerCount = (bottom: boolean) => (bottom ? 5 : 4);
-    // const layerFrom = (bottom: boolean, idx: number) =>
-    //     (bottom ? (v: ZLayer) => v : equivalentTop)(BOTTOMS[idx]);
-    // const layerIdx = (layer: ZLayer) =>
-    //     isBottom(layer) ? -layer + 5 : layer - 4;
-
-    // console.log("junky", [
-    //     layerIdx(ZLayer.B5),
-    //     layerIdx(ZLayer.B4),
-    //     layerIdx(ZLayer.B3),
-    //     layerIdx(ZLayer.B2),
-    //     layerIdx(ZLayer.B1),
-    //     layerIdx(ZLayer.T1),
-    //     layerIdx(ZLayer.T2),
-    //     layerIdx(ZLayer.T3),
-    //     layerIdx(ZLayer.T4),
-    // ]);
-    // console.log("junky", layerFrom(true, 1));
-    // console.log("junky", layerFrom(true, 2));
-    // console.log("junky", layerFrom(true, 3));
 
     const HARD_VALID_INPUT = /^-?\d*$/;
     const SOFT_VALID_INPUT = (s: string) => {
@@ -107,8 +88,6 @@
     };
 
     $: $menuZOrder = clamp($menuZOrder, -50, 50);
-
-    // clamp layer count
 </script>
 
 <fieldset

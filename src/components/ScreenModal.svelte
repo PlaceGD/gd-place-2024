@@ -23,7 +23,6 @@
     let dispatcher = createEventDispatcher();
 
     onMount(() => {
-        console.log(modal);
         modal?.close();
     });
 

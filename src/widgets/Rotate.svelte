@@ -5,6 +5,7 @@
     import * as wasm from "wasm-lib";
     import { isValidObject, objects } from "shared-lib/gd";
     import { setCheckedPreviewObject } from "../utils/misc";
+    import { EDIT_TAB_ICONS } from "../place_menu/edit/edit_tab";
 
     export let state: wasm.State;
 
@@ -71,6 +72,7 @@
         style={`
             transform: translate(${(Math.cos((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px, ${(Math.sin((-angle * 5 * Math.PI) / 180) * 284) / 2 - 32}px);
             touch-action: none;
+            --dot: url("${EDIT_TAB_ICONS["dot"]}");
         `}
         on:pointerdown={e => {
             e.preventDefault();
@@ -81,7 +83,7 @@
 
 <style>
     .the_dragger {
-        background-image: url("/assets/ui/edit/dot.svg");
+        background-image: var(--dot);
         background-size: 70px;
         box-shadow:
             0px 0px 0px 3px #fff,

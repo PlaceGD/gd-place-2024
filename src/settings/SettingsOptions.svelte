@@ -130,8 +130,8 @@
                         Donate!
                     </a>
                 {:else}
-                    <p class="text-base">
-                        Get a colored name by making a donation!
+                    <p class="text-base text-sm">
+                        Get a colored name by making a donation (any amount)!
                     </p>
 
                     {#if $loginData?.currentUserData?.userDetails != null}

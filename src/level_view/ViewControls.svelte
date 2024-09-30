@@ -15,6 +15,8 @@
         SFX_TRIGGER_SOUNDS,
         SONG_TRIGGER,
         SONG_TRIGGER_SONGS,
+        LEVEL_WIDTH_UNITS,
+        LEVEL_HEIGHT_UNITS,
     } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
@@ -45,6 +47,7 @@
         setLevelColor,
         menuSelectedSong,
         songPlaying,
+        eventStarted,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -97,15 +100,9 @@
     $zoomGoal = state.get_zoom();
     $: {
         changeZoom($zoomTween);
-        // state.
     }
 
-    // setInterval(() => {
-    //     console.log("vagooby", [...state.get_world_pos(0, 0)]);
-    // }, 1000);
-
     const getWorldMousePos = () => {
-        // console.log($mouseX, $mouseY);
         return state.get_world_pos(
             $mouseX - (canvas.offsetWidth * window.devicePixelRatio) / 2,
             -($mouseY - (canvas.offsetHeight * window.devicePixelRatio) / 2)
@@ -139,6 +136,10 @@
     }, 50);
 
     const placePreview = (mx: number, my: number) => {
+        if (!$eventStarted) {
+            return;
+        }
+
         let obj = state.get_preview_object();
 
         obj.x =
@@ -149,27 +150,12 @@
             Math.floor(my / 30) * 30 +
             15 +
             objects[$menuSelectedObject].placeOffsetY;
+
         obj.x_scale_exp = 0;
         obj.x_angle = 0;
         obj.y_scale_exp = 0;
         obj.y_angle = 18;
-        // let obj = new wasm.GDObjectOpt(
-        //     $menuSelectedObject,
-        //     Math.floor(mx / 30) * 30 +
-        //         15 +
-        //         objects[$menuSelectedObject].placeOffsetX,
-        //     Math.floor(my / 30) * 30 +
-        //         15 +
-        //         objects[$menuSelectedObject].placeOffsetY,
-        //     0,
-        //     0,
-        //     0,
-        //     18,
-        //     wasm.ZLayer.B4,
-        //     0,
-        //     wasm.GDColor.white(),
-        //     wasm.GDColor.white()
-        // );
+
         $menuMainColor = {
             hue: 0,
             x: 0,
@@ -213,8 +199,6 @@
             });
             songPlaying.set(true);
         }
-
-        // $menuZLayer = wasm.ZLayer.B1;
 
         if (setCheckedPreviewObject(state, obj)) {
             state.set_preview_visibility(true);
@@ -351,14 +335,13 @@
     const handleMouseUp = () => {
         if (!dragging) return;
 
-        if (!dragging.thresholdReached && $canPlaceEditDelete) {
+        if (!dragging.thresholdReached) {
             let [mx, my] = getWorldMousePos();
             let hit = state.objects_hit_at(mx, my, 0.0);
-            if ($menuTabGroup == TabGroup.Delete) {
-                // console.log(hit);
+            if ($menuTabGroup == TabGroup.Delete && $canPlaceEditDelete) {
                 trySelectAt(mx, my, hit);
             } else {
-                if (!tryRunTriggers(hit)) {
+                if (!tryRunTriggers(hit) && $canPlaceEditDelete) {
                     placePreview(mx, my);
                 }
             }
@@ -487,17 +470,12 @@
     $: {
         state.set_event_elapsed($eventElapsed);
     }
-
-    // $: {
-    //     console.log($bgColor, $ground1Color, $ground2Color);
-    // }
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
 <svelte:window
     on:pointerup={e => {
         setMousePos(e);
-        // if (e.pointerType === "touch") return;
 
         handleMouseUp();
     }}
@@ -586,7 +564,6 @@
         if (pinchZooming == null) {
             pinchZooming = $zoomTween;
         } else {
-            console.log(pinchZooming, e.detail.scale);
             $zoomGoal =
                 pinchZooming + (Math.log(e.detail.scale) / Math.log(2)) * 6;
         }
@@ -628,11 +605,6 @@
     >
         <TriggerRuns />
     </Widget>
-    {#if $loginData.currentUserData != null}
-        <!-- <Widget position={[30, -30]} scale={1.0} screenCenter={false}>
-            <ObjectInfo bind:state />
-        </Widget> -->
-    {/if}
     {#if $placedByHover != null && !$editorSettings.hidePlacedTooltip}
         <Widget
             position={getScreenPosZoomCorrected(

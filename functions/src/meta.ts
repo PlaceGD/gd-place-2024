@@ -53,7 +53,9 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
                 time: Date.now(),
             });
             break;
-
+        case "log_donation":
+            db.ref(`userDetails/${data.op.uid}/hasDonated`).set(true);
+            break;
         default:
             throw Error.code(500, "aborted");
     }

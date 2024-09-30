@@ -126,14 +126,14 @@
     </FadedScroll>
     {#if $menuBuildTab == "Triggers"}
         <button
-            class="w-full justify-end text-center hover-text-transition text-sm p-4"
+            class="justify-end w-full p-4 text-sm text-center hover-text-transition"
             on:click={() => {
                 $menuTabGroup = TabGroup.Edit;
                 $menuEditTab = EditTab.Colors;
             }}
         >
             Go to <Edit class="stroke-[1.5] w-6 h-6 inline-block"></Edit> to change
-            trigger settings
+            trigger settings. All triggers are touch triggered.
         </button>
     {/if}
 </fieldset>

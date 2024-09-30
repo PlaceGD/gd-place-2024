@@ -36,3 +36,8 @@ export const extractFilenames = <T>(
         {}
     );
 };
+
+export const notNaNAnd = (n: string, c: (n: number) => boolean) => {
+    let s = parseInt(n);
+    return !isNaN(s) && c(s);
+};

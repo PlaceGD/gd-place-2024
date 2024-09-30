@@ -5,6 +5,7 @@
     import Cross from "../icons/Cross.svelte";
     import { clamp, remEuclid } from "shared-lib/util";
     import DarkInput from "./DarkInput.svelte";
+    import { notNaNAnd } from "../utils/misc";
 
     export let maxStops: number;
 
@@ -27,12 +28,20 @@
     $: rotatedGradientString = `linear-gradient(${gradientAngle}deg, ${gradientColorListString})`;
     $: previewGradientString = `linear-gradient(90deg, ${gradientColorListString})`;
 
+    let lastClickedElement: HTMLElement | null = null;
+    const handleClickedElement = (
+        e: PointerEvent & { currentTarget: EventTarget & Window }
+    ) => {
+        lastClickedElement = e.target as HTMLElement | null;
+    };
+
     let clickedNub = false;
 
     const handlePointerDown = (
         e: PointerEvent & { currentTarget: EventTarget & HTMLDivElement }
     ) => {
         const target = e.target as HTMLElement | null;
+
         if (
             target != null &&
             (target.classList.contains("rangeNub") ||
@@ -41,9 +50,19 @@
             clickedNub = true;
         }
     };
+
+    const NUMBER_HARD_VALID_INPUT = /^\d*$/;
+    const STOP_POSITION_SOFT_VALID_INPUT = (s: string) => {
+        return notNaNAnd(s, n => 0 <= n && n <= 100);
+    };
+
+    const GRAD_ANGLE_SOFT_VALID_INPUT = (s: string) => {
+        return notNaNAnd(s, n => 0 <= n && n <= 360);
+    };
 </script>
 
 <svelte:window
+    on:pointerdown={handleClickedElement}
     on:pointerup={() => {
         isRotating = false;
     }}
@@ -76,6 +95,15 @@
         style={`--bg: ${previewGradientString}`}
         on:pointerdown={handlePointerDown}
         on:pointerup={e => {
+            // if you click on another element and drag onto the slider container
+            // this will prevent a stop being added
+            if (
+                lastClickedElement == null ||
+                !lastClickedElement.isEqualNode(sliderContainer)
+            ) {
+                return;
+            }
+
             if (clickedNub) {
                 clickedNub = false;
                 return;
@@ -143,6 +171,8 @@
             </div>
             <DarkInput
                 maxLength={3}
+                softValidInput={GRAD_ANGLE_SOFT_VALID_INPUT}
+                hardValidInput={NUMBER_HARD_VALID_INPUT}
                 bind:value={gradientAngle}
                 class="text-base w-14 xs:text-sm"
             />
@@ -152,7 +182,7 @@
         >
             {#each gradientStops
                 .map((pos, idx) => [pos, idx])
-                .sort(([a], [b]) => a - b) as [_, idx]}
+                .sort(([a], [b]) => a - b) as [_, idx] (idx)}
                 <li class="grid grid-cols-3">
                     <div
                         class="flex items-center justify-center flex-auto p-1 gradient-picker-color"
@@ -168,6 +198,8 @@
                     <div class="flex items-center justify-center flex-auto p-1">
                         <DarkInput
                             maxLength={3}
+                            softValidInput={STOP_POSITION_SOFT_VALID_INPUT}
+                            hardValidInput={NUMBER_HARD_VALID_INPUT}
                             bind:value={gradientStops[idx]}
                             class="w-full text-base xs:text-sm"
                         />

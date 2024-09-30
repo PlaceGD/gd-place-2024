@@ -18,6 +18,7 @@
     import { semitonesToFactor } from "shared-lib/util";
     import { onDestroy, onMount } from "svelte";
     import { SFX_ICONS, SFX_SOUNDS, SONG_ICONS, SONG_SOUNDS } from "./sfx_tab";
+    import { notNaNAnd } from "../../utils/misc";
 
     export let tabType: "sfx" | "song";
 
@@ -32,11 +33,7 @@
 
     const HARD_VALID_INPUT = /^-?\d*$/;
     const SOFT_VALID_INPUT = (s: string) => {
-        let n = parseInt(s);
-        if (isNaN(n)) {
-            return false;
-        }
-        return -12 <= n && n <= 12;
+        return notNaNAnd(s, n => -12 <= n && n <= 12);
     };
 
     const playTheSound = () => {
@@ -126,7 +123,7 @@
     </FadedScroll>
 
     {#if tabType == "song"}
-        <div class="w-full text-center hover-text-transition text-sm">
+        <div class="w-full text-sm text-center hover-text-transition">
             <a href="https://incompetech.com" target="_blank">
                 Music by Kevin MacLeod
             </a>

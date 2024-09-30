@@ -12,6 +12,7 @@
     import topIconUrl from "../assets/layer_tab/top.svg?url";
 
     import moveSmallIconUrl from "../assets/edit_tab/move_small.svg?url";
+    import { notNaNAnd } from "../../utils/misc";
 
     const layerName = (layer: ZLayer) => {
         switch (layer) {
@@ -80,11 +81,7 @@
 
     const HARD_VALID_INPUT = /^-?\d*$/;
     const SOFT_VALID_INPUT = (s: string) => {
-        let n = parseInt(s);
-        if (isNaN(n)) {
-            return false;
-        }
-        return -50 <= n && n <= 50;
+        return notNaNAnd(s, n => -50 <= n && n <= 50);
     };
 
     $: $menuZOrder = clamp($menuZOrder, -50, 50);

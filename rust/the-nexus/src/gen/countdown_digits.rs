@@ -50,7 +50,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                 .map(|o| to_gdobject(o, x, y, parsed))
                 .collect();
 
-            println!("{} ({}): {} objs", digit_set, digit, obj_list.len());
+            //println!("{} ({}): {} objs", digit_set, digit, obj_list.len());
 
             DigitObjects { objs: obj_list }
         })
@@ -239,7 +239,7 @@ fn apply_hsv(color: GDColor, hsv: Option<(f64, f64, f64)>) -> GDColor {
         let hsv = Hsv::from(rgb);
         let modified = Hsv::new((hsv.h + h).rem_euclid(360.0), hsv.s * s, hsv.v * v);
         let rgb_m = Rgb::from(modified);
-        println!("juh {:?}", rgb_m);
+        //println!("juh {:?}", rgb_m);
         // dbg!(rgb, rgb_m);
         GDColor::new(
             rgb_m.r as u8,

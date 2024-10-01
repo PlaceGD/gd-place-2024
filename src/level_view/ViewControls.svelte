@@ -6,6 +6,9 @@
 
     import * as wasm from "wasm-lib";
 
+    import player_start_help from "./assets/player_start_help.png?url";
+    import player_goal_help from "./assets/player_goal_help.png?url";
+
     import { clamp, hexToRgb, lerp, semitonesToFactor } from "shared-lib/util";
     import {
         BG_TRIGGER,
@@ -83,6 +86,7 @@
     import PlacedByText from "../widgets/PlacedByText.svelte";
     import { scale } from "svelte/transition";
     import { SFX_SOUNDS, SONG_SOUNDS } from "../place_menu/edit/sfx_tab";
+    import ImageWidget from "./ImageWidget.svelte";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -617,4 +621,20 @@
             <PlacedByText username={$placedByHover.username} />
         </Widget>
     {/if}
+
+    <ImageWidget
+        src={player_start_help}
+        position={getScreenPosZoomCorrected(-55, 33)}
+        scale={0.1}
+        screenScale={textZoomScale}
+        screenOrigin={originScreen}
+    />
+
+    <ImageWidget
+        src={player_goal_help}
+        position={getScreenPosZoomCorrected(-90, 200)}
+        scale={0.13}
+        screenScale={textZoomScale}
+        screenOrigin={originScreen}
+    />
 </div>

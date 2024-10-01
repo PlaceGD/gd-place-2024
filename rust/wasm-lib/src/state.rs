@@ -2,7 +2,7 @@ use core::f64;
 
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 
-const DRAW_LEVEL: bool = false;
+pub const DRAW_LEVEL: bool = true;
 
 use rust_shared::{
     console_log,
@@ -563,9 +563,9 @@ impl State {
             self.countdown.draw(self, &mut billy); // neg time because its just used for animation, not actually relative to anything
             billy.set_transform(old_t);
             //}
-            if DRAW_LEVEL {
-                level_draw(self, &mut billy);
-            }
+
+            level_draw(self, &mut billy);
+
             // these lines just commit the previous call
             billy.set_blend_mode(BlendMode::Additive);
             billy.set_blend_mode(BlendMode::Normal);

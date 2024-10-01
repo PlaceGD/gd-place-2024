@@ -4,7 +4,7 @@ use rust_shared::{console_log, gd::layer::Z_LAYERS, map};
 use crate::{
     level::ChunkCoord,
     object::GDObjectExt,
-    state::State,
+    state::{State, DRAW_LEVEL},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
 };
 
@@ -42,10 +42,11 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         );
         vec4(1.0, c, c, 1.0)
     };
-
-    draw_level(state, billy, &state.level, |k, _, detail| {
-        (state.selected_object == Some(k)).then(|| selected_color(detail))
-    });
+    if DRAW_LEVEL {
+        draw_level(state, billy, &state.level, |k, _, detail| {
+            (state.selected_object == Some(k)).then(|| selected_color(detail))
+        });
+    }
 
     if state.show_preview {
         state.level.remove_object([255; 20]);

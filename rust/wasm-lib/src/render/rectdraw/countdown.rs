@@ -45,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [0, 0, 0, 0],
+            sets: [0, 15, 16, 17],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -53,8 +53,9 @@ impl Countdown {
             bg_state: [false; 3],
         }
     }
-    pub fn update_state(&mut self, event_elapsed: f64) {
-        let time_until = -event_elapsed / 1000.0;
+    pub fn update_state(&mut self, event_start: f64) {
+        let event_elapsed = now() - event_start / 1000.0;
+        let time_until = -event_elapsed;
 
         if time_until.is_nan() || time_until.is_infinite() {
             return;
@@ -62,6 +63,7 @@ impl Countdown {
 
         // if u change this also change it in the wasm :3
         let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
+        //console_log!("{time_until}");
 
         let sets = SET_SWITCHES[switch_id];
 
@@ -117,6 +119,7 @@ impl Countdown {
                     //     self.sets[i]
                     // };
                     //let new_set = 0;
+
                     self.digits[i].transition_between(
                         self.state[i],
                         state[i],
@@ -268,7 +271,14 @@ impl Countdown {
 }
 
 fn get_alpha(o: GDObject) -> f32 {
-    (o.main_color.opacity as f32).min(o.detail_color.opacity as f32) / 255.0
+    let mut opacity = (o.main_color.opacity as f32).min(o.detail_color.opacity as f32) / 255.0;
+    if o.main_color.blending {
+        opacity *= (o.main_color.r as f32 + o.main_color.g as f32 + o.main_color.b as f32)
+            .min(o.detail_color.r as f32 + o.detail_color.g as f32 + o.detail_color.b as f32)
+            / 3.0
+            / 255.0;
+    }
+    opacity
 }
 
 fn draw_obj(obj: &GDObject, billy: &mut Billy) {
@@ -323,7 +333,7 @@ impl CountdownDigit {
     }
 
     fn get_set(set: usize, digit: u8) -> &'static [GDObject] {
-        &COUNTDOWN_DIGITS.0[set].0[digit as usize].objs
+        &COUNTDOWN_DIGITS.0[set].0[(digit as usize) % 10].objs
     }
 
     fn set_to(&mut self, set: usize, digit: u8, duration: f64) {
@@ -420,7 +430,7 @@ impl CountdownDigit {
             for obj_static in &static_objs {
                 if obj_in.0.id == obj_static.id
                     && obj_chebyshev_dist(obj_in.0, *obj_static) < 45.0
-                    && same_colors(obj_in.0, *obj_static)
+                    && close_colors(obj_in.0, *obj_static)
                     && obj_angle_dist(obj_in.0, *obj_static) <= std::f32::consts::PI / 2.0 + 0.1
                     && obj_scale_difference(obj_in.0, *obj_static) <= 3.0
                 {
@@ -445,7 +455,7 @@ impl CountdownDigit {
                 // }
                 if obj_in.0.id == obj_out.0.id
                     && obj_chebyshev_dist(obj_out.0, obj_in.0) < 60.0
-                    && same_colors(obj_out.0, obj_in.0)
+                    && close_colors(obj_out.0, obj_in.0)
                     && obj_scale_difference(obj_out.0, obj_in.0) <= 3.0
                 //&& same_transform(obj_out.0, obj_in.0)
                 {
@@ -531,6 +541,11 @@ fn same_colors(obj1: GDObject, obj2: GDObject) -> bool {
     obj1.main_color == obj2.main_color && obj1.detail_color == obj2.detail_color
 }
 
+fn close_colors(obj1: GDObject, obj2: GDObject) -> bool {
+    color_close(obj1.main_color, obj2.main_color)
+        && color_close(obj1.detail_color, obj2.detail_color)
+}
+
 fn same_transform(obj1: GDObject, obj2: GDObject) -> bool {
     (obj1.ix - obj2.ix).abs() < 0.02
         && (obj1.iy - obj2.iy).abs() < 0.02
@@ -585,6 +600,20 @@ fn obj_angle_dist(obj1: GDObject, obj2: GDObject) -> f32 {
 
 fn ease_out_quart(t: f32) -> f32 {
     1.0 - (1.0 - t).powi(4)
+}
+
+fn color_close(col1: GDColor, col2: GDColor) -> bool {
+    if col1.blending != col2.blending {
+        return false;
+    }
+
+    let d = |n| n as f32 / 255.0;
+
+    (d(col1.r) - d(col2.r)).powi(2)
+        + (d(col1.g) - d(col2.g)).powi(2)
+        + (d(col1.b) - d(col2.b)).powi(2)
+        + (d(col1.opacity) - d(col2.opacity)).powi(2)
+        < 0.2 * 0.2
 }
 
 enum AnimType {
@@ -671,6 +700,12 @@ impl TransitioningObject {
                             return Some(value);
                         }
                     }
+                    // Some(if obj.id == 1888 {
+                    //     // glow not tinted because ugly
+                    //     edited_obj
+                    // } else {
+                    //     edited_obj.select_tint()
+                    // })
                     Some(edited_obj.select_tint())
                 } else {
                     Some(obj)

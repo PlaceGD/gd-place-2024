@@ -1,4 +1,8 @@
+use core::f64;
+
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
+
+const DRAW_LEVEL: bool = false;
 
 use rust_shared::{
     console_log,
@@ -62,7 +66,8 @@ pub struct State {
     pub(crate) hide_outline: bool,
 
     /// unix time, negative before event starts
-    pub(crate) event_elapsed: f64,
+    //pub(crate) event_elapsed: f64,
+    pub(crate) event_start: f64,
 
     pub(crate) countdown: Countdown,
     // // (text, x, y, lifetime)
@@ -105,7 +110,7 @@ impl State {
             hide_grid: false,
             hide_ground: false,
             hide_outline: false,
-            event_elapsed: f64::NEG_INFINITY,
+            event_start: f64::INFINITY,
             render,
             countdown: Countdown::new(),
         }
@@ -479,8 +484,8 @@ impl State {
         self.hide_ground = to;
     }
 
-    pub fn set_event_elapsed(&mut self, to: f64) {
-        self.event_elapsed = to;
+    pub fn set_event_start(&mut self, to: f64) {
+        self.event_start = to;
     }
 
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
@@ -554,12 +559,13 @@ impl State {
             //if self.event_elapsed < 0.0 {
             let old_t = billy.get_transform();
             billy.apply_transform(self.view_transform());
-            self.countdown.update_state(self.event_elapsed);
+            self.countdown.update_state(self.event_start);
             self.countdown.draw(self, &mut billy); // neg time because its just used for animation, not actually relative to anything
             billy.set_transform(old_t);
             //}
-            level_draw(self, &mut billy);
-
+            if DRAW_LEVEL {
+                level_draw(self, &mut billy);
+            }
             // these lines just commit the previous call
             billy.set_blend_mode(BlendMode::Additive);
             billy.set_blend_mode(BlendMode::Normal);

@@ -79,6 +79,7 @@ parse_countdown_files! {
     "sirhadoken" ("SirHadoken"): [3],
     "jenkins" ("Jenkins"): [3],
     "kingtony" ("KINGTONY"): [3],
+    "domi" ("Dominus"): [3],
 }
 #[binrw]
 #[brw(little)]
@@ -128,7 +129,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         let prev = &switches[i];
 
         while j < 4 {
-            let random = DeterministicRandom(i + 6, r).random();
+            let random = DeterministicRandom(i + 3, r).random();
             let set = (random * DIGIT_SETS as f64) as usize;
             let name = get_creator_name(set);
             if !prev.contains(&set) && !sets.contains(&set) && !names.contains(&name) {

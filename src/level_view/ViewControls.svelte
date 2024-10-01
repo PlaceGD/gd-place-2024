@@ -48,6 +48,7 @@
         menuSelectedSong,
         songPlaying,
         eventStarted,
+        eventStartTime,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -468,7 +469,7 @@
         );
     }
     $: {
-        state.set_event_elapsed($eventElapsed);
+        state.set_event_start($eventStartTime);
     }
 </script>
 

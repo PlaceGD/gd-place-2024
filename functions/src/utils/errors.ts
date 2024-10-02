@@ -1,7 +1,8 @@
 import { HttpsError as fHttpsError } from "firebase-functions/v2/https";
 import { FIREBASE_ERRORS } from "shared-lib/cloud_functions";
 
-export interface HttpsError<_T> extends fHttpsError {}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type HttpsError<_T> = fHttpsError;
 
 type FirebaseErrorKindMap = {
     "1": "invalid-argument";

@@ -70,13 +70,6 @@ export type KofiDonation = {
       }
 );
 
-const EMAIL_BODY_HTML = `
-<h1>Thank you for donating to GD Place ❤</h1>
-<p><strong>You should now be able to change the colors of your username in the settings menu!</strong></p>
-<p>If the website asks you for a code, use this:</p>
-<h2 style="width: min-content; background: #00000016; padding: 10px; border-radius: 5px; user-select: all;">00000000-1111-2222-3333-444444444444</h2>
-`;
-
 // #region onKofiDonation
 export const onKofiDonation = onRequest(
     { cors: ["ko-fi.com"] },
@@ -203,7 +196,12 @@ export const onKofiDonation = onRequest(
                         },
                     ],
                     Subject: `GD Place Donation! (#${jsonData.message_id.split("-")[1]})`,
-                    HTMLPart: EMAIL_BODY_HTML,
+                    HTMLPart: `
+<h1>Thank you for donating to GD Place ❤</h1>
+<p><strong>You should now be able to change the colors of your username in the settings menu!</strong></p>
+<p>If the website asks you for a code, use this:</p>
+<h2 style="width: min-content; background: #00000016; padding: 10px; border-radius: 5px; user-select: all;">${txId}</h2>
+`,
                 },
             ],
         };

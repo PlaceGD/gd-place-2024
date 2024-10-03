@@ -3,10 +3,10 @@ export default {
     content: ["./src/**/*.{html,js,svelte,ts}"],
     theme: {
         screens: {
-            lg: [{ max: "1500px" }, { raw: "(max-height: 1080px)" }],
-            md: [{ max: "1000px" }, { raw: "(max-height: 680px)" }],
-            sm: [{ max: "750px" }, { raw: "(max-height: 530px)" }],
-            xs: [{ max: "500px" }, { raw: "(max-height: 440px)" }],
+            lg: [{ max: "1500px" }],
+            md: [{ max: "1000px" }],
+            sm: [{ max: "750px" }],
+            xs: [{ max: "500px" }],
         },
         colors: {
             "menu-gray": "#0A0A0A",

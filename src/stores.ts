@@ -144,6 +144,7 @@ export const currentNameGradient = persistLocalWritable(
     {
         positions: null,
         colors: null,
+        ids: null,
     },
     "nameGradient"
 );

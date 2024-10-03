@@ -152,7 +152,7 @@ export const onKofiDonation = onRequest(
         const db = smartDatabase();
 
         // try first by checking the username of the kofi donator against our database
-        const kofiDonatorUsername = jsonData.from_name.toLowerCase();
+        const kofiDonatorUsername = (jsonData.from_name ?? "-").toLowerCase();
         const kofiDonatorMaybeAccountData = (
             await db.ref(`/userName/${kofiDonatorUsername}`).get()
         ).val();
@@ -161,15 +161,17 @@ export const onKofiDonation = onRequest(
         // its very possible (though extremely unlikely) that the donator could have a username that points
         // to a different user in the database...
         if (kofiDonatorMaybeAccountData != null) {
-            db.ref(
-                `/userDetails/${kofiDonatorMaybeAccountData.uid}/hasDonated`
-            ).set(true);
+            await db
+                .ref(
+                    `/userDetails/${kofiDonatorMaybeAccountData.uid}/hasDonated`
+                )
+                .set(true);
 
             // in case someones kofi username matches someone elses gd place account, we want to keep track of the account that
             // recieved the perks so as to disable them later when the real donator claims the transaction id
-            db.ref(`/claimedDonations/${kofiDonatorMaybeAccountData.uid}`).set(
-                txId
-            );
+            await db
+                .ref(`/claimedDonations/${kofiDonatorMaybeAccountData.uid}`)
+                .set(txId);
         }
 
         // set it to an empty string if no account match was found
@@ -197,7 +199,8 @@ export const onKofiDonation = onRequest(
                     ],
                     Subject: `GD Place Donation! (#${jsonData.message_id.split("-")[1]})`,
                     HTMLPart: `
-<h1>Thank you for donating to GD Place ❤</h1>
+<img src="https://gd-place-2023.web.app/images/logo_donation.png" alt="Happy GD Place logo" style="width: 100px; height: 100px"/>
+<h1>Thank you for donating to GD Place!</h1>
 <p><strong>You should now be able to change the colors of your username in the settings menu!</strong></p>
 <p>If the website asks you for a code, use this:</p>
 <h2 style="width: min-content; background: #00000016; padding: 10px; border-radius: 5px; user-select: all;">${txId}</h2>

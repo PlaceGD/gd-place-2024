@@ -71,26 +71,27 @@ export default defineConfig(({ mode }) => ({
         sveltekit(),
         topLevelAwait(),
         // preload image assets (only works on `vite build`)
-        UnpluginInjectPreload({
-            files: [
-                {
-                    outputMatch: /ui\/.*\.(png|svg|otf|mp3)/,
-                    attributes: {
-                        rel: "preload",
-                    },
-                },
-                {
-                    outputMatch: /.*\.(png|svg|otf|mp3)/,
-                    attributes: {
-                        rel: "preload",
-                    },
-                },
-            ],
-            injectTo: "head-prepend",
-        }),
+        // UnpluginInjectPreload({
+        //     files: [
+        //         {
+        //             outputMatch: /ui\/.*\.(png|svg|otf|mp3)/,
+        //             attributes: {
+        //                 rel: "preload",
+        //             },
+        //         },
+        //         {
+        //             outputMatch: /.*\.(png|svg|otf|mp3)/,
+        //             attributes: {
+        //                 rel: "preload",
+        //             },
+        //         },
+        //     ],
+        //     injectTo: "head-prepend",
+        // }),
         mode !== "development"
             ? ViteImageOptimizer({
                   exclude: ["spritesheet.png"],
+                  test: /\.(jpe?g|png|gif|tiff|webp|svg|avif)$/i,
                   cache: false,
                   svg: {
                       plugins: [
@@ -99,6 +100,8 @@ export default defineConfig(({ mode }) => ({
                               params: {
                                   overrides: {
                                       removeViewBox: false,
+                                      collapseGroups: false,
+                                      moveGroupAttrsToElems: false,
                                   },
                               },
                           },

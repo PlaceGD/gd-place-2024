@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { afterUpdate, beforeUpdate } from "svelte";
     import RangeSlider from "svelte-range-slider-pips";
     import ColorPicker from "svelte-awesome-color-picker";
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
@@ -9,14 +10,31 @@
 
     export let maxStops: number;
 
+    let activeElement: HTMLElement | null;
+
+    beforeUpdate(() => {
+        if (
+            document.activeElement != null &&
+            !document.activeElement.isEqualNode(document.body)
+        ) {
+            activeElement = document.activeElement as HTMLElement;
+        }
+    });
+    afterUpdate(() => {
+        if (activeElement != null) {
+            activeElement.focus();
+        }
+    });
+
     let rotateKnob: HTMLDivElement;
     let gradientAngle = 90;
     let isRotating = false;
 
     let sliderContainer: HTMLDivElement;
 
-    export let gradientStops = [0, 50, 100];
-    export let gradientColors = ["#ff0000", "#00ff00", "#0000ff"];
+    export let gradientStops: number[];
+    export let gradientColors: string[];
+    export let gradientIDs: number[];
 
     $: gradientColorListString = gradientStops
         .map((pos, idx) => [pos, gradientColors[idx]] as [number, string])
@@ -118,9 +136,11 @@
 
             gradientStops.push(p);
             gradientColors.push("#ffffff");
+            gradientIDs.push(Math.random());
 
             gradientStops = gradientStops;
             gradientColors = gradientColors;
+            gradientIDs = gradientIDs;
         }}
         bind:this={sliderContainer}
     >
@@ -182,7 +202,7 @@
         >
             {#each gradientStops
                 .map((pos, idx) => [pos, idx])
-                .sort(([a], [b]) => a - b) as [_, idx] (idx)}
+                .sort(([a], [b]) => a - b) as [_, idx] (gradientIDs[idx])}
                 <li class="grid grid-cols-3">
                     <div
                         class="flex items-center justify-center flex-auto p-1 gradient-picker-color"
@@ -212,8 +232,10 @@
 
                                 gradientStops.splice(idx, 1);
                                 gradientColors.splice(idx, 1);
+                                gradientIDs.splice(idx, 1);
                                 gradientStops = gradientStops;
                                 gradientColors = gradientColors;
+                                gradientIDs = gradientIDs;
                             }}
                         >
                             <Cross

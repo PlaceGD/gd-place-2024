@@ -11,7 +11,7 @@
     export let kind: "pre-event" | "login-to-place";
 
     import profileInUrl from "../login/assets/profile_in.png";
-    // import loadingAnimSvg from "./assets/loadinganimcss.svg";
+    import loadingAnimSvgUrl from "./assets/loading_anim.svg?url";
     import Image from "../components/Image.svelte";
 
     let seconds_left = 0;
@@ -68,36 +68,30 @@
 </script>
 
 <div
-    class="absolute flex flex-col justify-end items-center w-full pointer-events-none pre-event-menu"
+    class="absolute flex flex-col items-center justify-end w-full pointer-events-none pre-event-menu"
 >
     {#if kind === "pre-event"}
         <div
-            class="flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[90rem]"
+            class="pointer-events-auto flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[90rem]"
         >
             <div
-                class="grid grid-cols-[1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-4"
+                class="grid overflow-hidden grid-cols-[min-content_1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
             >
-                <!-- temporary loading animation -->
-                <!-- <div class="loading_icon sm:hidden max-h-[170px] max-w-sm">
-                    <Image
-                        src={loadingAnimSvg}
-                        class="justify-center items-center col-span-1"
-                        style="max-height: inherit;"
-                    ></Image>
-                </div> -->
-                <div>
-                    <h1
-                        class="text-white text-3xl xs:text-xl flex flex-center gap-4"
-                    >
-                        <span class="text-white text-6xl xs:text-4xl">
-                            {$userCount}
-                        </span>
-                        <span>creators have signed up</span>
-                    </h1>
+                <div class="h-full pl-20 md:pl-4 w-max loading_icon sm:hidden">
+                    <Image src={loadingAnimSvgUrl} class="h-full max-h-max" />
                 </div>
 
+                <h1
+                    class="flex flex-wrap gap-2 px-4 text-3xl text-center text-white md:text-2xl flex-center xs:text-xl"
+                >
+                    <span class="text-6xl md:text-5xl xs:text-4xl">
+                        {$userCount}
+                    </span>
+                    <span>creators have signed up</span>
+                </h1>
+
                 <button
-                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-3 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end pointer-events-auto"
+                    class="flex flex-col items-center justify-around h-full gap-1 p-2 text-center sm:flex-row menu-panel w-96 md:w-80 sm:w-full justify-self-end"
                     style={`
                         opacity: ${creator_names ? 1 : 0};
                         scale: ${creator_names ? 1 : 0.7};
@@ -113,27 +107,27 @@
                     }}
                 >
                     <h1
-                        class="text-white text-xl md:text-lg sm:text-base xs:text-sm font-bold"
+                        class="text-xl font-bold text-white md:text-lg sm:text-base xs:text-sm"
                     >
                         Countdown designs by:
                     </h1>
 
                     <div
-                        class="text-white opacity-80 text-lg md:text-base sm:text-sm xs:text-xs"
+                        class="text-lg text-white opacity-80 md:text-base sm:text-sm xs:text-xs"
                     >
                         {creator_names}
                     </div>
 
                     {#if seconds_left > 600}
                         <div
-                            class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs text-center italic tabular-nums"
+                            class="italic text-center text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs tabular-nums"
                         >
                             Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}
 
                     <div
-                        class="text-white opacity-40 text-xs md:text-xxs sm:text-xxxs xs:hidden my-0"
+                        class="text-xs text-white opacity-40 md:text-xxs sm:text-xxxs xs:hidden"
                     >
                         (colons made by GD Colon)
                     </div>
@@ -145,11 +139,11 @@
             class="flex flex-col items-center justify-center w-full h-[200px] pointer-events-none"
         >
             <div
-                class="flex flex-col items-center menu-panel justify-evenly w-2/3 sm:w-3/4 h-[150px]"
+                class="pointer-events-auto flex flex-col items-center menu-panel justify-evenly w-2/3 sm:w-3/4 h-[150px]"
             >
-                <div class="flex flex-col gap-2 pointer-events-auto h-full">
+                <div class="flex flex-col h-full gap-2">
                     <button
-                        class="flex flex-row justify-items-evenly items-center gap-5 sm:gap-2 text-white w-full h-full p-4 text-4xl text-center md:text-3xl sm:text-2xl xs:text-xl flex-center font-pusab"
+                        class="flex flex-row items-center w-full h-full gap-5 p-4 text-4xl text-center text-white justify-items-evenly sm:gap-2 md:text-3xl sm:text-2xl xs:text-xl flex-center font-pusab"
                         on:click={() => {
                             $openMenu = ExclusiveMenus.Login;
                         }}
@@ -174,17 +168,11 @@
     }
 
     .loading_icon {
-        -webkit-mask-image: linear-gradient(
-            90deg,
-            #00000000 15%,
-            #fff 50%,
-            #00000000 80%
-        );
         mask-image: linear-gradient(
-            90deg,
-            #00000000 15%,
-            #fff 50%,
-            #00000000 80%
+            transparent 0%,
+            black 10%,
+            black 90%,
+            transparent 100%
         );
     }
 </style>

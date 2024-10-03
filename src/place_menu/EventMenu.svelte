@@ -75,22 +75,21 @@
             class="pointer-events-auto flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[90rem]"
         >
             <div
-                class="grid overflow-hidden grid-cols-[1fr_min-content] grid-rows-[100%] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-4"
+                class="grid overflow-hidden grid-cols-[min-content_1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
             >
-                <div class="creator-text-container">
-                    <div class="w-full h-[160px] flex-center loading_icon">
-                        <Image src={loadingAnimSvg} class="h-full max-h-full"
-                        ></Image>
-                    </div>
-                    <h1
-                        class="flex gap-4 text-3xl text-white xs:text-xl flex-center"
-                    >
-                        <span class="text-6xl text-white xs:text-4xl">
-                            {$userCount}
-                        </span>
-                        <span>creators have signed up</span>
-                    </h1>
+                <div class="h-full pl-20 md:pl-4 w-max loading_icon sm:hidden">
+                    <Image src={loadingAnimSvg} class="h-full max-h-max"
+                    ></Image>
                 </div>
+
+                <h1
+                    class="flex flex-wrap gap-2 px-4 text-3xl text-center text-white md:text-2xl flex-center xs:text-xl"
+                >
+                    <span class="text-6xl md:text-5xl xs:text-4xl">
+                        {$userCount}
+                    </span>
+                    <span>creators have signed up</span>
+                </h1>
 
                 <button
                     class="flex flex-col items-center justify-around h-full gap-1 p-2 text-center sm:flex-row menu-panel w-96 md:w-80 sm:w-full justify-self-end"
@@ -167,11 +166,6 @@
     .pre-event-menu {
         height: 100svh;
         padding: 8px;
-    }
-
-    .creator-text-container {
-        @apply grid h-full items-center justify-center;
-        grid-template-columns: 300px 1fr;
     }
 
     .loading_icon {

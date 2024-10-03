@@ -2,6 +2,20 @@ import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 import terser from "@rollup/plugin-terser";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import "dotenv/config";
+
+const REQUIRED_ENV_VARS = [
+    "KOFI_VERIFICATION_TOKEN",
+    "MAILJET_API_KEY",
+    "MAILJET_API_SECRET",
+];
+const missingVars = REQUIRED_ENV_VARS.filter(key => !process.env[key]);
+
+if (missingVars.length > 0) {
+    throw new Error(
+        `Missing required environment variables: ${missingVars.join(", ")}`
+    );
+}
 
 export default [
     {

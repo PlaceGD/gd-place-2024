@@ -31,6 +31,11 @@ export type HistoryItem =
           time: number;
       };
 
+// export type ActiveDonation = {
+//     txId: string;
+//     userClaimed: string | null; // user id
+// };
+
 export interface DatabaseSchema {
     announcement: {
         text: string;
@@ -82,7 +87,14 @@ export interface DatabaseSchema {
      */
     userPlaced: Record<ObjKey, string>;
 
-    activeDonations: Record<KofiTxId, number>;
+    /**
+     * user id -> tx id
+     */
+    claimedDonations: Record<string, KofiTxId>;
+    /**
+     * tx id -> user id
+     */
+    activeDonations: Record<KofiTxId, string>;
 
     metaVariables: {
         placeCooldown: number;

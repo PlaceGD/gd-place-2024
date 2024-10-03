@@ -11,7 +11,7 @@
     export let kind: "pre-event" | "login-to-place";
 
     import profileInUrl from "../login/assets/profile_in.png";
-    import loadingAnimSvg from "./assets/loading_anim.svg?url";
+    import loadingAnimSvgUrl from "./assets/loading_anim.svg?url";
     import Image from "../components/Image.svelte";
 
     let seconds_left = 0;
@@ -78,8 +78,7 @@
                 class="grid overflow-hidden grid-cols-[min-content_1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
             >
                 <div class="h-full pl-20 md:pl-4 w-max loading_icon sm:hidden">
-                    <Image src={loadingAnimSvg} class="h-full max-h-max"
-                    ></Image>
+                    <Image src={loadingAnimSvgUrl} class="h-full max-h-max" />
                 </div>
 
                 <h1

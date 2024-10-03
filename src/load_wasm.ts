@@ -10,8 +10,9 @@ import { PlaceDB } from "./utils/indexdb";
 
 import wasmUrl from "../rust/wasm-lib/pkg/wasm_lib_bg.wasm?url";
 import spritesheetUrl from "./assets/spritesheet.png?url";
-import wasmVersionUrl from "./assets/wasm.ver?url";
-import spritesheetVersionUrl from "./assets/spritesheet.ver?url";
+
+import wasmVersionUrl from "../static/versions/wasm.ver?url";
+import spritesheetVersionUrl from "../static/versions/spritesheet.ver?url";
 
 let db: PlaceDB | null = null;
 try {

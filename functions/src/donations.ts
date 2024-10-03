@@ -152,7 +152,7 @@ export const onKofiDonation = onRequest(
         const db = smartDatabase();
 
         // try first by checking the username of the kofi donator against our database
-        const kofiDonatorUsername = jsonData.from_name.toLowerCase();
+        const kofiDonatorUsername = (jsonData.from_name ?? "-").toLowerCase();
         const kofiDonatorMaybeAccountData = (
             await db.ref(`/userName/${kofiDonatorUsername}`).get()
         ).val();
@@ -161,15 +161,17 @@ export const onKofiDonation = onRequest(
         // its very possible (though extremely unlikely) that the donator could have a username that points
         // to a different user in the database...
         if (kofiDonatorMaybeAccountData != null) {
-            db.ref(
-                `/userDetails/${kofiDonatorMaybeAccountData.uid}/hasDonated`
-            ).set(true);
+            await db
+                .ref(
+                    `/userDetails/${kofiDonatorMaybeAccountData.uid}/hasDonated`
+                )
+                .set(true);
 
             // in case someones kofi username matches someone elses gd place account, we want to keep track of the account that
             // recieved the perks so as to disable them later when the real donator claims the transaction id
-            db.ref(`/claimedDonations/${kofiDonatorMaybeAccountData.uid}`).set(
-                txId
-            );
+            await db
+                .ref(`/claimedDonations/${kofiDonatorMaybeAccountData.uid}`)
+                .set(txId);
         }
 
         // set it to an empty string if no account match was found

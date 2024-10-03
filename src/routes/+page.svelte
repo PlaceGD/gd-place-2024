@@ -68,7 +68,7 @@
 >
     {#if $openTrans < 1}
         <div
-            class="absolute flex flex-col w-full h-full gap-8 flex-center p-4 pb-20 xs:p-2 z-50"
+            class="absolute z-50 flex flex-col w-full h-full gap-8 p-4 pb-20 flex-center xs:p-2"
         >
             <div
                 class="infinite-scroll"
@@ -123,13 +123,13 @@
                 </div>
             </div>
             <div
-                class="absolute bottom-4 w-full text-xl text-center text-white xs:text-base font-pusab text-stroke"
+                class="absolute w-full text-xl text-center text-white bottom-4 xs:text-base font-pusab text-stroke"
                 style={`
                     transform: translateY(${$openTrans * 100}px);
                     opacity: ${map($openTrans, 0, 0.3, 1, 0)};
                 `}
             >
-                Created by Flow, Spu7Nix, DreamingInsanity ❤ 
+                Created by Flow, Spu7Nix, DreamingInsanity ❤
             </div>
         </div>
     {/if}

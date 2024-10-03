@@ -67,6 +67,7 @@
         "#00ff00",
         "#0000ff",
     ];
+    let nameGradientIDs: number[] = $currentNameGradient.ids ?? [69, 420, 1337];
 
     let resetSubmitButton: () => void;
     let resetGradientButton: () => void;
@@ -141,6 +142,7 @@
 
             $currentNameGradient.positions = nameGradientStops;
             $currentNameGradient.colors = nameGradientColors;
+            $currentNameGradient.ids = nameGradientIDs;
 
             Toast.showSuccessToast("Successfully updated gradient!");
         } catch (e) {
@@ -252,6 +254,7 @@
                     bind:rotatedGradientString={nameGradientString}
                     bind:gradientStops={nameGradientStops}
                     bind:gradientColors={nameGradientColors}
+                    bind:gradientIDs={nameGradientIDs}
                 ></GradientPicker>
             </div>
             <OnceButton

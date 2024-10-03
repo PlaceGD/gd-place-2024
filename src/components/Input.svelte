@@ -52,6 +52,8 @@
 
 <input
     type="text"
+    on:focus={e => dispatcher("focus", e)}
+    on:blur={e => dispatcher("blur", e)}
     maxlength={maxLength}
     bind:value={innerValue}
     tabindex={tabIndex}

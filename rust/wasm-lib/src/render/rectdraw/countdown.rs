@@ -45,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [0, 15, 16, 18],
+            sets: [11, 3, 4, 19],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -65,7 +65,7 @@ impl Countdown {
         let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
         //console_log!("{time_until}");
 
-        let sets = SET_SWITCHES[switch_id];
+        let sets = SET_SWITCHES[switch_id % SET_SWITCHES.len()];
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)
@@ -147,7 +147,7 @@ impl Countdown {
                                 AnimType::Appear(*o, random_axis_offset())
                             },
                             0.8,
-                            false,
+                            true,
                         )
                         .offset(0.2)
                     })
@@ -165,7 +165,7 @@ impl Countdown {
                                 AnimType::Disappear(*o)
                             },
                             0.8,
-                            false,
+                            true,
                         )
                     })
                     .collect()
@@ -755,7 +755,7 @@ impl TransitioningObject {
         let delay = if !y_delay {
             0.0
         } else {
-            typ.output_obj().y / 300.0 * 0.2
+            typ.output_obj().y / 300.0 * 0.25
         };
         TransitioningObject {
             typ,

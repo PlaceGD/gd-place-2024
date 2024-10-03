@@ -94,6 +94,7 @@ parse_countdown_files! {
     "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  )],
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )],
     "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  )],
+    "exyl"              ("Exyl"):               [3 => weights(3,   3,   3,   3  )],
 }
 #[binrw]
 #[brw(little)]
@@ -130,7 +131,7 @@ impl DeterministicRandom {
     }
 }
 
-const WEIGHT_POWER: f64 = 1.5;
+const WEIGHT_POWER: f64 = 1.2;
 
 // runs in nexus gen
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {

@@ -97,7 +97,7 @@
                 </div>
 
                 <button
-                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-4 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end pointer-events-auto"
+                    class="flex flex-col sm:flex-row flex-center text-center p-2 gap-3 menu-panel h-full w-96 md:w-80 sm:w-full md:gap-2 justify-self-end pointer-events-auto"
                     style={`
                         opacity: ${creator_names ? 1 : 0};
                         scale: ${creator_names ? 1 : 0.7};
@@ -123,6 +123,7 @@
                     >
                         {creator_names}
                     </div>
+
                     {#if seconds_left > 600}
                         <div
                             class="text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs text-center italic tabular-nums"
@@ -130,6 +131,12 @@
                             Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}
+
+                    <div
+                        class="text-white opacity-40 text-xs md:text-xxs sm:text-xxxs xs:hidden my-0"
+                    >
+                        (colons made by GD Colon)
+                    </div>
                 </button>
             </div>
         </div>

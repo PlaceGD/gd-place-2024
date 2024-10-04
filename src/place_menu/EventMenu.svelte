@@ -82,13 +82,25 @@
                 </div>
 
                 <h1
-                    class="flex flex-wrap gap-2 px-4 text-3xl text-center text-white md:text-2xl flex-center xs:text-xl"
+                    class="flex flex-wrap gap-2 px-4 text-3xl text-center text-white md:text-2xl flex-center xs:text-xl justify-center"
                 >
                     <span class="text-6xl md:text-5xl xs:text-4xl">
                         {$userCount}
                     </span>
                     <span>creators have signed up</span>
                 </h1>
+
+                <!-- <button
+                        class="justify-end w-full p-4 text-sm text-center hover-text-transition sm:hidden"
+                        on:click={() => {
+                            $openMenu = ExclusiveMenus.Login;
+                        }}
+                    >
+                        <Image
+                            class="w-8 h-8 inline-block mx-2"
+                            src={profileInUrl}
+                        /> Sign up now!
+                    </button> -->
 
                 <button
                     class="flex flex-col items-center justify-around h-full gap-1 p-2 text-center sm:flex-row menu-panel w-96 md:w-80 sm:w-full justify-self-end"

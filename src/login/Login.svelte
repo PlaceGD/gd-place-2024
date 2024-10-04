@@ -3,7 +3,12 @@
     import Image from "../components/Image.svelte";
     import Loading from "../components/Loading.svelte";
     import { LoginMethod, handleSignIn } from "./login";
-    import { ExclusiveMenus, loginData, openMenu } from "../stores";
+    import {
+        ExclusiveMenus,
+        hasLoggedInBefore,
+        loginData,
+        openMenu,
+    } from "../stores";
     import Cross from "../icons/Cross.svelte";
     import Check from "../icons/Check.svelte";
     import Toast from "../utils/toast";
@@ -114,6 +119,8 @@
                         "User successfully created! Thanks for participating!"
                     );
                     $openMenu = null;
+
+                    hasLoggedInBefore.set(true);
                 })
                 .catch(e => {
                     isInProgress = false;

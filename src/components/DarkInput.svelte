@@ -13,9 +13,9 @@
 
     export let value: any = defaultValue;
 
-    onDestroy(() => {
-        console.log("Uh penis");
-    });
+    // onDestroy(() => {
+    //     console.log("Uh penis");
+    // });
 </script>
 
 <Input

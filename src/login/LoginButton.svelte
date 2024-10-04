@@ -4,7 +4,9 @@
     import { getUsernameColor } from "../firebase/donations";
     import {
         currentUserColor,
+        eventStarted,
         ExclusiveMenus,
+        hasLoggedInBefore,
         loginData,
         openMenu,
     } from "../stores";
@@ -12,6 +14,12 @@
 
     import profileInUrl from "./assets/profile_in.png";
     import profileOutUrl from "./assets/profile_out.png";
+    import upArrowUrl from "./assets/arrow_up.svg?url";
+
+    $hasLoggedInBefore = !!localStorage.getItem("has_previosly_logged_in");
+    hasLoggedInBefore.subscribe(v => {
+        localStorage.setItem("hasPreviouslyLoggedIn", v.toString());
+    });
 </script>
 
 <div class="gap-4 xs:gap-2 flex-center">
@@ -44,4 +52,55 @@
             class="object-contain aspect-square"
         ></Image>
     </button>
+
+    <!-- todo maybe: hide this if user has previously logged in on the device -->
+    {#if $loginData.currentUserData?.userDetails == null && !$eventStarted && !$hasLoggedInBefore}
+        <div
+            class="absolute top-0 z-20 flex-center flex-col hover-anim opacity-70"
+        >
+            <Image src={upArrowUrl} class="w-12 h-12"></Image>
+            <h1
+                class="text-white font-bold text-2xl sm:text-xl xs:text-lg pointer-events-none top-0"
+            >
+                Sign up now!
+            </h1>
+        </div>
+    {/if}
 </div>
+
+<style lang="postcss">
+    @keyframes hover-anim {
+        0% {
+            transform: translateY(5rem);
+        }
+        50% {
+            transform: translateY(5.5rem);
+        }
+        100% {
+            transform: translateY(5rem);
+        }
+    }
+
+    /* change this if theres a nicer way to do it */
+    @keyframes hover-anim-small {
+        0% {
+            transform: translateY(4rem);
+        }
+        50% {
+            transform: translateY(4.3rem);
+        }
+        100% {
+            transform: translateY(4rem);
+        }
+    }
+
+    .hover-anim {
+        animation: hover-anim 2.5s infinite ease-in-out;
+    }
+
+    @media (max-width: 750px) {
+        .hover-anim {
+            animation: hover-anim-small 2.5s infinite ease-in-out;
+        }
+    }
+</style>

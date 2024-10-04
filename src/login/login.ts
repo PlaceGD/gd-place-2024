@@ -6,7 +6,7 @@ import {
     signOut,
 } from "../firebase/auth";
 import Toast from "../utils/toast";
-import { loginData } from "../stores";
+import { hasLoggedInBefore, loginData } from "../stores";
 
 export enum SlideIds {
     LoginMethod = "LoginMethod",
@@ -21,6 +21,7 @@ export enum LoginMethod {
 }
 
 const logInSuccess = (user: any): boolean => {
+    hasLoggedInBefore.set(true);
     Toast.showSuccessToast("Signed in successfully!");
     // get(ref(db, `userDetails/${user.user.uid}`))
     //     .then(snapshot => {

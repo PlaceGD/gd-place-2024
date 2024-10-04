@@ -77,12 +77,12 @@
             <div
                 class="grid overflow-hidden grid-cols-[min-content_1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
             >
-                <div class="h-full pl-20 md:pl-4 w-max loading_icon sm:hidden">
-                    <Image src={loadingAnimSvgUrl} class="h-full max-h-max" />
+                <div class="h-full pl-40 md:pl-4 w-max loading_icon sm:hidden">
+                    <Image src={loadingAnimSvgUrl} class="h-full" />
                 </div>
 
                 <h1
-                    class="flex flex-wrap gap-2 px-4 text-3xl text-center text-white md:text-2xl flex-center xs:text-xl justify-center"
+                    class="flex flex-wrap gap-2 pr-4 text-3xl text-left text-white md:text-2xl flex-center xs:text-xl"
                 >
                     <span class="text-6xl md:text-5xl xs:text-4xl">
                         {$userCount}

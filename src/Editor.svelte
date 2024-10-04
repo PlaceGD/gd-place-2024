@@ -77,7 +77,7 @@
             >
                 <ZoomButton zoom="in" {canvas} />
                 <ZoomButton zoom="out" {canvas} />
-                <SongStopButton/>
+                <SongStopButton />
             </div>
         </div>
     {/if}

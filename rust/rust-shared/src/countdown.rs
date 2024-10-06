@@ -94,7 +94,8 @@ parse_countdown_files! {
     "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  )],
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )],
     "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  )],
-    "exyl"              ("Exyl"):               [3 => weights(3,   3,   3,   3  )],
+    "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )],
+    "jeyzor"            ("Jeyzor"):             [3 => weights(3,   3,   3,   3  )],
 }
 #[binrw]
 #[brw(little)]

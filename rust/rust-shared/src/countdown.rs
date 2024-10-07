@@ -95,7 +95,11 @@ parse_countdown_files! {
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )],
     "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  )],
     "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )],
-    "jeyzor"            ("Jeyzor"):             [3 => weights(3,   3,   3,   3  )],
+    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   5  )],
+    "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  )],
+    "mels"              ("MelX0exe"):           [2 => weights(3,   3,   3,   3  ),
+                                                 3 => weights(3,   3,   3,   3  )],
+    "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  )],
 }
 #[binrw]
 #[brw(little)]

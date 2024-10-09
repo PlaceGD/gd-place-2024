@@ -79,7 +79,7 @@ parse_countdown_files! {
                                                  1 => weights(0.3, 0.5, 0.4, 0.5),
                                                  2 => weights(0.5, 2,   0.5, 5  )],
     "viprin"            ("ViPriN"):             [3 => weights(3,   5,   5,   1  )],
-    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   2  )],
+    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  )],
     "flow"              ("Flow"):               [3 => weights(1,   1,   2,   0.5)],
     "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  )],
     "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  )],
@@ -97,9 +97,12 @@ parse_countdown_files! {
     "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )],
     "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   5  )],
     "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  )],
-    "mels"              ("MelX0exe"):           [2 => weights(3,   3,   3,   3  ),
-                                                 3 => weights(3,   3,   3,   3  )],
+    "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ),
+                                                 3 => weights(3,   3,   2,   4  )],
     "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  )],
+    "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  )],
+    "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  )],
+    "grax"              ("Grax"):               [3 => weights(3,   5,   2,   2  )],
 }
 #[binrw]
 #[brw(little)]
@@ -202,9 +205,12 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         // check if proportions are correct
         let mut counts = [[0; 4]; DIGIT_SETS];
 
+        let mut creator_counts = HashMap::new();
+
         for sets in &switches {
             for (i, &set) in sets.iter().enumerate() {
                 counts[set][i] += 1;
+                *creator_counts.entry(get_creator_name(set)).or_insert(0) += 1;
             }
         }
 
@@ -213,6 +219,14 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                 "{}: {:?}",
                 get_creator_name(i),
                 set.map(|x| x as f64 / n as f64)
+            );
+        }
+
+        for (name, count) in creator_counts {
+            println!(
+                "{}: {}% of the time",
+                name,
+                (count as f64 / n as f64) * 100.0
             );
         }
     }

@@ -103,6 +103,7 @@ parse_countdown_files! {
     "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  )],
     "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  )],
     "grax"              ("Grax"):               [3 => weights(3,   5,   2,   2  )],
+    "krmal"             ("KrmaL"):              [3 => weights(3,   3,   3,   3  )],
 }
 #[binrw]
 #[brw(little)]
@@ -222,13 +223,13 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
             );
         }
 
-        for (name, count) in creator_counts {
-            println!(
-                "{}: {}% of the time",
-                name,
-                (count as f64 / n as f64) * 100.0
-            );
-        }
+        // for (name, count) in creator_counts {
+        //     println!(
+        //         "{}: {}% of the time",
+        //         name,
+        //         (count as f64 / n as f64) * 100.0
+        //     );
+        // }
     }
 
     switches

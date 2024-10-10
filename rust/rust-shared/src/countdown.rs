@@ -75,35 +75,37 @@ macro_rules! parse_countdown_files {
 }
 
 parse_countdown_files! {
-    "spu7nix"           ("Spu7Nix"):            [0 => weights(3,   1,   1,   0.4),
-                                                 1 => weights(0.3, 0.5, 0.4, 0.5),
-                                                 2 => weights(0.5, 2,   0.5, 5  )],
-    "viprin"            ("ViPriN"):             [3 => weights(3,   5,   5,   1  )],
-    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  )],
-    "flow"              ("Flow"):               [3 => weights(1,   1,   2,   0.5)],
-    "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  )],
-    "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  )],
-    "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  )],
-    "dreaminginsanity"  ("DreamingInsanity"):   [3 => weights(0.4, 1,   0.4, 3  )],
-    "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  )],
-    "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  )],
-    "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  )],
-    "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  )],
-    "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5)],
-    "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  )],
-    "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  )],
-    "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )],
-    "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  )],
-    "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )],
-    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   5  )],
-    "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  )],
-    "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ),
-                                                 3 => weights(3,   3,   2,   4  )],
-    "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  )],
-    "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  )],
-    "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  )],
-    "grax"              ("Grax"):               [3 => weights(3,   5,   2,   2  )],
-    "krmal"             ("KrmaL"):              [3 => weights(3,   3,   3,   3  )],
+    "spu7nix"           ("Spu7Nix"):            [0 => weights(3,   1,   1,   0.4),  // 0
+                                                 1 => weights(0.3, 0.5, 0.4, 0.5),  // 1
+                                                 2 => weights(0.5, 2,   0.5, 5  )], // 2
+    "viprin"            ("ViPriN"):             [3 => weights(3,   5,   5,   1  )], // 3
+    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  )], // 4
+    "flow"              ("Flow"):               [3 => weights(1,   1,   2,   0.5)], // 5
+    "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  )], // 6
+    "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  )], // 7
+    "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  )], // 8
+    "dreaminginsanity"  ("DreamingInsanity"):   [3 => weights(0.4, 1,   0.4, 3  )], // 9
+    "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  )], // 10
+    "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  )], // 11
+    "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  )], // 12
+    "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  )], // 13
+    "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5)], // 14
+    "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  )], // 15
+    "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  )], // 16
+    "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )], // 17
+    "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  )], // 18
+    "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 19
+    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   5  )], // 20
+    "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  )], // 21
+    "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ),  // 22
+                                                 3 => weights(3,   3,   2,   4  )], // 23
+    "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  )], // 24
+    "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  )], // 25
+    "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  )], // 26
+    "grax"              ("Grax"):               [3 => weights(3,   5,   4,   2  )], // 27
+    "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  )], // 28
+    "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  )], // 29
+    "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  )], // 30
 }
 #[binrw]
 #[brw(little)]

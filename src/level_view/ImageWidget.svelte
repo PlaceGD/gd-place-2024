@@ -1,8 +1,6 @@
 <script lang="ts">
     import Widget from "../widgets/Widget.svelte";
-    import Image from "../components/Image.svelte";
 
-    export let src;
     export let position: [number, number];
     export let screenScale: number;
     export let scale: number;
@@ -16,7 +14,5 @@
     ]}
     scale={screenScale * scale}
 >
-    <div class="flex justify-center items-center">
-        <Image {src} />
-    </div>
+    <slot class="flex justify-center items-center" />
 </Widget>

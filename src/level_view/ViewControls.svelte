@@ -8,6 +8,7 @@
 
     import player_start_help from "./assets/player_start_help.png?url";
     import player_goal_help from "./assets/player_goal_help.png?url";
+    import player_goal from "./assets/player_goal.png?url";
 
     import { clamp, hexToRgb, lerp, semitonesToFactor } from "shared-lib/util";
     import {
@@ -87,6 +88,9 @@
     import { scale } from "svelte/transition";
     import { SFX_SOUNDS, SONG_SOUNDS } from "../place_menu/edit/sfx_tab";
     import ImageWidget from "./ImageWidget.svelte";
+
+    import Image from "../components/Image.svelte";
+    import ClosableWindow from "../components/ClosableWindow.svelte";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -623,18 +627,36 @@
     {/if}
 
     <ImageWidget
-        src={player_start_help}
-        position={getScreenPosZoomCorrected(-55, 33)}
+        position={getScreenPosZoomCorrected(-55, 50)}
         scale={0.1}
         screenScale={textZoomScale}
         screenOrigin={originScreen}
-    />
+    >
+        <ClosableWindow name="playerStartHelp">
+            <Image src={player_start_help} />
+        </ClosableWindow>
+    </ImageWidget>
 
     <ImageWidget
-        src={player_goal_help}
         position={getScreenPosZoomCorrected(-90, 200)}
         scale={0.13}
         screenScale={textZoomScale}
         screenOrigin={originScreen}
-    />
+    >
+        <ClosableWindow name="playerGoalHelp">
+            <Image src={player_goal_help} />
+        </ClosableWindow>
+    </ImageWidget>
+
+    <ImageWidget
+        position={getScreenPosZoomCorrected(
+            LEVEL_WIDTH_UNITS - 45,
+            LEVEL_HEIGHT_UNITS - 46
+        )}
+        scale={0.075}
+        screenScale={textZoomScale}
+        screenOrigin={originScreen}
+    >
+        <Image src={player_goal} />
+    </ImageWidget>
 </div>

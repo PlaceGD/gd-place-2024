@@ -83,15 +83,12 @@
             currentPage = Page.SELECT_GRADIENT;
 
             Toast.showSuccessToast(
-                "Transaction ID recieved successfully. Thanks for keeping this project going! <3"
+                "Donation recieved successfully. Thanks for keeping this project going! <3"
             );
         } catch (e: any) {
-            console.error(
-                "Failed to submit kofi transaction ID",
-                e.details.message
-            );
+            console.error("Failed to submit donation code", e.details.message);
             Toast.showErrorToast(
-                `Failed to submit kofi transaction ID. (${e.details.code})`
+                `Failed to submit donation code. (${e.details.code})`
             );
         }
 
@@ -144,11 +141,11 @@
             $currentNameGradient.colors = nameGradientColors;
             $currentNameGradient.ids = nameGradientIDs;
 
-            Toast.showSuccessToast("Successfully updated gradient!");
+            Toast.showSuccessToast("Successfully updated colors!");
         } catch (e) {
-            console.error("Failed to update name gradient", e.details.message);
+            console.error("Failed to update name colors", e.details.message);
             Toast.showErrorToast(
-                `Failed to update gradient. (${e.details.code})`
+                `Failed to update colors. (${e.details.code})`
             );
         }
 
@@ -172,10 +169,11 @@
                 <h1
                     class="text-2xl text-center xs:text-xl font-pusab text-stroke"
                 >
-                    Enter Kofi Transaction ID
+                    Enter Donation Code
                 </h1>
                 <p class="text-sm text-center xs:text-xs text-white/55">
-                    EX.: 00000000-1111-2222-<wbr />3333-444444444444
+                    You will get an E-Mail with a code when you donate (check
+                    spam folder)
                 </p>
             </hgroup>
             <div class="flex-col h-full gap-2 flex-center">
@@ -195,7 +193,7 @@
                         on:submit={e => e.preventDefault()}
                     >
                         <DarkInput
-                            class="w-[inherit] h-12 text-2xl sm:text-xl xs:text-base font-pusab"
+                            class="w-[inherit] h-12 text-lg sm:text-md xs:text-sm"
                             maxLength={36}
                             hardValidInput={VALID_KOFI_TRANSACTION_ID_CHARS}
                             autoTrim

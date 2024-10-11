@@ -106,6 +106,7 @@ parse_countdown_files! {
     "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  )], // 28
     "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  )], // 29
     "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  )], // 30
+    "test"              ("Test"):               [0 => weights(1,   1,   1,   1  )], // 31
 }
 #[binrw]
 #[brw(little)]

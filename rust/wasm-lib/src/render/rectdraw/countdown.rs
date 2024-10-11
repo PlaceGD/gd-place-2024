@@ -65,7 +65,7 @@ impl Countdown {
         let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
         //console_log!("{time_until}");
 
-        let sets = SET_SWITCHES[switch_id % SET_SWITCHES.len()];
+        let sets = self.sets; //SET_SWITCHES[switch_id % SET_SWITCHES.len()];
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)
@@ -783,6 +783,12 @@ fn move_obj_animation(
     }
     let move_x = target.x - obj.x;
     let move_y = target.y - obj.y;
+
+    if d > 0.5 {
+        obj.z_layer = target.z_layer;
+    }
+
+    obj.z_order = lerp!(obj.z_order as f64, target.z_order as f64, d) as i8;
 
     if move_x != 0.0 || move_y != 0.0 {
         let first_axis =

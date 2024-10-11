@@ -24,6 +24,7 @@ color_space = { workspace = true }
 
 rust-shared = { path = "../rust-shared" }
 
+num = "0.4.3"
 
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }

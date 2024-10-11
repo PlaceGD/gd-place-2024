@@ -162,15 +162,15 @@ mod dbconvert {
 
     use crate::gen::countdown_digits::get_transform;
 
-    pub fn convert_chunk(chunkkey: &str) -> &str {
-        let a = chunkkey
-            .split(',')
-            .map(|v| v.parse::<i32>().unwrap())
-            .collect::<Vec<_>>();
+    // pub fn convert_chunk(chunkkey: &str) -> &str {
+    //     let a = chunkkey
+    //         .split(',')
+    //         .map(|v| v.parse::<i32>().unwrap())
+    //         .collect::<Vec<_>>();
 
-        let x = a[0];
-        let y = a[1];
-    }
+    //     let x = a[0];
+    //     let y = a[1];
+    // }
 
     pub(crate) fn convert_old_obj_to_new(old_obj: &str) -> String {
         let values = old_obj.split(';').collect::<Vec<_>>();

@@ -142,7 +142,7 @@
             $currentNameGradient.ids = nameGradientIDs;
 
             Toast.showSuccessToast("Successfully updated colors!");
-        } catch (e) {
+        } catch (e: any) {
             console.error("Failed to update name colors", e.details.message);
             Toast.showErrorToast(
                 `Failed to update colors. (${e.details.code})`
@@ -246,7 +246,7 @@
                     {$loginData.currentUserData?.userDetails?.username ?? ""}
                 </p>
             </div>
-            <div class="flex-col h-full gap-2 px-4 py-1">
+            <div class="flex-col h-full gap-2 px-4 py-1 xs:px-2">
                 <GradientPicker
                     maxStops={MAX_GRADIENT_STOPS}
                     bind:rotatedGradientString={nameGradientString}

@@ -7,6 +7,7 @@
     import { clamp, remEuclid } from "shared-lib/util";
     import DarkInput from "./DarkInput.svelte";
     import { notNaNAnd } from "../utils/misc";
+    import Palette from "../icons/Palette.svelte";
 
     export let maxStops: number;
 
@@ -35,6 +36,8 @@
     export let gradientStops: number[];
     export let gradientColors: string[];
     export let gradientIDs: number[];
+
+    let openColorPickers = gradientStops.map(() => false);
 
     $: gradientColorListString = gradientStops
         .map((pos, idx) => [pos, gradientColors[idx]] as [number, string])
@@ -137,6 +140,7 @@
             gradientStops.push(p);
             gradientColors.push("#ffffff");
             gradientIDs.push(Math.random());
+            openColorPickers.push(false);
 
             gradientStops = gradientStops;
             gradientColors = gradientColors;
@@ -160,7 +164,9 @@
     </div>
 
     <div class="flex w-full h-full min-h-0">
-        <div class="flex flex-col items-center justify-center gap-2 pr-4">
+        <div
+            class="flex flex-col items-center justify-center gap-2 pr-4 xs:justify-start xs:mt-2"
+        >
             <div
                 class="relative flex flex-center"
                 on:pointerdown={() => {
@@ -205,14 +211,22 @@
                 .sort(([a], [b]) => a - b) as [_, idx] (gradientIDs[idx])}
                 <li class="grid grid-cols-3">
                     <div
-                        class="flex items-center justify-center flex-auto p-1 gradient-picker-color"
+                        class="flex items-center justify-center flex-auto p-1 cursor-pointer hover-text-transition gradient-picker-color"
+                        on:pointerup={() => {
+                            openColorPickers[idx] = true;
+                        }}
                     >
+                        <Palette
+                            stroke-width={1}
+                            class="p-1 shrink-0 xs:w-9 xs:h-9"
+                        />
                         <ColorPicker
                             bind:hex={gradientColors[idx]}
                             label=""
                             isAlpha={false}
                             components={{ wrapper: ColorPickerWrapper }}
                             textInputModes={["hex"]}
+                            bind:isOpen={openColorPickers[idx]}
                         />
                     </div>
                     <div class="flex items-center justify-center flex-auto p-1">
@@ -233,6 +247,7 @@
                                 gradientStops.splice(idx, 1);
                                 gradientColors.splice(idx, 1);
                                 gradientIDs.splice(idx, 1);
+                                openColorPickers.splice(idx, 1);
                                 gradientStops = gradientStops;
                                 gradientColors = gradientColors;
                                 gradientIDs = gradientIDs;

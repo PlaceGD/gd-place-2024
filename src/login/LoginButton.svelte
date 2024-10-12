@@ -56,11 +56,11 @@
     <!-- todo maybe: hide this if user has previously logged in on the device -->
     {#if $loginData.currentUserData?.userDetails == null && !$eventStarted && !$hasLoggedInBefore}
         <div
-            class="absolute top-0 z-20 flex-center flex-col hover-anim opacity-70"
+            class="absolute top-0 z-20 flex-col flex-center hover-anim opacity-70"
         >
             <Image src={upArrowUrl} class="w-12 h-12"></Image>
             <h1
-                class="text-white font-bold text-2xl sm:text-xl xs:text-lg pointer-events-none top-0"
+                class="top-0 text-2xl font-bold text-center text-white pointer-events-none sm:text-xl xs:text-lg"
             >
                 Sign up now!
             </h1>

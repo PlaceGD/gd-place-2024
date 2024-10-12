@@ -45,35 +45,3 @@
         </div>
     </div>
 {/if}
-<!-- 
-<div
-    class="menu-panel flex flex-col p-4 xs:p-2 rounded-xl border border-white pointer-events-auto"
-    style={`${hidden ? "transform: scaleY(0.0); opacity: 0.0" : ""}; transition: transform 0.3s, opacity 0.3s; transform-origin: top right;`}
->
-    <div class="flex flex-row">
-        <div class="flex-grow"></div>
-        <button
-            class="cursor-pointer"
-            on:click={() => {
-                console.log("clicked");
-                hidden = true;
-            }}
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="white"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                />
-            </svg>
-        </button>
-    </div>
-    <slot />
-</div> -->

@@ -163,7 +163,7 @@ fn to_gdobject(
         blending: false,
     };
 
-    fn parse_hsv(hsv: &str) -> (f64, f64, f64) {
+    fn parse_hsv(hsv: &str) -> (f64, f64, f64, bool, bool) {
         let mut parts = hsv.split("a");
 
         let h = parts.next().unwrap().parse::<f64>().unwrap();
@@ -172,11 +172,8 @@ fn to_gdobject(
 
         let s_checked = parts.next().unwrap() == "1";
         let v_checked = parts.next().unwrap() == "1";
-        if s_checked || v_checked {
-            panic!("hsv feature not supported");
-        }
 
-        (h, s, v)
+        (h, s, v, s_checked, v_checked)
     }
 
     let hsv1 =
@@ -231,13 +228,25 @@ fn to_gdobject(
     }
 }
 
-fn apply_hsv(color: GDColor, hsv: Option<(f64, f64, f64)>) -> GDColor {
-    if let Some((h, s, v)) = hsv {
+fn apply_hsv(color: GDColor, hsv: Option<(f64, f64, f64, bool, bool)>) -> GDColor {
+    if let Some((h, s, v, s_checked, v_checked)) = hsv {
         use color_space::{Hsv, Rgb};
 
         let rgb = Rgb::new(color.r as f64, color.g as f64, color.b as f64);
         let hsv = Hsv::from(rgb);
-        let modified = Hsv::new((hsv.h + h).rem_euclid(360.0), hsv.s * s, hsv.v * v);
+        let modified = Hsv::new(
+            (hsv.h + h).rem_euclid(360.0),
+            if s_checked {
+                (hsv.s + s).min(1.0)
+            } else {
+                hsv.s * s
+            },
+            if s_checked {
+                (hsv.v * v).min(1.0)
+            } else {
+                hsv.v * v
+            },
+        );
         let rgb_m = Rgb::from(modified);
         //println!("juh {:?}", rgb_m);
         // dbg!(rgb, rgb_m);

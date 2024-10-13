@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import initWasmInner from "wasm-lib";
-import Toast from "./utils/toast";
+import Toast, { WASM_ERROR } from "./utils/toast";
 import {
     Spritesheet,
     type RawSpritesheetData,
@@ -48,7 +48,7 @@ const startWasm = (data: ArrayBuffer) => {
         })
         .catch((e: unknown) => {
             console.error(e, "(failed in initWasmInner)");
-            Toast.showErrorToast(`Failed to initialize WASM. (${e})`);
+            Toast.showErrorToast(WASM_ERROR);
         });
 };
 

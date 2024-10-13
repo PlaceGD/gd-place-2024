@@ -3,6 +3,12 @@ import { writable } from "svelte/store";
 
 export const toastPortals = writable<HTMLElement[]>([]);
 
+export const WASM_ERROR = `
+<strong>A fatal error occured in the WASM.</strong><br/>Please report this bug to the developers!
+<span style="color:white;text-decoration:underline;cursor:pointer;pointer-events:all;" onclick='navigator.clipboard.writeText(window.consoleErrors.join("\\n"));'>
+(click this text to copy the errors and include this in the report)
+</span>`;
+
 export default class Toast {
     static showErrorToast = (...message: string[]) => {
         console.error(...message);

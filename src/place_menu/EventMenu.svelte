@@ -87,7 +87,7 @@
                     <span class="text-6xl md:text-5xl xs:text-4xl">
                         {$userCount}
                     </span>
-                    <span>creators have signed up</span>
+                    <span class="text-center">creators have signed up</span>
                 </h1>
 
                 <!-- <button
@@ -97,7 +97,7 @@
                         }}
                     >
                         <Image
-                            class="w-8 h-8 inline-block mx-2"
+                            class="inline-block w-8 h-8 mx-2"
                             src={profileInUrl}
                         /> Sign up now!
                     </button> -->

@@ -211,7 +211,7 @@
                 .sort(([a], [b]) => a - b) as [_, idx] (gradientIDs[idx])}
                 <li class="grid grid-cols-3">
                     <div
-                        class="flex items-center justify-center flex-auto p-1 cursor-pointer hover-text-transition gradient-picker-color"
+                        class="flex items-center justify-center flex-auto p-1 cursor-pointer gradient-picker-color"
                         on:pointerup={() => {
                             openColorPickers[idx] = true;
                         }}

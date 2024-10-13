@@ -78,7 +78,7 @@ parse_countdown_files! {
     "spu7nix"           ("Spu7Nix"):            [0 => weights(3,   1,   1,   0.4),  // 0
                                                  1 => weights(0.3, 0.5, 0.4, 0.5),  // 1
                                                  2 => weights(0.5, 2,   0.5, 5  )], // 2
-    "viprin"            ("ViPriN"):             [3 => weights(3,   5,   5,   1  )], // 3
+    "viprin"            ("Viprin"):             [3 => weights(3,   5,   5,   1  )], // 3
     "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  )], // 4
     "flow"              ("Flow"):               [3 => weights(1,   1,   2,   0.5)], // 5
     "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  )], // 6
@@ -107,6 +107,8 @@ parse_countdown_files! {
     "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  )], // 29
     "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  )], // 30
     "doggie"            ("Doggie"):             [0 => weights(3,   4,   4,   1  )], // 31
+    "pocke"             ("Pocke"):              [3 => weights(3,   3,   3,   3  )], // 32
+    "subwoofer"         ("Subwoofer"):          [3 => weights(3,   3,   3,   3  )], // 33
 }
 #[binrw]
 #[brw(little)]

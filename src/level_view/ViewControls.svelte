@@ -627,7 +627,7 @@
     {/if}
 
     <ImageWidget
-        position={getScreenPosZoomCorrected(-55, 50)}
+        position={getScreenPosZoomCorrected(-55, 40)}
         scale={0.1}
         screenScale={textZoomScale}
         screenOrigin={originScreen}

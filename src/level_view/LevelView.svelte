@@ -2,7 +2,7 @@
     import * as wasm from "wasm-lib";
 
     import { onMount } from "svelte";
-    import Toast from "../utils/toast";
+    import Toast, { WASM_ERROR } from "../utils/toast";
     import { DEBUG } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
     import Widget from "../widgets/Widget.svelte";
@@ -14,12 +14,6 @@
     export let canvas: HTMLCanvasElement;
     export let canvasWidth: number;
     export let canvasHeight: number;
-
-    const WASM_ERROR = `
-        <strong>A fatal error occured in the WASM.</strong><br/>Please report this bug to the developers!
-            <span style="color:white;text-decoration:underline;cursor:pointer;pointer-events:all;" onclick='navigator.clipboard.writeText(window.consoleErrors.join("\\n"));'>
-                (click this text to copy the errors and include this in the report)
-            </span>`;
 
     onMount(async () => {
         try {

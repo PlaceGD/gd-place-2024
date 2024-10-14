@@ -324,6 +324,7 @@ export const eventStartTime = writable(Number.POSITIVE_INFINITY);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 
 export const eventElapsed = writable(Number.NEGATIVE_INFINITY);
+export const timeLeft = writable(Number.POSITIVE_INFINITY);
 
 export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
 
@@ -331,12 +332,14 @@ setTimeout(
     () => {
         setInterval(() => {
             eventElapsed.set(Date.now() - get(eventStartTime));
+            timeLeft.set(get(eventEndTime) - Date.now());
         }, 1000);
     },
     1000 - (Date.now() % 1000)
 );
 
 export const eventStarted = derived(eventElapsed, v => v > 0);
+export const eventEnded = derived(timeLeft, v => v <= 0);
 
 db.ref("metaVariables/eventStartTime").on("value", v => {
     eventStartTime.set(v.val());

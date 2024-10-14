@@ -53,16 +53,25 @@
                     bind:value={inputValues.announcementText}
                 ></DarkInput>
             </div>
-
-            <WhiteButton
-                class="w-full"
-                on:click={() => {
-                    meta({
-                        type: "announcement",
-                        text: inputValues.announcementText,
-                    });
-                }}>Send</WhiteButton
-            >
+            <div class="flex flex-row w-full">
+                <WhiteButton
+                    class="w-full"
+                    on:click={() => {
+                        meta({
+                            type: "announcement",
+                            text: inputValues.announcementText,
+                        });
+                    }}>Send</WhiteButton
+                >
+                <WhiteButton
+                    class="w-full"
+                    on:click={() => {
+                        meta({
+                            type: "clear_announcement",
+                        });
+                    }}>Clear</WhiteButton
+                >
+            </div>
         </div>
         <div class="w-full min-h-[1px] bg-white/50" />
         <div class="flex flex-col gap-2 flex-center">

@@ -204,6 +204,9 @@ export type MetaOperation =
           text: string;
       }
     | {
+          type: "clear_announcement";
+      }
+    | {
           type: "log_donation";
           uid: string;
       };

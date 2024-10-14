@@ -63,6 +63,9 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
                 time: Date.now(),
             });
             break;
+        case "clear_announcement":
+            db.ref("announcement").remove();
+            break;
         case "log_donation":
             db.ref(`userDetails/${data.op.uid}/hasDonated`).set(true);
             break;

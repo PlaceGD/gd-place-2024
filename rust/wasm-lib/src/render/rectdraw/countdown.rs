@@ -65,7 +65,7 @@ impl Countdown {
         let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
         //console_log!("{time_until}");
 
-        let sets = self.sets; //SET_SWITCHES[switch_id % SET_SWITCHES.len()];
+        let sets = SET_SWITCHES[switch_id % SET_SWITCHES.len()];
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)

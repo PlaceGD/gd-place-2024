@@ -628,7 +628,7 @@
 
     <ImageWidget
         position={getScreenPosZoomCorrected(-55, 40)}
-        scale={0.1}
+        scale={0.15}
         screenScale={textZoomScale}
         screenOrigin={originScreen}
     >
@@ -639,7 +639,7 @@
 
     <ImageWidget
         position={getScreenPosZoomCorrected(-90, 200)}
-        scale={0.13}
+        scale={0.2}
         screenScale={textZoomScale}
         screenOrigin={originScreen}
     >
@@ -653,7 +653,7 @@
             LEVEL_WIDTH_UNITS - 45,
             LEVEL_HEIGHT_UNITS - 46
         )}
-        scale={0.075}
+        scale={0.12}
         screenScale={textZoomScale}
         screenOrigin={originScreen}
     >

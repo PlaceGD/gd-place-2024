@@ -172,7 +172,7 @@
                     Enter Donation Code
                 </h1>
                 <p class="text-sm text-center xs:text-xs text-white/55">
-                    You will get an E-Mail with a code when you donate (check
+                    You will get an E-Mail with a code after donating (check
                     spam folder)
                 </p>
             </hgroup>

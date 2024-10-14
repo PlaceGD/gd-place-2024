@@ -12,7 +12,7 @@
         screenOrigin[0] / window.devicePixelRatio + position[0] * screenScale,
         screenOrigin[1] / window.devicePixelRatio + position[1] * screenScale,
     ]}
-    scale={screenScale * scale}
+    scale={(screenScale * scale) / window.devicePixelRatio}
 >
-    <slot class="flex justify-center items-center" />
+    <slot />
 </Widget>

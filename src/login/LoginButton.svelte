@@ -53,8 +53,7 @@
         ></Image>
     </button>
 
-    <!-- todo maybe: hide this if user has previously logged in on the device -->
-    {#if $loginData.currentUserData?.userDetails == null && !$eventStarted && !$hasLoggedInBefore}
+    {#if $loginData.currentUserData?.userDetails == null && !$hasLoggedInBefore}
         <div
             class="absolute top-0 z-20 flex-col flex-center hover-anim opacity-70"
         >

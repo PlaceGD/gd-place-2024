@@ -178,6 +178,7 @@ parse_countdown_files! {
     "subwoofer"         ("Subwoofer"):          [3 => weights(2,   3,   3,   4  ) silly], // 33
     "para"              ("para"):               [3 => weights(3,   3,   3,   2  ) pretty], // 34
     "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  )], // 35
+    "kips"              ("Kips"):               [0 => weights(3,   3,   3,   3  ) classic pretty], // 36
 }
 
 #[binrw]

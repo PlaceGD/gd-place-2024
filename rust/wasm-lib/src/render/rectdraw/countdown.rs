@@ -45,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [28, 3, 12, 24],
+            sets: [28, 3, 12, 30],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),

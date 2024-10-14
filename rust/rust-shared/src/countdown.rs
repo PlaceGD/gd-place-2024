@@ -162,7 +162,7 @@ parse_countdown_files! {
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )], // 17
     "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  ) classic famous], // 18
     "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 19
-    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  )], // 20
+    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 20
     "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  ) classic], // 21
     "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ) silly,  // 22
                                                  3 => weights(3,   3,   2,   4  ) silly pretty], // 23
@@ -178,7 +178,8 @@ parse_countdown_files! {
     "subwoofer"         ("Subwoofer"):          [3 => weights(2,   3,   3,   4  ) silly], // 33
     "para"              ("para"):               [3 => weights(3,   3,   3,   2  ) pretty], // 34
     "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  )], // 35
-    "kips"              ("Kips"):               [0 => weights(3,   3,   3,   3  ) classic pretty], // 36
+    "kips"              ("Kips"):               [0 => weights(4,   3,   3,   2  ) classic pretty], // 36
+    "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 37
 }
 
 #[binrw]

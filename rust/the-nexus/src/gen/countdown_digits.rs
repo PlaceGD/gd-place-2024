@@ -1,13 +1,17 @@
 use core::fmt;
-use std::{array, collections::HashMap, io::Cursor};
+use std::{
+    array,
+    collections::{HashMap, HashSet},
+    io::Cursor,
+};
 
 use binrw::BinWrite;
 use itertools::Itertools;
 use rust_shared::{
     console_log,
     countdown::{
-        get_countdown_sets, CountdownDigitSets, DigitObjects, DigitSet, DIGIT_HEIGHT, DIGIT_SETS,
-        DIGIT_WIDTH,
+        get_countdown_sets, get_creator_name, CountdownDigitSets, DigitObjects, DigitSet,
+        DIGIT_HEIGHT, DIGIT_SETS, DIGIT_WIDTH,
     },
     gd::{
         layer::ZLayer,
@@ -15,7 +19,7 @@ use rust_shared::{
     },
 };
 
-use crate::objects::list::{parse_gmd_file, OBJECT_DEFAULT_Z};
+use crate::objects::list::{parse_gmd_file, AVAILABLE_OBJECTS, OBJECT_DEFAULT_Z};
 
 pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let (files, sets) = get_countdown_sets(parse_gmd_file);
@@ -26,9 +30,19 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let h_radius = DIGIT_WIDTH / 2.0;
     let v_radius = DIGIT_HEIGHT / 2.0;
 
+    let all_avaliable_ids = AVAILABLE_OBJECTS
+        .iter()
+        .map(|(k, _)| *k)
+        .collect::<HashSet<u16>>();
+
+    let mut missing = HashMap::new();
+
+    let mut set_i = 0;
+
     let sets: [[DigitObjects; 10]; DIGIT_SETS] = sets.map(|set_ptr| {
         let parsed = &files[set_ptr.file];
         let digit_set = set_ptr.set;
+        set_i += 1;
         array::from_fn(|digit| {
             let x = x_offset + digit as f32 * DIGIT_WIDTH;
             let y = y_offset + digit_set as f32 * DIGIT_HEIGHT;
@@ -47,7 +61,17 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
 
                     x >= x_min && x < x_max && y >= y_min && y < y_max
                 })
-                .map(|o| to_gdobject(o, x, y, parsed))
+                .filter_map(|o| {
+                    if !all_avaliable_ids.contains(&o[&1].parse::<u16>().unwrap()) {
+                        missing
+                            .entry(set_i - 1)
+                            .or_insert_with(HashSet::new)
+                            .insert(o[&1].parse::<u16>().unwrap());
+                        None
+                    } else {
+                        Some(to_gdobject(o, x, y, parsed))
+                    }
+                })
                 .collect();
 
             //println!("{} ({}): {} objs", digit_set, digit, obj_list.len());
@@ -55,6 +79,14 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             DigitObjects { objs: obj_list }
         })
     });
+
+    // print missing
+    for (set, missing) in missing {
+        println!("{}:", get_creator_name(set));
+        for id in missing {
+            println!("missing {}", id);
+        }
+    }
 
     let bg = parse_gmd_file(include_str!(
         "../../../rust-shared/src/countdowndigits/bg.gmd"

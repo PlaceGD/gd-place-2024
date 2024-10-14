@@ -159,7 +159,7 @@ parse_countdown_files! {
     "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5) classic], // 14
     "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 15
     "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  ) silly], // 16
-    "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  )], // 17
+    "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 17
     "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  ) classic famous], // 18
     "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 19
     "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 20
@@ -180,6 +180,7 @@ parse_countdown_files! {
     "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  )], // 35
     "kips"              ("Kips"):               [0 => weights(4,   3,   3,   2  ) classic pretty], // 36
     "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 37
+    "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 38
 }
 
 #[binrw]

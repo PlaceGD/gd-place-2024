@@ -23,6 +23,16 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
         case "event_end":
             db.ref("metaVariables/eventEndTime").set(data.op.to);
             break;
+        case "postpone_start":
+            db.ref("metaVariables/eventStartTime").transaction((time: any) => {
+                return parseInt(time) + data.op.secs * 1000;
+            });
+            break;
+        case "postpone_end":
+            db.ref("metaVariables/eventEndTime").transaction((time: any) => {
+                return parseInt(time) + data.op.secs * 1000;
+            });
+            break;
         case "change_mod_status":
             let userID1 = (
                 await db.ref(`userName/${data.op.user.toLowerCase()}/uid`).get()

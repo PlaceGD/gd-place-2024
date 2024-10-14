@@ -19,6 +19,8 @@
         deleteTimer: 0,
         eventStart: 0,
         eventEnd: 0,
+        postponeStart: 0,
+        postponeEnd: 0,
         modChangeUsername: "",
         unbanUsername: "",
         usernameOrID: "",
@@ -132,127 +134,162 @@
                     Set
                 </WhiteButton>
             </div>
-        </div>
 
-        <div class="w-full min-h-[1px] bg-white/50" />
-
-        <div class="flex flex-col w-full gap-2 flex-center">
             <div class="flex w-full gap-2 flex-center">
-                <h1 class="font-pusab text-stroke">Mod</h1>
+                <h1 class="w-32 font-pusab text-stroke">Postpone start</h1>
                 <DarkInput
-                    maxLength={16}
-                    class="w-full"
-                    bind:value={inputValues.modChangeUsername}
+                    maxLength={1000}
+                    bind:value={inputValues.postponeStart}
+                    hardValidInput={/^-?\d*$/}
                 ></DarkInput>
-            </div>
-            <div class="flex w-full gap-2">
                 <WhiteButton
-                    class="w-full"
-                    on:click={() => {
+                    on:click={() =>
                         meta({
-                            type: "change_mod_status",
-                            user: inputValues.modChangeUsername,
-                            to: "mod",
-                        });
-                    }}>Mod</WhiteButton
+                            type: "postpone_start",
+                            secs: inputValues.postponeStart,
+                        })}
                 >
-                <WhiteButton
-                    class="w-full"
-                    on:click={() => {
-                        meta({
-                            type: "change_mod_status",
-                            user: inputValues.modChangeUsername,
-                            to: "unmod",
-                        });
-                    }}>Unmod</WhiteButton
-                >
-            </div>
-        </div>
-        <div class="w-full min-h-[1px] bg-white/50" />
-        <div class="flex flex-col w-full gap-2 flex-center">
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="font-pusab text-stroke">Unban</h1>
-                <DarkInput
-                    maxLength={16}
-                    class="w-full"
-                    bind:value={inputValues.unbanUsername}
-                ></DarkInput>
-            </div>
-
-            <WhiteButton
-                class="w-full"
-                on:click={() => {
-                    meta({
-                        type: "unban",
-                        user: inputValues.unbanUsername,
-                    });
-                }}>Unban</WhiteButton
-            >
-        </div>
-        <div class="w-full min-h-[1px] bg-white/50" />
-
-        <div class="flex flex-col w-full gap-2 flex-center">
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="font-pusab text-stroke">UID</h1>
-                <DarkInput
-                    maxLength={100}
-                    class="w-full"
-                    bind:value={inputValues.donatorID}
-                ></DarkInput>
-            </div>
-            <div class="flex w-full gap-2">
-                <WhiteButton
-                    class="w-full"
-                    on:click={async () => {
-                        meta({
-                            type: "log_donation",
-                            uid: inputValues.donatorID,
-                        });
-                    }}>Make Donator</WhiteButton
-                >
-            </div>
-        </div>
-        <div class="w-full min-h-[1px] bg-white/50" />
-
-        <div class="flex flex-col w-full gap-2 flex-center">
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="font-pusab text-stroke">Username or ID</h1>
-                <DarkInput
-                    maxLength={100}
-                    class="w-full"
-                    bind:value={inputValues.usernameOrID}
-                ></DarkInput>
-            </div>
-
-            <div class="flex w-full gap-2">
-                <WhiteButton
-                    class="w-full"
-                    on:click={async () => {
-                        inputValues.usernameOrID =
-                            (
-                                await db
-                                    .ref(
-                                        `userName/${inputValues.usernameOrID.toLowerCase()}/uid`
-                                    )
-                                    .get()
-                            ).val() ?? "<unknown>";
-                    }}
-                >
-                    To ID
+                    Set
                 </WhiteButton>
+            </div>
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Postpone end</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.postponeEnd}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() =>
+                        meta({
+                            type: "postpone_end",
+                            secs: inputValues.postponeEnd,
+                        })}
+                >
+                    Set
+                </WhiteButton>
+            </div>
+
+            <div class="w-full min-h-[1px] bg-white/50" />
+
+            <div class="flex flex-col w-full gap-2 flex-center">
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="font-pusab text-stroke">Mod</h1>
+                    <DarkInput
+                        maxLength={16}
+                        class="w-full"
+                        bind:value={inputValues.modChangeUsername}
+                    ></DarkInput>
+                </div>
+                <div class="flex w-full gap-2">
+                    <WhiteButton
+                        class="w-full"
+                        on:click={() => {
+                            meta({
+                                type: "change_mod_status",
+                                user: inputValues.modChangeUsername,
+                                to: "mod",
+                            });
+                        }}>Mod</WhiteButton
+                    >
+                    <WhiteButton
+                        class="w-full"
+                        on:click={() => {
+                            meta({
+                                type: "change_mod_status",
+                                user: inputValues.modChangeUsername,
+                                to: "unmod",
+                            });
+                        }}>Unmod</WhiteButton
+                    >
+                </div>
+            </div>
+            <div class="w-full min-h-[1px] bg-white/50" />
+            <div class="flex flex-col w-full gap-2 flex-center">
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="font-pusab text-stroke">Unban</h1>
+                    <DarkInput
+                        maxLength={16}
+                        class="w-full"
+                        bind:value={inputValues.unbanUsername}
+                    ></DarkInput>
+                </div>
+
                 <WhiteButton
                     class="w-full"
-                    on:click={async () => {
-                        inputValues.usernameOrID =
-                            (
-                                await db
-                                    .ref(
-                                        `userDetails/${inputValues.usernameOrID}/username`
-                                    )
-                                    .get()
-                            ).val() ?? "<unknown>";
-                    }}>To username</WhiteButton
+                    on:click={() => {
+                        meta({
+                            type: "unban",
+                            user: inputValues.unbanUsername,
+                        });
+                    }}>Unban</WhiteButton
                 >
+            </div>
+            <div class="w-full min-h-[1px] bg-white/50" />
+
+            <div class="flex flex-col w-full gap-2 flex-center">
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="font-pusab text-stroke">UID</h1>
+                    <DarkInput
+                        maxLength={100}
+                        class="w-full"
+                        bind:value={inputValues.donatorID}
+                    ></DarkInput>
+                </div>
+                <div class="flex w-full gap-2">
+                    <WhiteButton
+                        class="w-full"
+                        on:click={async () => {
+                            meta({
+                                type: "log_donation",
+                                uid: inputValues.donatorID,
+                            });
+                        }}>Make Donator</WhiteButton
+                    >
+                </div>
+            </div>
+            <div class="w-full min-h-[1px] bg-white/50" />
+
+            <div class="flex flex-col w-full gap-2 flex-center">
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="font-pusab text-stroke">Username or ID</h1>
+                    <DarkInput
+                        maxLength={100}
+                        class="w-full"
+                        bind:value={inputValues.usernameOrID}
+                    ></DarkInput>
+                </div>
+
+                <div class="flex w-full gap-2">
+                    <WhiteButton
+                        class="w-full"
+                        on:click={async () => {
+                            inputValues.usernameOrID =
+                                (
+                                    await db
+                                        .ref(
+                                            `userName/${inputValues.usernameOrID.toLowerCase()}/uid`
+                                        )
+                                        .get()
+                                ).val() ?? "<unknown>";
+                        }}
+                    >
+                        To ID
+                    </WhiteButton>
+                    <WhiteButton
+                        class="w-full"
+                        on:click={async () => {
+                            inputValues.usernameOrID =
+                                (
+                                    await db
+                                        .ref(
+                                            `userDetails/${inputValues.usernameOrID}/username`
+                                        )
+                                        .get()
+                                ).val() ?? "<unknown>";
+                        }}>To username</WhiteButton
+                    >
+                </div>
             </div>
         </div>
     </fieldset>

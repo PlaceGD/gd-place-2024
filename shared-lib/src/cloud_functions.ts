@@ -183,6 +183,14 @@ export type MetaOperation =
           to: number;
       }
     | {
+          type: "postpone_start";
+          secs: number;
+      }
+    | {
+          type: "postpone_end";
+          secs: number;
+      }
+    | {
           type: "change_mod_status";
           user: string;
           to: "mod" | "unmod";

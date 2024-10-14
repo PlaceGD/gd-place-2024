@@ -36,8 +36,8 @@ impl ChunkCoord {
 
 pub enum ObjectDraw {
     Both,
-    Main,
-    Detail,
+    TopTexture,
+    BottomTexture,
 }
 
 pub struct LevelLayer<K> {
@@ -92,24 +92,24 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
                 blending_batch
                     .entry(obj.z_order)
                     .or_default()
-                    .insert(key, (obj, ObjectDraw::Main));
+                    .insert(key, (obj, ObjectDraw::TopTexture));
                 normal_batch
                     .entry(obj.z_order)
                     .or_default()
-                    .insert(key, (obj, ObjectDraw::Detail));
+                    .insert(key, (obj, ObjectDraw::BottomTexture));
             }
             (false, true) => {
                 normal_batch
                     .entry(obj.z_order)
                     .or_default()
-                    .insert(key, (obj, ObjectDraw::Main));
+                    .insert(key, (obj, ObjectDraw::TopTexture));
 
                 let [next_blending_batch, _] =
                     &mut chunk.layers[obj.z_layer as usize + 1].sheet_batches[sheet_idx];
                 next_blending_batch
                     .entry(obj.z_order)
                     .or_default()
-                    .insert(key, (obj, ObjectDraw::Detail));
+                    .insert(key, (obj, ObjectDraw::BottomTexture));
             }
             (false, false) => {
                 normal_batch
@@ -127,7 +127,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
                         if let Some((obj, draw)) = order_map.shift_remove(&key) {
                             match draw {
                                 ObjectDraw::Both => return Some(obj),
-                                ObjectDraw::Main => {
+                                ObjectDraw::TopTexture => {
                                     for order_map in normal_sheet.values_mut() {
                                         if order_map.shift_remove(&key).is_some() {
                                             break;
@@ -135,7 +135,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
                                     }
                                     return Some(obj);
                                 }
-                                ObjectDraw::Detail => panic!("The shouldnt happen"),
+                                ObjectDraw::BottomTexture => panic!("The shouldnt happen"),
                             }
                         }
                     }
@@ -143,7 +143,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
                         if let Some((obj, draw)) = order_map.shift_remove(&key) {
                             match draw {
                                 ObjectDraw::Both => return Some(obj),
-                                ObjectDraw::Main => {
+                                ObjectDraw::TopTexture => {
                                     'out: for [blending_sheet, _] in
                                         c.layers[layer_idx + 1].sheet_batches.iter_mut()
                                     {
@@ -155,7 +155,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
                                     }
                                     return Some(obj);
                                 }
-                                ObjectDraw::Detail => panic!("The shouldnt happen"),
+                                ObjectDraw::BottomTexture => panic!("The shouldnt happen"),
                             }
                         }
                     }

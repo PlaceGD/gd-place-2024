@@ -1,8 +1,10 @@
 use std::{collections::HashSet, fs};
 
 use gen::{
-    colors::get_available_colors, countdown_digits::make_get_countdown_digits_fn,
-    objects::make_get_object_info_fn, sprites::make_get_song_icon_sprite_fn,
+    colors::get_available_colors,
+    countdown_digits::make_get_countdown_digits_fn,
+    objects::{make_get_object_info_fn, make_get_object_main_over_detail},
+    sprites::make_get_song_icon_sprite_fn,
 };
 use objects::{sfx::SFX_TRIGGER_SOUNDS, song::SONG_TRIGGER_SONGS};
 use rust_shared::{
@@ -40,6 +42,8 @@ use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectSheet::*, Objec
 
 {}
 
+{}
+
     ",
         make_get_object_info_fn(),
         make_get_main_sprite_fn(sheet_data),
@@ -47,6 +51,7 @@ use rust_shared::{{gd::{{ObjectCategory::*, HitboxType::*, ObjectSheet::*, Objec
         make_get_sfx_icon_sprite_fn(sheet_data),
         make_get_song_icon_sprite_fn(sheet_data),
         make_get_set_switches_fn(),
+        make_get_object_main_over_detail(),
     )
 }
 

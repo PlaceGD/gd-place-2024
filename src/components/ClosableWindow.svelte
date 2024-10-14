@@ -7,7 +7,7 @@
 
 {#if !hidden}
     <div
-        class="relative bg-menu-gray/10 rounded-xl shadow-lg backdrop-blur-md flex flex-col border-4 border-white/80 pointer-events-none"
+        class="relative bg-menu-gray/30 rounded-xl shadow-lg backdrop-blur-md flex flex-col border-4 border-white/80 pointer-events-none"
         transition:blur={{
             duration: 150,
             delay: 0,

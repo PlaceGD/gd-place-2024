@@ -23,3 +23,20 @@ pub const OBJECT_INFO: [ObjectInfo; 4600] = {ongy:?};
     "
     )
 }
+
+pub fn make_get_object_main_over_detail() -> String {
+    let mut ongy = [false; 4600];
+    for id in include_str!("../objects/main_over_detail_objects.txt")
+        .lines()
+        .filter(|v| !v.is_empty())
+        .map(|v| v.parse::<u16>().unwrap())
+    {
+        ongy[id as usize] = true;
+    }
+
+    format!(
+        "
+pub const OBJECT_MAIN_OVER_DETAIL: [bool; 4600] = {ongy:?};
+    "
+    )
+}

@@ -11,7 +11,10 @@ use crate::{
     level::Level,
     object::GDObjectExt,
     state::State,
-    utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, SFX_ICON_SPRITES, SONG_ICON_SPRITES},
+    utilgen::{
+        DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, OBJECT_MAIN_OVER_DETAIL, SFX_ICON_SPRITES,
+        SONG_ICON_SPRITES,
+    },
 };
 
 pub mod billy;
@@ -190,24 +193,28 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                     // console_log!("bend {}", i);
                     for (_, m) in batch {
                         for (key, (obj, draw)) in m {
-                            for &detail in match draw {
+                            for &bottom_texture in match draw {
                                 crate::level::ObjectDraw::Both => &[false, true] as &[bool],
-                                crate::level::ObjectDraw::Main => &[false],
-                                crate::level::ObjectDraw::Detail => &[true],
+                                crate::level::ObjectDraw::TopTexture => &[false],
+                                crate::level::ObjectDraw::BottomTexture => &[true],
                             } {
-                                let (sprites, color) = if detail {
+                                let bottom_texture = if OBJECT_MAIN_OVER_DETAIL[obj.id as usize] {
+                                    !bottom_texture
+                                } else {
+                                    bottom_texture
+                                };
+                                let (sprites, color) = if bottom_texture {
                                     (&DETAIL_SPRITES, obj.detail_color)
                                 } else {
                                     (&MAIN_SPRITES, obj.main_color)
                                 };
                                 if let Some(sprite) = sprites[obj.id as usize] {
                                     if color.blending == (batch_idx == 0) {
-                                        let color = color_override(*key, obj, detail).unwrap_or(
-                                            Vec4::from_array(
+                                        let color = color_override(*key, obj, bottom_texture)
+                                            .unwrap_or(Vec4::from_array(
                                                 [color.r, color.g, color.b, color.opacity]
                                                     .map(|v| v as f32 / 255.0),
-                                            ),
-                                        );
+                                            ));
                                         // let color = if state.selected_object == Some(*key) {
                                         //     selected_color(detail)
                                         // } else {

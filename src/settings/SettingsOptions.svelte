@@ -130,7 +130,7 @@
                         Donate!
                     </a>
                 {:else}
-                    <p class="text-base text-sm">
+                    <p class="text-sm">
                         Get a colored name by making a donation (any amount)!
                     </p>
 

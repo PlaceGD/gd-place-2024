@@ -6,6 +6,7 @@
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import { toastPortals } from "../utils/toast";
     import { get } from "svelte/store";
+    import { fakeModalTransition } from "../utils/transitions";
 
     let modal: HTMLDialogElement | null = null;
 
@@ -25,16 +26,6 @@
     onMount(() => {
         modal?.close();
     });
-
-    // used so we can listen on the intro/outro events
-    const fakeTransition = (_: HTMLElement) => {
-        return {
-            duration: 0,
-            css: () => {
-                return "";
-            },
-        };
-    };
 
     const handleClose = () => {
         dispatcher("close");
@@ -57,7 +48,7 @@
                 e.preventDefault();
             }
         }}
-        transition:fakeTransition
+        transition:fakeModalTransition
         on:introstart={() => {
             modal?.showModal();
             $toastPortals = [...$toastPortals, toastContainer];

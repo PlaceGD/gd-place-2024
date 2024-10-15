@@ -12,3 +12,12 @@ export const menuHeight = (
         },
     };
 };
+
+export const fakeModalTransition = (_: HTMLElement) => {
+    return {
+        duration: 0,
+        css: () => {
+            return "";
+        },
+    };
+};

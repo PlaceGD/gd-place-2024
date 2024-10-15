@@ -72,10 +72,11 @@
             <MetaMenu />
         </div>
         <div
-            class="absolute top-0 right-0 flex flex-row xs:flex-col items-start w-full h-full gap-4 pointer-events-none sm:gap-2"
+            class="absolute top-0 right-0 flex flex-row items-start w-full h-full gap-4 pointer-events-none xs:flex-col sm:gap-2"
         >
             <div
                 class="flex flex-col justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
+                data-guide="zoom"
             >
                 <ZoomButton zoom="in" {canvas} />
                 <ZoomButton zoom="out" {canvas} />

@@ -1,24 +1,36 @@
 import { writable } from "svelte/store";
+import { ExclusiveMenus, openMenu } from "../stores";
+
+export type Step = {
+    id: string;
+    text: string;
+    beforeCb?: () => Promise<void>;
+};
 
 export const GUIDE_ELEM_IDS = {
     test: "test",
     zoom: "zoom",
     signup: "signup",
+    hideGrid: "hideGrid",
 } as const;
 
-export const GUIDE_STEPS = [
-    {
-        id: GUIDE_ELEM_IDS.test,
-        text: "Click this button to view settings.",
-    },
-    {
-        id: GUIDE_ELEM_IDS.zoom,
-        text: "Click these button to change zoom. You can use keybind blah blag",
-    },
-    {
-        id: GUIDE_ELEM_IDS.signup,
-        text: "fuck me",
-    },
+export const GUIDE_STEPS: Step[] = [
+    // {
+    //     id: GUIDE_ELEM_IDS.test,
+    //     text: "Click this button to view settings.",
+    // },
+    // {
+    //     id: GUIDE_ELEM_IDS.hideGrid,
+    //     text: "Click this button to hide grid.",
+    // },
+    // {
+    //     id: GUIDE_ELEM_IDS.zoom,
+    //     text: "Click these button to change zoom. You can use keybind blah blag",
+    // },
+    // {
+    //     id: GUIDE_ELEM_IDS.signup,
+    //     text: "fuck me",
+    // },
 ] as const;
 
 export const isGuideActive = writable(false);

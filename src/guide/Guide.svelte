@@ -5,13 +5,16 @@
         GUIDE_STEPS,
         // guideElems,
         isGuideActive,
+        type Step,
     } from "./guide";
-    import { onDestroy, onMount } from "svelte";
+    import { afterUpdate, onDestroy, onMount } from "svelte";
     import { clamp } from "shared-lib/util";
     import ClosableWindow from "../components/ClosableWindow.svelte";
     import IconButton from "../components/Buttons/IconButton.svelte";
     import ArrowLeft from "../icons/ArrowLeft.svelte";
     import ArrowRight from "../icons/ArrowRight.svelte";
+    import Cross from "../icons/Cross.svelte";
+    import WhiteButton from "../components/Buttons/WhiteButton.svelte";
 
     const guideElems: Record<string, HTMLElement> = {};
     const getGuideElem = (id: string): HTMLElement | null => {
@@ -36,13 +39,13 @@
 
     let tooltip: HTMLElement;
 
-    let boundingRect: DOMRect | null;
+    let targetElemRect: DOMRect | null;
 
     let observer: VisualObserver | null;
     onMount(() => {
         observer = new VisualObserver(entries => {
             if (entries[0].target.isSameNode(element)) {
-                boundingRect = entries[0].contentRect;
+                targetElemRect = entries[0].contentRect;
             }
         });
     });
@@ -51,6 +54,8 @@
 
     let prevElement: HTMLElement | null;
     let element: HTMLElement | null;
+
+    let currentStep: Step;
 
     $: currentStep = GUIDE_STEPS[step];
 
@@ -63,13 +68,25 @@
         }
     }
 
+    const cleanup = () => {
+        step = 0;
+        currentStep = GUIDE_STEPS[0];
+        tooltipLeft = 0;
+        tooltipTop = 0;
+        if (observer && element) {
+            observer.unobserve(element);
+        }
+    };
+
+    $: if (!$isGuideActive) cleanup();
+
     $: {
         if (observer && element && prevElement) {
             observer.unobserve(prevElement);
             observer.observe(element);
 
             // doesnt always call the callback for observing if the element has previously been observed
-            boundingRect = element.getBoundingClientRect();
+            targetElemRect = element.getBoundingClientRect();
         }
     }
 
@@ -81,39 +98,120 @@
     let tooltipLeft: number = 0;
     let tooltipTop: number = 0;
 
-    $: {
-        if (boundingRect && tooltip) {
-            left = boundingRect.left;
-            right = left + boundingRect.width;
-            top = boundingRect.top;
-            bottom = top + boundingRect.height;
+    // we want to handle this logic after first update so the tooltip bounding box
+    // has deifinitely changed to be the size of the new content
+    // we could use another observer but its a bit overkill
+    // im surprised this doesnt cause an infinite loop tbh
+    afterUpdate(() => {
+        if (targetElemRect && tooltip) {
+            left = targetElemRect.left;
+            right = left + targetElemRect.width;
+            top = targetElemRect.top;
+            bottom = top + targetElemRect.height;
 
             const tooltipBox = tooltip.getBoundingClientRect();
 
-            // on the right side
+            // // some of these calculations may be wrong but its hard to know
+            // // until it targets an element that satifies one of them which may not happen
+            // if (targetElemRect.width > tooltipBox.width) {
+            //     if (left > innerWidth / 2) {
+            //         tooltipLeft =
+            //             right - tooltipBox.width / 2 - targetElemRect.width / 2;
+            //     } else {
+            //         tooltipLeft =
+            //             left + targetElemRect.width / 2 - tooltipBox.width / 2;
+            //     }
+            // } else {
+            // }
             if (left > innerWidth / 2) {
                 tooltipLeft = right - tooltipBox.width;
             } else {
                 tooltipLeft = left;
             }
 
+            // if (targetElemRect.height > tooltipBox.height) {
+            //     if (top > innerHeight / 2) {
+            //         tooltipTop =
+            //             top - tooltipBox.height / 2 - targetElemRect.height / 2;
+            //     } else {
+            //         tooltipTop =
+            //             bottom +
+            //             targetElemRect.height / 2 -
+            //             tooltipBox.height / 2;
+            //     }
+            // } else {
+            // }
             if (top > innerHeight / 2) {
                 tooltipTop = top - tooltipBox.height;
             } else {
                 tooltipTop = bottom;
             }
         }
-    }
+    });
 
-    const nextStep = () => {
+    // $: {
+    //     if (targetElemRect && tooltip) {
+    //         left = targetElemRect.left;
+    //         right = left + targetElemRect.width;
+    //         top = targetElemRect.top;
+    //         bottom = top + targetElemRect.height;
+
+    //         const tooltipBox = tooltip.getBoundingClientRect();
+
+    //         console.log(tooltipBox);
+
+    //         // some of these calculations will be wrong but its hard to know
+    //         // until it targets an element that satifies one of them which may not happen
+    //         if (targetElemRect.width > tooltipBox.width) {
+    //             if (left > innerWidth / 2) {
+    //                 tooltipLeft =
+    //                     right - tooltipBox.width / 2 - targetElemRect.width / 2;
+    //             } else {
+    //                 tooltipLeft =
+    //                     left + targetElemRect.width / 2 - tooltipBox.width / 2;
+    //             }
+    //         } else {
+    //             if (left > innerWidth / 2) {
+    //                 tooltipLeft = right - tooltipBox.width;
+    //             } else {
+    //                 tooltipLeft = left;
+    //             }
+    //         }
+
+    //         if (top > innerHeight / 2) {
+    //             tooltipTop = top - tooltipBox.height;
+    //         } else {
+    //             tooltipTop = bottom;
+    //         }
+
+    //         if (targetElemRect.height > tooltipBox.height) {
+    //         }
+    //     }
+    // }
+
+    const nextStep = async () => {
+        let s = GUIDE_STEPS[step + 1];
+        await s?.beforeCb?.();
+
         step++;
     };
-    const prevStep = () => {
+    const prevStep = async () => {
+        let s = GUIDE_STEPS[step - 1];
+        await s?.beforeCb?.();
+
         step--;
     };
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+<svelte:window
+    bind:innerWidth
+    bind:innerHeight
+    on:keyup={e => {
+        if (e.key == "Escape") {
+            $isGuideActive = false;
+        }
+    }}
+/>
 
 {#if $isGuideActive}
     <div
@@ -135,7 +233,9 @@
     ></div>
 
     <!-- disable clicking of the element -->
-    <div class="absolute w-screen h-screen z-[52] pointer-events-auto"></div>
+    <dialog
+        class="absolute w-screen h-screen z-[52] pointer-events-auto"
+    ></dialog>
 
     <div
         class="absolute flex flex-col z-[53]"
@@ -158,13 +258,12 @@
                     disabled={step == 0}
                     on:click={prevStep}
                 >
-                    <span slot="left">
+                    <span slot="children">
                         <ArrowLeft
                             stroke-width={1}
                             class="w-8 h-8 xs:h-7 xs:w-7"
                         />
                     </span>
-                    <span slot="children"></span>
                 </IconButton>
 
                 <div class="text-center tabular-nums">
@@ -182,11 +281,23 @@
                             class="w-8 h-8 xs:h-7 xs:w-7"
                         />
                     </span>
-                    <span slot="right"></span>
                 </IconButton>
             </div>
         </div>
         <!-- margin on the bottom doesnt work without this for some reason -->
         <div class="mb-2"></div>
+    </div>
+
+    <div
+        class="absolute text-white left-1/2 -translate-x-1/2 top-6 xs:top-3 z-[53]"
+    >
+        <WhiteButton
+            aria-label="Exit guide"
+            on:click={() => {
+                $isGuideActive = false;
+            }}
+        >
+            <Cross aria-label="Exit" class="stroke-1 w-7 h-7" />
+        </WhiteButton>
     </div>
 {/if}

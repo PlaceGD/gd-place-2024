@@ -17,6 +17,10 @@ export const CHUNK_SIZE_UNITS = CHUNK_SIZE_BLOCKS * 30;
 
 export const LEVEL_WIDTH_BLOCKS = 800;
 export const LEVEL_HEIGHT_BLOCKS = 800;
-export const LEVEL_WIDTH_UNITS = LEVEL_WIDTH_BLOCKS * 30;
-export const LEVEL_HEIGHT_UNITS = LEVEL_HEIGHT_BLOCKS * 30;
+export const LEVEL_WIDTH_UNITS = 24000;
+export const LEVEL_HEIGHT_UNITS = 24000;
+
+export const END_POS_X = 23925;
+export const END_POS_Y = 23925;
+export const END_RADIUS = 240;
     

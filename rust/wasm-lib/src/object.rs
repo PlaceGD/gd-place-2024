@@ -1,12 +1,12 @@
 use std::{mem, ptr};
 use wasm_bindgen::prelude::*;
 
-use glam::{mat2, vec2, Affine2};
+use glam::{mat2, vec2, Affine2, Vec2};
 // use bytemuck::{bytes_of, Pod, Zeroable};
 use rust_shared::{
     gd::{
         layer::ZLayer,
-        level::{LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS},
+        level::{END_RADIUS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS},
         object::{GDColor, GDObject},
     },
     util::Rect,
@@ -117,6 +117,18 @@ impl GDObjectOpt {
 
         self.x = self.x.clamp(0.0, LEVEL_WIDTH_UNITS as f32 - 0.001);
         self.y = self.y.clamp(0.0, LEVEL_HEIGHT_UNITS as f32 - 0.001);
+
+        let top_right = vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32);
+        let pos = vec2(self.x, self.y);
+
+        let funny_len = |v: Vec2| (v.x.powf(4.0) + v.y.powf(4.0)).powf(1.0 / 4.0);
+        let funny_norm = |v: Vec2| v / funny_len(v);
+
+        if funny_len(top_right - pos) < END_RADIUS as f32 {
+            let new_pos = top_right + funny_norm(pos - top_right) * END_RADIUS as f32 * 1.001;
+            self.x = new_pos.x;
+            self.y = new_pos.y;
+        }
     }
     // pub fn debug_str(&self) -> String {
     //     format!("{:?}", self)

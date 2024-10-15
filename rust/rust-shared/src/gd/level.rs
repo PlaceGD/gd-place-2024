@@ -33,3 +33,7 @@ pub const LEVEL_RECT_BLOCKS: Rect<i32> =
     Rect::new(0, 0, LEVEL_WIDTH_BLOCKS as i32, LEVEL_HEIGHT_BLOCKS as i32);
 pub const LEVEL_RECT_UNITS: Rect<i32> =
     Rect::new(0, 0, LEVEL_WIDTH_UNITS as i32, LEVEL_HEIGHT_UNITS as i32);
+
+pub const END_POS_X: u32 = LEVEL_WIDTH_UNITS - 75;
+pub const END_POS_Y: u32 = LEVEL_HEIGHT_UNITS - 75;
+pub const END_RADIUS: u32 = 8 * 30;

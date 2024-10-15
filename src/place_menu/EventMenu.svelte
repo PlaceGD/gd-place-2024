@@ -21,6 +21,7 @@
 
     import * as wasm from "wasm-lib";
     import { moveCamera } from "../level_view/view_controls";
+
     export let state: wasm.State;
 
     let creator_names = "";

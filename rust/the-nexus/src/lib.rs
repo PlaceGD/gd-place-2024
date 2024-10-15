@@ -10,7 +10,10 @@ use objects::{sfx::SFX_TRIGGER_SOUNDS, song::SONG_TRIGGER_SONGS};
 use rust_shared::{
     countdown::generate_set_switches,
     gd::{
-        level::{CHUNK_SIZE_BLOCKS, LEVEL_HEIGHT_BLOCKS, LEVEL_WIDTH_BLOCKS},
+        level::{
+            CHUNK_SIZE_BLOCKS, END_POS_X, END_POS_Y, END_RADIUS, LEVEL_HEIGHT_BLOCKS,
+            LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_BLOCKS, LEVEL_WIDTH_UNITS,
+        },
         object::GDObject,
         special_ids,
     },
@@ -132,8 +135,12 @@ export const CHUNK_SIZE_UNITS = CHUNK_SIZE_BLOCKS * 30;
 
 export const LEVEL_WIDTH_BLOCKS = {};
 export const LEVEL_HEIGHT_BLOCKS = {};
-export const LEVEL_WIDTH_UNITS = LEVEL_WIDTH_BLOCKS * 30;
-export const LEVEL_HEIGHT_UNITS = LEVEL_HEIGHT_BLOCKS * 30;
+export const LEVEL_WIDTH_UNITS = {};
+export const LEVEL_HEIGHT_UNITS = {};
+
+export const END_POS_X = {};
+export const END_POS_Y = {};
+export const END_RADIUS = {};
     ",
             special_ids::BG_TRIGGER,
             special_ids::GROUND_TRIGGER,
@@ -147,7 +154,12 @@ export const LEVEL_HEIGHT_UNITS = LEVEL_HEIGHT_BLOCKS * 30;
             SONG_TRIGGER_SONGS,
             CHUNK_SIZE_BLOCKS,
             LEVEL_WIDTH_BLOCKS,
-            LEVEL_HEIGHT_BLOCKS
+            LEVEL_HEIGHT_BLOCKS,
+            LEVEL_WIDTH_UNITS,
+            LEVEL_HEIGHT_UNITS,
+            END_POS_X,
+            END_POS_Y,
+            END_RADIUS,
         ),
     )
     .unwrap();

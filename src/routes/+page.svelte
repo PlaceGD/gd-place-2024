@@ -21,6 +21,7 @@
     import { tweened } from "svelte/motion";
     import { cubicIn, linear, sineIn } from "svelte/easing";
     import { map } from "shared-lib/util";
+    import Guide from "../guide/Guide.svelte";
 
     let openTrans = tweened(
         0,
@@ -60,6 +61,8 @@
 
 <ToastContainers />
 <DataPopup />
+
+<Guide />
 
 <div
     class="relative w-screen h-screen overflow-hidden"

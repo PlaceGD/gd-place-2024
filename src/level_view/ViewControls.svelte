@@ -21,6 +21,9 @@
         SONG_TRIGGER_SONGS,
         LEVEL_WIDTH_UNITS,
         LEVEL_HEIGHT_UNITS,
+        END_POS_X,
+        END_POS_Y,
+        END_RADIUS,
     } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
@@ -649,10 +652,7 @@
     </ImageWidget>
 
     <ImageWidget
-        position={getScreenPosZoomCorrected(
-            LEVEL_WIDTH_UNITS - 45,
-            LEVEL_HEIGHT_UNITS - 46
-        )}
+        position={getScreenPosZoomCorrected(END_POS_X, END_POS_Y - 1)}
         scale={0.12}
         screenScale={textZoomScale}
         screenOrigin={originScreen}

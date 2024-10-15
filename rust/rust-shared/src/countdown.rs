@@ -146,7 +146,7 @@ parse_countdown_files! {
                                                  1 => weights(0.3, 0.5, 0.4, 0.5) silly,  // 1
                                                  2 => weights(0.5, 2,   0.5, 5  ) silly pretty], // 2
     "viprin"            ("Viprin"):             [3 => weights(3,   5,   5,   1  ) famous classic], // 3
-    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  )], // 4
+    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  ) classic], // 4
     "flow"              ("Flow"):               [3 => weights(1,   4,   4,   0.5) silly], // 5
     "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  ) pretty classic], // 6
     "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  ) pretty], // 7
@@ -155,7 +155,7 @@ parse_countdown_files! {
     "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  ) classic], // 10
     "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 11
     "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 12
-    "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  )], // 13
+    "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  ) classic], // 13
     "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5) classic], // 14
     "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 15
     "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  ) silly], // 16
@@ -173,11 +173,11 @@ parse_countdown_files! {
     "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  ) famous classic], // 28
     "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  ) famous], // 29
     "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  ) pretty], // 30
-    "doggie"            ("Doggie"):             [0 => weights(3,   4,   4,   1  ) silly famous], // 31
+    "doggie"            ("Doggie"):             [0 => weights(2,   3,   4,   3  ) silly famous], // 31
     "pocke"             ("Pocke"):              [3 => weights(4,   2,   2,   1  ) silly], // 32
     "subwoofer"         ("Subwoofer"):          [3 => weights(2,   3,   3,   4  ) silly], // 33
     "para"              ("para"):               [3 => weights(3,   3,   3,   2  ) pretty], // 34
-    "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  )], // 35
+    "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  ) pretty], // 35
     "kips"              ("Kips"):               [0 => weights(4,   3,   3,   2  ) classic pretty], // 36
     "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 37
     "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 38
@@ -222,14 +222,15 @@ const WEIGHT_POWER: f64 = 0.8;
 
 // runs in nexus gen
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
-    let mut switches = vec![[0, 5, 9, 2]]; // final sets
+    let mut switches = vec![[0, 5, 9, 2], [28, 3, 12, 38]]; // final sets
 
-    for i in 0..n {
+    for i in 1..n {
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev
         let mut sets = [usize::MAX; 4];
         let mut names = [""; 4];
 
         let prev = &switches[i];
+        let prev2 = &switches[i - 1];
         // let mut j = 0;
         // let mut r = 0;
         // while j < 4 {
@@ -268,6 +269,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
             possible_sets.retain(|&set| {
                 config[j].compat(get_set_labels(set))
                     && !prev.contains(&set)
+                    && !prev2.contains(&set)
                     && !sets.contains(&set)
                     && !names.contains(&get_creator_name(set))
             });
@@ -277,6 +279,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                 possible_sets = (0..DIGIT_SETS).collect::<Vec<_>>();
                 possible_sets.retain(|&set| {
                     !prev.contains(&set)
+                        && !prev2.contains(&set)
                         && !sets.contains(&set)
                         && !names.contains(&get_creator_name(set))
                 });

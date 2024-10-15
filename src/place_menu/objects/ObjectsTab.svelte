@@ -133,7 +133,7 @@
             }}
         >
             Go to <Edit class="stroke-[1.5] w-6 h-6 inline-block"></Edit> to change
-            trigger settings. All triggers are touch triggered.
+            trigger settings. <b>All triggers are touch triggered.</b>
         </button>
     {/if}
 </fieldset>

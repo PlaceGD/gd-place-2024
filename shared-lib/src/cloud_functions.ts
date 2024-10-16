@@ -137,6 +137,8 @@ export const DEV_UIDS: string[] = [
 ];
 
 export type PlaceReq = { object: string };
+export type PlaceRes = string;
+
 export type DeleteReq = { chunkId: ChunkID; objId: string };
 export type InitWithUsernameReq = {
     username: string;

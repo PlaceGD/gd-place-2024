@@ -44,6 +44,7 @@
         menuSelectedSFX,
         menuSpeed,
         menuSelectedSong,
+        canPlacePreview,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -181,7 +182,7 @@
     }
 
     $: {
-        if ($menuTabGroup == TabGroup.Delete) {
+        if ($menuTabGroup == TabGroup.Delete && $canPlacePreview) {
             state.set_preview_visibility(false);
         } else {
             $selectedObject = null;
@@ -483,9 +484,14 @@
             data-minimised={+$menuMinimized}
             on:click={() => {
                 if ($menuTabGroup != TabGroup.Delete) {
-                    addObject(state.get_preview_object());
-                    state.set_preview_visibility(false);
+                    addObject(state.get_preview_object(), k => {
+                        canPlacePreview.set(true);
+                        state.set_preview_visibility(false);
+                        // state.add_object(k, state.get_preview_object());
+                    });
+                    // state.set_preview_visibility(false);
                     pdButtonDisabled = true;
+                    $canPlacePreview = false;
                 } else {
                     let k = state.get_selected_object_key();
                     let coord = state.get_selected_object_chunk();

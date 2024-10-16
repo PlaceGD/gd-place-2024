@@ -4,6 +4,9 @@ import _spritesheet from "./gd/spritesheet.json";
 import _colors from "./gd/colors.json";
 import { remEuclid } from "./util";
 import {
+    END_RADIUS,
+    LEVEL_HEIGHT_UNITS,
+    LEVEL_WIDTH_UNITS,
     SFX_TRIGGER,
     SFX_TRIGGER_SOUNDS,
     SONG_TRIGGER,

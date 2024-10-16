@@ -5,6 +5,7 @@ import Toast from "../utils/toast";
 import {
     addDeleteText,
     bgColor,
+    canPlacePreview,
     DEFAULT_BG_COLOR,
     DEFAULT_GROUND_1_COLOR,
     DEFAULT_GROUND_2_COLOR,
@@ -12,12 +13,14 @@ import {
     ground1Color,
     ground2Color,
     lastRunColorTrigger,
+    loginData,
 } from "../stores";
 import debounce from "lodash.debounce";
 import { tweened } from "svelte/motion";
 import { cubicOut } from "svelte/easing";
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { clamp } from "shared-lib/util";
+import { db } from "../firebase/firebase";
 
 export const zoomGoal = writable(0);
 export const zoomTween = tweened(0, {
@@ -50,8 +53,22 @@ export const handleSub = (state: wasm.State) => {
                         let obj = wasm.GDObjectOpt.from_bytes(
                             decodeString(val, 126)
                         );
-
                         state.add_object(key, obj);
+
+                        // let username =
+                        //     get(loginData).currentUserData?.userDetails
+                        //         ?.username;
+                        // if (username != null) {
+                        //     (async () => {
+                        //         let placedBy = (
+                        //             await db.ref(`userPlaced/${key}`).get()
+                        //         ).val();
+                        //         if (username == placedBy) {
+                        //             canPlacePreview.set(true);
+                        //             state.set_preview_visibility(false);
+                        //         }
+                        //     })();
+                        // }
                     } catch (e: any) {
                         if (val.slice(0, 2) != "%%") {
                             console.error(

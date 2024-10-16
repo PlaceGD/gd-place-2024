@@ -16,6 +16,7 @@ import type {
     GradientReq,
     FirebaseError,
     MetaReq,
+    PlaceRes,
 } from "shared-lib/cloud_functions";
 import { GDColor, GDObjectOpt } from "wasm-lib";
 import { isValidObject, objects } from "shared-lib/gd";
@@ -63,7 +64,10 @@ const httpsCallable = <Req, Res = unknown>(
 };
 
 const functions = getFunctions();
-export const placeObject = httpsCallable<PlaceReq>(functions, "placeObject");
+export const placeObject = httpsCallable<PlaceReq, PlaceRes>(
+    functions,
+    "placeObject"
+);
 export const deleteObject = httpsCallable<DeleteReq>(functions, "deleteObject");
 export const reportUser = httpsCallable<ReportUserReq>(functions, "reportUser");
 export const banUser = httpsCallable<BanReq>(functions, "banUser");

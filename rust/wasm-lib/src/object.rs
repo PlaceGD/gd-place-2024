@@ -8,6 +8,7 @@ use rust_shared::{
         layer::ZLayer,
         level::{END_RADIUS, LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS},
         object::{GDColor, GDObject},
+        HitboxType,
     },
     util::Rect,
 };
@@ -124,7 +125,9 @@ impl GDObjectOpt {
         let funny_len = |v: Vec2| (v.x.powf(4.0) + v.y.powf(4.0)).powf(1.0 / 4.0);
         let funny_norm = |v: Vec2| v / funny_len(v);
 
-        if funny_len(top_right - pos) < END_RADIUS as f32 {
+        if OBJECT_INFO[self.id as usize].hitbox_type != HitboxType::NoHitbox
+            && funny_len(top_right - pos) < END_RADIUS as f32
+        {
             let new_pos = top_right + funny_norm(pos - top_right) * END_RADIUS as f32 * 1.001;
             self.x = new_pos.x;
             self.y = new_pos.y;

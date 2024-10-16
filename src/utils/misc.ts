@@ -1,10 +1,16 @@
 import { isValidObject, objects } from "shared-lib/gd";
 import * as wasm from "wasm-lib";
+import { canPlacePreview } from "../stores";
+import { get } from "svelte/store";
 
 export const setCheckedPreviewObject = (
     state: wasm.State,
     obj: wasm.GDObjectOpt
 ): boolean => {
+    if (get(canPlacePreview) == false) {
+        return false;
+    }
+
     if (
         objects[obj.id].hitboxType == "Solid" &&
         (obj.x_angle % 18 != 0 || obj.y_angle % 18 != 0)

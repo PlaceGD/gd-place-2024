@@ -56,6 +56,7 @@
         songPlaying,
         eventStarted,
         eventStartTime,
+        canPlacePreview,
     } from "../stores";
     import {
         MOVE_KEYBINDS,

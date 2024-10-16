@@ -104,6 +104,8 @@ export const editorData = persistLocalWritable(
     "editorData"
 );
 
+export const canPlacePreview = writable(true);
+
 export const editorSettings = persistLocalWritable(
     {
         showCollidable: false,

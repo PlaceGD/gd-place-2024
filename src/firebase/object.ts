@@ -5,21 +5,28 @@ import Toast from "../utils/toast";
 import { placeObject, deleteObject } from "./cloud_functions";
 import { encodeString } from "shared-lib/base_util";
 
-export const addObject = (obj: GDObjectOpt) => {
+export const addObject = (obj: GDObjectOpt, cb: (key: string) => void) => {
     let v = obj.bytes();
 
     let s = encodeString(v, 126);
 
-    placeObject({ object: s }).catch(e => {
-        if (e.details.code === 600) {
-            Toast.showInfoToast(
-                "There are too many objects in this chunk! Try deleting a few!"
-            );
-        } else {
-            console.error("Failed to place object", e.details.message);
-            Toast.showErrorToast(`Failed to place object. (${e.details.code})`);
-        }
-    });
+    placeObject({ object: s })
+        .then(v => {
+            cb(v.data);
+        })
+        .catch(e => {
+            console.log(e);
+            if (e.details.code === 600) {
+                Toast.showInfoToast(
+                    "There are too many objects in this chunk! Try deleting a few!"
+                );
+            } else {
+                console.error("Failed to place object", e.details.message);
+                Toast.showErrorToast(
+                    `Failed to place object. (${e.details.code})`
+                );
+            }
+        });
 };
 export const removeObject = (key: string, chunk: [number, number]) => {
     deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key }).catch(

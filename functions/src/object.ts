@@ -8,9 +8,10 @@ import {
     isValidObject,
 } from "shared-lib/gd";
 import { ChunkID } from "shared-lib/database";
-import { PlaceReq, DeleteReq } from "shared-lib/cloud_functions";
+import { PlaceReq, DeleteReq, PlaceRes } from "shared-lib/cloud_functions";
 import {
     CHUNK_SIZE_UNITS,
+    END_RADIUS,
     LEVEL_HEIGHT_UNITS,
     LEVEL_WIDTH_UNITS,
 } from "shared-lib/nexusgen";
@@ -33,7 +34,7 @@ const deserializeObject = (
 ): GDObjectOpt | null => {
     let bytes: Uint8Array = decodeString(data, 126); // crazy base
 
-    logger.debug("Reading bytes:", bytes);
+    //logger.debug("Reading bytes:", bytes);
 
     let reader: Reader<Uint8Array>;
     try {
@@ -44,31 +45,46 @@ const deserializeObject = (
     }
 
     const id = reader.readU16();
-    logger.debug("Object id:", id);
+    //logger.debug("Object id:", id);
     if (objects[id] == undefined) return null;
 
     const x = reader.readF32();
-    logger.debug("Object x:", x);
+    //logger.debug("Object x:", x);
     if (x < 0 || x > LEVEL_WIDTH_UNITS) return null;
     const y = reader.readF32();
-    logger.debug("Object y:", y);
+    //logger.debug("Object y:", y);
     if (y < 0 || y > LEVEL_HEIGHT_UNITS) return null;
+
+    if (objects[id].hitboxType != "NoHitbox") {
+        let top_right = [LEVEL_WIDTH_UNITS, LEVEL_HEIGHT_UNITS];
+        let pos = [x, y];
+
+        let safezone_funny_len = ([x, y]: [number, number]): number =>
+            Math.pow(Math.pow(x, 4.0) + Math.pow(y, 4.0), 1.0 / 4.0);
+
+        if (
+            safezone_funny_len([top_right[0] - pos[0], top_right[1] - pos[1]]) <
+            END_RADIUS
+        ) {
+            return null;
+        }
+    }
 
     ///// validated inside `isValidObject`
     const x_scale_exp = reader.readI8();
-    logger.debug("Object x_scale_exp:", x_scale_exp);
+    //logger.debug("Object x_scale_exp:", x_scale_exp);
     const x_angle = reader.readI8();
-    logger.debug("Object x_angle:", x_angle);
+    //logger.debug("Object x_angle:", x_angle);
     const y_scale_exp = reader.readI8();
-    logger.debug("Object y_scale_exp:", y_scale_exp);
+    //logger.debug("Object y_scale_exp:", y_scale_exp);
     const y_angle = reader.readI8();
-    logger.debug("Object y_angle:", y_angle);
+    //logger.debug("Object y_angle:", y_angle);
 
     const z_layer = reader.readU8();
-    logger.debug("Object z_layer:", z_layer);
+    //logger.debug("Object z_layer:", z_layer);
 
     const z_order = reader.readI8();
-    logger.debug("Object z_order:", z_order);
+    //logger.debug("Object z_order:", z_order);
     /////
 
     const main_color = deserializeColor(reader, logger);
@@ -103,19 +119,19 @@ const deserializeColor = (
     logger: LogGroup
 ): GDColor | null => {
     const r = reader.readU8();
-    logger.debug("Object color red", r);
+    //logger.debug("Object color red", r);
     if (r < 0 || r > 255) return null;
 
     const g = reader.readU8();
-    logger.debug("Object color green", r);
+    //logger.debug("Object color green", r);
     if (g < 0 || g > 255) return null;
 
     const b = reader.readU8();
-    logger.debug("Object color blue", r);
+    //logger.debug("Object color blue", r);
     if (b < 0 || b > 255) return null;
 
     const opacity = reader.readU8();
-    logger.debug("Object opacity", r);
+    //logger.debug("Object opacity", r);
     if (opacity < 0 || opacity > 255) return null;
 
     const blending = reader.readBool();
@@ -130,7 +146,7 @@ const deserializeColor = (
 };
 
 // #region placeObject
-export const placeObject = onCallAuthLogger<PlaceReq>(
+export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
     "placeObject",
     async (request, logger) => {
         const db = smartDatabase();
@@ -192,6 +208,8 @@ export const placeObject = onCallAuthLogger<PlaceReq>(
                 time: now,
             }),
         ]);
+
+        return objRef.key ?? "";
     }
 );
 

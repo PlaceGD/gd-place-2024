@@ -81,18 +81,13 @@
                                 //     playSound({ url: fireMp3Url, volume: 0.04 });
                                 // }
 
-                                resetPreviewColor(state, $menuSelectedObject);
-                                if (
-                                    COLOR_TRIGGERS.includes($menuSelectedObject)
-                                ) {
-                                    chooseRandomTriggerColor(
-                                        state,
-                                        $menuSelectedObject
-                                    );
+                                resetPreviewColor(state, id);
+                                if (COLOR_TRIGGERS.includes(id)) {
+                                    chooseRandomTriggerColor(state, id);
                                 } else {
                                     chooseDefaultColor();
                                 }
-                                if ($menuSelectedObject != SONG_TRIGGER) {
+                                if (id != SONG_TRIGGER) {
                                     stopSound("preview song");
                                     if ($songPlayingIsPreview)
                                         songPlaying.set(false);

@@ -24,6 +24,7 @@
         END_POS_X,
         END_POS_Y,
         END_RADIUS,
+        COLOR_TRIGGERS,
     } from "shared-lib/nexusgen";
     import { decodeString } from "shared-lib/base_util";
     import { subChunk, unsubChunk } from "../firebase/chunks";
@@ -169,20 +170,37 @@
         obj.y_scale_exp = 0;
         obj.y_angle = 18;
 
-        $menuMainColor = {
-            hue: 0,
-            x: 0,
-            y: 0,
-            opacity: 1,
-            blending: false,
-        };
-        $menuDetailColor = {
-            hue: 0,
-            x: 0,
-            y: 0,
-            opacity: 1,
-            blending: false,
-        };
+        if (COLOR_TRIGGERS.includes(obj.id)) {
+            $menuMainColor = {
+                hue: 8,
+                x: 2,
+                y: 2,
+                opacity: 1,
+                blending: false,
+            };
+            $menuDetailColor = {
+                hue: 8,
+                x: 2,
+                y: 2,
+                opacity: 1,
+                blending: false,
+            };
+        } else {
+            $menuMainColor = {
+                hue: 0,
+                x: 0,
+                y: 0,
+                opacity: 1,
+                blending: false,
+            };
+            $menuDetailColor = {
+                hue: 0,
+                x: 0,
+                y: 0,
+                opacity: 1,
+                blending: false,
+            };
+        }
         $menuZLayer = wasm.ZLayer.B2;
         $menuZOrder = 0;
         $menuSelectedSFX = 0;

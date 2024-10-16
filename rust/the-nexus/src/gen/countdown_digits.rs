@@ -229,7 +229,7 @@ fn to_gdobject(
         // z_layer: ZLayer::B3,
         z_order: o
             .get(&25)
-            .map(|v| v.parse::<i8>().unwrap())
+            .map(|v| v.parse::<i32>().unwrap().min(128).max(-128) as i8)
             .unwrap_or_else(|| OBJECT_DEFAULT_Z.get(&id).map(|v| v.1).unwrap_or(0)),
         main_color: o
             .get(&21)
@@ -269,12 +269,12 @@ fn apply_hsv(color: GDColor, hsv: Option<(f64, f64, f64, bool, bool)>) -> GDColo
         let modified = Hsv::new(
             (hsv.h + h).rem_euclid(360.0),
             if s_checked {
-                (hsv.s + s).min(1.0)
+                (hsv.s + s).min(1.0).max(0.0)
             } else {
                 hsv.s * s
             },
-            if s_checked {
-                (hsv.v * v).min(1.0)
+            if v_checked {
+                (hsv.v + v).min(1.0).max(0.0)
             } else {
                 hsv.v * v
             },

@@ -60,7 +60,12 @@
     import LayersTab from "./edit/LayersTab.svelte";
     import TransformTab from "./edit/TransformTab.svelte";
     import ObjectsTab from "./objects/ObjectsTab.svelte";
-    import { fade, type TransitionConfig } from "svelte/transition";
+    import {
+        blur,
+        fade,
+        scale,
+        type TransitionConfig,
+    } from "svelte/transition";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
     import { timerDisplay } from "shared-lib/util";
     import { SyncedCooldown } from "../utils/cooldown";
@@ -514,7 +519,12 @@
                     {/if}
                 </h1>
                 {#if pdButtonDisabled}
-                    <span class="proportional-nums font-pusab"
+                    <span
+                        class="proportional-nums font-pusab"
+                        style={$placeCooldownDisplay == "--:--" ||
+                        $placeCooldownDisplay == "--:--"
+                            ? "opacity: 0.5"
+                            : ""}
                         >{$menuTabGroup != TabGroup.Delete
                             ? $placeCooldownDisplay
                             : $deleteCooldownDisplay}</span

@@ -56,12 +56,12 @@ export const menuBuildTab: PersistentStore<ObjectCategory> =
     persistLocalWritable("Blocks", "menuBuildTab");
 export const menuSelectedObject = persistLocalWritable(1, "menuSelectedObject");
 export const menuMainColor = persistLocalWritable(
-    { hue: 0, x: 0, y: 0, opacity: 1, blending: false },
+    { hue: 5, x: 0, y: 0, opacity: 1, blending: false },
     "menuMainColor"
 );
 export const menuDetailColor = persistLocalWritable(
     {
-        hue: 0,
+        hue: 5,
         x: 0,
         y: 0,
         opacity: 1,

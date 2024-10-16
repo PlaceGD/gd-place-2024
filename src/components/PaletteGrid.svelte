@@ -6,7 +6,7 @@
         ground2Color,
         mainColorRGB,
         menuSelectedObject,
-        setLevelColor,
+        setPreviewColor,
     } from "../stores";
     import {
         BG_TRIGGER,
@@ -45,7 +45,7 @@
                         currentRow = r;
                         currentColumn = c;
 
-                        setLevelColor(
+                        setPreviewColor(
                             state,
                             $menuSelectedObject,
                             $mainColorRGB

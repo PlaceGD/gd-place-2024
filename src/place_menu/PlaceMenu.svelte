@@ -45,6 +45,11 @@
         menuSpeed,
         menuSelectedSong,
         canPlacePreview,
+        applyPreviewColor,
+        resetPreviewColor,
+        chooseRandomTriggerColor,
+        chooseDefaultColor,
+        songPlaying,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -75,7 +80,7 @@
     import { setCheckedPreviewObject } from "../utils/misc";
     import DeleteTab from "./delete/DeleteTab.svelte";
     import SFXSongTab from "./edit/SFXSongTab.svelte";
-    import { playSound } from "../utils/audio";
+    import { playSound, stopSound } from "../utils/audio";
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
 
@@ -96,11 +101,15 @@
         return tab;
     };
     $: {
+        resetPreviewColor(state, $menuSelectedObject);
         if (COLOR_TRIGGERS.includes($menuSelectedObject)) {
-            $menuMainColor.blending = false;
-            $menuDetailColor.blending = false;
-            $menuMainColor.opacity = 1;
-            $menuDetailColor.opacity = 1;
+            chooseRandomTriggerColor(state, $menuSelectedObject);
+        } else {
+            chooseDefaultColor();
+        }
+        if ($menuSelectedObject != SONG_TRIGGER) {
+            stopSound("preview song");
+            songPlaying.set(false);
         }
     }
     $: {
@@ -492,6 +501,7 @@
                     addObject(state.get_preview_object(), k => {
                         canPlacePreview.set(true);
                         state.set_preview_visibility(false);
+                        applyPreviewColor();
                         // state.add_object(k, state.get_preview_object());
                     });
                     // state.set_preview_visibility(false);

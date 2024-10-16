@@ -222,7 +222,140 @@ export const ground2Color = tweened(
     // "ground2Color",
     { duration: 500, easing: linear }
 );
+
+let nonPreviewColors = {
+    bg: DEFAULT_BG_COLOR,
+    ground1: DEFAULT_GROUND_1_COLOR,
+    ground2: DEFAULT_GROUND_2_COLOR,
+};
+
+let previewColor: {
+    obj_id: number;
+    rgb: [number, number, number];
+} | null = null;
+
 export const setLevelColor = (
+    state: State,
+    obj_id: number,
+    rgb: [number, number, number]
+) => {
+    __setLevelColor(state, obj_id, rgb);
+
+    if (obj_id == BG_TRIGGER) {
+        nonPreviewColors.bg = { r: rgb[0], g: rgb[1], b: rgb[2] };
+    }
+
+    if (obj_id == GROUND_TRIGGER) {
+        nonPreviewColors.ground1 = { r: rgb[0], g: rgb[1], b: rgb[2] };
+    }
+
+    if (obj_id == GROUND_2_TRIGGER) {
+        nonPreviewColors.ground2 = { r: rgb[0], g: rgb[1], b: rgb[2] };
+    }
+};
+
+export const setPreviewColor = (
+    state: State,
+    obj_id: number,
+    rgb: [number, number, number]
+) => {
+    __setLevelColor(state, obj_id, rgb);
+    previewColor = { obj_id, rgb };
+};
+
+export const resetPreviewColor = (state: State, new_id: number) => {
+    if (previewColor != null && new_id == previewColor.obj_id) {
+        previewColor = null;
+    } else if (previewColor != null) {
+        let color = { r: 0, g: 0, b: 0 };
+        if (previewColor.obj_id == BG_TRIGGER) {
+            color = nonPreviewColors.bg;
+        } else if (previewColor.obj_id == GROUND_TRIGGER) {
+            color = nonPreviewColors.ground1;
+        } else if (previewColor.obj_id == GROUND_2_TRIGGER) {
+            color = nonPreviewColors.ground2;
+        }
+
+        __setLevelColor(state, previewColor.obj_id, [
+            color.r,
+            color.g,
+            color.b,
+        ]);
+
+        previewColor = null;
+    }
+};
+
+export const applyPreviewColor = () => {
+    if (previewColor != null) {
+        if (previewColor.obj_id == BG_TRIGGER) {
+            nonPreviewColors.bg = {
+                r: previewColor.rgb[0],
+                g: previewColor.rgb[1],
+                b: previewColor.rgb[2],
+            };
+        } else if (previewColor.obj_id == GROUND_TRIGGER) {
+            nonPreviewColors.ground1 = {
+                r: previewColor.rgb[0],
+                g: previewColor.rgb[1],
+                b: previewColor.rgb[2],
+            };
+        } else if (previewColor.obj_id == GROUND_2_TRIGGER) {
+            nonPreviewColors.ground2 = {
+                r: previewColor.rgb[0],
+                g: previewColor.rgb[1],
+                b: previewColor.rgb[2],
+            };
+        }
+
+        previewColor = null;
+    }
+};
+
+export const chooseRandomTriggerColor = (state: State, obj_id: number) => {
+    const random_hue = Math.floor(Math.random() * colors.hues);
+    const random_x = Math.floor(Math.random() * (colors.columns - 1)) + 1;
+    const y = obj_id == BG_TRIGGER ? 3 : obj_id == GROUND_TRIGGER ? 2 : 1;
+    menuMainColor.set({
+        hue: random_hue,
+        x: random_x,
+        y,
+        opacity: 1,
+        blending: false,
+    });
+    menuDetailColor.set({
+        hue: random_hue,
+        x: random_x,
+        y,
+        opacity: 1,
+        blending: false,
+    });
+
+    setPreviewColor(
+        state,
+        obj_id,
+        colors.list[random_hue].palette[y][random_x]
+    );
+};
+
+export const chooseDefaultColor = () => {
+    menuMainColor.set({
+        hue: 0,
+        x: 0,
+        y: 0,
+        opacity: 1,
+        blending: false,
+    });
+    menuDetailColor.set({
+        hue: 0,
+        x: 0,
+        y: 0,
+        opacity: 1,
+        blending: false,
+    });
+};
+
+const __setLevelColor = (
     state: State,
     obj_id: number,
     rgb: [number, number, number]

@@ -8,11 +8,14 @@
     import { DEBUG } from "../../utils/debug";
 
     import {
+        chooseDefaultColor,
+        chooseRandomTriggerColor,
         menuBuildTab,
         menuEditTab,
         menuMinimized,
         menuSelectedObject,
         menuTabGroup,
+        resetPreviewColor,
         TabGroup,
     } from "../../stores";
     import ObjectButtonImage from "./ObjectButtonImage.svelte";
@@ -22,6 +25,7 @@
     import fireMp3Url from "../assets/fire.mp3?url";
     import {
         BG_TRIGGER,
+        COLOR_TRIGGERS,
         GROUND_2_TRIGGER,
         GROUND_TRIGGER,
         SFX_TRIGGER,
@@ -71,6 +75,7 @@
                                 // if (id == 3854) {
                                 //     playSound({ url: fireMp3Url, volume: 0.04 });
                                 // }
+
                                 $menuSelectedObject = id;
                             }}
                         >
@@ -88,7 +93,7 @@
                                 </span>
                             {/if}
                             <div class="relative w-full h-full flex-center">
-                                {#if [BG_TRIGGER, GROUND_TRIGGER, GROUND_2_TRIGGER].includes(id)}
+                                {#if COLOR_TRIGGERS.includes(id)}
                                     <div
                                         class={`${SPECIAL_ICON_TAILWIND} bg-white border border-black`}
                                     />

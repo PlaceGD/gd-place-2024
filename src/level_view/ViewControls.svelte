@@ -58,6 +58,10 @@
         eventStarted,
         eventStartTime,
         canPlacePreview,
+        setPreviewColor,
+        resetPreviewColor,
+        chooseRandomTriggerColor,
+        chooseDefaultColor,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -85,10 +89,10 @@
         zoomTween,
     } from "./view_controls";
     import { pinch, pan } from "svelte-gestures";
-    import { isValidObject, objects } from "shared-lib/gd";
+    import { colors, isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
-    import { playSound } from "../utils/audio";
+    import { playSound, stopSound } from "../utils/audio";
     import PlacedByText from "../widgets/PlacedByText.svelte";
     import { scale } from "svelte/transition";
     import { SFX_SOUNDS, SONG_SOUNDS } from "../place_menu/edit/sfx_tab";
@@ -170,36 +174,11 @@
         obj.y_scale_exp = 0;
         obj.y_angle = 18;
 
+        resetPreviewColor(state, obj.id);
         if (COLOR_TRIGGERS.includes(obj.id)) {
-            $menuMainColor = {
-                hue: 8,
-                x: 2,
-                y: 2,
-                opacity: 1,
-                blending: false,
-            };
-            $menuDetailColor = {
-                hue: 8,
-                x: 2,
-                y: 2,
-                opacity: 1,
-                blending: false,
-            };
+            chooseRandomTriggerColor(state, obj.id);
         } else {
-            $menuMainColor = {
-                hue: 0,
-                x: 0,
-                y: 0,
-                opacity: 1,
-                blending: false,
-            };
-            $menuDetailColor = {
-                hue: 0,
-                x: 0,
-                y: 0,
-                opacity: 1,
-                blending: false,
-            };
+            chooseDefaultColor();
         }
         $menuZLayer = wasm.ZLayer.B2;
         $menuZOrder = 0;
@@ -216,10 +195,13 @@
                 exclusive_channel: "preview sfx",
                 speed: semitonesToFactor($menuSpeed),
             });
-        } else if (obj.id == SONG_TRIGGER) {
+        }
+
+        if (obj.id == SONG_TRIGGER) {
             $menuSelectedSong = Math.floor(
                 Math.random() * SONG_TRIGGER_SONGS.length
             );
+            stopSound("song");
             playSound({
                 url: SONG_SOUNDS[SONG_TRIGGER_SONGS[$menuSelectedSong]],
                 exclusive_channel: "preview song",
@@ -229,6 +211,9 @@
                 },
             });
             songPlaying.set(true);
+        } else {
+            stopSound("preview song");
+            songPlaying.set(false);
         }
 
         if (setCheckedPreviewObject(state, obj)) {
@@ -324,13 +309,14 @@
                     let rand =
                         Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
 
+                    stopSound("preview song");
                     playSound({
                         url: SONG_SOUNDS[
                             SONG_TRIGGER_SONGS[i.obj.main_color.r]
                         ],
                         volume: 1.0 / Math.sqrt(audio_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
-                        exclusive_channel: "preview song", // because honestly 2 songs should never play on top of eachother
+                        exclusive_channel: "song", // because honestly 2 songs should never play on top of eachother
                     });
                     songPlaying.set(true);
                     audio_hit_idx += 1;

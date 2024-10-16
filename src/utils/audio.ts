@@ -40,3 +40,13 @@ export const stopSound = (channel: string) => {
         delete channels[channel];
     }
 };
+
+export const transferSoundChannel = (from: string, to: string) => {
+    if (channels[from] != undefined) {
+        if (channels[to] != undefined) {
+            channels[to].pause();
+        }
+        channels[to] = channels[from];
+        delete channels[from];
+    }
+};

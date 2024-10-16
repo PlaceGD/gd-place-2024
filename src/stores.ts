@@ -490,5 +490,6 @@ db.ref("userCount").on("value", v => {
 });
 
 export const songPlaying = writable(false);
+export let songPlayingIsPreview = writable(false);
 
 export const hasLoggedInBefore = writable(false);

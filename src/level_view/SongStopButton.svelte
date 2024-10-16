@@ -17,6 +17,7 @@
             on:click={() => {
                 songPlaying.set(false);
                 stopSound("preview song");
+                stopSound("song");
                 localStorage.setItem("hasStoppedMusicBefore", "true");
                 hasStoppedMusicBefore = true;
             }}

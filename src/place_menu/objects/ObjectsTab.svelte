@@ -16,6 +16,8 @@
         menuSelectedObject,
         menuTabGroup,
         resetPreviewColor,
+        songPlaying,
+        songPlayingIsPreview,
         TabGroup,
     } from "../../stores";
     import ObjectButtonImage from "./ObjectButtonImage.svelte";
@@ -31,12 +33,15 @@
         SFX_TRIGGER,
         SONG_TRIGGER,
     } from "shared-lib/nexusgen";
-    import { playSound } from "../../utils/audio";
+    import { playSound, stopSound } from "../../utils/audio";
     import sfxNoteIconUrl from "../assets/objects_tab/sfx_note.png";
     import songNoteIconUrl from "../assets/objects_tab/song_note.png";
     import FadedScroll from "../../components/FadedScroll.svelte";
     import Edit from "../../icons/Edit.svelte";
     import { EditTab } from "../edit/edit_tab";
+
+    import * as wasm from "wasm-lib";
+    export let state: wasm.State;
 
     let objects: [number, ObjectInfo][] = [];
 
@@ -75,6 +80,23 @@
                                 // if (id == 3854) {
                                 //     playSound({ url: fireMp3Url, volume: 0.04 });
                                 // }
+
+                                resetPreviewColor(state, $menuSelectedObject);
+                                if (
+                                    COLOR_TRIGGERS.includes($menuSelectedObject)
+                                ) {
+                                    chooseRandomTriggerColor(
+                                        state,
+                                        $menuSelectedObject
+                                    );
+                                } else {
+                                    chooseDefaultColor();
+                                }
+                                if ($menuSelectedObject != SONG_TRIGGER) {
+                                    stopSound("preview song");
+                                    if ($songPlayingIsPreview)
+                                        songPlaying.set(false);
+                                }
 
                                 $menuSelectedObject = id;
                             }}

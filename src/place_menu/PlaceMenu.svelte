@@ -50,6 +50,7 @@
         chooseRandomTriggerColor,
         chooseDefaultColor,
         songPlaying,
+        songPlayingIsPreview,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -80,7 +81,7 @@
     import { setCheckedPreviewObject } from "../utils/misc";
     import DeleteTab from "./delete/DeleteTab.svelte";
     import SFXSongTab from "./edit/SFXSongTab.svelte";
-    import { playSound, stopSound } from "../utils/audio";
+    import { playSound, stopSound, transferSoundChannel } from "../utils/audio";
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
 
@@ -100,18 +101,12 @@
         }
         return tab;
     };
-    $: {
-        resetPreviewColor(state, $menuSelectedObject);
-        if (COLOR_TRIGGERS.includes($menuSelectedObject)) {
-            chooseRandomTriggerColor(state, $menuSelectedObject);
-        } else {
-            chooseDefaultColor();
-        }
-        if ($menuSelectedObject != SONG_TRIGGER) {
-            stopSound("preview song");
-            songPlaying.set(false);
-        }
-    }
+
+    const stopPreviewSong = () => {
+        stopSound("preview song");
+        if ($songPlayingIsPreview) songPlaying.set(false);
+    };
+
     $: {
         if ($menuSelectedObject == ARROW_TRIGGER) {
             if ($menuEditTab == EditTab.Colors) {
@@ -198,6 +193,8 @@
     $: {
         if ($menuTabGroup == TabGroup.Delete && $canPlacePreview) {
             state.set_preview_visibility(false);
+            stopPreviewSong();
+            resetPreviewColor(state, 1);
         } else {
             $selectedObject = null;
             state.deselect_object();
@@ -463,7 +460,7 @@
                     object tab as it has to add all the elements back to the dom
                     its more efficient to just set them to not be visible
                 -->
-                <ObjectsTab></ObjectsTab>
+                <ObjectsTab bind:state></ObjectsTab>
                 <!-- EDIT TAB TRANSFORM + LAYERS -->
                 {#if $menuTabGroup == TabGroup.Edit}
                     {#if $menuEditTab == EditTab.Transform}
@@ -502,6 +499,8 @@
                         canPlacePreview.set(true);
                         state.set_preview_visibility(false);
                         applyPreviewColor();
+                        transferSoundChannel("preview song", "song");
+                        songPlayingIsPreview.set(false);
                         // state.add_object(k, state.get_preview_object());
                     });
                     // state.set_preview_visibility(false);

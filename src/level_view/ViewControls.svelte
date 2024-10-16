@@ -62,6 +62,7 @@
         resetPreviewColor,
         chooseRandomTriggerColor,
         chooseDefaultColor,
+        songPlayingIsPreview,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -211,9 +212,10 @@
                 },
             });
             songPlaying.set(true);
+            songPlayingIsPreview.set(true);
         } else {
             stopSound("preview song");
-            songPlaying.set(false);
+            if ($songPlayingIsPreview) songPlaying.set(false);
         }
 
         if (setCheckedPreviewObject(state, obj)) {
@@ -319,6 +321,7 @@
                         exclusive_channel: "song", // because honestly 2 songs should never play on top of eachother
                     });
                     songPlaying.set(true);
+                    songPlayingIsPreview.set(false);
                     audio_hit_idx += 1;
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);

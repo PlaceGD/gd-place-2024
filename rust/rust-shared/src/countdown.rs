@@ -143,15 +143,15 @@ macro_rules! parse_countdown_files {
 
 parse_countdown_files! {
     "spu7nix"           ("Spu7Nix"):            [0 => weights(3,   1,   1,   0.4) silly,  // 0
-                                                 1 => weights(3, 3, 3, 0.5) silly,  // 1
-                                                 2 => weights(0.5, 2,   0.5, 5  ) silly], // 2
+                                                 1 => weights(3,   3,   3,   0.5) silly,  // 1
+                                                 2 => weights(0.5, 1,   0.5, 3  ) silly], // 2
     "viprin"            ("Viprin"):             [3 => weights(3,   5,   5,   1  ) famous classic], // 3
     "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  ) classic], // 4
     "flow"              ("Flow"):               [3 => weights(1,   4,   4,   0.5) silly], // 5
     "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  ) pretty classic], // 6
     "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  ) pretty], // 7
     "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  ) pretty], // 8
-    "dreaminginsanity"  ("DreamingInsanity"):   [3 => weights(0.4, 1,   0.4, 3  ) silly], // 9
+    "dreaminginsanity"  ("DreamingInsanity"):   [3 => weights(0.4, 1,   0.4, 2  ) silly], // 9
     "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  ) classic], // 10
     "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 11
     "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 12
@@ -182,6 +182,7 @@ parse_countdown_files! {
     "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 37
     "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 38
     "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5)], // 39
+    "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 40
 }
 
 #[binrw]

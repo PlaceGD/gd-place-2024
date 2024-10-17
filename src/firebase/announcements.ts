@@ -13,7 +13,9 @@ db.ref("announcement").on("value", s => {
         return;
     }
 
-    Toast.showAnnouncementToast(data.text, () => {
-        lastClosedAnnouncement.set(Date.now());
-    });
+    if (typeof window != "undefined") {
+        Toast.showAnnouncementToast(data.text, () => {
+            lastClosedAnnouncement.set(Date.now());
+        });
+    }
 });

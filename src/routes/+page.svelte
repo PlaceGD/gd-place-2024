@@ -22,6 +22,7 @@
     import { cubicIn, linear, sineIn } from "svelte/easing";
     import { map } from "shared-lib/util";
     import Guide from "../guide/Guide.svelte";
+    import { beginGuide } from "../guide/guide";
 
     let openTrans = tweened(
         0,
@@ -58,6 +59,8 @@
 
     let viewSize = [1000, 1000];
 </script>
+
+<button class="text-white" on:click={beginGuide}>TEST</button>
 
 <ToastContainers />
 <DataPopup />

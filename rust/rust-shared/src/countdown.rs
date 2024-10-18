@@ -183,6 +183,9 @@ parse_countdown_files! {
     "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 38
     "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5)], // 39
     "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 40
+    "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 41
+    "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   8  ) silly pretty classic], // 42
+    "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 43
 }
 
 #[binrw]
@@ -224,15 +227,15 @@ const WEIGHT_POWER: f64 = 0.8;
 
 // runs in nexus gen
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
-    let mut switches = vec![[0, 5, 9, 2], [28, 3, 12, 38]]; // final sets
+    let mut switches = vec![[0, 5, 9, 2]]; // final sets
 
-    for i in 1..n {
+    for i in 0..n {
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev
         let mut sets = [usize::MAX; 4];
         let mut names = [""; 4];
 
         let prev = &switches[i];
-        let prev2 = &switches[i - 1];
+        //let prev2 = &switches[i - 1];
         // let mut j = 0;
         // let mut r = 0;
         // while j < 4 {
@@ -271,7 +274,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
             possible_sets.retain(|&set| {
                 config[j].compat(get_set_labels(set))
                     && !prev.contains(&set)
-                    && !prev2.contains(&set)
+                    //&& !prev2.contains(&set)
                     && !sets.contains(&set)
                     && !names.contains(&get_creator_name(set))
             });
@@ -281,7 +284,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                 possible_sets = (0..DIGIT_SETS).collect::<Vec<_>>();
                 possible_sets.retain(|&set| {
                     !prev.contains(&set)
-                        && !prev2.contains(&set)
+                        //&& !prev2.contains(&set)
                         && !sets.contains(&set)
                         && !names.contains(&get_creator_name(set))
                 });

@@ -45,7 +45,7 @@ impl Countdown {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [28, 3, 12, 40],
+            sets: [28, 3, 12, 43],
 
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
@@ -66,6 +66,7 @@ impl Countdown {
         //console_log!("{time_until}");
 
         let sets = SET_SWITCHES[switch_id % SET_SWITCHES.len()];
+        //console_log!("{}", switch_id % SET_SWITCHES.len());
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)
@@ -454,10 +455,33 @@ impl CountdownDigit {
                 //     console_log!("{} {}", obj_chebyshev_dist(obj_out.0, obj_in.0), obj_in.0.y);
                 // }
                 if obj_in.0.id == obj_out.0.id
-                    && obj_chebyshev_dist(obj_out.0, obj_in.0) < 60.0
+                    && obj_chebyshev_dist(obj_out.0, obj_in.0) <= 60.0
                     && close_colors(obj_out.0, obj_in.0)
                     && obj_scale_difference(obj_out.0, obj_in.0) <= 3.0
                 //&& same_transform(obj_out.0, obj_in.0)
+                {
+                    obj_in.1 = false;
+                    obj_out.1 = false;
+                    self.objects.push(TransitioningObject::new(
+                        AnimType::Transition(obj_out.0, obj_in.0, random() < 0.5),
+                        0.7,
+                        false,
+                    ));
+                    break;
+                }
+            }
+        }
+
+        // longer transition
+        for obj_out in trans_out.iter_mut().filter(|o| o.1) {
+            for obj_in in trans_in.iter_mut().filter(|o| o.1) {
+                // if obj_in.0.id == 3810 {
+                //     console_log!("{} {}", obj_chebyshev_dist(obj_out.0, obj_in.0), obj_in.0.y);
+                // }
+                if obj_in.0.id == obj_out.0.id
+                    && obj_chebyshev_dist(obj_out.0, obj_in.0) < 90.0
+                    && close_colors(obj_out.0, obj_in.0)
+                    && same_transform(obj_out.0, obj_in.0)
                 {
                     obj_in.1 = false;
                     obj_out.1 = false;
@@ -881,7 +905,7 @@ fn transform_animation(obj: &mut GDObject, target: GDObject, d: f64) -> Option<G
         }
         i1 = i2 / i2len;
         j1 = j2 / j2len;
-        let scale = (((d as f32) / 0.6).max(0.0).min(1.0));
+        let scale = ((d as f32) / 0.6).max(0.0).min(1.0);
 
         i1 *= lerp!(i1len, i2len, scale);
         j1 *= lerp!(j1len, j2len, scale);
@@ -920,4 +944,31 @@ fn rotate_between(a: Vec2, b: Vec2, d: f32) -> Vec2 {
     let angle = angle * d;
     let rot = Affine2::from_angle(angle);
     rot.transform_vector2(a)
+}
+
+fn closest_iterator(range: std::ops::Range<usize>, x: usize) -> impl Iterator<Item = usize> {
+    let mut sequence = Vec::with_capacity((range.end - range.start) as usize);
+    let start = range.start;
+    let end = range.end;
+
+    let max_distance = std::cmp::max(x - start, end - 1 - x);
+
+    for offset in 0..=max_distance {
+        if offset == 0 {
+            if x >= start && x < end {
+                sequence.push(x);
+            }
+        } else {
+            let right = x + offset;
+            if right < end {
+                sequence.push(right);
+            }
+            let left = x - offset;
+            if left >= start {
+                sequence.push(left);
+            }
+        }
+    }
+
+    sequence.into_iter()
 }

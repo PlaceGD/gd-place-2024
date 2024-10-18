@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { afterUpdate, onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { VisualObserver } from "viz-observer";
 
     export let target: string;
+
     export let tooltipSize: { width: number; height: number };
 
     export let tooltipLeft: number;
@@ -19,7 +20,7 @@
     let targetElemRect: DOMRect | null;
 
     let observer: VisualObserver | null;
-    onMount(() => {
+    const updateObserver = () => {
         observer = new VisualObserver(entries => {
             targetElemRect = entries[0].contentRect;
         });
@@ -30,9 +31,23 @@
             observer.observe(elem);
             targetElemRect = elem.getBoundingClientRect();
         } else {
-            console.warn("no target elem found for guide:", target);
+            console.warn(
+                `no target elem found for guide: ${target}. set "data-guide=" on an element`
+            );
         }
+    };
+
+    onMount(() => {
+        updateObserver();
     });
+
+    $: {
+        if (observer && target) {
+            observer.disconnect();
+            elemTrap.destroy();
+            updateObserver();
+        }
+    }
 
     onDestroy(() => {
         observer?.disconnect();
@@ -46,7 +61,7 @@
     let top: number = 0;
     let bottom: number = 0;
 
-    afterUpdate(() => {
+    $: {
         if (targetElemRect) {
             left = targetElemRect.left;
             right = left + targetElemRect.width;
@@ -64,13 +79,32 @@
                 tooltipTop = bottom;
             }
         }
-    });
+    }
 </script>
 
-<svelte:window bind:innerHeight={windowHeight} bind:innerWidth={windowWidth} />
+<svelte:window
+    bind:innerHeight={windowHeight}
+    bind:innerWidth={windowWidth}
+    on:pointerdown={e => {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        if (
+            targetElemRect &&
+            x >= targetElemRect.left &&
+            x <= targetElemRect.right &&
+            y >= targetElemRect.top &&
+            y <= targetElemRect.bottom
+        ) {
+        } else {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+    }}
+/>
 
 <div
-    class="fixed top-0 left-0 z-[51] w-screen h-screen bg-black/40"
+    class="fixed top-0 left-0 z-[51] w-screen h-screen bg-black/70"
     style={`
         clip-path: polygon(
             0px 0px,
@@ -86,6 +120,3 @@
         )
     `}
 ></div>
-
-<!-- disable clicking of the element -->
-<div class="absolute w-screen h-screen z-[52] pointer-events-auto"></div>

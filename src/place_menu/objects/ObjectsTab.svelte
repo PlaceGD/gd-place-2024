@@ -41,6 +41,7 @@
     import { EditTab } from "../edit/edit_tab";
 
     import * as wasm from "wasm-lib";
+    import { GUIDE_ELEM_IDS } from "../../guide/guide";
     export let state: wasm.State;
 
     let objects: [number, ObjectInfo][] = [];
@@ -59,6 +60,7 @@
         "!hidden": $menuTabGroup != TabGroup.Build,
     })}
     disabled={$menuMinimized}
+    data-guide={GUIDE_ELEM_IDS.objectsList}
 >
     <FadedScroll update={$menuTabGroup} threshold={1}>
         {#each Object.entries(CATEGORY_ICONS) as [key, path] (key)}

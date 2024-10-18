@@ -84,6 +84,7 @@
     import { playSound, stopSound, transferSoundChannel } from "../utils/audio";
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
+    import { GUIDE_ELEM_IDS } from "../guide/guide";
 
     export let state: wasm.State;
 
@@ -273,6 +274,7 @@
             "flex justify-end text-white sm:flex-col pointer-events-all": true,
             "gap-2": !$menuMinimized,
         })}
+        data-guide={GUIDE_ELEM_IDS.placeMenu}
     >
         <div
             class="grid flex-1 gap-2 menu-grid-container"
@@ -309,6 +311,7 @@
                         e.currentTarget.scrollLeft += e.deltaY / 10;
                     }}
                     data-minimised={+$menuMinimized}
+                    data-guide={GUIDE_ELEM_IDS.placeMenuTabs}
                 >
                     {#if $menuTabGroup == TabGroup.Build}
                         {#each Object.entries(CATEGORY_ICONS) as [key, path]}
@@ -384,6 +387,7 @@
             <fieldset
                 class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
                 disabled={$menuMinimized}
+                data-guide={GUIDE_ELEM_IDS.placeMenuModes}
             >
                 <ul
                     class="absolute flex flex-col items-center w-full h-full gap-6 px-2 md:px-1.5 py-2 justify-evenly"
@@ -516,6 +520,7 @@
                 }
             }}
             disabled={pdButtonDisabled || $menuMinimized}
+            data-guide={GUIDE_ELEM_IDS.pdButton}
         >
             <div
                 class="flex flex-col w-full h-full gap-1 py-4 text-5xl sm:flex-row sm:gap-2 flex-center md:text-4xl sm:text-4xl text-stroke"

@@ -1,0 +1,29 @@
+<script lang="ts">
+    import * as wasm from "wasm-lib";
+    import { onMount } from "svelte";
+    import type { GuideAction } from "./guideActions";
+
+    export let step: GuideAction;
+    export let state: wasm.State;
+    export let tooltipSize: { width: number; height: number };
+
+    export let tooltipTop: number = 0;
+    export let tooltipLeft: number = 0;
+
+    const setTooltipPos = () => {
+        [tooltipLeft, tooltipTop] = step?.getTooltipPos?.({
+            state,
+            tooltipSize,
+        }) ?? [0, 0];
+    };
+
+    onMount(async () => {
+        setTooltipPos();
+    });
+</script>
+
+<svelte:window
+    on:resize={() => {
+        setTooltipPos();
+    }}
+/>

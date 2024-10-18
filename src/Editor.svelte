@@ -24,6 +24,7 @@
     import EventMenu from "./place_menu/EventMenu.svelte";
     import SongStopButton from "./level_view/SongStopButton.svelte";
     import EndCountdown from "./level_view/EndCountdown.svelte";
+    import Guide from "./guide/Guide.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -48,6 +49,8 @@
 
 <div class="absolute w-full h-full">
     {#if state != null}
+        <Guide {state} />
+
         <div
             class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
         >

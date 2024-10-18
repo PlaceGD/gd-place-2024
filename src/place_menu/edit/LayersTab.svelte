@@ -13,6 +13,7 @@
 
     import moveSmallIconUrl from "../assets/edit_tab/move_small.svg?url";
     import { notNaNAnd } from "../../utils/misc";
+    import { GUIDE_ELEM_IDS } from "../../guide/guide";
 
     const layerName = (layer: ZLayer) => {
         switch (layer) {
@@ -90,6 +91,7 @@
 <fieldset
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items layers-tab-container md:text-lg sm:text-base"
     disabled={$menuMinimized}
+    data-guide={GUIDE_ELEM_IDS.layersTab}
 >
     <ul class="flex flex-col h-full buttons w-min">
         <li

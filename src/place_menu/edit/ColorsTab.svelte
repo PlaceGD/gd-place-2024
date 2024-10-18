@@ -21,6 +21,7 @@
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
 
     import * as wasm from "wasm-lib";
+    import { GUIDE_ELEM_IDS } from "../../guide/guide";
     export let state: wasm.State;
 
     enum ColorTab {
@@ -56,6 +57,7 @@
 <fieldset
     class="items-center w-full h-full p-4 text-xl md:p-2 gap-x-4 items colors-tab-container md:text-lg sm:text-base"
     disabled={$menuMinimized}
+    data-guide={GUIDE_ELEM_IDS.colorsTab}
 >
     <ul class="flex flex-col h-full buttons">
         <li class="relative flex-1 w-full h-full flex-center font-pusab">

@@ -16,6 +16,7 @@
     import rotateIconUrl from "../assets/edit_tab/rotate.svg?url";
     import warpIconUrl from "../assets/edit_tab/warp.svg?url";
     import scaleIconUrl from "../assets/edit_tab/scale.svg?url";
+    import { GUIDE_ELEM_IDS } from "../../guide/guide";
 
     export let state: wasm.State;
 
@@ -41,7 +42,11 @@
     };
 </script>
 
-<fieldset class="transform-container" disabled={$menuMinimized}>
+<fieldset
+    class="transform-container"
+    disabled={$menuMinimized}
+    data-guide={GUIDE_ELEM_IDS.transformTab}
+>
     <div
         class="flex items-center gap-2 grow-1 shrink-0 md:gap-4 xs:gap-1 move md:flex-center"
     >

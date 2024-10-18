@@ -1,20 +1,43 @@
-import type { ComponentType } from "svelte";
+import type { ComponentType, EventDispatcher } from "svelte";
+import * as wasm from "wasm-lib";
 import HighlightElementComp from "./HighlightElement.svelte";
+import { moveCamera } from "../level_view/view_controls";
+import { get, type Unsubscriber, type Writable } from "svelte/store";
 
 type Props<C> =
     C extends ComponentType<infer X> ? Partial<X["$$prop_def"]> : never;
 
+type ActionPropsBase = {
+    state: wasm.State;
+    tooltipSize: { width: number; height: number };
+};
+type ActionBeginEndProps = ActionPropsBase & {
+    direction?: -1 | 1;
+    nextStep: () => Promise<void>;
+    prevStep: () => Promise<void>;
+};
+
 export abstract class GuideAction {
-    component?: ComponentType;
-    props?(): Props<ComponentType>;
+    requiresInteraction: boolean = false;
+
+    getComponent?(): ComponentType | undefined;
+    getProps?(): Props<ComponentType> | undefined;
 
     constructor(public description: string) {}
+
+    // used when a component is not provided
+    getTooltipPos?(props: ActionPropsBase): [number, number] | undefined;
+
+    async onBeginAction?(props: ActionBeginEndProps): Promise<void>;
+    async onEndAction?(props: ActionBeginEndProps): Promise<void>;
 }
 
 export class HighlightElement extends GuideAction {
-    override component = HighlightElementComp;
+    override getComponent() {
+        return HighlightElementComp;
+    }
 
-    override props(): Props<typeof HighlightElementComp> {
+    override getProps(): Props<typeof HighlightElementComp> {
         return {
             target: this.target,
         };
@@ -22,8 +45,163 @@ export class HighlightElement extends GuideAction {
 
     constructor(
         private target: string,
-        description: string
+        description: string,
+        public allowClickingInRegion: boolean = false
     ) {
         super(description);
+    }
+}
+
+export class EditorGuide extends GuideAction {
+    constructor(
+        description: string,
+        private cameraPos: { x: number; y: number; zoom: number },
+        private tooltiopPos: { x: number; y: number }
+    ) {
+        super(description);
+    }
+
+    override getTooltipPos(props: ActionPropsBase): [number, number] {
+        const origin = props.state.get_screen_pos(0, 0);
+        const screenScale = props.state.get_zoom_scale();
+
+        const pos = props.state
+            .get_screen_pos(this.tooltiopPos.x, this.tooltiopPos.y)
+            .map(v => v / window.devicePixelRatio);
+
+        return [
+            //origin[0] / window.devicePixelRatio + pos[0] * screenScale,
+            //origin[1] / window.devicePixelRatio + pos[1] * screenScale,
+            0, 0,
+        ];
+    }
+
+    override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
+        moveCamera(props.state, this.cameraPos.x, this.cameraPos.y);
+        props.state.set_zoom(this.cameraPos.zoom);
+    }
+}
+
+export class WaitThen<T extends GuideAction> extends GuideAction {
+    constructor(
+        private action: T,
+        private delay: number
+    ) {
+        super(action.description);
+
+        this.action = action;
+    }
+
+    override getComponent() {
+        return this.action?.getComponent?.();
+    }
+
+    override getProps() {
+        return this.action?.getProps?.();
+    }
+
+    override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
+        await new Promise(res => setTimeout(res, this.delay));
+        await this.action?.onBeginAction?.(props);
+    }
+
+    override async onEndAction(props: ActionBeginEndProps): Promise<void> {
+        await this.action?.onEndAction?.(props);
+    }
+
+    override getTooltipPos?(
+        props: ActionPropsBase
+    ): [number, number] | undefined {
+        return this.action?.getTooltipPos?.(props);
+    }
+}
+
+export class Setup<T extends GuideAction> extends GuideAction {
+    constructor(
+        private setup: {
+            begin?: (props: ActionBeginEndProps) => Promise<void>;
+            end?: (props: ActionBeginEndProps) => Promise<void>;
+        },
+        private action: T
+    ) {
+        super(action.description);
+
+        this.action = action;
+    }
+
+    override getComponent() {
+        return this.action?.getComponent?.();
+    }
+
+    override getProps() {
+        return this.action?.getProps?.();
+    }
+
+    override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
+        await this.setup?.begin?.(props);
+        await this.action?.onBeginAction?.(props);
+    }
+
+    override async onEndAction(props: ActionBeginEndProps): Promise<void> {
+        await this.setup?.end?.(props);
+        await this.action?.onEndAction?.(props);
+    }
+
+    override getTooltipPos?(
+        props: ActionPropsBase
+    ): [number, number] | undefined {
+        return this.action?.getTooltipPos?.(props);
+    }
+}
+
+export class ClickInteraction<T extends GuideAction> extends GuideAction {
+    override requiresInteraction: boolean = true;
+
+    constructor(
+        private selector: string,
+        private action: T
+    ) {
+        super(action.description);
+
+        this.action = action;
+    }
+
+    override getComponent() {
+        return this.action?.getComponent?.();
+    }
+    override getProps() {
+        return this.action?.getProps?.();
+    }
+
+    private onClickHandler(props: ActionBeginEndProps) {
+        return (e: PointerEvent & { originalTarget: HTMLElement }) => {
+            if (e.button === 0 && e.originalTarget.matches(this.selector)) {
+                props.nextStep();
+            }
+        };
+    }
+
+    override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
+        await this.action?.onBeginAction?.(props);
+
+        if (props.direction == 1) {
+            document.addEventListener(
+                "click",
+                this.onClickHandler(props) as any
+            );
+        }
+    }
+    override async onEndAction(props: ActionBeginEndProps): Promise<void> {
+        document.removeEventListener(
+            "click",
+            this.onClickHandler(props) as any
+        );
+
+        await this.action?.onEndAction?.(props);
+    }
+    override getTooltipPos?(
+        props: ActionPropsBase
+    ): [number, number] | undefined {
+        return this.action?.getTooltipPos?.(props);
     }
 }

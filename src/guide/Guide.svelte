@@ -100,8 +100,6 @@
         delayedStep = step;
         currentStep = GUIDE_STEPS[step];
     };
-
-    $: console.log(currentStep);
 </script>
 
 <svelte:window
@@ -134,7 +132,7 @@
     {/if}
 
     <div
-        class="absolute flex flex-col z-[53]"
+        class="absolute flex flex-col z-[53] w-full h-full flex-center"
         style={`
             left: ${tooltipLeft}px;
             top: ${tooltipTop}px;    
@@ -143,7 +141,7 @@
         bind:clientHeight={tooltipSize.height}
     >
         <div
-            class="flex flex-col gap-2 p-4 text-white rounded-lg xs:p-2 menu-panel flex-center max-w-[400px] outline-2 outline outline-white/20 m-4"
+            class="absolute z-[53] flex flex-col gap-2 p-4 text-white rounded-lg xs:p-2 menu-panel flex-center max-w-[400px] outline-2 outline pulsing-outline m-4"
         >
             <span class="text-base sm:text-sm xs:text-xs">
                 {currentStep.description}

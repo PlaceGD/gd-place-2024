@@ -49,17 +49,17 @@ export const GUIDE_STEPS: GuideAction[] = [
                 y: 0,
                 zoom: 12,
             },
-            { x: 0, y: 0 }
+            { x: 80, y: -10 }
         )
     ),
     new EditorGuide(
         "TODO end of level",
         {
-            x: LEVEL_WIDTH_UNITS,
-            y: LEVEL_HEIGHT_UNITS,
+            x: LEVEL_WIDTH_UNITS - 70,
+            y: LEVEL_HEIGHT_UNITS - 70,
             zoom: 12,
         },
-        { x: 0, y: 0 }
+        { x: LEVEL_WIDTH_UNITS + 30, y: LEVEL_HEIGHT_UNITS - 80 }
     ),
     new Setup(
         {

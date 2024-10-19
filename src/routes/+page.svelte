@@ -58,10 +58,6 @@
         ($rawSpritesheetData != null ? 0.2 : 0.0);
 
     let viewSize = [1000, 1000];
-
-    const test = v => {
-        console.log(v);
-    };
 </script>
 
 <!-- <button class="text-white" on:click={beginGuide}>TEST</button> -->

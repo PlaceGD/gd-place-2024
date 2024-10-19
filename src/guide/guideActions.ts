@@ -65,17 +65,10 @@ export class EditorGuide extends GuideAction {
     }
 
     override getTooltipPos(props: ActionPropsBase): [number, number] {
-        const origin = props.state.get_screen_pos(0, 0);
-        const screenScale = props.state.get_zoom_scale();
-
         const pos = props.state
             .get_screen_pos(this.tooltiopPos.x, this.tooltiopPos.y)
             .map(v => v / window.devicePixelRatio);
-
-        return [
-            origin[0] / window.devicePixelRatio + pos[0] * screenScale,
-            origin[1] / window.devicePixelRatio + pos[1] * screenScale,
-        ];
+        return [pos[0], -pos[1]];
     }
 
     override async onBeginAction(props: ActionBeginEndProps): Promise<void> {

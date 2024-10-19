@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as wasm from "wasm-lib";
-    import { onMount } from "svelte";
+    import { beforeUpdate, onMount } from "svelte";
     import type { GuideAction } from "./guideActions";
 
     export let step: GuideAction;
@@ -18,6 +18,10 @@
     };
 
     onMount(async () => {
+        setTooltipPos();
+    });
+
+    beforeUpdate(() => {
         setTooltipPos();
     });
 </script>

@@ -39,7 +39,7 @@
     style={`
         left: ${pos[0]}px;
         top: ${-pos[1]}px;
-        transform: scale(${scale * (scaleWithZoom ? zoomScale : 1)});
+        transform: scale(${(scale * (scaleWithZoom ? zoomScale : 1)) / window.devicePixelRatio});
     `}
 >
     <slot />

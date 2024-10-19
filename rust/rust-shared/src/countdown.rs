@@ -188,6 +188,8 @@ parse_countdown_files! {
     "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 43
 }
 
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([12, 21, 3, 24]);
+
 #[binrw]
 #[brw(little)]
 pub struct DigitObjects {

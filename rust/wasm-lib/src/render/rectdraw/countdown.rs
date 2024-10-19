@@ -4,7 +4,7 @@ use binrw::BinRead;
 use glam::{vec2, vec4, Affine2, Vec2};
 use rust_shared::{
     console_log,
-    countdown::{CountdownDigitSets, DigitObjects},
+    countdown::{CountdownDigitSets, DigitObjects, TEST_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
     util::random,
@@ -65,7 +65,7 @@ impl Countdown {
         let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
         //console_log!("{time_until}");
 
-        let sets = SET_SWITCHES[switch_id % SET_SWITCHES.len()];
+        let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
         //console_log!("{}", switch_id % SET_SWITCHES.len());
 
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {

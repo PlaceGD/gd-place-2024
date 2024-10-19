@@ -3,6 +3,7 @@
     import { VisualObserver } from "viz-observer";
 
     export let target: string;
+    export let allowClicking: boolean;
 
     export let tooltipSize: { width: number; height: number };
 
@@ -44,7 +45,6 @@
     $: {
         if (observer && target) {
             observer.disconnect();
-            elemTrap.destroy();
             updateObserver();
         }
     }
@@ -102,6 +102,11 @@
         }
     }}
 />
+
+{#if !allowClicking}
+    <!-- disable clicking of the element -->
+    <div class="absolute w-screen h-screen z-[52] pointer-events-auto"></div>
+{/if}
 
 <div
     class="fixed top-0 left-0 z-[51] w-screen h-screen bg-black/70"

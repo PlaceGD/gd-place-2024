@@ -60,7 +60,6 @@
         "!hidden": $menuTabGroup != TabGroup.Build,
     })}
     disabled={$menuMinimized}
-    data-guide={GUIDE_ELEM_IDS.objectsList}
 >
     <FadedScroll update={$menuTabGroup} threshold={1}>
         {#each Object.entries(CATEGORY_ICONS) as [key, path] (key)}

@@ -60,12 +60,10 @@
     let viewSize = [1000, 1000];
 </script>
 
-<button class="text-white" on:click={beginGuide}>TEST</button>
+<button class="text-white absolute z-[1000]" on:click={beginGuide}>TEST</button>
 
 <ToastContainers />
 <DataPopup />
-
-<Guide />
 
 <div
     class="relative w-screen h-screen overflow-hidden"

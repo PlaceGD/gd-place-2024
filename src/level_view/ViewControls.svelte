@@ -101,6 +101,7 @@
 
     import Image from "../components/Image.svelte";
     import ClosableWindow from "../components/ClosableWindow.svelte";
+    import { walmart } from "../guide/guide";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -360,9 +361,20 @@
             let hit = state.objects_hit_at(mx, my, 0.0);
             if ($menuTabGroup == TabGroup.Delete && $canPlaceEditDelete) {
                 trySelectAt(mx, my, hit);
+
+                walmart.update(v => {
+                    v.hasDeleteSelection =
+                        state.get_selected_object_key() != undefined;
+                    return v;
+                });
             } else {
                 if (!tryRunTriggers(hit) && $canPlaceEditDelete) {
                     placePreview(mx, my);
+
+                    walmart.update(v => {
+                        v.hasPlacedObject = state.is_preview_visible();
+                        return v;
+                    });
                 }
             }
         }

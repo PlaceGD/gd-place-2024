@@ -100,6 +100,8 @@
         delayedStep = step;
         currentStep = GUIDE_STEPS[step];
     };
+
+    $: console.log(currentStep);
 </script>
 
 <svelte:window
@@ -111,13 +113,6 @@
 />
 
 {#if currentStep != null}
-    {#if !currentStep.requiresInteraction}
-        <!-- disable clicking of the element -->
-        <div
-            class="absolute w-screen h-screen z-[52] pointer-events-auto"
-        ></div>
-    {/if}
-
     {#if currentStep?.getComponent?.() != undefined}
         {@const props = currentStep?.getProps?.() ?? {}}
         <svelte:component
@@ -154,7 +149,7 @@
                 {currentStep.description}
             </span>
             <div class="flex w-full gap-4 xs:gap-2">
-                {#if !currentStep.requiresInteraction}
+                {#if !currentStep.getRequiresInteraction()}
                     <IconButton
                         class="w-24"
                         disabled={step == 0 || !canChangeStep}
@@ -171,7 +166,7 @@
                 <div class="text-center tabular-nums hover-text-transition">
                     {delayedStep + 1}/{GUIDE_STEPS.length}
                 </div>
-                {#if !currentStep.requiresInteraction}
+                {#if !currentStep.getRequiresInteraction()}
                     <IconButton
                         class="w-24"
                         disabled={!canChangeStep}

@@ -18,7 +18,9 @@ type ActionBeginEndProps = ActionPropsBase & {
 };
 
 export abstract class GuideAction {
-    requiresInteraction: boolean = false;
+    getRequiresInteraction(): boolean {
+        return false;
+    }
 
     getComponent?(): ComponentType | undefined;
     getProps?(): Props<ComponentType> | undefined;
@@ -40,6 +42,7 @@ export class HighlightElement extends GuideAction {
     override getProps(): Props<typeof HighlightElementComp> {
         return {
             target: this.target,
+            allowClicking: this.allowClickingInRegion,
         };
     }
 
@@ -55,7 +58,7 @@ export class HighlightElement extends GuideAction {
 export class EditorGuide extends GuideAction {
     constructor(
         description: string,
-        private cameraPos: { x: number; y: number; zoom: number },
+        private cameraPos: { x: number; y: number; zoom: number } | null,
         private tooltiopPos: { x: number; y: number }
     ) {
         super(description);
@@ -70,15 +73,16 @@ export class EditorGuide extends GuideAction {
             .map(v => v / window.devicePixelRatio);
 
         return [
-            //origin[0] / window.devicePixelRatio + pos[0] * screenScale,
-            //origin[1] / window.devicePixelRatio + pos[1] * screenScale,
-            0, 0,
+            origin[0] / window.devicePixelRatio + pos[0] * screenScale,
+            origin[1] / window.devicePixelRatio + pos[1] * screenScale,
         ];
     }
 
     override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
-        moveCamera(props.state, this.cameraPos.x, this.cameraPos.y);
-        props.state.set_zoom(this.cameraPos.zoom);
+        if (this.cameraPos) {
+            moveCamera(props.state, this.cameraPos.x, this.cameraPos.y);
+            props.state.set_zoom(this.cameraPos.zoom);
+        }
     }
 }
 
@@ -90,6 +94,10 @@ export class WaitThen<T extends GuideAction> extends GuideAction {
         super(action.description);
 
         this.action = action;
+    }
+
+    override getRequiresInteraction() {
+        return this.action.getRequiresInteraction();
     }
 
     override getComponent() {
@@ -129,6 +137,10 @@ export class Setup<T extends GuideAction> extends GuideAction {
         this.action = action;
     }
 
+    override getRequiresInteraction() {
+        return this.action.getRequiresInteraction();
+    }
+
     override getComponent() {
         return this.action?.getComponent?.();
     }
@@ -155,7 +167,7 @@ export class Setup<T extends GuideAction> extends GuideAction {
 }
 
 export class ClickInteraction<T extends GuideAction> extends GuideAction {
-    override requiresInteraction: boolean = true;
+    private handlerFn: any | null = null;
 
     constructor(
         private selector: string,
@@ -164,6 +176,10 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
         super(action.description);
 
         this.action = action;
+    }
+
+    override getRequiresInteraction() {
+        return true;
     }
 
     override getComponent() {
@@ -184,19 +200,68 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
     override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
         await this.action?.onBeginAction?.(props);
 
+        this.handlerFn = this.onClickHandler(props) as any;
+
         if (props.direction == 1) {
-            document.addEventListener(
-                "click",
-                this.onClickHandler(props) as any
-            );
+            document.addEventListener("click", this.handlerFn);
         }
     }
-    override async onEndAction(props: ActionBeginEndProps): Promise<void> {
-        document.removeEventListener(
-            "click",
-            this.onClickHandler(props) as any
-        );
 
+    override async onEndAction(props: ActionBeginEndProps): Promise<void> {
+        if (this.handlerFn) {
+            document.removeEventListener("click", this.handlerFn);
+        }
+
+        await this.action?.onEndAction?.(props);
+    }
+
+    override getTooltipPos?(
+        props: ActionPropsBase
+    ): [number, number] | undefined {
+        return this.action?.getTooltipPos?.(props);
+    }
+}
+
+export class FlagStoreChange<
+    T extends GuideAction,
+    U extends Writable<{ [key: string]: any }>,
+> extends GuideAction {
+    private unsubscribe: Unsubscriber | null = null;
+
+    constructor(
+        private store: U,
+        private storeMember: U extends Writable<infer X> ? keyof X : never,
+        private action: T
+    ) {
+        super(action.description);
+
+        this.action = action;
+    }
+
+    override getRequiresInteraction() {
+        return true;
+    }
+
+    override getComponent() {
+        return this.action?.getComponent?.();
+    }
+    override getProps() {
+        return this.action?.getProps?.();
+    }
+
+    override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
+        await this.action?.onBeginAction?.(props);
+
+        let isInitial = true;
+        this.unsubscribe = this.store.subscribe(v => {
+            if (!isInitial && v[this.storeMember]) {
+                props.nextStep();
+            }
+            isInitial = false;
+        });
+    }
+    override async onEndAction(props: ActionBeginEndProps): Promise<void> {
+        this?.unsubscribe?.();
         await this.action?.onEndAction?.(props);
     }
     override getTooltipPos?(

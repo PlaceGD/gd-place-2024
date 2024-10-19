@@ -274,11 +274,11 @@
             "flex justify-end text-white sm:flex-col pointer-events-all": true,
             "gap-2": !$menuMinimized,
         })}
-        data-guide={GUIDE_ELEM_IDS.placeMenu}
     >
         <div
             class="grid flex-1 gap-2 menu-grid-container"
             data-minimised={+$menuMinimized}
+            data-guide={GUIDE_ELEM_IDS.placeMenu}
         >
             <div
                 class="flex flex-col items-center minimize menu-panel justify-evenly focus:outline focus:outline-1 focus:outline-offset-1"
@@ -311,7 +311,6 @@
                         e.currentTarget.scrollLeft += e.deltaY / 10;
                     }}
                     data-minimised={+$menuMinimized}
-                    data-guide={GUIDE_ELEM_IDS.placeMenuTabs}
                 >
                     {#if $menuTabGroup == TabGroup.Build}
                         {#each Object.entries(CATEGORY_ICONS) as [key, path]}
@@ -414,13 +413,17 @@
                             </RadialCooldown>
                         </button>
                     </li>
-                    <li class="w-full flex-center grow-0 shrink-0">
+                    <li
+                        class="w-full flex-center grow-0 shrink-0"
+                        id="edit-mode"
+                    >
                         <button
                             class="w-full cursor-pointer"
                             on:click={() => {
                                 $menuTabGroup = TabGroup.Edit;
                             }}
                             aria-label="Edit Tab"
+                            data-guide={GUIDE_ELEM_IDS.placeMenuEditButton}
                         >
                             <Edit
                                 class={cx({
@@ -431,13 +434,17 @@
                             ></Edit>
                         </button>
                     </li>
-                    <li class="w-full flex-center grow-0 shrink-0">
+                    <li
+                        class="w-full flex-center grow-0 shrink-0"
+                        id="delete-mode"
+                    >
                         <button
                             class="w-full cursor-pointer"
                             on:click={() => {
                                 $menuTabGroup = TabGroup.Delete;
                             }}
                             aria-label="Delete Tab"
+                            data-guide={GUIDE_ELEM_IDS.placeMenuDeleteButton}
                         >
                             <RadialCooldown
                                 max={totalDeleteCooldown}

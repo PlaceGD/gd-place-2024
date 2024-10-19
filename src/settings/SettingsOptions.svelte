@@ -11,6 +11,7 @@
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
     import { menuHeight } from "../utils/transitions";
     import { onMount } from "svelte";
+    import { GUIDE_ELEM_IDS } from "../guide/guide";
 
     $: isOpen = $openMenu == ExclusiveMenus.Settings;
 
@@ -24,7 +25,11 @@
             .replace("Support me on ko-fi.com", "Support us!");
     });
 
-    const settings: { bind: keyof typeof $editorSettings; name: string }[] = [
+    const settings: {
+        bind: keyof typeof $editorSettings;
+        name: string;
+        guide?: string;
+    }[] = [
         {
             name: "Show Collidable Objects",
             // description:
@@ -84,6 +89,7 @@
                     {#each settings as setting}
                         <li
                             class="flex flex-col gap-1 p-3 rounded-lg li-alternating"
+                            data-guide={setting.guide ?? ""}
                         >
                             <label
                                 for={setting.bind}
@@ -110,6 +116,7 @@
             </FadedScroll>
             <div
                 class="flex flex-col items-center justify-center gap-2 p-2 pb-0 text-center"
+                data-guide={GUIDE_ELEM_IDS.settingsMenuDonate}
             >
                 {#if $loginData.currentUserData?.userDetails?.hasDonated}
                     <WhiteButton

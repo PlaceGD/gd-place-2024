@@ -27,3 +27,8 @@
         setTooltipPos();
     }}
 />
+
+{#if !step.getRequiresInteraction()}
+    <!-- disable clicking of the element -->
+    <div class="absolute w-screen h-screen z-[52] pointer-events-auto"></div>
+{/if}

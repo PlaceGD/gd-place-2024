@@ -7,18 +7,18 @@
 
 {#if !hidden}
     <div
-        class="relative bg-menu-gray/30 rounded-xl shadow-lg backdrop-blur-md flex flex-col border-4 border-white/80 pointer-events-none"
+        class="relative bg-menu-gray/30 overflow-hidden rounded-xl shadow-lg backdrop-blur-md flex flex-col border-4 border-white/80 pointer-events-none"
         transition:blur={{
             duration: 150,
             delay: 0,
         }}
     >
         <div
-            class="flex flex-row border-b-2 border-b-white/80 bg-menu-gray/80 rounded-t-xl"
+            class="flex flex-row border-b-4 border-b-white/80 bg-menu-gray/80 rounded-t-xl"
         >
             <div class="flex-grow"></div>
             <button
-                class="cursor-pointer pointer-events-auto"
+                class="cursor-pointer pointer-events-auto bg-[#a22] hover:bg-[#e33] m-1 rounded-md"
                 on:click={() => {
                     hidden = true;
                     localStorage.setItem(name, "true");

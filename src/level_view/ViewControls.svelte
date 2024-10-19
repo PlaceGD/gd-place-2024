@@ -72,7 +72,6 @@
 
     import Toast from "../utils/toast";
     import { isMobile } from "../utils/document";
-    import Widget from "../widgets/Widget.svelte";
     // import { addCallback } from "../state";
     import Rotate from "../widgets/Rotate.svelte";
     import Scale from "../widgets/Scale.svelte";
@@ -97,11 +96,11 @@
     import PlacedByText from "../widgets/PlacedByText.svelte";
     import { scale } from "svelte/transition";
     import { SFX_SOUNDS, SONG_SOUNDS } from "../place_menu/edit/sfx_tab";
-    import ImageWidget from "./ImageWidget.svelte";
 
     import Image from "../components/Image.svelte";
     import ClosableWindow from "../components/ClosableWindow.svelte";
     import { walmart } from "../guide/guide";
+    import LevelWidget from "../widgets/LevelWidget.svelte";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -440,32 +439,17 @@
         });
     }, 100);
 
-    let editWidgetPos: [number, number] = [0, 0];
+    let previewObjectPos: [number, number] = [0, 0];
     let editWidgetScale = 1;
     let editWidgetVisible = false;
-
-    let originScreen: [number, number] = [0, 0];
-    let textZoomScale = 0;
-
-    const getScreenPosZoomCorrected = (
-        x: number,
-        y: number
-    ): [number, number] =>
-        [
-            ...state.get_screen_pos(x, y).map(v => v / window.devicePixelRatio),
-        ] as any;
 
     const loopFn = () => {
         let obj = state.get_preview_object();
 
-        editWidgetPos = getScreenPosZoomCorrected(obj.x, obj.y);
+        previewObjectPos = [obj.x, obj.y];
 
         editWidgetScale = (1 + state.get_zoom() / 80) / window.devicePixelRatio;
         editWidgetVisible = state.is_preview_visible();
-
-        textZoomScale = state.get_zoom_scale();
-        let p = state.get_screen_pos(0, 0);
-        originScreen = [p[0], p[1]];
 
         loop = requestAnimationFrame(loopFn);
     };
@@ -607,7 +591,13 @@
 
 <div class="absolute w-full h-full overflow-visible pointer-events-none">
     {#if editWidgetVisible}
-        <Widget position={editWidgetPos} scale={editWidgetScale}>
+        <LevelWidget
+            {state}
+            x={previewObjectPos[0]}
+            y={previewObjectPos[1]}
+            scale={editWidgetScale}
+            scaleWithZoom={false}
+        >
             {#if $menuOpenWidget == WidgetType.Rotate}
                 <Rotate bind:state />
             {:else if $menuOpenWidget == WidgetType.Scale}
@@ -615,68 +605,42 @@
             {:else if $menuOpenWidget == WidgetType.Warp}
                 <Warp bind:state widgetScale={editWidgetScale} />
             {/if}
-        </Widget>
+        </LevelWidget>
     {/if}
     {#if !$editorSettings.hideDeleteText}
-        <Widget
-            position={[
-                originScreen[0] / window.devicePixelRatio,
-                originScreen[1] / window.devicePixelRatio,
-            ]}
-            scale={textZoomScale}
-        >
+        <LevelWidget {state}>
             <DeleteTexts />
-        </Widget>
+        </LevelWidget>
     {/if}
-    <Widget
-        position={[
-            originScreen[0] / window.devicePixelRatio,
-            originScreen[1] / window.devicePixelRatio,
-        ]}
-        scale={textZoomScale}
-    >
+    <LevelWidget {state}>
         <TriggerRuns />
-    </Widget>
+    </LevelWidget>
     {#if $placedByHover != null && !$editorSettings.hidePlacedTooltip}
-        <Widget
-            position={getScreenPosZoomCorrected(
-                $placedByHover.x,
-                $placedByHover.y
-            )}
-            scale={1.0}
+        <LevelWidget
+            {state}
+            x={$placedByHover.x}
+            y={$placedByHover.y}
+            scaleWithZoom={false}
         >
             <PlacedByText username={$placedByHover.username} />
-        </Widget>
+        </LevelWidget>
     {/if}
 
-    <ImageWidget
-        position={getScreenPosZoomCorrected(-55, 40)}
-        scale={0.15}
-        screenScale={textZoomScale}
-        screenOrigin={originScreen}
-    >
+    <LevelWidget {state} x={-55} y={40} scale={0.15}>
         <ClosableWindow name="playerStartHelp">
             <Image src={player_start_help} />
         </ClosableWindow>
-    </ImageWidget>
-
-    <ImageWidget
-        position={getScreenPosZoomCorrected(-90, 200)}
-        scale={0.2}
-        screenScale={textZoomScale}
-        screenOrigin={originScreen}
-    >
+    </LevelWidget>
+    <LevelWidget {state} x={-90} y={200} scale={0.2}>
         <ClosableWindow name="playerGoalHelp">
             <Image src={player_goal_help} />
         </ClosableWindow>
-    </ImageWidget>
-
-    <ImageWidget
-        position={getScreenPosZoomCorrected(END_POS_X, END_POS_Y - 1)}
-        scale={0.12}
-        screenScale={textZoomScale}
-        screenOrigin={originScreen}
-    >
+    </LevelWidget>
+    <LevelWidget {state} x={END_POS_X} y={END_POS_Y - 1} scale={0.12}>
         <Image src={player_goal} />
-    </ImageWidget>
+    </LevelWidget>
+
+    <!-- <LevelWidget {state} x={60} y={60}>
+        <button class="bg-red p-4">Gaga</button>
+    </LevelWidget> -->
 </div>

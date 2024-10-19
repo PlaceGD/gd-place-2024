@@ -5,7 +5,7 @@
     import Toast, { WASM_ERROR } from "../utils/toast";
     import { DEBUG } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
-    import Widget from "../widgets/Widget.svelte";
+    // import Widget from "../widgets/Widget.svelte";
     import { rawSpritesheetData } from "../stores";
     // import { loadState, runCallbacks } from "../state";
 

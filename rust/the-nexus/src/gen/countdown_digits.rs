@@ -62,6 +62,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                     x >= x_min && x < x_max && y >= y_min && y < y_max
                 })
                 .filter_map(|o| {
+                    let o = replace_obj_id(o.clone());
                     if !all_avaliable_ids.contains(&o[&1].parse::<u16>().unwrap()) {
                         missing
                             .entry(set_i - 1)
@@ -69,7 +70,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                             .insert(o[&1].parse::<u16>().unwrap());
                         None
                     } else {
-                        Some(to_gdobject(o, x, y, parsed))
+                        Some(to_gdobject(&o, x, y, parsed))
                     }
                 })
                 .collect();
@@ -132,6 +133,16 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     .write(&mut writer)
     .unwrap();
     writer.into_inner()
+}
+
+fn replace_obj_id(mut o: HashMap<u16, String>) -> HashMap<u16, String> {
+    let new_id = match o.get(&1).unwrap().as_ref() {
+        "955" => "211",
+
+        a => a,
+    };
+    o.insert(1, String::from(new_id));
+    o
 }
 
 fn to_gdobject(

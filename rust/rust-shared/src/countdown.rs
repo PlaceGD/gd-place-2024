@@ -158,7 +158,7 @@ parse_countdown_files! {
     "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  ) classic], // 13
     "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5) classic], // 14
     "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 15
-    "kingtony"          ("KINGTONY"):           [3 => weights(3,   3,   3,   3  ) silly], // 16
+    "kingtony"          ("KINGTONY"):           [3 => weights(2,   2,   3,   3  )], // 16
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 17
     "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  ) classic famous], // 18
     "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 19
@@ -184,11 +184,15 @@ parse_countdown_files! {
     "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5)], // 39
     "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 40
     "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 41
-    "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   8  ) silly pretty classic], // 42
+    "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 42
     "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 43
+    "culuc"             ("Culuc"):              [3 => weights(5,   3,   4,   4  ) famous pretty silly], // 44
+    "boldstep"          ("BoldStep"):           [0 => weights(3,   3,   3,   1.5)], // 45
+    "evasium"           ("Evasium"):            [0 => weights(1,   1,   2,   4  ) classic], // 46
+    "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 47
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([12, 21, 3, 24]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([28, 3, 46, 47]);
 
 #[binrw]
 #[brw(little)]

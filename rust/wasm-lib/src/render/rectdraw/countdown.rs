@@ -507,24 +507,24 @@ impl CountdownDigit {
 
         // resort (dw this only happens once a second to like 200 objects at a time)
         // console_log!("FUCK FART");
-        self.objects.sort_by(|a, b| {
-            let a = a.typ.output_obj();
-            let b = b.typ.output_obj();
-            // place blending objects at bottom of layer (dont care about detail color for this)
-            let a_z = if a.main_color.blending {
-                i8::MIN
-            } else {
-                a.z_order
-            };
-            let b_z = if b.main_color.blending {
-                i8::MIN
-            } else {
-                b.z_order
-            };
-            (a.z_layer as u8)
-                .cmp(&(b.z_layer as u8))
-                .then(a_z.cmp(&b_z))
-        });
+        // self.objects.sort_by(|a, b| {
+        //     let a = a.typ.output_obj();
+        //     let b = b.typ.output_obj();
+        //     // place blending objects at bottom of layer (dont care about detail color for this)
+        //     let a_z = if a.main_color.blending {
+        //         i8::MIN
+        //     } else {
+        //         a.z_order
+        //     };
+        //     let b_z = if b.main_color.blending {
+        //         i8::MIN
+        //     } else {
+        //         b.z_order
+        //     };
+        //     (a.z_layer as u8)
+        //         .cmp(&(b.z_layer as u8))
+        //         .then(a_z.cmp(&b_z))
+        // });
     }
 }
 

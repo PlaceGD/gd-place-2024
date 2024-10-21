@@ -1,6 +1,7 @@
 <script lang="ts">
     import { scale, blur } from "svelte/transition";
     export let name;
+    export let open = true;
 
     let hidden = localStorage.getItem(name) === "true";
 </script>
@@ -12,6 +13,7 @@
             duration: 150,
             delay: 0,
         }}
+        style={`transform: scale(${open ? 1 : 0.8}); opacity: ${open ? 1 : 0}; pointer-events: ${open ? "auto" : "none"}; transition: transform 300ms, opacity 300ms;`}
     >
         <div
             class="flex flex-row border-b-4 border-b-white/80 bg-menu-gray/80 rounded-t-xl"

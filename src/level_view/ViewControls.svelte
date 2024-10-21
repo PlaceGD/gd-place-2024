@@ -448,7 +448,7 @@
 
         previewObjectPos = [obj.x, obj.y];
 
-        editWidgetScale = (1 + state.get_zoom() / 80) / window.devicePixelRatio;
+        editWidgetScale = 1 + state.get_zoom() / 80;
         editWidgetVisible = state.is_preview_visible();
 
         loop = requestAnimationFrame(loopFn);
@@ -608,34 +608,34 @@
         </LevelWidget>
     {/if}
     {#if !$editorSettings.hideDeleteText}
-        <LevelWidget {state}>
-            <DeleteTexts />
-        </LevelWidget>
+        <DeleteTexts {state} />
     {/if}
-    <LevelWidget {state}>
-        <TriggerRuns />
-    </LevelWidget>
+
+    <TriggerRuns {state} />
+
     {#if $placedByHover != null && !$editorSettings.hidePlacedTooltip}
         <LevelWidget
             {state}
             x={$placedByHover.x}
             y={$placedByHover.y}
             scaleWithZoom={false}
+            scale={1.5}
         >
             <PlacedByText username={$placedByHover.username} />
         </LevelWidget>
     {/if}
 
     <LevelWidget {state} x={-55} y={40} scale={0.15}>
-        <ClosableWindow name="playerStartHelp">
+        <ClosableWindow name="playerStartHelp" open={$eventStarted}>
             <Image src={player_start_help} />
         </ClosableWindow>
     </LevelWidget>
     <LevelWidget {state} x={-90} y={200} scale={0.2}>
-        <ClosableWindow name="playerGoalHelp">
+        <ClosableWindow name="playerGoalHelp" open={$eventStarted}>
             <Image src={player_goal_help} />
         </ClosableWindow>
     </LevelWidget>
+
     <LevelWidget {state} x={END_POS_X} y={END_POS_Y - 1} scale={0.12}>
         <Image src={player_goal} />
     </LevelWidget>

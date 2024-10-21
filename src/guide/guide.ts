@@ -43,7 +43,7 @@ export const GUIDE_STEPS: GuideAction[] = [
             },
         },
         new EditorGuide(
-            "TODO start of level",
+            "The goal of this project is to work a working platformer level - together! This is the part of the level where the player will spawn in... ",
             {
                 x: 0,
                 y: 0,
@@ -53,7 +53,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         )
     ),
     new EditorGuide(
-        "TODO end of level",
+        "...and when the player touches this <b>END trigger</b>, they have completed the level! Your job is to build everything in between.",
         {
             x: LEVEL_WIDTH_UNITS - 70,
             y: LEVEL_HEIGHT_UNITS - 70,
@@ -72,7 +72,7 @@ export const GUIDE_STEPS: GuideAction[] = [
             ".object-grid-container > li *",
             new HighlightElement(
                 GUIDE_ELEM_IDS.placeMenu,
-                "TODO choose an object",
+                "Let's place an object! Select an object from this menu.",
                 true
             )
         )
@@ -81,7 +81,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         walmart,
         "hasPlacedObject",
         new EditorGuide(
-            "TODO place object",
+            `Click where you want your object to be placed in the level.`,
             {
                 x: 0,
                 y: 0,
@@ -94,39 +94,52 @@ export const GUIDE_STEPS: GuideAction[] = [
         "#edit-mode *",
         new HighlightElement(
             GUIDE_ELEM_IDS.placeMenuEditButton,
-            "TODO choose edit to edit object",
+            "Go to the <b>edit tab</b> to adjust your object.",
             true
         )
     ),
     new HighlightElement(
         GUIDE_ELEM_IDS.placeMenu,
-        "TODO edit the object props",
+        "Move, scale, rotate, or change the color of your object!",
         true
     ),
     new ClickInteraction(
         ".pd-button *",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
-            "TODO click place button",
+            "Click the place button to place the object in the level! (After you have done this, you need to wait a couple of minutes before you can place another one.)",
             true
         )
     ),
-    new EditorGuide("TODO WOW OBJECT", null, { x: 0, y: 0 }),
+    new EditorGuide(
+        "<b>Congratulations!</b> You have placed your first object.",
+        null,
+        { x: 0, y: 0 }
+    ),
     new ClickInteraction(
         "#delete-mode *",
         new HighlightElement(
             GUIDE_ELEM_IDS.placeMenuDeleteButton,
-            "TODO choose delete to delete object",
+            "Let's delete an object >:) Go to the <b>delete tab</b>.",
             true
         )
     ),
     new FlagStoreChange(
         walmart,
         "hasDeleteSelection",
-        new EditorGuide("TODO click on an object to select it", null, {
-            x: 0,
-            y: 0,
-        })
+        new EditorGuide(
+            "Click on an object in the level you wish to delete!",
+            null,
+            {
+                x: 0,
+                y: 0,
+            }
+        )
+    ),
+    new EditorGuide(
+        "<b>Congratulations!</b> You have deleted your first object! You can only delete one object every few minutes, but the delete timer is separate from the place timer.",
+        null,
+        { x: 0, y: 0 }
     ),
     new Setup(
         {
@@ -138,7 +151,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         new WaitThen(
             new HighlightElement(
                 GUIDE_ELEM_IDS.settingsMenuDonate,
-                "TODO donate"
+                "This project took a lot of passionate work to make, so if you enjoy it, consider donating! If you donate (any amount) you also get to choose the colors of your username (which makes you really cool)!"
             ),
             500
         )

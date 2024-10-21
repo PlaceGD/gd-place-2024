@@ -254,8 +254,11 @@ impl State {
     }
     pub fn set_camera_pos(&mut self, x: f32, y: f32) {
         self.camera_pos = vec2(x, y).clamp(
-            Vec2::ZERO,
-            vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32),
+            vec2(-90.0, -60.0),
+            vec2(
+                LEVEL_WIDTH_UNITS as f32 + 60.0,
+                LEVEL_HEIGHT_UNITS as f32 + 60.0,
+            ),
         );
     }
     pub fn set_bg_color(&mut self, r: u8, g: u8, b: u8) {

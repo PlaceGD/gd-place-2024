@@ -187,12 +187,13 @@ parse_countdown_files! {
     "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 42
     "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 43
     "culuc"             ("Culuc"):              [3 => weights(5,   3,   4,   4  ) famous pretty silly], // 44
-    "boldstep"          ("BoldStep"):           [0 => weights(3,   3,   3,   1.5)], // 45
+    "boldstep"          ("BoldStep"):           [0 => weights(6,   2,   2,   1)], // 45
     "evasium"           ("Evasium"):            [0 => weights(1,   1,   2,   4  ) classic], // 46
     "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 47
+    "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 48
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([28, 3, 46, 47]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([28, 3, 37, 37]);
 
 #[binrw]
 #[brw(little)]

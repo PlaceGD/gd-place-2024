@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
     import * as wasm from "wasm-lib";
-
+    import { blur } from "svelte/transition";
     export let state: wasm.State;
 
     export let x: number = 0;

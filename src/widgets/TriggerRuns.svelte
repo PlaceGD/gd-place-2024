@@ -1,38 +1,24 @@
 <script lang="ts">
     import { triggerRuns } from "../stores";
+    import LevelWidget from "./LevelWidget.svelte";
+    export let state;
 </script>
 
-<div class="absolute text-white">
-    {#each Object.entries($triggerRuns) as [k, { x, y }] (k)}
-        <div
-            class="text-nowrap"
-            style={`
-                position: absolute;
-                transform: translate(${x / window.devicePixelRatio}px, ${-y / window.devicePixelRatio}px) scale(${1.0 / window.devicePixelRatio});
-            `}
-        >
-            <!-- <span
-                class="absolute letext text-black text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
-                >Deleted by {name}</span
-            >
-            <span
-                class="absolute letext text-saira text-3xl text-nowrap w-[500px] text-center"
-                >Deleted by <ColoredName username={name}></ColoredName></span
-            > -->
-            <div class="absolute border-white rounded-full w-32 h-32 dog"></div>
-        </div>
-    {/each}
-</div>
+{#each Object.entries($triggerRuns) as [k, { x, y }] (k)}
+    <LevelWidget {state} {x} {y}>
+        <div class="absolute border-white rounded-full w-32 h-32 dog"></div>
+    </LevelWidget>
+{/each}
 
 <style>
     @keyframes example {
         0% {
-            transform: translate(-50%, -50%) scale(0);
+            transform: scale(0);
             border-width: 32px;
             opacity: 100%;
         }
         100% {
-            transform: translate(-50%, -50%) scale(1);
+            transform: scale(1);
             border-width: 0px;
             opacity: 0%;
         }

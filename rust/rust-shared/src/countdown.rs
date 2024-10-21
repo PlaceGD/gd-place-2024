@@ -192,9 +192,10 @@ parse_countdown_files! {
     "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 47
     "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 48
     "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 49
+    "vrymer"            ("Vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 50
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = Some([28, 3, 37, 49]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([28, 3, 37, 50]);
 
 #[binrw]
 #[brw(little)]

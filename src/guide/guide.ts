@@ -17,6 +17,7 @@ import {
     FlagStoreChange,
     WaitThen,
     type GuideAction,
+    EditorGuidePosition,
 } from "./guideActions";
 import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
 import { EditTab } from "../place_menu/edit/edit_tab";
@@ -49,7 +50,7 @@ export const GUIDE_STEPS: GuideAction[] = [
                 y: 0,
                 zoom: 12,
             },
-            { x: 80, y: -10 }
+            EditorGuidePosition.Bottom
         )
     ),
     new EditorGuide(
@@ -59,7 +60,7 @@ export const GUIDE_STEPS: GuideAction[] = [
             y: LEVEL_HEIGHT_UNITS - 70,
             zoom: 12,
         },
-        { x: LEVEL_WIDTH_UNITS + 30, y: LEVEL_HEIGHT_UNITS - 80 }
+        EditorGuidePosition.Bottom
     ),
     new Setup(
         {
@@ -87,7 +88,7 @@ export const GUIDE_STEPS: GuideAction[] = [
                 y: 0,
                 zoom: 12,
             },
-            { x: 0, y: 0 }
+            EditorGuidePosition.Top
         )
     ),
     new ClickInteraction(
@@ -107,14 +108,14 @@ export const GUIDE_STEPS: GuideAction[] = [
         ".pd-button *",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
-            "Click the place button to place the object in the level! (After you have done this, you need to wait a couple of minutes before you can place another one.)",
+            "Click the place button to place the object in the level! (After you have done this, you need to wait some time before you can place another one.)",
             true
         )
     ),
     new EditorGuide(
         "<b>Congratulations!</b> You have placed your first object.",
         null,
-        { x: 0, y: 0 }
+        EditorGuidePosition.Top
     ),
     new ClickInteraction(
         "#delete-mode *",
@@ -130,16 +131,21 @@ export const GUIDE_STEPS: GuideAction[] = [
         new EditorGuide(
             "Click on an object in the level you wish to delete!",
             null,
-            {
-                x: 0,
-                y: 0,
-            }
+            EditorGuidePosition.Top
+        )
+    ),
+    new ClickInteraction(
+        ".pd-button *",
+        new HighlightElement(
+            GUIDE_ELEM_IDS.pdButton,
+            "Click the delete button to delete the object in the level! (After you have done this, you need to wait some time before you can delete another one.)",
+            true
         )
     ),
     new EditorGuide(
         "<b>Congratulations!</b> You have deleted your first object! You can only delete one object every few minutes, but the delete timer is separate from the place timer.",
         null,
-        { x: 0, y: 0 }
+        EditorGuidePosition.Top
     ),
     new Setup(
         {

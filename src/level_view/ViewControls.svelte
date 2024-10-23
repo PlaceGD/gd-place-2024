@@ -641,6 +641,6 @@
     </LevelWidget>
 
     <!-- <LevelWidget {state} x={60} y={60}>
-        <button class="bg-red p-4">Gaga</button>
+        <button class="p-4 bg-red">Gaga</button>
     </LevelWidget> -->
 </div>

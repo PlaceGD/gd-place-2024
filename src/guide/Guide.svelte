@@ -132,7 +132,7 @@
     {/if}
 
     <div
-        class="absolute flex flex-col z-[53] w-full h-full flex-center"
+        class="absolute z-[53]"
         style={`
             left: ${tooltipLeft}px;
             top: ${tooltipTop}px;    
@@ -141,64 +141,65 @@
         bind:clientHeight={tooltipSize.height}
     >
         <div
-            class="absolute z-[53] flex flex-col gap-2 p-4 text-white rounded-lg xs:p-2 menu-panel flex-center max-w-[400px] outline-2 outline pulsing-outline m-4"
+            class="z-[53] flex flex-col gap-2 p-4 text-white rounded-lg xs:p-2 menu-panel flex-center max-w-[400px] outline-2 outline pulsing-outline m-4"
         >
             <span class="text-base sm:text-sm xs:text-xs">
-                {currentStep.description}
+                {@html currentStep.description}
             </span>
-            <div class="flex w-full gap-4 xs:gap-2">
-                {#if !currentStep.getRequiresInteraction()}
-                    <IconButton
-                        class="w-24"
-                        disabled={step == 0 || !canChangeStep}
-                        on:click={goPrevStep}
+            <div class="flex items-center justify-between w-full">
+                <div class="flex gap-4 xs:gap-2">
+                    {#if !currentStep.getRequiresInteraction()}
+                        <IconButton
+                            class="w-24"
+                            disabled={step == 0 || !canChangeStep}
+                            on:click={goPrevStep}
+                        >
+                            <span slot="children">
+                                <ArrowLeft
+                                    stroke-width={1}
+                                    class="w-8 h-8 xs:h-7 xs:w-7"
+                                />
+                            </span>
+                        </IconButton>
+                    {/if}
+                    <div
+                        class="text-center tabular-nums hover-text-transition xs:text-sm"
                     >
-                        <span slot="children">
-                            <ArrowLeft
-                                stroke-width={1}
-                                class="w-8 h-8 xs:h-7 xs:w-7"
-                            />
-                        </span>
-                    </IconButton>
-                {/if}
-                <div class="text-center tabular-nums hover-text-transition">
-                    {delayedStep + 1}/{GUIDE_STEPS.length}
+                        {delayedStep + 1}/{GUIDE_STEPS.length}
+                    </div>
+                    {#if !currentStep.getRequiresInteraction()}
+                        <IconButton
+                            class="w-24"
+                            disabled={!canChangeStep}
+                            on:click={goNextStep}
+                        >
+                            <span slot="children">
+                                {#if delayedStep < GUIDE_STEPS.length - 1}
+                                    <ArrowRight
+                                        stroke-width={1}
+                                        class="w-8 h-8 xs:h-7 xs:w-7"
+                                    />
+                                {:else}
+                                    <Check
+                                        stroke-width={1}
+                                        class="w-8 h-8 xs:h-7 xs:w-7"
+                                    />
+                                {/if}
+                            </span>
+                        </IconButton>
+                    {/if}
                 </div>
-                {#if !currentStep.getRequiresInteraction()}
-                    <IconButton
-                        class="w-24"
-                        disabled={!canChangeStep}
-                        on:click={goNextStep}
-                    >
-                        <span slot="children">
-                            {#if delayedStep < GUIDE_STEPS.length - 1}
-                                <ArrowRight
-                                    stroke-width={1}
-                                    class="w-8 h-8 xs:h-7 xs:w-7"
-                                />
-                            {:else}
-                                <Check
-                                    stroke-width={1}
-                                    class="w-8 h-8 xs:h-7 xs:w-7"
-                                />
-                            {/if}
-                        </span>
-                    </IconButton>
-                {/if}
+                <IconButton
+                    aria-label="Exit guide"
+                    on:click={() => {
+                        $isGuideActive = false;
+                    }}
+                >
+                    <span slot="children">
+                        <Cross aria-label="Exit" class="stroke-1 w-7 h-7" />
+                    </span>
+                </IconButton>
             </div>
         </div>
-    </div>
-
-    <div
-        class="absolute text-white left-1/2 -translate-x-1/2 top-6 xs:top-3 z-[53]"
-    >
-        <WhiteButton
-            aria-label="Exit guide"
-            on:click={() => {
-                $isGuideActive = false;
-            }}
-        >
-            <Cross aria-label="Exit" class="stroke-1 w-7 h-7" />
-        </WhiteButton>
     </div>
 {/if}

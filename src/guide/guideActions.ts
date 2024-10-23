@@ -55,20 +55,29 @@ export class HighlightElement extends GuideAction {
     }
 }
 
+export enum EditorGuidePosition {
+    Top,
+    Bottom,
+}
+
 export class EditorGuide extends GuideAction {
     constructor(
         description: string,
         private cameraPos: { x: number; y: number; zoom: number } | null,
-        private tooltiopPos: { x: number; y: number }
+        private tooltiopPos: EditorGuidePosition
     ) {
         super(description);
     }
 
     override getTooltipPos(props: ActionPropsBase): [number, number] {
-        const pos = props.state
-            .get_screen_pos(this.tooltiopPos.x, this.tooltiopPos.y)
-            .map(v => v / window.devicePixelRatio);
-        return [pos[0], -pos[1]];
+        if (this.tooltiopPos === EditorGuidePosition.Top) {
+            return [window.innerWidth / 2 - props.tooltipSize.width / 2, 60];
+        } else {
+            return [
+                window.innerWidth / 2 - props.tooltipSize.width / 2,
+                window.innerHeight - props.tooltipSize.height,
+            ];
+        }
     }
 
     override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
@@ -183,8 +192,8 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
     }
 
     private onClickHandler(props: ActionBeginEndProps) {
-        return (e: PointerEvent & { originalTarget: HTMLElement }) => {
-            if (e.button === 0 && e.originalTarget.matches(this.selector)) {
+        return (e: PointerEvent & { target: HTMLElement }) => {
+            if (e.button === 0 && e.target.matches(this.selector)) {
                 props.nextStep();
             }
         };

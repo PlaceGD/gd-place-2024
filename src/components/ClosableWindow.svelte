@@ -8,7 +8,7 @@
 
 {#if !hidden}
     <div
-        class="relative bg-menu-gray/30 overflow-hidden rounded-xl shadow-lg backdrop-blur-md flex flex-col border-4 border-white/80 pointer-events-none"
+        class="relative flex flex-col overflow-hidden border-4 shadow-lg pointer-events-none shrink-0 bg-menu-gray/30 rounded-xl backdrop-blur-md border-white/80"
         transition:blur={{
             duration: 150,
             delay: 0,
@@ -28,7 +28,7 @@
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-12 w-12"
+                    class="w-12 h-12"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="white"

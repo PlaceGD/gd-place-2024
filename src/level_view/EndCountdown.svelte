@@ -22,6 +22,7 @@
             delay: 0,
             start: 0.5,
         }}
+        style={$timeLeft < 600 ? "color: #ff0000" : ""}
     >
         {hours.toString().padStart(2, "0")}:{minutes
             .toString()

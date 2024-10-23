@@ -5,7 +5,10 @@ import Toast from "../utils/toast";
 import { placeObject, deleteObject } from "./cloud_functions";
 import { encodeString } from "shared-lib/base_util";
 
-export const addObject = (obj: GDObjectOpt, cb: (key: string) => void) => {
+export const addObject = (
+    obj: GDObjectOpt,
+    cb: (key: string | null) => void
+) => {
     let v = obj.bytes();
 
     let s = encodeString(v, 126);
@@ -26,6 +29,7 @@ export const addObject = (obj: GDObjectOpt, cb: (key: string) => void) => {
                     `Failed to place object. (${e.details.code})`
                 );
             }
+            cb(null);
         });
 };
 export const removeObject = (key: string, chunk: [number, number]) => {

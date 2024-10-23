@@ -142,60 +142,60 @@ macro_rules! parse_countdown_files {
 }
 
 parse_countdown_files! {
-    "spu7nix"           ("Spu7Nix"):            [0 => weights(3,   1,   1,   0.4) silly,  // 0
-                                                 1 => weights(3,   3,   3,   0.5) silly,  // 1
-                                                 2 => weights(0.5, 1,   0.5, 3  ) silly], // 2
-    "viprin"            ("Viprin"):             [3 => weights(3,   5,   5,   1  ) famous classic], // 3
-    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  ) classic], // 4
-    "flow"              ("Flow"):               [3 => weights(1,   4,   4,   0.5) silly], // 5
-    "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  ) pretty classic], // 6
-    "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  ) pretty], // 7
-    "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  ) pretty], // 8
-    "dreaminginsanity"  ("DreamingInsanity"):   [3 => weights(0.4, 1,   0.4, 2  ) silly], // 9
-    "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  ) classic], // 10
-    "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 11
-    "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 12
-    "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  ) classic], // 13
-    "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5) classic], // 14
-    "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 15
-    "kingtony"          ("KINGTONY"):           [3 => weights(2,   2,   3,   3  )], // 16
-    "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 17
-    "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  ) classic famous], // 18
-    "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 19
-    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 20
-    "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  ) classic], // 21
-    "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ) silly,  // 22
-                                                 3 => weights(3,   3,   2,   4  ) silly pretty], // 23
-    "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  ) silly famous], // 24
-    "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 25
-    "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  ) pretty famous], // 26
-    "grax"              ("Grax"):               [3 => weights(3,   5,   4,   2  ) pretty], // 27
-    "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  ) famous classic], // 28
-    "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  ) famous], // 29
-    "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  ) pretty], // 30
-    "doggie"            ("Doggie"):             [0 => weights(2,   3,   4,   3  ) silly famous], // 31
-    "pocke"             ("Pocke"):              [3 => weights(4,   2,   2,   1  ) silly], // 32
-    "subwoofer"         ("Subwoofer"):          [3 => weights(2,   3,   3,   4  ) silly], // 33
-    "para"              ("para"):               [3 => weights(3,   3,   3,   2  ) pretty], // 34
-    "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  ) pretty], // 35
-    "kips"              ("Kips"):               [0 => weights(4,   3,   3,   2  ) classic pretty], // 36
-    "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 37
-    "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 38
-    "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5)], // 39
-    "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 40
-    "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 41
-    "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 42
-    "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 43
-    "culuc"             ("Culuc"):              [3 => weights(5,   3,   4,   4  ) famous pretty silly], // 44
-    "boldstep"          ("BoldStep"):           [0 => weights(6,   2,   2,   1)], // 45
-    "evasium"           ("Evasium"):            [0 => weights(1,   1,   2,   4  ) classic], // 46
-    "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 47
-    "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 48
-    "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 49
-    "vrymer"            ("Vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 50
+    "spu7nix"           ("Spu7Nix"):            [1 => weights(4,   3,   3,   1  ) silly pretty], // 0
+    "viprin"            ("Viprin"):             [3 => weights(3,   5,   5,   1  ) famous classic], // 1
+    "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  ) classic], // 2
+    "flow"              ("Flow"):               [3 => weights(1,   1,   1,   0  ) silly], // 3
+    "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  ) pretty classic], // 4
+    "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  ) pretty], // 5
+    "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  ) pretty], // 6
+    "dreaminginsanity3" ("DreamingInsanity"):   [3 => weights(2,   2,   2,   3  ) pretty silly], // 7
+    "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  ) classic], // 8
+    "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 9
+    "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 10
+    "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  ) classic], // 11
+    "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5) classic], // 12
+    "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 13
+    "kingtony"          ("KINGTONY"):           [3 => weights(2,   2,   3,   3  )], // 14
+    "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 15
+    "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  ) classic famous], // 16
+    "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 17
+    "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 18
+    "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  ) classic], // 19
+    "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ) silly,  // 20
+                                                 3 => weights(3,   3,   2,   4  ) silly pretty], // 21
+    "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  ) silly famous], // 22
+    "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 23
+    "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  ) pretty famous], // 24
+    "grax"              ("Grax"):               [3 => weights(3,   5,   4,   2  ) pretty], // 25
+    "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  ) famous classic], // 26
+    "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  ) famous], // 27
+    "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  ) pretty], // 28
+    "doggie"            ("Doggie"):             [0 => weights(2,   3,   4,   3  ) silly famous], // 29
+    "pocke"             ("Pocke"):              [3 => weights(4,   2,   2,   1  ) silly], // 30
+    "subwoofer"         ("Subwoofer"):          [3 => weights(2,   3,   3,   4  ) silly], // 31
+    "para"              ("para"):               [3 => weights(3,   3,   3,   2  ) pretty], // 32
+    "ww"                ("WerewolfGD"):         [3 => weights(2,   3,   3,   5  ) pretty], // 33
+    "kips"              ("Kips"):               [0 => weights(4,   3,   3,   2  ) classic pretty], // 34
+    "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 35
+    "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 36
+    "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5)], // 37
+    "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 38
+    "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 39
+    "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 40
+    "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 41
+    "culuc"             ("Culuc"):              [3 => weights(5,   3,   4,   4  ) famous pretty silly], // 42
+    "boldstep"          ("BoldStep"):           [0 => weights(6,   2,   2,   1  )], // 43
+    "evasium"           ("Evasium"):            [0 => weights(1,   1,   2,   4  ) classic], // 44
+    "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 45
+    "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 46
+    "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 47
+    "vrymer"            ("vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 58
+    "meeloz"            ("meeloz"):             [3 => weights(2,   2,   3,   3  )], // 49
+    "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty silly], // 50
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([28, 3, 37, 50]);
+pub const TEST_SETS: Option<[usize; 4]> = None;
 
 #[binrw]
 #[brw(little)]
@@ -236,7 +236,7 @@ const WEIGHT_POWER: f64 = 0.8;
 
 // runs in nexus gen
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
-    let mut switches = vec![[0, 5, 9, 2]]; // final sets
+    let mut switches = vec![[1, 50, 0, 7]]; // final sets
 
     for i in 0..n {
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev

@@ -63,7 +63,19 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
                 })
                 .filter_map(|o| {
                     let o = replace_obj_id(o.clone());
-                    if !all_avaliable_ids.contains(&o[&1].parse::<u16>().unwrap()) {
+                    if o.get(&129)
+                        .unwrap_or(&"1.0".to_string())
+                        .parse::<f32>()
+                        .unwrap()
+                        < 0.01
+                        || o.get(&128)
+                            .unwrap_or(&"1.0".to_string())
+                            .parse::<f32>()
+                            .unwrap()
+                            < 0.01
+                    {
+                        None
+                    } else if !all_avaliable_ids.contains(&o[&1].parse::<u16>().unwrap()) {
                         missing
                             .entry(set_i - 1)
                             .or_insert_with(HashSet::new)

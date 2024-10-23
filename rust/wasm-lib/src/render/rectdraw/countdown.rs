@@ -103,12 +103,14 @@ impl Countdown {
         };
 
         for i in 0..8 {
+            let delay = index_delay(i);
             if sets != self.sets {
                 self.digits[i].transition_between(
                     self.state[i],
                     state[i],
                     self.sets[i / 2],
                     sets[i / 2],
+                    delay,
                 );
                 self.state[i] = state[i];
             } else {
@@ -126,6 +128,7 @@ impl Countdown {
                         state[i],
                         self.sets[i / 2],
                         self.sets[i / 2],
+                        delay,
                     );
                     self.state[i] = state[i];
                     //self.sets[i / 2] = new_set;
@@ -137,7 +140,7 @@ impl Countdown {
 
         // colons, days marker
         {
-            let appear = |a: &DigitObjects| {
+            let appear = |a: &DigitObjects, delay: f32| {
                 a.objs
                     .iter()
                     .map(|o| {
@@ -148,14 +151,15 @@ impl Countdown {
                                 AnimType::Appear(*o, random_axis_offset())
                             },
                             0.8,
-                            true,
+                            false,
+                            delay,
                         )
                         .offset(0.2)
                     })
                     .collect()
             };
 
-            let dissapear = |a: &DigitObjects| {
+            let dissapear = |a: &DigitObjects, delay: f32| {
                 a.objs
                     .iter()
                     .map(|o| {
@@ -166,7 +170,8 @@ impl Countdown {
                                 AnimType::Disappear(*o)
                             },
                             0.8,
-                            true,
+                            false,
+                            delay,
                         )
                     })
                     .collect()
@@ -182,10 +187,11 @@ impl Countdown {
                         2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
                         _ => unreachable!(),
                     };
+                    let delay = index_delay(i * 2);
                     *state = if new_bg_state[i] {
-                        appear(&bg)
+                        appear(&bg, delay)
                     } else {
-                        dissapear(&bg)
+                        dissapear(&bg, delay)
                     };
 
                     self.bg_state[i] = new_bg_state[i];
@@ -271,6 +277,10 @@ impl Countdown {
     }
 }
 
+fn index_delay(i: usize) -> f32 {
+    (8 - i) as f32 * 0.07
+}
+
 fn get_alpha(o: GDObject) -> f32 {
     let mut opacity = (o.main_color.opacity as f32).min(o.detail_color.opacity as f32) / 255.0;
     if o.main_color.blending {
@@ -340,7 +350,9 @@ impl CountdownDigit {
     fn set_to(&mut self, set: usize, digit: u8, duration: f64) {
         self.objects = Self::get_set(set, digit)
             .iter()
-            .map(|o| TransitioningObject::new(AnimType::Appear(*o, vec2(0.0, 0.0)), duration, true))
+            .map(|o| {
+                TransitioningObject::new(AnimType::Appear(*o, vec2(0.0, 0.0)), duration, true, 0.0)
+            })
             .collect();
     }
 
@@ -354,6 +366,7 @@ impl CountdownDigit {
         digit2: Option<u8>,
         set1: usize,
         set2: usize,
+        delay: f32,
     ) {
         self.objects.clear(); // so it dont reallocate :)
 
@@ -387,6 +400,7 @@ impl CountdownDigit {
                         AnimType::Static(obj_out.0),
                         0.8,
                         false,
+                        delay,
                     ));
                     break;
                 }
@@ -440,6 +454,7 @@ impl CountdownDigit {
                         AnimType::Copy(*obj_static, obj_in.0, random() < 0.5),
                         0.8,
                         false,
+                        delay,
                     ));
                     break;
                 }
@@ -466,6 +481,7 @@ impl CountdownDigit {
                         AnimType::Transition(obj_out.0, obj_in.0, random() < 0.5),
                         0.7,
                         false,
+                        delay,
                     ));
                     break;
                 }
@@ -489,6 +505,7 @@ impl CountdownDigit {
                         AnimType::Transition(obj_out.0, obj_in.0, random() < 0.5),
                         0.7,
                         false,
+                        delay,
                     ));
                     break;
                 }
@@ -496,12 +513,17 @@ impl CountdownDigit {
         }
 
         self.objects.extend(trans_out.iter().filter_map(|o| {
-            o.1.then(|| TransitioningObject::new(AnimType::Disappear(o.0), 0.8, true))
+            o.1.then(|| TransitioningObject::new(AnimType::Disappear(o.0), 0.8, true, delay))
         }));
 
         self.objects.extend(trans_in.iter().filter_map(|o| {
             o.1.then(|| {
-                TransitioningObject::new(AnimType::Appear(o.0, random_axis_offset()), 0.8, true)
+                TransitioningObject::new(
+                    AnimType::Appear(o.0, random_axis_offset()),
+                    0.8,
+                    true,
+                    delay,
+                )
             })
         }));
 
@@ -774,13 +796,11 @@ impl TransitioningObject {
         }
     }
 
-    fn new(typ: AnimType, duration: f64, y_delay: bool) -> TransitioningObject {
+    fn new(typ: AnimType, duration: f64, y_delay: bool, mut delay: f32) -> TransitioningObject {
         let time = now();
-        let delay = if !y_delay {
-            0.0
-        } else {
-            typ.output_obj().y / 300.0 * 0.25
-        };
+        if y_delay {
+            delay += typ.output_obj().y / 300.0 * 0.25
+        }
         TransitioningObject {
             typ,
             start_time: time + random() * duration * 0.1 + delay as f64,

@@ -57,14 +57,14 @@
             bind: "hideOutline",
         },
         {
-            name: "Hide Delete Text",
+            name: "Show who Deleted an Object",
             // description: "Hide the text that appears when an object is deleted",
-            bind: "hideDeleteText",
+            bind: "showDeleteText",
         },
         {
-            name: "Hide Hover Tooltip",
+            name: "Show who Placed an Object",
             // description: "Hide the text that appears when an object is deleted",
-            bind: "hidePlacedTooltip",
+            bind: "showPlacedText",
         },
     ];
 

@@ -8,6 +8,8 @@
     import DarkInput from "./DarkInput.svelte";
     import { notNaNAnd } from "../utils/misc";
     import Palette from "../icons/Palette.svelte";
+    import WhiteButton from "./Buttons/WhiteButton.svelte";
+    import { getRandomGradientColors } from "../utils/gradient";
 
     export let maxStops: number;
 
@@ -111,98 +113,100 @@
 />
 
 <div class="grid w-full h-full pointer-events-auto gradient-picker">
-    <div
-        class="h-16 min-h-0 mb-16 xs:h-12 cursor-copy xs:mb-5"
-        style={`--bg: ${previewGradientString}`}
-        on:pointerdown={handlePointerDown}
-        on:pointerup={e => {
-            // if you click on another element and drag onto the slider container
-            // this will prevent a stop being added
-            if (
-                lastClickedElement == null ||
-                !lastClickedElement.isEqualNode(sliderContainer)
-            ) {
-                return;
-            }
-
-            if (clickedNub) {
-                clickedNub = false;
-                return;
-            }
-
-            if (gradientStops.length > maxStops - 1) return;
-
-            let rect = sliderContainer.getBoundingClientRect();
-            let p = Math.round(
-                clamp(((e.clientX - rect.left) / rect.width) * 100, 0, 100)
-            );
-
-            gradientStops.push(p);
-            gradientColors.push("#ffffff");
-            gradientIDs.push(Math.random());
-            openColorPickers.push(false);
-
-            gradientStops = gradientStops;
-            gradientColors = gradientColors;
-            gradientIDs = gradientIDs;
-        }}
-        bind:this={sliderContainer}
-    >
-        <RangeSlider
-            id="gradient-slider"
-            bind:values={gradientStops}
-            springValues={{ stiffness: 1, damping: 1 }}
-            step={1}
-            min={0}
-            max={100}
-            float
-            hoverable={false}
-        ></RangeSlider>
-    </div>
-    <div class="absolute dark left-1/4">
-        <div id="color-picker-portal" />
-    </div>
-
-    <div class="flex w-full h-full min-h-0">
-        <div
-            class="flex flex-col items-center justify-center gap-2 pr-4 xs:justify-start xs:mt-2"
-        >
-            <div
-                class="relative flex flex-center"
-                on:pointerdown={() => {
-                    isRotating = true;
-                }}
-                bind:this={rotateKnob}
-            >
+    <div class="flex flex-row w-full gap-2">
+        <div class="flex flex-col items-center h-full gap-2 pr-6 sm:pr-4">
+            <div class="flex items-center justify-center h-16 xs:h-12">
                 <div
-                    class="box-content flex w-10 border-2 border-white rounded-full cursor-pointer xs:w-9 aspect-square flex-center"
+                    class="relative flex flex-center"
+                    on:pointerdown={() => {
+                        isRotating = true;
+                    }}
+                    bind:this={rotateKnob}
                 >
                     <div
-                        class="relative w-2 h-full"
-                        style:transform={`rotate(${gradientAngle}deg)`}
+                        class="box-content flex w-12 border-2 border-white rounded-full cursor-pointer xs:w-9 aspect-square flex-center"
                     >
-                        <span
-                            class="absolute w-2 bg-white rounded-full top-1 aspect-square"
-                        ></span>
+                        <div
+                            class="relative w-2 h-full"
+                            style:transform={`rotate(${gradientAngle}deg)`}
+                        >
+                            <span
+                                class="absolute w-2 bg-white rounded-full top-1 aspect-square"
+                            ></span>
+                        </div>
                     </div>
+                    <input
+                        type="range"
+                        min={0}
+                        max={360}
+                        aria-label="Gradient Angle"
+                        class="absolute sr-only"
+                        bind:value={gradientAngle}
+                    />
                 </div>
-                <input
-                    type="range"
-                    min={0}
-                    max={360}
-                    aria-label="Gradient Angle"
-                    class="absolute sr-only"
-                    bind:value={gradientAngle}
-                />
             </div>
             <DarkInput
                 maxLength={3}
                 softValidInput={GRAD_ANGLE_SOFT_VALID_INPUT}
                 hardValidInput={NUMBER_HARD_VALID_INPUT}
                 bind:value={gradientAngle}
-                class="text-base w-14 xs:text-sm"
+                class="text-base w-14 xs:text-sm h-min"
             />
         </div>
+        <div
+            class="w-full h-16 min-h-0 mb-16 xs:h-12 cursor-copy xs:mb-5"
+            style={`--bg: ${previewGradientString}`}
+            on:pointerdown={handlePointerDown}
+            on:pointerup={e => {
+                // if you click on another element and drag onto the slider container
+                // this will prevent a stop being added
+                if (
+                    lastClickedElement == null ||
+                    !lastClickedElement.isEqualNode(sliderContainer)
+                ) {
+                    return;
+                }
+
+                if (clickedNub) {
+                    clickedNub = false;
+                    return;
+                }
+
+                if (gradientStops.length > maxStops - 1) return;
+
+                let rect = sliderContainer.getBoundingClientRect();
+                let p = Math.round(
+                    clamp(((e.clientX - rect.left) / rect.width) * 100, 0, 100)
+                );
+
+                gradientStops.push(p);
+                gradientColors.push("#ffffff");
+                gradientIDs.push(Math.random());
+                openColorPickers.push(false);
+
+                gradientStops = gradientStops;
+                gradientColors = gradientColors;
+                gradientIDs = gradientIDs;
+            }}
+            bind:this={sliderContainer}
+        >
+            <RangeSlider
+                id="gradient-slider"
+                bind:values={gradientStops}
+                springValues={{ stiffness: 1, damping: 1 }}
+                step={1}
+                min={0}
+                max={100}
+                float
+                hoverable={false}
+            ></RangeSlider>
+        </div>
+        <div class="absolute dark left-1/4">
+            <div id="color-picker-portal" />
+        </div>
+    </div>
+
+    <div class="flex w-full h-full min-h-0">
         <ul
             class="overflow-y-scroll rounded-lg alternating-bg stop-list thin-scrollbar"
         >

@@ -33,6 +33,9 @@
     import type { Readable } from "svelte/store";
     import type { UserData } from "../firebase/auth";
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
+    import { getRandomGradientColors } from "../utils/gradient";
+    import IconButton from "../components/Buttons/IconButton.svelte";
+    import MagicWand from "../icons/MagicWand.svelte";
 
     enum Page {
         SUBMIT_TX_ID,
@@ -62,11 +65,8 @@
     let nameGradientStops: number[] = $currentNameGradient.positions ?? [
         0, 50, 100,
     ];
-    let nameGradientColors: string[] = $currentNameGradient.colors ?? [
-        "#ff0000",
-        "#00ff00",
-        "#0000ff",
-    ];
+    let nameGradientColors: string[] =
+        $currentNameGradient.colors ?? getRandomGradientColors();
     let nameGradientIDs: number[] = $currentNameGradient.ids ?? [69, 420, 1337];
 
     let resetSubmitButton: () => void;
@@ -160,6 +160,7 @@
     state={isInProgress ? "loading" : "default"}
     {isOpen}
     canClose={!isInProgress}
+    size="max-w-[500px] h-[600px] max-h-[650px]"
 >
     {#if currentPage === Page.SUBMIT_TX_ID}
         <div
@@ -255,21 +256,42 @@
                     bind:gradientIDs={nameGradientIDs}
                 ></GradientPicker>
             </div>
-            <OnceButton
-                userDisabled={!($gradientCooldownFinished ?? true)}
-                let:click
-                let:disabled
-                bind:reset={resetGradientButton}
-            >
-                <WhiteButton
-                    {disabled}
-                    class="w-full"
-                    on:click={click}
-                    on:click={onUpdateGradient}
+            <div class="grid grid-cols-[0.3fr_0.7fr] w-full gap-2">
+                <button
+                    class="flex w-full gap-1 px-2 underline flex-center hover:decoration-dashed"
+                    on:click={() => {
+                        nameGradientColors = getRandomGradientColors();
+                        nameGradientStops = nameGradientColors.map(
+                            (_, idx) =>
+                                (idx / (nameGradientColors.length - 1)) * 100
+                        );
+                        nameGradientIDs = nameGradientColors.map(_ =>
+                            Math.random()
+                        );
+                    }}
                 >
-                    <p class="text-lg xs:text-base">Update</p>
-                </WhiteButton>
-            </OnceButton>
+                    <p class="text-lg xs:text-base">Random</p>
+                    <MagicWand
+                        stroke-width={1}
+                        class="p-1 xs:w-7 xs:h-7 w-9 h-9"
+                    />
+                </button>
+                <OnceButton
+                    userDisabled={!($gradientCooldownFinished ?? true)}
+                    let:click
+                    let:disabled
+                    bind:reset={resetGradientButton}
+                >
+                    <WhiteButton
+                        {disabled}
+                        class="w-full"
+                        on:click={click}
+                        on:click={onUpdateGradient}
+                    >
+                        <p class="text-lg xs:text-base">Set Colors</p>
+                    </WhiteButton>
+                </OnceButton>
+            </div>
             {#if !($gradientCooldownFinished ?? false)}
                 <p class="text-sm text-center transition hover-text-transition">
                     You changed your gradient recently! Please wait <span

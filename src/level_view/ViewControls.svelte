@@ -607,13 +607,13 @@
             {/if}
         </LevelWidget>
     {/if}
-    {#if !$editorSettings.hideDeleteText}
+    {#if $editorSettings.showDeleteText}
         <DeleteTexts {state} />
     {/if}
 
     <TriggerRuns {state} />
 
-    {#if $placedByHover != null && !$editorSettings.hidePlacedTooltip}
+    {#if $placedByHover != null && $editorSettings.showPlacedText}
         <LevelWidget
             {state}
             x={$placedByHover.x}

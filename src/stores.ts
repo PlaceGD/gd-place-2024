@@ -113,8 +113,8 @@ export const editorSettings = persistLocalWritable(
         hideGrid: false,
         hideGround: false,
         hideOutline: false,
-        hideDeleteText: false,
-        hidePlacedTooltip: false,
+        showDeleteText: true,
+        showPlacedText: true,
     },
     "editorSettings"
 );

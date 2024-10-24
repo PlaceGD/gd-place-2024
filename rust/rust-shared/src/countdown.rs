@@ -194,10 +194,11 @@ parse_countdown_files! {
     "meeloz"            ("meeloz"):             [3 => weights(2,   2,   3,   3  )], // 49
     "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty silly], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
-    "loco"              ("xloco"):              [3 => weights(3,   3,   3,   3  ) classic], // 52
+    "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
+    "tech"              ("Technical"):          [0 => weights(3,   3,   3,   3  ) silly famous], // 53
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 52]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 53]);
 
 #[binrw]
 #[brw(little)]

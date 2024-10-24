@@ -255,12 +255,12 @@
                     <li>Do not exercise hate speech (please)</li>
                     <li>
                         Only report people who are breaking the rules
-                        <i style="font-size: small; opacity: 0.5;">
+                        <!-- <i style="font-size: small; opacity: 0.5;">
                             (unless you and another user are both reporting each
                             other for breaking this rule, in which case one of
                             you should break one other rule so that the other
                             one is no longer breaking a rule)
-                        </i>
+                        </i> -->
                     </li>
                 </ul>
 

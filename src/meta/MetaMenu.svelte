@@ -183,7 +183,7 @@
 
             <div class="flex flex-col w-full gap-2 flex-center">
                 <div class="flex w-full gap-2 flex-center">
-                    <h1 class="font-pusab text-stroke">Mod</h1>
+                    <h1 class="font-pusab text-stroke">username</h1>
                     <DarkInput
                         maxLength={16}
                         class="w-full"
@@ -216,7 +216,7 @@
             <div class="w-full min-h-[1px] bg-white/50" />
             <div class="flex flex-col w-full gap-2 flex-center">
                 <div class="flex w-full gap-2 flex-center">
-                    <h1 class="font-pusab text-stroke">Unban</h1>
+                    <h1 class="font-pusab text-stroke">username</h1>
                     <DarkInput
                         maxLength={16}
                         class="w-full"
@@ -273,7 +273,7 @@
                     <WhiteButton
                         class="w-full"
                         on:click={async () => {
-                            inputValues.usernameOrID =
+                            const id =
                                 (
                                     await db
                                         .ref(
@@ -281,6 +281,8 @@
                                         )
                                         .get()
                                 ).val() ?? "<unknown>";
+                            inputValues.usernameOrID = id;
+                            inputValues.donatorID = id;
                         }}
                     >
                         To ID
@@ -288,7 +290,7 @@
                     <WhiteButton
                         class="w-full"
                         on:click={async () => {
-                            inputValues.usernameOrID =
+                            const username =
                                 (
                                     await db
                                         .ref(
@@ -296,6 +298,9 @@
                                         )
                                         .get()
                                 ).val() ?? "<unknown>";
+                            inputValues.usernameOrID = username;
+                            inputValues.unbanUsername = username;
+                            inputValues.modChangeUsername = username;
                         }}>To username</WhiteButton
                     >
                 </div>

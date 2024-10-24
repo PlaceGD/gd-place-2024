@@ -71,6 +71,10 @@
                 tooltipLeft = right - tooltipSize.width;
             } else {
                 tooltipLeft = left;
+
+                if (left + tooltipSize.width > windowWidth) {
+                    tooltipLeft -= left + tooltipSize.width - windowWidth;
+                }
             }
 
             if (top > windowHeight / 2) {

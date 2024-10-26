@@ -12,9 +12,7 @@ type ActionPropsBase = {
     tooltipSize: { width: number; height: number };
 };
 type ActionBeginEndProps = ActionPropsBase & {
-    direction?: -1 | 1;
     nextStep: () => Promise<void>;
-    prevStep: () => Promise<void>;
 };
 
 export abstract class GuideAction {
@@ -204,9 +202,7 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
 
         this.handlerFn = this.onClickHandler(props) as any;
 
-        if (props.direction == 1) {
-            document.addEventListener("click", this.handlerFn);
-        }
+        document.addEventListener("click", this.handlerFn);
     }
 
     override async onEndAction(props: ActionBeginEndProps): Promise<void> {

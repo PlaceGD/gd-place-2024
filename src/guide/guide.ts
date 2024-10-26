@@ -151,7 +151,12 @@ export const GUIDE_STEPS: GuideAction[] = [
     new Setup(
         {
             begin: async () => {
+                menuMinimized.set(true);
                 openMenu.set(ExclusiveMenus.Settings);
+            },
+            end: async () => {
+                openMenu.set(null);
+                menuMinimized.set(false);
             },
         },
 

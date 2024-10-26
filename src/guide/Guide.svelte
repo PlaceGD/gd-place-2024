@@ -49,9 +49,7 @@
             await GUIDE_STEPS[step]?.onEndAction?.({
                 state,
                 tooltipSize,
-                direction: 1,
                 nextStep: goNextStep,
-                prevStep: goPrevStep,
             });
 
             $isGuideActive = false;
@@ -59,16 +57,12 @@
             await GUIDE_STEPS[step]?.onEndAction?.({
                 state,
                 tooltipSize,
-                direction: 1,
                 nextStep: goNextStep,
-                prevStep: goPrevStep,
             });
             await GUIDE_STEPS[step + 1]?.onBeginAction?.({
                 state,
                 tooltipSize,
-                direction: 1,
                 nextStep: goNextStep,
-                prevStep: goPrevStep,
             });
 
             prevStep = step;
@@ -77,28 +71,6 @@
             delayedStep = step;
             currentStep = GUIDE_STEPS[step];
         }
-    };
-    const goPrevStep = async () => {
-        await GUIDE_STEPS[step]?.onEndAction?.({
-            state,
-            tooltipSize,
-            direction: -1,
-            nextStep: goNextStep,
-            prevStep: goPrevStep,
-        });
-        await GUIDE_STEPS[step - 1]?.onBeginAction?.({
-            state,
-            tooltipSize,
-            direction: -1,
-            nextStep: goNextStep,
-            prevStep: goPrevStep,
-        });
-
-        prevStep = step;
-        step = step - 1;
-
-        delayedStep = step;
-        currentStep = GUIDE_STEPS[step];
     };
 </script>
 
@@ -141,27 +113,13 @@
         bind:clientHeight={tooltipSize.height}
     >
         <div
-            class="z-[53] flex flex-col gap-2 p-4 text-white rounded-lg xs:p-2 menu-panel flex-center max-w-[400px] outline-2 outline pulsing-outline m-4"
+            class="z-[53] flex flex-col gap-2 p-4 text-white rounded-lg xs:p-2 menu-panel flex-center max-w-[400px] xs:max-w-[350px] outline-2 outline pulsing-outline m-4 xs:m-2"
         >
             <span class="text-base sm:text-sm xs:text-xs">
                 {@html currentStep.description}
             </span>
-            <div class="flex items-center justify-between w-full">
+            <div class="flex items-center justify-between w-full gap-2">
                 <div class="flex gap-4 xs:gap-2">
-                    {#if !currentStep.getRequiresInteraction()}
-                        <IconButton
-                            class="w-24"
-                            disabled={step == 0 || !canChangeStep}
-                            on:click={goPrevStep}
-                        >
-                            <span slot="children">
-                                <ArrowLeft
-                                    stroke-width={1}
-                                    class="w-8 h-8 xs:h-7 xs:w-7"
-                                />
-                            </span>
-                        </IconButton>
-                    {/if}
                     <div
                         class="text-center tabular-nums hover-text-transition xs:text-sm"
                     >
@@ -196,7 +154,10 @@
                     }}
                 >
                     <span slot="children">
-                        <Cross aria-label="Exit" class="stroke-1 w-7 h-7" />
+                        <Cross
+                            aria-label="Exit"
+                            class="w-8 h-8 stroke-1 xs:h-7 xs:w-7"
+                        />
                     </span>
                 </IconButton>
             </div>

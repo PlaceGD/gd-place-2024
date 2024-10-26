@@ -295,6 +295,10 @@
                 "move widgets"
                 "transforms widgets";
         }
+
+        .move-button-grid {
+            @apply h-full;
+        }
     }
 
     @media only screen and (min-width: 900px) and (max-width: 1000px) {

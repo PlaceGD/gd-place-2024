@@ -35,8 +35,22 @@ const gradients = [
     ["#7bdff2", "#b2f7ef", "#eff7f6", "#f7d6e0", "#f2b5d4"],
     ["#001427", "#708d81", "#f4d58d", "#bf0603", "#8d0801"],
     ["#edafb8", "#f7e1d7", "#dedbd2", "#b0c4b1", "#4a5759"],
+
+    ["#E50000", "#FF8D00", "#FFEE00", "#028121", "#004CFF", "#770088"],
+    ["#5BCFFB", "#F5ABB9", "#FFFFFF", "#F5ABB9", "#5BCFFB"],
+    ["#D60270", "#9B4F96", "#0038A8"],
+    ["#FF1C8D", "#FFD700", "#1AB3FF"],
+    ["#FCF431", "#FCFCFC", "#9D59D2", "#282828"],
+    ["#D62800", "#FF9B56", "#FFFFFF", "#D462A6", "#A40062"],
+    ["#000000", "#A4A4A4", "#FFFFFF", "#810081"],
 ];
 
-export const getRandomGradientColors = (): string[] => {
-    return gradients[Math.floor(Math.random() * gradients.length)];
+export const getRandomGradientColors = (
+    current: string[] | null = null
+): string[] => {
+    let choice = gradients[Math.floor(Math.random() * gradients.length)];
+    while (choice.every((color, i) => color === current[i])) {
+        choice = gradients[Math.floor(Math.random() * gradients.length)];
+    }
+    return choice;
 };

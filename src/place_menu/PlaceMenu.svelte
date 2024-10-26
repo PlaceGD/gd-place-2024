@@ -51,6 +51,7 @@
         chooseDefaultColor,
         songPlaying,
         songPlayingIsPreview,
+        canPlaceEditDelete,
     } from "../stores";
     import { addObject, removeObject } from "../firebase/object";
     import { DEBUG } from "../utils/debug";
@@ -199,6 +200,14 @@
         } else {
             $selectedObject = null;
             state.deselect_object();
+        }
+    }
+
+    $: {
+        if (!$canPlaceEditDelete) {
+            state.set_preview_visibility(false);
+            stopPreviewSong();
+            resetPreviewColor(state, 1);
         }
     }
 

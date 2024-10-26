@@ -88,7 +88,7 @@
         zoomGoal,
         zoomTween,
     } from "./view_controls";
-    import { pinch, pan } from "svelte-gestures";
+    import { pinch, pan, tap } from "svelte-gestures";
     import { colors, isValidObject, objects } from "shared-lib/gd";
     import TriggerRuns from "../widgets/TriggerRuns.svelte";
     import { setCheckedPreviewObject } from "../utils/misc";
@@ -114,7 +114,7 @@
         thresholdReached: boolean;
     } = null;
 
-    let pinchZooming: null | number = null;
+    //let pinchZooming: null | number = null;
 
     $zoomGoal = state.get_zoom();
     $: {
@@ -352,12 +352,13 @@
         handleSub(state);
     });
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (isTouch: boolean) => {
         if (!dragging) return;
 
         if (!dragging.thresholdReached) {
             let [mx, my] = getWorldMousePos();
             let hit = state.objects_hit_at(mx, my, 0.0);
+
             if ($menuTabGroup == TabGroup.Delete && $canPlaceEditDelete) {
                 trySelectAt(mx, my, hit);
 
@@ -367,7 +368,14 @@
                     return v;
                 });
             } else {
-                if (!tryRunTriggers(hit) && $canPlaceEditDelete) {
+                if (isTouch) {
+                    checkHover();
+                }
+                if (
+                    !tryRunTriggers(hit) &&
+                    !(isTouch && hit.length > 0) &&
+                    $canPlaceEditDelete
+                ) {
                     placePreview(mx, my);
 
                     walmart.update(v => {
@@ -437,10 +445,11 @@
         getPlacedUsername(top.key(), v => {
             placedByHover.set({ username: v, x: top.obj.x, y: top.obj.y });
         });
-    }, 100);
+    }, 50);
 
     let previewObjectPos: [number, number] = [0, 0];
     let editWidgetScale = 1;
+    let placedNameScale = 1;
     let editWidgetVisible = false;
 
     const loopFn = () => {
@@ -450,6 +459,8 @@
 
         editWidgetScale = 1 + state.get_zoom() / 80;
         editWidgetVisible = state.is_preview_visible();
+
+        placedNameScale = Math.pow(2.0, state.get_zoom() / 30.0);
 
         loop = requestAnimationFrame(loopFn);
     };
@@ -492,11 +503,12 @@
 <svelte:window
     on:pointerup={e => {
         setMousePos(e);
-
-        handleMouseUp();
+        const isTouch = e.pointerType == "touch";
+        handleMouseUp(isTouch);
     }}
     on:pointermove={e => {
-        if (pinchZooming == null) {
+        const isTouch = e.pointerType == "touch";
+        if (!isTouch) {
             setMousePos(e);
             handleDrag($mouseX, $mouseY);
             if (dragging == null) {
@@ -505,6 +517,28 @@
                 placedByHover.set(null);
                 checkHover.cancel();
             }
+        }
+    }}
+    on:touchmove={e => {
+        // get all touches and average them
+        const touches = e.touches;
+        if (touches.length > 0) {
+            let avgX = 0;
+            let avgY = 0;
+            for (let i = 0; i < touches.length; i++) {
+                avgX += touches[i].clientX;
+                avgY += touches[i].clientY;
+            }
+            avgX /= touches.length;
+            avgY /= touches.length;
+            setMousePos({ clientX: avgX, clientY: avgY });
+        }
+        handleDrag($mouseX, $mouseY);
+        if (dragging == null) {
+            checkHover();
+        } else {
+            placedByHover.set(null);
+            checkHover.cancel();
         }
     }}
     on:resize={() => {
@@ -572,11 +606,14 @@
         e.preventDefault();
         $zoomGoal = $zoomGoal - e.deltaY / Math.max(Math.abs(e.deltaY), 1);
     }}
-    use:pinch
+/>
+
+<!-- use:pinch
     on:pinch={e => {
         dragging = null;
         $mouseX = e.detail.center.x * window.devicePixelRatio;
         $mouseY = e.detail.center.y * window.devicePixelRatio;
+
         if (pinchZooming == null) {
             pinchZooming = $zoomTween;
         } else {
@@ -586,8 +623,7 @@
     }}
     on:pinchup={() => {
         pinchZooming = null;
-    }}
-/>
+    }} -->
 
 <div class="absolute w-full h-full overflow-visible pointer-events-none">
     {#if editWidgetVisible}
@@ -619,7 +655,7 @@
             x={$placedByHover.x}
             y={$placedByHover.y}
             scaleWithZoom={false}
-            scale={1.5}
+            scale={placedNameScale}
         >
             <PlacedByText username={$placedByHover.username} />
         </LevelWidget>

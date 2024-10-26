@@ -208,7 +208,7 @@
 
     <div class="flex w-full h-full min-h-0">
         <ul
-            class="overflow-y-scroll rounded-lg alternating-bg stop-list thin-scrollbar"
+            class="overflow-y-auto rounded-lg alternating-bg stop-list thin-scrollbar"
         >
             {#each gradientStops
                 .map((pos, idx) => [pos, idx])

@@ -7,7 +7,7 @@
 </script>
 
 {#each Object.entries($deleteTexts) as [k, { name, x, y }] (k)}
-    <LevelWidget {state} {x} {y}>
+    <LevelWidget {state} {x} {y} scale={0.7}>
         <span
             class="absolute letext text-black font-bold text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
             >Deleted by {name}</span

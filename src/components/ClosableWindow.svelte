@@ -8,12 +8,12 @@
 
 {#if !hidden}
     <div
-        class="relative flex flex-col overflow-hidden border-4 shadow-lg pointer-events-none shrink-0 bg-menu-gray/30 rounded-xl backdrop-blur-md border-white/80"
+        class="relative flex flex-col overflow-hidden border-4 shadow-lg shrink-0 bg-menu-gray/30 rounded-xl backdrop-blur-md border-white/80"
         transition:blur={{
             duration: 150,
             delay: 0,
         }}
-        style={`transform: scale(${open ? 1 : 0.8}); opacity: ${open ? 1 : 0}; pointer-events: ${open ? "auto" : "none"}; transition: transform 300ms, opacity 300ms;`}
+        style={`transform: scale(${open ? 1 : 0.8}); opacity: ${open ? 1 : 0}; pointer-events: none; transition: transform 300ms, opacity 300ms;`}
     >
         <div
             class="flex flex-row border-b-4 border-b-white/80 bg-menu-gray/80 rounded-t-xl"
@@ -42,7 +42,7 @@
                 </svg>
             </button>
         </div>
-        <div class="p-6 xs:p-3">
+        <div class="p-6 xs:p-3 pointer-events-none">
             <slot />
         </div>
     </div>

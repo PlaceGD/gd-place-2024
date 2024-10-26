@@ -43,7 +43,18 @@
     }
 
     let isInProgress = false;
-    $: isOpen = $openMenu == ExclusiveMenus.Kofi;
+    let isOpen = false;
+    $: {
+        if (!isOpen && $openMenu == ExclusiveMenus.Kofi) {
+            if ($currentNameGradient.positions !== null)
+                nameGradientStops = $currentNameGradient.positions;
+            if ($currentNameGradient.colors !== null)
+                nameGradientColors = $currentNameGradient.colors;
+            if ($currentNameGradient.ids !== null)
+                nameGradientIDs = $currentNameGradient.ids;
+        }
+        isOpen = $openMenu == ExclusiveMenus.Kofi;
+    }
 
     let currentPage: Page = Page.SUBMIT_TX_ID;
 
@@ -260,7 +271,8 @@
                 <button
                     class="flex w-full gap-1 px-2 underline flex-center hover:decoration-dashed"
                     on:click={() => {
-                        nameGradientColors = getRandomGradientColors();
+                        nameGradientColors =
+                            getRandomGradientColors(nameGradientColors);
                         nameGradientStops = nameGradientColors.map(
                             (_, idx) =>
                                 (idx / (nameGradientColors.length - 1)) * 100

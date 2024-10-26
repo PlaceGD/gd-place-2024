@@ -149,7 +149,7 @@ parse_countdown_files! {
     "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  ) pretty classic], // 4
     "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  ) pretty], // 5
     "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  ) pretty], // 6
-    "dreaminginsanity3" ("DreamingInsanity"):   [3 => weights(2,   2,   2,   3  ) pretty silly], // 7
+    "dreaminginsanity3" ("DreamingInsanity"):   [3 => weights(2,   3,   3,   4  ) pretty silly], // 7
     "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  ) classic], // 8
     "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 9
     "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 10
@@ -190,7 +190,7 @@ parse_countdown_files! {
     "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 45
     "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 46
     "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 47
-    "vrymer"            ("vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 58
+    "vrymer"            ("vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 48
     "meeloz"            ("meeloz"):             [3 => weights(2,   2,   3,   3  )], // 49
     "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty silly], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51

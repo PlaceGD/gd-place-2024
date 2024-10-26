@@ -84,7 +84,12 @@
             class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
         >
             <!-- Faded scroll just for fanciness -->
-            <FadedScroll update={transitionVal} scrollY="overflow-y-scroll">
+            <FadedScroll
+                update={transitionVal}
+                scrollY={transitionVal === 1
+                    ? "overflow-y-auto"
+                    : "overflow-y-hidden"}
+            >
                 <ul class="flex flex-col gap-2 xs:gap-1 alternating-bg">
                     {#each settings as setting}
                         <li

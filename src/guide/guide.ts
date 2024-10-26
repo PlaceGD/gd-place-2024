@@ -33,6 +33,7 @@ export const GUIDE_ELEM_IDS = {
     placeMenuDeleteButton: "place-menu-delete",
     settingsMenuDonate: "settings-menu-donate",
     pdButton: "place-delete-button",
+    placeMenuModes: null,
 } as const;
 
 export const GUIDE_STEPS: GuideAction[] = [

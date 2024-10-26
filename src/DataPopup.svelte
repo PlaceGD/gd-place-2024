@@ -72,7 +72,7 @@
     label="Privacy Policy Modal"
     {isOpen}
     canClose={false}
-    size="max-w-[600px] max-h-[400px]"
+    size="max-w-[600px] max-h-min"
 >
     <div class="grid gap-4 modal-panel grid-rows-[minmax(0,_1fr)_min-content]">
         <section class="text">

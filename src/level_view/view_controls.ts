@@ -111,7 +111,7 @@ const savePos = debounce((state: wasm.State) => {
         data.zoom = zoom;
         return data;
     });
-}, 200);
+}, 1000);
 
 const RESET_COLOR_TRIGGER_MIN_COOLDOWN_SECS_HAHA = 10;
 export const moveCamera = (state: wasm.State, x: number, y: number) => {

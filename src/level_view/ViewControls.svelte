@@ -170,22 +170,22 @@
             15 +
             objects[$menuSelectedObject].placeOffsetY;
 
-        obj.x_scale_exp = 0;
-        obj.x_angle = 0;
-        obj.y_scale_exp = 0;
-        obj.y_angle = 18;
+        // obj.x_scale_exp = 0;
+        // obj.x_angle = 0;
+        // obj.y_scale_exp = 0;
+        // obj.y_angle = 18;
 
         resetPreviewColor(state, obj.id);
         if (COLOR_TRIGGERS.includes(obj.id)) {
             chooseRandomTriggerColor(state, obj.id);
         } else {
-            chooseDefaultColor();
+            // chooseDefaultColor();
         }
-        $menuZLayer = wasm.ZLayer.B2;
-        $menuZOrder = 0;
-        $menuSelectedSFX = 0;
-        $menuSelectedSong = 0;
-        $menuSpeed = 0;
+        // $menuZLayer = wasm.ZLayer.B2;
+        // $menuZOrder = 0;
+        // $menuSelectedSFX = 0;
+        // $menuSelectedSong = 0;
+        // $menuSpeed = 0;
 
         if (obj.id == SFX_TRIGGER) {
             $menuSelectedSFX = Math.floor(

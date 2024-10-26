@@ -31,7 +31,11 @@ export const playSound = (options: SoundPlayOptions) => {
     if (options.end_cb != undefined) {
         audio.onended = options.end_cb;
     }
-    audio.play();
+    (async () => {
+        try {
+            await audio.play();
+        } catch {}
+    })();
 };
 
 export const stopSound = (channel: string) => {

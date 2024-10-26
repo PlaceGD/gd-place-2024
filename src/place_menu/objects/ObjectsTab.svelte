@@ -86,7 +86,7 @@
                                 if (COLOR_TRIGGERS.includes(id)) {
                                     chooseRandomTriggerColor(state, id);
                                 } else {
-                                    chooseDefaultColor();
+                                    // chooseDefaultColor();
                                 }
                                 if (id != SONG_TRIGGER) {
                                     stopSound("preview song");

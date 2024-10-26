@@ -49,6 +49,7 @@ export const getRandomGradientColors = (
     current: string[] | null = null
 ): string[] => {
     let choice = gradients[Math.floor(Math.random() * gradients.length)];
+    if (current == null) return [];
     while (choice.every((color, i) => color === current[i])) {
         choice = gradients[Math.floor(Math.random() * gradients.length)];
     }

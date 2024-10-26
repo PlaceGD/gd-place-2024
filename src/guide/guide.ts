@@ -25,6 +25,7 @@ import { EditTab } from "../place_menu/edit/edit_tab";
 export const walmart = writable({
     hasDeleteSelection: false,
     hasPlacedObject: false,
+    hasEditedObject: false,
 });
 
 export const GUIDE_ELEM_IDS = {
@@ -72,6 +73,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         },
         new ClickInteraction(
             ".object-grid-container > li *",
+            "manual-next",
             new HighlightElement(
                 GUIDE_ELEM_IDS.placeMenu,
                 "Let's place an object! Select an object from this menu.",
@@ -92,21 +94,31 @@ export const GUIDE_STEPS: GuideAction[] = [
             EditorGuidePosition.Top
         )
     ),
-    new ClickInteraction(
-        "#edit-mode *",
-        new HighlightElement(
-            GUIDE_ELEM_IDS.placeMenuEditButton,
-            "Go to the <b>edit tab</b> to adjust your object.",
-            true
+    new Setup(
+        {
+            begin: async () => {
+                menuMinimized.set(false);
+            },
+        },
+        new ClickInteraction(
+            "#edit-mode *",
+            "auto-next",
+            new HighlightElement(
+                GUIDE_ELEM_IDS.placeMenuEditButton,
+                "Go to the <b>edit tab</b> to adjust your object.",
+                true
+            )
         )
     ),
-    new HighlightElement(
-        GUIDE_ELEM_IDS.placeMenu,
+    new EditorGuide(
         "Move, scale, rotate, or change the color of your object!",
+        null,
+        EditorGuidePosition.Top,
         true
     ),
     new ClickInteraction(
         ".pd-button *",
+        "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
             "Click the place button to place the object in the level! (After you have done this, you need to wait some time before you can place another one.)",
@@ -120,6 +132,7 @@ export const GUIDE_STEPS: GuideAction[] = [
     ),
     new ClickInteraction(
         "#delete-mode *",
+        "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.placeMenuDeleteButton,
             "Let's delete an object >:) Go to the <b>delete tab</b>.",
@@ -137,6 +150,7 @@ export const GUIDE_STEPS: GuideAction[] = [
     ),
     new ClickInteraction(
         ".pd-button *",
+        "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
             "Click the delete button to delete the object in the level! (After you have done this, you need to wait some time before you can delete another one.)",

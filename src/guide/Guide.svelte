@@ -13,6 +13,7 @@
     import type { GuideAction } from "./guideActions";
     import GenericAction from "./GenericAction.svelte";
     import Check from "../icons/Check.svelte";
+    import { get, type Unsubscriber } from "svelte/store";
 
     export let state: wasm.State;
 
@@ -30,6 +31,18 @@
 
     let tooltipSize = { width: 0, height: 0 };
 
+    let requiresInteractionUnsub: Unsubscriber | undefined;
+    let requiresInteraction = false;
+    $: requiresInteractionUnsub = currentStep?.requiresInteraction.subscribe(
+        v => (requiresInteraction = v)
+    );
+
+    let canInteractUnsub: Unsubscriber | undefined;
+    let canInteract = false;
+    $: canInteractUnsub = currentStep?.canInteract.subscribe(
+        v => (canInteract = v)
+    );
+
     $: {
         if ($isGuideActive) {
             goNextStep();
@@ -45,6 +58,9 @@
     }
 
     const goNextStep = async () => {
+        requiresInteractionUnsub?.();
+        canInteractUnsub?.();
+
         if (step + 1 >= GUIDE_STEPS.length) {
             await GUIDE_STEPS[step]?.onEndAction?.({
                 state,
@@ -98,6 +114,7 @@
             step={currentStep}
             {state}
             {tooltipSize}
+            {canInteract}
             bind:tooltipTop
             bind:tooltipLeft
         />
@@ -119,32 +136,34 @@
                 {@html currentStep.description}
             </span>
             <div class="flex items-center justify-between w-full gap-2">
-                <div class="flex gap-4 xs:gap-2">
+                <div class="flex gap-4 xs:gap-2 flex-center">
                     <div
                         class="text-center tabular-nums hover-text-transition xs:text-sm"
                     >
                         {delayedStep + 1}/{GUIDE_STEPS.length}
                     </div>
-                    {#if !currentStep.getRequiresInteraction()}
-                        <IconButton
-                            class="w-24"
-                            disabled={!canChangeStep}
-                            on:click={goNextStep}
-                        >
-                            <span slot="children">
-                                {#if delayedStep < GUIDE_STEPS.length - 1}
-                                    <ArrowRight
-                                        stroke-width={1}
-                                        class="w-8 h-8 xs:h-7 xs:w-7"
-                                    />
-                                {:else}
-                                    <Check
-                                        stroke-width={1}
-                                        class="w-8 h-8 xs:h-7 xs:w-7"
-                                    />
-                                {/if}
-                            </span>
-                        </IconButton>
+                    {#if true}
+                        {#if !requiresInteraction}
+                            <IconButton
+                                class="w-24"
+                                disabled={!canChangeStep}
+                                on:click={goNextStep}
+                            >
+                                <span slot="children">
+                                    {#if delayedStep < GUIDE_STEPS.length - 1}
+                                        <ArrowRight
+                                            stroke-width={1}
+                                            class="w-8 h-8 xs:h-7 xs:w-7"
+                                        />
+                                    {:else}
+                                        <Check
+                                            stroke-width={1}
+                                            class="w-8 h-8 xs:h-7 xs:w-7"
+                                        />
+                                    {/if}
+                                </span>
+                            </IconButton>
+                        {/if}
                     {/if}
                 </div>
                 <IconButton

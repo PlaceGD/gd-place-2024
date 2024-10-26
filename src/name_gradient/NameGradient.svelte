@@ -267,7 +267,7 @@
                     bind:gradientIDs={nameGradientIDs}
                 ></GradientPicker>
             </div>
-            <div class="grid grid-cols-[0.3fr_0.7fr] w-full gap-2">
+            <div class="grid grid-cols-[0.3fr_1fr] w-full gap-2">
                 <button
                     class="flex w-full gap-1 px-2 underline flex-center hover:decoration-dashed"
                     on:click={() => {

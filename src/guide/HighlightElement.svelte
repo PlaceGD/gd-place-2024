@@ -2,6 +2,8 @@
     import { onDestroy, onMount } from "svelte";
     import { VisualObserver } from "viz-observer";
 
+    const BORDER_WIDTH = 2;
+
     export let target: string;
     export let allowClicking: boolean;
 
@@ -18,6 +20,7 @@
         ) as HTMLElement | null;
     };
 
+    let targetElem: HTMLElement | null;
     let targetElemRect: DOMRect | null;
 
     let observer: VisualObserver | null;
@@ -27,8 +30,11 @@
         });
 
         const elem = getGuideElem(target);
+        targetElem = elem;
 
         if (elem) {
+            elem.style.outline = `${BORDER_WIDTH}px red solid`;
+
             observer.observe(elem);
             targetElemRect = elem.getBoundingClientRect();
         } else {
@@ -43,13 +49,15 @@
     });
 
     $: {
-        if (observer && target) {
+        if (observer && target && targetElem) {
+            targetElem.style.outline = "";
             observer.disconnect();
             updateObserver();
         }
     }
 
     onDestroy(() => {
+        if (targetElem) targetElem.style.outline = "";
         observer?.disconnect();
     });
 
@@ -67,6 +75,7 @@
             right = left + targetElemRect.width;
             top = targetElemRect.top;
             bottom = top + targetElemRect.height;
+
             if (left > windowWidth / 2) {
                 tooltipLeft = right - tooltipSize.width;
             } else {
@@ -82,6 +91,12 @@
             } else {
                 tooltipTop = bottom;
             }
+
+            // dont want these to effect the tooltip position so they come last
+            left -= BORDER_WIDTH;
+            right += BORDER_WIDTH;
+            top -= BORDER_WIDTH;
+            bottom += BORDER_WIDTH;
         }
     }
 </script>

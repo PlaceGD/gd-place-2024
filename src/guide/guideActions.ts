@@ -2,7 +2,13 @@ import type { ComponentType, EventDispatcher } from "svelte";
 import * as wasm from "wasm-lib";
 import HighlightElementComp from "./HighlightElement.svelte";
 import { moveCamera } from "../level_view/view_controls";
-import { get, type Unsubscriber, type Writable } from "svelte/store";
+import {
+    derived,
+    get,
+    writable,
+    type Unsubscriber,
+    type Writable,
+} from "svelte/store";
 
 type Props<C> =
     C extends ComponentType<infer X> ? Partial<X["$$prop_def"]> : never;
@@ -16,9 +22,8 @@ type ActionBeginEndProps = ActionPropsBase & {
 };
 
 export abstract class GuideAction {
-    getRequiresInteraction(): boolean {
-        return false;
-    }
+    public requiresInteraction: Writable<boolean> = writable(false);
+    public canInteract: Writable<boolean> = writable(false);
 
     getComponent?(): ComponentType | undefined;
     getProps?(): Props<ComponentType> | undefined;
@@ -62,9 +67,12 @@ export class EditorGuide extends GuideAction {
     constructor(
         description: string,
         private cameraPos: { x: number; y: number; zoom: number } | null,
-        private tooltiopPos: EditorGuidePosition
+        private tooltiopPos: EditorGuidePosition,
+        canInteract: boolean = false
     ) {
         super(description);
+
+        this.canInteract.set(canInteract);
     }
 
     override getTooltipPos(props: ActionPropsBase): [number, number] {
@@ -92,12 +100,10 @@ export class WaitThen<T extends GuideAction> extends GuideAction {
         private delay: number
     ) {
         super(action.description);
+        this.requiresInteraction = action.requiresInteraction;
+        this.canInteract = action.canInteract;
 
         this.action = action;
-    }
-
-    override getRequiresInteraction() {
-        return this.action.getRequiresInteraction();
     }
 
     override getComponent() {
@@ -133,13 +139,15 @@ export class Setup<T extends GuideAction> extends GuideAction {
         private action: T
     ) {
         super(action.description);
+        this.requiresInteraction = action.requiresInteraction;
+        this.canInteract = action.canInteract;
 
         this.action = action;
     }
 
-    override getRequiresInteraction() {
-        return this.action.getRequiresInteraction();
-    }
+    // override getRequiresInteraction() {
+    //     return this.action.getRequiresInteraction();
+    // }
 
     override getComponent() {
         return this.action?.getComponent?.();
@@ -171,15 +179,16 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
 
     constructor(
         private selector: string,
+        private mode: "auto-next" | "manual-next",
         private action: T
     ) {
         super(action.description);
+        this.requiresInteraction = action.requiresInteraction;
+        this.canInteract = action.canInteract;
+        this.requiresInteraction.set(true);
+        this.canInteract.set(true);
 
         this.action = action;
-    }
-
-    override getRequiresInteraction() {
-        return true;
     }
 
     override getComponent() {
@@ -192,7 +201,11 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
     private onClickHandler(props: ActionBeginEndProps) {
         return (e: PointerEvent & { target: HTMLElement }) => {
             if (e.button === 0 && e.target.matches(this.selector)) {
-                props.nextStep();
+                if (this.mode == "auto-next") {
+                    props.nextStep();
+                } else {
+                    this.requiresInteraction.set(false);
+                }
             }
         };
     }
@@ -206,6 +219,8 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
     }
 
     override async onEndAction(props: ActionBeginEndProps): Promise<void> {
+        this.requiresInteraction.set(true);
+
         if (this.handlerFn) {
             document.removeEventListener("click", this.handlerFn);
         }
@@ -233,11 +248,12 @@ export class FlagStoreChange<
     ) {
         super(action.description);
 
-        this.action = action;
-    }
+        this.requiresInteraction = action.requiresInteraction;
+        this.canInteract = action.canInteract;
+        this.requiresInteraction.set(true);
+        this.canInteract.set(true);
 
-    override getRequiresInteraction() {
-        return true;
+        this.action = action;
     }
 
     override getComponent() {

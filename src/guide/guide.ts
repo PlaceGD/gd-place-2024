@@ -48,7 +48,7 @@ export const GUIDE_STEPS: GuideAction[] = [
             },
         },
         new EditorGuide(
-            '<div class="text-xl text-center p-4"> Welcome to GD Place! </div> The goal of this project is to build a huge, working platformer level - together! This is the part of the level where the player will spawn in... ',
+            '<div class="text-xl text-center p-4 xs:p-2 xs:text-lg"> Welcome to GD Place! </div> The goal of this project is to build a huge, working platformer level - together! This is the part of the level where the player will spawn in... ',
             {
                 x: 0,
                 y: 0,

@@ -51,6 +51,12 @@
 
     $: {
         if (!$isGuideActive) {
+            GUIDE_STEPS[step]?.onEndAction?.({
+                state,
+                tooltipSize,
+                nextStep: goNextStep,
+            });
+
             step = -1;
             delayedStep = 0;
             currentStep = null;
@@ -174,7 +180,7 @@
                 >
                     <span
                         slot="children"
-                        class="h-8 opacity-30 flex flex-center justify-center"
+                        class="flex justify-center h-8 opacity-30 flex-center"
                     >
                         <!-- <Cross
                             aria-label="Exit"

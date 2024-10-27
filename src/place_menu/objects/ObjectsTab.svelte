@@ -14,7 +14,12 @@
         menuEditTab,
         menuMinimized,
         menuSelectedObject,
+        menuSelectedSFX,
+        menuSelectedSong,
+        menuSpeed,
         menuTabGroup,
+        menuZLayer,
+        menuZOrder,
         resetPreviewColor,
         songPlaying,
         songPlayingIsPreview,
@@ -42,6 +47,7 @@
 
     import * as wasm from "wasm-lib";
     import { GUIDE_ELEM_IDS } from "../../guide/guide";
+    import { setCheckedPreviewObject } from "../../utils/misc";
     export let state: wasm.State;
 
     let objects: [number, ObjectInfo][] = [];
@@ -81,18 +87,31 @@
                                 // if (id == 3854) {
                                 //     playSound({ url: fireMp3Url, volume: 0.04 });
                                 // }
+                                let obj = state.get_preview_object();
+                                obj.x_scale_exp = 0;
+                                obj.x_angle = 0;
+                                obj.y_scale_exp = 0;
+                                obj.y_angle = 18;
+
+                                $menuZLayer = wasm.ZLayer.B2;
+                                $menuZOrder = 0;
+                                $menuSelectedSFX = 0;
+                                $menuSelectedSong = 0;
+                                $menuSpeed = 0;
 
                                 resetPreviewColor(state, id);
                                 if (COLOR_TRIGGERS.includes(id)) {
                                     chooseRandomTriggerColor(state, id);
                                 } else {
-                                    // chooseDefaultColor();
+                                    chooseDefaultColor();
                                 }
                                 if (id != SONG_TRIGGER) {
                                     stopSound("preview song");
                                     if ($songPlayingIsPreview)
                                         songPlaying.set(false);
                                 }
+
+                                setCheckedPreviewObject(state, obj);
 
                                 $menuSelectedObject = id;
                             }}

@@ -110,10 +110,10 @@ export const initUserWithUsername = onCallAuthLogger<
 
     const user: UserDetails = {
         username: data.username,
-        epochNextPlace: 0,
-        epochNextDelete: 0,
-        epochNextReport: 0,
-        epochNextGradient: 0,
+        lastPlaceTimestamp: 0,
+        lastDeleteTimestamp: 0,
+        lastReportTimestamp: 0,
+        lastGradientTimestamp: 0,
         moderator: false,
         hasDonated: false,
     };
@@ -155,10 +155,11 @@ export const reportUser = onCallAuthLogger<ReportUserReq>(
 
         const [_, userToReport] = await Promise.all([
             checkedTransaction(
-                userDetails.ref.child("epochNextReport"),
-                nextReport => now >= nextReport,
+                userDetails.ref.child("lastReportTimestamp"),
+                lastReport =>
+                    now >= (lastReport ?? 0) + REPORT_COOLDOWN_SECONDS * 1000,
                 () => Error.code(204, "permission-denied"),
-                () => now + REPORT_COOLDOWN_SECONDS * 1000
+                () => now // + REPORT_COOLDOWN_SECONDS * 1000
             ),
             db
                 .ref(`userName/${data.username.toLowerCase()}`)

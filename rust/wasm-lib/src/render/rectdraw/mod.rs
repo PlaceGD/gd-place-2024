@@ -12,10 +12,23 @@ use crate::{
     object::GDObjectExt,
     state::State,
     utilgen::{
-        DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, OBJECT_MAIN_OVER_DETAIL, SFX_ICON_SPRITES,
+        DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, OBJECT_MAIN_OVER_DETAIL_IDS, SFX_ICON_SPRITES,
         SONG_ICON_SPRITES,
     },
 };
+
+const fn object_main_over_detail() -> [bool; 4600] {
+    let mut arr = [false; 4600];
+    let ids = OBJECT_MAIN_OVER_DETAIL_IDS;
+    let mut i = 0;
+    while i < ids.len() {
+        arr[ids[i] as usize] = true;
+        i += 1;
+    }
+    arr
+}
+
+const OBJECT_MAIN_OVER_DETAIL: [bool; 4600] = object_main_over_detail();
 
 pub mod billy;
 pub mod countdown;

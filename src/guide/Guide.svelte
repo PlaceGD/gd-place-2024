@@ -172,11 +172,15 @@
                         $isGuideActive = false;
                     }}
                 >
-                    <span slot="children">
-                        <Cross
+                    <span
+                        slot="children"
+                        class="h-8 opacity-30 flex flex-center justify-center"
+                    >
+                        <!-- <Cross
                             aria-label="Exit"
                             class="w-8 h-8 stroke-1 xs:h-7 xs:w-7"
-                        />
+                        /> -->
+                        Exit
                     </span>
                 </IconButton>
             </div>

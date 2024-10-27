@@ -13,7 +13,7 @@ export const addObject = (
 
     let s = encodeString(v, 126);
 
-    placeObject({ object: s })
+    placeObject({ object: s, timestamp: Date.now() })
         .then(v => {
             cb(v.data);
         })

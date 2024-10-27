@@ -35,11 +35,13 @@
     import reportButtonimage from "../../moderator/assets/report_button.png?url";
     import type { FirebaseError } from "shared-lib/cloud_functions";
     import { SFX_ICONS, SONG_ICONS } from "../edit/sfx_tab";
+    import { REPORT_COOLDOWN_SECONDS } from "shared-lib/user";
 
     export let state: wasm.State;
 
     const cooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextReport`
+        `userDetails/${$loginData.currentUserData!.user.uid}/lastReportTimestamp`,
+        REPORT_COOLDOWN_SECONDS
     );
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
 

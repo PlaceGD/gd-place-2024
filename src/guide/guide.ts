@@ -46,7 +46,7 @@ export const GUIDE_STEPS: GuideAction[] = [
             },
         },
         new EditorGuide(
-            "The goal of this project is to work a working platformer level - together! This is the part of the level where the player will spawn in... ",
+            '<div class="text-xl text-center p-4"> Welcome to GD Place! </div> The goal of this project is to build a huge, working platformer level - together! This is the part of the level where the player will spawn in... ',
             {
                 x: 0,
                 y: 0,
@@ -56,7 +56,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         )
     ),
     new EditorGuide(
-        "...and when the player touches this <b>END trigger</b>, they have completed the level! Your job is to build everything in between.",
+        "...and when the player touches this <b>END trigger</b>, they have completed the level! <br/> <b>Your job is to build everything in between.</b>",
         {
             x: LEVEL_WIDTH_UNITS - 70,
             y: LEVEL_HEIGHT_UNITS - 70,
@@ -153,7 +153,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
-            "Click the delete button to delete the object in the level! (After you have done this, you need to wait some time before you can delete another one.)",
+            "Click the delete button to delete the object from the level! (After you have done this, you need to wait some time before you can delete another one.)",
             true
         )
     ),

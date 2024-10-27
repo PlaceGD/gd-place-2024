@@ -136,7 +136,7 @@ export const DEV_UIDS: string[] = [
     "LtbULkrh8sRas6y52oieUlApCLo1",
 ];
 
-export type PlaceReq = { object: string };
+export type PlaceReq = { object: string; timestamp: number };
 export type PlaceRes = string;
 
 export type DeleteReq = { chunkId: ChunkID; objId: string };

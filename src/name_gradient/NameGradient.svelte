@@ -118,8 +118,10 @@
         }
         if (data != null) {
             gradientCooldown = SyncedCooldown.new(
-                `userDetails/${data?.user?.uid ?? ""}/epochNextGradient`
+                `userDetails/${data?.user?.uid ?? ""}/lastGradientTimestamp`,
+                GRADIENT_COOLDOWN_SECONDS
             );
+
             gradientCooldownDisplay = gradientCooldown.display;
             gradientCooldownFinished = gradientCooldown.finished;
         } else {

@@ -26,6 +26,7 @@ import {
     refAllGet,
 } from "./utils/utils";
 import Error from "./utils/errors";
+import { write } from "firebase-functions/logger";
 
 // #region deserializeObject
 const deserializeObject = (
@@ -171,10 +172,10 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
         }
 
         await checkedTransaction(
-            userDetails.ref.child("epochNextPlace"),
-            nextPlace => now >= nextPlace,
+            userDetails.ref.child("lastPlaceTimestamp"),
+            lastPlaced => now >= (lastPlaced ?? 0) + placeCooldown.val() * 1000,
             () => Error.code(202, "permission-denied"),
-            () => now + placeCooldown.val() * 1000
+            () => now
         );
 
         if (!data.object) {
@@ -243,10 +244,11 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
         }
 
         await checkedTransaction(
-            userDetails.ref.child("epochNextDelete"),
-            nextDelete => now >= nextDelete,
+            userDetails.ref.child("lastDeleteTimestamp"),
+            lastDelete =>
+                now >= (lastDelete ?? 0) + deleteCooldown.val() * 1000,
             () => Error.code(203, "permission-denied"),
-            () => now + deleteCooldown.val() * 1000
+            () => now
         );
 
         const obj = db.ref(`objects/${data.chunkId}/${data.objId}`);

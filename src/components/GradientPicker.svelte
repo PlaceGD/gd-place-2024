@@ -4,7 +4,7 @@
     import ColorPicker from "svelte-awesome-color-picker";
     import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
     import Cross from "../icons/Cross.svelte";
-    import { clamp, remEuclid } from "shared-lib/util";
+    import { clamp, hexToRgb, remEuclid } from "shared-lib/util";
     import DarkInput from "./DarkInput.svelte";
     import { notNaNAnd } from "../utils/misc";
     import Palette from "../icons/Palette.svelte";
@@ -180,7 +180,53 @@
                 );
 
                 gradientStops.push(p);
-                gradientColors.push("#ffffff");
+                // sample gradient at the new stop position
+                let left_stop = null;
+                let right_stop = null;
+                for (let i = 0; i < gradientStops.length; i++) {
+                    if (gradientStops[i] < p) {
+                        left_stop = i;
+                    } else if (gradientStops[i] > p) {
+                        right_stop = i;
+                        break;
+                    }
+                }
+                let color = "#ffffff";
+
+                // sample color from gradient
+                if (left_stop == null && right_stop != null)
+                    color = gradientColors[right_stop];
+                else if (right_stop == null && left_stop != null)
+                    color = gradientColors[left_stop];
+                else if (left_stop != null && right_stop != null) {
+                    let left_color = hexToRgb(gradientColors[left_stop]);
+                    let right_color = hexToRgb(gradientColors[right_stop]);
+                    if (left_color != null && right_color != null) {
+                        let left_pos = gradientStops[left_stop];
+                        let right_pos = gradientStops[right_stop];
+                        let ratio = (p - left_pos) / (right_pos - left_pos);
+                        let r = Math.round(
+                            left_color.r +
+                                (right_color.r - left_color.r) * ratio
+                        );
+                        let g = Math.round(
+                            left_color.g +
+                                (right_color.g - left_color.g) * ratio
+                        );
+                        let b = Math.round(
+                            left_color.b +
+                                (right_color.b - left_color.b) * ratio
+                        );
+                        color = `#${r.toString(16).padStart(2, "0")}${g
+                            .toString(16)
+                            .padStart(
+                                2,
+                                "0"
+                            )}${b.toString(16).padStart(2, "0")}`;
+                    }
+                }
+
+                gradientColors.push(color);
                 gradientIDs.push(Math.random());
                 openColorPickers.push(false);
 

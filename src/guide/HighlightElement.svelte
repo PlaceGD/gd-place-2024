@@ -34,6 +34,7 @@
 
         if (elem) {
             elem.style.outline = `${BORDER_WIDTH}px red solid`;
+            elem.style.animation = "guide-highlight 1s infinite";
 
             observer.observe(elem);
             targetElemRect = elem.getBoundingClientRect();

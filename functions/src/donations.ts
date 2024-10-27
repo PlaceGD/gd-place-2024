@@ -11,7 +11,7 @@ import { onCallAuthLogger } from "./utils/on_call";
 import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
 import { smartDatabase } from "src";
-import { getCheckedUserDetails } from "./utils/utils";
+import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 import Error from "./utils/errors";
 
 let mailjetClient: Mailjet;
@@ -278,13 +278,14 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
         //     request.rawRequest,
         //     logger
         // );
+        let now = Date.now();
 
         const userDetails = await getCheckedUserDetails(db, request.auth.uid);
 
-        const timeNextGradient = userDetails.val.epochNextGradient;
-        if (Date.now() < timeNextGradient) {
-            throw Error.code(205, "permission-denied");
-        }
+        // const timeNextGradient = userDetails.val.epochNextGradient;
+        // if (Date.now() < timeNextGradient) {
+        //     throw Error.code(205, "permission-denied");
+        // }
 
         if (!userDetails.val.hasDonated) {
             throw Error.code(207, "permission-denied");
@@ -305,16 +306,29 @@ export const changeNameGradient = onCallAuthLogger<GradientReq>(
             throw Error.code(105, "invalid-argument");
         }
 
-        let nextGradient = Date.now();
-        nextGradient += GRADIENT_COOLDOWN_SECONDS * 1000;
+        await checkedTransaction(
+            userDetails.ref.child("lastGradientTimestamp"),
+            lastGradient =>
+                now >= lastGradient + GRADIENT_COOLDOWN_SECONDS * 1000,
+            () => Error.code(205, "permission-denied"),
+            () => now // + REPORT_COOLDOWN_SECONDS * 1000
+        );
 
-        await Promise.all([
-            userDetails.ref.child("epochNextGradient").set(nextGradient),
-            db
-                .ref(
-                    `userName/${userDetails.val.username.toLowerCase()}/displayColor`
-                )
-                .set(grad),
-        ]);
+        await db
+            .ref(
+                `userName/${userDetails.val.username.toLowerCase()}/displayColor`
+            )
+            .set(grad);
+
+        // nextGradient += GRADIENT_COOLDOWN_SECONDS * 1000;
+
+        // await Promise.all([
+        //     // userDetails.ref.child("epochNextGradient").set(nextGradient),
+        //     db
+        //         .ref(
+        //             `userName/${userDetails.val.username.toLowerCase()}/displayColor`
+        //         )
+        //         .set(grad),
+        // ]);
     }
 );

@@ -5,10 +5,10 @@ export type ObjKey = string;
 
 export type UserDetails = {
     username: string;
-    epochNextPlace: number;
-    epochNextDelete: number;
-    epochNextReport: number;
-    epochNextGradient: number;
+    lastPlaceTimestamp: number;
+    lastDeleteTimestamp: number;
+    lastReportTimestamp: number;
+    lastGradientTimestamp: number;
     moderator: boolean;
     hasDonated: boolean;
 };

@@ -86,6 +86,10 @@
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
     import { GUIDE_ELEM_IDS } from "../guide/guide";
+    import {
+        currentDeleteCooldown,
+        currentPlaceCooldown,
+    } from "../firebase/cooldowns";
 
     export let state: wasm.State;
 
@@ -211,24 +215,9 @@
         }
     }
 
-    let totalPlaceCooldown = 0;
-    let totalDeleteCooldown = 0;
-    let totalPlaceListener = db
-        .ref("metaVariables/placeCooldown")
-        .on("value", v => (totalPlaceCooldown = v.val()));
-    let totalDeleteListener = db
-        .ref("metaVariables/deleteCooldown")
-        .on("value", v => (totalDeleteCooldown = v.val()));
-    onDestroy(() => {
-        totalPlaceListener();
-        totalDeleteListener();
-        placeCooldown.unsub();
-        deleteCooldown.unsub();
-    });
-
     const placeCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextPlace`,
-        1.5
+        `userDetails/${$loginData.currentUserData!.user.uid}/lastPlaceTimestamp`,
+        currentPlaceCooldown
     );
     let {
         display: placeCooldownDisplay,
@@ -237,8 +226,8 @@
     } = placeCooldown;
 
     const deleteCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/epochNextDelete`,
-        1.5
+        `userDetails/${$loginData.currentUserData!.user.uid}/lastDeleteTimestamp`,
+        currentDeleteCooldown
     );
     let {
         display: deleteCooldownDisplay,
@@ -378,13 +367,13 @@
                     data-minimised={+$menuMinimized}
                 >
                     <RadialCooldown
-                        max={totalPlaceCooldown}
+                        max={$currentPlaceCooldown}
                         remaining={$placeCooldownRemaining}
                     >
                         <Build class="w-full h-full stroke-[1.5]" />
                     </RadialCooldown>
                     <RadialCooldown
-                        max={totalDeleteCooldown}
+                        max={$currentDeleteCooldown}
                         remaining={$deleteCooldownRemaining}
                     >
                         <Delete class="w-full h-full stroke-[1.5]" />
@@ -409,7 +398,7 @@
                             aria-label="Build Tab"
                         >
                             <RadialCooldown
-                                max={totalPlaceCooldown}
+                                max={$currentPlaceCooldown}
                                 remaining={$placeCooldownRemaining}
                             >
                                 <Build
@@ -456,7 +445,7 @@
                             data-guide={GUIDE_ELEM_IDS.placeMenuDeleteButton}
                         >
                             <RadialCooldown
-                                max={totalDeleteCooldown}
+                                max={$currentDeleteCooldown}
                                 remaining={$deleteCooldownRemaining}
                             >
                                 <Delete

@@ -66,11 +66,11 @@ export const checkedTransaction = async <T, E>(
     ref: SmartReference<T>,
     is_valid: (value: T) => boolean,
     err: () => E,
-    update: (v: T) => T
+    update: (v: T | null) => T
 ) => {
     let bad = false;
     let result = await ref.transaction(v => {
-        if (!is_valid(v)) {
+        if (v != null && !is_valid(v)) {
             bad = true;
             return v;
         }

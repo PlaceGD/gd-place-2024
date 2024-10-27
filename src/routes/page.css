@@ -232,6 +232,20 @@ body {
     }
 }
 
+@keyframes guide-highlight {
+    0% {
+        outline-color: #fbff7f;
+    }
+
+    50% {
+        outline-color: #477000;
+    }
+
+    100% {
+        outline-color: #fbff7f;
+    }
+}
+
 *:focus-visible {
     outline-offset: 1px;
 

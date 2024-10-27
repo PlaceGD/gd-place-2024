@@ -21,6 +21,8 @@ import {
 } from "./guideActions";
 import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
 import { EditTab } from "../place_menu/edit/edit_tab";
+import { toast } from "@zerodevx/svelte-toast";
+import GuidePopup from "./GuidePopup.svelte";
 
 export const walmart = writable({
     hasDeleteSelection: false,
@@ -44,11 +46,18 @@ export const GUIDE_STEPS: GuideAction[] = [
         {
             begin: async () => {
                 // run any initial setup for the guide, like hiding stuff
+                openMenu.set(null);
                 menuMinimized.set(true);
             },
         },
         new EditorGuide(
-            '<div class="text-xl text-center p-4 xs:p-2 xs:text-lg"> Welcome to GD Place! </div> The goal of this project is to build a huge, working platformer level - together! This is the part of the level where the player will spawn in... ',
+            `
+            <div class="text-xl text-center p-4 xs:p-2 xs:text-lg">
+                Welcome to GD Place! 
+            </div> 
+            The goal of this project is to build a huge, working platformer level - together! This is the part of the level where the player will spawn in... 
+            <p class="text-sm xs:text-xs hover-text-transition">(you can find this guide in the settings menu)</p>
+            `,
             {
                 x: 0,
                 y: 0,
@@ -86,6 +95,7 @@ export const GUIDE_STEPS: GuideAction[] = [
     new FlagStoreChange(
         walmart,
         "hasPlacedObject",
+        "auto-next",
         new EditorGuide(
             `Click where you want your object to be placed in the level.`,
             {
@@ -107,7 +117,7 @@ export const GUIDE_STEPS: GuideAction[] = [
             "auto-next",
             new HighlightElement(
                 GUIDE_ELEM_IDS.placeMenuEditButton,
-                "Go to the <b>edit tab</b> to adjust your object.",
+                "Let's adjust your object! Click here to go to the <b>edit tab</b>.",
                 true
             )
         )
@@ -123,7 +133,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
-            "Click the place button to place the object in the level! (After you have done this, you need to wait some time before you can place another one.)",
+            "Click the place button to place the object in the level! (After you have done this, you need to wait some time before you can place another one)",
             true
         ),
         () => get(walmart).hasPlaceCooldown
@@ -138,13 +148,14 @@ export const GUIDE_STEPS: GuideAction[] = [
         "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.placeMenuDeleteButton,
-            "Let's delete an object >:) Go to the <b>delete tab</b>.",
+            "Let's delete an object >:) Click here to go to the <b>delete tab</b>.",
             true
         )
     ),
     new FlagStoreChange(
         walmart,
         "hasDeleteSelection",
+        "manual-next",
         new EditorGuide(
             "Click on an object in the level you wish to delete!",
             null,
@@ -156,7 +167,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         "auto-next",
         new HighlightElement(
             GUIDE_ELEM_IDS.pdButton,
-            "Click the delete button to delete the object from the level! (After you have done this, you need to wait some time before you can delete another one.)",
+            "Click the delete button to delete the object from the level! (After you have done this, you need to wait some time before you can delete another one)",
             true
         ),
         () => get(walmart).hasDeleteCooldown
@@ -192,4 +203,22 @@ export const isGuideActive = writable(false);
 
 export const beginGuide = () => {
     isGuideActive.update(() => true);
+};
+
+let showedGuidePopup = false;
+
+export const showGuidePopup = () => {
+    if (showedGuidePopup) {
+        return;
+    }
+    showedGuidePopup = true;
+    let toastId = 0;
+    toastId = toast.push({
+        component: {
+            src: GuidePopup,
+            props: { toastId },
+        },
+        classes: ["info"],
+        duration: 15000,
+    });
 };

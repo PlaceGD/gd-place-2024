@@ -90,6 +90,7 @@
         currentDeleteCooldown,
         currentPlaceCooldown,
     } from "../firebase/cooldowns";
+    import Loading from "../components/Loading.svelte";
 
     export let state: wasm.State;
 
@@ -212,6 +213,8 @@
             state.set_preview_visibility(false);
             stopPreviewSong();
             resetPreviewColor(state, 1);
+            $selectedObject = null;
+            state.deselect_object();
         }
     }
 
@@ -546,18 +549,37 @@
                     {/if}
                 </h1>
                 {#if pdButtonDisabled}
-                    <span
-                        class="proportional-nums font-pusab"
-                        style={($menuTabGroup != TabGroup.Delete &&
+                    {@const isTimerWaiting =
+                        ($menuTabGroup != TabGroup.Delete &&
                             $placeCooldownDisplay) == "--:--" ||
                         ($menuTabGroup == TabGroup.Delete &&
-                            $deleteCooldownDisplay) == "--:--"
-                            ? "opacity: 0.5"
-                            : ""}
-                        >{$menuTabGroup != TabGroup.Delete
-                            ? $placeCooldownDisplay
-                            : $deleteCooldownDisplay}</span
+                            $deleteCooldownDisplay) == "--:--"}
+                    <span
+                        class={cx({
+                            "relative flex w-full h-12 text-center sm:h-full proportional-numsflex-center": true,
+                            "w-full h-12 sm:w-12 sm:h-full": isTimerWaiting,
+                            "sm:w-max h-max": !isTimerWaiting,
+                        })}
+                        style={isTimerWaiting ? "opacity: 0.5" : ""}
                     >
+                        {#if isTimerWaiting}
+                            <Loading darken={false} />
+                        {:else if $menuTabGroup != TabGroup.Delete}
+                            <span
+                                class="flex w-full flex-center sm:h-full font-pusab"
+                                transition:scale
+                            >
+                                {$placeCooldownDisplay}
+                            </span>
+                        {:else}
+                            <span
+                                class="flex w-full flex-center sm:h-full font-pusab"
+                                transition:scale
+                            >
+                                {$deleteCooldownDisplay}
+                            </span>
+                        {/if}
+                    </span>
                 {/if}
             </div>
         </button>

@@ -163,7 +163,7 @@ fn to_gdobject(
     y: f32,
     parsed: &rust_shared::countdown::LevelParseResult,
 ) -> GDObject {
-    let rotation = o
+    let mut rotation = o
         .get(&6)
         .map(|v| v.parse::<f32>().unwrap())
         .unwrap_or(0.0)
@@ -173,6 +173,11 @@ fn to_gdobject(
     let v_flip = o.get(&5).map(|a| a.as_ref()) == Some("1");
 
     let id = o[&1].parse().unwrap();
+    if id == 1704 || id == 1751 {
+        if rotation > 360.0 - 70.0 {
+            rotation = rotation - 360.0
+        }
+    }
 
     let x_scale = o
         .get(&128)

@@ -246,6 +246,7 @@ export class FlagStoreChange<
     constructor(
         private store: U,
         private storeMember: U extends Writable<infer X> ? keyof X : never,
+        private mode: "auto-next" | "manual-next",
         private action: T
     ) {
         super(action.description);
@@ -270,7 +271,11 @@ export class FlagStoreChange<
 
         this.unsubscribe = this.store.subscribe(v => {
             if (v[this.storeMember]) {
-                props.nextStep();
+                if (this.mode == "auto-next") {
+                    props.nextStep();
+                } else {
+                    this.requiresInteraction.set(false);
+                }
             }
         });
     }

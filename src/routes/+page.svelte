@@ -69,7 +69,7 @@
     }}
 />
 
-<button class="text-white absolute z-[53]" on:click={beginGuide}>TEST</button>
+<!-- <button class="text-white absolute z-[53]" on:click={beginGuide}>TEST</button> -->
 
 <ToastContainers />
 <DataPopup />

@@ -4,6 +4,7 @@
         GUIDE_STEPS,
         // guideElems,
         isGuideActive,
+        showGuidePopup,
     } from "./guide";
     import IconButton from "../components/Buttons/IconButton.svelte";
     import ArrowLeft from "../icons/ArrowLeft.svelte";
@@ -14,6 +15,8 @@
     import GenericAction from "./GenericAction.svelte";
     import Check from "../icons/Check.svelte";
     import { get, type Unsubscriber } from "svelte/store";
+    import { toast } from "@zerodevx/svelte-toast";
+    import { eventStarted, loginData } from "../stores";
 
     export let state: wasm.State;
 
@@ -94,6 +97,16 @@
             currentStep = GUIDE_STEPS[step];
         }
     };
+
+    $: if (
+        !localStorage.getItem("dontShowGuidePopup") &&
+        $eventStarted &&
+        $loginData?.currentUserData?.userDetails != null
+    ) {
+        showGuidePopup();
+
+        //toast.pop(toastId);
+    }
 </script>
 
 <svelte:window

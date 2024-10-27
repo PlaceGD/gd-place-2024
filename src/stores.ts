@@ -28,7 +28,7 @@ export enum TabGroup {
     Delete,
 }
 
-const persistLocalWritable = <T>(v: T, key: string) =>
+const persistLocalWritable = <T>(v: T, key: string): PersistentStore<T> =>
     persist(
         writable(v),
         // avoids errors in sveltekit

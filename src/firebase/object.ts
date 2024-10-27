@@ -9,6 +9,7 @@ export const addObject = (
     obj: GDObjectOpt,
     cb: (key: string | null) => void
 ) => {
+    localStorage.setItem("dontShowGuidePopup", "true");
     let v = obj.bytes();
 
     let s = encodeString(v, 126);
@@ -33,6 +34,7 @@ export const addObject = (
         });
 };
 export const removeObject = (key: string, chunk: [number, number]) => {
+    localStorage.setItem("dontShowGuidePopup", "true");
     deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key }).catch(
         e => {
             console.error("Failed to delete object", e.details.message);

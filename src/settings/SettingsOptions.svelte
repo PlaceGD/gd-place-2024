@@ -4,6 +4,7 @@
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
     import {
         editorSettings,
+        eventStarted,
         ExclusiveMenus,
         loginData,
         openMenu,
@@ -12,6 +13,7 @@
     import { menuHeight } from "../utils/transitions";
     import { onMount } from "svelte";
     import { GUIDE_ELEM_IDS } from "../guide/guide";
+    import GuidePopup from "../guide/GuidePopup.svelte";
 
     $: isOpen = $openMenu == ExclusiveMenus.Settings;
 
@@ -77,8 +79,9 @@
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center h-[50%] pointer-events-auto"
         disabled={!isOpen}
         transition:menuHeight={{ duration: 200 }}
+        style={`max-height: ${settings.length * 70 + 140 + 70}px;`}
         on:introend={() => (transitionVal = 1)}
-        on:outroend={() => (transitionVal = 0)}
+        on:outrostart={() => (transitionVal = 0)}
     >
         <div
             class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
@@ -119,6 +122,12 @@
                     {/each}
                 </ul>
             </FadedScroll>
+            {#if $eventStarted && $loginData?.currentUserData?.userDetails != null}
+                <div class="p-2 pb-0">
+                    <GuidePopup></GuidePopup>
+                </div>
+            {/if}
+
             <div
                 class="flex flex-col items-center justify-center gap-2 p-2 pb-0 text-center"
                 data-guide={GUIDE_ELEM_IDS.settingsMenuDonate}
@@ -141,36 +150,38 @@
                     >
                         Donate!
                     </a>
-                {:else}
+                {:else if $loginData?.currentUserData?.userDetails != null}
                     <p class="text-sm">
                         Get a colored name by making a donation (any amount)!
                     </p>
-
-                    {#if $loginData?.currentUserData?.userDetails != null}
+                    <span title="Support us">
+                        {#if isOpen}
+                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                            {@html widgetString}
+                        {/if}
+                    </span>
+                    <button
+                        class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
+                        on:click={() => {
+                            $openMenu = ExclusiveMenus.Kofi;
+                        }}
+                    >
+                        Choose your username colors
+                    </button>
+                {:else}
+                    <button
+                        class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
+                        on:click={() => {
+                            $openMenu = ExclusiveMenus.Login;
+                        }}
+                    >
                         <span title="Support us">
                             {#if isOpen}
                                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                                 {@html widgetString}
                             {/if}
                         </span>
-                        <button
-                            class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
-                            on:click={() => {
-                                $openMenu = ExclusiveMenus.Kofi;
-                            }}
-                        >
-                            Choose your username colors
-                        </button>
-                    {:else}
-                        <button
-                            class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
-                            on:click={() => {
-                                $openMenu = ExclusiveMenus.Login;
-                            }}
-                        >
-                            You must login first!
-                        </button>
-                    {/if}
+                    </button>
                 {/if}
             </div>
         </div>

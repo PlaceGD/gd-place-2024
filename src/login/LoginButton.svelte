@@ -60,6 +60,7 @@
             <Image src={upArrowUrl} class="w-12 h-12"></Image>
             <h1
                 class="top-0 text-2xl font-bold text-center text-white pointer-events-none sm:text-xl xs:text-lg"
+                style="text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);"
             >
                 Sign up now!
             </h1>

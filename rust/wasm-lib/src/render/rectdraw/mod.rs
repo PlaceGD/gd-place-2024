@@ -211,15 +211,30 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                                 crate::level::ObjectDraw::TopTexture => &[false],
                                 crate::level::ObjectDraw::BottomTexture => &[true],
                             } {
-                                let bottom_texture = if OBJECT_MAIN_OVER_DETAIL[obj.id as usize] {
+                                let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
+                                let bottom_texture = if main_over_detail {
                                     !bottom_texture
                                 } else {
                                     bottom_texture
                                 };
                                 let (sprites, color) = if bottom_texture {
-                                    (&DETAIL_SPRITES, obj.detail_color)
+                                    (
+                                        &DETAIL_SPRITES,
+                                        if main_over_detail {
+                                            obj.main_color
+                                        } else {
+                                            obj.detail_color
+                                        },
+                                    )
                                 } else {
-                                    (&MAIN_SPRITES, obj.main_color)
+                                    (
+                                        &MAIN_SPRITES,
+                                        if main_over_detail {
+                                            obj.detail_color
+                                        } else {
+                                            obj.main_color
+                                        },
+                                    )
                                 };
                                 if let Some(sprite) = sprites[obj.id as usize] {
                                     if color.blending == (batch_idx == 0) {

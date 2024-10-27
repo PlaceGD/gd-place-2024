@@ -198,7 +198,7 @@ parse_countdown_files! {
     "tech"              ("Technical"):          [0 => weights(3,   3,   3,   3  ) silly famous], // 53
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 53]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 46]); //Some([24, 0, 7, 53]);
 
 #[binrw]
 #[brw(little)]

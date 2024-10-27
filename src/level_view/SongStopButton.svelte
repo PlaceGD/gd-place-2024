@@ -27,12 +27,13 @@
 
         {#if !hasStoppedMusicBefore}
             <div
-                class="absolute left-20 sm:left-16 xs:left:12 z-20 flex flex-row flex-left h-hover-anim opacity-70 self-center"
+                class="absolute z-20 flex flex-row self-center left-20 sm:left-16 xs:left:12 flex-left h-hover-anim opacity-70"
             >
                 <Image src={upArrowUrl} class="w-12 h-12 rotate-[-90deg]"
                 ></Image>
                 <h1
-                    class="top-0 text-2xl font-bold text-center self-center text-white pointer-events-none sm:text-xl xs:text-lg"
+                    class="top-0 self-center text-2xl font-bold text-center text-white pointer-events-none sm:text-xl xs:text-lg"
+                    style="text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);"
                 >
                     Press to stop music
                 </h1>

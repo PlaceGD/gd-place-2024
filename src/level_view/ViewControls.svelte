@@ -652,7 +652,7 @@
         <LevelWidget
             {state}
             x={$placedByHover.x}
-            y={$placedByHover.y}
+            y={$placedByHover.y + 15}
             scaleWithZoom={false}
             scale={placedNameScale}
         >

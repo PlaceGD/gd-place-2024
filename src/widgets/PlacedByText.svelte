@@ -5,7 +5,7 @@
 </script>
 
 <div
-    class="px-4 py-2 text-xl text-white -translate-y-16 rounded-md bg-menu-gray/60 backdrop-blur-sm"
+    class="px-4 py-2 text-xl text-white -translate-y-8 rounded-md bg-menu-gray/60 backdrop-blur-sm"
 >
     Placed by <span class="font-bold"><ColoredName {username} /></span>
 </div>

@@ -23,6 +23,7 @@
     import { map } from "shared-lib/util";
     import Guide from "../guide/Guide.svelte";
     import { beginGuide } from "../guide/guide";
+    import { DEBUG } from "../utils/debug";
 
     let openTrans = tweened(
         0,
@@ -59,6 +60,14 @@
 
     let viewSize = [1000, 1000];
 </script>
+
+<svelte:window
+    on:keyup={e => {
+        if (e.ctrlKey && e.shiftKey && e.key === "F") {
+            $DEBUG = !$DEBUG;
+        }
+    }}
+/>
 
 <button class="text-white absolute z-[53]" on:click={beginGuide}>TEST</button>
 

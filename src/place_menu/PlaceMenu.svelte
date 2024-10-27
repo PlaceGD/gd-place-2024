@@ -85,7 +85,7 @@
     import { playSound, stopSound, transferSoundChannel } from "../utils/audio";
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
-    import { GUIDE_ELEM_IDS } from "../guide/guide";
+    import { GUIDE_ELEM_IDS, walmart } from "../guide/guide";
     import {
         currentDeleteCooldown,
         currentPlaceCooldown,
@@ -244,21 +244,29 @@
     let playPlaceCooldownSound = !$placeCooldownFinished;
     $: {
         if ($placeCooldownFinished) {
+            $walmart.hasPlaceCooldown = false;
+
             if (playPlaceCooldownSound) {
                 playSound({ url: placeTimerFinishedSoundUrl });
             } else {
                 playPlaceCooldownSound = true;
             }
+        } else {
+            $walmart.hasPlaceCooldown = true;
         }
     }
     let playDeleteCooldownSound = !$deleteCooldownFinished;
     $: {
         if ($deleteCooldownFinished) {
+            $walmart.hasDeleteCooldown = false;
+
             if (playDeleteCooldownSound) {
                 playSound({ url: deleteTimerFinishedSoundUrl });
             } else {
                 playDeleteCooldownSound = true;
             }
+        } else {
+            $walmart.hasDeleteCooldown = true;
         }
     }
 </script>
@@ -540,8 +548,10 @@
                 {#if pdButtonDisabled}
                     <span
                         class="proportional-nums font-pusab"
-                        style={$placeCooldownDisplay == "--:--" ||
-                        $placeCooldownDisplay == "--:--"
+                        style={($menuTabGroup != TabGroup.Delete &&
+                            $placeCooldownDisplay) == "--:--" ||
+                        ($menuTabGroup == TabGroup.Delete &&
+                            $deleteCooldownDisplay) == "--:--"
                             ? "opacity: 0.5"
                             : ""}
                         >{$menuTabGroup != TabGroup.Delete

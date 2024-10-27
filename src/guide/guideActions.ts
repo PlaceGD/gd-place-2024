@@ -180,12 +180,13 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
     constructor(
         private selector: string,
         private mode: "auto-next" | "manual-next",
-        private action: T
+        private action: T,
+        private canSkip: () => boolean = () => false
     ) {
         super(action.description);
         this.requiresInteraction = action.requiresInteraction;
         this.canInteract = action.canInteract;
-        this.requiresInteraction.set(true);
+        this.requiresInteraction.set(!canSkip());
         this.canInteract.set(true);
 
         this.action = action;
@@ -211,6 +212,7 @@ export class ClickInteraction<T extends GuideAction> extends GuideAction {
     }
 
     override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
+        this.requiresInteraction.set(!this.canSkip());
         await this.action?.onBeginAction?.(props);
 
         this.handlerFn = this.onClickHandler(props) as any;
@@ -266,12 +268,10 @@ export class FlagStoreChange<
     override async onBeginAction(props: ActionBeginEndProps): Promise<void> {
         await this.action?.onBeginAction?.(props);
 
-        let isInitial = true;
         this.unsubscribe = this.store.subscribe(v => {
-            if (!isInitial && v[this.storeMember]) {
+            if (v[this.storeMember]) {
                 props.nextStep();
             }
-            isInitial = false;
         });
     }
     override async onEndAction(props: ActionBeginEndProps): Promise<void> {

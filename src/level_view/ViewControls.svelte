@@ -99,7 +99,7 @@
 
     import Image from "../components/Image.svelte";
     import ClosableWindow from "../components/ClosableWindow.svelte";
-    import { walmart } from "../guide/guide";
+    import { isGuideActive, walmart } from "../guide/guide";
     import LevelWidget from "../widgets/LevelWidget.svelte";
 
     export let state: wasm.State;
@@ -362,11 +362,11 @@
             if ($menuTabGroup == TabGroup.Delete && $canPlaceEditDelete) {
                 trySelectAt(mx, my, hit);
 
-                walmart.update(v => {
-                    v.hasDeleteSelection =
-                        state.get_selected_object_key() != undefined;
-                    return v;
-                });
+                if ($isGuideActive) {
+                    $walmart.hasDeleteSelection =
+                        state.get_selected_object_key() != undefined &&
+                        $isGuideActive;
+                }
             } else {
                 if (isTouch) {
                     checkHover();
@@ -378,10 +378,9 @@
                 ) {
                     placePreview(mx, my);
 
-                    walmart.update(v => {
-                        v.hasPlacedObject = state.is_preview_visible();
-                        return v;
-                    });
+                    if ($isGuideActive) {
+                        $walmart.hasPlacedObject = state.is_preview_visible();
+                    }
                 }
             }
         }

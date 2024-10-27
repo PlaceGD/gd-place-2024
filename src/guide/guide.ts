@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 import {
     ExclusiveMenus,
     menuBuildTab,
@@ -26,6 +26,8 @@ export const walmart = writable({
     hasDeleteSelection: false,
     hasPlacedObject: false,
     hasEditedObject: false,
+    hasPlaceCooldown: false,
+    hasDeleteCooldown: false,
 });
 
 export const GUIDE_ELEM_IDS = {
@@ -123,7 +125,8 @@ export const GUIDE_STEPS: GuideAction[] = [
             GUIDE_ELEM_IDS.pdButton,
             "Click the place button to place the object in the level! (After you have done this, you need to wait some time before you can place another one.)",
             true
-        )
+        ),
+        () => get(walmart).hasPlaceCooldown
     ),
     new EditorGuide(
         "<b>Congratulations!</b> You have placed your first object.",
@@ -155,7 +158,8 @@ export const GUIDE_STEPS: GuideAction[] = [
             GUIDE_ELEM_IDS.pdButton,
             "Click the delete button to delete the object from the level! (After you have done this, you need to wait some time before you can delete another one.)",
             true
-        )
+        ),
+        () => get(walmart).hasDeleteCooldown
     ),
     new EditorGuide(
         "<b>Congratulations!</b> You have deleted your first object! You can only delete one object every few minutes, but the delete timer is separate from the place timer.",

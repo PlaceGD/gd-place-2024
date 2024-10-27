@@ -3,7 +3,7 @@
 
     import { onMount } from "svelte";
     import Toast, { WASM_ERROR } from "../utils/toast";
-    import { DEBUG } from "../utils/debug";
+    import { DEBUG, stats } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
     // import Widget from "../widgets/Widget.svelte";
     import { rawSpritesheetData } from "../stores";
@@ -34,7 +34,12 @@
     const draw = (time: number) => {
         if (state != null) {
             try {
+                stats.begin();
+
                 state.render((time - prevTime) / 1000);
+
+                stats.end();
+
                 prevTime = time;
             } catch (e: unknown) {
                 console.error(e, "(Failed in `state.render`)");

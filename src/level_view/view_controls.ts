@@ -34,9 +34,10 @@ zoomGoal.subscribe(v => {
     }
 });
 export const [mouseX, mouseY] = [writable(0), writable(0)];
+export const [zoomCenterX, zoomCenterY] = [writable(0), writable(0)];
 export const zoomCentral = (to: number, canvas: HTMLCanvasElement) => {
-    mouseX.set((canvas.offsetWidth / 2) * window.devicePixelRatio);
-    mouseY.set((canvas.offsetHeight / 2) * window.devicePixelRatio);
+    zoomCenterX.set((canvas.offsetWidth / 2) * window.devicePixelRatio);
+    zoomCenterY.set((canvas.offsetHeight / 2) * window.devicePixelRatio);
     zoomGoal.set(to);
     zoomTween.set(to, { duration: 0 });
 };

@@ -84,6 +84,8 @@
         mouseX,
         mouseY,
         moveCamera,
+        zoomCenterX,
+        zoomCenterY,
         zoomCentral,
         zoomGoal,
         zoomTween,
@@ -101,6 +103,7 @@
     import ClosableWindow from "../components/ClosableWindow.svelte";
     import { isGuideActive, walmart } from "../guide/guide";
     import LevelWidget from "../widgets/LevelWidget.svelte";
+    import { set } from "firebase/database";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -114,6 +117,16 @@
         thresholdReached: boolean;
     } = null;
 
+    let panzooming: null | {
+        prevTouches: { x: number; y: number }[];
+        prevFrameTouches: { x: number; y: number }[];
+        prevCameraX: number;
+        prevCameraY: number;
+        prevZoom: number;
+        prevZoomScale: number;
+        thresholdReached: boolean;
+    } = null;
+
     //let pinchZooming: null | number = null;
 
     $zoomGoal = state.get_zoom();
@@ -121,19 +134,28 @@
         changeZoom($zoomTween);
     }
 
-    const getWorldMousePos = () => {
+    const screenToWorld = (x: number, y: number) => {
         return state.get_world_pos(
-            $mouseX - (canvas.offsetWidth * window.devicePixelRatio) / 2,
-            -($mouseY - (canvas.offsetHeight * window.devicePixelRatio) / 2)
+            x - (canvas.offsetWidth * window.devicePixelRatio) / 2,
+            -(y - (canvas.offsetHeight * window.devicePixelRatio) / 2)
         );
     };
+
+    const getWorldMousePos = () => screenToWorld($mouseX, $mouseY);
+    const getWorldZoomCenter = () => screenToWorld($zoomCenterX, $zoomCenterY);
+
     const setMousePos = (e: { clientX: number; clientY: number }) => {
         $mouseX = e.clientX * window.devicePixelRatio;
         $mouseY = e.clientY * window.devicePixelRatio;
     };
 
+    const setZoomCenter = (x: number, y: number) => {
+        $zoomCenterX = x * window.devicePixelRatio;
+        $zoomCenterY = y * window.devicePixelRatio;
+    };
+
     const changeZoom = (z: number) => {
-        let [mx, my] = getWorldMousePos();
+        let [mx, my] = getWorldZoomCenter();
         let [cx, cy] = state.get_camera_pos();
         let prev_zoom_scale = state.get_zoom_scale();
 
@@ -353,9 +375,12 @@
     });
 
     const handleMouseUp = (isTouch: boolean) => {
-        if (!dragging) return;
+        if (!dragging && !panzooming) return;
 
-        if (!dragging.thresholdReached) {
+        if (
+            !(dragging?.thresholdReached ?? true) ||
+            !(panzooming?.thresholdReached ?? true)
+        ) {
             let [mx, my] = getWorldMousePos();
             let hit = state.objects_hit_at(mx, my, 0.0);
 
@@ -386,6 +411,7 @@
         }
 
         dragging = null;
+        panzooming = null;
     };
 
     const startDrag = (
@@ -400,6 +426,35 @@
             prevMouseX: x,
             prevMouseY: y,
             thresholdReached,
+        };
+    };
+
+    const makeTouchList = (l: TouchList): { x: number; y: number }[] => {
+        let out = [];
+        for (let i = 0; i < l.length; i++) {
+            out.push({
+                x: l[i].clientX * window.devicePixelRatio,
+                y: l[i].clientY * window.devicePixelRatio,
+            });
+        }
+        return out;
+    };
+
+    const startPanzoom = (
+        touches: { x: number; y: number }[],
+        thresholdReached: boolean = false
+    ) => {
+        let [prevX, prevY] = state.get_camera_pos();
+
+        panzooming = {
+            prevCameraX: prevX,
+            prevCameraY: prevY,
+            prevTouches: touches,
+            prevFrameTouches: touches,
+
+            thresholdReached,
+            prevZoom: state.get_zoom(),
+            prevZoomScale: state.get_zoom_scale(),
         };
     };
 
@@ -428,6 +483,93 @@
                 }
             }
         }
+    };
+
+    const handlePanzoom = (touches: { x: number; y: number }[]) => {
+        let numPrevTouch = panzooming?.prevTouches.length ?? 0;
+        let numTouch = touches.length;
+
+        if (numPrevTouch != numTouch) {
+            startPanzoom(touches);
+            return;
+        }
+
+        switch (numTouch) {
+            case 1: {
+                let [camX, camY] = state.get_camera_pos();
+                let touch = touches[0];
+
+                if (panzooming!.thresholdReached) {
+                    let z = state.get_zoom_scale();
+                    let prevFrameTouch = panzooming!.prevFrameTouches[0];
+
+                    moveCamera(
+                        state,
+                        (prevFrameTouch.x - touch.x) / z + camX,
+                        (-prevFrameTouch.y + touch.y) / z + camY
+                    );
+                } else {
+                    let prevTouch = panzooming!.prevTouches[0];
+                    if (
+                        Math.hypot(
+                            touch.x - prevTouch.x,
+                            touch.y - prevTouch.y
+                        ) > 30.0
+                    ) {
+                        panzooming!.thresholdReached = true;
+                        panzooming!.prevTouches[0] = touch;
+                    }
+                }
+
+                break;
+            }
+            case 2: {
+                let touch1 = touches[0];
+                let touch2 = touches[1];
+
+                let [camX, camY] = state.get_camera_pos();
+
+                // PAN
+                let prevFrameTouch1 = panzooming!.prevFrameTouches[0];
+                let prevFrameTouch2 = panzooming!.prevFrameTouches[1];
+
+                let midX = (touch1.x + touch2.x) / 2;
+                let midY = (touch1.y + touch2.y) / 2;
+
+                let prevMidX = (prevFrameTouch1.x + prevFrameTouch2.x) / 2;
+                let prevMidY = (prevFrameTouch1.y + prevFrameTouch2.y) / 2;
+
+                let z = state.get_zoom_scale();
+                let newCamX = camX - (midX - prevMidX) / z;
+                let newCamY = camY - (-midY + prevMidY) / z;
+
+                moveCamera(state, newCamX, newCamY);
+
+                // ZOOM
+                let prevTouch1 = panzooming!.prevTouches[0];
+                let prevTouch2 = panzooming!.prevTouches[1];
+                let dist = Math.hypot(touch1.x - touch2.x, touch1.y - touch2.y);
+
+                let prevdist = Math.hypot(
+                    prevTouch1.x - prevTouch2.x,
+                    prevTouch1.y - prevTouch2.y
+                );
+
+                let zoomFactor = dist / prevdist;
+                let newZoom =
+                    panzooming!.prevZoom +
+                    (Math.log(zoomFactor) / Math.log(2)) * 12;
+
+                $zoomCenterX = midX;
+                $zoomCenterY = midY;
+
+                $zoomTween = newZoom;
+
+                break;
+            }
+        }
+
+        panzooming!.prevFrameTouches = touches;
     };
 
     const checkHover = debounce(() => {
@@ -505,6 +647,9 @@
         const isTouch = e.pointerType == "touch";
         handleMouseUp(isTouch);
     }}
+    on:touchend={e => {
+        panzooming = null;
+    }}
     on:pointermove={e => {
         const isTouch = e.pointerType == "touch";
         if (!isTouch) {
@@ -519,21 +664,12 @@
         }
     }}
     on:touchmove={e => {
-        // get all touches and average them
-        const touches = e.touches;
-        if (touches.length > 0) {
-            let avgX = 0;
-            let avgY = 0;
-            for (let i = 0; i < touches.length; i++) {
-                avgX += touches[i].clientX;
-                avgY += touches[i].clientY;
-            }
-            avgX /= touches.length;
-            avgY /= touches.length;
-            setMousePos({ clientX: avgX, clientY: avgY });
-        }
-        handleDrag($mouseX, $mouseY);
-        if (dragging == null) {
+        console.log(e);
+        const touches = makeTouchList(e.touches);
+
+        handlePanzoom(touches);
+
+        if (panzooming == null) {
             checkHover();
         } else {
             placedByHover.set(null);
@@ -552,10 +688,10 @@
         }
 
         if (e.ctrlKey || e.metaKey) {
-            if (e.key === "=") {
+            if (e.key === "+" || e.key === "=") {
                 e.preventDefault();
                 zoomCentral($zoomGoal + 4, canvas);
-            } else if (e.key === "-") {
+            } else if (e.key === "-" || e.key === "_") {
                 e.preventDefault();
                 zoomCentral($zoomGoal - 4, canvas);
             } else {
@@ -591,9 +727,16 @@
     tabindex="0"
     on:focus={() => (isFocused = true)}
     on:blur={() => (isFocused = false)}
+    on:touchstart={e => {
+        setMousePos(e.touches[0]);
+        const touches = makeTouchList(e.touches);
+        startPanzoom(touches);
+    }}
     on:pointerdown={e => {
         setMousePos(e);
-        if (e.button == 0) {
+        const isTouch = e.pointerType == "touch";
+
+        if (e.button == 0 && !isTouch) {
             startDrag(
                 e.clientX * window.devicePixelRatio,
                 e.clientY * window.devicePixelRatio
@@ -601,7 +744,7 @@
         }
     }}
     on:wheel={e => {
-        setMousePos(e);
+        setZoomCenter(e.clientX, e.clientY);
         e.preventDefault();
         $zoomGoal = $zoomGoal - e.deltaY / Math.max(Math.abs(e.deltaY), 1);
     }}

@@ -36,6 +36,7 @@
     import { getRandomGradientColors } from "../utils/gradient";
     import IconButton from "../components/Buttons/IconButton.svelte";
     import MagicWand from "../icons/MagicWand.svelte";
+    import { setUsernameColorCache } from "../firebase/donations";
 
     enum Page {
         SUBMIT_TX_ID,
@@ -150,9 +151,9 @@
                 grad: nameGradientString,
             });
 
-            $currentNameGradient.positions = nameGradientStops;
-            $currentNameGradient.colors = nameGradientColors;
-            $currentNameGradient.ids = nameGradientIDs;
+            $currentNameGradient.positions = nameGradientStops as any;
+            $currentNameGradient.colors = nameGradientColors as any;
+            $currentNameGradient.ids = nameGradientIDs as any;
 
             Toast.showSuccessToast("Successfully updated colors!");
         } catch (e: any) {
@@ -163,6 +164,11 @@
         }
 
         isInProgress = false;
+
+        setUsernameColorCache(
+            $loginData.currentUserData?.userDetails?.username ?? "",
+            nameGradientString
+        );
 
         resetGradientButton();
     };
@@ -309,7 +315,7 @@
             {#if !($gradientCooldownFinished ?? false)}
                 <p class="text-sm text-center transition hover-text-transition">
                     You changed your gradient recently! Please wait <span
-                        class="proportional-nums"
+                        class="tabular-nums"
                         >{$gradientCooldownDisplay ?? "--:--"}</span
                     >
                     before changing it again.

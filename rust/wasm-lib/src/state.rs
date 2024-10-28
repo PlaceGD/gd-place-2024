@@ -563,7 +563,7 @@ impl State {
             let old_t = billy.get_transform();
             billy.apply_transform(self.view_transform());
             self.countdown.update_state(self.event_start);
-            // self.countdown.draw(self, &mut billy); // neg time because its just used for animation, not actually relative to anything
+            self.countdown.draw(self, &mut billy);
             billy.set_transform(old_t);
             //}
 

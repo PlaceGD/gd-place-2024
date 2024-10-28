@@ -191,15 +191,18 @@ parse_countdown_files! {
     "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 46
     "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 47
     "vrymer"            ("vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 48
-    "meeloz"            ("meeloz"):             [3 => weights(2,   2,   3,   3  )], // 49
+    "meeloz"            ("meeloz"):             [3 => weights(1,   2,   3,   3  )], // 49
     "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty silly], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
     "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
     "tech"              ("Technical"):          [0 => weights(3,   3,   3,   3  ) silly famous], // 53
     "connot"            ("connot"):             [3 => weights(4,   2,   3,   3  ) silly], // 54
+    "rustam"            ("Rustam"):             [0 => weights(3,   3,   3,   3  ) classic], // 55
+    "robtop"            ("RobTop"):             [0 => weights(6,   6,   6,   6  ) famous classic silly], // 56
+    "desticy"           ("DesTicY"):            [0 => weights(5,   2,   3,   3  ) classic pretty], // 57
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 53]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([51, 39, 7, 57]);
 
 #[binrw]
 #[brw(little)]
@@ -224,23 +227,15 @@ pub struct CountdownDigitSets(
 ); // days marker, hours colon, minutes colon
    // should probably be a struct maybe now
 
-#[derive(Hash)]
-struct DeterministicRandom(usize, usize);
-
-impl DeterministicRandom {
-    fn random(&self) -> f64 {
-        let mut hasher = std::collections::hash_map::DefaultHasher::new();
-        self.hash(&mut hasher);
-        let hash = hasher.finish();
-        (hash as f64) / (u64::MAX as f64)
-    }
-}
-
 const WEIGHT_POWER: f64 = 0.8;
 
 // runs in nexus gen
+#[cfg(not(target_arch = "wasm32"))]
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
+    use rand::prelude::*;
     let mut switches = vec![[1, 50, 0, 7]]; // final sets
+
+    let mut rng = thread_rng();
 
     for i in 0..n {
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev
@@ -266,21 +261,17 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         let mut config = [DigitSetLabels::random(); 4];
 
         // insert one silly or one classic set
-        if DeterministicRandom(i + 234, 0).random() < 0.5 {
-            config[(DeterministicRandom(i + 535, 0).random() * 3.0) as usize] =
-                DigitSetLabels::silly();
+        if rng.gen::<f64>() < 0.5 {
+            config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::silly();
         } else {
-            config[(DeterministicRandom(i + 535, 0).random() * 3.0) as usize] =
-                DigitSetLabels::classic();
+            config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::classic();
         }
 
         // insert one pretty set
-        config[(DeterministicRandom(i + 234, 1).random() * 3.0) as usize] =
-            DigitSetLabels::pretty();
+        config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::pretty();
 
         // insert one famous set
-        config[(DeterministicRandom(i + 432, 2).random() * 3.0) as usize] =
-            DigitSetLabels::famous();
+        config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::famous();
 
         for j in 0..4 {
             let mut possible_sets = (0..DIGIT_SETS).collect::<Vec<_>>();
@@ -315,7 +306,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                 .map(|&set| get_set_weights(set)[j].powf(WEIGHT_POWER))
                 .sum::<f64>();
 
-            let random = DeterministicRandom(i + 88, j + 6).random() * total_weight;
+            let random = rng.gen::<f64>() * total_weight;
 
             let mut weight_sum = 0.0;
             for &set in &possible_sets {

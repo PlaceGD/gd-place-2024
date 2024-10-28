@@ -38,3 +38,9 @@ build
 static/versions/*.ver
 
 .firebase/*
+
+rust/wasm-lib/src/countdown_digits
+rust/wasm-lib/src/utilgen.rs
+shared-lib/src/gd
+shared-lib/src/nexusgen.ts
+src/assets/spritesheet.png

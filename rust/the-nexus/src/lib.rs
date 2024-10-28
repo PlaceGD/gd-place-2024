@@ -1,4 +1,8 @@
-use std::{collections::HashSet, fs};
+use std::{
+    collections::HashSet,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use gen::{
     colors::get_available_colors,
@@ -64,7 +68,7 @@ fn generate_shid() {
 }
 
 #[test]
-fn generate_shid_no_sheet() {
+fn generate_shimabid_no_sheet() {
     generate_shide(false)
 }
 
@@ -76,8 +80,13 @@ fn generate_shide(sheet: bool) {
     use gen::sprites::make_spritesheet;
     use itertools::Itertools;
     use std::fs;
-    std::fs::create_dir("../../src/assets").unwrap();
-    std::fs::create_dir("../../shared-lib/src/gd").unwrap();
+    eprintln!("GLABOBOBOB");
+    if !PathBuf::from("../../src/assets").exists() {
+        std::fs::create_dir("../../src/assets").unwrap();
+    }
+    if !PathBuf::from("../../shared-lib/src/gd").exists() {
+        std::fs::create_dir("../../shared-lib/src/gd").unwrap();
+    }
 
     if sheet {
         let (mut img, data) = make_spritesheet();

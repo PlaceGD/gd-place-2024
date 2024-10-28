@@ -12,6 +12,7 @@
     import {
         canPlaceEditDelete,
         eventElapsed,
+        eventEnded,
         eventStarted,
         eventStartTime,
         loginData,
@@ -48,7 +49,7 @@
 </script>
 
 <div class="absolute w-full h-full">
-    {#if state != null}
+    {#if state != null && !$eventEnded}
         <Guide {state} />
 
         <div
@@ -91,7 +92,7 @@
     {#if wasmLoaded}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
-    {#if state != null}
+    {#if state != null && !$eventEnded}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
 
         {#if !$eventStarted}

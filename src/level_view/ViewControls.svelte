@@ -63,6 +63,7 @@
         chooseRandomTriggerColor,
         chooseDefaultColor,
         songPlayingIsPreview,
+        eventEndTime,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -637,6 +638,9 @@
     }
     $: {
         state.set_event_start($eventStartTime);
+    }
+    $: {
+        state.set_event_end($eventEndTime);
     }
 </script>
 

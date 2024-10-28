@@ -31,9 +31,7 @@ use crate::{
         },
         state::RenderState,
     },
-    util::get_max_bounding_box,
-    utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
-    ErrorType, RustError,
+    RustError,
 };
 
 #[wasm_bindgen]
@@ -68,6 +66,8 @@ pub struct State {
     /// unix time, negative before event starts
     //pub(crate) event_elapsed: f64,
     pub(crate) event_start: f64,
+
+    pub(crate) event_end: f64,
 
     pub(crate) countdown: Countdown,
     // // (text, x, y, lifetime)
@@ -111,6 +111,7 @@ impl State {
             hide_ground: false,
             hide_outline: false,
             event_start: f64::INFINITY,
+            event_end: f64::INFINITY,
             render,
             countdown: Countdown::new(),
         }
@@ -489,6 +490,10 @@ impl State {
 
     pub fn set_event_start(&mut self, to: f64) {
         self.event_start = to;
+    }
+
+    pub fn set_event_end(&mut self, to: f64) {
+        self.event_end = to;
     }
 
     fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {

@@ -10,7 +10,7 @@ use rust_shared::{
 };
 use wasm_bindgen::prelude::*;
 
-use crate::utilgen::OBJECT_INFO;
+use crate::{render::rectdraw::OBJECT_MAIN_OVER_DETAIL, utilgen::OBJECT_INFO};
 
 pub type DbKey = [u8; 20];
 
@@ -33,7 +33,7 @@ impl ChunkCoord {
 //         self.x.cmp(&other.x).then(self.y.cmp(&other.y))
 //     }
 // }
-
+#[derive(Debug, Clone, Copy)]
 pub enum ObjectDraw {
     Both,
     TopTexture,
@@ -81,7 +81,15 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
         let [blending_batch, normal_batch] =
             &mut chunk.layers[obj.z_layer as usize].sheet_batches[sheet_idx];
 
-        match (obj.main_color.blending, obj.detail_color.blending) {
+        let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
+
+        let (gaga_a, gaga_b) = if !main_over_detail {
+            (obj.main_color.blending, obj.detail_color.blending)
+        } else {
+            (obj.detail_color.blending, obj.main_color.blending)
+        };
+
+        match (gaga_a, gaga_b) {
             (true, true) => {
                 blending_batch
                     .entry(obj.z_order)

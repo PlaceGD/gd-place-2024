@@ -1,6 +1,7 @@
 use billy::{Billy, BlendMode};
 use glam::{uvec2, vec2, vec4, Vec4};
 use rust_shared::{
+    console_log,
     gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
     map,
     sprite::SpriteInfo,
@@ -28,7 +29,7 @@ const fn object_main_over_detail() -> [bool; 4600] {
     arr
 }
 
-const OBJECT_MAIN_OVER_DETAIL: [bool; 4600] = object_main_over_detail();
+pub const OBJECT_MAIN_OVER_DETAIL: [bool; 4600] = object_main_over_detail();
 
 pub mod billy;
 pub mod countdown;
@@ -218,25 +219,12 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                                     bottom_texture
                                 };
                                 let (sprites, color) = if bottom_texture {
-                                    (
-                                        &DETAIL_SPRITES,
-                                        if main_over_detail {
-                                            obj.main_color
-                                        } else {
-                                            obj.detail_color
-                                        },
-                                    )
+                                    (&DETAIL_SPRITES, obj.detail_color)
                                 } else {
-                                    (
-                                        &MAIN_SPRITES,
-                                        if main_over_detail {
-                                            obj.detail_color
-                                        } else {
-                                            obj.main_color
-                                        },
-                                    )
+                                    (&MAIN_SPRITES, obj.main_color)
                                 };
                                 if let Some(sprite) = sprites[obj.id as usize] {
+                                    // console_log!("-> {:?} {}", draw, batch_idx);
                                     if color.blending == (batch_idx == 0) {
                                         let color = color_override(*key, obj, bottom_texture)
                                             .unwrap_or(Vec4::from_array(

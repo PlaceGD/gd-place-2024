@@ -5,11 +5,15 @@ use rust_shared::{
     gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
     map,
     sprite::SpriteInfo,
+    util::now,
 };
-use std::hash::Hash;
+use std::{
+    f32::consts::PI,
+    hash::{DefaultHasher, Hash, Hasher},
+};
 
 use crate::{
-    level::Level,
+    level::{DbKey, Level},
     object::GDObjectExt,
     state::State,
     utilgen::{
@@ -92,21 +96,48 @@ pub fn draw_obj_simple(
     }
 }
 
-pub fn draw_level_obj_sprite(
+fn ease_out_expo(x: f32) -> f32 {
+    if x == 1.0 {
+        1.0
+    } else {
+        1.0 - 2.0f32.powf(-10.0 * x)
+    }
+}
+
+pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
     sprite: SpriteInfo,
     obj: &GDObject,
     color: Vec4,
+    key: K,
 ) {
     if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
         return;
     }
 
+    let end_anim_time = ((now() - state.event_end) / 1000.0) as f32;
+
     let info = OBJECT_INFO[obj.id as usize];
 
     let old_t = billy.get_transform();
     billy.apply_transform(obj.transform());
+
+    if end_anim_time > 0.0 {
+        let end_anim_time = end_anim_time % 3.0;
+        let explosion_d = ease_out_expo(end_anim_time / 3.0);
+        let z = obj.z_order as f32 / 256.0;
+
+        let random_x = random_num(key, 0) * 2.0 - 1.0;
+        let random_y = random_num(key, 1) * 2.0 - 1.0;
+
+        let angular_velocity = random_num(key, 1) * 2.0 - 1.0;
+
+        // billy
+        //     .translate((vec2(obj.x, obj.y) - state.camera_pos) * explosion_d * random_offset * 3.0);
+        billy.translate(vec2(random_x, random_y) * explosion_d * 90.0);
+        billy.rotate(angular_velocity * PI * 0.1 * end_anim_time + angular_velocity * explosion_d);
+    }
 
     let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
         2
@@ -186,6 +217,13 @@ pub fn draw_level_obj_sprite(
     billy.set_transform(old_t);
 }
 
+fn random_num<K: Default + Hash + Eq + Copy>(key: K, i: usize) -> f32 {
+    let mut hasher = DefaultHasher::new();
+    key.hash(&mut hasher);
+    i.hash(&mut hasher);
+    hasher.finish() as f32 / u64::MAX as f32
+}
+
 pub fn draw_level<K: Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
@@ -239,7 +277,9 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                                         //             .map(|v| v as f32 / 255.0),
                                         //     )
                                         // };
-                                        draw_level_obj_sprite(state, billy, sprite, obj, color);
+                                        draw_level_obj_sprite(
+                                            state, billy, sprite, obj, color, *key,
+                                        );
                                     }
                                 }
                             }

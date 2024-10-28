@@ -49,7 +49,7 @@
 </script>
 
 <div class="absolute w-full h-full">
-    {#if state != null && !$eventEnded}
+    {#if state != null}
         <Guide {state} />
 
         <div
@@ -92,15 +92,16 @@
     {#if wasmLoaded}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
-    {#if state != null && !$eventEnded}
+    {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-
-        {#if !$eventStarted}
-            <EventMenu kind="pre-event" bind:state />
-        {:else if $canPlaceEditDelete}
-            <PlaceMenu bind:state />
-        {:else}
-            <EventMenu kind="login-to-place" bind:state />
+        {#if !$eventEnded}
+            {#if !$eventStarted}
+                <EventMenu kind="pre-event" bind:state />
+            {:else if $canPlaceEditDelete}
+                <PlaceMenu bind:state />
+            {:else}
+                <EventMenu kind="login-to-place" bind:state />
+            {/if}
         {/if}
     {/if}
 </div>

@@ -14,6 +14,7 @@ use rust_shared::{
         },
         object::{GDColor, GDObject},
     },
+    map,
     util::{now, point_in_triangle, Rect},
 };
 use wasm_bindgen::prelude::*;
@@ -643,7 +644,45 @@ impl State {
     }
 
     pub fn render(&mut self, delta: f32) {
-        self.render_inner(delta).unwrap()
+        fn ease_in_out_quart(x: f32) -> f32 {
+            if x < 0.5 {
+                8.0 * x * x * x * x
+            } else {
+                1.0 - (-2.0 * x + 2.0).powf(4.0) / 2.0
+            }
+        }
+
+        let (old_camera_pos, old_zoom, old_bg_color, old_ground1_color, old_ground2_color) = (
+            self.camera_pos,
+            self.zoom,
+            self.bg_color,
+            self.ground1_color,
+            self.ground2_color,
+        );
+
+        let end_anim_time = ((now() - self.event_end) / 1000.0) as f32;
+
+        if end_anim_time > 0.0 {
+            let zoomout_d = ease_in_out_quart((end_anim_time / 5.0).clamp(0.0, 1.0));
+            self.zoom = map!(zoomout_d, 0.0, 1.0, self.zoom, 2.0);
+            console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
+        }
+
+        self.render_inner(delta).unwrap();
+
+        (
+            self.camera_pos,
+            self.zoom,
+            self.bg_color,
+            self.ground1_color,
+            self.ground2_color,
+        ) = (
+            old_camera_pos,
+            old_zoom,
+            old_bg_color,
+            old_ground1_color,
+            old_ground2_color,
+        );
     }
 
     pub fn get_countdown_creator_names(&self) -> Vec<String> {

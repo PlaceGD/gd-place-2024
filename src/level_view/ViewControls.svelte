@@ -64,6 +64,7 @@
         chooseDefaultColor,
         songPlayingIsPreview,
         eventEndTime,
+        eventEnded,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -642,6 +643,19 @@
     $: {
         state.set_event_end($eventEndTime);
     }
+    $: {
+        if ($eventEnded) {
+            dragging = null;
+            panzooming = null;
+
+            state.set_preview_visibility(false);
+            stopSound("preview song");
+            stopSound("song");
+            resetPreviewColor(state, 1);
+            $selectedObject = null;
+            state.deselect_object();
+        }
+    }
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
@@ -723,38 +737,39 @@
     }}
 />
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-<div
-    class="absolute w-full h-full touch-none"
-    id="gesture-target"
-    tabindex="0"
-    on:focus={() => (isFocused = true)}
-    on:blur={() => (isFocused = false)}
-    on:touchstart={e => {
-        setMousePos(e.touches[0]);
-        const touches = makeTouchList(e.touches);
-        startPanzoom(touches);
-    }}
-    on:pointerdown={e => {
-        setMousePos(e);
-        const isTouch = e.pointerType == "touch";
+{#if !$eventEnded || true}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+    <div
+        class="absolute w-full h-full touch-none"
+        id="gesture-target"
+        tabindex="0"
+        on:focus={() => (isFocused = true)}
+        on:blur={() => (isFocused = false)}
+        on:touchstart={e => {
+            setMousePos(e.touches[0]);
+            const touches = makeTouchList(e.touches);
+            startPanzoom(touches);
+        }}
+        on:pointerdown={e => {
+            setMousePos(e);
+            const isTouch = e.pointerType == "touch";
 
-        if (e.button == 0 && !isTouch) {
-            startDrag(
-                e.clientX * window.devicePixelRatio,
-                e.clientY * window.devicePixelRatio
-            );
-        }
-    }}
-    on:wheel={e => {
-        setZoomCenter(e.clientX, e.clientY);
-        e.preventDefault();
-        $zoomGoal = $zoomGoal - e.deltaY / Math.max(Math.abs(e.deltaY), 1);
-    }}
-/>
+            if (e.button == 0 && !isTouch) {
+                startDrag(
+                    e.clientX * window.devicePixelRatio,
+                    e.clientY * window.devicePixelRatio
+                );
+            }
+        }}
+        on:wheel={e => {
+            setZoomCenter(e.clientX, e.clientY);
+            e.preventDefault();
+            $zoomGoal = $zoomGoal - e.deltaY / Math.max(Math.abs(e.deltaY), 1);
+        }}
+    />
 
-<!-- use:pinch
+    <!-- use:pinch
     on:pinch={e => {
         dragging = null;
         $mouseX = e.detail.center.x * window.devicePixelRatio;
@@ -771,58 +786,65 @@
         pinchZooming = null;
     }} -->
 
-<div class="absolute w-full h-full overflow-visible pointer-events-none">
-    {#if editWidgetVisible}
-        <LevelWidget
-            {state}
-            x={previewObjectPos[0]}
-            y={previewObjectPos[1]}
-            scale={editWidgetScale}
-            scaleWithZoom={false}
-        >
-            {#if $menuOpenWidget == WidgetType.Rotate}
-                <Rotate bind:state />
-            {:else if $menuOpenWidget == WidgetType.Scale}
-                <Scale bind:state />
-            {:else if $menuOpenWidget == WidgetType.Warp}
-                <Warp bind:state widgetScale={editWidgetScale} />
-            {/if}
+    <div class="absolute w-full h-full overflow-visible pointer-events-none">
+        {#if editWidgetVisible}
+            <LevelWidget
+                {state}
+                x={previewObjectPos[0]}
+                y={previewObjectPos[1]}
+                scale={editWidgetScale}
+                scaleWithZoom={false}
+            >
+                {#if $menuOpenWidget == WidgetType.Rotate}
+                    <Rotate bind:state />
+                {:else if $menuOpenWidget == WidgetType.Scale}
+                    <Scale bind:state />
+                {:else if $menuOpenWidget == WidgetType.Warp}
+                    <Warp bind:state widgetScale={editWidgetScale} />
+                {/if}
+            </LevelWidget>
+        {/if}
+        {#if $editorSettings.showDeleteText}
+            <DeleteTexts {state} />
+        {/if}
+
+        <TriggerRuns {state} />
+
+        {#if $placedByHover != null && $editorSettings.showPlacedText}
+            <LevelWidget
+                {state}
+                x={$placedByHover.x}
+                y={$placedByHover.y + 15}
+                scaleWithZoom={false}
+                scale={placedNameScale}
+            >
+                <PlacedByText username={$placedByHover.username} />
+            </LevelWidget>
+        {/if}
+
+        <LevelWidget {state} x={-55} y={40} scale={0.15}>
+            <ClosableWindow
+                name="playerStartHelp"
+                open={$eventStarted && !$eventEnded}
+            >
+                <Image src={player_start_help} />
+            </ClosableWindow>
         </LevelWidget>
-    {/if}
-    {#if $editorSettings.showDeleteText}
-        <DeleteTexts {state} />
-    {/if}
-
-    <TriggerRuns {state} />
-
-    {#if $placedByHover != null && $editorSettings.showPlacedText}
-        <LevelWidget
-            {state}
-            x={$placedByHover.x}
-            y={$placedByHover.y + 15}
-            scaleWithZoom={false}
-            scale={placedNameScale}
-        >
-            <PlacedByText username={$placedByHover.username} />
+        <LevelWidget {state} x={-90} y={200} scale={0.2}>
+            <ClosableWindow
+                name="playerGoalHelp"
+                open={$eventStarted && !$eventEnded}
+            >
+                <Image src={player_goal_help} />
+            </ClosableWindow>
         </LevelWidget>
-    {/if}
 
-    <LevelWidget {state} x={-55} y={40} scale={0.15}>
-        <ClosableWindow name="playerStartHelp" open={$eventStarted}>
-            <Image src={player_start_help} />
-        </ClosableWindow>
-    </LevelWidget>
-    <LevelWidget {state} x={-90} y={200} scale={0.2}>
-        <ClosableWindow name="playerGoalHelp" open={$eventStarted}>
-            <Image src={player_goal_help} />
-        </ClosableWindow>
-    </LevelWidget>
+        <LevelWidget {state} x={END_POS_X} y={END_POS_Y - 1} scale={0.12}>
+            <Image src={player_goal} />
+        </LevelWidget>
 
-    <LevelWidget {state} x={END_POS_X} y={END_POS_Y - 1} scale={0.12}>
-        <Image src={player_goal} />
-    </LevelWidget>
-
-    <!-- <LevelWidget {state} x={60} y={60}>
+        <!-- <LevelWidget {state} x={60} y={60}>
         <button class="p-4 bg-red">Gaga</button>
     </LevelWidget> -->
-</div>
+    </div>
+{/if}

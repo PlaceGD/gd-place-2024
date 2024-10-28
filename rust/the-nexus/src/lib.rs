@@ -76,6 +76,9 @@ fn generate_shide(sheet: bool) {
     use gen::sprites::make_spritesheet;
     use itertools::Itertools;
     use std::fs;
+    std::fs::create_dir("../../src/assets").unwrap();
+    std::fs::create_dir("../../shared-lib/src/gd").unwrap();
+
     if sheet {
         let (mut img, data) = make_spritesheet();
         color_bleed(&mut img);

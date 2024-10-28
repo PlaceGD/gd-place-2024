@@ -154,7 +154,7 @@ parse_countdown_files! {
     "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 9
     "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 10
     "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  ) classic], // 11
-    "sirhadoken"        ("SirHadoken"):         [3 => weights(1,   3,   3,   0.5) classic], // 12
+    "sirhadoken"        ("SirHadoken"):         [3 => weights(3,   3,   3,   3) classic], // 12
     "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 13
     "kingtony"          ("KINGTONY"):           [3 => weights(2,   2,   3,   3  )], // 14
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 15
@@ -196,9 +196,10 @@ parse_countdown_files! {
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
     "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
     "tech"              ("Technical"):          [0 => weights(3,   3,   3,   3  ) silly famous], // 53
+    "connot"            ("connot"):             [3 => weights(4,   2,   3,   3  ) silly], // 54
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 46]); //Some([24, 0, 7, 53]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([24, 0, 7, 53]);
 
 #[binrw]
 #[brw(little)]

@@ -28,7 +28,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     let y_offset = 15.0 * 30.0;
 
     let h_radius = DIGIT_WIDTH / 2.0;
-    let v_radius = DIGIT_HEIGHT / 2.0 + 2.0 * 30.0;
+    let v_radius = DIGIT_HEIGHT / 2.0;
 
     let all_avaliable_ids = AVAILABLE_OBJECTS
         .iter()

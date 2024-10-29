@@ -179,7 +179,7 @@ parse_countdown_files! {
     "kips"              ("Kips"):               [0 => weights(4,   3,   3,   2  ) classic pretty], // 34
     "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 35
     "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 36
-    "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5)], // 37
+    "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5) pretty], // 37
     "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 38
     "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 39
     "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 40
@@ -195,11 +195,11 @@ parse_countdown_files! {
     "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty silly], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
     "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
-    "tech"              ("Technical"):          [0 => weights(3,   3,   3,   3  ) silly famous], // 53
+    "tech"              ("Technical"):          [0 => weights(2,   2,   2,   2  ) silly famous], // 53
     "connot"            ("connot"):             [3 => weights(4,   2,   3,   3  ) silly], // 54
     "rustam"            ("Rustam"):             [0 => weights(3,   3,   3,   3  ) classic], // 55
     "robtop"            ("RobTopGames"):        [0 => weights(6,   6,   6,   6  ) famous classic silly], // 56
-    "desticy"           ("DesTicY"):            [0 => weights(5,   2,   3,   3  ) classic pretty], // 57
+    "desticy"           ("DesTicY"):            [0 => weights(5,   2,   4,   4  ) classic pretty], // 57
     "xeno"              ("xenoteric"):          [3 => weights(4,   3,   2,   5  ) pretty], // 58
     "logi"              ("logiking"):           [0 => weights(4,   3,   3,   3  ) pretty], // 59
     "aeonair"           ("AeonAir"):            [0 => weights(4,   2,   2,   5  ) silly classic famous], // 60
@@ -207,7 +207,7 @@ parse_countdown_files! {
     // "serp_test"         ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 62
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([47, 60, 61, 62]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([59, 60, 58, 57]);
 
 #[binrw]
 #[brw(little)]
@@ -239,8 +239,7 @@ const WEIGHT_POWER: f64 = 0.8;
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     use rand::prelude::*;
     let mut switches = vec![[1, 50, 0, 7]]; // final sets
-
-    let mut rng = thread_rng();
+    let mut rng = StdRng::seed_from_u64(42);
 
     for i in 0..n {
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev

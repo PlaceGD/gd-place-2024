@@ -219,7 +219,7 @@
     }
 
     const placeCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/lastPlaceTimestamp`,
+        `userDetails/${$loginData?.currentUserData?.user.uid ?? ""}/lastPlaceTimestamp`,
         currentPlaceCooldown
     );
     let {
@@ -229,7 +229,7 @@
     } = placeCooldown;
 
     const deleteCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/lastDeleteTimestamp`,
+        `userDetails/${$loginData?.currentUserData?.user.uid ?? ""}/lastDeleteTimestamp`,
         currentDeleteCooldown
     );
     let {

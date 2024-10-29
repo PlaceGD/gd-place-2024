@@ -49,7 +49,7 @@
     let canvasHeight: number;
 </script>
 
-<EndingNameInput />
+<!-- <EndingNameInput /> -->
 <div class="absolute w-full h-full">
     {#if state != null}
         <Guide {state} />

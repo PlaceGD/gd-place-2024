@@ -26,6 +26,7 @@
     import SongStopButton from "./level_view/SongStopButton.svelte";
     import EndCountdown from "./level_view/EndCountdown.svelte";
     import Guide from "./guide/Guide.svelte";
+    import EndingNameInput from "./ending/EndingNameInput.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -48,6 +49,7 @@
     let canvasHeight: number;
 </script>
 
+<EndingNameInput />
 <div class="absolute w-full h-full">
     {#if state != null}
         <Guide {state} />
@@ -75,31 +77,42 @@
             <SettingsOptions />
             <MetaMenu />
         </div>
-        <div
-            class="absolute top-0 right-0 flex flex-row items-start w-full h-full gap-4 pointer-events-none xs:flex-col sm:gap-2"
-        >
+        {#if !$eventEnded}
             <div
-                class="flex flex-col justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
-                data-guide="zoom"
+                class="absolute top-0 right-0 flex flex-row items-start w-full h-full gap-4 pointer-events-none xs:flex-col sm:gap-2"
             >
-                <ZoomButton zoom="in" {canvas} />
-                <ZoomButton zoom="out" {canvas} />
-                <SongStopButton />
+                <div
+                    class="flex flex-col justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
+                    data-guide="zoom"
+                >
+                    <ZoomButton zoom="in" {canvas} />
+                    <ZoomButton zoom="out" {canvas} />
+                    <SongStopButton />
+                </div>
+                <EndCountdown />
             </div>
-            <EndCountdown />
-        </div>
+        {/if}
     {/if}
     {#if wasmLoaded}
+        <!-- {#if $eventEnded}
+            <EndingNameInput />
+        {/if} -->
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
         {#if !$eventEnded}
+            <div
+                style:display={$eventStarted && $canPlaceEditDelete
+                    ? "contents"
+                    : "none"}
+            >
+                <PlaceMenu bind:state />
+            </div>
+
             {#if !$eventStarted}
                 <EventMenu kind="pre-event" bind:state />
-            {:else if $canPlaceEditDelete}
-                <PlaceMenu bind:state />
-            {:else}
+            {:else if !$canPlaceEditDelete}
                 <EventMenu kind="login-to-place" bind:state />
             {/if}
         {/if}

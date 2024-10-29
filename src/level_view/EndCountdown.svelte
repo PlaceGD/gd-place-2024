@@ -16,7 +16,7 @@
 
 {#if $timeLeft && $timeLeft > 0 && hours < 10}
     <div
-        class="menu-panel z-50 text-white p-4 m-4 sm:p-2 xs:m-2 tabular-nums"
+        class="z-50 p-4 m-4 text-white menu-panel sm:p-2 xs:m-2 tabular-nums"
         transition:scale={{
             duration: 200,
             delay: 0,

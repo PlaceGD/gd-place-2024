@@ -43,7 +43,8 @@ export const zoomCentral = (to: number, canvas: HTMLCanvasElement) => {
 };
 
 export const handleSub = (state: wasm.State) => {
-    for (let chunk of state.get_chunks_to_sub()) {
+    let gibohabid = state.get_chunks_to_sub();
+    for (let chunk of gibohabid) {
         subChunk(
             [chunk.x, chunk.y],
             data => {

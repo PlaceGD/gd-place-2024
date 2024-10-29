@@ -146,6 +146,21 @@ where
     }
 }
 
+// cant be arsed anymore
+impl Rect<f32> {
+    pub fn expanded(self, by: f32) -> Self {
+        let center_x = self.x + self.w / 2.0;
+        let center_y = self.y + self.h / 2.0;
+
+        Self {
+            x: center_x - self.w * by / 2.0,
+            y: center_y - self.h * by / 2.0,
+            w: self.w * by,
+            h: self.h * by,
+        }
+    }
+}
+
 pub fn now() -> f64 {
     js_sys::Date::now()
 }

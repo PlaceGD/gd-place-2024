@@ -1,5 +1,5 @@
 use billy::{Billy, BlendMode};
-use glam::{uvec2, vec2, vec4, Vec4};
+use glam::{uvec2, vec2, vec3, vec4, Vec4};
 use rust_shared::{
     console_log,
     gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
@@ -104,6 +104,8 @@ fn ease_out_expo(x: f32) -> f32 {
     }
 }
 
+use glam::Vec3Swizzles;
+
 pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
@@ -123,25 +125,48 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     let old_t = billy.get_transform();
     billy.apply_transform(obj.transform());
 
+    let mut tint_color = vec4(1.0, 1.0, 1.0, 1.0);
+
     if end_anim_time > 0.0 {
-        //let end_anim_time = end_anim_time % 3.0;
+        let explosion_time = 10.0;
+        let end_anim_time = end_anim_time;
         let dist_from_center = (vec2(obj.x, obj.y) - state.camera_pos).length();
-        let delay = dist_from_center * 0.0003;
-        let explosion_d = ease_out_expo((end_anim_time / 3.0 - delay).clamp(0.0, 1.0));
-        let z = obj.z_order as f32 / 256.0;
+        let delay = dist_from_center * 0.0001;
+        let explosion_d =
+            ease_out_expo(((end_anim_time - explosion_time) / 3.0 - delay).clamp(0.0, 1.0));
+        let obj_z = ((obj.z_order as f32 / 256.0 + obj.z_layer as usize as f32) / 9.0) * 2.0 - 1.0;
+
+        let explode_vec =
+            vec3(obj.x, obj.y, obj_z * 100.0) - vec3(state.camera_pos.x, state.camera_pos.y, 0.0);
+
+        let explode_dir = explode_vec.normalize();
+        let explode_strength = 1.0 / explode_vec.length().max(30.0).min(900.0) + 0.5;
 
         let random_x = random_num(key, 0) * 2.0 - 1.0;
         let random_y = random_num(key, 1) * 2.0 - 1.0;
+        let random_z = random_num(key, 2) * 2.0 - 1.0;
 
         let angular_velocity = random_num(key, 1) * 2.0 - 1.0;
 
         // billy
         //     .translate((vec2(obj.x, obj.y) - state.camera_pos) * explosion_d * random_offset * 3.0);
-        billy.translate(vec2(random_x, random_y) * explosion_d * 90.0);
+        let pos = vec2(obj.x, obj.y)
+            + (vec2(random_x, random_y) * 90.0 + explode_dir.xy() * explode_strength * 900.0)
+                * explosion_d;
+        let new_z = random_z * explosion_d + 1.2;
+        let z_scaleup = 4.0 - 3.0 / (1.0 + (random_z + 1.0) * explosion_d);
+        let new_pos = state.camera_pos + (pos - state.camera_pos) * z_scaleup;
+
+        billy.translate(new_pos - vec2(obj.x, obj.y));
+        billy.scale(vec2(z_scaleup, z_scaleup));
         billy.rotate(
-            angular_velocity * PI * 0.1 * (end_anim_time - delay).max(0.0)
+            angular_velocity * PI * 0.1 * (end_anim_time - explosion_time - delay).max(0.0)
                 + angular_velocity * explosion_d,
         );
+
+        let fadeout_d =
+            1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
+        tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
     }
 
     let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
@@ -153,7 +178,7 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
-    let tint_color = if !state.show_collidable {
+    tint_color *= if !state.show_collidable {
         if info.category == ObjectCategory::Triggers {
             vec4(1.0, 1.0, 1.0, 1.0)
         } else {

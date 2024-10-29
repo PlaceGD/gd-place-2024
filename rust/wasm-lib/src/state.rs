@@ -35,6 +35,15 @@ use crate::{
     RustError,
 };
 
+#[derive(Clone, Copy)]
+pub struct EndingAnimInfo {
+    pub initial_zoom: f32,
+    pub initial_camera_pos: Vec2,
+    pub initial_bg_color: (u8, u8, u8),
+    pub initial_ground1_color: (u8, u8, u8),
+    pub initial_ground2_color: (u8, u8, u8),
+}
+
 #[wasm_bindgen]
 pub struct State {
     pub(crate) render: RenderState,
@@ -77,6 +86,7 @@ pub struct State {
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
     // text_draws: Vec<TextDraw>,
+    pub(crate) ending_anim_info: Option<EndingAnimInfo>,
 }
 
 impl State {
@@ -118,6 +128,7 @@ impl State {
             render,
             countdown: Countdown::new(),
             now: 0.0,
+            ending_anim_info: None,
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -657,20 +668,76 @@ impl State {
             }
         }
 
-        let (old_camera_pos, old_zoom, old_bg_color, old_ground1_color, old_ground2_color) = (
-            self.camera_pos,
-            self.zoom,
-            self.bg_color,
-            self.ground1_color,
-            self.ground2_color,
-        );
+        fn ease_out_sine(x: f32) -> f32 {
+            f32::sin(x * std::f32::consts::PI / 2.0)
+        }
 
         let end_anim_time = ((self.now - self.event_end) / 1000.0) as f32;
 
         if end_anim_time > 0.0 {
-            let zoomout_d = ease_in_out_quart((end_anim_time / 5.0).clamp(0.0, 1.0));
-            self.zoom = map!(zoomout_d, 0.0, 1.0, self.zoom, 2.0);
+            if self.ending_anim_info.is_none() {
+                self.ending_anim_info = Some(EndingAnimInfo {
+                    initial_zoom: self.zoom,
+                    initial_camera_pos: self.camera_pos,
+                    initial_bg_color: self.bg_color,
+                    initial_ground1_color: self.ground1_color,
+                    initial_ground2_color: self.ground2_color,
+                });
+            }
+
+            let EndingAnimInfo {
+                initial_zoom,
+                initial_camera_pos,
+                initial_bg_color,
+                initial_ground1_color,
+                initial_ground2_color,
+            } = self.ending_anim_info.unwrap();
+
+            let zoomout_d = ease_out_sine((end_anim_time / 30.0).clamp(0.0, 1.0));
+            self.zoom = map!(zoomout_d, 0.0, 1.0, initial_zoom, -5.0);
             // console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
+
+            let margin = 50.0 * 30.0;
+            let cam_move_d = ease_in_out_quart((end_anim_time / 10.0).clamp(0.0, 1.0));
+            let lerped_x = if initial_camera_pos.x < margin {
+                map!(cam_move_d, 0.0, 1.0, initial_camera_pos.x, margin)
+            } else if initial_camera_pos.x > LEVEL_WIDTH_UNITS as f32 - margin {
+                map!(
+                    cam_move_d,
+                    0.0,
+                    1.0,
+                    initial_camera_pos.x,
+                    LEVEL_WIDTH_UNITS as f32 - margin
+                )
+            } else {
+                initial_camera_pos.x
+            };
+
+            let lerped_y = if initial_camera_pos.y < margin {
+                map!(cam_move_d, 0.0, 1.0, initial_camera_pos.y, margin)
+            } else if initial_camera_pos.y > LEVEL_HEIGHT_UNITS as f32 - margin {
+                map!(
+                    cam_move_d,
+                    0.0,
+                    1.0,
+                    initial_camera_pos.y,
+                    LEVEL_HEIGHT_UNITS as f32 - margin
+                )
+            } else {
+                initial_camera_pos.y
+            };
+
+            self.camera_pos = vec2(lerped_x, lerped_y);
+
+            let color_d = 1.0 - (end_anim_time - 3.0 / 7.0).clamp(0.0, 1.0);
+
+            self.bg_color = (
+                (initial_bg_color.0 as f32 * color_d) as u8,
+                (initial_bg_color.1 as f32 * color_d) as u8,
+                (initial_bg_color.2 as f32 * color_d) as u8,
+            );
+        } else {
+            self.ending_anim_info = None;
         }
 
         self.render_inner(delta).unwrap();

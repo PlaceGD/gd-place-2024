@@ -71,6 +71,8 @@ pub struct State {
     pub(crate) event_end: f64,
 
     pub(crate) countdown: Countdown,
+
+    pub(crate) now: f64,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -115,6 +117,7 @@ impl State {
             event_end: f64::INFINITY,
             render,
             countdown: Countdown::new(),
+            now: 0.0,
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -644,6 +647,8 @@ impl State {
     }
 
     pub fn render(&mut self, delta: f32) {
+        self.now = now();
+
         fn ease_in_out_quart(x: f32) -> f32 {
             if x < 0.5 {
                 8.0 * x * x * x * x
@@ -660,7 +665,7 @@ impl State {
             self.ground2_color,
         );
 
-        let end_anim_time = ((now() - self.event_end) / 1000.0) as f32;
+        let end_anim_time = ((self.now - self.event_end) / 1000.0) as f32;
 
         if end_anim_time > 0.0 {
             let zoomout_d = ease_in_out_quart((end_anim_time / 5.0).clamp(0.0, 1.0));

@@ -116,7 +116,7 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
         return;
     }
 
-    let end_anim_time = ((now() - state.event_end) / 1000.0) as f32;
+    let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
 
     let info = OBJECT_INFO[obj.id as usize];
 

@@ -17,6 +17,7 @@ import type {
     FirebaseError,
     MetaReq,
     PlaceRes,
+    LevelNameReq,
 } from "shared-lib/cloud_functions";
 import { GDColor, GDObjectOpt } from "wasm-lib";
 import { isValidObject, objects } from "shared-lib/gd";
@@ -88,3 +89,7 @@ export const changeNameGradient = httpsCallable<GradientReq>(
     "changeNameGradient"
 );
 export const setMeta = httpsCallable<MetaReq>(functions, "setMeta");
+export const setLevelNameLetter = httpsCallable<LevelNameReq>(
+    functions,
+    "setLevelNameLetter"
+);

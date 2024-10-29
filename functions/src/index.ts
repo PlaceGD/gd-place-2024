@@ -21,6 +21,8 @@ export {
 
 export { setMeta } from "./meta";
 
+export { setLevelNameLetter } from "./ending";
+
 export const smartDatabase = () => convertDatabase<DatabaseSchema>(database());
 
 initializeApp();

@@ -9,6 +9,7 @@ export type UserDetails = {
     lastDeleteTimestamp: number;
     lastReportTimestamp: number;
     lastGradientTimestamp: number;
+    lastCharacterTimestamp: number;
     moderator: boolean;
     hasDonated: boolean;
 };
@@ -110,10 +111,20 @@ export interface DatabaseSchema {
          * unix timesamp
          */
         eventEndTime: number;
+
+        /**
+         * seconds (auto added to end time) ![oye](https://preview.redd.it/why-does-this-cat-look-like-that-v0-zin7alw9g8jd1.jpeg?width=1080&format=pjpg&auto=webp&s=7684738cd8233040c7a60ce4a9d4296a03524136)
+         */
+        setNameTime: number;
     };
 
     /**
      * random uid -> data
      */
     history: Record<string, HistoryItem>;
+
+    levelName: {
+        inputs: Record<string, string>;
+        history: Record<string, { letter: string; index: number }>;
+    };
 }

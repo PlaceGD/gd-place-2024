@@ -205,7 +205,7 @@ parse_countdown_files! {
     "aeonair"           ("AeonAir"):            [0 => weights(4,   2,   2,   5  ) silly classic famous], // 60
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([47, 59, 57, 43]);
+pub const TEST_SETS: Option<[usize; 4]> = None; // Some([47, 60, 57, 45]);
 
 #[binrw]
 #[brw(little)]

@@ -124,8 +124,10 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     billy.apply_transform(obj.transform());
 
     if end_anim_time > 0.0 {
-        let end_anim_time = end_anim_time % 3.0;
-        let explosion_d = ease_out_expo(end_anim_time / 3.0);
+        //let end_anim_time = end_anim_time % 3.0;
+        let dist_from_center = (vec2(obj.x, obj.y) - state.camera_pos).length();
+        let delay = dist_from_center * 0.0003;
+        let explosion_d = ease_out_expo((end_anim_time / 3.0 - delay).clamp(0.0, 1.0));
         let z = obj.z_order as f32 / 256.0;
 
         let random_x = random_num(key, 0) * 2.0 - 1.0;
@@ -136,7 +138,10 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
         // billy
         //     .translate((vec2(obj.x, obj.y) - state.camera_pos) * explosion_d * random_offset * 3.0);
         billy.translate(vec2(random_x, random_y) * explosion_d * 90.0);
-        billy.rotate(angular_velocity * PI * 0.1 * end_anim_time + angular_velocity * explosion_d);
+        billy.rotate(
+            angular_velocity * PI * 0.1 * (end_anim_time - delay).max(0.0)
+                + angular_velocity * explosion_d,
+        );
     }
 
     let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {

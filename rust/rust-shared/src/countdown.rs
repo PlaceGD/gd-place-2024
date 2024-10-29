@@ -185,7 +185,7 @@ parse_countdown_files! {
     "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 40
     "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 41
     "culuc"             ("Culuc"):              [3 => weights(5,   3,   4,   4  ) famous pretty silly], // 42
-    "boldstep"          ("BoldStep"):           [0 => weights(6,   2,   2,   1  )], // 43
+    "boldstep"          ("BoldStep"):           [0 => weights(6,   3,   3,   2  )], // 43
     "evasium"           ("Evasium"):            [0 => weights(1,   1,   2,   4  ) classic], // 44
     "dorami"            ("Dorami"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 45
     "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 46
@@ -198,11 +198,14 @@ parse_countdown_files! {
     "tech"              ("Technical"):          [0 => weights(3,   3,   3,   3  ) silly famous], // 53
     "connot"            ("connot"):             [3 => weights(4,   2,   3,   3  ) silly], // 54
     "rustam"            ("Rustam"):             [0 => weights(3,   3,   3,   3  ) classic], // 55
-    "robtop"            ("RobTop"):             [0 => weights(6,   6,   6,   6  ) famous classic silly], // 56
+    "robtop"            ("RobTopGames"):        [0 => weights(6,   6,   6,   6  ) famous classic silly], // 56
     "desticy"           ("DesTicY"):            [0 => weights(5,   2,   3,   3  ) classic pretty], // 57
+    "xeno"              ("xenoteric"):          [3 => weights(4,   3,   2,   5  ) pretty], // 58
+    "logi"              ("logiking"):           [0 => weights(4,   3,   3,   3  ) pretty], // 59
+    "aeonair"           ("AeonAir"):            [0 => weights(4,   2,   2,   5  ) silly classic famous], // 60
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([51, 39, 7, 57]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([47, 59, 57, 43]);
 
 #[binrw]
 #[brw(little)]

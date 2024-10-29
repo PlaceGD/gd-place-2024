@@ -179,6 +179,16 @@
                 </WhiteButton>
             </div>
 
+            <WhiteButton
+                on:click={() =>
+                    meta({
+                        type: "event_end",
+                        to: Date.now() + 5000,
+                    })}
+            >
+                Run End Sequence
+            </WhiteButton>
+
             <div class="w-full min-h-[1px] bg-white/50" />
 
             <div class="flex flex-col w-full gap-2 flex-center">

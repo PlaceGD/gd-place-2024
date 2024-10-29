@@ -737,7 +737,7 @@
     }}
 />
 
-{#if !$eventEnded || true}
+{#if !$eventEnded}
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <div

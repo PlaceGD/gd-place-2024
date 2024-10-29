@@ -223,7 +223,7 @@ impl State {
         gongy
     }
     fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
-        let view_rect = self.get_camera_world_rect();
+        let mut view_rect = self.get_camera_world_rect().expanded(1.5);
 
         let mut out = vec![];
 
@@ -670,24 +670,24 @@ impl State {
         if end_anim_time > 0.0 {
             let zoomout_d = ease_in_out_quart((end_anim_time / 5.0).clamp(0.0, 1.0));
             self.zoom = map!(zoomout_d, 0.0, 1.0, self.zoom, 2.0);
-            console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
+            // console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
         }
 
         self.render_inner(delta).unwrap();
 
-        (
-            self.camera_pos,
-            self.zoom,
-            self.bg_color,
-            self.ground1_color,
-            self.ground2_color,
-        ) = (
-            old_camera_pos,
-            old_zoom,
-            old_bg_color,
-            old_ground1_color,
-            old_ground2_color,
-        );
+        // (
+        //     self.camera_pos,
+        //     self.zoom,
+        //     self.bg_color,
+        //     self.ground1_color,
+        //     self.ground2_color,
+        // ) = (
+        //     old_camera_pos,
+        //     old_zoom,
+        //     old_bg_color,
+        //     old_ground1_color,
+        //     old_ground2_color,
+        // );
     }
 
     pub fn get_countdown_creator_names(&self) -> Vec<String> {

@@ -65,6 +65,7 @@
         songPlayingIsPreview,
         eventEndTime,
         eventEnded,
+        timeLeft,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -174,6 +175,10 @@
     };
 
     setInterval(() => {
+        if ($timeLeft < 0) {
+            handleSub(state);
+        }
+
         state.get_chunks_to_sub(); // this just updates time of visible chiunks, doesnt subscriber
         handleUnsub(state);
     }, 50);

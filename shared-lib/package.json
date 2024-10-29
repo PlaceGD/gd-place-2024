@@ -36,6 +36,10 @@
             "import": "./dist/kofi.js",
             "types": "./dist/kofi.d.ts"
         },
+        "./ending": {
+            "import": "./dist/ending.js",
+            "types": "./dist/ending.d.ts"
+        },
         ".": {
             "import": "./dist/index.js",
             "types": "./dist/index.d.ts"

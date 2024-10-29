@@ -1,7 +1,8 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
     import Input from "../components/Input.svelte";
-    import { TOTAL_ENDING_INPUTS } from "shared-lib/ending";
+    import { TOTAL_ENDING_INPUTS, VALID_LEVEL_NAME } from "shared-lib/ending";
+    import { setLevelNameLetter } from "../firebase/cloud_functions";
 </script>
 
 <div
@@ -9,10 +10,17 @@
     class="absolute z-50 flex content-center justify-center w-full h-full pointer-events-none ending-grid"
     style={`--count: ${TOTAL_ENDING_INPUTS}`}
 >
-    {#each Array(TOTAL_ENDING_INPUTS) as _}
+    {#each Array(TOTAL_ENDING_INPUTS) as _, i}
         <Input
             maxLength={1}
-            class="w-auto h-full pointer-events-auto character-input"
+            class="w-auto h-full pointer-events-auto character-input text-stroke"
+            hardValidInput={VALID_LEVEL_NAME}
+            on:change={e => {
+                setLevelNameLetter({
+                    index: i,
+                    letter: e.detail,
+                });
+            }}
         />
     {/each}
 </div>
@@ -28,7 +36,7 @@
     }
 
     :global(.character-input) {
-        @apply text-stroke text-center font-pusab text-7xl text-white !outline-none;
+        @apply text-center font-pusab text-7xl text-white !outline-none;
 
         box-shadow:
             0px 0px 0px 3px #989696,

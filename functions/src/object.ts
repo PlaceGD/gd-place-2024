@@ -157,17 +157,18 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
 
         const userDetails = await getCheckedUserDetails(db, authUID);
 
-        const [eventStartTime, placeCooldown, chunkObjectLimit] =
+        const [eventStartTime, eventEndTime, placeCooldown, chunkObjectLimit] =
             await refAllGet(
                 db,
                 "metaVariables/eventStartTime",
+                "metaVariables/eventEndTime",
                 "metaVariables/placeCooldown",
                 "metaVariables/chunkObjectLimit"
             );
 
         const now = Date.now();
 
-        if (now < eventStartTime.val()) {
+        if (now < eventStartTime.val() || now > eventEndTime.val()) {
             Error.code(209, "permission-denied");
         }
 
@@ -231,15 +232,16 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
             throw Error.code(401, "invalid-argument");
         }
 
-        const [deleteCooldown, eventStartTime] = await refAllGet(
+        const [deleteCooldown, eventStartTime, eventEndTime] = await refAllGet(
             db,
             "metaVariables/deleteCooldown",
-            "metaVariables/eventStartTime"
+            "metaVariables/eventStartTime",
+            "metaVariables/eventEndTime"
         );
 
         const now = Date.now();
 
-        if (now < eventStartTime.val()) {
+        if (now < eventStartTime.val() || now > eventEndTime.val()) {
             throw Error.code(209, "permission-denied");
         }
 

@@ -34,6 +34,14 @@ export const FIREBASE_ERRORS = {
         code: 107,
         message: "Invalid transaction ID",
     },
+    [108]: {
+        code: 108,
+        message: "Invalid level name letter",
+    },
+    [109]: {
+        code: 109,
+        message: "Invalid level name index",
+    },
     // 200 - permission denied
     [200]: {
         code: 200,
@@ -79,6 +87,10 @@ export const FIREBASE_ERRORS = {
     [210]: {
         code: 210,
         message: "User is not authenticated",
+    },
+    [211]: {
+        code: 211,
+        message: "Cannot change letter before event ended",
     },
     // 300 - already exists
     [300]: {
@@ -215,4 +227,9 @@ export type MetaOperation =
 
 export type MetaReq = {
     op: MetaOperation;
+};
+
+export type LevelNameReq = {
+    letter: string;
+    index: number;
 };

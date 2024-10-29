@@ -25,7 +25,7 @@
         if (checkIfValid(innerValue, hardValidInput)) {
             if (checkIfValid(innerValue, softValidInput)) {
                 value = innerValue;
-                dispatcher("change");
+                dispatcher("change", innerValue);
             }
             prevTypeableValue = innerValue;
         } else {

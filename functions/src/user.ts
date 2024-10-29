@@ -114,6 +114,7 @@ export const initUserWithUsername = onCallAuthLogger<
         lastDeleteTimestamp: 0,
         lastReportTimestamp: 0,
         lastGradientTimestamp: 0,
+        lastCharacterTimestamp: 0,
         moderator: false,
         hasDonated: false,
     };

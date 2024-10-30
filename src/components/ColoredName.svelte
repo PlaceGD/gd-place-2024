@@ -16,14 +16,14 @@
 </script>
 
 <span
-    class="relative flex flex-col flex-center"
+    class="relative"
     style={`
         font-family: inherit;
         font-weight: inherit;
     `}
 >
     <span
-        class="absolute text-stroke fix-stroke"
+        class="absolute text-stroke fix-stroke h-full"
         style={`
                 font-family: inherit;
                 font-weight: inherit;
@@ -34,7 +34,7 @@
     </span>
     {#await getOrOverride(username, colorOverride)}
         <span
-            class="relative"
+            class="relative h-full"
             style={`
                 font-family: inherit;
                 font-weight: inherit;
@@ -44,7 +44,7 @@
         </span>
     {:then color}
         <span
-            class="relative"
+            class="relative h-full"
             style={`
                 font-family: inherit;
                 font-weight: inherit;

@@ -80,7 +80,7 @@
 <DataPopup />
 
 <div
-    class="relative w-screen h-screen overflow-hidden"
+    class="relative w-screen page overflow-hidden"
     bind:offsetWidth={viewSize[0]}
     bind:offsetHeight={viewSize[1]}
 >
@@ -174,5 +174,9 @@
         to {
             background-position: var(--bg-pos-x) 50%;
         }
+    }
+
+    .page {
+        height: 100svh;
     }
 </style>

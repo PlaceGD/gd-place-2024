@@ -206,7 +206,7 @@ parse_countdown_files! {
     "breadking"         ("Breadking"):          [3 => weights(2,   2,   2,   3  )], // 61
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([59, 60, 58, 61]);
+pub const TEST_SETS: Option<[usize; 4]> = Some([56, 19, 1, 60]);
 
 #[binrw]
 #[brw(little)]

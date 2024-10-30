@@ -292,11 +292,13 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
     for layer in 0..(Z_LAYERS.len() + 1) {
         for sheet_batch_idx in 0..5 {
             for batch_idx in 0..2 {
-                billy.set_blend_mode(if state.show_collidable {
-                    BlendMode::Normal
-                } else {
-                    [BlendMode::Additive, BlendMode::Normal][batch_idx]
-                });
+                if end_anim_time < 20.0 {
+                    billy.set_blend_mode(if state.show_collidable {
+                        BlendMode::Normal
+                    } else {
+                        [BlendMode::Additive, BlendMode::Normal][batch_idx]
+                    });
+                }
                 for (_, chunk) in &level.chunks {
                     let sheet_batch = &chunk.layers[layer].sheet_batches[sheet_batch_idx];
                     let batch = &sheet_batch[batch_idx];
@@ -396,7 +398,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     let sprites = [3827, 3825, 3828, 1886];
     let choice = sprites[(random_num(key, 11) * sprites.len() as f32) as usize];
 
-    let spritescale = match choice {
+    let spritescale: f32 = match choice {
         3827 => 0.5,
         3825 => 1.0,
         3828 => 0.5,
@@ -416,7 +418,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     let fall_anim_opacity = (-((fall_anim - 0.5).powf(2.0)) + 0.25) * 4.0;
 
     let fall_anim_start_d =
-        ((end_anim_time - explosion_time - delay - 2.0 - random_num(key, 14) * 2.0) / 5.0)
+        ((end_anim_time - explosion_time - delay - 3.0 - random_num(key, 14) * 2.0) / 5.0)
             .clamp(0.0, 1.0);
 
     billy.translate(pos + fall_anim_pos * fall_anim_start_d - vec2(obj.x, obj.y));
@@ -430,8 +432,11 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
 
     billy.apply_transform(obj.transform());
-    let reveal = ((end_anim_time - explosion_time - delay) / 2.0).clamp(0.0, 1.0);
-    billy.scale(vec2(reveal * 3.0 * spritescale, reveal * 3.0 * spritescale));
+    let reveal = ((end_anim_time - explosion_time - delay + 0.5) / 2.0).clamp(0.0, 1.0);
+    billy.scale(vec2(
+        reveal * 3.0 * spritescale.powf(reveal),
+        reveal * 3.0 * spritescale.powf(reveal),
+    ));
     billy.rotate(angle_offset);
 
     let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
@@ -450,7 +455,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
         .map(|v| v as f32 / 255.0),
     );
 
-    color.w *= (reveal * 0.7 * random_num(key, 10).powf(2.0) * fall_anim_opacity / spritescale)
+    color.w *= (0.7 * random_num(key, 10).powf(2.0) * fall_anim_opacity / spritescale.powf(reveal))
         .clamp(0.0, 1.0);
 
     let sprite = MAIN_SPRITES[choice].unwrap();

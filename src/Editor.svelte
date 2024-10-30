@@ -13,6 +13,7 @@
         canPlaceEditDelete,
         eventElapsed,
         eventEnded,
+        eventEndTime,
         eventStarted,
         eventStartTime,
         loginData,
@@ -47,9 +48,26 @@
     let canvas: HTMLCanvasElement;
     let canvasWidth: number;
     let canvasHeight: number;
+
+    let showEndingNameInput = false;
+    let showEndingNameTimeout: NodeJS.Timeout;
+
+    $: {
+        if ($eventEnded) {
+            showEndingNameTimeout = setTimeout(
+                () => (showEndingNameInput = true),
+                21000 - Math.max(Date.now() - $eventEndTime, 0.0)
+            );
+        } else {
+            clearTimeout(showEndingNameTimeout);
+            showEndingNameInput = false;
+        }
+    }
 </script>
 
-<!-- <EndingNameInput /> -->
+{#if $canPlaceEditDelete && showEndingNameInput}
+    <EndingNameInput />
+{/if}
 <div class="absolute w-full h-full">
     {#if state != null}
         <Guide {state} />

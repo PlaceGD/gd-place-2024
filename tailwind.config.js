@@ -24,6 +24,7 @@ export default {
         fontFamily: {
             pusab: "Pusab",
             saira: "Saira",
+            exo: "Exo",
         },
     },
     plugins: [],

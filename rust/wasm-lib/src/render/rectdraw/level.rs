@@ -234,6 +234,8 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
         let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
 
+        let fadeout = 1.0 - ((state.now - state.event_end) as f32 / 3.0).clamp(0.0, 1.0);
+
         for i in min_x..=max_x {
             let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;
             // let t = transform
@@ -250,7 +252,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
                     state.ground1_color.0 as f32 / 255.0,
                     state.ground1_color.1 as f32 / 255.0,
                     state.ground1_color.2 as f32 / 255.0,
-                    1.0,
+                    1.0 * fadeout,
                 ),
                 1,
                 vec2(0.0, 0.0),
@@ -263,7 +265,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
                     state.ground2_color.0 as f32 / 255.0,
                     state.ground2_color.1 as f32 / 255.0,
                     state.ground2_color.2 as f32 / 255.0,
-                    1.0,
+                    1.0 * fadeout,
                 ),
                 1,
                 vec2(0.0, 256.0),
@@ -274,7 +276,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         billy.centered_textured_rect(
             vec2(state.camera_pos.x, -1.0),
             vec2(GROUND_SIZE_UNITS * 10.0, 2.0),
-            vec4(1.0, 1.0, 1.0, 1.0),
+            vec4(1.0, 1.0, 1.0, 1.0 * fadeout),
             1,
             vec2(0.0, 513.0),
             vec2(256.0, 1.0),

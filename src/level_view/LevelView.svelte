@@ -16,9 +16,8 @@
     export let canvasHeight: number;
 
     let offscreenCanvas: OffscreenCanvas | null = null;
-    // $: offscreenCanvas = canvas?.transferControlToOffscreen();
 
-    onMount(async () => {
+    const setView = async () => {
         offscreenCanvas = canvas?.transferControlToOffscreen();
 
         if (canvas == null || offscreenCanvas == null) {
@@ -38,7 +37,13 @@
             console.error(e, "(Failed in `wasm.create_view`)");
             Toast.showErrorToast(WASM_ERROR);
         }
-    });
+    };
+
+    $: {
+        if (canvas != null && offscreenCanvas == null) {
+            setView();
+        }
+    }
 
     let prevTime = 0;
 

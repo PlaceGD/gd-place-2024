@@ -652,7 +652,6 @@
         if ($eventEnded) {
             dragging = null;
             panzooming = null;
-
             state.set_preview_visibility(false);
             stopSound("preview song");
             stopSound("song");
@@ -687,7 +686,6 @@
         }
     }}
     on:touchmove={e => {
-        console.log(e);
         const touches = makeTouchList(e.touches);
 
         handlePanzoom(touches);

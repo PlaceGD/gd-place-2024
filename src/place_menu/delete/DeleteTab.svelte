@@ -94,7 +94,7 @@
 </script>
 
 {#if $selectedObject != null}
-    <fieldset class="delete-tab-grid" disabled={$menuMinimized}>
+    <fieldset class="delete-tab-grid">
         <div
             class="grid h-full grid-rows-[min-content_1fr] min-w-60 max-w-60 md:min-w-40 md:max-w-40 sm:max-w-full sm:min-w-full sm:w-full sm:h-min sm:grid-rows-none sm:grid-cols-2 sm:gap-2"
         >

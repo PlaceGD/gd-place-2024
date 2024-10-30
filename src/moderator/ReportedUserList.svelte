@@ -115,7 +115,7 @@
 {#if isOpen}
     <fieldset
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel overflow-hidden flex-center h-[50%] pointer-events-auto"
-        disabled={!isOpen}
+        inert={!isOpen}
         transition:menuHeight={{ duration: 200 }}
     >
         <h1

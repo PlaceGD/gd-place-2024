@@ -41,7 +41,7 @@
 {#if isOpen}
     <fieldset
         class="z-50 flex flex-col gap-4 p-4 mr-6 overflow-x-hidden overflow-y-scroll text-white rounded-lg pointer-events-auto sm:mr-4 w-96 xs:w-80 h-[50%] menu-panel thin-scrollbar"
-        disabled={!isOpen}
+        inert={!isOpen}
         transition:menuHeight={{ duration: 200 }}
     >
         <div class="flex flex-col w-full gap-2 flex-center">

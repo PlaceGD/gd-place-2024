@@ -65,7 +65,6 @@
         "w-full h-full flex flex-col p-2": true,
         "!hidden": $menuTabGroup != TabGroup.Build,
     })}
-    disabled={$menuMinimized}
 >
     <FadedScroll update={$menuTabGroup} threshold={1}>
         {#each Object.entries(CATEGORY_ICONS) as [key, path] (key)}

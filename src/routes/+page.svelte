@@ -63,9 +63,11 @@
 
 <svelte:window
     on:wheel|nonpassive={e => {
-        // prevents apz zoom which just mimics ctrl+wheel up/down
-        e.preventDefault();
-        e.stopImmediatePropagation();
+        if (e.ctrlKey) {
+            // prevents apz zoom which just mimics ctrl+wheel up/down
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
     }}
     on:keyup={e => {
         if (e.ctrlKey && e.shiftKey && e.key === "F") {

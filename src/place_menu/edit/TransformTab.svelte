@@ -42,7 +42,7 @@
     };
 </script>
 
-<fieldset class="transform-container" disabled={$menuMinimized}>
+<fieldset class="transform-container">
     <div
         class="flex items-center gap-2 grow-1 shrink-0 md:gap-4 xs:gap-1 move md:flex-center"
     >

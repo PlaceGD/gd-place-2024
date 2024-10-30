@@ -68,7 +68,6 @@
             hoverable={false}
             id="speed-slider"
             pips
-            disabled={$menuMinimized}
             ariaLabels={[tabType == "sfx" ? "SFX Speed" : "Song Speed"]}
             values={[$menuSpeed]}
             on:change={e => {

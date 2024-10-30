@@ -255,199 +255,198 @@
                 </button>
             </div>
 
-            <fieldset
-                class="relative overflow-hidden tabs menu-panel"
-                disabled={$menuMinimized}
-            >
-                <ul
-                    class="absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar tab-options"
-                    tabindex="-1"
-                    on:wheel|passive={e => {
-                        if (!e || !e.target) return;
-                        e.currentTarget.scrollLeft += e.deltaY / 10;
-                    }}
-                    data-minimised={+$menuMinimized}
-                >
-                    {#if $menuTabGroup == TabGroup.Build}
-                        {#each Object.entries(CATEGORY_ICONS) as [key, path]}
-                            <li
-                                class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px] xs:min-w-[52px]"
-                            >
-                                <button
-                                    class="z-20 w-full p-1 xs:p-1.5 h-full flex-center"
-                                    on:click={() => {
-                                        // @ts-expect-error its fine
-                                        $menuBuildTab = key;
-                                    }}
-                                    aria-label={key}
-                                >
-                                    <Image
-                                        src={path}
-                                        alt={key}
-                                        class="object-contain w-auto h-auto max-w-full max-h-full"
-                                    ></Image>
-                                </button>
-                                {#if $menuBuildTab == key}
-                                    <div class="sliding-selector"></div>
-                                {/if}
-                            </li>
-                        {/each}
-                    {:else if $menuTabGroup == TabGroup.Edit}
-                        {#each Object.values(EditTab) as value}
-                            {#if value != EditTab.Colors || (value == EditTab.Colors && showColorsTab)}
+            <div class="contents" inert={$menuMinimized}>
+                <fieldset class="relative overflow-hidden tabs menu-panel">
+                    <ul
+                        class="absolute w-full h-full p-2 xs:p-1.5 flex overflow-y-hidden overflow-x-auto thin-scrollbar tab-options"
+                        tabindex="-1"
+                        on:wheel|passive={e => {
+                            if (!e || !e.target) return;
+                            e.currentTarget.scrollLeft += e.deltaY / 10;
+                        }}
+                        data-minimised={+$menuMinimized}
+                    >
+                        {#if $menuTabGroup == TabGroup.Build}
+                            {#each Object.entries(CATEGORY_ICONS) as [key, path]}
                                 <li
-                                    class="relative flex-1 h-full cursor-pointer flex-center"
+                                    class="relative h-full flex-center cursor-pointer flex-1 min-w-[64px] xs:min-w-[52px]"
                                 >
                                     <button
-                                        class="w-full h-full px-4 cursor-pointer xs:px-2 flex-center"
+                                        class="z-20 w-full p-1 xs:p-1.5 h-full flex-center"
                                         on:click={() => {
-                                            $menuEditTab = value;
+                                            // @ts-expect-error its fine
+                                            $menuBuildTab = key;
                                         }}
-                                        aria-label={value}
+                                        aria-label={key}
                                     >
-                                        <h1
-                                            class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
-                                        >
-                                            {editTabName(value)}
-                                        </h1>
+                                        <Image
+                                            src={path}
+                                            alt={key}
+                                            class="object-contain w-auto h-auto max-w-full max-h-full"
+                                        ></Image>
                                     </button>
-                                    {#if $menuEditTab == value}
+                                    {#if $menuBuildTab == key}
                                         <div class="sliding-selector"></div>
                                     {/if}
                                 </li>
-                            {/if}
-                        {/each}
-                    {/if}
-                </ul>
+                            {/each}
+                        {:else if $menuTabGroup == TabGroup.Edit}
+                            {#each Object.values(EditTab) as value}
+                                {#if value != EditTab.Colors || (value == EditTab.Colors && showColorsTab)}
+                                    <li
+                                        class="relative flex-1 h-full cursor-pointer flex-center"
+                                    >
+                                        <button
+                                            class="w-full h-full px-4 cursor-pointer xs:px-2 flex-center"
+                                            on:click={() => {
+                                                $menuEditTab = value;
+                                            }}
+                                            aria-label={value}
+                                        >
+                                            <h1
+                                                class="z-20 text-2xl md:text-xl xs:text-sm font-pusab text-stroke"
+                                            >
+                                                {editTabName(value)}
+                                            </h1>
+                                        </button>
+                                        {#if $menuEditTab == value}
+                                            <div class="sliding-selector"></div>
+                                        {/if}
+                                    </li>
+                                {/if}
+                            {/each}
+                        {/if}
+                    </ul>
+
+                    <div
+                        class="absolute flex justify-around w-24 h-full gap-3 p-2.5 md:p-2 tab-mini-icons"
+                        data-minimised={+$menuMinimized}
+                    >
+                        <RadialCooldown
+                            max={$currentPlaceCooldown}
+                            remaining={placeCooldownRemaining}
+                        >
+                            <Build class="w-full h-full stroke-[1.5]" />
+                        </RadialCooldown>
+                        <RadialCooldown
+                            max={$currentDeleteCooldown}
+                            remaining={deleteCooldownRemaining}
+                        >
+                            <Delete class="w-full h-full stroke-[1.5]" />
+                        </RadialCooldown>
+                    </div>
+                </fieldset>
+
+                <fieldset
+                    class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
+                    data-guide={GUIDE_ELEM_IDS.placeMenuModes}
+                >
+                    <ul
+                        class="absolute flex flex-col items-center w-full h-full gap-6 px-2 md:px-1.5 py-2 justify-evenly"
+                    >
+                        <li class="w-full flex-center grow-0 shrink-0">
+                            <button
+                                class="w-full cursor-pointer"
+                                on:click={() => {
+                                    $menuTabGroup = TabGroup.Build;
+                                }}
+                                aria-label="Build Tab"
+                            >
+                                <RadialCooldown
+                                    max={$currentPlaceCooldown}
+                                    remaining={placeCooldownRemaining}
+                                >
+                                    <Build
+                                        class={cx({
+                                            "stroke-[1.5] w-full h-full": true,
+                                            "opacity-30":
+                                                $menuTabGroup != TabGroup.Build,
+                                        })}
+                                    ></Build>
+                                </RadialCooldown>
+                            </button>
+                        </li>
+                        <li
+                            class="w-full flex-center grow-0 shrink-0"
+                            id="edit-mode"
+                        >
+                            <button
+                                class="w-full cursor-pointer"
+                                on:click={() => {
+                                    $menuTabGroup = TabGroup.Edit;
+                                }}
+                                aria-label="Edit Tab"
+                                data-guide={GUIDE_ELEM_IDS.placeMenuEditButton}
+                            >
+                                <Edit
+                                    class={cx({
+                                        "stroke-[1.5] w-full h-full": true,
+                                        "opacity-30":
+                                            $menuTabGroup != TabGroup.Edit,
+                                    })}
+                                ></Edit>
+                            </button>
+                        </li>
+                        <li
+                            class="w-full flex-center grow-0 shrink-0"
+                            id="delete-mode"
+                        >
+                            <button
+                                class="w-full cursor-pointer"
+                                on:click={() => {
+                                    $menuTabGroup = TabGroup.Delete;
+                                }}
+                                aria-label="Delete Tab"
+                                data-guide={GUIDE_ELEM_IDS.placeMenuDeleteButton}
+                            >
+                                <RadialCooldown
+                                    max={$currentDeleteCooldown}
+                                    remaining={deleteCooldownRemaining}
+                                >
+                                    <Delete
+                                        class={cx({
+                                            "stroke-[1.5] w-full h-full": true,
+                                            "opacity-30":
+                                                $menuTabGroup !=
+                                                TabGroup.Delete,
+                                        })}
+                                    ></Delete>
+                                </RadialCooldown>
+                            </button>
+                        </li>
+                    </ul>
+                </fieldset>
 
                 <div
-                    class="absolute flex justify-around w-24 h-full gap-3 p-2.5 md:p-2 tab-mini-icons"
-                    data-minimised={+$menuMinimized}
+                    class="w-full h-full overflow-hidden rounded-lg buttons menu-panel"
                 >
-                    <RadialCooldown
-                        max={$currentPlaceCooldown}
-                        remaining={placeCooldownRemaining}
-                    >
-                        <Build class="w-full h-full stroke-[1.5]" />
-                    </RadialCooldown>
-                    <RadialCooldown
-                        max={$currentDeleteCooldown}
-                        remaining={deleteCooldownRemaining}
-                    >
-                        <Delete class="w-full h-full stroke-[1.5]" />
-                    </RadialCooldown>
-                </div>
-            </fieldset>
-
-            <fieldset
-                class="w-full h-full overflow-hidden flex-center menu-panel side-menu"
-                disabled={$menuMinimized}
-                data-guide={GUIDE_ELEM_IDS.placeMenuModes}
-            >
-                <ul
-                    class="absolute flex flex-col items-center w-full h-full gap-6 px-2 md:px-1.5 py-2 justify-evenly"
-                >
-                    <li class="w-full flex-center grow-0 shrink-0">
-                        <button
-                            class="w-full cursor-pointer"
-                            on:click={() => {
-                                $menuTabGroup = TabGroup.Build;
-                            }}
-                            aria-label="Build Tab"
-                        >
-                            <RadialCooldown
-                                max={$currentPlaceCooldown}
-                                remaining={placeCooldownRemaining}
-                            >
-                                <Build
-                                    class={cx({
-                                        "stroke-[1.5] w-full h-full": true,
-                                        "opacity-30":
-                                            $menuTabGroup != TabGroup.Build,
-                                    })}
-                                ></Build>
-                            </RadialCooldown>
-                        </button>
-                    </li>
-                    <li
-                        class="w-full flex-center grow-0 shrink-0"
-                        id="edit-mode"
-                    >
-                        <button
-                            class="w-full cursor-pointer"
-                            on:click={() => {
-                                $menuTabGroup = TabGroup.Edit;
-                            }}
-                            aria-label="Edit Tab"
-                            data-guide={GUIDE_ELEM_IDS.placeMenuEditButton}
-                        >
-                            <Edit
-                                class={cx({
-                                    "stroke-[1.5] w-full h-full": true,
-                                    "opacity-30":
-                                        $menuTabGroup != TabGroup.Edit,
-                                })}
-                            ></Edit>
-                        </button>
-                    </li>
-                    <li
-                        class="w-full flex-center grow-0 shrink-0"
-                        id="delete-mode"
-                    >
-                        <button
-                            class="w-full cursor-pointer"
-                            on:click={() => {
-                                $menuTabGroup = TabGroup.Delete;
-                            }}
-                            aria-label="Delete Tab"
-                            data-guide={GUIDE_ELEM_IDS.placeMenuDeleteButton}
-                        >
-                            <RadialCooldown
-                                max={$currentDeleteCooldown}
-                                remaining={deleteCooldownRemaining}
-                            >
-                                <Delete
-                                    class={cx({
-                                        "stroke-[1.5] w-full h-full": true,
-                                        "opacity-30":
-                                            $menuTabGroup != TabGroup.Delete,
-                                    })}
-                                ></Delete>
-                            </RadialCooldown>
-                        </button>
-                    </li>
-                </ul>
-            </fieldset>
-
-            <div
-                class="w-full h-full overflow-hidden rounded-lg buttons menu-panel"
-            >
-                <!-- 
+                    <!-- 
                     the reason we dont use ifs statements to toggle the tabs is that it causes lag when switching back to the 
                     object tab as it has to add all the elements back to the dom
                     its more efficient to just set them to not be visible
                 -->
-                <ObjectsTab bind:state></ObjectsTab>
-                <!-- EDIT TAB TRANSFORM + LAYERS -->
-                {#if $menuTabGroup == TabGroup.Edit}
-                    {#if $menuEditTab == EditTab.Transform}
-                        <TransformTab bind:state></TransformTab>
-                    {:else if $menuEditTab == EditTab.Layers}
-                        <LayersTab></LayersTab>
-                    {:else if $menuEditTab == EditTab.Colors}
-                        {#if $menuSelectedObject == SFX_TRIGGER}
-                            <SFXSongTab tabType="sfx"></SFXSongTab>
-                        {:else if $menuSelectedObject == SONG_TRIGGER}
-                            <SFXSongTab tabType="song"></SFXSongTab>
-                        {:else}
-                            <ColorsTab bind:state />
+                    <ObjectsTab bind:state></ObjectsTab>
+                    <!-- EDIT TAB TRANSFORM + LAYERS -->
+                    {#if $menuTabGroup == TabGroup.Edit}
+                        {#if $menuEditTab == EditTab.Transform}
+                            <TransformTab bind:state></TransformTab>
+                        {:else if $menuEditTab == EditTab.Layers}
+                            <LayersTab></LayersTab>
+                        {:else if $menuEditTab == EditTab.Colors}
+                            {#if $menuSelectedObject == SFX_TRIGGER}
+                                <SFXSongTab tabType="sfx"></SFXSongTab>
+                            {:else if $menuSelectedObject == SONG_TRIGGER}
+                                <SFXSongTab tabType="song"></SFXSongTab>
+                            {:else}
+                                <ColorsTab bind:state />
+                            {/if}
                         {/if}
                     {/if}
-                {/if}
 
-                {#if $menuTabGroup == TabGroup.Delete}
-                    <DeleteTab {state} />
-                {/if}
+                    {#if $menuTabGroup == TabGroup.Delete}
+                        <DeleteTab {state} />
+                    {/if}
+                </div>
             </div>
         </div>
         {#if $canPlaceEditDelete}

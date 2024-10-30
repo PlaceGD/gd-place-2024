@@ -18,7 +18,7 @@
         />
         <meta content="https://place.gd" property="og:url" />
         <!-- <meta content="https://cdn.discordapp.com/attachments/771474198836674594/1042833291327316028/IMG_1746.png" property="og:image" /> -->
-        <meta content="#fc3fe9" data-react-helmet="true" name="theme-color" />
+        <meta content="#000000" data-react-helmet="true" name="theme-color" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
 
@@ -34,6 +34,8 @@
         %sveltekit.head%
     </head>
     <body data-sveltekit-preload-data="hover">
-        <div style="display: contents">%sveltekit.body%</div>
+        <div style="display: contents; touch-action: none">
+            %sveltekit.body%
+        </div>
     </body>
 </html>

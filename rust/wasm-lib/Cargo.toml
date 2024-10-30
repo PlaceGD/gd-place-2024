@@ -21,6 +21,7 @@ web-sys = { version = "0.3.69", features = [
     "Element",
     "HtmlCanvasElement",
     "Window",
+    "OffscreenCanvas",
 ] }
 wgpu = { version = "0.20.1", features = ["webgl"] }
 

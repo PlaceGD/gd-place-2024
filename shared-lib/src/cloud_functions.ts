@@ -78,11 +78,11 @@ export const FIREBASE_ERRORS = {
     },
     [208]: {
         code: 208,
-        message: "Cannot place before event starts",
+        message: "Cannot place at current time",
     },
     [209]: {
         code: 209,
-        message: "Cannot delete before event starts",
+        message: "Cannot delete at current time",
     },
     [210]: {
         code: 210,
@@ -90,7 +90,7 @@ export const FIREBASE_ERRORS = {
     },
     [211]: {
         code: 211,
-        message: "Cannot change letter before event ended",
+        message: "Cannot change letter at current time",
     },
     // 300 - already exists
     [300]: {

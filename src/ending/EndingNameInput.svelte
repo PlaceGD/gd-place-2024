@@ -1,28 +1,64 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
     import Input from "../components/Input.svelte";
-    import { TOTAL_ENDING_INPUTS, VALID_LEVEL_NAME } from "shared-lib/ending";
+    import {
+        CHARACTER_COOLDOWN_SECONDS,
+        TOTAL_ENDING_INPUTS,
+        VALID_LEVEL_NAME,
+    } from "shared-lib/ending";
     import { setLevelNameLetter } from "../firebase/cloud_functions";
+    import { onDestroy, onMount } from "svelte";
+    import { db } from "../firebase/firebase";
+    import type { Unsubscribe } from "firebase/database";
+    import { SyncedCooldown } from "../utils/cooldown";
+    import { loginData } from "../stores";
+
+    const characterCooldown = SyncedCooldown.new(
+        `userDetails/${$loginData.currentUserData!.user.uid}/lastCharacterTimestamp`,
+        CHARACTER_COOLDOWN_SECONDS
+    );
+    let {
+        display: characterCooldownDisplay,
+        finished: characterCooldownFinished,
+    } = characterCooldown;
+
+    let letters: (HTMLInputElement | null)[] =
+        Array(TOTAL_ENDING_INPUTS).fill(null);
+
+    let unsub: Unsubscribe | null;
+    onMount(async () => {
+        unsub = db.ref("/levelName/inputs").on("value", v => {});
+    });
+
+    onDestroy(() => {
+        unsub?.();
+    });
 </script>
 
 <div
     transition:fade
-    class="absolute z-50 flex content-center justify-center w-full h-full pointer-events-none ending-grid"
+    class="absolute z-50 flex flex-col w-full h-full gap-4 pointer-events-none flex-center"
     style={`--count: ${TOTAL_ENDING_INPUTS}`}
 >
-    {#each Array(TOTAL_ENDING_INPUTS) as _, i}
-        <Input
-            maxLength={1}
-            class="w-auto h-full pointer-events-auto character-input text-stroke"
-            hardValidInput={VALID_LEVEL_NAME}
-            on:change={e => {
-                setLevelNameLetter({
-                    index: i,
-                    letter: e.detail,
-                });
-            }}
-        />
-    {/each}
+    <div class="content-center justify-center ending-grid">
+        {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
+            <Input
+                maxLength={1}
+                class="w-auto pointer-events-auto h- character-input text-stroke"
+                hardValidInput={VALID_LEVEL_NAME}
+                on:change={e => {
+                    setLevelNameLetter({
+                        index: i,
+                        letter: e.detail,
+                    });
+                }}
+                disabled={!$characterCooldownFinished}
+            />
+        {/each}
+    </div>
+    <div class="p-4 text-5xl text-white bg-black rounded-sm">
+        {$characterCooldownDisplay}
+    </div>
 </div>
 
 <style lang="postcss">

@@ -16,7 +16,7 @@
 </script>
 
 <span
-    class="relative"
+    class="relative flex flex-col flex-center"
     style={`
         font-family: inherit;
         font-weight: inherit;

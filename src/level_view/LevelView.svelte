@@ -15,10 +15,21 @@
     export let canvasWidth: number;
     export let canvasHeight: number;
 
+    let offscreenCanvas: OffscreenCanvas | null = null;
+    // $: offscreenCanvas = canvas?.transferControlToOffscreen();
+
     onMount(async () => {
+        offscreenCanvas = canvas?.transferControlToOffscreen();
+
+        if (canvas == null || offscreenCanvas == null) {
+            Toast.showErrorToast(
+                "There was an error creating the canvas. Please report this!"
+            );
+        }
+
         try {
             state = await wasm.create_view(
-                canvas,
+                offscreenCanvas,
                 $rawSpritesheetData!.data,
                 $rawSpritesheetData!.width,
                 $rawSpritesheetData!.height
@@ -52,7 +63,7 @@
     requestAnimationFrame(draw);
 
     $: {
-        if (state != null && canvas != null) {
+        if (state != null && offscreenCanvas != null && canvas != null) {
             let [w, h] = [canvasWidth, canvasHeight];
             if (w % 2 != 0) {
                 w += 1;
@@ -66,11 +77,16 @@
             const dprWidth = Math.floor(w * scale);
             const dprHeight = Math.floor(h * scale);
 
+            // state.resize(w, h);
             state.resize(dprWidth, dprHeight);
             canvas.style.width = `${w}px`;
             canvas.style.height = `${h}px`;
-            canvas.width = dprWidth;
-            canvas.height = dprHeight;
+            // canvas.width = dprWidth;
+            // canvas.height = dprHeight;
+            // canvas.width = w;
+            // canvas.height = h;
+            offscreenCanvas.width = dprWidth;
+            offscreenCanvas.height = dprHeight;
         }
     }
 </script>

@@ -383,7 +383,7 @@ impl RenderState {
     }
 
     pub async fn new_canvas(
-        canvas: web_sys::HtmlCanvasElement,
+        canvas: web_sys::OffscreenCanvas,
         spritesheet_data: &[u8],
         spritesheet_width: u32,
         spritesheet_height: u32,
@@ -396,7 +396,7 @@ impl RenderState {
         });
 
         let surface = instance
-            .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
+            .create_surface(wgpu::SurfaceTarget::OffscreenCanvas(canvas))
             .unwrap();
 
         Self::new(

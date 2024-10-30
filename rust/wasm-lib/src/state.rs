@@ -511,7 +511,7 @@ impl State {
         self.event_end = to;
     }
 
-    fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
+    fn render_inner(&mut self, delta: f32, end_anim_time: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
         let output_view = output
             .texture
@@ -540,7 +540,13 @@ impl State {
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
-                time: self.time,
+                time: if end_anim_time < 0.0 {
+                    self.time
+                } else {
+                    -end_anim_time as f32
+                },
+                // end_anim_time,
+                // padding: [0.0; 2],
             }]),
         );
 
@@ -694,10 +700,10 @@ impl State {
             } = self.ending_anim_info.unwrap();
 
             let zoomout_d = ease_out_sine((end_anim_time / 30.0).clamp(0.0, 1.0));
-            self.zoom = map!(zoomout_d, 0.0, 1.0, initial_zoom, -5.0);
+            self.zoom = map!(zoomout_d, 0.0, 1.0, initial_zoom, -2.0);
             // console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
 
-            let margin = 50.0 * 30.0;
+            let margin = 40.0 * 30.0;
             let cam_move_d = ease_in_out_quart((end_anim_time / 10.0).clamp(0.0, 1.0));
             let lerped_x = if initial_camera_pos.x < margin {
                 map!(cam_move_d, 0.0, 1.0, initial_camera_pos.x, margin)
@@ -731,16 +737,28 @@ impl State {
 
             let color_d = 1.0 - (end_anim_time - 3.0 / 7.0).clamp(0.0, 1.0);
 
-            self.bg_color = (
-                (initial_bg_color.0 as f32 * color_d) as u8,
-                (initial_bg_color.1 as f32 * color_d) as u8,
-                (initial_bg_color.2 as f32 * color_d) as u8,
+            // self.bg_color = (
+            //     (initial_bg_color.0 as f32 * color_d) as u8,
+            //     (initial_bg_color.1 as f32 * color_d) as u8,
+            //     (initial_bg_color.2 as f32 * color_d) as u8,
+            // );
+
+            self.ground1_color = (
+                (initial_ground1_color.0 as f32 * color_d) as u8,
+                (initial_ground1_color.1 as f32 * color_d) as u8,
+                (initial_ground1_color.2 as f32 * color_d) as u8,
+            );
+
+            self.ground2_color = (
+                (initial_ground2_color.0 as f32 * color_d) as u8,
+                (initial_ground2_color.1 as f32 * color_d) as u8,
+                (initial_ground2_color.2 as f32 * color_d) as u8,
             );
         } else {
             self.ending_anim_info = None;
         }
 
-        self.render_inner(delta).unwrap();
+        self.render_inner(delta, end_anim_time).unwrap();
 
         // (
         //     self.camera_pos,

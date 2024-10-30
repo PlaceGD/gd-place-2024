@@ -203,11 +203,10 @@ parse_countdown_files! {
     "xeno"              ("xenoteric"):          [3 => weights(4,   3,   2,   5  ) pretty], // 58
     "logi"              ("logiking"):           [0 => weights(4,   3,   3,   3  ) pretty], // 59
     "aeonair"           ("AeonAir"):            [0 => weights(4,   2,   2,   5  ) silly classic famous], // 60
-    // "serp2"             ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 61
-    // "serp_test"         ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 62
+    "breadking"         ("Breadking"):          [3 => weights(2,   2,   2,   3  )], // 61
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([59, 60, 58, 57]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([59, 60, 58, 61]);
 
 #[binrw]
 #[brw(little)]

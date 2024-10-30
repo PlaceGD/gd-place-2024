@@ -6,4 +6,7 @@ pub struct Globals {
     pub camera_pos: [f32; 2],
     pub zoom_scale: f32,
     pub time: f32,
+    // pub end_anim_time: f32,
+
+    // pub padding: [f32; 2],
 }

@@ -19,6 +19,8 @@ struct Globals {
     camera_pos: vec2<f32>,
     zoom_scale: f32,
     time: f32,
+    // end_anim_time: f32,
+    // padding: array<f32, 2>,
 };
 
 

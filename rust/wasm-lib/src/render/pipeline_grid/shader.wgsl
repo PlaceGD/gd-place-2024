@@ -22,6 +22,8 @@ struct Globals {
     camera_pos: vec2<f32>,
     zoom_scale: f32,
     time: f32,
+    // end_anim_time: f32,
+    // padding: array<f32, 2>,
 };
 
 
@@ -84,6 +86,10 @@ fn draw_grid(
     return false;
 }
 
+fn ease_out_expo(t: f32) -> f32 {
+    return 1.0 - pow(2.0, -10.0 * t);
+}
+
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let fade = map(log2(globals.zoom_scale) * 12.0, -8.0, 24.0, 0.0, 1.0);
@@ -93,8 +99,17 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     // if length(pos) < 10.0 {
     //     return vec4<f32>(0.0, 1.0, 0.0, 1.0);
     // }
+    var anim_val = 0.0;
+    if globals.time < 0.0 {
+        let explosion_time = 10.0;
+        let end_anim_time = -globals.time;
+        let dist_from_center = length(pos - globals.camera_pos);
+        let delay = dist_from_center * 0.001;
+        let explosion_d =
+            ease_out_expo(min(max(((end_anim_time - explosion_time - delay) / 3.0),0.0),1.0));
 
-
+        anim_val += explosion_d;
+    }
 
     if is_within_rect(pos, vec2(0.0), LEVEL_SIZE_VEC, 2.0 / globals.zoom_scale) {
         if draw_grid(pos, LEVEL_SIZE_VEC, 4.0 / globals.zoom_scale) {
@@ -104,10 +119,11 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
     if is_within_rect(pos, vec2(0.0), LEVEL_SIZE_VEC, 0.5 / globals.zoom_scale) {
         if draw_grid(pos, vec2(30.0, 30.0), 1.0 / globals.zoom_scale) {
-            return vec4<f32>(0.0, 0.0, 0.0, fade);
+            return vec4<f32>(0.0, 0.0, 0.0, fade + anim_val);
         }
     }
 
 
-    return vec4<f32>(0.0);
+
+    return vec4<f32>(0.0, 0.0, 0.0, anim_val);
 }

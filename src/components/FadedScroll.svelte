@@ -67,9 +67,6 @@
     }
     touch-action: none;`}
     use:overflowElem
-    on:touchmove={e => {
-        e.stopPropagation();
-    }}
 >
     <slot />
 </div>

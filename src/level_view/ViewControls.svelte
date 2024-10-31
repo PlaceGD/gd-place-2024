@@ -112,6 +112,17 @@
     export let canvas: HTMLCanvasElement;
     export let isFocused: boolean = false;
 
+    const GESTURE_TARGET_ID: string = "gesture-target";
+    const isGestureTarget = <T,>(
+        e: Event & {
+            currentTarget: EventTarget & T;
+        }
+    ) => {
+        return (
+            (e.currentTarget as unknown as HTMLElement).id === GESTURE_TARGET_ID
+        );
+    };
+
     let dragging: null | {
         prevMouseX: number;
         prevMouseY: number;
@@ -254,6 +265,10 @@
 
     let selectDepth = 0;
     const trySelectAt = (mx: number, my: number, hit: wasm.HitObjectInfo[]) => {
+        if (!$eventStarted) {
+            return;
+        }
+
         if (hit.length == 0) {
             $selectedObject = null;
             state.deselect_object();
@@ -323,8 +338,8 @@
                     break;
                 }
                 case SFX_TRIGGER: {
-                    let rand =
-                        Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
+                    // let rand =
+                    //     Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
 
                     playSound({
                         url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[i.obj.main_color.r]],
@@ -337,8 +352,8 @@
                     break;
                 }
                 case SONG_TRIGGER: {
-                    let rand =
-                        Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
+                    // let rand =
+                    //     Math.sin(Math.sin(audio_hit_idx * 6.97) * 6.97) / 2 + 1;
 
                     stopSound("preview song");
                     playSound({
@@ -673,6 +688,10 @@
         panzooming = null;
     }}
     on:pointermove={e => {
+        if (dragging == null && !isGestureTarget(e)) {
+            return;
+        }
+
         const isTouch = e.pointerType == "touch";
         if (!isTouch) {
             setMousePos(e);
@@ -686,6 +705,10 @@
         }
     }}
     on:touchmove={e => {
+        if (!isGestureTarget(e)) {
+            return;
+        }
+
         const touches = makeTouchList(e.touches);
 
         handlePanzoom(touches);
@@ -745,7 +768,7 @@
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <div
         class="absolute w-full h-full touch-none"
-        id="gesture-target"
+        id={GESTURE_TARGET_ID}
         tabindex="0"
         on:focus={() => (isFocused = true)}
         on:blur={() => (isFocused = false)}

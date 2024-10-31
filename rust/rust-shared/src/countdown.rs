@@ -207,7 +207,7 @@ parse_countdown_files! {
     "neige"             ("Neigefeu"):           [0 => weights(3,   3,   3,   3  ) classic pretty], // 62
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = Some([56, 19, 1, 62]);
+pub const TEST_SETS: Option<[usize; 4]> = None;
 
 #[binrw]
 #[brw(little)]

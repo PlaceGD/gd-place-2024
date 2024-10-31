@@ -588,7 +588,7 @@ impl State {
             //if self.event_elapsed < 0.0 {
             let old_t = billy.get_transform();
             billy.apply_transform(self.view_transform());
-            self.countdown.update_state(self.event_start);
+            self.countdown.update_state(self.event_start, self.now);
             self.countdown.draw(self, &mut billy);
             billy.set_transform(old_t);
             //}

@@ -16,7 +16,7 @@ use crate::{
     utilgen::{OBJECT_INFO, SET_SWITCHES},
 };
 
-use super::{billy::Billy, draw_level, draw_obj_simple};
+use super::{billy::Billy, draw_level};
 
 pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
     let bytes = include_bytes!("../../countdown_digits");
@@ -53,8 +53,8 @@ impl Countdown {
             bg_state: [false; 3],
         }
     }
-    pub fn update_state(&mut self, event_start: f64) {
-        let event_elapsed = now() - event_start / 1000.0;
+    pub fn update_state(&mut self, event_start: f64, now: f64) {
+        let event_elapsed = now - event_start / 1000.0;
         let time_until = -event_elapsed;
 
         if time_until.is_nan() || time_until.is_infinite() {
@@ -221,7 +221,7 @@ impl Countdown {
             .chain(self.hours_marker.iter())
             .chain(self.minutes_marker.iter())
             .for_each(|o| {
-                o.get().inspect(|o| {
+                o.get(state.now).inspect(|o| {
                     add_object(o.offset(offset - vec2(450.0, 450.0 + 30.0 * 14.0)));
                     // level.add_object(*o, idx);
                     // idx += 1;
@@ -237,7 +237,7 @@ impl Countdown {
             // digit.draw(billy);
 
             for obj in &digit.objects {
-                obj.get().inspect(|o| {
+                obj.get(state.now).inspect(|o| {
                     // level.add_object(o.offset(offset), idx);
                     // idx += 1;
                     add_object(o.offset(offset));
@@ -292,35 +292,6 @@ fn get_alpha(o: GDObject) -> f32 {
     opacity
 }
 
-fn draw_obj(obj: &GDObject, billy: &mut Billy) {
-    // main
-    draw_obj_simple(
-        billy,
-        &obj,
-        false,
-        vec4(
-            obj.main_color.r as f32 / 255.0,
-            obj.main_color.g as f32 / 255.0,
-            obj.main_color.b as f32 / 255.0,
-            obj.main_color.opacity as f32 / 255.0,
-        ),
-        obj.main_color.blending,
-    );
-    // detail
-    draw_obj_simple(
-        billy,
-        &obj,
-        true,
-        vec4(
-            obj.detail_color.r as f32 / 255.0,
-            obj.detail_color.g as f32 / 255.0,
-            obj.detail_color.b as f32 / 255.0,
-            obj.detail_color.opacity as f32 / 255.0,
-        ),
-        obj.detail_color.blending,
-    );
-}
-
 struct CountdownDigit {
     objects: Vec<TransitioningObject>,
 }
@@ -337,11 +308,11 @@ impl CountdownDigit {
         empty
     }
 
-    fn draw(&self, billy: &mut Billy) {
-        for obj in &self.objects {
-            obj.get().inspect(|o| draw_obj(o, billy));
-        }
-    }
+    // fn draw(&self, billy: &mut Billy) {
+    //     for obj in &self.objects {
+    //         obj.get(state.now).inspect(|o| draw_obj(o, billy));
+    //     }
+    // }
 
     fn get_set(set: usize, digit: u8) -> &'static [GDObject] {
         &COUNTDOWN_DIGITS.0[set].0[(digit as usize) % 10].objs
@@ -697,8 +668,8 @@ struct TransitioningObject {
 }
 
 impl TransitioningObject {
-    fn get(&self) -> Option<GDObject> {
-        let time = now();
+    fn get(&self, now: f64) -> Option<GDObject> {
+        let time = now;
         let d = (time - self.start_time) / self.duration;
 
         fn lerp_color(c1: GDColor, c2: GDColor, d: f64) -> GDColor {

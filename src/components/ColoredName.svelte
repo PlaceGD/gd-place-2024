@@ -16,14 +16,14 @@
 </script>
 
 <span
-    class="relative"
+    class="grid grid-cols-1 grid-rows-1"
     style={`
         font-family: inherit;
         font-weight: inherit;
     `}
 >
     <span
-        class="absolute text-stroke fix-stroke h-full"
+        class="block h-full col-start-1 row-start-1 text-stroke fix-stroke"
         style={`
                 font-family: inherit;
                 font-weight: inherit;
@@ -34,7 +34,7 @@
     </span>
     {#await getOrOverride(username, colorOverride)}
         <span
-            class="relative h-full"
+            class="block h-full col-start-1 row-start-1"
             style={`
                 font-family: inherit;
                 font-weight: inherit;
@@ -44,7 +44,7 @@
         </span>
     {:then color}
         <span
-            class="relative h-full"
+            class="block h-full col-start-1 row-start-1"
             style={`
                 font-family: inherit;
                 font-weight: inherit;

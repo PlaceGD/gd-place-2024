@@ -82,7 +82,7 @@
 <DataPopup />
 
 <div
-    class="relative w-screen page overflow-hidden"
+    class="relative w-screen overflow-hidden page"
     bind:offsetWidth={viewSize[0]}
     bind:offsetHeight={viewSize[1]}
 >

@@ -31,76 +31,65 @@
             />
         </h1>
     {/if}
-    <button
-        class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
-        on:click={() => {
-            $openMenu = null;
-
-            if ($loginData.currentUserData?.userDetails != null) {
+    <div class="relative flex flex-col">
+        <button
+            class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
+            on:click={() => {
                 $openMenu = null;
 
-                handleSignOut();
-            } else {
-                $openMenu = ExclusiveMenus.Login;
-            }
-        }}
-    >
-        <Image
-            src={$loginData.currentUserData?.userDetails != null
-                ? profileOutUrl
-                : profileInUrl}
-            class="object-contain aspect-square"
-        ></Image>
-    </button>
+                if ($loginData.currentUserData?.userDetails != null) {
+                    $openMenu = null;
 
-    {#if $loginData.currentUserData?.userDetails == null && !$hasLoggedInBefore}
-        <div
-            class="absolute top-0 z-20 flex-col flex-center hover-anim opacity-70"
+                    handleSignOut();
+                } else {
+                    $openMenu = ExclusiveMenus.Login;
+                }
+            }}
         >
-            <Image src={upArrowUrl} class="w-12 h-12"></Image>
-            <h1
-                class="top-0 text-2xl font-bold text-center text-white pointer-events-none sm:text-xl xs:text-lg"
-                style="text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);"
+            <Image
+                src={$loginData.currentUserData?.userDetails != null
+                    ? profileOutUrl
+                    : profileInUrl}
+                class="object-contain aspect-square"
+            ></Image>
+        </button>
+
+        {#if $loginData.currentUserData?.userDetails == null && !$hasLoggedInBefore}
+            <div
+                class="absolute bottom-0 z-20 flex flex-col left-1/2 flex-center opacity-70 hover-anim"
             >
-                Sign up now!
-            </h1>
-        </div>
-    {/if}
+                <Image
+                    src={upArrowUrl}
+                    class="w-10 h-10"
+                    style="filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.7))"
+                />
+                <h1
+                    class="text-2xl font-bold text-center text-white pointer-events-none sm:text-xl xs:text-lg"
+                    style="text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);"
+                >
+                    Sign&nbsp;up now!
+                </h1>
+            </div>
+        {/if}
+    </div>
 </div>
 
 <style lang="postcss">
     @keyframes hover-anim {
         0% {
-            transform: translateY(5rem);
+            transform: translate(-50%, 100%);
         }
         50% {
-            transform: translateY(5.5rem);
+            transform: translate(-50%, 110%);
         }
         100% {
-            transform: translateY(5rem);
+            transform: translate(-50%, 100%);
         }
     }
 
     /* change this if theres a nicer way to do it */
-    @keyframes hover-anim-small {
-        0% {
-            transform: translateY(4rem);
-        }
-        50% {
-            transform: translateY(4.3rem);
-        }
-        100% {
-            transform: translateY(4rem);
-        }
-    }
-
+    /* i have :DD */
     .hover-anim {
         animation: hover-anim 2.5s infinite ease-in-out;
-    }
-
-    @media (max-width: 750px) {
-        .hover-anim {
-            animation: hover-anim-small 2.5s infinite ease-in-out;
-        }
     }
 </style>

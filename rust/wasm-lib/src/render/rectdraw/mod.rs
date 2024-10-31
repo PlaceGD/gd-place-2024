@@ -285,6 +285,7 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                                             //             .map(|v| v as f32 / 255.0),
                                             //     )
                                             // };
+
                                             draw_level_obj_sprite(
                                                 state, billy, sprite, obj, color, *key,
                                             );

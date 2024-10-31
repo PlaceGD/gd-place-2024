@@ -154,7 +154,7 @@ parse_countdown_files! {
     "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 9
     "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 10
     "bianox"            ("Bianox"):             [3 => weights(2,   2,   2,   6  ) classic], // 11
-    "sirhadoken"        ("SirHadoken"):         [3 => weights(3,   3,   3,   3) classic], // 12
+    "sirhadoken"        ("SirHadoken"):         [3 => weights(3,   3,   3,   3  ) classic], // 12
     "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 13
     "kingtony"          ("KINGTONY"):           [3 => weights(2,   2,   3,   3  )], // 14
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 15
@@ -204,9 +204,10 @@ parse_countdown_files! {
     "logi"              ("logiking"):           [0 => weights(4,   3,   3,   3  ) pretty], // 59
     "aeonair"           ("AeonAir"):            [0 => weights(4,   2,   2,   5  ) silly classic famous], // 60
     "breadking"         ("Breadking"):          [3 => weights(2,   2,   2,   3  )], // 61
+    "neige"             ("Neigefeu"):           [0 => weights(3,   3,   3,   3  ) classic pretty], // 62
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = Some([56, 19, 1, 60]);
+pub const TEST_SETS: Option<[usize; 4]> = Some([56, 19, 1, 62]);
 
 #[binrw]
 #[brw(little)]

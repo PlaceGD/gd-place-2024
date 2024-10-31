@@ -339,7 +339,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
         return;
     }
 
-    let sprites = [3827, 3825, 3828, 1886];
+    let sprites = [3827, 3825, 3828, 1886, 1886, 1765, 3969];
     let choice = sprites[(random_num(key, 11) * sprites.len() as f32) as usize];
 
     let spritescale: f32 = match choice {
@@ -347,6 +347,17 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
         3825 => 1.0,
         3828 => 0.5,
         1886 => 3.0,
+        3969 => 0.2,
+        1766 => 0.5,
+        1765 => 0.3,
+        _ => 1.0,
+    };
+
+    let trans_spritescale: f32 = match choice {
+        3827 => 0.5,
+        3825 => 0.5,
+        3828 => 0.5,
+        1886 => 0.2,
         _ => 1.0,
     };
 
@@ -361,9 +372,9 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
 
     let fall_anim_opacity = (-((fall_anim - 0.5).powf(2.0)) + 0.25) * 4.0;
 
-    let fall_anim_start_d =
-        ((end_anim_time - explosion_time - delay - 3.0 - random_num(key, 14) * 2.0) / 5.0)
-            .clamp(0.0, 1.0);
+    let fall_anim_start_d = ((end_anim_time - explosion_time - delay - random_num(key, 14) * 2.0)
+        / 5.0)
+        .clamp(0.0, 1.0);
 
     billy.translate(pos + fall_anim_pos * fall_anim_start_d - vec2(obj.x, obj.y));
     //billy.scale(vec2(z_scaleup, z_scaleup));
@@ -376,10 +387,10 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
 
     billy.apply_transform(obj.transform());
-    let reveal = ((end_anim_time - explosion_time - delay + 0.5) / 2.0).clamp(0.0, 1.0);
+    let reveal = ((end_anim_time - explosion_time - delay) / 3.5).clamp(0.0, 1.0);
     billy.scale(vec2(
-        reveal * 3.0 * spritescale.powf(reveal),
-        reveal * 3.0 * spritescale.powf(reveal),
+        reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
+        reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
     ));
     billy.rotate(angle_offset);
 
@@ -399,8 +410,12 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
         .map(|v| v as f32 / 255.0),
     );
 
-    color.w *= (0.7 * random_num(key, 10).powf(2.0) * fall_anim_opacity / spritescale.powf(reveal))
-        .clamp(0.0, 1.0);
+    color.w *= ((0.7f32).powf(reveal)
+        * random_num(key, 10).powf(2.0 * reveal)
+        * fall_anim_opacity.powf(fall_anim_start_d)
+        / spritescale.powf(reveal)
+        / trans_spritescale.powf(1.0 - reveal))
+    .clamp(0.0, 1.0);
 
     let sprite = MAIN_SPRITES[choice].unwrap();
 

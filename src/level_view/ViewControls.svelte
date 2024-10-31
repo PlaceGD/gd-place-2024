@@ -118,9 +118,7 @@
             currentTarget: EventTarget & T;
         }
     ) => {
-        return (
-            (e.currentTarget as unknown as HTMLElement).id === GESTURE_TARGET_ID
-        );
+        return (e.target as unknown as HTMLElement).id === GESTURE_TARGET_ID;
     };
 
     let dragging: null | {

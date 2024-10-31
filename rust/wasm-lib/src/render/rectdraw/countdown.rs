@@ -7,7 +7,7 @@ use rust_shared::{
     countdown::{CountdownDigitSets, DigitObjects, TEST_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
-    util::random,
+    util::{now, random},
 };
 
 use crate::{
@@ -24,9 +24,6 @@ pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
     CountdownDigitSets::read(&mut Cursor::new(bytes)).unwrap()
 });
 
-fn now() -> f64 {
-    rust_shared::util::now() / 1000.0
-}
 pub struct Countdown {
     pub digits: [CountdownDigit; 8],
     pub state: [Option<u8>; 8],
@@ -54,7 +51,7 @@ impl Countdown {
         }
     }
     pub fn update_state(&mut self, event_start: f64, now: f64) {
-        let event_elapsed = now - event_start / 1000.0;
+        let event_elapsed = now / 1000.0 - event_start / 1000.0;
         let time_until = -event_elapsed;
 
         if time_until.is_nan() || time_until.is_infinite() {
@@ -669,7 +666,7 @@ struct TransitioningObject {
 
 impl TransitioningObject {
     fn get(&self, now: f64) -> Option<GDObject> {
-        let time = now;
+        let time = now / 1000.0;
         let d = (time - self.start_time) / self.duration;
 
         fn lerp_color(c1: GDColor, c2: GDColor, d: f64) -> GDColor {
@@ -768,7 +765,7 @@ impl TransitioningObject {
     }
 
     fn new(typ: AnimType, duration: f64, y_delay: bool, mut delay: f32) -> TransitioningObject {
-        let time = now();
+        let time = now() / 1000.0;
         if y_delay {
             delay += typ.output_obj().y / 300.0 * 0.25
         }

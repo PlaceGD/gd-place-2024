@@ -17,8 +17,8 @@
     import { playSound, transferSoundChannel } from "../utils/audio";
     import { SyncedCooldown } from "../utils/cooldown";
     import * as wasm from "wasm-lib";
-    import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.ogg?url";
-    import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.ogg?url";
+    import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.mp3?url";
+    import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.mp3?url";
     import { default as cx } from "classnames";
     import Loading from "../components/Loading.svelte";
     import { scale } from "svelte/transition";

@@ -1,14 +1,14 @@
 import { extractFilenames } from "../../utils/misc";
 
 export const SFX_SOUNDS = extractFilenames<string>(
-    import.meta.glob("../assets/sfx_tab/sfx/*.ogg", {
+    import.meta.glob("../assets/sfx_tab/sfx/*.mp3", {
         eager: true,
         query: "?url",
         import: "default",
     })
 );
 export const SONG_SOUNDS = extractFilenames<string>(
-    import.meta.glob("../assets/song_tab/songs/*.ogg", {
+    import.meta.glob("../assets/song_tab/songs/*.mp3", {
         eager: true,
         query: "?url",
         import: "default",

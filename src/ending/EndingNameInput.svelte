@@ -86,7 +86,7 @@
         <div class="content-center justify-center ending-grid">
             {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
                 <div
-                    class="relative flex w-auto h-full character-input text-stroke backdrop-blur-sm flex-center"
+                    class="relative flex w-auto h-full character-input flex-center"
                     transition:fade|global={{
                         delay: titleText.length * 100 + 1000 + i * 125,
                         duration: 200,
@@ -94,13 +94,13 @@
                     }}
                 >
                     <span
-                        class="absolute flex w-full h-full text-center flex-center font-pusab text-stroke"
+                        class="absolute z-20 flex w-full h-full text-center pointer-events-none font-pusab text-stroke flex-center"
                     >
                         {letters[i]}
                     </span>
 
                     <input
-                        class="absolute w-full h-full text-transparent bg-transparent pointer-events-auto select-none outline-2 outline-transparent focus:outline-red caret-transparent"
+                        class="character-input-input"
                         on:keydown={async e => {
                             if (!$characterCooldownFinished) return;
                             let key = null;
@@ -130,15 +130,7 @@
         </div>
         <div
             class="p-4 text-5xl text-white rounded-sm"
-            transition:fade|global={{
-                delay:
-                    titleText.length * 100 +
-                    1000 +
-                    TOTAL_ENDING_INPUTS * 125 +
-                    300,
-                duration: 200,
-                easing: cubicInOut,
-            }}
+            style:visibility={$characterCooldownFinished ? "hidden" : "visible"}
         >
             {$characterCooldownDisplay}
         </div>
@@ -164,7 +156,15 @@
             0px 0px 0px var(--box-shadow-thickness) #989696,
             /* 0px 0px 0px calc(var(--box-shadow-thickness) * 2) #363535, */ 0px
                 0px 70px 0px #ffffff28;
+    }
+
+    .character-input-input {
+        @apply pointer-events-auto absolute z-10 h-full w-full cursor-pointer select-none text-transparent caret-transparent backdrop-blur-sm;
         background: linear-gradient(0deg, #18181833 0%, #03030333 100%);
+    }
+
+    .character-input-input:hover {
+        background: linear-gradient(0deg, #181818 0%, #03030333 100%);
     }
 
     @media only screen and (max-width: 2045px) {

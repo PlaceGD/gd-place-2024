@@ -108,6 +108,7 @@ impl Countdown {
                     self.sets[i / 2],
                     sets[i / 2],
                     delay,
+                    now,
                 );
                 self.state[i] = state[i];
             } else {
@@ -126,6 +127,7 @@ impl Countdown {
                         self.sets[i / 2],
                         self.sets[i / 2],
                         delay,
+                        now,
                     );
                     self.state[i] = state[i];
                     //self.sets[i / 2] = new_set;
@@ -150,6 +152,7 @@ impl Countdown {
                             0.8,
                             false,
                             delay,
+                            now,
                         )
                         .offset(0.2)
                     })
@@ -169,6 +172,7 @@ impl Countdown {
                             0.8,
                             false,
                             delay,
+                            now,
                         )
                     })
                     .collect()
@@ -299,9 +303,9 @@ impl CountdownDigit {
             objects: Vec::new(),
         }
     }
-    fn from_set(set: usize, digit: u8) -> Self {
+    fn from_set(set: usize, digit: u8, now: f64) -> Self {
         let mut empty = Self::new();
-        empty.set_to(set, digit, 0.5);
+        empty.set_to(set, digit, 0.5, now);
         empty
     }
 
@@ -315,11 +319,17 @@ impl CountdownDigit {
         &COUNTDOWN_DIGITS.0[set].0[(digit as usize) % 10].objs
     }
 
-    fn set_to(&mut self, set: usize, digit: u8, duration: f64) {
+    fn set_to(&mut self, set: usize, digit: u8, duration: f64, now: f64) {
         self.objects = Self::get_set(set, digit)
             .iter()
             .map(|o| {
-                TransitioningObject::new(AnimType::Appear(*o, vec2(0.0, 0.0)), duration, true, 0.0)
+                TransitioningObject::new(
+                    AnimType::Appear(*o, vec2(0.0, 0.0)),
+                    duration,
+                    true,
+                    0.0,
+                    now,
+                )
             })
             .collect();
     }
@@ -335,6 +345,7 @@ impl CountdownDigit {
         set1: usize,
         set2: usize,
         delay: f32,
+        now: f64,
     ) {
         self.objects.clear(); // so it dont reallocate :)
 
@@ -369,6 +380,7 @@ impl CountdownDigit {
                         0.8,
                         false,
                         delay,
+                        now,
                     ));
                     break;
                 }
@@ -423,6 +435,7 @@ impl CountdownDigit {
                         0.8,
                         false,
                         delay,
+                        now,
                     ));
                     break;
                 }
@@ -450,6 +463,7 @@ impl CountdownDigit {
                         0.7,
                         false,
                         delay,
+                        now,
                     ));
                     break;
                 }
@@ -474,6 +488,7 @@ impl CountdownDigit {
                         0.7,
                         false,
                         delay,
+                        now,
                     ));
                     break;
                 }
@@ -481,7 +496,7 @@ impl CountdownDigit {
         }
 
         self.objects.extend(trans_out.iter().filter_map(|o| {
-            o.1.then(|| TransitioningObject::new(AnimType::Disappear(o.0), 0.8, true, delay))
+            o.1.then(|| TransitioningObject::new(AnimType::Disappear(o.0), 0.8, true, delay, now))
         }));
 
         self.objects.extend(trans_in.iter().filter_map(|o| {
@@ -491,6 +506,7 @@ impl CountdownDigit {
                     0.8,
                     true,
                     delay,
+                    now,
                 )
             })
         }));
@@ -764,8 +780,14 @@ impl TransitioningObject {
         }
     }
 
-    fn new(typ: AnimType, duration: f64, y_delay: bool, mut delay: f32) -> TransitioningObject {
-        let time = now() / 1000.0;
+    fn new(
+        typ: AnimType,
+        duration: f64,
+        y_delay: bool,
+        mut delay: f32,
+        now: f64,
+    ) -> TransitioningObject {
+        let time = now / 1000.0;
         if y_delay {
             delay += typ.output_obj().y / 300.0 * 0.25
         }

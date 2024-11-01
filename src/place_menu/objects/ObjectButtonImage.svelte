@@ -2,13 +2,16 @@
     import { objects, spritesheet } from "shared-lib/gd";
     import Image from "../../components/Image.svelte";
     import { Spritesheet } from "../../utils/spritesheet/spritesheet";
+    import { getFixedSize } from "../../utils/spritesheet/util";
 
     export let id: number;
 
-    let maxDimension = Math.max(
-        ...(spritesheet.main_sprites[id]?.size ?? [2, 2]),
-        ...(spritesheet.detail_sprites[id]?.size ?? [2, 2])
+    let [fWidth, fHeight] = getFixedSize(
+        spritesheet.main_sprites[id],
+        spritesheet.detail_sprites[id]
     );
+
+    let maxDimension = Math.max(fWidth, fHeight);
     let scale = maxDimension >= 120 ? 1 : maxDimension / 120;
 
     let src: string | null = null;

@@ -3,6 +3,7 @@ import { spritesheet, type SpriteData } from "shared-lib/gd";
 import { clamp } from "shared-lib/util";
 import type { Message, SpritesheetData } from "./spritesheet";
 import { PlaceDB } from "../indexdb";
+import { getFixedSize } from "./util";
 
 // const spriteCache = indexedDB.open("spriteCache");
 
@@ -111,21 +112,11 @@ const loadSprite = async (
     let mSprite = spritesheet.main_sprites[id] as SpriteData | null;
     let dSprite = spritesheet.detail_sprites[id] as SpriteData | null;
 
+    let [destWidth, destHeight] = getFixedSize(mSprite, dSprite);
+
     const dest = new PNG({
-        width:
-            Math.max(
-                (mSprite == null ? 0 : mSprite.size[0]) +
-                    Math.abs(mSprite == null ? 0 : mSprite.offset[0]) * 2,
-                (dSprite == null ? 0 : dSprite.size[0]) +
-                    Math.abs(dSprite == null ? 0 : dSprite.offset[0]) * 2
-            ) + 2,
-        height:
-            Math.max(
-                (mSprite == null ? 0 : mSprite.size[1]) +
-                    Math.abs(mSprite == null ? 0 : mSprite.offset[1]) * 2,
-                (dSprite == null ? 0 : dSprite.size[1]) +
-                    Math.abs(dSprite == null ? 0 : dSprite.offset[1]) * 2
-            ) + 2,
+        width: destWidth,
+        height: destHeight,
     });
 
     if (mSprite != null) {

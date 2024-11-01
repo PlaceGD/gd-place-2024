@@ -711,31 +711,31 @@ impl State {
             self.zoom = map!(zoomout_d, 0.0, 1.0, initial_zoom, -2.0);
             // console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
 
-            let margin = 40.0 * 30.0;
+            let margin = vec2(40.0, 40.0) * 30.0;
             let cam_move_d = ease_in_out_quart((end_anim_time / 10.0).clamp(0.0, 1.0));
-            let lerped_x = if initial_camera_pos.x < margin {
-                map!(cam_move_d, 0.0, 1.0, initial_camera_pos.x, margin)
-            } else if initial_camera_pos.x > LEVEL_WIDTH_UNITS as f32 - margin {
+            let lerped_x = if initial_camera_pos.x < margin.x {
+                map!(cam_move_d, 0.0, 1.0, initial_camera_pos.x, margin.x)
+            } else if initial_camera_pos.x > LEVEL_WIDTH_UNITS as f32 - margin.x {
                 map!(
                     cam_move_d,
                     0.0,
                     1.0,
                     initial_camera_pos.x,
-                    LEVEL_WIDTH_UNITS as f32 - margin
+                    LEVEL_WIDTH_UNITS as f32 - margin.x
                 )
             } else {
                 initial_camera_pos.x
             };
 
-            let lerped_y = if initial_camera_pos.y < margin {
-                map!(cam_move_d, 0.0, 1.0, initial_camera_pos.y, margin)
-            } else if initial_camera_pos.y > LEVEL_HEIGHT_UNITS as f32 - margin {
+            let lerped_y = if initial_camera_pos.y < margin.y {
+                map!(cam_move_d, 0.0, 1.0, initial_camera_pos.y, margin.y)
+            } else if initial_camera_pos.y > LEVEL_HEIGHT_UNITS as f32 - margin.y {
                 map!(
                     cam_move_d,
                     0.0,
                     1.0,
                     initial_camera_pos.y,
-                    LEVEL_HEIGHT_UNITS as f32 - margin
+                    LEVEL_HEIGHT_UNITS as f32 - margin.y
                 )
             } else {
                 initial_camera_pos.y

@@ -6,7 +6,8 @@
     import { DEBUG, stats } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
     // import Widget from "../widgets/Widget.svelte";
-    import { rawSpritesheetData } from "../stores";
+    import { editorSettings, rawSpritesheetData } from "../stores";
+    import { handleSub } from "./view_controls";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -79,19 +80,36 @@
 
             // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
             const scale = window.devicePixelRatio;
+            1 / 3;
             const dprWidth = Math.floor(w * scale);
             const dprHeight = Math.floor(h * scale);
 
+            // high = window.dpr
+            // low = 1
+
+            // high = 1
+            // med = 1/window.dpr / 2
+            // low = 1/window.dpr
+
+            const quality = {
+                high: 1,
+                medium: 0.6,
+                low: 0.35,
+            }[$editorSettings.quality];
+
             // state.resize(w, h);
             state.resize(dprWidth, dprHeight);
+            state.set_quality(quality);
             canvas.style.width = `${w}px`;
             canvas.style.height = `${h}px`;
             // canvas.width = dprWidth;
             // canvas.height = dprHeight;
             // canvas.width = w;
             // canvas.height = h;
-            offscreenCanvas.width = dprWidth;
-            offscreenCanvas.height = dprHeight;
+            offscreenCanvas.width = dprWidth * quality;
+            offscreenCanvas.height = dprHeight * quality;
+
+            handleSub(state);
         }
     }
 </script>

@@ -221,6 +221,10 @@ export type MetaOperation =
           type: "clear_announcement";
       }
     | {
+          type: "to_username";
+          uid: string;
+      }
+    | {
           type: "log_donation";
           uid: string;
       };

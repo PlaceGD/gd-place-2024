@@ -77,6 +77,10 @@ export const alertHasDarkReader = () => {
 };
 
 export const isMobile = (): boolean => {
+    if (typeof window != "undefined") {
+        return false;
+    }
+
     try {
         document.createEvent("TouchEvent");
         return true;

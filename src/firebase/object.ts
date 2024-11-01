@@ -19,7 +19,6 @@ export const addObject = (
             cb(v.data);
         })
         .catch(e => {
-            console.log(e);
             if (e.details.code === 600) {
                 Toast.showInfoToast(
                     "There are too many objects in this chunk! Try deleting a few!"

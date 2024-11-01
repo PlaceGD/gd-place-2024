@@ -15,7 +15,9 @@
                 toast.pop(toastId);
             }
             beginGuide();
-            localStorage.setItem("dontShowGuidePopup", true);
-        }}>Click here for a guide!</WhiteButton
+            localStorage.setItem("dontShowGuidePopup", "true");
+        }}
+        ><span class="text-base xs:text-sm">Click here for a guide!</span
+        ></WhiteButton
     >
 </div>

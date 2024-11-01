@@ -21,6 +21,7 @@ import {
     GROUND_2_TRIGGER,
     GROUND_TRIGGER,
 } from "shared-lib/nexusgen";
+import { isMobile } from "./utils/document";
 
 export enum TabGroup {
     Build,
@@ -106,15 +107,25 @@ export const editorData = persistLocalWritable(
 
 export const canPlacePreview = writable(true);
 
-export const editorSettings = persistLocalWritable(
+export const editorSettings = persistLocalWritable<{
+    showCollidable: boolean;
+    hideTriggers: boolean;
+    hideGrid: boolean;
+    hideGround: boolean;
+    hideOutline: boolean;
+    showDeleteTextI: boolean;
+    showPlacedTextI: boolean;
+    quality: "low" | "medium" | "high";
+}>(
     {
         showCollidable: false,
         hideTriggers: false,
         hideGrid: false,
         hideGround: false,
         hideOutline: false,
-        showDeleteText: true,
-        showPlacedText: true,
+        showDeleteTextI: true,
+        showPlacedTextI: true,
+        quality: isMobile() ? "low" : "high",
     },
     "editorSettings"
 );

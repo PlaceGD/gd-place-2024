@@ -66,6 +66,9 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
         case "clear_announcement":
             db.ref("announcement").remove();
             break;
+        case "to_username":
+            (await db.ref(`userDetails/${data.uid}/username`).get()).val();
+            break;
         case "log_donation":
             db.ref(`userDetails/${data.op.uid}/hasDonated`).set(true);
             break;

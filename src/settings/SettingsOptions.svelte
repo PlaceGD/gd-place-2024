@@ -1,6 +1,7 @@
 <script lang="ts">
     import { default as cx } from "classnames";
     import FadedScroll from "../components/FadedScroll.svelte";
+    import Radio from "../components/Radio.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
     import {
         editorSettings,
@@ -14,6 +15,7 @@
     import { onMount } from "svelte";
     import { GUIDE_ELEM_IDS } from "../guide/guide";
     import GuidePopup from "../guide/GuidePopup.svelte";
+    import { fade } from "svelte/transition";
 
     $: isOpen = $openMenu == ExclusiveMenus.Settings;
 
@@ -28,7 +30,7 @@
     });
 
     const settings: {
-        bind: keyof typeof $editorSettings;
+        bind: Exclude<keyof typeof $editorSettings, "quality">;
         name: string;
         guide?: string;
     }[] = [
@@ -61,12 +63,12 @@
         {
             name: "Show who Deleted an Object",
             // description: "Hide the text that appears when an object is deleted",
-            bind: "showDeleteText",
+            bind: "showDeleteTextI",
         },
         {
             name: "Show who Placed an Object",
             // description: "Hide the text that appears when an object is deleted",
-            bind: "showPlacedText",
+            bind: "showPlacedTextI",
         },
     ];
 
@@ -81,7 +83,7 @@
         transition:menuHeight={{ duration: 200 }}
         style={`max-height: ${settings.length * 70 + 140 + 70}px;`}
         on:introend={() => (transitionVal = 1)}
-        on:outrostart={() => (transitionVal = 0)}
+        on:outroend={() => (transitionVal = 0)}
     >
         <div
             class="grid-rows-[minmax(0,_1fr)_min-content] grid gap-2 px-2 py-1 divide-y divide-white/10 w-full h-full overflow-hidden thin-scrollbar"
@@ -122,6 +124,59 @@
                     {/each}
                 </ul>
             </FadedScroll>
+
+            <div
+                class="grid grid-cols-[min-content_1fr] gap-2 p-2 pb-0 flex-center"
+            >
+                <div class="flex flex-col justify-center">
+                    <p class="whitespace-nowrap xs:whitespace-normal">
+                        Canvas Resolution
+                    </p>
+                </div>
+                <div
+                    class="flex gap-6 justify-self-center xs:gap-4 flex-center w-min"
+                >
+                    <label
+                        for="low-quality"
+                        class="flex flex-col gap-2 cursor-pointer flex-center"
+                    >
+                        <Radio
+                            id="low-quality"
+                            name="quality"
+                            on:click={() => ($editorSettings.quality = "low")}
+                            checked={$editorSettings.quality === "low"}
+                        />
+                        <span class="text-sm text-center">Low</span>
+                    </label>
+                    <label
+                        for="medium-quality"
+                        class="flex flex-col gap-2 cursor-pointer flex-center"
+                    >
+                        <Radio
+                            id="medium-quality"
+                            name="quality"
+                            on:click={() =>
+                                ($editorSettings.quality = "medium")}
+                            checked={$editorSettings.quality === "medium"}
+                        />
+                        <span class="text-sm text-center">Medium</span>
+                    </label>
+                    <label
+                        for="high-quality"
+                        class="flex flex-col gap-2 cursor-pointer flex-center"
+                    >
+                        <Radio
+                            id="high-quality"
+                            name="quality"
+                            on:click={() => ($editorSettings.quality = "high")}
+                            checked={($editorSettings.quality ?? "high") ===
+                                "high"}
+                        />
+                        <span class="text-sm text-center">High</span>
+                    </label>
+                </div>
+            </div>
+
             {#if $eventStarted && $loginData?.currentUserData?.userDetails != null}
                 <div class="p-2 pb-0">
                     <GuidePopup></GuidePopup>
@@ -186,4 +241,13 @@
             </div>
         </div>
     </fieldset>
+{:else if transitionVal == 0}
+    <span
+        class="text-white z-50 font-bold mr-4 opacity-40 xs:opacity-60 text-sm xs:text-xs text-right"
+        in:fade={{ duration: 500 }}
+    >
+        {#each [$editorSettings.showCollidable ? "showing only collidable objects" : null, $editorSettings.hideTriggers ? "hiding triggers" : null].filter(v => v != null) as t}
+            <span>⚙️ {t}</span><br />
+        {/each}
+    </span>
 {/if}

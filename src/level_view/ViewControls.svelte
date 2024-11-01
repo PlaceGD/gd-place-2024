@@ -828,13 +828,13 @@
                 {/if}
             </LevelWidget>
         {/if}
-        {#if $editorSettings.showDeleteText}
+        {#if $editorSettings.showDeleteTextI}
             <DeleteTexts {state} />
         {/if}
 
         <TriggerRuns {state} />
 
-        {#if $placedByHover != null && $editorSettings.showPlacedText}
+        {#if $placedByHover != null && $editorSettings.showPlacedTextI}
             <LevelWidget
                 {state}
                 x={$placedByHover.x}

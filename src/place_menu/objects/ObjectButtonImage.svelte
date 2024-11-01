@@ -11,7 +11,10 @@
         spritesheet.detail_sprites[id]
     );
 
-    let maxDimension = Math.max(fWidth, fHeight);
+    let maxDimension = Math.max(
+        fWidth * objects[id].builtinScaleX,
+        fHeight * objects[id].builtinScaleY
+    );
     let scale = maxDimension >= 120 ? 1 : maxDimension / 120;
 
     let src: string | null = null;

@@ -29,12 +29,25 @@
     };
 
     const meta = (data: MetaReq["op"]) => {
-        setMeta({ op: data }).catch(e => {
-            console.error("meta failed", e.message);
-            Toast.showErrorToast(
-                `Failed meta operation ${data.type} (${e.details.code})`
-            );
-        });
+        if (
+            confirm(
+                `You are about to update "${data.type.replace("_", " ")}"! Are you sure?`
+            ) &&
+            confirm(`Are you 100% sure please read this`) &&
+            confirm(
+                `You will change "${data.type.replace("_", " ")}"!!! Please check with all of us`
+            ) &&
+            confirm(
+                `Are you super fucking sure you want to change "${data.type.replace("_", " ")}"`
+            )
+        ) {
+            setMeta({ op: data }).catch(e => {
+                console.error("meta failed", e.message);
+                Toast.showErrorToast(
+                    `Failed meta operation ${data.type} (${e.details.code})`
+                );
+            });
+        }
     };
 </script>
 
@@ -301,13 +314,11 @@
                         class="w-full"
                         on:click={async () => {
                             const username =
-                                (
-                                    await db
-                                        .ref(
-                                            `userDetails/${inputValues.usernameOrID}/username`
-                                        )
-                                        .get()
-                                ).val() ?? "<unknown>";
+                                meta({
+                                    type: "to_username",
+                                    uid: inputValues.usernameOrID,
+                                }) ?? "<unknown>";
+
                             inputValues.usernameOrID = username;
                             inputValues.unbanUsername = username;
                             inputValues.modChangeUsername = username;

@@ -13,6 +13,8 @@
     import { SyncedCooldown } from "../utils/cooldown";
     import { loginData } from "../stores";
     import { cubicInOut } from "svelte/easing";
+    import { isGuideActive } from "../guide/guide";
+    import { toast } from "@zerodevx/svelte-toast";
 
     const characterCooldown = SyncedCooldown.new(
         `userDetails/${$loginData.currentUserData!.user.uid}/lastCharacterTimestamp`,
@@ -27,6 +29,10 @@
 
     let unsub: Unsubscribe | null;
     onMount(async () => {
+        $isGuideActive = false;
+        toast.pop();
+        toast.pop({ target: "announcement " });
+
         unsub = db.ref("/levelName/inputs").on("value", v => {
             Object.entries(v.val()).forEach(([key, value]) => {
                 let index = parseInt(key);
@@ -49,10 +55,17 @@
 
     const titleText = "ENTER LEVEL NAME:";
     let lettersVisible = 0;
+
+    let inputsDisabled = false;
+
+    $: {
+        let _ = $characterCooldownFinished;
+        inputsDisabled = false;
+    }
 </script>
 
 <div
-    class="absolute z-50 flex flex-col w-full h-full pointer-events-none flex-center gap-32"
+    class="absolute z-50 flex flex-col w-full h-full pointer-events-none flex-center gap-32 ending-container"
     style={`--count: ${TOTAL_ENDING_INPUTS}`}
 >
     <h1
@@ -78,8 +91,8 @@
                     </span>
 
                     <input
-                        class="w-full h-full absolute pointer-events-auto bg-transparent outline-2 outline-transparent focus:outline-red caret-transparent text-transparent"
-                        on:keydown={e => {
+                        class="w-full h-full absolute pointer-events-auto bg-transparent outline-2 outline-transparent focus:outline-red caret-transparent text-transparent select-none"
+                        on:keydown={async e => {
                             if (!$characterCooldownFinished) return;
                             let key = null;
                             if (e.key === "Backspace") {
@@ -93,13 +106,15 @@
                             if (key != null) {
                                 letters[i] = key;
 
+                                inputsDisabled = true;
+
                                 setLevelNameLetter({
                                     index: i,
                                     letter: key,
                                 });
                             }
                         }}
-                        disabled={!$characterCooldownFinished}
+                        disabled={!$characterCooldownFinished || inputsDisabled}
                     />
                 </div>
             {/each}
@@ -190,5 +205,32 @@
             0 0 24px #397d7d,
             0 0 4px #2d5959,
             0 0 40px #264646;
+    }
+
+    .ending-container::before {
+        --size: 45px;
+        --line: #ffffff33;
+        content: "";
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        background:
+            linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size))
+                50% 50% / var(--size) var(--size),
+            linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50%
+                50% / var(--size) var(--size);
+        mask: linear-gradient(0deg, transparent 60%, white),
+            radial-gradient(
+                circle,
+                transparent 0%,
+                transparent 40%,
+                white 70%,
+                white
+            );
+        mask-composite: intersect;
+        top: 0;
+        transform-style: flat;
+        pointer-events: none;
+        z-index: -1;
     }
 </style>

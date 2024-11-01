@@ -99,7 +99,7 @@
     };
 
     $: if (
-        !localStorage.getItem("dontShowGuidePopup") &&
+        localStorage.getItem("dontShowGuidePopup") !== "true" &&
         $eventStarted &&
         !$eventEnded &&
         $loginData?.currentUserData?.userDetails != null

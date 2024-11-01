@@ -52,6 +52,7 @@ pub struct State {
 
     pub(crate) width: u32,
     pub(crate) height: u32,
+    pub(crate) quality: f32,
 
     pub(crate) camera_pos: Vec2,
     pub(crate) zoom: f32,
@@ -95,6 +96,7 @@ impl State {
             time: 0.0,
             width: 10,
             height: 10,
+            quality: 1.0,
             camera_pos: vec2(0.0, 0.0),
             zoom: 0.0,
             bg_color: (40, 125, 255),
@@ -257,9 +259,14 @@ impl State {
 #[wasm_bindgen]
 impl State {
     pub fn resize(&mut self, width: u32, height: u32) {
-        self.render.resize(width, height);
+        self.render.resize(width, height, self.quality);
 
         (self.width, self.height) = (width, height);
+    }
+    pub fn set_quality(&mut self, quality: f32) {
+        self.render.resize(self.width, self.height, quality);
+
+        self.quality = quality;
     }
 
     pub fn get_zoom_scale(&self) -> f32 {
@@ -536,7 +543,8 @@ impl State {
                     self.render.surface_config.width as f32,
                     self.render.surface_config.height as f32,
                 ],
-                onion_size: Vec2::ZERO.to_array(),
+                quality: self.quality,
+                _unused: 0.0,
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),

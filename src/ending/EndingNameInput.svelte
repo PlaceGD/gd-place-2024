@@ -29,12 +29,16 @@
 
     let unsub: Unsubscribe | null;
     onMount(async () => {
+        document
+            .getElementById("level-canvas")
+            ?.style.setProperty("--canvas-fade", `transparent 10%`);
+
         $isGuideActive = false;
         toast.pop();
-        toast.pop({ target: "announcement " });
+        toast.pop({ target: "announcement" });
 
         unsub = db.ref("/levelName/inputs").on("value", v => {
-            Object.entries(v.val()).forEach(([key, value]) => {
+            Object.entries(v?.val() ?? {}).forEach(([key, value]) => {
                 let index = parseInt(key);
                 letters[index] = value ?? " ";
             });
@@ -50,6 +54,10 @@
     });
 
     onDestroy(() => {
+        document
+            .getElementById("level-canvas")
+            ?.style.setProperty("--canvas-fade", `white`);
+
         unsub?.();
     });
 
@@ -65,19 +73,20 @@
 </script>
 
 <div
-    class="absolute z-50 flex flex-col w-full h-full pointer-events-none flex-center gap-32 ending-container"
+    class="absolute z-50 flex flex-col w-full h-full gap-32 pointer-events-none flex-center ending-container"
     style={`--count: ${TOTAL_ENDING_INPUTS}`}
 >
     <h1
-        class="font-exo text-7xl md:text-5xl sm:text-4xl xs:text-3xl text-white text-center enter-level-name-text"
+        class="text-center text-white font-exo text-7xl md:text-5xl sm:text-4xl xs:text-3xl enter-level-name-text"
     >
         {titleText.slice(0, lettersVisible)}
     </h1>
+
     <div class="flex flex-col gap-2 flex-center">
         <div class="content-center justify-center ending-grid">
             {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
                 <div
-                    class="relative w-auto h-full character-input text-stroke backdrop-blur-sm flex flex-center"
+                    class="relative flex w-auto h-full character-input text-stroke backdrop-blur-sm flex-center"
                     transition:fade|global={{
                         delay: titleText.length * 100 + 1000 + i * 125,
                         duration: 200,
@@ -85,13 +94,13 @@
                     }}
                 >
                     <span
-                        class="absolute w-full h-full flex flex-center text-center font-pusab text-stroke"
+                        class="absolute flex w-full h-full text-center flex-center font-pusab text-stroke"
                     >
                         {letters[i]}
                     </span>
 
                     <input
-                        class="w-full h-full absolute pointer-events-auto bg-transparent outline-2 outline-transparent focus:outline-red caret-transparent text-transparent select-none"
+                        class="absolute w-full h-full text-transparent bg-transparent pointer-events-auto select-none outline-2 outline-transparent focus:outline-red caret-transparent"
                         on:keydown={async e => {
                             if (!$characterCooldownFinished) return;
                             let key = null;
@@ -146,14 +155,15 @@
         grid-template-rows: var(--input-height);
     }
 
-    :global(.character-input) {
+    .character-input {
         --box-shadow-thickness: 3px;
 
         @apply text-center font-pusab text-7xl text-white !outline-none;
 
         box-shadow:
             0px 0px 0px var(--box-shadow-thickness) #989696,
-            0px 0px 0px calc(var(--box-shadow-thickness) * 2) #363535;
+            /* 0px 0px 0px calc(var(--box-shadow-thickness) * 2) #363535, */ 0px
+                0px 70px 0px #ffffff28;
         background: linear-gradient(0deg, #18181833 0%, #03030333 100%);
     }
 
@@ -180,7 +190,7 @@
             grid-template-rows: repeat(4, var(--input-height));
         }
 
-        :global(.character-input) {
+        .character-input {
             @apply text-5xl;
         }
     }
@@ -191,40 +201,39 @@
             @apply gap-2;
         }
 
-        :global(.character-input) {
+        .character-input {
             --box-shadow-thickness: 2px;
             @apply text-4xl;
         }
     }
 
+    :global(#level-canvas) {
+        mask: linear-gradient(0deg, var(--canvas-fade, white), white);
+    }
+
     .enter-level-name-text {
-        text-shadow:
-            0 0 2px #92ffe9,
-            0 0 8px #affbf1,
-            0 0 16px #63a7a7,
-            0 0 24px #397d7d,
-            0 0 4px #2d5959,
-            0 0 40px #264646;
+        text-shadow: 0px 0px 70px #ffffff69;
     }
 
     .ending-container::before {
+        filter: url(#filter);
         --size: 45px;
-        --line: #ffffff33;
+        --line: #ffffff1a;
         content: "";
         height: 100vh;
         width: 100vw;
         position: fixed;
         background:
-            linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size))
+            linear-gradient(90deg, var(--line) 2px, transparent 2px var(--size))
                 50% 50% / var(--size) var(--size),
-            linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50%
+            linear-gradient(var(--line) 2px, transparent 2px var(--size)) 50%
                 50% / var(--size) var(--size);
-        mask: linear-gradient(0deg, transparent 60%, white),
+        mask: linear-gradient(0deg, transparent 300px, white),
             radial-gradient(
                 circle,
                 transparent 0%,
-                transparent 40%,
-                white 70%,
+                transparent 300px,
+                white 480px,
                 white
             );
         mask-composite: intersect;

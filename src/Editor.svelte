@@ -65,9 +65,6 @@
     }
 </script>
 
-<!-- {#if $canPlaceEditDelete && showEndingNameInput}
-    <EndingNameInput />
-{/if} -->
 <div class="absolute w-full h-full">
     {#if state != null}
         <Guide {state} />
@@ -112,7 +109,7 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        {#if $eventEnded}
+        {#if $eventEnded && showEndingNameInput}
             <EndingNameInput />
         {/if}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />

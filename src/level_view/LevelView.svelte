@@ -119,6 +119,7 @@
     bind:offsetHeight={canvasHeight}
     bind:offsetWidth={canvasWidth}
     aria-label="Level Canvas"
+    id="level-canvas"
 >
     <canvas bind:this={canvas} />
 </div>

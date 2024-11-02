@@ -4,7 +4,6 @@
     import { getUsernameColor } from "../firebase/donations";
     import {
         currentUserColor,
-        eventStarted,
         ExclusiveMenus,
         hasLoggedInBefore,
         loginData,

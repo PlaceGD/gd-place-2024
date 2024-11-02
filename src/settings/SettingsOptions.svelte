@@ -5,7 +5,7 @@
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
     import {
         editorSettings,
-        eventStarted,
+        eventStatus,
         ExclusiveMenus,
         loginData,
         openMenu,
@@ -179,7 +179,7 @@
                 </ul>
             </FadedScroll>
 
-            {#if $eventStarted && $loginData?.currentUserData?.userDetails != null}
+            {#if $eventStatus == "during" && $loginData?.currentUserData?.userDetails != null}
                 <div class="p-2 pb-0">
                     <GuidePopup></GuidePopup>
                 </div>

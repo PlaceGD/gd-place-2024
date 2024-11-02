@@ -1,27 +1,38 @@
-import { derived, get, writable, type Writable } from "svelte/store";
+import { derived, writable, type Readable, type Writable } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor, State } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
 import {
-    createIndexedDBStorage,
     createLocalStorage,
     createNoopStorage,
     persist,
     type PersistentStore,
 } from "@macfja/svelte-persistent-store";
 import { colors, type ObjectCategory } from "shared-lib/gd";
-import { tweened, type TweenedOptions } from "svelte/motion";
+import { tweened } from "svelte/motion";
 import { linear } from "svelte/easing";
 import { db } from "./firebase/firebase";
 import type { RawSpritesheetData } from "./utils/spritesheet/spritesheet";
-import type { SmartReference } from "@smart-firebase/client";
-import { runTransaction } from "firebase/database";
 import {
     BG_TRIGGER,
     GROUND_2_TRIGGER,
     GROUND_TRIGGER,
 } from "shared-lib/nexusgen";
 import { isMobile } from "./utils/document";
+
+const STORAGE_VERSION = 1;
+
+if (typeof window != "undefined") {
+    if (
+        localStorage["STORAGE_VERSION"] == null ||
+        localStorage["STORAGE_VERSION"] != STORAGE_VERSION
+    ) {
+        localStorage.clear();
+        indexedDB.deleteDatabase("PlaceDB");
+
+        localStorage["STORAGE_VERSION"] = STORAGE_VERSION;
+    }
+}
 
 export enum TabGroup {
     Build,
@@ -43,6 +54,33 @@ const persistLocalWritable = <T>(v: T, key: string): PersistentStore<T> =>
 //     key: string,
 //     options: TweenedOptions<T>
 // ) => persist(tweened(v, options), createLocalStorage(), key);
+
+// MARK: User Stuff
+
+export const bannedUsers = writable<Record<string, boolean>>({});
+
+export const analytics = persistLocalWritable<boolean | null>(
+    null,
+    "analytics"
+);
+export const newReports = persistLocalWritable(false, "newReports");
+
+export const loginData = writable<{
+    currentUserData: UserData | null;
+}>({
+    currentUserData: null,
+});
+
+export const currentNameGradient = persistLocalWritable(
+    {
+        positions: null,
+        colors: null,
+        ids: null,
+    },
+    "nameGradient"
+);
+
+// MARK: Editor Stuff
 
 export const menuMinimized = persistLocalWritable(false, "menuMinimized");
 export const menuTabGroup = persistLocalWritable(
@@ -86,15 +124,14 @@ export const detailColorRGB = derived(
     c => colors.list[c.hue].palette[c.y][c.x]
 );
 
-export const menuOpenWidget = persistLocalWritable(
-    WidgetType.None,
-    "menuOpenWidget"
-);
-
-export const lastClosedAnnouncement = persistLocalWritable<number>(
-    0,
-    "lastClosedAnnouncement"
-);
+export const selectedObject = writable<{
+    id: number;
+    mainColor: GDColor;
+    detailColor: GDColor;
+    namePlaced: string | null;
+    zLayer: ZLayer;
+    zOrder: number;
+} | null>(null);
 
 export const editorData = persistLocalWritable(
     {
@@ -104,8 +141,6 @@ export const editorData = persistLocalWritable(
     },
     "editorData"
 );
-
-export const canPlacePreview = writable(true);
 
 export const editorSettings = persistLocalWritable<{
     showCollidable: boolean;
@@ -129,8 +164,18 @@ export const editorSettings = persistLocalWritable<{
     },
     "editorSettings"
 );
+export const canPlacePreview = writable(true);
+export const canPlaceEditDelete = derived(
+    [loginData],
+    ([l]) => l.currentUserData?.userDetails != null
+);
 
-export const bannedUsers = writable<Record<string, boolean>>({});
+// MARK: Menu Stuff
+
+export const menuOpenWidget = persistLocalWritable(
+    WidgetType.None,
+    "menuOpenWidget"
+);
 
 export enum ExclusiveMenus {
     Moderator,
@@ -141,78 +186,12 @@ export enum ExclusiveMenus {
 }
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 
-export const analytics = persistLocalWritable<boolean | null>(
-    null,
-    "analytics"
-);
-export const newReports = persistLocalWritable(false, "newReports");
-
-export const loginData = writable<{
-    currentUserData: UserData | null;
-}>({
-    currentUserData: null,
-});
-
-export const currentNameGradient = persistLocalWritable(
-    {
-        positions: null,
-        colors: null,
-        ids: null,
-    },
-    "nameGradient"
+export const lastClosedAnnouncement = persistLocalWritable<number>(
+    0,
+    "lastClosedAnnouncement"
 );
 
-export const canPlaceEditDelete = derived(
-    [loginData],
-    ([l]) => l.currentUserData?.userDetails != null
-);
-
-let deleteTextCounter = 0;
-export const deleteTexts = writable<
-    Record<
-        number,
-        {
-            name: string;
-            x: number;
-            y: number;
-        }
-    >
->({});
-export const addDeleteText = (name: string, x: number, y: number) => {
-    let id = deleteTextCounter++;
-
-    deleteTexts.update(v => {
-        v[id] = { name, x, y };
-
-        return v;
-    });
-
-    setTimeout(() => {
-        deleteTexts.update(v => {
-            delete v[id];
-            return v;
-        });
-    }, 1500);
-};
-
-export const selectedObject = writable<{
-    id: number;
-    mainColor: GDColor;
-    detailColor: GDColor;
-    namePlaced: string | null;
-    zLayer: ZLayer;
-    zOrder: number;
-} | null>(null);
-
-// export const colors = persist(
-//     writable({
-//         bg: { r: 40, g: 125, b: 255 },
-//         ground1: { r: 40, g: 125, b: 255 },
-//         ground2: { r: 127, g: 178, b: 255 },
-//     }),
-//     createLocalStorage(),
-//     "colors"
-// );
+// MARK: Color Stuff
 
 export const DEFAULT_BG_COLOR = { r: 4, g: 24, b: 46 };
 export const DEFAULT_GROUND_1_COLOR = { r: 5, g: 40, b: 77 };
@@ -431,6 +410,8 @@ loginData.subscribe(v => {
     }
 });
 
+// MARK: DOM editor indicator stuff
+
 let triggerRunCount = 0;
 export const triggerRuns = writable<
     Record<
@@ -464,48 +445,99 @@ export const placedByHover = writable<{
     y: number;
 } | null>(null);
 
+let deleteTextCounter = 0;
+export const deleteTexts = writable<
+    Record<
+        number,
+        {
+            name: string;
+            x: number;
+            y: number;
+        }
+    >
+>({});
+export const addDeleteText = (name: string, x: number, y: number) => {
+    let id = deleteTextCounter++;
+
+    deleteTexts.update(v => {
+        v[id] = { name, x, y };
+
+        return v;
+    });
+
+    setTimeout(() => {
+        deleteTexts.update(v => {
+            delete v[id];
+            return v;
+        });
+    }, 1500);
+};
+
+// MARK: spritesheet
+
 export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
 
-export const eventStartTime = writable(Number.POSITIVE_INFINITY);
-export const eventEndTime = writable(Number.POSITIVE_INFINITY);
+// MARK: Event Times
 
-export const eventElapsed = writable(Number.NEGATIVE_INFINITY);
-export const timeLeft = writable(Number.POSITIVE_INFINITY);
-
-export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
-
-export const eventElapsedContinuous = tweened(Number.NEGATIVE_INFINITY, {
-    duration: 1000,
-    easing: linear,
-});
-
-const funnyUpdate = () => {
-    let elapsed = Date.now() - get(eventStartTime);
-    eventElapsed.set(elapsed);
-    eventElapsedContinuous.set(elapsed);
-    timeLeft.set(get(eventEndTime) - Date.now());
-};
-eventStartTime.subscribe(() => funnyUpdate());
-eventEndTime.subscribe(() => funnyUpdate());
-
+export const nowStore = writable(0);
 setTimeout(
     () => {
         setInterval(() => {
-            funnyUpdate();
+            nowStore.set(Date.now());
         }, 1000);
     },
     1000 - (Date.now() % 1000)
 );
 
-export const eventStarted = derived(eventElapsed, v => v > 0);
-export const eventEnded = derived(timeLeft, v => v <= 0);
-
+export const eventStartTime = writable(Number.POSITIVE_INFINITY);
+export const eventEndTime = writable(Number.POSITIVE_INFINITY);
+export const setNameSeconds = writable(0);
 db.ref("metaVariables/eventStartTime").on("value", v => {
     eventStartTime.set(v.val());
 });
 db.ref("metaVariables/eventEndTime").on("value", v => {
     eventEndTime.set(v.val());
 });
+db.ref("metaVariables/setNameSeconds").on("value", v => {
+    setNameSeconds.set(v.val());
+});
+
+export const eventElapsed = derived(
+    [eventStartTime, nowStore],
+    ([start, now]) => (now - start) / 1000
+);
+export const timeLeft = derived(
+    [eventEndTime, nowStore],
+    ([end, now]) => (end - now) / 1000
+);
+
+export type EventStatus = "before" | "during" | "name set" | "fully done";
+export const eventStatus: Readable<EventStatus> = derived(
+    [nowStore, eventStartTime, eventEndTime, setNameSeconds],
+    ([now, start, end, name]): EventStatus => {
+        if (now < start) {
+            return "before";
+        }
+        if (now < end) {
+            return "during";
+        }
+        if (now < end + name * 1000) {
+            return "name set";
+        }
+        return "fully done";
+    }
+);
+eventStatus.subscribe(v => console.log("Status: ", v));
+
+export const eventElapsedContinuous = tweened(0, {
+    duration: 1000,
+    easing: linear,
+});
+eventElapsed.subscribe(v => eventElapsedContinuous.set(v));
+
+// MARK: Other Shit Idk Sputnix
+
+export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
 
 export const userCount = writable(0);
 

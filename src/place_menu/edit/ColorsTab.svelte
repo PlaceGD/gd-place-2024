@@ -3,7 +3,6 @@
     color tab goes over 14 each blocks so it has to be separated
 -->
 <script lang="ts">
-    import { default as cx } from "classnames";
     import RangeSlider from "svelte-range-slider-pips";
 
     import ToggleSwitch from "../../components/ToggleSwitch.svelte";
@@ -15,13 +14,11 @@
     import {
         menuDetailColor,
         menuMainColor,
-        menuMinimized,
         menuSelectedObject,
     } from "../../stores";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
 
     import * as wasm from "wasm-lib";
-    import { GUIDE_ELEM_IDS } from "../../guide/guide";
     export let state: wasm.State;
 
     enum ColorTab {
@@ -247,14 +244,5 @@
     }
     .buttons {
         grid-area: buttons;
-    }
-    .color-preview {
-        grid-area: color-preview;
-    }
-    .color-preview > * {
-        box-shadow:
-            10px -10px 0px 0px rgba(0, 0, 0, 0.2) inset,
-            0px 0px 0px 4px #000,
-            0px 0px 0px 6px #fff;
     }
 </style>

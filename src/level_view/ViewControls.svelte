@@ -48,14 +48,12 @@
         ground2Color,
         menuSelectedSFX,
         placedByHover,
-        eventElapsed,
         canPlaceEditDelete,
         menuSpeed,
         lastRunColorTrigger,
         setLevelColor,
         menuSelectedSong,
         songPlaying,
-        eventStarted,
         eventStartTime,
         canPlacePreview,
         setPreviewColor,
@@ -64,8 +62,8 @@
         chooseDefaultColor,
         songPlayingIsPreview,
         eventEndTime,
-        eventEnded,
         timeLeft,
+        eventStatus,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -193,7 +191,7 @@
     }, 50);
 
     const placePreview = (mx: number, my: number) => {
-        if (!$eventStarted) {
+        if ($eventStatus != "during") {
             return;
         }
 
@@ -263,7 +261,7 @@
 
     let selectDepth = 0;
     const trySelectAt = (mx: number, my: number, hit: wasm.HitObjectInfo[]) => {
-        if (!$eventStarted) {
+        if ($eventStatus != "during") {
             return;
         }
 
@@ -663,7 +661,7 @@
         state.set_event_end($eventEndTime);
     }
     $: {
-        if ($eventEnded) {
+        if ($eventStatus == "name set") {
             dragging = null;
             panzooming = null;
             state.set_preview_visibility(false);
@@ -762,7 +760,7 @@
     }}
 />
 
-{#if !$eventEnded}
+{#if $eventStatus == "before" || $eventStatus == "during"}
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <div
@@ -850,7 +848,7 @@
         <LevelWidget {state} x={-55} y={40} scale={0.15}>
             <ClosableWindow
                 name="playerStartHelp"
-                open={$eventStarted && !$eventEnded}
+                open={$eventStatus == "during"}
             >
                 <Image src={player_start_help} />
             </ClosableWindow>
@@ -858,7 +856,7 @@
         <LevelWidget {state} x={-90} y={200} scale={0.2}>
             <ClosableWindow
                 name="playerGoalHelp"
-                open={$eventStarted && !$eventEnded}
+                open={$eventStatus == "during"}
             >
                 <Image src={player_goal_help} />
             </ClosableWindow>

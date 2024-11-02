@@ -1,1 +1,1 @@
-export const LEVEL_NAME_DELAY = 26000;
+export const LEVEL_NAME_DELAY = 26;

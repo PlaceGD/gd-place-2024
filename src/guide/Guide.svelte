@@ -16,7 +16,7 @@
     import Check from "../icons/Check.svelte";
     import { get, type Unsubscriber } from "svelte/store";
     import { toast } from "@zerodevx/svelte-toast";
-    import { eventEnded, eventStarted, loginData } from "../stores";
+    import { eventStatus, loginData } from "../stores";
 
     export let state: wasm.State;
 
@@ -100,8 +100,7 @@
 
     $: if (
         localStorage.getItem("dontShowGuidePopup") !== "true" &&
-        $eventStarted &&
-        !$eventEnded &&
+        $eventStatus == "during" &&
         $loginData?.currentUserData?.userDetails != null
     ) {
         showGuidePopup();

@@ -85,14 +85,18 @@
         }
     }
 
-    import sound from "./assets/poop.mp3?url";
+    // setInterval(() => {
+    //     state?.set_stats(Math.floor(Math.random() * 9999999));
+    // }, 3000);
 
-    let bimba = new Howl({
-        src: [sound],
-        volume: 0.1,
-    });
+    // import sound from "./assets/poop.mp3?url";
 
-    bimba.play();
+    // let bimba = new Howl({
+    //     src: [sound],
+    //     volume: 0.1,
+    // });
+
+    // bimba.play();
     // setInterval(() => {
     //     bimba.stop();
     //     bimba.play();
@@ -149,7 +153,7 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        <EndingNameInput />
+        <!-- <EndingNameInput /> -->
         {#if showEndingNameInput}{/if}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}

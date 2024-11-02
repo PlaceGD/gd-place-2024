@@ -4,7 +4,7 @@ use binrw::BinRead;
 use glam::{vec2, vec4, Affine2, Vec2};
 use rust_shared::{
     console_log,
-    countdown::{CountdownDigitSets, DigitObjects, TEST_SETS},
+    countdown::{CountdownDigitSets, DigitObjects, DIGIT_SETS, TEST_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
     util::{now, random},
@@ -275,6 +275,86 @@ impl Countdown {
         //     digit.draw(billy);
         //     billy.translate(vec2(30.0 * 7.0, 0.0));
         // }
+    }
+}
+
+pub struct StatsDisplay {
+    pub digits: [CountdownDigit; STATS_NUM_DIGITS],
+    pub state: [Option<u8>; STATS_NUM_DIGITS],
+    pub sets: [usize; STATS_NUM_DIGITS],
+}
+
+const STATS_NUM_DIGITS: usize = 7;
+
+impl StatsDisplay {
+    pub fn new() -> Self {
+        let mut sets = [27287; STATS_NUM_DIGITS];
+        for i in 0..STATS_NUM_DIGITS {
+            let mut random_set = (random() * DIGIT_SETS as f64) as usize;
+            while sets.contains(&random_set) {
+                random_set = (random() * DIGIT_SETS as f64) as usize;
+            }
+            sets[i] = random_set;
+        }
+        Self {
+            digits: array::from_fn(|_| CountdownDigit::new()),
+            state: [None; STATS_NUM_DIGITS],
+            sets,
+        }
+    }
+
+    pub fn set_to(&mut self, num: Option<u32>, now: f64) {
+        let num_digits: [Option<u8>; STATS_NUM_DIGITS] = if let Some(num) = num {
+            array::from_fn(|i| {
+                let div = 10u32.pow(STATS_NUM_DIGITS as u32 - i as u32 - 1);
+                Some(((num / div) % 10) as u8)
+            })
+        } else {
+            [None; STATS_NUM_DIGITS]
+        };
+
+        for i in 0..STATS_NUM_DIGITS {
+            let delay = index_delay(i + (8 - STATS_NUM_DIGITS));
+            self.digits[i].transition_between(
+                self.state[i],
+                num_digits[i],
+                self.sets[i],
+                self.sets[i],
+                delay,
+                now,
+            );
+        }
+        self.state = num_digits;
+    }
+    pub fn draw(&self, state: &State, billy: &mut Billy) {
+        let mut level = Level::default();
+        let mut idx = 0usize;
+
+        // billy.scale(vec2(0.7, 0.7));
+
+        let mut add_object = |mut obj: GDObject| {
+            let info = OBJECT_INFO[obj.id as usize];
+            obj.ix /= info.builtin_scale_x;
+            obj.iy /= info.builtin_scale_x;
+            obj.jx /= info.builtin_scale_y;
+            obj.jy /= info.builtin_scale_y;
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }));
+            idx += 1;
+        };
+        let spacing = 30.0 * 7.5;
+        let mut offset = state.camera_pos + vec2(-spacing * (STATS_NUM_DIGITS / 2) as f32, -300.0);
+
+        for digit in self.digits.iter() {
+            for obj in &digit.objects {
+                obj.get(state.now).inspect(|o| {
+                    add_object(o.offset(offset));
+                });
+            }
+
+            offset += vec2(spacing, 0.0);
+        }
+
+        draw_level(state, billy, &level, |_, _, _| None, 0.0);
     }
 }
 

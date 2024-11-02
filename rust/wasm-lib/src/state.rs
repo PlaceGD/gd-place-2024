@@ -27,7 +27,7 @@ use crate::{
         data::Globals,
         rectdraw::{
             billy::{Billy, BlendMode},
-            countdown::Countdown,
+            countdown::{Countdown, StatsDisplay},
             level::draw as level_draw,
         },
         state::RenderState,
@@ -81,6 +81,7 @@ pub struct State {
     pub(crate) event_end: f64,
 
     pub(crate) countdown: Countdown,
+    pub(crate) stats_display: StatsDisplay,
 
     pub(crate) now: f64,
     // // (text, x, y, lifetime)
@@ -129,6 +130,7 @@ impl State {
             event_end: f64::INFINITY,
             render,
             countdown: Countdown::new(),
+            stats_display: StatsDisplay::new(),
             now: 0.0,
             ending_anim_info: None,
         }
@@ -518,6 +520,14 @@ impl State {
         self.event_end = to;
     }
 
+    pub fn set_stats(&mut self, num: u32) {
+        self.stats_display.set_to(Some(num), self.now);
+    }
+
+    pub fn hide_stats(&mut self) {
+        self.stats_display.set_to(None, self.now);
+    }
+
     fn render_inner(&mut self, delta: f32, end_anim_time: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
         let output_view = output
@@ -606,6 +616,13 @@ impl State {
             // these lines just commit the previous call
             billy.set_blend_mode(BlendMode::Additive);
             billy.set_blend_mode(BlendMode::Normal);
+
+            if self.now > self.event_end {
+                let old_t = billy.get_transform();
+                //billy.apply_transform(self.view_transform());
+                self.stats_display.draw(self, &mut billy);
+                billy.set_transform(old_t);
+            }
 
             let instance_buffer =
                 self.render

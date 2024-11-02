@@ -4,9 +4,11 @@ import { writable } from "svelte/store";
 export const toastPortals = writable<HTMLElement[]>([]);
 
 export const WASM_ERROR = `
-<strong>A fatal error occured in the WASM.</strong><br/>Please report this bug to the developers!
+<strong>A fatal error occured in the WASM. <span style="color:white;text-decoration:underline;cursor:pointer;pointer-events:all;" onclick='localStorage.removeItem("wasmVer");indexedDB.deleteDatabase("PlaceDB");window.location.reload();'>
+Click here to refresh it.</span></strong>
+<br/>
 <span style="color:white;text-decoration:underline;cursor:pointer;pointer-events:all;" onclick='navigator.clipboard.writeText(window.consoleErrors.join("\\n"));'>
-(click this text to copy the errors and include this in the report)
+<i>(click here to copy the error)</i>
 </span>`;
 
 export default class Toast {

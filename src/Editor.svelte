@@ -33,7 +33,6 @@
     import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
     import { LEVEL_NAME_DELAY } from "./ending/ending";
     import { scheduleFor } from "shared-lib/util";
-    import { Howl } from "howler";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -66,7 +65,7 @@
             const loopSound = () => {
                 playSound({
                     url: endingAmbientUrl,
-                    end_cb: () => {
+                    endCb: () => {
                         if (true) {
                             // change this to check if the enter level name thing is still running :3
                             loopSound();
@@ -84,25 +83,6 @@
             }, $eventEndTime + 11000);
         }
     }
-
-    import sound from "./assets/poop.mp3?url";
-
-    let bimba = new Howl({
-        src: [sound],
-        volume: 0.1,
-    });
-
-    bimba.play();
-    // setInterval(() => {
-    //     bimba.stop();
-    //     bimba.play();
-    // }, 200);
-
-    // $: console.log(
-    //     "vig ",
-    //     $eventElapsedContinuous -
-    //         ($eventEndTime / 1000 - $eventStartTime / 1000 + 29)
-    // );
 </script>
 
 <div class="absolute w-full h-full">
@@ -149,8 +129,9 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        <EndingNameInput />
-        {#if showEndingNameInput}{/if}
+        {#if showEndingNameInput}
+            <EndingNameInput />
+        {/if}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
     {#if state != null}

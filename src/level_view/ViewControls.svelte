@@ -229,7 +229,7 @@
             );
             playSound({
                 url: SFX_SOUNDS[SFX_TRIGGER_SOUNDS[$menuSelectedSFX]],
-                exclusive_channel: "preview sfx",
+                exclusiveChannel: "preview sfx",
                 speed: semitonesToFactor($menuSpeed),
             });
         }
@@ -241,9 +241,9 @@
             stopSound("song");
             playSound({
                 url: SONG_SOUNDS[SONG_TRIGGER_SONGS[$menuSelectedSong]],
-                exclusive_channel: "preview song",
+                exclusiveChannel: "preview song",
                 speed: semitonesToFactor($menuSpeed),
-                end_cb: () => {
+                endCb: () => {
                     songPlaying.set(false);
                 },
             });
@@ -358,7 +358,7 @@
                         ],
                         volume: 1.0 / Math.sqrt(audio_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
-                        exclusive_channel: "song", // because honestly 2 songs should never play on top of eachother
+                        exclusiveChannel: "song", // because honestly 2 songs should never play on top of eachother
                     });
                     songPlaying.set(true);
                     songPlayingIsPreview.set(false);

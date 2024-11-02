@@ -95,16 +95,12 @@
         0,
         1
     );
-    $: console.log(vignetteProgress);
 </script>
 
 <div class="contents" style={`--vignette-progress: ${vignetteProgress}`}>
-    <span
-        class="absolute z-[70] pointer-events-none size-full vignette-2"
-        style={``}
-    ></span>
-    <span class="absolute z-[60] pointer-events-none size-full vignette"></span>
-    <span class="absolute z-30 pointer-events-none size-full dagrid"></span>
+    <span class="absolute z-[70] pointer-events-none size-full vignette-2" />
+    <span class="absolute z-[60] pointer-events-none size-full vignette" />
+    <span class="absolute z-30 pointer-events-none size-full dagrid" />
 </div>
 
 <div
@@ -277,23 +273,48 @@
         text-shadow: 0px 0px 70px #ffffff69;
     }
 
+    @property --fade-pos {
+        syntax: "<number>";
+        initial-value: 0;
+        inherits: false;
+    }
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+            --fade-pos: 0;
+        }
+        100% {
+            opacity: 1;
+            --fade-pos: 300;
+        }
+    }
+
     .dagrid::before {
-        --size: 45px;
+        --grid-size: 45px;
         --line: #ffffff08;
         content: "";
         height: 100vh;
         width: 100vw;
         position: fixed;
         background:
-            linear-gradient(90deg, var(--line) 2px, transparent 2px var(--size))
-                50% 50% / var(--size) var(--size),
-            linear-gradient(var(--line) 2px, transparent 2px var(--size)) 50%
-                50% / var(--size) var(--size);
-        mask: linear-gradient(0deg, transparent 300px, white),
+            linear-gradient(
+                    90deg,
+                    var(--line) 2px,
+                    transparent 2px var(--grid-size)
+                )
+                50% 50% / var(--grid-size) var(--grid-size),
+            linear-gradient(var(--line) 2px, transparent 2px var(--grid-size))
+                50% 50% / var(--grid-size) var(--grid-size);
+        mask: linear-gradient(
+                0deg,
+                transparent calc(var(--fade-pos) * 1px),
+                white
+            ),
             radial-gradient(
                 circle,
                 transparent 0%,
-                transparent 300px,
+                transparent calc(var(--fade-pos) * 1px),
                 white 480px,
                 white
             );
@@ -303,8 +324,7 @@
         pointer-events: none;
         z-index: -1;
         mix-blend-mode: plus-lighter;
-        opacity: 1;
-        transition: 4s ease-in-out opacity;
+        animation: fade-in 5s forwards;
     }
 
     @property --vignette-color {

@@ -33,6 +33,7 @@
     import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
     import { LEVEL_NAME_DELAY } from "./ending/ending";
     import { scheduleFor } from "shared-lib/util";
+    import { Howl } from "howler";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -83,6 +84,19 @@
             }, $eventEndTime + 11000);
         }
     }
+
+    import sound from "./assets/poop.mp3?url";
+
+    let bimba = new Howl({
+        src: [sound],
+        volume: 0.1,
+    });
+
+    bimba.play();
+    // setInterval(() => {
+    //     bimba.stop();
+    //     bimba.play();
+    // }, 200);
 
     // $: console.log(
     //     "vig ",
@@ -135,9 +149,8 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        {#if showEndingNameInput}
-            <EndingNameInput />
-        {/if}
+        <EndingNameInput />
+        {#if showEndingNameInput}{/if}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
     {#if state != null}

@@ -221,5 +221,8 @@ export const showGuidePopup = () => {
         },
         classes: ["info"],
         duration: 15000,
+        onpop() {
+            localStorage.setItem("dontShowGuidePopup", "true");
+        },
     });
 };

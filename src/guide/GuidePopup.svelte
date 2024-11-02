@@ -17,7 +17,7 @@
             beginGuide();
             localStorage.setItem("dontShowGuidePopup", "true");
         }}
-        ><span class="text-base xs:text-sm">Click here for a guide!</span
-        ></WhiteButton
     >
+        <span class="text-base xs:text-sm">Click here for a guide!</span>
+    </WhiteButton>
 </div>

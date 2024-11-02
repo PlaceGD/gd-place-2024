@@ -583,7 +583,8 @@
                 $zoomCenterX = midX;
                 $zoomCenterY = midY;
 
-                $zoomTween = newZoom;
+                zoomGoal.set(newZoom);
+                zoomTween.set(newZoom, { duration: 0 });
 
                 break;
             }

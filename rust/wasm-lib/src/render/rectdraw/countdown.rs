@@ -250,7 +250,7 @@ impl Countdown {
             // billy.translate(vec2(30.0 * 7.0, 0.0));
         }
 
-        draw_level(state, billy, &level, |_, _, _| None);
+        draw_level(state, billy, &level, |_, _, _| None, 0.0);
 
         // self.days_marker.iter().for_each(|o| {
         //     o.get().inspect(|o| draw_obj(o, billy));

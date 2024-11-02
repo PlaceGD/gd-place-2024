@@ -8,6 +8,7 @@
     // import Widget from "../widgets/Widget.svelte";
     import { editorSettings, rawSpritesheetData } from "../stores";
     import { handleSub } from "./view_controls";
+    import { isMobile } from "../utils/document";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -80,7 +81,6 @@
 
             // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
             const scale = window.devicePixelRatio;
-            1 / 3;
             const dprWidth = Math.floor(w * scale);
             const dprHeight = Math.floor(h * scale);
 
@@ -95,7 +95,7 @@
                 high: 1,
                 medium: 0.6,
                 low: 0.35,
-            }[$editorSettings.quality];
+            }[$editorSettings.quality ?? (isMobile() ? "medium" : "high")];
 
             // state.resize(w, h);
             state.resize(dprWidth, dprHeight);

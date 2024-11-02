@@ -42,10 +42,15 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         );
         vec4(1.0, c, c, 1.0)
     };
+    let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
     if DRAW_LEVEL {
-        draw_level(state, billy, &state.level, |k, _, detail| {
-            (state.selected_object == Some(k)).then(|| selected_color(detail))
-        });
+        draw_level(
+            state,
+            billy,
+            &state.level,
+            |k, _, detail| (state.selected_object == Some(k)).then(|| selected_color(detail)),
+            ((end_anim_time - 10.0) / 10.0).max(0.0),
+        );
     }
 
     if state.show_preview {

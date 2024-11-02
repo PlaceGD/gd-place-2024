@@ -8,6 +8,8 @@ type SoundPlayOptions = {
     end_cb?: () => void;
 };
 export const playSound = (options: SoundPlayOptions) => {
+    if (typeof window === "undefined") return;
+
     let audio: HTMLAudioElement;
     if (options.exclusive_channel != undefined) {
         audio = channels[options.exclusive_channel] ?? new Audio(options.url);

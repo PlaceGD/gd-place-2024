@@ -24,7 +24,7 @@ export default {
         fontFamily: {
             pusab: "Pusab",
             saira: "Saira",
-            exo: "Share Tech Mono",
+            share: "Share Tech Mono",
             // exo: "Exo",
         },
     },

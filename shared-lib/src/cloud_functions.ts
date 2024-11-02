@@ -197,6 +197,10 @@ export type MetaOperation =
           to: number;
       }
     | {
+          type: "name_duration";
+          duration: number;
+      }
+    | {
           type: "postpone_start";
           secs: number;
       }

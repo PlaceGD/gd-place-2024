@@ -56,12 +56,13 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     obj: &GDObject,
     color: Vec4,
     key: K,
+    end_trans01: f32,
 ) {
     if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
         return;
     }
 
-    let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
+    //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
 
     let info = OBJECT_INFO[obj.id as usize];
 
@@ -72,9 +73,9 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     let mut scaleup = 1.0;
     let mut angle_offset = 0.0;
 
-    if end_anim_time > 0.0 {
-        let (explosion_time, delay, explosion_d, angular_velocity, pos) =
-            obj_end_anim(obj, state, end_anim_time, key);
+    if end_trans01 > 0.0 {
+        let (delay, explosion_d, angular_velocity, pos) =
+            obj_end_anim(obj, state, end_trans01, key);
         //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
 
         //console_log!("{}", z_scaleup);
@@ -86,9 +87,8 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
         // }
         //billy.scale(vec2(z_scaleup, z_scaleup));
 
-        angle_offset +=
-            angular_velocity * PI * 0.1 * (end_anim_time - explosion_time - delay).max(0.0)
-                + angular_velocity * explosion_d;
+        angle_offset += angular_velocity * PI * 0.1 * (end_trans01 * 10.0 - delay).max(0.0)
+            + angular_velocity * explosion_d;
 
         // let fadeout_d =
         //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
@@ -181,15 +181,15 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
 fn obj_end_anim<K: Default + Hash + Eq + Copy>(
     obj: &GDObject,
     state: &State,
-    end_anim_time: f32,
+    end_trans01: f32,
     key: K,
-) -> (f32, f32, f32, f32, glam::Vec2) {
-    let explosion_time = 10.0;
+) -> (f32, f32, f32, glam::Vec2) {
+    // let explosion_time = 10.0;
+    let end_anim_time = end_trans01 * 10.0;
 
     let dist_from_center = (vec2(obj.x, obj.y) - state.camera_pos).length();
     let delay = dist_from_center * 0.001;
-    let explosion_d =
-        ease_out_expo(((end_anim_time - explosion_time - delay) / 3.0).clamp(0.0, 1.0));
+    let explosion_d = ease_out_expo(((end_anim_time - delay) / 3.0).clamp(0.0, 1.0));
     let obj_z = ((obj.z_order as f32 / 256.0 + obj.z_layer as usize as f32) / 9.0) * 2.0 - 1.0;
 
     let explode_vec =
@@ -213,7 +213,7 @@ fn obj_end_anim<K: Default + Hash + Eq + Copy>(
         + (vec2(random_offset.x, random_offset.y) * 60.0
             + explode_dir.xy() * explode_strength * 120.0)
             * explosion_d;
-    (explosion_time, delay, explosion_d, angular_velocity, pos)
+    (delay, explosion_d, angular_velocity, pos)
 }
 
 fn random_num<K: Default + Hash + Eq + Copy>(key: K, i: usize) -> f32 {
@@ -228,14 +228,15 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
     billy: &mut Billy,
     level: &Level<K>,
     mut color_override: impl FnMut(K, &GDObject, bool) -> Option<Vec4>,
+    end_trans01: f32,
 ) {
-    let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
+    //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
     let mut ending_stars = Vec::new();
 
     for layer in 0..(Z_LAYERS.len() + 1) {
         for sheet_batch_idx in 0..5 {
             for batch_idx in 0..2 {
-                if end_anim_time < 20.0 {
+                if end_trans01 < 1.0 {
                     billy.set_blend_mode(if state.show_collidable {
                         BlendMode::Normal
                     } else {
@@ -249,10 +250,10 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                     // console_log!("bend {}", i);
                     for (_, m) in batch {
                         for (key, (obj, draw)) in m {
-                            if end_anim_time > 0.0 {
+                            if end_trans01 > 0.0 {
                                 ending_stars.push((*key, *obj));
                             }
-                            if end_anim_time < 20.0 {
+                            if end_trans01 < 1.0 {
                                 for &bottom_texture in match draw {
                                     crate::level::ObjectDraw::Both => &[false, true] as &[bool],
                                     crate::level::ObjectDraw::TopTexture => &[false],
@@ -287,7 +288,13 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
                                             // };
 
                                             draw_level_obj_sprite(
-                                                state, billy, sprite, obj, color, *key,
+                                                state,
+                                                billy,
+                                                sprite,
+                                                obj,
+                                                color,
+                                                *key,
+                                                end_trans01,
                                             );
                                         }
                                     }
@@ -300,11 +307,11 @@ pub fn draw_level<K: Default + Hash + Eq + Copy>(
         }
     }
 
-    if end_anim_time > 0.0 {
+    if end_trans01 > 0.0 {
         billy.set_blend_mode(BlendMode::Additive);
 
         for (key, obj) in ending_stars {
-            draw_ending_sparkle(state, billy, obj, key);
+            draw_ending_sparkle(state, billy, obj, key, end_trans01);
         }
     }
 }
@@ -318,12 +325,13 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     billy: &mut Billy,
     obj: GDObject,
     key: K,
+    end_trans01: f32,
 ) {
     if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
         return;
     }
 
-    let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
+    //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
 
     let info = OBJECT_INFO[obj.id as usize];
 
@@ -331,8 +339,8 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
 
     let mut angle_offset = 0.0;
 
-    let (explosion_time, delay, explosion_d, angular_velocity, pos) =
-        obj_end_anim(&obj, state, end_anim_time, key);
+    let (delay, explosion_d, angular_velocity, pos) = obj_end_anim(&obj, state, end_trans01, key);
+    let end_anim_time = end_trans01 * 10.0;
     //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
 
     if explosion_d <= 0.0 {
@@ -363,7 +371,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
 
     let lifetime = 3.0 + random_num(key, 12) * 7.0;
     let fall_length = 30.0 + random_num(key, 13) * 120.0;
-    let fall_anim = (end_anim_time % lifetime) / lifetime;
+    let fall_anim = ((state.now / 1000.0) % lifetime as f64) as f32 / lifetime;
     let fall_anim_strafe = random_num(key, 14) * 0.6 - 0.3;
     let fall_anim_pos = vec2(
         fall_anim * fall_anim_strafe * fall_length,
@@ -372,14 +380,13 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
 
     let fall_anim_opacity = (-((fall_anim - 0.5).powf(2.0)) + 0.25) * 4.0;
 
-    let fall_anim_start_d = ((end_anim_time - explosion_time - delay - random_num(key, 14) * 2.0)
-        / 5.0)
-        .clamp(0.0, 1.0);
+    let fall_anim_start_d =
+        ((end_anim_time - delay - random_num(key, 14) * 2.0) / 5.0).clamp(0.0, 1.0);
 
     billy.translate(pos + fall_anim_pos * fall_anim_start_d - vec2(obj.x, obj.y));
     //billy.scale(vec2(z_scaleup, z_scaleup));
 
-    angle_offset += angular_velocity * PI * 0.1 * (end_anim_time - explosion_time - delay).max(0.0)
+    angle_offset += angular_velocity * PI * 0.1 * (end_anim_time - delay).max(0.0)
         + angular_velocity * explosion_d;
 
     // let fadeout_d =
@@ -387,7 +394,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
 
     billy.apply_transform(obj.transform());
-    let reveal = ((end_anim_time - explosion_time - delay) / 3.5).clamp(0.0, 1.0);
+    let reveal = ((end_anim_time - delay) / 3.5).clamp(0.0, 1.0);
     billy.scale(vec2(
         reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
         reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
@@ -410,7 +417,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
         .map(|v| v as f32 / 255.0),
     );
 
-    color.w *= ((0.7f32).powf(reveal)
+    color.w *= ((0.6f32).powf(reveal)
         * random_num(key, 10).powf(2.0 * reveal)
         * fall_anim_opacity.powf(fall_anim_start_d)
         / spritescale.powf(reveal)

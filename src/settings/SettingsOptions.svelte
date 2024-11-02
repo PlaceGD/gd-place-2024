@@ -81,7 +81,7 @@
         class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center h-[50%] pointer-events-auto"
         inert={!isOpen}
         transition:menuHeight={{ duration: 200 }}
-        style={`max-height: ${settings.length * 70 + 140 + 70}px;`}
+        style={`max-height: ${settings.length * 70 + 100 + 140 + 70}px;`}
         on:introend={() => (transitionVal = 1)}
         on:outroend={() => (transitionVal = 0)}
     >
@@ -122,60 +122,62 @@
                             </label>
                         </li>
                     {/each}
+                    <li
+                        class="grid grid-cols-[min-content_1fr] p-3 rounded-lg li-alternating flex-center"
+                    >
+                        <div class="flex flex-col justify-center">
+                            <p class="whitespace-nowrap xs:whitespace-normal">
+                                Resolution
+                            </p>
+                        </div>
+                        <div
+                            class="flex gap-6 justify-self-center xs:gap-4 flex-center w-min"
+                        >
+                            <label
+                                for="low-quality"
+                                class="flex flex-col gap-2 cursor-pointer flex-center"
+                            >
+                                <Radio
+                                    id="low-quality"
+                                    name="quality"
+                                    on:click={() =>
+                                        ($editorSettings.quality = "low")}
+                                    checked={$editorSettings.quality === "low"}
+                                />
+                                <span class="text-sm text-center">Low</span>
+                            </label>
+                            <label
+                                for="medium-quality"
+                                class="flex flex-col gap-2 cursor-pointer flex-center"
+                            >
+                                <Radio
+                                    id="medium-quality"
+                                    name="quality"
+                                    on:click={() =>
+                                        ($editorSettings.quality = "medium")}
+                                    checked={$editorSettings.quality ===
+                                        "medium"}
+                                />
+                                <span class="text-sm text-center">Medium</span>
+                            </label>
+                            <label
+                                for="high-quality"
+                                class="flex flex-col gap-2 cursor-pointer flex-center"
+                            >
+                                <Radio
+                                    id="high-quality"
+                                    name="quality"
+                                    on:click={() =>
+                                        ($editorSettings.quality = "high")}
+                                    checked={($editorSettings.quality ??
+                                        "high") === "high"}
+                                />
+                                <span class="text-sm text-center">High</span>
+                            </label>
+                        </div>
+                    </li>
                 </ul>
             </FadedScroll>
-
-            <div
-                class="grid grid-cols-[min-content_1fr] gap-2 p-2 pb-0 flex-center"
-            >
-                <div class="flex flex-col justify-center">
-                    <p class="whitespace-nowrap xs:whitespace-normal">
-                        Canvas Resolution
-                    </p>
-                </div>
-                <div
-                    class="flex gap-6 justify-self-center xs:gap-4 flex-center w-min"
-                >
-                    <label
-                        for="low-quality"
-                        class="flex flex-col gap-2 cursor-pointer flex-center"
-                    >
-                        <Radio
-                            id="low-quality"
-                            name="quality"
-                            on:click={() => ($editorSettings.quality = "low")}
-                            checked={$editorSettings.quality === "low"}
-                        />
-                        <span class="text-sm text-center">Low</span>
-                    </label>
-                    <label
-                        for="medium-quality"
-                        class="flex flex-col gap-2 cursor-pointer flex-center"
-                    >
-                        <Radio
-                            id="medium-quality"
-                            name="quality"
-                            on:click={() =>
-                                ($editorSettings.quality = "medium")}
-                            checked={$editorSettings.quality === "medium"}
-                        />
-                        <span class="text-sm text-center">Medium</span>
-                    </label>
-                    <label
-                        for="high-quality"
-                        class="flex flex-col gap-2 cursor-pointer flex-center"
-                    >
-                        <Radio
-                            id="high-quality"
-                            name="quality"
-                            on:click={() => ($editorSettings.quality = "high")}
-                            checked={($editorSettings.quality ?? "high") ===
-                                "high"}
-                        />
-                        <span class="text-sm text-center">High</span>
-                    </label>
-                </div>
-            </div>
 
             {#if $eventStarted && $loginData?.currentUserData?.userDetails != null}
                 <div class="p-2 pb-0">
@@ -243,7 +245,7 @@
     </fieldset>
 {:else if transitionVal == 0}
     <span
-        class="text-white z-50 font-bold mr-4 opacity-40 xs:opacity-60 text-sm xs:text-xs text-right"
+        class="z-50 mr-4 text-sm font-bold text-right text-white opacity-40 xs:opacity-60 xs:text-xs"
         in:fade={{ duration: 500 }}
     >
         {#each [$editorSettings.showCollidable ? "showing only collidable objects" : null, $editorSettings.hideTriggers ? "hiding triggers" : null].filter(v => v != null) as t}

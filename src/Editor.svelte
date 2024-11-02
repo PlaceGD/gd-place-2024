@@ -28,6 +28,10 @@
     import EndCountdown from "./level_view/EndCountdown.svelte";
     import Guide from "./guide/Guide.svelte";
     import EndingNameInput from "./ending/EndingNameInput.svelte";
+    import { playSound } from "./utils/audio";
+    import boomUrl from "./assets/boom.mp3?url";
+    import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
+    import { LEVEL_NAME_DELAY } from "./ending/ending";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -52,11 +56,36 @@
     let showEndingNameInput = false;
     let showEndingNameTimeout: NodeJS.Timeout;
 
+    // $: console.log("penis$eventEndTime);
+
     $: {
         if ($eventEnded) {
+            const loopSound = () => {
+                playSound({
+                    url: endingAmbientUrl,
+                    end_cb: () => {
+                        if (true) {
+                            // change this to check if the enter level name thing is still running :3
+                            loopSound();
+                        }
+                    },
+                    volume: 0.5,
+                });
+            };
+            loopSound();
+            if (Date.now() - $eventEndTime < 11000) {
+                console.log("CACA");
+                setTimeout(
+                    () =>
+                        playSound({
+                            url: boomUrl,
+                        }),
+                    10000 - Math.max(Date.now() - $eventEndTime, 0.0)
+                );
+            }
             showEndingNameTimeout = setTimeout(
                 () => (showEndingNameInput = true),
-                21000 - Math.max(Date.now() - $eventEndTime, 0.0)
+                LEVEL_NAME_DELAY - Math.max(Date.now() - $eventEndTime, 0.0)
             );
         } else {
             clearTimeout(showEndingNameTimeout);

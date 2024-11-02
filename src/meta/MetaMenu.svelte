@@ -19,6 +19,7 @@
         deleteTimer: 0,
         eventStart: 0,
         eventEnd: 0,
+        nameDuration: 0,
         postponeStart: 0,
         postponeEnd: 0,
         modChangeUsername: "",
@@ -156,7 +157,23 @@
                     Set
                 </WhiteButton>
             </div>
-
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Name Duration</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.nameDuration}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() =>
+                        meta({
+                            type: "name_duration",
+                            duration: inputValues.nameDuration,
+                        })}
+                >
+                    Set
+                </WhiteButton>
+            </div>
             <div class="flex w-full gap-2 flex-center">
                 <h1 class="w-32 font-pusab text-stroke">Postpone start</h1>
                 <DarkInput

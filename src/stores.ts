@@ -474,11 +474,24 @@ export const timeLeft = writable(Number.POSITIVE_INFINITY);
 
 export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
 
+export const eventElapsedContinuous = tweened(Number.NEGATIVE_INFINITY, {
+    duration: 1000,
+    easing: linear,
+});
+
+const funnyUpdate = () => {
+    let elapsed = Date.now() - get(eventStartTime);
+    eventElapsed.set(elapsed);
+    eventElapsedContinuous.set(elapsed);
+    timeLeft.set(get(eventEndTime) - Date.now());
+};
+eventStartTime.subscribe(() => funnyUpdate());
+eventEndTime.subscribe(() => funnyUpdate());
+
 setTimeout(
     () => {
         setInterval(() => {
-            eventElapsed.set(Date.now() - get(eventStartTime));
-            timeLeft.set(get(eventEndTime) - Date.now());
+            funnyUpdate();
         }, 1000);
     },
     1000 - (Date.now() % 1000)

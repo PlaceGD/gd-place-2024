@@ -76,7 +76,12 @@ export const handleSub = (state: wasm.State) => {
                             console.error(
                                 "(Failed in `GDObjectOpt.from_bytes`)"
                             );
-                            Toast.showErrorToast(e.display());
+
+                            if ("display" in e) {
+                                Toast.showErrorToast(e.display());
+                            } else {
+                                console.error(e);
+                            }
                         }
                     }
                 }

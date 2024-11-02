@@ -11,12 +11,14 @@
         <span
             class="absolute text-anim text-black font-bold text-saira text-stroke text-3xl text-nowrap w-[500px] text-center"
         >
-            Deleted by <p>{name}</p>
+            Deleted by <p class="inline-block">{name}</p>
         </span>
         <span
             class="absolute text-anim text-saira font-bold text-3xl text-nowrap w-[500px] text-center text-white"
         >
-            Deleted by <ColoredName username={name}></ColoredName>
+            Deleted by <span class="inline-block"
+                ><ColoredName username={name}></ColoredName></span
+            >
         </span>
     </LevelWidget>
 {/each}

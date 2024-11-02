@@ -43,7 +43,7 @@
                     tabType == "sfx" ? $menuSelectedSFX : $menuSelectedSong
                 ]
             ],
-            exclusive_channel: `preview ${tabType}`,
+            exclusiveChannel: `preview ${tabType}`,
             speed: semitonesToFactor($menuSpeed),
         });
 

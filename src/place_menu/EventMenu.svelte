@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { get } from "svelte/store";
-    import WhiteButton from "../components/Buttons/WhiteButton.svelte";
     import {
         eventElapsed,
         ExclusiveMenus,
@@ -28,7 +26,7 @@
 
     $: {
         if ($eventElapsed != Number.NEGATIVE_INFINITY) {
-            seconds_left = -($eventElapsed / 1000);
+            seconds_left = -$eventElapsed;
 
             const names = state.get_countdown_creator_names();
             if (

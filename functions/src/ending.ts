@@ -29,17 +29,17 @@ export const setLevelNameLetter = onCallAuth<LevelNameReq>(async request => {
         throw Error.code(109, "invalid-argument");
     }
 
-    const [eventEndTime, setNameTime] = await refAllGet(
+    const [eventEndTime, setNameSeconds] = await refAllGet(
         db,
         "metaVariables/eventEndTime",
-        "metaVariables/setNameTime"
+        "metaVariables/setNameSeconds"
     );
 
     const now = Date.now();
 
     if (
         now < eventEndTime.val() ||
-        now > eventEndTime.val() + setNameTime.val() * 1000
+        now > eventEndTime.val() + setNameSeconds.val() * 1000
     ) {
         Error.code(211, "permission-denied");
     }

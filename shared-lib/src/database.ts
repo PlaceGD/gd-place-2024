@@ -113,9 +113,9 @@ export interface DatabaseSchema {
         eventEndTime: number;
 
         /**
-         * seconds (auto added to end time) ![oye](https://preview.redd.it/why-does-this-cat-look-like-that-v0-zin7alw9g8jd1.jpeg?width=1080&format=pjpg&auto=webp&s=7684738cd8233040c7a60ce4a9d4296a03524136)
+         * auto added to end time ![oye](https://preview.redd.it/why-does-this-cat-look-like-that-v0-zin7alw9g8jd1.jpeg?width=1080&format=pjpg&auto=webp&s=7684738cd8233040c7a60ce4a9d4296a03524136)
          */
-        setNameTime: number;
+        setNameSeconds: number;
     };
 
     /**

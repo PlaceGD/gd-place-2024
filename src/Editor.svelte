@@ -11,12 +11,12 @@
     import SettingsOptions from "./settings/SettingsOptions.svelte";
     import {
         canPlaceEditDelete,
-        eventElapsed,
-        eventEnded,
+        eventElapsedContinuous,
         eventEndTime,
-        eventStarted,
         eventStartTime,
+        eventStatus,
         loginData,
+        nowStore,
         openMenu,
     } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
@@ -32,6 +32,7 @@
     import boomUrl from "./assets/boom.mp3?url";
     import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
     import { LEVEL_NAME_DELAY } from "./ending/ending";
+    import { scheduleFor } from "shared-lib/util";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -53,13 +54,14 @@
     let canvasWidth: number;
     let canvasHeight: number;
 
-    let showEndingNameInput = false;
-    let showEndingNameTimeout: NodeJS.Timeout;
+    $: showEndingNameInput =
+        $eventStatus == "name set" &&
+        $nowStore >= $eventEndTime + LEVEL_NAME_DELAY * 1000;
 
     // $: console.log("penis$eventEndTime);
 
     $: {
-        if ($eventEnded) {
+        if ($eventStatus == "name set") {
             const loopSound = () => {
                 playSound({
                     url: endingAmbientUrl,
@@ -73,25 +75,20 @@
                 });
             };
             loopSound();
-            if (Date.now() - $eventEndTime < 11000) {
-                console.log("CACA");
-                setTimeout(
-                    () =>
-                        playSound({
-                            url: boomUrl,
-                        }),
-                    10000 - Math.max(Date.now() - $eventEndTime, 0.0)
-                );
-            }
-            showEndingNameTimeout = setTimeout(
-                () => (showEndingNameInput = true),
-                LEVEL_NAME_DELAY - Math.max(Date.now() - $eventEndTime, 0.0)
-            );
-        } else {
-            clearTimeout(showEndingNameTimeout);
-            showEndingNameInput = false;
+
+            scheduleFor(() => {
+                playSound({
+                    url: boomUrl,
+                });
+            }, $eventEndTime + 11000);
         }
     }
+
+    // $: console.log(
+    //     "vig ",
+    //     $eventElapsedContinuous -
+    //         ($eventEndTime / 1000 - $eventStartTime / 1000 + 29)
+    // );
 </script>
 
 <div class="absolute w-full h-full">
@@ -121,7 +118,7 @@
             <SettingsOptions />
             <MetaMenu />
         </div>
-        {#if !$eventEnded}
+        {#if $eventStatus == "during" || $eventStatus == "before"}
             <div
                 class="absolute top-0 right-0 flex flex-row items-start w-full h-full gap-4 pointer-events-none xs:flex-col sm:gap-2"
             >
@@ -138,23 +135,23 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        {#if $eventEnded && showEndingNameInput}
+        {#if showEndingNameInput}
             <EndingNameInput />
         {/if}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}
     {#if state != null}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        {#if !$eventEnded}
+        {#if $eventStatus == "before" || $eventStatus == "during"}
             <div
-                style:display={$eventStarted && $canPlaceEditDelete
+                style:display={$eventStatus == "during" && $canPlaceEditDelete
                     ? "contents"
                     : "none"}
             >
                 <PlaceMenu bind:state />
             </div>
 
-            {#if !$eventStarted}
+            {#if $eventStatus == "before"}
                 <EventMenu kind="pre-event" bind:state />
             {:else if !$canPlaceEditDelete}
                 <EventMenu kind="login-to-place" bind:state />

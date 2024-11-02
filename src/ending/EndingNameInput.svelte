@@ -13,10 +13,11 @@
     import type { Unsubscribe } from "firebase/database";
     import { SyncedCooldown } from "../utils/cooldown";
     import {
-        eventElapsed,
         eventElapsedContinuous,
         eventEndTime,
+        eventStartTime,
         loginData,
+        setNameSeconds,
     } from "../stores";
     import { cubicInOut } from "svelte/easing";
     import { isGuideActive } from "../guide/guide";
@@ -26,7 +27,7 @@
     import { clamp } from "shared-lib/util";
     import { LEVEL_NAME_DELAY } from "./ending";
 
-    const DURATION = 10000;
+    const VIGNETTE_DELAY = LEVEL_NAME_DELAY + 3;
 
     // let percentage = 0;
     // const updateVignettes = () => {
@@ -88,11 +89,13 @@
         inputsDisabled = false;
     }
     $: vignetteProgress = clamp(
-        ($eventElapsedContinuous - ($eventEndTime + LEVEL_NAME_DELAY + 3000)) /
-            DURATION,
+        ($eventElapsedContinuous -
+            ($eventEndTime / 1000 - $eventStartTime / 1000 + VIGNETTE_DELAY)) /
+            ($setNameSeconds - VIGNETTE_DELAY),
         0,
         1
     );
+    $: console.log(vignetteProgress);
 </script>
 
 <div class="contents" style={`--vignette-progress: ${vignetteProgress}`}>

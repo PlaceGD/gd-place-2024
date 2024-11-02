@@ -93,3 +93,14 @@ export const timerDisplay = (time?: number) => {
 };
 
 export const semitonesToFactor = (s: number) => Math.pow(2, s / 12);
+
+export const scheduleFor = (
+    f: () => void,
+    timeUnix: number,
+    runIfNegative: boolean = false
+) => {
+    let time = timeUnix - Date.now();
+    if (time >= 0 || runIfNegative) {
+        setTimeout(f, time);
+    }
+};

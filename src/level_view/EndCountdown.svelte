@@ -7,14 +7,13 @@
     let seconds = 0;
 
     $: {
-        const secs = $timeLeft / 1000;
-        hours = Math.floor(secs / 3600);
-        minutes = Math.floor((secs % 3600) / 60);
-        seconds = Math.floor(secs % 60);
+        hours = Math.floor($timeLeft / 3600);
+        minutes = Math.floor(($timeLeft % 3600) / 60);
+        seconds = Math.floor($timeLeft % 60);
     }
 </script>
 
-{#if $timeLeft && $timeLeft > 0 && hours < 10}
+{#if $timeLeft > 0 && hours < 10}
     <div
         class="z-50 p-4 m-4 text-white menu-panel sm:p-2 xs:m-2 tabular-nums"
         transition:scale={{

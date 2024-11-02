@@ -205,9 +205,11 @@ parse_countdown_files! {
     "aeonair"           ("AeonAir"):            [0 => weights(4,   2,   2,   5  ) silly classic famous], // 60
     "breadking"         ("Breadking"):          [3 => weights(2,   2,   2,   3  )], // 61
     "neige"             ("Neigefeu"):           [0 => weights(3,   3,   3,   3  ) classic pretty], // 62
+    "juniper"           ("Juniper"):            [0 => weights(2,   3,   3,   3  ) famous silly], // 63
+    "wulzy"             ("Wulzy"):              [0 => weights(3,   3,   3,   5  )], // 64
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None;
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 1, 64, 63]);
 
 #[binrw]
 #[brw(little)]

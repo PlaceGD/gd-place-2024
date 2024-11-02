@@ -55,7 +55,8 @@ export const GUIDE_STEPS: GuideAction[] = [
             <div class="text-xl text-center p-4 xs:p-2 xs:text-lg">
                 Welcome to GD Place! 
             </div> 
-            The goal of this project is to build a huge, working Geometry Dash platformer level - together! This is the part of the level where the player will spawn in... 
+            The goal of this project is to build a huge, working
+            <a href="https://www.robtopgames.com/files/GDEditor.pdf#page=33" target="_blank" class="underline">Geometry Dash</a> platformer level - together! This is the part of the level where the player will spawn in... 
             <p class="text-sm xs:text-xs hover-text-transition">(you can find this guide in the settings menu)</p>
             `,
             {
@@ -67,8 +68,7 @@ export const GUIDE_STEPS: GuideAction[] = [
         )
     ),
     new EditorGuide(
-        `...and when the player touches this <b>END trigger</b>, they have completed the level! <br/> <b>Your job is to build everything in between.</b>
-        <i>(You can read more about how Geometry Dash gameplay works <a href="https://www.robtopgames.com/files/GDEditor.pdf#page=33"> here </a>)</i>`,
+        `...and when the player touches this <b>END trigger</b>, they have completed the level! <br/> <b>Your job is to build everything in between.</b>`,
         {
             x: LEVEL_WIDTH_UNITS - 70,
             y: LEVEL_HEIGHT_UNITS - 70,

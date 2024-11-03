@@ -116,15 +116,14 @@
             class="text-4xl text-center sm:text-3xl xs:text-2xl font-share text-stroke"
             in:fade|global={{
                 duration: CROSSFADE_DURATION,
-                delay:
-                    GLOBAL_DELAY + TOTAL_ENDING_INPUTS * CHARACTER_DELAY + 1000,
+                delay: GLOBAL_DELAY + 1000,
             }}
             out:disappear
         >
             LEVEL NAME:
         </p>
         <h1
-            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-4xl xs:text-3xl enter-level-name-texttext-center"
+            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-4xl xs:text-3xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
             bind:this={target}
         >
             {letters.slice(0, lettersVisible).join("")}
@@ -136,14 +135,15 @@
                 delay:
                     CHARACTER_DURATION +
                     GLOBAL_DELAY +
-                    TOTAL_ENDING_INPUTS * CHARACTER_DELAY,
+                    TOTAL_ENDING_INPUTS * CHARACTER_DELAY +
+                    1000,
             }}
             out:disappear
         >
             <p
                 class="text-2xl italic text-center pointer-events-auto xs:text-base hover-text-transition"
             >
-                THANKS FOR PARTICIPATING! SEE YOU NEXT TIME ❤
+                THANK YOU FOR PARTICIPATING! ❤
             </p>
             <p
                 class="p-4 text-center xs:p-2 menu-panel max-w-[450px] sm:max-w-[350px] flex flex-col gap-1 flex-center"

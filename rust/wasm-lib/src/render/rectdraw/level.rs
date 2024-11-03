@@ -239,7 +239,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         let min_x = (view_rect.x / GROUND_SIZE_UNITS).floor() as i32 - 1;
         let max_x = ((view_rect.x + view_rect.w) / GROUND_SIZE_UNITS).floor() as i32 + 1;
 
-        let fadeout = 1.0 - ((state.now - state.event_end) as f32 / 3.0).clamp(0.0, 1.0);
+        let fadeout = 1.0 - (end_anim_time / 3.0).clamp(0.0, 1.0);
 
         for i in min_x..=max_x {
             let x = i as f32 * GROUND_SIZE_BLOCKS * 30.0;

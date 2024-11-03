@@ -65,16 +65,12 @@
     let target: HTMLElement;
 
     export const fadeOut = (
-        node: HTMLElement,
+        _: HTMLElement,
         { duration }: { duration: number }
     ) => {
         return {
             duration,
-            tick: (t: number) => {
-                Object.assign(node.style, {
-                    opacity: 1 - t,
-                });
-            },
+            css: (t: number) => `opacity: ${1 - t}`,
         };
     };
 
@@ -86,17 +82,16 @@
             offcenter,
         }: { duration: number; delay: number; offcenter: number }
     ) => {
-        const nodePos = node.getBoundingClientRect();
         const screenCenter = window.innerWidth / 2;
+        const nodePos = node.getBoundingClientRect();
         const nodeX = nodePos.left + nodePos.width / 2;
+        const targetPos = target.getBoundingClientRect();
 
         return {
             delay,
             duration,
             easing: expoIn,
             css: (t: number) => {
-                const targetPos = target.getBoundingClientRect();
-
                 return `
                     opacity: ${Math.pow(1 - t, 2)};
                     transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.bottom - nodePos.bottom + nodePos.height / 2) * t}px);
@@ -123,7 +118,7 @@
             LEVEL NAME:
         </p>
         <h1
-            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-4xl xs:text-3xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
+            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
             bind:this={target}
         >
             {letters.slice(0, lettersVisible).join("")}
@@ -161,9 +156,9 @@
     <div class="content-center justify-center row-start-2 ending-grid">
         {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
             <div class="relative flex w-auto h-full flex-center">
-                <input
+                <div
                     in:fadeOut|global={{ duration: CROSSFADE_DURATION }}
-                    class="character-input-input backdrop-blur-md"
+                    class="opacity-0 pointer-events-none character-input-input backdrop-blur-md"
                 />
                 <span
                     class="absolute z-20 flex w-full h-full text-center opacity-0 pointer-events-none font-pusab text-stroke flex-center character-input"

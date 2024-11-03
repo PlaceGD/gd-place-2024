@@ -64,6 +64,11 @@
         eventEndTime,
         timeLeft,
         eventStatus,
+        nowStore,
+        openMenu,
+        ExclusiveMenus,
+        viewingLevelAfterEvent,
+        setNameSeconds,
     } from "../stores";
     import {
         MOVE_KEYBINDS,
@@ -180,6 +185,11 @@
         );
         placedByHover.set(null);
     };
+
+    $: {
+        $nowStore;
+        handleSub(state);
+    }
 
     setInterval(() => {
         if ($timeLeft < 0) {
@@ -606,6 +616,9 @@
             placedByHover.set({ username: v, x: top.obj.x, y: top.obj.y });
         });
     }, 50);
+    //
+
+    //
 
     let previewObjectPos: [number, number] = [0, 0];
     let editWidgetScale = 1;
@@ -659,6 +672,9 @@
     }
     $: {
         state.set_event_end($eventEndTime);
+    }
+    $: {
+        state.set_ending_fully_done($eventEndTime + $setNameSeconds * 1000);
     }
     $: {
         if ($eventStatus == "name set") {
@@ -760,7 +776,7 @@
     }}
 />
 
-{#if $eventStatus == "before" || $eventStatus == "during"}
+{#if $eventStatus == "before" || $eventStatus == "during" || $viewingLevelAfterEvent}
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
     <div
@@ -779,6 +795,7 @@
             const isTouch = e.pointerType == "touch";
 
             if (e.button == 0 && !isTouch) {
+                console.log("sex");
                 startDrag(
                     e.clientX * window.devicePixelRatio,
                     e.clientY * window.devicePixelRatio

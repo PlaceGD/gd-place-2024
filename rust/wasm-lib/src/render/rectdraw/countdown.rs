@@ -328,7 +328,7 @@ impl StatsDisplay {
         let mut level = Level::default();
         let mut idx = 0usize;
 
-        let scale = state.width as f32 / 1920.0;
+        let scale = (state.width as f32 / 1920.0).min(state.height as f32 / 1080.0);
 
         let yoffset = (1920i32 - state.width as i32).max(0) as f32 / 1920.0;
 

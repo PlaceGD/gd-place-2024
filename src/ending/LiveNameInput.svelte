@@ -19,16 +19,18 @@
         loginData,
         setNameSeconds,
     } from "../stores";
+    import enterLevelNameSoundUrl from "../assets/enter_level_name_sound.mp3?url";
     import { cubicInOut } from "svelte/easing";
     import { isGuideActive } from "../guide/guide";
     import { toast } from "@zerodevx/svelte-toast";
     import { readable } from "svelte/store";
     import Loading from "../components/Loading.svelte";
-    import { clamp } from "shared-lib/util";
+    import { clamp, scheduleFor } from "shared-lib/util";
     import { CROSSFADE_DURATION, LEVEL_NAME_DELAY } from "./ending";
-
     import "./ending_styles.css";
     import { disappear } from "../utils/transitions";
+    import { playSound } from "../utils/audio";
+    import heartBeatUrl from "../assets/heartbeat.mp3?url";
 
     const VIGNETTE_DELAY = LEVEL_NAME_DELAY + 3;
 
@@ -51,6 +53,14 @@
     let unsub: Unsubscribe | null;
 
     onMount(async () => {
+        playSound({
+            url: enterLevelNameSoundUrl,
+            volume: 2.0,
+            exclusiveChannel: "enter-level-name",
+        });
+
+        loopHeartbeatSound();
+
         $isGuideActive = false;
         toast.pop();
         toast.pop({ target: "announcement" });
@@ -91,6 +101,19 @@
         0,
         1
     );
+
+    const loopHeartbeatSound = () => {
+        let interval = setInterval(() => {
+            if (vignetteProgress >= 0.99999) {
+                clearInterval(interval);
+            } else {
+                playSound({
+                    url: heartBeatUrl,
+                    volume: 2 * Math.pow(vignetteProgress, 3),
+                });
+            }
+        }, 1000);
+    };
 </script>
 
 <div class="contents" style={`--vignette-progress: ${vignetteProgress}`}>
@@ -136,8 +159,11 @@
                     >
                         <input
                             out:disappear
-                            class="character-input-input backdrop-blur-md"
+                            class="pointer-events-auto character-input-input backdrop-blur-md"
+                            unselectable="on"
                             on:keydown={async e => {
+                                e.preventDefault();
+
                                 if (!$characterCooldownFinished) return;
                                 let key = null;
                                 if (e.key === "Backspace") {

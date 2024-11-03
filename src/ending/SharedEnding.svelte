@@ -5,12 +5,10 @@
     import * as wasm from "wasm-lib";
     import LiveNameInput from "./LiveNameInput.svelte";
     import StatsDisplay from "./StatsDisplay.svelte";
-    import { eventStatus, ExclusiveMenus, openMenu } from "../stores";
+    import { eventStatus } from "../stores";
     import { onDestroy } from "svelte";
 
     export let state: wasm.State;
-
-    onDestroy(() => console.log("X"));
 </script>
 
 {#if $eventStatus == "name set"}

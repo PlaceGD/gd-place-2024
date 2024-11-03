@@ -19,6 +19,7 @@ import {
     GROUND_TRIGGER,
 } from "shared-lib/nexusgen";
 import { isMobile } from "./utils/document";
+import { LEVEL_NAME_DELAY } from "./ending/ending";
 
 const STORAGE_VERSION = 1;
 
@@ -501,7 +502,7 @@ db.ref("metaVariables/eventEndTime").on("value", v => {
     eventEndTime.set(v.val());
 });
 db.ref("metaVariables/setNameSeconds").on("value", v => {
-    setNameSeconds.set(v.val());
+    setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);
 });
 
 export const eventElapsed = derived(
@@ -513,10 +514,24 @@ export const timeLeft = derived(
     ([end, now]) => (end - now) / 1000
 );
 
-export type EventStatus = "before" | "during" | "name set" | "fully done";
+export type EventStatus =
+    | "loading"
+    | "before"
+    | "during"
+    | "name set"
+    | "fully done";
 export const eventStatus: Readable<EventStatus> = derived(
     [nowStore, eventStartTime, eventEndTime, setNameSeconds],
     ([now, start, end, name]): EventStatus => {
+        if (
+            now == 0 ||
+            start == Number.POSITIVE_INFINITY ||
+            end == Number.POSITIVE_INFINITY ||
+            name == 0
+        ) {
+            return "loading";
+        }
+
         if (now < start) {
             return "before";
         }
@@ -526,7 +541,11 @@ export const eventStatus: Readable<EventStatus> = derived(
         if (now < end + name * 1000) {
             return "name set";
         }
-        return "fully done";
+        if (now >= end + name * 1000) {
+            return "fully done";
+        }
+
+        return "loading";
     }
 );
 eventStatus.subscribe(v => console.log("Status: ", v));
@@ -542,6 +561,8 @@ eventElapsed.subscribe(v => eventElapsedContinuous.set(v));
 export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
 
 export const userCount = writable(0);
+
+export const viewingLevelAfterEvent = writable(false);
 
 db.ref("userCount").on("value", v => {
     userCount.set(v.val());

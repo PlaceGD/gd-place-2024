@@ -21,3 +21,6 @@ export const STATS = Promise.all([
         .get()
         .then(snapshot => snapshot.val() ?? 0),
 ]);
+
+// export let statsTimeout: NodeJS.Timeout;
+// export let statsInterval: NodeJS.Timeout;

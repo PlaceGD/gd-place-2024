@@ -207,7 +207,7 @@ parse_countdown_files! {
     "neige"             ("Neigefeu"):           [0 => weights(3,   3,   3,   3  ) classic pretty], // 62
     "juniper"           ("Juniper"):            [0 => weights(2,   3,   3,   3  ) famous silly], // 63
     "wulzy"             ("Wulzy"):              [0 => weights(3,   3,   3,   5  )], // 64
-    "platnuu"           ("Platnuu"):            [0 => weights(3,   3,   3,   3  ) pretty], // 65
+    "platnuu"           ("Platnuu"):            [0 => weights(4,   3,   3,   5  ) pretty], // 65
 }
 
 pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 1, 64, 65]);

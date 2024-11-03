@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { default as cx } from "classnames";
     import FadedScroll from "./components/FadedScroll.svelte";
     import Button from "./components/Button.svelte";
-    import { analytics } from "./stores";
+    import { analytics, eventStatus } from "./stores";
     import ScreenModal from "./components/ScreenModal.svelte";
     import AcceptButton from "./components/Buttons/AcceptButton.svelte";
     import DeclineButton from "./components/Buttons/DeclineButton.svelte";
@@ -31,7 +32,11 @@
 
 {#if !hidePopup}
     <div
-        class="absolute top-0 z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 xs:w-full left-1/2"
+        class={cx({
+            "absolute z-50 w-1/2 h-auto p-4 transform -translate-x-1/2 xs:w-full left-1/2": true,
+            "top-0": $eventStatus !== "fully done",
+            "bottom-0": $eventStatus === "fully done",
+        })}
     >
         <div
             class="flex-col w-full gap-3 p-3 text-center text-white rounded-lg shadow-lg sm:text-sm sm:w-full flex-center bg-menu-gray/90 shadow-black/40 backdrop-blur-md"

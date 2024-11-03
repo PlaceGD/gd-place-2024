@@ -19,6 +19,8 @@
         loginData,
         nowStore,
         openMenu,
+        timeLeft,
+        viewingLevelAfterEvent,
     } from "./stores";
     import NameGradient from "./name_gradient/NameGradient.svelte";
     import ZoomButton from "./level_view/ZoomButton.svelte";
@@ -30,13 +32,16 @@
     import Guide from "./guide/Guide.svelte";
     import EndingNameInput from "./ending/LiveNameInput.svelte";
     import { playSound } from "./utils/audio";
-    import boomUrl from "./assets/boom.mp3?url";
-    import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
-    import endingSequenceAmbientUrl from "./assets/ending_sequence_sound_ending_idk_idfk.mp3?url";
     import { DEBUG_ENDING_VISIBILITY, LEVEL_NAME_DELAY } from "./ending/ending";
     import { scheduleFor } from "shared-lib/util";
     import SharedEnding from "./ending/SharedEnding.svelte";
     import ViewLevelButton from "./ending/ViewLevelButton.svelte";
+    import { onMount } from "svelte";
+    import boomUrl from "./assets/boom.mp3?url";
+    import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
+    import endingSequenceAmbientUrl from "./assets/ending_sequence_sound_ending_idk_idfk.mp3?url";
+    import bigTickUrl from "./assets/big_tick.mp3?url";
+    import tickUrl from "./assets/tick.mp3?url";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -62,33 +67,44 @@
         ($eventStatus == "name set" || $eventStatus == "fully done") &&
         $nowStore >= $eventEndTime + LEVEL_NAME_DELAY * 1000;
 
-    $: {
-        if ($eventStatus == "name set") {
-            const loopSound = () => {
-                playSound({
-                    url: endingAmbientUrl,
-                    endCb: () => {
-                        if (true) {
-                            // change this to check if the enter level name thing is still running :3
-                            loopSound();
-                        }
-                    },
-                    volume: 0.5,
-                });
-            };
-            playSound({
-                url: endingSequenceAmbientUrl,
-                volume: 1.0,
-                endCb: loopSound,
-            });
-
-            // scheduleFor(() => {
-            //     playSound({
-            //         url: boomUrl,
-            //     });
-            // }, $eventEndTime + 11000);
-        }
+    $: if ($timeLeft > -1.0 && $timeLeft <= 11.0) {
+        playSound({
+            url: $timeLeft < 0.0 ? bigTickUrl : tickUrl,
+            volume: 1.0,
+            exclusiveChannel: `tick${Math.round($timeLeft)}`,
+        });
     }
+
+    onMount(() => {
+        const loopSound = () => {
+            playSound({
+                url: endingAmbientUrl,
+                endCb: () => {
+                    if ($eventStatus !== "fully done") {
+                        // change this to check if the enter level name thing is still running :3
+                        loopSound();
+                    }
+                },
+                volume: 0.5,
+                exclusiveChannel: "ending-ambient",
+            });
+        };
+
+        // for (let i = 0; i < 11; i++) {
+        //     scheduleFor(() => {}, eventEndTime, { delay: -i * 1000 });
+        // }
+
+        scheduleFor(
+            () =>
+                playSound({
+                    url: endingSequenceAmbientUrl,
+                    volume: 2.0,
+                    endCb: loopSound,
+                    exclusiveChannel: "ending-sequence",
+                }),
+            eventEndTime
+        );
+    });
 </script>
 
 <!-- <button
@@ -98,7 +114,7 @@
 > -->
 
 <div class="absolute w-full h-full">
-    {#if state != null}
+    {#if state != null && $eventStatus != "loading"}
         <Guide {state} />
 
         <div
@@ -107,7 +123,7 @@
             <div
                 class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
             >
-                {#if $eventStatus == "fully done"}
+                {#if $eventStatus == "fully done" && !$viewingLevelAfterEvent}
                     <ViewLevelButton bind:state />
                 {/if}
 
@@ -149,12 +165,19 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        {#if showEnding && state != null && $openMenu != ExclusiveMenus.Editor}
+        {#if showEnding && state != null && !$viewingLevelAfterEvent}
             <SharedEnding bind:state />
         {/if}
-        <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
+        {#if $eventStatus != "loading"}
+            <LevelView
+                bind:state
+                bind:canvas
+                bind:canvasHeight
+                bind:canvasWidth
+            />
+        {/if}
     {/if}
-    {#if state != null}
+    {#if state != null && $eventStatus != "loading"}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
         {#if $eventStatus == "before" || $eventStatus == "during"}
             <div

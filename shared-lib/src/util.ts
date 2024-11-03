@@ -1,3 +1,5 @@
+import { Unsubscriber, Writable } from "svelte/store";
+
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 export const clamp = (v: number, min: number, max: number) =>
     Math.max(Math.min(v, max), min);
@@ -96,11 +98,40 @@ export const semitonesToFactor = (s: number) => Math.pow(2, s / 12);
 
 export const scheduleFor = (
     f: () => void,
-    timeUnix: number,
-    runIfNegative: boolean = false
+    timeUnix: number | Writable<number>,
+    { runIfNegative, delay }: { runIfNegative?: boolean; delay?: number } = {
+        runIfNegative: false,
+        delay: 0,
+    }
 ) => {
-    let time = timeUnix - Date.now();
-    if (time >= 0 || runIfNegative) {
-        setTimeout(f, time);
+    let timeout: NodeJS.Timeout;
+    let time: number;
+    let unsub: Unsubscriber;
+
+    const s = () => {
+        if (isNaN(time) || time == Infinity || time > 2147483647) {
+            return;
+        }
+
+        if (time >= 0 || runIfNegative) {
+            timeout = setTimeout(
+                () => {
+                    unsub?.();
+                    f();
+                },
+                time + (delay ?? 0)
+            );
+        }
+    };
+
+    if (typeof timeUnix === "number") {
+        time = timeUnix - Date.now();
+        s();
+    } else {
+        unsub = timeUnix.subscribe(t => {
+            clearTimeout(timeout);
+            time = t - Date.now();
+            s();
+        });
     }
 };

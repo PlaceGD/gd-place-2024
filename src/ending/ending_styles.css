@@ -16,12 +16,12 @@
 }
 
 .character-input {
-    @apply text-center font-pusab text-7xl text-white;
+    @apply text-center text-white font-pusab text-7xl;
 }
 
 .character-input-input {
     --box-shadow-thickness: 3px;
-    @apply pointer-events-auto relative z-10 h-full w-full cursor-text select-none rounded-md text-transparent caret-transparent !outline-none;
+    @apply relative z-10 h-full w-full cursor-text select-none rounded-md text-transparent caret-transparent !outline-none;
 
     background: linear-gradient(0deg, #18181833 0%, #03030333 100%);
     border: var(--box-shadow-thickness) solid #747272;

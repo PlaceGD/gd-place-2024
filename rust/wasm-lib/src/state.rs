@@ -2,7 +2,7 @@ use core::f64;
 
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 
-pub const DRAW_LEVEL: bool = false;
+pub const DRAW_LEVEL: bool = true;
 
 use rust_shared::{
     console_log,
@@ -79,6 +79,7 @@ pub struct State {
     pub(crate) event_start: f64,
 
     pub(crate) event_end: f64,
+    pub(crate) ending_fully_done: f64,
 
     pub(crate) countdown: Countdown,
     pub(crate) stats_display: StatsDisplay,
@@ -130,6 +131,7 @@ impl State {
             hide_outline: false,
             event_start: f64::INFINITY,
             event_end: f64::INFINITY,
+            ending_fully_done: f64::INFINITY,
             render,
             countdown: Countdown::new(),
             stats_display: StatsDisplay::new(),
@@ -523,6 +525,9 @@ impl State {
     pub fn set_event_end(&mut self, to: f64) {
         self.event_end = to;
     }
+    pub fn set_ending_fully_done(&mut self, to: f64) {
+        self.ending_fully_done = to;
+    }
 
     pub fn set_stats(&mut self, num: u32) {
         self.stats_display.set_to(Some(num), self.now);
@@ -718,7 +723,8 @@ impl State {
 
         let end_anim_time = ((self.now - self.event_end) / 1000.0) as f32;
 
-        if end_anim_time > 0.0 {
+        if end_anim_time > 0.0 && self.now < self.ending_fully_done {
+            // console_log!("funny");
             if self.ending_anim_info.is_none() {
                 self.ending_anim_info = Some(EndingAnimInfo {
                     initial_zoom: self.zoom,
@@ -770,28 +776,27 @@ impl State {
             } else {
                 initial_camera_pos.y
             };
-
             self.camera_pos = vec2(lerped_x, lerped_y);
 
-            let color_d = 1.0 - (end_anim_time - 3.0 / 7.0).clamp(0.0, 1.0);
+            // let color_d = 1.0 - (end_anim_time - 3.0 / 7.0).clamp(0.0, 1.0);
 
-            // self.bg_color = (
-            //     (initial_bg_color.0 as f32 * color_d) as u8,
-            //     (initial_bg_color.1 as f32 * color_d) as u8,
-            //     (initial_bg_color.2 as f32 * color_d) as u8,
+            // // self.bg_color = (
+            // //     (initial_bg_color.0 as f32 * color_d) as u8,
+            // //     (initial_bg_color.1 as f32 * color_d) as u8,
+            // //     (initial_bg_color.2 as f32 * color_d) as u8,
+            // // );
+
+            // self.ground1_color = (
+            //     (initial_ground1_color.0 as f32 * color_d) as u8,
+            //     (initial_ground1_color.1 as f32 * color_d) as u8,
+            //     (initial_ground1_color.2 as f32 * color_d) as u8,
             // );
 
-            self.ground1_color = (
-                (initial_ground1_color.0 as f32 * color_d) as u8,
-                (initial_ground1_color.1 as f32 * color_d) as u8,
-                (initial_ground1_color.2 as f32 * color_d) as u8,
-            );
-
-            self.ground2_color = (
-                (initial_ground2_color.0 as f32 * color_d) as u8,
-                (initial_ground2_color.1 as f32 * color_d) as u8,
-                (initial_ground2_color.2 as f32 * color_d) as u8,
-            );
+            // self.ground2_color = (
+            //     (initial_ground2_color.0 as f32 * color_d) as u8,
+            //     (initial_ground2_color.1 as f32 * color_d) as u8,
+            //     (initial_ground2_color.2 as f32 * color_d) as u8,
+            // );
         } else {
             self.ending_anim_info = None;
         }

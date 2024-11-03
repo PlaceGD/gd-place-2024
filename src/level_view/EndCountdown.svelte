@@ -1,6 +1,6 @@
 <script lang="ts">
     import { scale } from "svelte/transition";
-    import { timeLeft } from "../stores";
+    import { eventStatus, timeLeft } from "../stores";
 
     let hours = 0;
     let minutes = 0;
@@ -13,7 +13,7 @@
     }
 </script>
 
-{#if $timeLeft > 0 && hours < 10}
+{#if $timeLeft > 0 && hours < 10 && $eventStatus != "before"}
     <div
         class="z-50 p-4 m-4 text-white menu-panel sm:p-2 xs:m-2 tabular-nums"
         transition:scale={{

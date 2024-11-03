@@ -9,12 +9,15 @@ if (typeof window !== "undefined") {
 
     DEBUG.subscribe(is => {
         if (is) {
+            stats = new Stats();
             document.body.appendChild(stats.dom);
             stats.dom.style.inset = "unset";
             stats.dom.style.right = "0";
             stats.dom.style.bottom = "0";
         } else {
             document.body.removeChild(stats.dom);
+
+            stats = { begin: () => {}, end: () => 0 } as Stats;
         }
     });
 }

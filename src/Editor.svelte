@@ -37,7 +37,6 @@
     import SharedEnding from "./ending/SharedEnding.svelte";
     import ViewLevelButton from "./ending/ViewLevelButton.svelte";
     import { onMount } from "svelte";
-    import boomUrl from "./assets/boom.mp3?url";
     import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
     import endingSequenceAmbientUrl from "./assets/ending_sequence_sound_ending_idk_idfk.mp3?url";
     import bigTickUrl from "./assets/big_tick.mp3?url";

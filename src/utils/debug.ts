@@ -15,7 +15,9 @@ if (typeof window !== "undefined") {
             stats.dom.style.right = "0";
             stats.dom.style.bottom = "0";
         } else {
-            document.body.removeChild(stats.dom);
+            try {
+                document.body.removeChild(stats.dom);
+            } catch {}
 
             stats = { begin: () => {}, end: () => 0 } as Stats;
         }

@@ -36,6 +36,10 @@ export const playSound = (options: SoundPlayOptions) => {
         howl.volume((options.volume ?? 1) / 2, id);
         howl.rate(options.speed ?? 1, id);
 
+        if (options.endCb != undefined) {
+            howl.once("end", options.endCb, id);
+        }
+
         if (options.exclusiveChannel != undefined) {
             channels[options.exclusiveChannel] = [howl, id];
         }

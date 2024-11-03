@@ -50,14 +50,6 @@
             });
         }
     };
-
-    // onMount(() => {
-    //     let g = new Audio(
-    //         "https://www.dropbox.com/scl/fi/z5kwtjkv5006g1hygmalp/youtube_6PvxyUFN8Hs_audio.mp3?rlkey=d7ymbtpynslnrcqkictujc007&st=xcjmpmgk&raw=1"
-    //     );
-    //     g.play();
-    //     // g.play();
-    // });
 </script>
 
 {#if isOpen}

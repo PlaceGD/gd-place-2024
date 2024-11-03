@@ -161,6 +161,7 @@
                             out:disappear
                             class="pointer-events-auto character-input-input backdrop-blur-md"
                             unselectable="on"
+                            maxlength={1}
                             on:keydown={async e => {
                                 e.preventDefault();
 

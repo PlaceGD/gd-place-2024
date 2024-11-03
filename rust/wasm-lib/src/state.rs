@@ -89,6 +89,8 @@ pub struct State {
 
     // text_draws: Vec<TextDraw>,
     pub(crate) ending_anim_info: Option<EndingAnimInfo>,
+    pub(crate) ending_transition_override: Option<f32>,
+    pub(crate) ending_transition_speed: f32,
 }
 
 impl State {
@@ -133,6 +135,8 @@ impl State {
             stats_display: StatsDisplay::new(),
             now: 0.0,
             ending_anim_info: None,
+            ending_transition_override: None,
+            ending_transition_speed: 0.0,
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -528,7 +532,12 @@ impl State {
         self.stats_display.set_to(None, self.now);
     }
 
-    fn render_inner(&mut self, delta: f32, end_anim_time: f32) -> Result<(), wgpu::SurfaceError> {
+    pub fn transition_to_ending_spectate(&mut self, duration: f32) {
+        self.ending_transition_override = Some(1.0);
+        self.ending_transition_speed = -(1.0 / duration);
+    }
+
+    fn render_inner(&mut self, delta: f32, end_trans01: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
         let output_view = output
             .texture
@@ -545,6 +554,10 @@ impl State {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
 
+        if let Some(d) = &mut self.ending_transition_override {
+            *d = (*d + self.ending_transition_speed * delta).clamp(0.0, 1.0);
+        }
+
         self.render.queue.write_buffer(
             &self.render.globals_buffer,
             0,
@@ -558,10 +571,10 @@ impl State {
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
-                time: if end_anim_time < 0.0 {
+                time: if end_trans01 == 0.0 {
                     self.time
                 } else {
-                    -end_anim_time as f32
+                    -end_trans01 as f32
                 },
                 // end_anim_time,
                 // padding: [0.0; 2],
@@ -618,10 +631,10 @@ impl State {
             billy.set_blend_mode(BlendMode::Normal);
 
             if self.now > self.event_end {
-                let old_t = billy.get_transform();
-                //billy.apply_transform(self.view_transform());
-                self.stats_display.draw(self, &mut billy);
+                let new_t = billy.get_transform();
                 billy.set_transform(old_t);
+                self.stats_display.draw(self, &mut billy);
+                billy.set_transform(new_t);
             }
 
             let instance_buffer =
@@ -783,7 +796,8 @@ impl State {
             self.ending_anim_info = None;
         }
 
-        self.render_inner(delta, end_anim_time).unwrap();
+        self.render_inner(delta, get_end_trans01(self, end_anim_time))
+            .unwrap();
 
         // (
         //     self.camera_pos,
@@ -838,5 +852,13 @@ pub struct HitObjectInfo {
 impl HitObjectInfo {
     pub fn key(&self) -> String {
         String::from_utf8(self.key.into()).unwrap()
+    }
+}
+
+pub fn get_end_trans01(state: &State, end_anim_time: f32) -> f32 {
+    if let Some(d) = state.ending_transition_override {
+        d * d
+    } else {
+        ((end_anim_time - 10.0) / 10.0).max(0.0)
     }
 }

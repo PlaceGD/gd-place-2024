@@ -3,6 +3,8 @@ import * as wasm from "wasm-lib";
 import { canPlacePreview } from "../stores";
 import { get } from "svelte/store";
 
+export const KOFI_ID = "Z8Z410GRY2";
+
 export const setCheckedPreviewObject = (
     state: wasm.State,
     obj: wasm.GDObjectOpt

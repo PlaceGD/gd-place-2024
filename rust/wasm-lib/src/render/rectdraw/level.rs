@@ -4,7 +4,7 @@ use rust_shared::{console_log, gd::layer::Z_LAYERS, map};
 use crate::{
     level::ChunkCoord,
     object::GDObjectExt,
-    state::{State, DRAW_LEVEL},
+    state::{get_end_trans01, State, DRAW_LEVEL},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
 };
 
@@ -49,7 +49,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
             billy,
             &state.level,
             |k, _, detail| (state.selected_object == Some(k)).then(|| selected_color(detail)),
-            ((end_anim_time - 10.0) / 10.0).max(0.0),
+            get_end_trans01(state, end_anim_time),
         );
     }
 

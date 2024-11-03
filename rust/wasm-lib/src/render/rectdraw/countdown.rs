@@ -111,27 +111,25 @@ impl Countdown {
                     now,
                 );
                 self.state[i] = state[i];
-            } else {
-                if self.state[i] != state[i] {
-                    // let num_sets = COUNTDOWN_DIGITS.0.len();
-                    // let new_set = if random() < 0.2 {
-                    //     (random() * num_sets as f64) as usize
-                    // } else {
-                    //     self.sets[i]
-                    // };
-                    //let new_set = 0;
+            } else if self.state[i] != state[i] {
+                // let num_sets = COUNTDOWN_DIGITS.0.len();
+                // let new_set = if random() < 0.2 {
+                //     (random() * num_sets as f64) as usize
+                // } else {
+                //     self.sets[i]
+                // };
+                //let new_set = 0;
 
-                    self.digits[i].transition_between(
-                        self.state[i],
-                        state[i],
-                        self.sets[i / 2],
-                        self.sets[i / 2],
-                        delay,
-                        now,
-                    );
-                    self.state[i] = state[i];
-                    //self.sets[i / 2] = new_set;
-                }
+                self.digits[i].transition_between(
+                    self.state[i],
+                    state[i],
+                    self.sets[i / 2],
+                    self.sets[i / 2],
+                    delay,
+                    now,
+                );
+                self.state[i] = state[i];
+                //self.sets[i / 2] = new_set;
             }
         }
 
@@ -330,7 +328,11 @@ impl StatsDisplay {
         let mut level = Level::default();
         let mut idx = 0usize;
 
-        // billy.scale(vec2(0.7, 0.7));
+        let scale = state.width as f32 / 1920.0;
+
+        let yoffset = (1920i32 - state.width as i32).max(0) as f32 / 1920.0;
+
+        billy.scale(vec2(scale, scale));
 
         let mut add_object = |mut obj: GDObject| {
             let info = OBJECT_INFO[obj.id as usize];
@@ -342,7 +344,10 @@ impl StatsDisplay {
             idx += 1;
         };
         let spacing = 30.0 * 7.5;
-        let mut offset = state.camera_pos + vec2(-spacing * (STATS_NUM_DIGITS / 2) as f32, -300.0);
+        let mut offset = vec2(
+            -spacing * (STATS_NUM_DIGITS / 2) as f32,
+            -300.0 - yoffset * 300.0,
+        );
 
         for digit in self.digits.iter() {
             for obj in &digit.objects {

@@ -25,16 +25,12 @@
     import { readable } from "svelte/store";
     import Loading from "../components/Loading.svelte";
     import { clamp } from "shared-lib/util";
-    import { LEVEL_NAME_DELAY } from "./ending";
+    import { CROSSFADE_DURATION, LEVEL_NAME_DELAY } from "./ending";
+
+    import "./ending_styles.css";
+    import { disappear } from "../utils/transitions";
 
     const VIGNETTE_DELAY = LEVEL_NAME_DELAY + 3;
-
-    // let percentage = 0;
-    // const updateVignettes = () => {
-    //     percentage += 0.1;
-
-    //     raf = requestAnimationFrame(updateVignettes);
-    // };
 
     const characterCooldown = $loginData.currentUserData
         ? SyncedCooldown.new(
@@ -98,22 +94,35 @@
 </script>
 
 <div class="contents" style={`--vignette-progress: ${vignetteProgress}`}>
-    <span class="absolute z-[70] pointer-events-none size-full vignette-2" />
-    <span class="absolute z-[60] pointer-events-none size-full vignette" />
-    <span class="absolute z-30 pointer-events-none size-full dagrid" />
+    <span
+        class="absolute z-[70] pointer-events-none size-full vignette-2"
+        out:fade={{ duration: CROSSFADE_DURATION }}
+    />
+    <span
+        class="absolute z-[60] pointer-events-none size-full vignette"
+        out:fade={{ duration: CROSSFADE_DURATION }}
+    />
+    <span
+        class="absolute z-30 pointer-events-none size-full dagrid"
+        out:fade={{ duration: CROSSFADE_DURATION }}
+    />
 </div>
 
 <div
-    class="absolute z-40 flex flex-col w-full h-full gap-32 pointer-events-none sm:gap-28 xs:gap-24 flex-center ending-container"
+    class="absolute z-40 w-full h-full pointer-events-none page-grid"
     style={`--count: ${TOTAL_ENDING_INPUTS}`}
 >
     <h1
         class="text-center text-white font-share text-7xl md:text-5xl sm:text-4xl xs:text-3xl enter-level-name-text"
+        out:fade={{ duration: CROSSFADE_DURATION }}
     >
         {titleText.slice(0, lettersVisible)}
     </h1>
 
-    <div class="relative flex flex-col gap-2 flex-center">
+    <div
+        class="relative flex flex-col gap-2 flex-center self-baseline"
+        out:fade={{ duration: CROSSFADE_DURATION }}
+    >
         <div class="relative w-full h-full">
             <div class="content-center justify-center ending-grid">
                 {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
@@ -126,6 +135,7 @@
                         }}
                     >
                         <input
+                            out:disappear
                             class="character-input-input backdrop-blur-md"
                             on:keydown={async e => {
                                 if (!$characterCooldownFinished) return;
@@ -176,99 +186,6 @@
 </div>
 
 <style lang="postcss">
-    .ending-grid {
-        --input-width: 85px;
-        --input-height: calc(var(--input-width) * 1.5);
-
-        @apply grid gap-4;
-        grid-template-columns: repeat(var(--count), var(--input-width));
-        grid-template-rows: var(--input-height);
-    }
-    .ending-container {
-        animation: rotateAnimation 1s linear infinite;
-    }
-
-    .character-input {
-        @apply text-center font-pusab text-7xl text-white;
-    }
-
-    .character-input-input {
-        --box-shadow-thickness: 3px;
-        @apply pointer-events-auto relative z-10 h-full w-full cursor-text select-none rounded-md text-transparent caret-transparent !outline-none;
-
-        background: linear-gradient(0deg, #18181833 0%, #03030333 100%);
-        border: var(--box-shadow-thickness) solid #747272;
-        box-shadow: 0px 0px 70px 0px #ffffff28;
-    }
-
-    .character-input-input:not(:disabled):hover {
-        background: linear-gradient(0deg, #181818 0%, #03030333 100%);
-    }
-
-    @keyframes pulse-opacity {
-        0% {
-            opacity: 70%;
-        }
-        50% {
-            opacity: 20%;
-        }
-        100% {
-            opacity: 70%;
-        }
-    }
-
-    .character-input-input:focus {
-        border: var(--box-shadow-thickness) solid #fff;
-        box-shadow: 0px 0px 70px 0px #ffffff28;
-    }
-
-    .character-input-input:focus ~ .character-input {
-        animation: pulse-opacity 1s ease-in-out forwards infinite;
-    }
-
-    @media only screen and (max-width: 2045px) {
-        .ending-grid {
-            grid-template-columns: repeat(
-                calc(var(--count) / 2),
-                var(--input-width)
-            );
-            grid-template-rows: repeat(2, var(--input-height));
-        }
-    }
-
-    @media only screen and (max-width: 1025px) {
-        .ending-grid {
-            --input-width: 65px;
-        }
-
-        .ending-grid {
-            grid-template-columns: repeat(
-                calc(var(--count) / 4),
-                var(--input-width)
-            );
-            grid-template-rows: repeat(4, var(--input-height));
-        }
-
-        .character-input {
-            @apply text-5xl;
-        }
-    }
-
-    @media only screen and (max-width: 525px) {
-        .ending-grid {
-            --input-width: 45px;
-            @apply gap-2;
-        }
-
-        .character-input-input {
-            --box-shadow-thickness: 2px;
-        }
-
-        .character-input {
-            @apply text-4xl;
-        }
-    }
-
     .enter-level-name-text {
         text-shadow: 0px 0px 70px #ffffff69;
     }

@@ -15,6 +15,7 @@
         eventEndTime,
         eventStartTime,
         eventStatus,
+        ExclusiveMenus,
         loginData,
         nowStore,
         openMenu,
@@ -27,12 +28,15 @@
     import SongStopButton from "./level_view/SongStopButton.svelte";
     import EndCountdown from "./level_view/EndCountdown.svelte";
     import Guide from "./guide/Guide.svelte";
-    import EndingNameInput from "./ending/EndingNameInput.svelte";
+    import EndingNameInput from "./ending/LiveNameInput.svelte";
     import { playSound } from "./utils/audio";
     import boomUrl from "./assets/boom.mp3?url";
     import endingAmbientUrl from "./assets/ending_ambient_bg.mp3?url";
-    import { LEVEL_NAME_DELAY } from "./ending/ending";
+    import endingSequenceAmbientUrl from "./assets/ending_sequence_sound_ending_idk_idfk.mp3?url";
+    import { DEBUG_ENDING_VISIBILITY, LEVEL_NAME_DELAY } from "./ending/ending";
     import { scheduleFor } from "shared-lib/util";
+    import SharedEnding from "./ending/SharedEnding.svelte";
+    import ViewLevelButton from "./ending/ViewLevelButton.svelte";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -54,11 +58,9 @@
     let canvasWidth: number;
     let canvasHeight: number;
 
-    $: showEndingNameInput =
-        $eventStatus == "name set" &&
+    $: showEnding =
+        ($eventStatus == "name set" || $eventStatus == "fully done") &&
         $nowStore >= $eventEndTime + LEVEL_NAME_DELAY * 1000;
-
-    // $: console.log("penis$eventEndTime);
 
     $: {
         if ($eventStatus == "name set") {
@@ -74,16 +76,26 @@
                     volume: 0.5,
                 });
             };
-            loopSound();
+            playSound({
+                url: endingSequenceAmbientUrl,
+                volume: 1.0,
+                endCb: loopSound,
+            });
 
-            scheduleFor(() => {
-                playSound({
-                    url: boomUrl,
-                });
-            }, $eventEndTime + 11000);
+            // scheduleFor(() => {
+            //     playSound({
+            //         url: boomUrl,
+            //     });
+            // }, $eventEndTime + 11000);
         }
     }
 </script>
+
+<!-- <button
+    class="absolute z-50 text-xl text-white bg-black"
+    on:click={() => ($DEBUG_ENDING_VISIBILITY = !$DEBUG_ENDING_VISIBILITY)}
+    >SHOW/HIDE ENDING</button
+> -->
 
 <div class="absolute w-full h-full">
     {#if state != null}
@@ -95,13 +107,21 @@
             <div
                 class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
             >
-                <SettingsButton />
+                {#if $eventStatus == "fully done"}
+                    <ViewLevelButton bind:state />
+                {/if}
 
-                {#if state != null}
+                {#if $eventStatus == "during"}
+                    <SettingsButton />
+                {/if}
+
+                {#if state != null && $eventStatus == "during"}
                     <ModButton />
                 {/if}
                 <MetaButton />
-                <LoginButton />
+                {#if $eventStatus == "during"}
+                    <LoginButton />
+                {/if}
             </div>
             <Login />
             <NameGradient />
@@ -129,8 +149,8 @@
         {/if}
     {/if}
     {#if wasmLoaded}
-        {#if showEndingNameInput}
-            <EndingNameInput />
+        {#if showEnding && state != null && $openMenu != ExclusiveMenus.Editor}
+            <SharedEnding bind:state />
         {/if}
         <LevelView bind:state bind:canvas bind:canvasHeight bind:canvasWidth />
     {/if}

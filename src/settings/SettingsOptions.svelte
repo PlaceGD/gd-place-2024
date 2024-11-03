@@ -16,18 +16,10 @@
     import { GUIDE_ELEM_IDS } from "../guide/guide";
     import GuidePopup from "../guide/GuidePopup.svelte";
     import { fade } from "svelte/transition";
+    import { KOFI_ID } from "../utils/misc";
+    import KofiButton from "../components/KofiButton.svelte";
 
     $: isOpen = $openMenu == ExclusiveMenus.Settings;
-
-    const KOFI_ID = "Z8Z410GRY2";
-
-    let widgetString = "";
-    onMount(() => {
-        window.kofiwidget2.init("Support Us!", "#7ADE2D", KOFI_ID);
-        widgetString = window.kofiwidget2
-            .getHTML()
-            .replace("Support me on ko-fi.com", "Support us!");
-    });
 
     const settings: {
         bind: Exclude<keyof typeof $editorSettings, "quality">;
@@ -211,12 +203,9 @@
                     <p class="text-sm">
                         Get a colored name by making a donation (any amount)!
                     </p>
-                    <span title="Support us">
-                        {#if isOpen}
-                            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                            {@html widgetString}
-                        {/if}
-                    </span>
+                    {#if isOpen}
+                        <KofiButton />
+                    {/if}
                     <button
                         class="p-1 text-sm text-center underline hover-text-transition hover:decoration-dashed"
                         on:click={() => {
@@ -232,12 +221,9 @@
                             $openMenu = ExclusiveMenus.Login;
                         }}
                     >
-                        <span title="Support us">
-                            {#if isOpen}
-                                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                                {@html widgetString}
-                            {/if}
-                        </span>
+                        {#if isOpen}
+                            <KofiButton />
+                        {/if}
                     </button>
                 {/if}
             </div>

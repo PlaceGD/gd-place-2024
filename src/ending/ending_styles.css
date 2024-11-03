@@ -1,0 +1,97 @@
+.page-grid {
+    @apply grid items-center justify-center;
+    grid-template-rows: 0.6fr 1fr;
+}
+
+.ending-grid {
+    --input-width: 85px;
+    --input-height: calc(var(--input-width) * 1.5);
+
+    @apply grid gap-4 self-baseline;
+    grid-template-columns: repeat(var(--count), var(--input-width));
+    grid-template-rows: var(--input-height);
+}
+.ending-container {
+    animation: rotateAnimation 1s linear infinite;
+}
+
+.character-input {
+    @apply text-center font-pusab text-7xl text-white;
+}
+
+.character-input-input {
+    --box-shadow-thickness: 3px;
+    @apply pointer-events-auto relative z-10 h-full w-full cursor-text select-none rounded-md text-transparent caret-transparent !outline-none;
+
+    background: linear-gradient(0deg, #18181833 0%, #03030333 100%);
+    border: var(--box-shadow-thickness) solid #747272;
+    box-shadow: 0px 0px 70px 0px #ffffff28;
+}
+
+.character-input-input:not(:disabled):hover {
+    background: linear-gradient(0deg, #181818 0%, #03030333 100%);
+}
+
+@keyframes pulse-opacity {
+    0% {
+        opacity: 70%;
+    }
+    50% {
+        opacity: 20%;
+    }
+    100% {
+        opacity: 70%;
+    }
+}
+
+.character-input-input:focus {
+    border: var(--box-shadow-thickness) solid #fff;
+    box-shadow: 0px 0px 70px 0px #ffffff28;
+}
+
+.character-input-input:focus ~ .character-input {
+    animation: pulse-opacity 1s ease-in-out forwards infinite;
+}
+
+@media only screen and (max-width: 2045px) {
+    .ending-grid {
+        grid-template-columns: repeat(
+            calc(var(--count) / 2),
+            var(--input-width)
+        );
+        grid-template-rows: repeat(2, var(--input-height));
+    }
+}
+
+@media only screen and (max-width: 1025px) {
+    .ending-grid {
+        --input-width: 65px;
+    }
+
+    .ending-grid {
+        grid-template-columns: repeat(
+            calc(var(--count) / 4),
+            var(--input-width)
+        );
+        grid-template-rows: repeat(4, var(--input-height));
+    }
+
+    .character-input {
+        @apply text-5xl;
+    }
+}
+
+@media only screen and (max-width: 525px) {
+    .ending-grid {
+        --input-width: 45px;
+        @apply gap-2;
+    }
+
+    .character-input-input {
+        --box-shadow-thickness: 2px;
+    }
+
+    .character-input {
+        @apply text-4xl;
+    }
+}

@@ -127,4 +127,7 @@ export interface DatabaseSchema {
         inputs: Record<string, string>;
         history: Record<string, { letter: string; index: number }>;
     };
+
+    totalObjectsPlaced: number;
+    totalObjectsDeleted: number;
 }

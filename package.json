@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vite build",
         "deploy": "npm run wasm:build-prod && npm run shared:build && npm run build && firebase deploy",
         "preview": "vite preview",

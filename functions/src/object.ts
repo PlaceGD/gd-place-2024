@@ -209,6 +209,7 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
                 username: userDetails.val.username,
                 time: now,
             }),
+            db.ref(`totalObjectsPlaced`).transaction(v => (v ?? 0) + 1),
         ]);
 
         return objRef.key ?? "";
@@ -275,6 +276,7 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
             db
                 .ref(`objectCount/${data.chunkId}`)
                 .transaction(v => (v ?? 1) - 1),
+            db.ref(`totalObjectsDeleted`).transaction(v => (v ?? 0) + 1),
         ]);
     }
 );

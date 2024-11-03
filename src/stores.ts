@@ -183,6 +183,8 @@ export enum ExclusiveMenus {
     Settings,
     Kofi,
     Meta,
+
+    Editor,
 }
 export const openMenu: Writable<ExclusiveMenus | null> = writable(null);
 

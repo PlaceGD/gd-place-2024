@@ -64,6 +64,33 @@ impl<K: Default> LevelChunk<K> {
     }
 }
 
+pub trait ObjKey {
+    fn random_num(&self, i: u8) -> f32;
+}
+
+impl ObjKey for [u8; 20] {
+    #[inline]
+    fn random_num(&self, i: u8) -> f32 {
+        let mut hash = 14695981039346656037u64;
+        for &b in self {
+            hash = hash ^ (b as u64);
+            hash = hash.wrapping_mul(1099511628211u64);
+        }
+
+        hash = hash ^ (i as u64);
+        hash = hash.wrapping_mul(1099511628211u64);
+
+        (hash % 1000000u64) as f32 / 1000000.0
+    }
+}
+
+impl ObjKey for usize {
+    #[inline]
+    fn random_num(&self, i: u8) -> f32 {
+        0.0 // xd
+    }
+}
+
 #[derive(Default)]
 pub struct Level<K> {
     pub chunks: BTreeMap<ChunkCoord, LevelChunk<K>>,

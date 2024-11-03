@@ -13,7 +13,7 @@ use std::{
 };
 
 use crate::{
-    level::{DbKey, Level},
+    level::{DbKey, Level, ObjKey},
     object::GDObjectExt,
     state::State,
     utilgen::{
@@ -49,7 +49,7 @@ fn ease_out_expo(x: f32) -> f32 {
 
 use glam::Vec3Swizzles;
 
-pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
+pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
     sprite: SpriteInfo,
@@ -178,7 +178,7 @@ pub fn draw_level_obj_sprite<K: Default + Hash + Eq + Copy>(
     billy.set_transform(old_t);
 }
 
-fn obj_end_anim<K: Default + Hash + Eq + Copy>(
+fn obj_end_anim<K: ObjKey + Default + Hash + Eq + Copy>(
     obj: &GDObject,
     state: &State,
     end_trans01: f32,
@@ -199,13 +199,13 @@ fn obj_end_anim<K: Default + Hash + Eq + Copy>(
     let explode_strength = 1.0 / explode_vec.length().max(30.0).min(900.0) + 0.5;
 
     let random_offset = vec3(
-        random_num(key, 0) * 2.0 - 1.0,
-        random_num(key, 1) * 2.0 - 1.0,
+        key.random_num(0) * 2.0 - 1.0,
+        key.random_num(1) * 2.0 - 1.0,
         0.0,
     )
     .normalize();
 
-    let angular_velocity = random_num(key, 3) * 2.0 - 1.0;
+    let angular_velocity = key.random_num(3) * 2.0 - 1.0;
 
     // billy
     //     .translate((vec2(obj.x, obj.y) - state.camera_pos) * explosion_d * random_offset * 3.0);
@@ -216,14 +216,14 @@ fn obj_end_anim<K: Default + Hash + Eq + Copy>(
     (delay, explosion_d, angular_velocity, pos)
 }
 
-fn random_num<K: Default + Hash + Eq + Copy>(key: K, i: usize) -> f32 {
-    let mut hasher = DefaultHasher::new();
-    key.hash(&mut hasher);
-    i.hash(&mut hasher);
-    hasher.finish() as f32 / u64::MAX as f32
-}
+// fn random_num<K: ObjKey + Default + Hash + Eq + Copy>(key: K, i: usize) -> f32 {
+//     let mut hasher = DefaultHasher::new();
+//     key.hash(&mut hasher);
+//     i.hash(&mut hasher);
+//     hasher.finish() as f32 / u64::MAX as f32
+// }
 
-pub fn draw_level<K: Default + Hash + Eq + Copy>(
+pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
     level: &Level<K>,
@@ -320,7 +320,7 @@ fn ease_out_cubic(x: f32) -> f32 {
     1.0 - (1.0 - x).powf(3.0)
 }
 
-pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
+pub fn draw_ending_sparkle<K: ObjKey + Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
     obj: GDObject,
@@ -348,7 +348,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     }
 
     let sprites = [3827, 3825, 3828, 1886, 1886, 1765, 3969];
-    let choice = sprites[(random_num(key, 11) * sprites.len() as f32) as usize];
+    let choice = sprites[(key.random_num(11) * sprites.len() as f32) as usize];
 
     let spritescale: f32 = match choice {
         3827 => 0.5,
@@ -369,10 +369,10 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
         _ => 1.0,
     };
 
-    let lifetime = 3.0 + random_num(key, 12) * 7.0;
-    let fall_length = 30.0 + random_num(key, 13) * 120.0;
+    let lifetime = 3.0 + key.random_num(12) * 7.0;
+    let fall_length = 30.0 + key.random_num(13) * 120.0;
     let fall_anim = ((state.now / 1000.0) % lifetime as f64) as f32 / lifetime;
-    let fall_anim_strafe = random_num(key, 14) * 0.6 - 0.3;
+    let fall_anim_strafe = key.random_num(14) * 0.6 - 0.3;
     let fall_anim_pos = vec2(
         fall_anim * fall_anim_strafe * fall_length,
         -fall_anim * fall_length,
@@ -381,7 +381,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     let fall_anim_opacity = (-((fall_anim - 0.5).powf(2.0)) + 0.25) * 4.0;
 
     let fall_anim_start_d =
-        ((end_anim_time - delay - random_num(key, 14) * 2.0) / 5.0).clamp(0.0, 1.0);
+        ((end_anim_time - delay - key.random_num(14) * 2.0) / 5.0).clamp(0.0, 1.0);
 
     billy.translate(pos + fall_anim_pos * fall_anim_start_d - vec2(obj.x, obj.y));
     //billy.scale(vec2(z_scaleup, z_scaleup));
@@ -418,7 +418,7 @@ pub fn draw_ending_sparkle<K: Default + Hash + Eq + Copy>(
     );
 
     color.w *= ((0.6f32).powf(reveal)
-        * random_num(key, 10).powf(2.0 * reveal)
+        * key.random_num(10).powf(2.0 * reveal)
         * fall_anim_opacity.powf(fall_anim_start_d)
         / spritescale.powf(reveal)
         / trans_spritescale.powf(1.0 - reveal))

@@ -70,7 +70,7 @@
 
 {#if isOpen}
     <fieldset
-        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center h-[50%] pointer-events-auto"
+        class="z-50 flex flex-col py-2 gap-2 mr-6 text-white rounded-lg sm:mr-4 w-96 xs:w-80 menu-panel flex-center h-[55%] pointer-events-auto"
         inert={!isOpen}
         transition:menuHeight={{ duration: 200 }}
         style={`max-height: ${settings.length * 70 + 100 + 140 + 70}px;`}

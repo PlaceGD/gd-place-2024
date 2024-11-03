@@ -111,7 +111,7 @@
                     <ViewLevelButton bind:state />
                 {/if}
 
-                {#if $eventStatus == "during"}
+                {#if $eventStatus == "during" || $eventStatus == "before"}
                     <SettingsButton />
                 {/if}
 
@@ -119,7 +119,7 @@
                     <ModButton />
                 {/if}
                 <MetaButton />
-                {#if $eventStatus == "during"}
+                {#if $eventStatus == "during" || $eventStatus == "before"}
                     <LoginButton />
                 {/if}
             </div>

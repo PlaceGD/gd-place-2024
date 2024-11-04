@@ -209,9 +209,10 @@ parse_countdown_files! {
     "wulzy"             ("Wulzy"):              [0 => weights(3,   3,   3,   5  )], // 64
     "platnuu"           ("Platnuu"):            [0 => weights(4,   3,   3,   5  ) pretty], // 65
     "radiationv2"       ("RadiationV2"):        [3 => weights(5,   4,   4,   3  ) pretty], // 66
+    "smiffy"            ("Smiffy777"):          [0 => weights(3,   3,   3,   3  ) famous silly], // 67
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 1, 64, 12]);
+pub const TEST_SETS: Option<[usize; 4]> = Some([0, 1, 64, 67]);
 
 #[binrw]
 #[brw(little)]

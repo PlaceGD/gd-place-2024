@@ -11,7 +11,7 @@
     import { onDestroy, onMount } from "svelte";
     import { db } from "../firebase/firebase";
     import type { Unsubscribe } from "firebase/database";
-    import { SyncedCooldown } from "../utils/cooldown";
+    import { Cooldown } from "../utils/cooldown";
     import { loginData } from "../stores";
     import {
         cubicInOut,

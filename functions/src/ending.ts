@@ -1,4 +1,4 @@
-import { LevelNameReq } from "shared-lib/cloud_functions";
+import { LevelNameReq, LevelNameRes } from "shared-lib/cloud_functions";
 import { onCallAuth } from "./utils/on_call";
 import { smartDatabase } from "src";
 import {
@@ -14,7 +14,10 @@ import {
     CHARACTER_COOLDOWN_SECONDS,
 } from "shared-lib/ending";
 
-export const setLevelNameLetter = onCallAuth<LevelNameReq>(async request => {
+export const setLevelNameLetter = onCallAuth<
+    LevelNameReq,
+    Promise<LevelNameRes>
+>(async request => {
     const db = smartDatabase();
     const data = request.data;
     const authUID = request.auth.uid;
@@ -63,6 +66,8 @@ export const setLevelNameLetter = onCallAuth<LevelNameReq>(async request => {
     ) {
         db.ref("levelName/history").push(data);
     }
+
+    return { cooldown: CHARACTER_COOLDOWN_SECONDS * 1000 };
 
     // db.ref(`/levelName/inputs/${data.index}`).set(data.letter);
 });

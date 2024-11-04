@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
-        currentDeleteCooldown,
-        currentPlaceCooldown,
+        deleteCooldown as deleteCooldownTime,
+        placeCooldown as placeCooldownTime,
     } from "../firebase/cooldowns";
     import { addObject, removeObject } from "../firebase/object";
     import { GUIDE_ELEM_IDS, walmart } from "../guide/guide";
@@ -15,32 +15,32 @@
         TabGroup,
     } from "../stores";
     import { playSound, transferSoundChannel } from "../utils/audio";
-    import { SyncedCooldown } from "../utils/cooldown";
+    import { Cooldown } from "../utils/cooldown";
     import * as wasm from "wasm-lib";
     import deleteTimerFinishedSoundUrl from "./assets/sounds/delete_timer_finished.mp3?url";
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.mp3?url";
     import { default as cx } from "classnames";
     import Loading from "../components/Loading.svelte";
     import { scale } from "svelte/transition";
+    import {
+        getDeleteCooldown,
+        getPlaceCooldown,
+    } from "../firebase/cloud_functions";
 
     export let state: wasm.State;
     export let exportPlaceCooldownRemaining: number;
     export let exportDeleteCooldownRemaining: number;
 
-    const placeCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/lastPlaceTimestamp`,
-        currentPlaceCooldown
-    );
+    const placeCooldown = new Cooldown();
+    getPlaceCooldown().then(v => placeCooldown.setCooldown(v.data));
     let {
         display: placeCooldownDisplay,
         finished: placeCooldownFinished,
         remaining: placeCooldownRemaining,
     } = placeCooldown;
 
-    const deleteCooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/lastDeleteTimestamp`,
-        currentDeleteCooldown
-    );
+    const deleteCooldown = new Cooldown();
+    getDeleteCooldown().then(v => deleteCooldown.setCooldown(v.data));
     let {
         display: deleteCooldownDisplay,
         finished: deleteCooldownFinished,
@@ -99,12 +99,17 @@
     data-minimised={+$menuMinimized}
     on:click={() => {
         if ($menuTabGroup != TabGroup.Delete) {
-            addObject(state.get_preview_object(), k => {
+            addObject(state.get_preview_object(), (k, c) => {
                 canPlacePreview.set(true);
                 state.set_preview_visibility(false);
                 applyPreviewColor();
                 transferSoundChannel("preview song", "song");
                 songPlayingIsPreview.set(false);
+
+                if (c != null) {
+                    placeCooldown.setCooldown(c);
+                }
+
                 // state.add_object(k, state.get_preview_object());
             });
             // state.set_preview_visibility(false);
@@ -115,7 +120,9 @@
             let coord = state.get_selected_object_chunk();
             if (k != null && coord != null) {
                 pdButtonDisabled = true;
-                removeObject(k, [coord.x, coord.y]);
+                removeObject(k, [coord.x, coord.y], c => {
+                    deleteCooldown.setCooldown(c);
+                });
             }
         }
     }}

@@ -11,12 +11,8 @@
     import SettingsOptions from "./settings/SettingsOptions.svelte";
     import {
         canPlaceEditDelete,
-        eventElapsedContinuous,
         eventEndTime,
-        eventStartTime,
         eventStatus,
-        ExclusiveMenus,
-        loginData,
         nowStore,
         openMenu,
         timeLeft,
@@ -30,9 +26,8 @@
     import SongStopButton from "./level_view/SongStopButton.svelte";
     import EndCountdown from "./level_view/EndCountdown.svelte";
     import Guide from "./guide/Guide.svelte";
-    import EndingNameInput from "./ending/LiveNameInput.svelte";
     import { playSound } from "./utils/audio";
-    import { DEBUG_ENDING_VISIBILITY, LEVEL_NAME_DELAY } from "./ending/ending";
+    import { LEVEL_NAME_DELAY } from "./ending/ending";
     import { scheduleFor } from "shared-lib/util";
     import SharedEnding from "./ending/SharedEnding.svelte";
     import ViewLevelButton from "./ending/ViewLevelButton.svelte";

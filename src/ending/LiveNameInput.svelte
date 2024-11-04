@@ -11,7 +11,7 @@
     import { onDestroy, onMount } from "svelte";
     import { db } from "../firebase/firebase";
     import type { Unsubscribe } from "firebase/database";
-    import { SyncedCooldown } from "../utils/cooldown";
+    import { Cooldown } from "../utils/cooldown";
     import {
         eventElapsedContinuous,
         eventEndTime,
@@ -35,7 +35,7 @@
     const VIGNETTE_DELAY = LEVEL_NAME_DELAY + 3;
 
     const characterCooldown = $loginData.currentUserData
-        ? SyncedCooldown.new(
+        ? Cooldown.new(
               `userDetails/${$loginData.currentUserData!.user.uid}/lastCharacterTimestamp`,
               CHARACTER_COOLDOWN_SECONDS
           )

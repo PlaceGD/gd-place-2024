@@ -85,7 +85,7 @@ export const rotateVec = (
 };
 
 export const timerDisplay = (time?: number) => {
-    if (time == null || time < 0) {
+    if (time == null || time < 0 || !isFinite(time)) {
         return "--:--";
     }
 

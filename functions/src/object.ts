@@ -8,7 +8,12 @@ import {
     isValidObject,
 } from "shared-lib/gd";
 import { ChunkID } from "shared-lib/database";
-import { PlaceReq, DeleteReq, PlaceRes } from "shared-lib/cloud_functions";
+import {
+    PlaceReq,
+    DeleteReq,
+    PlaceRes,
+    DeleteRes,
+} from "shared-lib/cloud_functions";
 import {
     CHUNK_SIZE_UNITS,
     END_RADIUS,
@@ -212,12 +217,12 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
             db.ref(`totalObjectsPlaced`).transaction(v => (v ?? 0) + 1),
         ]);
 
-        return objRef.key ?? "";
+        return { key: objRef.key ?? "", cooldown: placeCooldown.val() * 1000 };
     }
 );
 
 // #region deleteObject
-export const deleteObject = onCallAuthLogger<DeleteReq>(
+export const deleteObject = onCallAuthLogger<DeleteReq, Promise<DeleteRes>>(
     "deleteObject",
     async (request, logger) => {
         const db = smartDatabase();
@@ -278,5 +283,7 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
                 .transaction(v => (v ?? 1) - 1),
             db.ref(`totalObjectsDeleted`).transaction(v => (v ?? 0) + 1),
         ]);
+
+        return { cooldown: deleteCooldown.val() * 1000 };
     }
 );

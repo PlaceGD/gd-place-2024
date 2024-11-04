@@ -14,6 +14,7 @@
     import Check from "../icons/Check.svelte";
     import {
         changeNameGradient,
+        getGradientCooldown,
         submitKofiTxId,
     } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
@@ -29,7 +30,7 @@
     import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
     import ScreenModal from "../components/ScreenModal.svelte";
     import DarkInput from "../components/DarkInput.svelte";
-    import { SyncedCooldown } from "../utils/cooldown";
+    import { Cooldown } from "../utils/cooldown";
     import type { Readable } from "svelte/store";
     import type { UserData } from "../firebase/auth";
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
@@ -109,22 +110,23 @@
         resetSubmitButton();
     };
 
-    let gradientCooldown: SyncedCooldown | null = null;
+    let gradientCooldown: Cooldown | null = null;
     let gradientCooldownDisplay: Readable<string> | null = null;
     let gradientCooldownFinished: Readable<boolean> | null = null;
 
     const onUserData = (data: UserData | null) => {
-        if (gradientCooldown != null) {
-            gradientCooldown.unsub();
-        }
+        // if (gradientCooldown != null) {
+        //     gradientCooldown.unsub();
+        // }
         if (data != null) {
-            gradientCooldown = SyncedCooldown.new(
-                `userDetails/${data?.user?.uid ?? ""}/lastGradientTimestamp`,
-                GRADIENT_COOLDOWN_SECONDS
-            );
+            async () => {
+                gradientCooldown = new Cooldown();
+                let v = await getGradientCooldown();
+                gradientCooldown.setCooldown(v.data);
 
-            gradientCooldownDisplay = gradientCooldown.display;
-            gradientCooldownFinished = gradientCooldown.finished;
+                gradientCooldownDisplay = gradientCooldown.display;
+                gradientCooldownFinished = gradientCooldown.finished;
+            };
         } else {
             gradientCooldown = null;
             gradientCooldownDisplay = null;
@@ -149,6 +151,8 @@
         try {
             await changeNameGradient({
                 grad: nameGradientString,
+            }).then(v => {
+                gradientCooldown?.setCooldown(v.data.cooldown);
             });
 
             $currentNameGradient.positions = nameGradientStops as any;

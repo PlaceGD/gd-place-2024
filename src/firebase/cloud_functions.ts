@@ -18,6 +18,10 @@ import type {
     MetaReq,
     PlaceRes,
     LevelNameReq,
+    DeleteRes,
+    GradientRes,
+    ReportUserRes,
+    LevelNameRes,
 } from "shared-lib/cloud_functions";
 import { GDColor, GDObjectOpt } from "wasm-lib";
 import { isValidObject, objects } from "shared-lib/gd";
@@ -69,8 +73,14 @@ export const placeObject = httpsCallable<PlaceReq, PlaceRes>(
     functions,
     "placeObject"
 );
-export const deleteObject = httpsCallable<DeleteReq>(functions, "deleteObject");
-export const reportUser = httpsCallable<ReportUserReq>(functions, "reportUser");
+export const deleteObject = httpsCallable<DeleteReq, DeleteRes>(
+    functions,
+    "deleteObject"
+);
+export const reportUser = httpsCallable<ReportUserReq, ReportUserRes>(
+    functions,
+    "reportUser"
+);
 export const banUser = httpsCallable<BanReq>(functions, "banUser");
 export const reportedUserOperation = httpsCallable<ReportedUserOperationReq>(
     functions,
@@ -84,12 +94,33 @@ export const submitKofiTxId = httpsCallable<KofiReq>(
     functions,
     "submitKofiTxId"
 );
-export const changeNameGradient = httpsCallable<GradientReq>(
+export const changeNameGradient = httpsCallable<GradientReq, GradientRes>(
     functions,
     "changeNameGradient"
 );
 export const setMeta = httpsCallable<MetaReq>(functions, "setMeta");
-export const setLevelNameLetter = httpsCallable<LevelNameReq>(
+export const setLevelNameLetter = httpsCallable<LevelNameReq, LevelNameRes>(
     functions,
     "setLevelNameLetter"
+);
+
+export const getPlaceCooldown = httpsCallable<{}, number>(
+    functions,
+    "getPlaceCooldown"
+);
+export const getDeleteCooldown = httpsCallable<{}, number>(
+    functions,
+    "getDeleteCooldown"
+);
+export const getReportCooldown = httpsCallable<{}, number>(
+    functions,
+    "getReportCooldown"
+);
+export const getGradientCooldown = httpsCallable<{}, number>(
+    functions,
+    "getGradientCooldown"
+);
+export const getCharacterCooldown = httpsCallable<{}, number>(
+    functions,
+    "getCharacterCooldown"
 );

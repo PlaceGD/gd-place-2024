@@ -2,30 +2,44 @@
     import { expoOut } from "svelte/easing";
     import { fade, fly } from "svelte/transition";
     import * as wasm from "wasm-lib";
-    import { STATS } from "./ending";
     import { onDestroy } from "svelte";
+    import { db } from "../firebase/firebase";
 
-    const stat_names = [
-        "Number of creators",
-        "Objects placed",
-        "Objects deleted",
-    ];
+    let userCount = 0;
+    let unsubUserCountUnsub = db
+        .ref("userCount")
+        .on("value", snapshot => (userCount = snapshot.val() ?? 0));
+
+    let totalPlaced = 0;
+    let totalPlacedUnsub = db
+        .ref("totalObjectsPlaced")
+        .on("value", snapshot => (totalPlaced = snapshot.val() ?? 0));
+
+    let totalDeleted = 0;
+    let totalDeletedUnsub = db
+        .ref("totalObjectsDeleted")
+        .on("value", snapshot => (totalDeleted = snapshot.val() ?? 0));
+
+    const STATS: Record<string, number> = {
+        "Number of creators": userCount,
+        "Objects placed": totalPlaced,
+        "Objects deleted": totalDeleted,
+    };
+    const STAT_NAMES = Object.keys(STATS);
 
     export let state: wasm.State;
-    let current_stat = -1;
+    let currentStat = -1;
 
     let interval: NodeJS.Timeout;
     let timeout: NodeJS.Timeout;
 
-    STATS.then((stats: number[]) => {
-        interval = setInterval(() => {
-            timeout = setTimeout(() => {
-                state.set_stats(stats[current_stat]);
-            }, 1000);
-            current_stat++;
-            current_stat = current_stat % stats.length;
-        }, 8000);
-    });
+    interval = setInterval(() => {
+        timeout = setTimeout(() => {
+            state.set_stats(STATS[STAT_NAMES[currentStat]]);
+        }, 1000);
+        currentStat++;
+        currentStat = currentStat % STAT_NAMES.length;
+    }, 8000);
 
     const fltoatInOutTest = (node: HTMLElement) => {
         node.animate(
@@ -99,13 +113,13 @@
 </script>
 
 <!-- transition:fltoatInOut|global -->
-{#if current_stat != -1}
-    {#key stat_names[current_stat]}
+{#if currentStat != -1}
+    {#key STAT_NAMES[currentStat]}
         <div
             class="absolute z-30 flex justify-center w-full h-full text-3xl text-white bg-transparent pointer-events-none xs:text-xl flex-center"
             use:fltoatInOutTest
         >
-            {stat_names[current_stat]}:
+            {STAT_NAMES[currentStat]}:
         </div>
     {/key}
 {/if}

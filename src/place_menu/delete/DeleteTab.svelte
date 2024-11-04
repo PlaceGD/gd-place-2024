@@ -5,17 +5,24 @@
         bannedUsers,
         loginData,
         menuMinimized,
+        menuSelectedObject,
+        menuTabGroup,
         selectedObject,
+        TabGroup,
     } from "../../stores";
 
     import OnceButton from "../../components/Buttons/OnceButton.svelte";
     import Toast from "../../utils/toast";
     import Image from "../../components/Image.svelte";
-    import { banUser, reportUser } from "../../firebase/cloud_functions";
+    import {
+        banUser,
+        getReportCooldown,
+        reportUser,
+    } from "../../firebase/cloud_functions";
     import ColoredName from "../../components/ColoredName.svelte";
     import Loading from "../../components/Loading.svelte";
     import { setClipboard } from "../../utils/clipboard";
-    import { SyncedCooldown } from "../../utils/cooldown";
+    import { Cooldown } from "../../utils/cooldown";
     import { getCameraPos } from "../../level_view/view_controls";
     import { getNewTurnstileToken } from "../../utils/turnstile";
     import ObjectButtonImage from "../objects/ObjectButtonImage.svelte";
@@ -39,10 +46,8 @@
 
     export let state: wasm.State;
 
-    const cooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/lastReportTimestamp`,
-        REPORT_COOLDOWN_SECONDS
-    );
+    const cooldown = new Cooldown();
+    getReportCooldown().then(v => cooldown.setCooldown(v.data));
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
 
     $: isYourself =
@@ -63,6 +68,8 @@
                 // turnstileResp: token,
                 x: cameraPos[0],
                 y: cameraPos[1],
+            }).then(v => {
+                cooldown.setCooldown(v.data.cooldown);
             });
         } catch (e: any) {
             console.error("Failed to report user", e.details.message);
@@ -231,7 +238,15 @@
         ></span>
 
         <ul class="object-info-grid">
-            <li class="object-info-item type sm:gap-1">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <li
+                class="object-info-item type sm:gap-1"
+                on:click={() => {
+                    $menuSelectedObject = $selectedObject.id ?? 1;
+                    $menuTabGroup = TabGroup.Build;
+                }}
+            >
                 <h1 class="text-xl md:text-base font-pusab text-stroke">
                     Type:
                 </h1>

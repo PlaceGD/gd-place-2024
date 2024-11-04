@@ -489,7 +489,7 @@ setTimeout(
             nowStore.set(Date.now());
         }, 1000);
     },
-    1000 - (Date.now() % 1000)
+    1500 - (Date.now() % 1000)
 );
 
 export const eventStartTime = writable(Number.POSITIVE_INFINITY);

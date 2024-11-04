@@ -71,6 +71,7 @@
         setNameSeconds,
     } from "../stores";
     import {
+        getTransformedPlaceOffset,
         MOVE_KEYBINDS,
         TRANSFORM_KEYBINDS,
         WidgetType,
@@ -207,14 +208,10 @@
 
         let obj = state.get_preview_object();
 
-        obj.x =
-            Math.floor(mx / 30) * 30 +
-            15 +
-            objects[$menuSelectedObject].placeOffsetX;
-        obj.y =
-            Math.floor(my / 30) * 30 +
-            15 +
-            objects[$menuSelectedObject].placeOffsetY;
+        let [gagaX, gagaY] = getTransformedPlaceOffset(obj);
+
+        obj.x = Math.floor(mx / 30) * 30 + 15 - gagaX;
+        obj.y = Math.floor(my / 30) * 30 + 15 - gagaY;
 
         // obj.x_scale_exp = 0;
         // obj.x_angle = 0;

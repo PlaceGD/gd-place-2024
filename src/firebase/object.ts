@@ -2,12 +2,12 @@ import { GDObjectOpt } from "wasm-lib";
 import { db } from "./firebase";
 import Toast from "../utils/toast";
 
-import { placeObject, deleteObject } from "./cloud_functions";
+import { placeObject, deleteObject, getPlaceCooldown } from "./cloud_functions";
 import { encodeString } from "shared-lib/base_util";
 
 export const addObject = (
     obj: GDObjectOpt,
-    cb: (key: string | null) => void
+    cb: (key: string | null, cooldown: number | null) => void
 ) => {
     localStorage.setItem("dontShowGuidePopup", "true");
     let v = obj.bytes();
@@ -16,7 +16,7 @@ export const addObject = (
 
     placeObject({ object: s, timestamp: Date.now() })
         .then(v => {
-            cb(v.data);
+            cb(v.data.key, v.data.cooldown);
         })
         .catch(e => {
             if (e.details.code === 600) {
@@ -29,19 +29,25 @@ export const addObject = (
                     `Failed to place object. (${e.details.code})`
                 );
             }
-            cb(null);
+            cb(null, null);
         });
 };
-export const removeObject = (key: string, chunk: [number, number]) => {
+export const removeObject = (
+    key: string,
+    chunk: [number, number],
+    cb: (cooldown: number) => void
+) => {
     localStorage.setItem("dontShowGuidePopup", "true");
-    deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key }).catch(
-        e => {
+    deleteObject({ chunkId: `${chunk[0]},${chunk[1]}`, objId: key })
+        .then(v => {
+            cb(v.data.cooldown);
+        })
+        .catch(e => {
             console.error("Failed to delete object", e.details.message);
             Toast.showErrorToast(
                 `Failed to delete object. (${e.details.code})`
             );
-        }
-    );
+        });
 };
 //MEOLW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 let userPlacedCache: Record<string, string> = {};

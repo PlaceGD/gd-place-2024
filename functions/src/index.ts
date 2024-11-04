@@ -23,6 +23,13 @@ export { setMeta } from "./meta";
 
 export { setLevelNameLetter } from "./ending";
 
+export {
+    getPlaceCooldown,
+    getDeleteCooldown,
+    getReportCooldown,
+    getGradientCooldown,
+} from "./cooldown";
+
 export const smartDatabase = () => convertDatabase<DatabaseSchema>(database());
 
 initializeApp();

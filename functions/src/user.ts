@@ -6,6 +6,7 @@ import type {
     ReportUserReq,
     ReportedUserOperationReq,
     BanReq,
+    ReportUserRes,
 } from "shared-lib/cloud_functions";
 import { Level, LogGroup } from "./utils/logger";
 import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
@@ -136,85 +137,87 @@ export const initUserWithUsername = onCallAuthLogger<
 });
 
 // #region reportUser
-export const reportUser = onCallAuthLogger<ReportUserReq>(
-    "reportUser",
-    async (request, logger) => {
-        const data = request.data;
+export const reportUser = onCallAuthLogger<
+    ReportUserReq,
+    Promise<ReportUserRes>
+>("reportUser", async (request, logger) => {
+    const data = request.data;
 
-        // await validateTurnstile(
-        //     process.env["TURNSTILE_GENERAL_PRIV_KEY"],
-        //     data.turnstileResp,
-        //     request.rawRequest,
-        //     logger
-        // );
+    // await validateTurnstile(
+    //     process.env["TURNSTILE_GENERAL_PRIV_KEY"],
+    //     data.turnstileResp,
+    //     request.rawRequest,
+    //     logger
+    // );
 
-        const db = smartDatabase();
+    const db = smartDatabase();
 
-        const now = Date.now();
+    const now = Date.now();
 
-        const userDetails = await getCheckedUserDetails(db, request.auth.uid);
+    const userDetails = await getCheckedUserDetails(db, request.auth.uid);
 
-        const [_, userToReport] = await Promise.all([
-            checkedTransaction(
-                userDetails.ref.child("lastReportTimestamp"),
-                lastReport =>
-                    now >= (lastReport ?? 0) + REPORT_COOLDOWN_SECONDS * 1000,
-                () => Error.code(204, "permission-denied"),
-                () => now // + REPORT_COOLDOWN_SECONDS * 1000
-            ),
-            db
-                .ref(`userName/${data.username.toLowerCase()}`)
-                .get()
-                .then(v => v.val()),
-        ]);
+    const [_, userToReport] = await Promise.all([
+        checkedTransaction(
+            userDetails.ref.child("lastReportTimestamp"),
+            lastReport =>
+                now >= (lastReport ?? 0) + REPORT_COOLDOWN_SECONDS * 1000,
+            () => Error.code(204, "permission-denied"),
+            () => now // + REPORT_COOLDOWN_SECONDS * 1000
+        ),
+        db
+            .ref(`userName/${data.username.toLowerCase()}`)
+            .get()
+            .then(v => v.val()),
+    ]);
 
-        if (userToReport == undefined) {
-            throw Error.code(100, "invalid-argument");
-        }
-
-        if (data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
-            logger.debug("User reported at X", data.x);
-            throw Error.code(101, "invalid-argument");
-        }
-        if (data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
-            logger.debug("User reported at Y", data.y);
-            throw Error.code(101, "invalid-argument");
-        }
-
-        // const reported = db.ref("reportedUsers");
-
-        await checkedTransaction(
-            db.ref("reportedUsers").child(userToReport.uid),
-            () => true,
-            () => 0,
-            reportData => {
-                if (reportData == undefined) {
-                    return {
-                        username: data.username,
-                        timestamp: Date.now(),
-                        count: 1,
-                        avg_x: data.x,
-                        avg_y: data.y,
-                    };
-                } else {
-                    return {
-                        username: data.username,
-                        timestamp: Date.now(),
-                        count: reportData.count + 1,
-                        avg_x:
-                            (reportData.avg_x * reportData.count + data.x) /
-                            (reportData.count + 1),
-                        avg_y:
-                            (reportData.avg_y * reportData.count + data.y) /
-                            (reportData.count + 1),
-                    };
-                }
-            }
-        );
-
-        logger.info(`Reported user ${data.username}`);
+    if (userToReport == undefined) {
+        throw Error.code(100, "invalid-argument");
     }
-);
+
+    if (data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
+        logger.debug("User reported at X", data.x);
+        throw Error.code(101, "invalid-argument");
+    }
+    if (data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
+        logger.debug("User reported at Y", data.y);
+        throw Error.code(101, "invalid-argument");
+    }
+
+    // const reported = db.ref("reportedUsers");
+
+    await checkedTransaction(
+        db.ref("reportedUsers").child(userToReport.uid),
+        () => true,
+        () => 0,
+        reportData => {
+            if (reportData == undefined) {
+                return {
+                    username: data.username,
+                    timestamp: Date.now(),
+                    count: 1,
+                    avg_x: data.x,
+                    avg_y: data.y,
+                };
+            } else {
+                return {
+                    username: data.username,
+                    timestamp: Date.now(),
+                    count: reportData.count + 1,
+                    avg_x:
+                        (reportData.avg_x * reportData.count + data.x) /
+                        (reportData.count + 1),
+                    avg_y:
+                        (reportData.avg_y * reportData.count + data.y) /
+                        (reportData.count + 1),
+                };
+            }
+        }
+    );
+
+    logger.info(`Reported user ${data.username}`);
+
+    return { cooldown: REPORT_COOLDOWN_SECONDS * 1000 };
+});
 
 // #region banUserInner
 const banUserInner = async (

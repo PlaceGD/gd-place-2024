@@ -208,9 +208,10 @@ parse_countdown_files! {
     "juniper"           ("Juniper"):            [0 => weights(2,   3,   3,   3  ) famous silly], // 63
     "wulzy"             ("Wulzy"):              [0 => weights(3,   3,   3,   5  )], // 64
     "platnuu"           ("Platnuu"):            [0 => weights(4,   3,   3,   5  ) pretty], // 65
+    "radiationv2"       ("RadiationV2"):        [3 => weights(5,   4,   4,   3  ) pretty], // 66
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 1, 64, 65]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 1, 64, 12]);
 
 #[binrw]
 #[brw(little)]

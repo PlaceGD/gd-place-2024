@@ -108,6 +108,8 @@
 
                 if (c != null) {
                     placeCooldown.setCooldown(c);
+                } else {
+                    pdButtonDisabled = false;
                 }
 
                 // state.add_object(k, state.get_preview_object());

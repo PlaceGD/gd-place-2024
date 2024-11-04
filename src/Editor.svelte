@@ -121,9 +121,7 @@
                     <ViewLevelButton bind:state />
                 {/if}
 
-                {#if $eventStatus == "during" || $eventStatus == "before"}
-                    <SettingsButton />
-                {/if}
+                <SettingsButton />
 
                 {#if state != null && $eventStatus == "during"}
                     <ModButton />

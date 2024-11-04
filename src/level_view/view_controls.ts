@@ -29,8 +29,8 @@ export const zoomTween = tweened(0, {
 });
 zoomGoal.subscribe(v => zoomTween.set(v));
 zoomGoal.subscribe(v => {
-    if (v < -4 || v > 36) {
-        zoomGoal.set(clamp(v, -4, 36));
+    if (v < -8 || v > 100) {
+        zoomGoal.set(clamp(v, -8, 100));
     }
 });
 export const [mouseX, mouseY] = [writable(0), writable(0)];
@@ -43,6 +43,7 @@ export const zoomCentral = (to: number, canvas: HTMLCanvasElement) => {
 };
 
 export const handleSub = (state: wasm.State) => {
+    return;
     let gibohabid = state.get_chunks_to_sub();
     for (let chunk of gibohabid) {
         subChunk(
@@ -51,39 +52,7 @@ export const handleSub = (state: wasm.State) => {
                 let key = data.key;
                 let val = data.val();
                 if (key != null) {
-                    try {
-                        let obj = wasm.GDObjectOpt.from_bytes(
-                            decodeString(val, 126)
-                        );
-                        state.add_object(key, obj);
-
-                        // let username =
-                        //     get(loginData).currentUserData?.userDetails
-                        //         ?.username;
-                        // if (username != null) {
-                        //     (async () => {
-                        //         let placedBy = (
-                        //             await db.ref(`userPlaced/${key}`).get()
-                        //         ).val();
-                        //         if (username == placedBy) {
-                        //             canPlacePreview.set(true);
-                        //             state.set_preview_visibility(false);
-                        //         }
-                        //     })();
-                        // }
-                    } catch (e: any) {
-                        if (val.slice(0, 2) != "%%") {
-                            console.error(
-                                "(Failed in `GDObjectOpt.from_bytes`)"
-                            );
-
-                            if ("display" in e) {
-                                Toast.showErrorToast(e.display());
-                            } else {
-                                console.error(e);
-                            }
-                        }
-                    }
+                    addObjString(state, key, val);
                 }
             },
             data => {
@@ -101,9 +70,9 @@ export const handleSub = (state: wasm.State) => {
 };
 
 export const handleUnsub = (state: wasm.State) => {
-    for (let chunk of state.get_chunks_to_unsub()) {
-        unsubChunk([chunk.x, chunk.y]);
-    }
+    // for (let chunk of state.get_chunks_to_unsub()) {
+    //     unsubChunk([chunk.x, chunk.y]);
+    // }
 };
 
 const savePos = debounce((state: wasm.State) => {
@@ -161,4 +130,20 @@ export const moveCamera = (state: wasm.State, x: number, y: number) => {
 export const getCameraPos = (state: wasm.State): [number, number] => {
     const [x, y] = state.get_camera_pos();
     return [x, y];
+};
+export const addObjString = (state: wasm.State, key: string, val: string) => {
+    try {
+        let obj = wasm.GDObjectOpt.from_bytes(decodeString(val, 126));
+        state.add_object(key, obj);
+    } catch (e: any) {
+        if (val.slice(0, 2) != "%%") {
+            console.error("(Failed in `GDObjectOpt.from_bytes`)");
+
+            if ("display" in e) {
+                Toast.showErrorToast(e.display());
+            } else {
+                console.error(e);
+            }
+        }
+    }
 };

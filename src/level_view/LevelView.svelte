@@ -9,6 +9,7 @@
     import { editorSettings, rawSpritesheetData } from "../stores";
     import { handleSub } from "./view_controls";
     import { isMobile } from "../utils/document";
+    import { runtTimelapse } from "../timelapse";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -68,6 +69,8 @@
         requestAnimationFrame(draw);
     };
     requestAnimationFrame(draw);
+
+    requestAnimationFrame(t => runtTimelapse(t, state));
 
     $: {
         if (state != null && offscreenCanvas != null && canvas != null) {

@@ -1,4 +1,10 @@
-import { derived, writable, type Readable, type Writable } from "svelte/store";
+import {
+    derived,
+    readable,
+    writable,
+    type Readable,
+    type Writable,
+} from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor, State } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
@@ -520,35 +526,7 @@ export type EventStatus =
     | "during"
     | "name set"
     | "fully done";
-export const eventStatus: Readable<EventStatus> = derived(
-    [nowStore, eventStartTime, eventEndTime, setNameSeconds],
-    ([now, start, end, name]): EventStatus => {
-        if (
-            now == 0 ||
-            start == Number.POSITIVE_INFINITY ||
-            end == Number.POSITIVE_INFINITY ||
-            name == 0
-        ) {
-            return "loading";
-        }
-
-        if (now < start) {
-            return "before";
-        }
-        if (now < end) {
-            return "during";
-        }
-        if (now < end + name * 1000) {
-            return "name set";
-        }
-        if (now >= end + name * 1000) {
-            return "fully done";
-        }
-
-        return "loading";
-    }
-);
-eventStatus.subscribe(v => console.log("Status: ", v));
+export const eventStatus: Readable<EventStatus> = readable("during");
 
 export const eventElapsedContinuous = tweened(0, {
     duration: 1000,

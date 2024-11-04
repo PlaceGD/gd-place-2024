@@ -41,6 +41,7 @@
     import endingSequenceAmbientUrl from "./assets/ending_sequence_sound_ending_idk_idfk.mp3?url";
     import bigTickUrl from "./assets/big_tick.mp3?url";
     import tickUrl from "./assets/tick.mp3?url";
+    import { runtTimelapse } from "./timelapse";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -113,7 +114,7 @@
 > -->
 
 <div class="absolute w-full h-full">
-    {#if state != null && $eventStatus != "loading"}
+    <!-- {#if state != null && $eventStatus != "loading"}
         <Guide {state} />
 
         <div
@@ -162,11 +163,11 @@
                 <EndCountdown />
             </div>
         {/if}
-    {/if}
+    {/if} -->
     {#if wasmLoaded}
-        {#if showEnding && state != null && !$viewingLevelAfterEvent}
+        <!-- {#if showEnding && state != null && !$viewingLevelAfterEvent}
             <SharedEnding bind:state />
-        {/if}
+        {/if} -->
         {#if $eventStatus != "loading"}
             <LevelView
                 bind:state
@@ -178,7 +179,7 @@
     {/if}
     {#if state != null && $eventStatus != "loading"}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        {#if $eventStatus == "before" || $eventStatus == "during"}
+        <!-- {#if $eventStatus == "before" || $eventStatus == "during"}
             <div
                 style:display={$eventStatus == "during" && $canPlaceEditDelete
                     ? "contents"
@@ -192,6 +193,6 @@
             {:else if !$canPlaceEditDelete}
                 <EventMenu kind="login-to-place" bind:state />
             {/if}
-        {/if}
+        {/if} -->
     {/if}
 </div>

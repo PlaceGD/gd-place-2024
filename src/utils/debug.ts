@@ -1,7 +1,7 @@
 import Stats from "stats.js";
 import { writable } from "svelte/store";
 
-export let DEBUG = writable(__DEBUG ?? false); // in development mode it is set to true by default
+export let DEBUG = writable(false); // in development mode it is set to true by default
 
 export let stats: Stats;
 if (typeof window !== "undefined") {

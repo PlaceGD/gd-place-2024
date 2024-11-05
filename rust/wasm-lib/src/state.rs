@@ -2,7 +2,7 @@ use core::f64;
 
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 
-pub const DRAW_LEVEL: bool = true;
+pub const DRAW_LEVEL: bool = false;
 
 use rust_shared::{
     console_log,

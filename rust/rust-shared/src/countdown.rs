@@ -182,7 +182,7 @@ parse_countdown_files! {
     "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5) pretty], // 37
     "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 38
     "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 39
-    "rafer"             ("Rafer"):              [3 => weights(2,   2,   2,   9  ) silly pretty classic], // 40
+    "rafer"             ("Rafer"):              [3 => weights(2,   2,   5,   9  ) silly pretty classic], // 40
     "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 41
     "culuc"             ("Culuc"):              [3 => weights(5,   3,   4,   4  ) famous pretty silly], // 42
     "boldstep"          ("BoldStep"):           [0 => weights(6,   3,   3,   2  )], // 43
@@ -209,10 +209,11 @@ parse_countdown_files! {
     "wulzy"             ("Wulzy"):              [0 => weights(3,   3,   3,   5  )], // 64
     "platnuu"           ("Platnuu"):            [0 => weights(4,   3,   3,   5  ) pretty], // 65
     "radiationv2"       ("RadiationV2"):        [3 => weights(5,   4,   4,   3  ) pretty], // 66
-    "smiffy"            ("Smiffy777"):          [0 => weights(3,   3,   3,   3  ) famous silly], // 67
+    "smiffy"            ("Smiffy777"):          [0 => weights(3,   3,   3,   3  ) silly], // 67
+    "knots"             ("Knots"):              [3 => weights(4,   3,   3,   4  ) pretty], // 68
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = Some([0, 1, 64, 67]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 66, 65, 68]);
 
 #[binrw]
 #[brw(little)]

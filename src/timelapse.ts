@@ -35,7 +35,7 @@ let timelapsetime = HISTORY[0].time;
 let historyIndex = 0;
 
 let paused = true;
-let TIMELAPSE_SPEED = 26;
+let TIMELAPSE_SPEED = 200;
 export const togglePause = () => {
     paused = !paused;
 };
@@ -82,7 +82,7 @@ export const runtTimelapse = (time: number, state: wasm.State | null) => {
 
     if (!paused) {
         timelapsetime += delta * TIMELAPSE_SPEED;
-        TIMELAPSE_SPEED += 0.013 * delta;
+        //TIMELAPSE_SPEED += 0.01 * delta;
     }
 
     prevTime = time;

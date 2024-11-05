@@ -792,12 +792,12 @@
         }
 
         if (e.code == "ArrowUp") {
-            zoomVel += 0.0000007;
+            zoomVel += 0.00000045;
             return;
         }
 
         if (e.code == "ArrowDown") {
-            zoomVel -= 0.0000007;
+            zoomVel -= 0.00000045;
             return;
         }
 

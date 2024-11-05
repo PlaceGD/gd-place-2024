@@ -67,7 +67,7 @@
                     bind:value={inputValues.announcementText}
                 ></DarkInput>
             </div>
-            <div class="flex flex-row w-full">
+            <div class="flex flex-row w-full gap-1">
                 <WhiteButton
                     class="w-full"
                     on:click={() => {

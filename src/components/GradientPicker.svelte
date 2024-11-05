@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { afterUpdate, beforeUpdate } from "svelte";
+    import { afterUpdate, beforeUpdate, onDestroy, onMount } from "svelte";
     import RangeSlider from "svelte-range-slider-pips";
     import ColorPicker from "svelte-awesome-color-picker";
-    import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
     import Cross from "../icons/Cross.svelte";
     import { clamp, hexToRgb, remEuclid } from "shared-lib/util";
     import DarkInput from "./DarkInput.svelte";
@@ -10,24 +9,25 @@
     import Palette from "../icons/Palette.svelte";
     import WhiteButton from "./Buttons/WhiteButton.svelte";
     import { getRandomGradientColors } from "../utils/gradient";
+    import ColorPickerWrapper from "./ColorPickerWrapper.svelte";
 
     export let maxStops: number;
 
-    let activeElement: HTMLElement | null;
+    // let activeElement: HTMLElement | null;
 
-    beforeUpdate(() => {
-        if (
-            document.activeElement != null &&
-            !document.activeElement.isEqualNode(document.body)
-        ) {
-            activeElement = document.activeElement as HTMLElement;
-        }
-    });
-    afterUpdate(() => {
-        if (activeElement != null) {
-            activeElement.focus();
-        }
-    });
+    // beforeUpdate(() => {
+    //     if (
+    //         document.activeElement != null &&
+    //         !document.activeElement.isEqualNode(document.body)
+    //     ) {
+    //         activeElement = document.activeElement as HTMLElement;
+    //     }
+    // });
+    // afterUpdate(() => {
+    //     if (activeElement != null) {
+    //         activeElement.focus();
+    //     }
+    // });
 
     let rotateKnob: HTMLDivElement;
     let gradientAngle = 90;
@@ -39,7 +39,44 @@
     export let gradientColors: string[];
     export let gradientIDs: number[];
 
-    let openColorPickers = gradientStops.map(() => false);
+    // let openColorPickers = gradientStops.map(() => false);
+
+    let colorPickerHex = "";
+    let colorPickerIndex = -1;
+
+    let observer: MutationObserver;
+
+    onMount(() => {
+        const elem = document.getElementById("gradient-color-picker");
+        if (elem == null) {
+            console.warn("no color picker");
+        } else {
+            observer = new MutationObserver(mutations => {
+                mutations.forEach(mu => {
+                    if (
+                        mu.type !== "attributes" &&
+                        mu.attributeName !== "class"
+                    ) {
+                        return;
+                    }
+
+                    colorPickerIndex = elem.classList.contains("is-open")
+                        ? colorPickerIndex
+                        : -1;
+                });
+            });
+
+            observer.observe(elem, { attributes: true });
+        }
+    });
+
+    onDestroy(() => {
+        observer.disconnect();
+    });
+
+    $: colorPickerIndex != -1
+        ? (gradientColors[colorPickerIndex] = colorPickerHex)
+        : undefined;
 
     $: gradientColorListString = gradientStops
         .map((pos, idx) => [pos, gradientColors[idx]] as [number, string])
@@ -228,7 +265,7 @@
 
                 gradientColors.push(color);
                 gradientIDs.push(Math.random());
-                openColorPickers.push(false);
+                // openColorPickers.push(false);
 
                 gradientStops = gradientStops;
                 gradientColors = gradientColors;
@@ -247,8 +284,18 @@
                 hoverable={false}
             ></RangeSlider>
         </div>
-        <div class="absolute dark left-1/4">
-            <div id="color-picker-portal" />
+        <div
+            class="absolute z-30 dark left-1/4"
+            style="--input-size: 0px; --cp-input-color: #080808; transform: translateY(65px)"
+        >
+            <ColorPicker
+                components={{ wrapper: ColorPickerWrapper }}
+                bind:hex={colorPickerHex}
+                label=""
+                isAlpha={false}
+                textInputModes={["hex"]}
+                isOpen={colorPickerIndex != -1}
+            />
         </div>
     </div>
 
@@ -260,25 +307,23 @@
                 .map((pos, idx) => [pos, idx])
                 .sort(([a], [b]) => a - b) as [_, idx] (gradientIDs[idx])}
                 <li class="grid grid-cols-3">
-                    <div
+                    <button
                         class="flex items-center justify-center flex-auto p-1 cursor-pointer gradient-picker-color"
-                        on:pointerup={() => {
-                            openColorPickers[idx] = true;
+                        on:click={() => {
+                            colorPickerHex = gradientColors[idx];
+                            colorPickerIndex =
+                                colorPickerIndex === idx ? -1 : idx;
                         }}
                     >
+                        <div
+                            class="w-8 h-8 rounded-full xs:w-7 xs:h-7"
+                            style:background={gradientColors[idx]}
+                        />
                         <Palette
                             stroke-width={1}
                             class="p-1 shrink-0 xs:w-9 xs:h-9"
                         />
-                        <ColorPicker
-                            bind:hex={gradientColors[idx]}
-                            label=""
-                            isAlpha={false}
-                            components={{ wrapper: ColorPickerWrapper }}
-                            textInputModes={["hex"]}
-                            bind:isOpen={openColorPickers[idx]}
-                        />
-                    </div>
+                    </button>
                     <div class="flex items-center justify-center flex-auto p-1">
                         <DarkInput
                             maxLength={3}
@@ -297,7 +342,7 @@
                                 gradientStops.splice(idx, 1);
                                 gradientColors.splice(idx, 1);
                                 gradientIDs.splice(idx, 1);
-                                openColorPickers.splice(idx, 1);
+                                // openColorPickers.splice(idx, 1);
                                 gradientStops = gradientStops;
                                 gradientColors = gradientColors;
                                 gradientIDs = gradientIDs;

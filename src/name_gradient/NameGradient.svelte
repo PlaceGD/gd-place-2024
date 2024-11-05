@@ -115,18 +115,16 @@
     let gradientCooldownFinished: Readable<boolean> | null = null;
 
     const onUserData = (data: UserData | null) => {
-        // if (gradientCooldown != null) {
-        //     gradientCooldown.unsub();
-        // }
         if (data != null) {
-            async () => {
+            (async () => {
                 gradientCooldown = new Cooldown();
+
                 let v = await getGradientCooldown();
                 gradientCooldown.setCooldown(v.data);
 
                 gradientCooldownDisplay = gradientCooldown.display;
                 gradientCooldownFinished = gradientCooldown.finished;
-            };
+            })();
         } else {
             gradientCooldown = null;
             gradientCooldownDisplay = null;
@@ -137,13 +135,6 @@
     $: {
         onUserData($loginData.currentUserData);
     }
-    // const gradientCooldown = SyncedCooldown.new(
-    //     `userDetails/${$loginData.currentUserData?.user?.uid ?? ""}/epochNextGradient`
-    // );
-    // let {
-    //     display: gradientCooldownDisplay,
-    //     finished: gradientCooldownFinished,
-    // } = gradientCooldown;
 
     const onUpdateGradient = async () => {
         isInProgress = true;

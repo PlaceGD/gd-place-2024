@@ -155,8 +155,9 @@
                                             );
                                         }}
                                     >
-                                        <Back class="rotate-180 stroke-[1.5]"
-                                        ></Back>
+                                        <Back
+                                            class="rotate-180 stroke-[1.5] w-full h-full"
+                                        />
                                     </button>
                                 </div>
                             </div>

@@ -7,7 +7,7 @@
 </script>
 
 <div
-    use:portal={"#color-picker-portal"}
+    id="gradient-color-picker"
     bind:this={wrapper}
     class="wrapper"
     class:is-open={isOpen}

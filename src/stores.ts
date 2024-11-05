@@ -21,7 +21,7 @@ import {
 import { isMobile } from "./utils/document";
 import { LEVEL_NAME_DELAY } from "./ending/ending";
 
-const STORAGE_VERSION = 2;
+const STORAGE_VERSION = 3;
 
 if (typeof window != "undefined") {
     if (

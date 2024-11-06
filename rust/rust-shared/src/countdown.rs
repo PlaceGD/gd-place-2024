@@ -218,10 +218,11 @@ parse_countdown_files! {
     "smiffy"            ("Smiffy777"):          [0 => weights(3,   3,   3,   3  ) silly], // 67
     "knots"             ("Knots"):              [3 => weights(4,   3,   3,   4  ) pretty], // 68
     "terron"            ("Terron"):             [0 => weights(4,   3,   3,   5  ) classic pretty], // 69
-    "aqua"              ("Aquatias"):           [4 => weights(3,   2,   2,   5  ) classic], // 70
+    "aqua"              ("Aquatias"):           [3 => weights(3,   2,   2,   4  ) classic], // 70
+    "devon"             ("Thedevon"):           [0 => weights(4,   2,   2,   5  ) classic], // 71
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 70, 69]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 70, 71]);
 
 #[binrw]
 #[brw(little)]
@@ -263,13 +264,13 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         switches[index] = Some(sets.map(|s| get_set_by_creator(s)));
     };
 
-    set_day_end(7, ["kips", "taman", "nasgubb", "echonox"]);
-    set_day_end(6, ["serp", "culuc", "knots", "rafer"]);
-    set_day_end(5, ["yunhaseu", "desticy", "galva", "grax"]); // change to goose and manix
-    set_day_end(4, ["evw", "juniper", "dorami", "aeonair"]);
-    set_day_end(3, ["npesta", "tech", "srguillester", "doggie"]);
-    set_day_end(2, ["bli", "davjt", "nasgubb", "echonox"]); // change to voxicat and xender once they finish
-    set_day_end(1, ["robtop", "krmal", "viprin", "echonox"]); // change to knobbelboy
+    set_day_end(7, ["desticy", "taman", "kips", "audieo"]); // change to goose
+    set_day_end(6, ["bli", "loco", "spu7nix", "spu7nix"]); // change to voxicat, xender
+    set_day_end(5, ["culuc", "knots", "nasgubb", "grax"]);
+    set_day_end(4, ["krmal", "partition", "galva", "terron"]);
+    set_day_end(3, ["yunhaseu", "dorami", "juniper", "smiffy"]);
+    set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
+    set_day_end(1, ["evw", "robtop", "viprin", "rafer"]); // change to knobbelboy?
 
     let mut rng = StdRng::seed_from_u64(42);
 
@@ -300,7 +301,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
 
         let mut config = [DigitSetLabels::random(); 4];
 
-        let sillytime = rng.gen::<f64>() < 0.2;
+        let sillytime = rng.gen::<f64>() < 0.1;
 
         if sillytime {
             config = [DigitSetLabels::silly(); 4]; // wacky time silly tinnme

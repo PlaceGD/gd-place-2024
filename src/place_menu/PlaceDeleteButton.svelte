@@ -43,6 +43,11 @@
         remaining: placeCooldownRemaining,
     } = placeCooldown;
 
+    $: {
+        $placeCooldownTime;
+        placeCooldown.updateCooldown();
+    }
+
     const deleteCooldown = new Cooldown(
         getDeleteCooldown,
         loginData,
@@ -53,6 +58,11 @@
         finished: deleteCooldownFinished,
         remaining: deleteCooldownRemaining,
     } = deleteCooldown;
+
+    $: {
+        $deleteCooldownTime;
+        deleteCooldown.updateCooldown();
+    }
 
     onDestroy(() => {
         placeCooldown.cleanup();
@@ -135,7 +145,11 @@
             if (k != null && coord != null) {
                 pdButtonDisabled = true;
                 removeObject(k, [coord.x, coord.y], c => {
-                    deleteCooldown.start(c);
+                    if (c != null) {
+                        deleteCooldown.start(c);
+                    } else {
+                        pdButtonDisabled = false;
+                    }
                 });
             }
         }

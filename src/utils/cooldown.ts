@@ -32,14 +32,12 @@ export class Cooldown {
 
                 this.unsubCooldown = db
                     .ref(
-                        `/userDetails/${d.currentUserData.user.uid}${userDetailsKey}/`
+                        `/userDetails/${d.currentUserData.user.uid}/${userDetailsKey}`
                     )
                     .on("value", async () => {
                         if (this.isStarted) return;
 
-                        const cooldown = (await cooldownGetter()).data;
-                        // console.log(cooldown);
-                        this.future.set(Date.now() + cooldown);
+                        this.updateCooldown();
                     });
             }
         });
@@ -59,6 +57,12 @@ export class Cooldown {
     public cleanup() {
         this.loginDataUnsub?.();
         this.unsubCooldown?.();
+    }
+
+    public async updateCooldown() {
+        const cooldown = (await this.cooldownGetter()).data;
+
+        this.future.set(Date.now() + cooldown);
     }
 
     public start(cooldown: number) {

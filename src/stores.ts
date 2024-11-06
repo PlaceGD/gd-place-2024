@@ -144,6 +144,16 @@ export const editorData = persistLocalWritable(
     "editorData"
 );
 
+export const DEFAULT_SETTINGS = {
+    showCollidable: false,
+    hideTriggers: false,
+    hideGrid: false,
+    hideGround: false,
+    hideOutline: false,
+    showDeleteTextI: true,
+    showPlacedTextI: true,
+    quality: isMobile() ? "low" : "high",
+} as const;
 export const editorSettings = persistLocalWritable<{
     showCollidable: boolean;
     hideTriggers: boolean;
@@ -153,19 +163,8 @@ export const editorSettings = persistLocalWritable<{
     showDeleteTextI: boolean;
     showPlacedTextI: boolean;
     quality: "low" | "medium" | "high";
-}>(
-    {
-        showCollidable: false,
-        hideTriggers: false,
-        hideGrid: false,
-        hideGround: false,
-        hideOutline: false,
-        showDeleteTextI: true,
-        showPlacedTextI: true,
-        quality: isMobile() ? "low" : "high",
-    },
-    "editorSettings"
-);
+}>(DEFAULT_SETTINGS, "editorSettings");
+
 export const canPlacePreview = writable(true);
 export const canPlaceEditDelete = derived(
     [loginData],

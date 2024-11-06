@@ -7,12 +7,17 @@
         TOTAL_ENDING_INPUTS,
         VALID_LEVEL_NAME,
     } from "shared-lib/ending";
-    import { setLevelNameLetter } from "../firebase/cloud_functions";
+    import {
+        getCharacterCooldown,
+        setLevelNameLetter,
+    } from "../firebase/cloud_functions";
     import { onDestroy, onMount } from "svelte";
     import { db } from "../firebase/firebase";
     import type { Unsubscribe } from "firebase/database";
     import { Cooldown } from "../utils/cooldown";
     import {
+        DEFAULT_SETTINGS,
+        editorSettings,
         eventElapsedContinuous,
         eventEndTime,
         eventStartTime,
@@ -26,33 +31,36 @@
     import { readable } from "svelte/store";
     import Loading from "../components/Loading.svelte";
     import { clamp, scheduleFor } from "shared-lib/util";
-    import { CROSSFADE_DURATION, LEVEL_NAME_DELAY } from "./ending";
+    import {
+        CROSSFADE_DURATION,
+        LEVEL_NAME_DELAY,
+        resetStoresForEnding,
+    } from "./ending";
     import "./ending_styles.css";
     import { disappear } from "../utils/transitions";
     import { playSound } from "../utils/audio";
     import heartBeatUrl from "../assets/heartbeat.mp3?url";
+    import { Howler } from "howler";
 
     const VIGNETTE_DELAY = LEVEL_NAME_DELAY + 3;
 
-    const characterCooldown = $loginData.currentUserData
-        ? Cooldown.new(
-              `userDetails/${$loginData.currentUserData!.user.uid}/lastCharacterTimestamp`,
-              CHARACTER_COOLDOWN_SECONDS
-          )
-        : null;
+    const characterCooldown = new Cooldown(
+        getCharacterCooldown,
+        loginData,
+        "lastCharacterTimestamp"
+    );
     let {
         display: characterCooldownDisplay,
         finished: characterCooldownFinished,
-    } = characterCooldown ?? {
-        display: readable(""),
-        finished: readable(false),
-    };
+    } = characterCooldown;
 
     let letters: string[] = Array(TOTAL_ENDING_INPUTS).fill(" ");
 
     let unsub: Unsubscribe | null;
 
     onMount(async () => {
+        resetStoresForEnding();
+
         playSound({
             url: enterLevelNameSoundUrl,
             volume: 2.0,
@@ -60,10 +68,6 @@
         });
 
         loopHeartbeatSound();
-
-        $isGuideActive = false;
-        toast.pop();
-        toast.pop({ target: "announcement" });
 
         unsub = db.ref("/levelName/inputs").on("value", v => {
             Object.entries(v?.val() ?? {}).forEach(([key, value]) => {
@@ -82,6 +86,7 @@
     });
 
     onDestroy(() => {
+        characterCooldown.cleanup();
         unsub?.();
     });
 
@@ -183,6 +188,10 @@
                                     setLevelNameLetter({
                                         index: i,
                                         letter: key,
+                                    }).then(c => {
+                                        characterCooldown.start(
+                                            c.data.cooldown
+                                        );
                                     });
                                 }
                             }}

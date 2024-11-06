@@ -655,6 +655,7 @@
     onDestroy(() => cancelAnimationFrame(loop));
 
     $: {
+        console.log($editorSettings);
         state.set_show_collidable($editorSettings.showCollidable);
         state.set_hide_triggers($editorSettings.hideTriggers);
         state.set_hide_grid($editorSettings.hideGrid);

@@ -20,18 +20,21 @@
         .ref("totalObjectsDeleted")
         .on("value", snapshot => (totalDeleted = snapshot.val() ?? 0));
 
-    const STATS: Record<string, number> = {
+    $: STATS = {
         "Number of creators": userCount,
         "Objects placed": totalPlaced,
         "Objects deleted": totalDeleted,
-    };
-    const STAT_NAMES = Object.keys(STATS);
+    } as Record<string, number>;
+
+    $: STAT_NAMES = Object.keys(STATS);
 
     export let state: wasm.State;
     let currentStat = -1;
 
     let interval: NodeJS.Timeout;
     let timeout: NodeJS.Timeout;
+
+    let statText: HTMLDivElement | null = null;
 
     interval = setInterval(() => {
         timeout = setTimeout(() => {
@@ -40,6 +43,23 @@
         currentStat++;
         currentStat = currentStat % STAT_NAMES.length;
     }, 8000);
+
+    onDestroy(() => {
+        // if (statText != null) {
+        //     statText.animate([{ opacity: 1 }, { opacity: 0 }], {
+        //         duration: 500,
+        //         fill: "forwards",
+        //     });
+        // }
+
+        totalPlacedUnsub();
+        totalDeletedUnsub();
+        unsubUserCountUnsub();
+
+        state.hide_stats();
+        clearInterval(interval);
+        clearTimeout(timeout);
+    });
 
     const fltoatInOutTest = (node: HTMLElement) => {
         node.animate(
@@ -94,22 +114,6 @@
             }
         );
     };
-
-    onDestroy(() => {
-        state.hide_stats();
-        clearInterval(interval);
-        clearTimeout(timeout);
-    });
-
-    // const disappear = (_: HTMLElement) => {
-    //     console.log("HERE");
-    //     return {
-    //         duration: 0,
-    //         css: () => {
-    //             return "";
-    //         },
-    //     };
-    // };
 </script>
 
 <!-- transition:fltoatInOut|global -->
@@ -118,6 +122,7 @@
         <div
             class="absolute z-30 flex justify-center w-full h-full text-3xl text-white bg-transparent pointer-events-none xs:text-xl flex-center"
             use:fltoatInOutTest
+            bind:this={statText}
         >
             {STAT_NAMES[currentStat]}:
         </div>

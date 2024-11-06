@@ -21,7 +21,7 @@
     import placeTimerFinishedSoundUrl from "./assets/sounds/place_timer_finished.mp3?url";
     import { default as cx } from "classnames";
     import Loading from "../components/Loading.svelte";
-    import { scale } from "svelte/transition";
+    import { fade, scale } from "svelte/transition";
     import {
         getDeleteCooldown,
         getPlaceCooldown,
@@ -160,14 +160,14 @@
                 {:else if $menuTabGroup != TabGroup.Delete}
                     <span
                         class="flex w-full flex-center sm:h-full font-pusab"
-                        transition:scale
+                        in:scale
                     >
                         {$placeCooldownDisplay}
                     </span>
                 {:else}
                     <span
                         class="flex w-full flex-center sm:h-full font-pusab"
-                        transition:scale
+                        in:scale
                     >
                         {$deleteCooldownDisplay}
                     </span>

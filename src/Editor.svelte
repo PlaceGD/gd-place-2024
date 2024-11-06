@@ -132,7 +132,10 @@
                 {/if}
             </div>
             <Login />
-            <NameGradient />
+
+            {#if $canPlaceEditDelete}
+                <NameGradient />
+            {/if}
 
             {#if state != null}
                 <ReportedUserList bind:state />

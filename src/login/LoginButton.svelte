@@ -32,7 +32,7 @@
     {/if}
     <div class="relative flex flex-col">
         <button
-            class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
+            class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12 shrink-0"
             on:click={() => {
                 $openMenu = null;
 

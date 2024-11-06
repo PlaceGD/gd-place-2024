@@ -73,6 +73,13 @@
         if (e.ctrlKey && e.shiftKey && e.key === "F") {
             $DEBUG = !$DEBUG;
         }
+
+        if (e.key === "Tab") {
+            document.body.classList.add("active-tabbing");
+        }
+    }}
+    on:pointerup={() => {
+        document.body.classList.remove("active-tabbing");
     }}
 />
 

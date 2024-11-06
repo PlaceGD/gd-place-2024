@@ -247,7 +247,11 @@ body {
     }
 }
 
-*:focus-visible {
+*:focus {
+    outline: none;
+}
+
+.active-tabbing *:focus-visible {
     outline-offset: 1px;
 
     outline-width: 2px;

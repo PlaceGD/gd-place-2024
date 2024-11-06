@@ -6,7 +6,7 @@
 </script>
 
 <button
-    class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12"
+    class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12 shrink-0"
     data-guide="test"
     on:click={() => {
         $openMenu =

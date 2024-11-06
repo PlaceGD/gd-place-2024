@@ -72,6 +72,7 @@
     } from "../stores";
     import {
         getTransformedPlaceOffset,
+        MISC_KEYBINDS,
         MOVE_KEYBINDS,
         TRANSFORM_KEYBINDS,
         WidgetType,
@@ -253,9 +254,11 @@
                 endCb: () => {
                     songPlaying.set(false);
                 },
+                loadCb: () => {
+                    songPlaying.set(true);
+                    songPlayingIsPreview.set(true);
+                },
             });
-            songPlaying.set(true);
-            songPlayingIsPreview.set(true);
         } else {
             stopSound("preview song");
             if ($songPlayingIsPreview) songPlaying.set(false);
@@ -366,9 +369,15 @@
                         volume: 1.0 / Math.sqrt(audio_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
                         exclusiveChannel: "song", // because honestly 2 songs should never play on top of eachother
+                        endCb: () => {
+                            songPlaying.set(false);
+                        },
+                        loadCb: () => {
+                            songPlaying.set(true);
+                            songPlayingIsPreview.set(false);
+                        },
                     });
-                    songPlaying.set(true);
-                    songPlayingIsPreview.set(false);
+
                     audio_hit_idx += 1;
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
@@ -695,6 +704,7 @@
         handleMouseUp(isTouch);
     }}
     on:touchend={e => {
+        isFocused = false;
         panzooming = null;
     }}
     on:pointermove={e => {
@@ -757,6 +767,7 @@
 
         for (let v of [
             ...Object.values(TRANSFORM_KEYBINDS),
+            ...Object.values(MISC_KEYBINDS),
             ...Object.values(MOVE_KEYBINDS).flatMap(v => Object.values(v)),
         ]) {
             if (
@@ -783,6 +794,8 @@
         on:focus={() => (isFocused = true)}
         on:blur={() => (isFocused = false)}
         on:touchstart={e => {
+            isFocused = true;
+
             setMousePos(e.touches[0]);
             const touches = makeTouchList(e.touches);
             startPanzoom(touches);

@@ -57,7 +57,7 @@ type _TypedHttpsCallable<FHttpCallable extends HttpsCallable<any, any>> = (
     ? TypedPromise<Res, FunctionsError>
     : never;
 
-type TypedHttpsCallable<
+export type TypedHttpsCallable<
     RequestData,
     ResponseData = unknown,
 > = _TypedHttpsCallable<HttpsCallable<RequestData, ResponseData>>;

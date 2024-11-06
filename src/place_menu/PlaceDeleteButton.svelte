@@ -26,26 +26,38 @@
         getDeleteCooldown,
         getPlaceCooldown,
     } from "../firebase/cloud_functions";
+    import { onDestroy } from "svelte";
 
     export let state: wasm.State;
     export let exportPlaceCooldownRemaining: number;
     export let exportDeleteCooldownRemaining: number;
 
-    const placeCooldown = new Cooldown();
-    getPlaceCooldown().then(v => placeCooldown.setCooldown(v.data));
+    const placeCooldown = new Cooldown(
+        getPlaceCooldown,
+        loginData,
+        "lastPlaceTimestamp"
+    );
     let {
         display: placeCooldownDisplay,
         finished: placeCooldownFinished,
         remaining: placeCooldownRemaining,
     } = placeCooldown;
 
-    const deleteCooldown = new Cooldown();
-    getDeleteCooldown().then(v => deleteCooldown.setCooldown(v.data));
+    const deleteCooldown = new Cooldown(
+        getDeleteCooldown,
+        loginData,
+        "lastDeleteTimestamp"
+    );
     let {
         display: deleteCooldownDisplay,
         finished: deleteCooldownFinished,
         remaining: deleteCooldownRemaining,
     } = deleteCooldown;
+
+    onDestroy(() => {
+        placeCooldown.cleanup();
+        deleteCooldown.cleanup();
+    });
 
     $: {
         exportPlaceCooldownRemaining = $placeCooldownRemaining;
@@ -107,7 +119,7 @@
                 songPlayingIsPreview.set(false);
 
                 if (c != null) {
-                    placeCooldown.setCooldown(c);
+                    placeCooldown.start(c);
                 } else {
                     pdButtonDisabled = false;
                 }
@@ -123,7 +135,7 @@
             if (k != null && coord != null) {
                 pdButtonDisabled = true;
                 removeObject(k, [coord.x, coord.y], c => {
-                    deleteCooldown.setCooldown(c);
+                    deleteCooldown.start(c);
                 });
             }
         }

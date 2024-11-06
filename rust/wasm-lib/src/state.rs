@@ -143,6 +143,7 @@ impl State {
     }
     pub fn view_transform(&self) -> Affine2 {
         let scale = self.get_zoom_scale();
+        // let size_scale = (self.)
 
         Affine2::from_scale(vec2(scale, scale)) * Affine2::from_translation(-self.camera_pos)
 
@@ -278,7 +279,9 @@ impl State {
     }
 
     pub fn get_zoom_scale(&self) -> f32 {
-        2.0f32.powf(self.zoom / 12.0)
+        let size_zoom = (self.width as f32 / 1600.0).max(self.height as f32 / 900.0);
+
+        2.0f32.powf(self.zoom / 12.0) * size_zoom
     }
     pub fn get_camera_pos(&self) -> Vec<f32> {
         vec![self.camera_pos.x, self.camera_pos.y]
@@ -318,7 +321,7 @@ impl State {
         self.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.zoom = v.clamp(-4.0, 36.0);
+        self.zoom = v.clamp(-16.0, 36.0);
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {

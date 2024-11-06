@@ -66,9 +66,10 @@ export const analytics = persistLocalWritable<boolean | null>(
 );
 export const newReports = persistLocalWritable(false, "newReports");
 
-export const loginData = writable<{
+export type LoginData = {
     currentUserData: UserData | null;
-}>({
+};
+export const loginData = writable<LoginData>({
     currentUserData: null,
 });
 

@@ -30,7 +30,7 @@ export const zoomTween = tweened(0, {
 zoomGoal.subscribe(v => zoomTween.set(v));
 zoomGoal.subscribe(v => {
     if (v < -4 || v > 36) {
-        zoomGoal.set(clamp(v, -4, 36));
+        zoomGoal.set(clamp(v, -16, 36));
     }
 });
 export const [mouseX, mouseY] = [writable(0), writable(0)];

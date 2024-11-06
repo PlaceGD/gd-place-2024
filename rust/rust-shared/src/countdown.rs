@@ -220,9 +220,10 @@ parse_countdown_files! {
     "terron"            ("Terron"):             [0 => weights(4,   3,   3,   5  ) classic pretty], // 69
     "aqua"              ("Aquatias"):           [3 => weights(3,   2,   2,   4  ) classic], // 70
     "devon"             ("Thedevon"):           [0 => weights(4,   2,   2,   5  ) classic], // 71
+    "digi"              ("Digitalight"):        [3 => weights(3,   3,   3,   3  ) pretty], // 72
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 70, 71]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 70, 72]);
 
 #[binrw]
 #[brw(little)]
@@ -258,10 +259,12 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     switches[0] = Some([1, 50, 0, 7]); // final sets
 
     let set_switch_minutes = 20;
+    let mut release_days = HashMap::new();
 
     let mut set_day_end = |day: usize, sets: [&str; 4]| {
         let index = day * 60 * 24 / set_switch_minutes;
         switches[index] = Some(sets.map(|s| get_set_by_creator(s)));
+        release_days.insert(index, day);
     };
 
     set_day_end(7, ["desticy", "taman", "kips", "audieo"]); // change to goose
@@ -271,6 +274,8 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     set_day_end(3, ["yunhaseu", "dorami", "juniper", "smiffy"]);
     set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
     set_day_end(1, ["evw", "robtop", "viprin", "rafer"]); // change to knobbelboy?
+
+    let get_release_day = |index| release_days.get(&index).copied().unwrap_or(9);
 
     let mut rng = StdRng::seed_from_u64(42);
 
@@ -298,6 +303,8 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         //     }
         //     r += 1;
         // }
+
+        let day = i * set_switch_minutes / (60 * 24);
 
         let mut config = [DigitSetLabels::random(); 4];
 
@@ -329,6 +336,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                     //&& !prev2.contains(&set)
                     && !sets.contains(&set)
                     && !names.contains(&get_creator_name(set))
+                    && get_release_day(set) >= day
             });
 
             if possible_sets.is_empty() {
@@ -339,6 +347,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                         && next.map_or(true, |next| !next.contains(&set))
                         && !sets.contains(&set)
                         && !names.contains(&get_creator_name(set))
+                        && get_release_day(set) >= day
                 });
             }
 

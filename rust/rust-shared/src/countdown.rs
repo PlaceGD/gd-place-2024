@@ -138,18 +138,24 @@ macro_rules! parse_countdown_files {
 
             LABELS[index]
         }
+
+        fn get_set_by_creator(creator: &str) -> usize {
+            const NAMES: [(usize, &str); DIGIT_SETS] = [$($(($index, $creator),)*)*];
+
+            NAMES.iter().enumerate().find(|(_, &(_, name))| name == creator).expect(&format!("couldnt find creator: {}", creator)).0
+        }
     };
 }
 
 parse_countdown_files! {
-    "spu7nix"           ("Spu7Nix"):            [1 => weights(4,   3,   3,   1  ) silly pretty], // 0
+    "spu7nix"           ("Spu7Nix"):            [1 => weights(4,   3,   3,   1  ) pretty], // 0
     "viprin"            ("Viprin"):             [3 => weights(3,   5,   5,   1  ) famous classic], // 1
     "deffie"            ("Cometface"):          [3 => weights(4,   3,   2,   3  ) classic], // 2
-    "flow"              ("Flow"):               [3 => weights(1,   1,   1,   0  ) silly], // 3
+    "flow"              ("Flow"):               [3 => weights(1,   1,   1,   0  ) ], // 3
     "galva"             ("G4lvatron"):          [3 => weights(7,   3,   2,   1  ) pretty classic], // 4
     "fungi"             ("Fungifity"):          [3 => weights(2.5, 5,   5,   1  ) pretty], // 5
     "thomartin"         ("Thomartin"):          [3 => weights(3,   4,   5,   2  ) pretty], // 6
-    "dreaminginsanity3" ("DreamingInsanity"):   [3 => weights(2,   3,   3,   4  ) pretty silly], // 7
+    "dreaminginsanity3" ("DreamingInsanity"):   [3 => weights(2,   3,   3,   4  ) pretty], // 7
     "echonox"           ("Echonox"):            [3 => weights(4,   5,   5,   6  ) classic], // 8
     "taman"             ("TamaN"):              [3 => weights(4,   5,   3,   1  ) classic], // 9
     "srguillester"      ("SrGuillester"):       [3 => weights(5,   2,   3,   3  ) silly famous], // 10
@@ -163,7 +169,7 @@ parse_countdown_files! {
     "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 18
     "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  ) classic], // 19
     "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ) silly,  // 20
-                                                 3 => weights(3,   3,   2,   4  ) silly pretty], // 21
+                                                 3 => weights(3,   3,   2,   4  ) pretty], // 21
     "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  ) silly famous], // 22
     "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 23
     "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  ) pretty famous], // 24
@@ -180,7 +186,7 @@ parse_countdown_files! {
     "motley"            ("Motleyorc"):          [0 => weights(3,   3,   3,   1.5) classic pretty], // 35
     "nasgubb"           ("Nasgubb"):            [3 => weights(5,   4,   3,   4  ) classic pretty], // 36
     "tchotchke"         ("Tchotchke"):          [3 => weights(4,   2,   2,   1.5) pretty], // 37
-    "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) silly], // 38
+    "dreaminginsanity2" ("DreamingInsanity"):   [3 => weights(0,   1.5, 1.5, 1  ) ], // 38
     "yunhaseu"          ("YunHaSeu"):           [0 => weights(3,   3,   2,   3  ) silly famous], // 39
     "rafer"             ("Rafer"):              [3 => weights(2,   2,   5,   9  ) silly pretty classic], // 40
     "ilrell"            ("ILRELL"):             [0 => weights(2,   4,   4,   1  ) pretty], // 41
@@ -192,7 +198,7 @@ parse_countdown_files! {
     "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 47
     "vrymer"            ("vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 48
     "meeloz"            ("meeloz"):             [3 => weights(1,   2,   3,   3  )], // 49
-    "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty silly], // 50
+    "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
     "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
     "tech"              ("Technical"):          [0 => weights(2,   2,   2,   2  ) silly famous], // 53
@@ -211,9 +217,11 @@ parse_countdown_files! {
     "radiationv2"       ("RadiationV2"):        [3 => weights(5,   4,   4,   3  ) pretty], // 66
     "smiffy"            ("Smiffy777"):          [0 => weights(3,   3,   3,   3  ) silly], // 67
     "knots"             ("Knots"):              [3 => weights(4,   3,   3,   4  ) pretty], // 68
+    "terron"            ("Terron"):             [0 => weights(4,   3,   3,   5  ) classic pretty], // 69
+    "aqua"              ("Aquatias"):           [4 => weights(3,   2,   2,   5  ) classic], // 70
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 66, 65, 68]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 70, 69]);
 
 #[binrw]
 #[brw(little)]
@@ -244,15 +252,37 @@ const WEIGHT_POWER: f64 = 0.8;
 #[cfg(not(target_arch = "wasm32"))]
 pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     use rand::prelude::*;
-    let mut switches = vec![[1, 50, 0, 7]]; // final sets
+    let mut switches = vec![None; n];
+
+    switches[0] = Some([1, 50, 0, 7]); // final sets
+
+    let set_switch_minutes = 20;
+
+    let mut set_day_end = |day: usize, sets: [&str; 4]| {
+        let index = day * 60 * 24 / set_switch_minutes;
+        switches[index] = Some(sets.map(|s| get_set_by_creator(s)));
+    };
+
+    set_day_end(7, ["kips", "taman", "nasgubb", "echonox"]);
+    set_day_end(6, ["serp", "culuc", "knots", "rafer"]);
+    set_day_end(5, ["yunhaseu", "desticy", "galva", "grax"]); // change to goose and manix
+    set_day_end(4, ["evw", "juniper", "dorami", "aeonair"]);
+    set_day_end(3, ["npesta", "tech", "srguillester", "doggie"]);
+    set_day_end(2, ["bli", "davjt", "nasgubb", "echonox"]); // change to voxicat and xender once they finish
+    set_day_end(1, ["robtop", "krmal", "viprin", "echonox"]); // change to knobbelboy
+
     let mut rng = StdRng::seed_from_u64(42);
 
-    for i in 0..n {
+    for i in 0..(n - 1) {
+        if switches[i + 1].is_some() {
+            continue;
+        }
         // choose 4 distinct sets (0..DIGIT_SETS) that are not in prev
         let mut sets = [usize::MAX; 4];
         let mut names = [""; 4];
 
-        let prev = &switches[i];
+        let prev = &switches[i].unwrap();
+        let next = &switches.get(i + 2).cloned().flatten();
         //let prev2 = &switches[i - 1];
         // let mut j = 0;
         // let mut r = 0;
@@ -270,24 +300,31 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
 
         let mut config = [DigitSetLabels::random(); 4];
 
-        // insert one silly or one classic set
-        if rng.gen::<f64>() < 0.5 {
-            config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::silly();
+        let sillytime = rng.gen::<f64>() < 0.2;
+
+        if sillytime {
+            config = [DigitSetLabels::silly(); 4]; // wacky time silly tinnme
         } else {
-            config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::classic();
+            // insert one silly or one classic set
+            if rng.gen::<f64>() < 0.5 {
+                config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::silly();
+            } else {
+                config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::classic();
+            }
+
+            // insert one pretty set
+            config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::pretty();
+
+            // insert one famous set
+            config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::famous();
         }
-
-        // insert one pretty set
-        config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::pretty();
-
-        // insert one famous set
-        config[(rng.gen::<f64>() * 3.0f64) as usize] = DigitSetLabels::famous();
 
         for j in 0..4 {
             let mut possible_sets = (0..DIGIT_SETS).collect::<Vec<_>>();
             possible_sets.retain(|&set| {
                 config[j].compat(get_set_labels(set))
                     && !prev.contains(&set)
+                    && next.map_or(true, |next| !next.contains(&set))
                     //&& !prev2.contains(&set)
                     && !sets.contains(&set)
                     && !names.contains(&get_creator_name(set))
@@ -298,7 +335,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                 possible_sets = (0..DIGIT_SETS).collect::<Vec<_>>();
                 possible_sets.retain(|&set| {
                     !prev.contains(&set)
-                        //&& !prev2.contains(&set)
+                        && next.map_or(true, |next| !next.contains(&set))
                         && !sets.contains(&set)
                         && !names.contains(&get_creator_name(set))
                 });
@@ -329,8 +366,10 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
             }
         }
 
-        switches.push(sets);
+        switches[i + 1] = Some(sets);
     }
+
+    let switches = switches.into_iter().map(|x| x.unwrap()).collect::<Vec<_>>();
 
     {
         // check if proportions are correct

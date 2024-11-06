@@ -393,7 +393,26 @@ pub fn draw_ending_sparkle<K: ObjKey + Default + Hash + Eq + Copy>(
     //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
 
-    billy.apply_transform(obj.transform());
+    // billy.apply_transform({
+    //     glam::Affine2::from_mat2_translation(
+    //         glam::mat2(vec2(1.0, 0.0), vec2(0.0, 1.0)),
+    //         vec2(obj.x, obj.y),
+    //     )
+    // });
+    billy.apply_transform({
+        let this = &obj;
+        let scale_x = OBJECT_INFO[choice].builtin_scale_x / 4.0;
+        let scale_y = OBJECT_INFO[choice].builtin_scale_y / 4.0;
+
+        glam::Affine2::from_mat2_translation(
+            glam::mat2(
+                vec2(this.ix * scale_x, this.iy * scale_x),
+                vec2(this.jx * scale_y, this.jy * scale_y),
+            ),
+            vec2(this.x, this.y),
+        )
+    });
+    //billy.translate(vec2(obj.x, obj.y));
     let reveal = ((end_anim_time - delay) / 3.5).clamp(0.0, 1.0);
     billy.scale(vec2(
         reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),

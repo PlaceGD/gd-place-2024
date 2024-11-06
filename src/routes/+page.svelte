@@ -11,7 +11,7 @@
         spritesheetProgress,
     } from "../load_wasm";
     import ToastContainers from "../components/ToastContainers.svelte";
-    import { rawSpritesheetData } from "../stores";
+    import { eventStatus, rawSpritesheetData } from "../stores";
     // import JetpackAnim from "./JetpackAnim.svelte";
     import jetpackAnimText from "./assets/jetpack_anim.svg?raw";
     import ColoredName from "../components/ColoredName.svelte";
@@ -47,7 +47,7 @@
         $spritesheetProgress.arrayBuffer != null &&
         $rawSpritesheetData != null;
 
-    $: if (loaded) {
+    $: if (loaded && $eventStatus !== "loading") {
         setTimeout(() => {
             $openTrans = 1;
         }, 500);
@@ -168,7 +168,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        height: 100vh;
+        height: 100svh;
         width: 100vw;
         background-color: #00368a;
         background-image: var(--bg);

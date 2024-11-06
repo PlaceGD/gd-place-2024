@@ -9,6 +9,7 @@
     import { editorSettings, rawSpritesheetData } from "../stores";
     import { handleSub } from "./view_controls";
     import { isMobile } from "../utils/document";
+    import { toast } from "@zerodevx/svelte-toast";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -49,13 +50,44 @@
 
     let prevTime = 0;
 
+    let fpsSum = 0;
+    let fpsCount = 0;
+    let showedFpsWarning = false;
+
     const draw = (time: number) => {
         if (state != null) {
             try {
                 stats.begin();
 
                 state.render((time - prevTime) / 1000);
+                fpsSum += 1000 / (time - prevTime);
+                fpsCount += 1;
+                if (fpsCount > 60) {
+                    let avg = fpsSum / fpsCount;
+                    if (avg < 20.0 && !showedFpsWarning) {
+                        let helpLink = {
+                            chrome: "https://help.glorify.com/en/articles/3730301-turn-hardware-acceleration-on-in-google-chrome",
+                            firefox:
+                                "https://support.mozilla.org/en-US/kb/performance-settings",
+                        };
+                        let link =
+                            "https://kb.bigmarker.com/knowledge/enable-disable-hardware-acceleration-in-browser";
 
+                        let browser = navigator.userAgent.toLowerCase();
+                        if (browser.includes("chrome")) {
+                            link = helpLink.chrome;
+                        } else if (browser.includes("firefox")) {
+                            link = helpLink.firefox;
+                        }
+
+                        Toast.showInfoToast(
+                            `Low FPS detected. Make sure you have <a href="${link}" target="_blank" rel="norefer" class="underline">GPU acceleration enabled in your browser</a>.`
+                        );
+                        showedFpsWarning = true;
+                    }
+                    fpsSum = 0;
+                    fpsCount = 0;
+                }
                 stats.end();
 
                 prevTime = time;

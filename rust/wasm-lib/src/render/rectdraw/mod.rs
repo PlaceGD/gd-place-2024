@@ -49,6 +49,37 @@ fn ease_out_expo(x: f32) -> f32 {
 
 use glam::Vec3Swizzles;
 
+const fn is_rotating_obj(id: u16) -> bool {
+    matches!(
+        id,
+        1705 | 1706
+            | 1707
+            | 1708
+            | 1709
+            | 1710
+            | 1734
+            | 1735
+            | 1736
+            | 186
+            | 187
+            | 188
+            | 85
+            | 86
+            | 87
+            | 137
+            | 138
+            | 394
+            | 395
+            | 1058
+            | 1059
+            | 1752
+            | 1831
+            | 1832
+            | 1833
+            | 1834
+    )
+}
+
 pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
@@ -96,6 +127,12 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     }
 
     billy.apply_transform(obj.transform());
+    if is_rotating_obj(obj.id) {
+        let rand = key.random_num(10);
+        let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
+
+        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 4.0);
+    }
 
     billy.scale(vec2(scaleup, scaleup));
     billy.rotate(angle_offset);

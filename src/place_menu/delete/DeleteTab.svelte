@@ -28,7 +28,7 @@
     import ObjectButtonImage from "../objects/ObjectButtonImage.svelte";
     import checker from "../assets/checker.png?url";
     import FadedScroll from "../../components/FadedScroll.svelte";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { db } from "../../firebase/firebase";
     import {
         SFX_TRIGGER,
@@ -46,9 +46,16 @@
 
     export let state: wasm.State;
 
-    const cooldown = new Cooldown();
-    getReportCooldown().then(v => cooldown.setCooldown(v.data));
+    const cooldown = new Cooldown(
+        getReportCooldown,
+        loginData,
+        "lastReportTimestamp"
+    );
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
+
+    onDestroy(() => {
+        cooldown.cleanup();
+    });
 
     $: isYourself =
         $loginData.currentUserData?.userDetails?.username ==
@@ -69,7 +76,7 @@
                 x: cameraPos[0],
                 y: cameraPos[1],
             }).then(v => {
-                cooldown.setCooldown(v.data.cooldown);
+                cooldown.start(v.data.cooldown);
             });
         } catch (e: any) {
             console.error("Failed to report user", e.details.message);

@@ -389,16 +389,22 @@
     };
 
     onMount(() => {
-        let data = new URLSearchParams(window.location.search);
+        if ($eventStatus != "fully done") {
+            let data = new URLSearchParams(window.location.search);
 
-        if (data.get("x")) {
-            $editorData.x = parseFloat(data.get("x")!);
-        }
-        if (data.get("y")) {
-            $editorData.y = parseFloat(data.get("y")!);
-        }
-        if (data.get("zoom")) {
-            $editorData.zoom = parseFloat(data.get("zoom")!);
+            if (data.get("x")) {
+                $editorData.x = parseFloat(data.get("x")!);
+            }
+            if (data.get("y")) {
+                $editorData.y = parseFloat(data.get("y")!);
+            }
+            if (data.get("zoom")) {
+                $editorData.zoom = parseFloat(data.get("zoom")!);
+            }
+        } else {
+            $editorData.x = LEVEL_WIDTH_UNITS / 2;
+            $editorData.y = LEVEL_HEIGHT_UNITS / 2;
+            $editorData.zoom = -2;
         }
 
         $zoomGoal = $editorData.zoom;

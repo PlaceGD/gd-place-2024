@@ -1,6 +1,6 @@
 <script lang="ts">
     import { default as cx } from "classnames";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import ToastContainers from "../components/ToastContainers.svelte";
     import OnceButton from "../components/Buttons/OnceButton.svelte";
     import Loading from "../components/Loading.svelte";
@@ -110,31 +110,20 @@
         resetSubmitButton();
     };
 
-    let gradientCooldown: Cooldown | null = null;
-    let gradientCooldownDisplay: Readable<string> | null = null;
-    let gradientCooldownFinished: Readable<boolean> | null = null;
+    const gradientCooldown = new Cooldown(
+        getGradientCooldown,
+        loginData,
+        "lastGradientTimestamp"
+    );
+    let {
+        display: gradientCooldownDisplay,
+        finished: gradientCooldownFinished,
+        remaining: gradientCooldownRemaining,
+    } = gradientCooldown;
 
-    const onUserData = (data: UserData | null) => {
-        if (data != null) {
-            (async () => {
-                gradientCooldown = new Cooldown();
-
-                let v = await getGradientCooldown();
-                gradientCooldown.setCooldown(v.data);
-
-                gradientCooldownDisplay = gradientCooldown.display;
-                gradientCooldownFinished = gradientCooldown.finished;
-            })();
-        } else {
-            gradientCooldown = null;
-            gradientCooldownDisplay = null;
-            gradientCooldownFinished = null;
-        }
-    };
-
-    $: {
-        onUserData($loginData.currentUserData);
-    }
+    onDestroy(() => {
+        gradientCooldown.cleanup();
+    });
 
     const onUpdateGradient = async () => {
         isInProgress = true;
@@ -143,7 +132,7 @@
             await changeNameGradient({
                 grad: nameGradientString,
             }).then(v => {
-                gradientCooldown?.setCooldown(v.data.cooldown);
+                gradientCooldown.start(v.data.cooldown);
             });
 
             $currentNameGradient.positions = nameGradientStops as any;

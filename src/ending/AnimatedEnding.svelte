@@ -55,7 +55,7 @@
                     clearInterval(interval);
                 }
             }, CHARACTER_DELAY);
-        }, 4000);
+        }, 3700);
     });
 
     onDestroy(() => {
@@ -95,8 +95,8 @@
             easing: expoIn,
             css: (t: number) => {
                 return `
-                    opacity: ${Math.pow(1 - t, 2)};
-                    transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.bottom - nodePos.bottom + nodePos.height / 2) * t}px);
+                    opacity: ${1 - t};
+                    transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.top - nodePos.bottom + nodePos.height / 2) * t}px);
                 `;
             },
         };

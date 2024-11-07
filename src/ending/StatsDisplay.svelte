@@ -4,7 +4,6 @@
     import * as wasm from "wasm-lib";
     import { onDestroy } from "svelte";
     import { db } from "../firebase/firebase";
-    import { customFadeOut } from "./animations";
     import { disappear } from "../utils/transitions";
 
     let userCount = 0;
@@ -116,7 +115,6 @@
     };
 </script>
 
-<!-- transition:fltoatInOut|global -->
 {#if currentStat != -1}
     {#key STAT_NAMES[currentStat]}
         <div

@@ -127,7 +127,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     }
 
     billy.apply_transform(obj.transform());
-    if is_rotating_obj(obj.id) {
+    if !state.no_rotating_objects && is_rotating_obj(obj.id) {
         let rand = key.random_num(10);
         let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
 

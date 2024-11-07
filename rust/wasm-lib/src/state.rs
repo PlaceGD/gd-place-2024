@@ -70,6 +70,7 @@ pub struct State {
     // select_depth: u32,
     pub(crate) show_collidable: bool,
     pub(crate) hide_triggers: bool,
+    pub(crate) no_rotating_objects: bool,
     pub(crate) hide_grid: bool,
     pub(crate) hide_ground: bool,
     pub(crate) hide_outline: bool,
@@ -126,6 +127,7 @@ impl State {
             selected_object: None,
             show_collidable: false,
             hide_triggers: false,
+            no_rotating_objects: false,
             hide_grid: false,
             hide_ground: false,
             hide_outline: false,
@@ -510,6 +512,9 @@ impl State {
     }
     pub fn set_hide_triggers(&mut self, to: bool) {
         self.hide_triggers = to;
+    }
+    pub fn set_no_rotating_objects(&mut self, to: bool) {
+        self.no_rotating_objects = to;
     }
     pub fn set_hide_grid(&mut self, to: bool) {
         self.hide_grid = to;

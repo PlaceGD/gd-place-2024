@@ -147,21 +147,23 @@ export const editorData = persistLocalWritable(
 export const DEFAULT_SETTINGS = {
     showCollidable: false,
     hideTriggers: false,
+    noRotatingObjects: false,
     hideGrid: false,
     hideGround: false,
     hideOutline: false,
-    showDeleteTextI: true,
-    showPlacedTextI: true,
+    showDeleteText: true,
+    showPlacedText: true,
     quality: isMobile() ? "low" : "high",
 } as const;
 export const editorSettings = persistLocalWritable<{
     showCollidable: boolean;
     hideTriggers: boolean;
+    noRotatingObjects: boolean;
     hideGrid: boolean;
     hideGround: boolean;
     hideOutline: boolean;
-    showDeleteTextI: boolean;
-    showPlacedTextI: boolean;
+    showDeleteText: boolean;
+    showPlacedText: boolean;
     quality: "low" | "medium" | "high";
 }>(DEFAULT_SETTINGS, "editorSettings");
 

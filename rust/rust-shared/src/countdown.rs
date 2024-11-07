@@ -221,9 +221,11 @@ parse_countdown_files! {
     "aqua"              ("Aquatias"):           [3 => weights(3,   2,   2,   4  ) classic], // 70
     "devon"             ("Thedevon"):           [0 => weights(4,   2,   2,   5  ) classic], // 71
     "digi"              ("Digitalight"):        [3 => weights(3,   3,   3,   3  ) pretty], // 72
+    "chunlv1"           ("chunlv1"):            [3 => weights(3,   3,   3,   6  ) pretty], // 73
+    "stormfly"          ("Stormfly"):           [0 => weights(1,   2,   2,   3  ) classic], // 74
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 70, 72]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 74, 73]);
 
 #[binrw]
 #[brw(little)]
@@ -264,14 +266,16 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     let mut set_day_end = |day: usize, sets: [&str; 4]| {
         let index = day * 60 * 24 / set_switch_minutes;
         switches[index] = Some(sets.map(|s| get_set_by_creator(s)));
-        release_days.insert(index, day);
+        for set in sets {
+            release_days.insert(get_set_by_creator(set), day);
+        }
     };
 
     set_day_end(7, ["desticy", "taman", "kips", "audieo"]); // change to goose
-    set_day_end(6, ["bli", "loco", "spu7nix", "spu7nix"]); // change to voxicat, xender
-    set_day_end(5, ["culuc", "knots", "nasgubb", "grax"]);
-    set_day_end(4, ["krmal", "partition", "galva", "terron"]);
-    set_day_end(3, ["yunhaseu", "dorami", "juniper", "smiffy"]);
+    set_day_end(6, ["culuc", "knots", "nasgubb", "grax"]);
+    set_day_end(5, ["krmal", "partition", "galva", "terron"]); // change to rafer?
+    set_day_end(4, ["yunhaseu", "dorami", "juniper", "smiffy"]);
+    set_day_end(3, ["bli", "loco", "spu7nix", "spu7nix"]); // change to voxicat, xender
     set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
     set_day_end(1, ["evw", "robtop", "viprin", "rafer"]); // change to knobbelboy?
 

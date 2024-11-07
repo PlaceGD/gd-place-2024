@@ -156,7 +156,7 @@
                     opacity: ${map($openTrans, 0, 0.3, 1, 0)};
                 `}
             >
-                Created by Flow, Spu7Nix, DreamingInsanity ❤
+                Created by Flow, Spu7Nix, DreamingInsanity&nbsp;❤
             </div>
         </div>
     {/if}

@@ -655,8 +655,10 @@
     onDestroy(() => cancelAnimationFrame(loop));
 
     $: {
+        console.log($editorSettings);
         state.set_show_collidable($editorSettings.showCollidable);
         state.set_hide_triggers($editorSettings.hideTriggers);
+        state.set_no_rotating_objects($editorSettings.noRotatingObjects);
         state.set_hide_grid($editorSettings.hideGrid);
         state.set_hide_ground($editorSettings.hideGround);
         state.set_hide_outline($editorSettings.hideOutline);
@@ -860,13 +862,13 @@
                 {/if}
             </LevelWidget>
         {/if}
-        {#if $editorSettings.showDeleteTextI}
+        {#if $editorSettings.showDeleteText}
             <DeleteTexts {state} />
         {/if}
 
         <TriggerRuns {state} />
 
-        {#if $placedByHover != null && $editorSettings.showPlacedTextI}
+        {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
             <LevelWidget
                 {state}
                 x={$placedByHover.x}

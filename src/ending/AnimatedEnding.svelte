@@ -12,7 +12,7 @@
     import { db } from "../firebase/firebase";
     import type { Unsubscribe } from "firebase/database";
     import { Cooldown } from "../utils/cooldown";
-    import { loginData } from "../stores";
+    import { loginData, viewingLevelAfterEvent } from "../stores";
     import {
         cubicInOut,
         expoIn,
@@ -23,7 +23,7 @@
     } from "svelte/easing";
 
     import "./ending_styles.css";
-    import { CROSSFADE_DURATION } from "./ending";
+    import { CROSSFADE_DURATION, resetStoresForEnding } from "./ending";
     import { clamp } from "shared-lib/util";
     import KofiButton from "../components/KofiButton.svelte";
     import { disappear } from "../utils/transitions";
@@ -38,6 +38,8 @@
     let unsub: Unsubscribe | null;
 
     onMount(async () => {
+        resetStoresForEnding();
+
         unsub = db.ref("/levelName/inputs").on("value", v => {
             Object.entries(v?.val() ?? {}).forEach(([key, value]) => {
                 let index = parseInt(key);
@@ -53,7 +55,7 @@
                     clearInterval(interval);
                 }
             }, CHARACTER_DELAY);
-        }, 4000);
+        }, 3700);
     });
 
     onDestroy(() => {
@@ -93,8 +95,8 @@
             easing: expoIn,
             css: (t: number) => {
                 return `
-                    opacity: ${Math.pow(1 - t, 2)};
-                    transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.bottom - nodePos.bottom + nodePos.height / 2) * t}px);
+                    opacity: ${1 - t};
+                    transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.top - nodePos.bottom + nodePos.height / 2) * t}px);
                 `;
             },
         };

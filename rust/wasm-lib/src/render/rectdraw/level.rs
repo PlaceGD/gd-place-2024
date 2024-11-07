@@ -50,6 +50,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
             &state.level,
             |k, _, detail| (state.selected_object == Some(k)).then(|| selected_color(detail)),
             get_end_trans01(state, end_anim_time),
+            false,
         );
     }
 

@@ -22,9 +22,9 @@ export const fakeModalTransition = (_: HTMLElement) => {
     };
 };
 
-export const disappear = (_: HTMLElement) => {
+export const disappear = (_: HTMLElement, params?: { duration?: number }) => {
     return {
-        duration: 0,
+        duration: params?.duration ?? 0,
         css: () => {
             return "";
         },

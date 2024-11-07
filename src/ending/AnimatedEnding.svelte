@@ -103,79 +103,77 @@
     };
 </script>
 
-{#if !$viewingLevelAfterEvent}
-    <div
-        class="absolute z-40 w-full h-full pointer-events-none page-grid"
-        style={`--count: ${TOTAL_ENDING_INPUTS}`}
-        out:fade|global={{ duration: 1000 }}
-    >
-        <span class="flex flex-col gap-2 p-4 text-white flex-center xs:p-2">
+<div
+    class="absolute z-40 w-full h-full pointer-events-none page-grid"
+    style={`--count: ${TOTAL_ENDING_INPUTS}`}
+    out:fade|global={{ duration: 1000 }}
+>
+    <span class="flex flex-col gap-2 p-4 text-white flex-center xs:p-2">
+        <p
+            class="text-4xl text-center sm:text-3xl xs:text-2xl font-share text-stroke"
+            in:fade|global={{
+                duration: CROSSFADE_DURATION,
+                delay: GLOBAL_DELAY + 1000,
+            }}
+            out:disappear
+        >
+            LEVEL NAME:
+        </p>
+        <h1
+            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
+            bind:this={target}
+        >
+            {letters.slice(0, lettersVisible).join("")}
+        </h1>
+        <span
+            class="flex flex-col gap-1 pointer-events-auto flex-center"
+            in:fade|global={{
+                duration: CROSSFADE_DURATION,
+                delay:
+                    CHARACTER_DURATION +
+                    GLOBAL_DELAY +
+                    TOTAL_ENDING_INPUTS * CHARACTER_DELAY +
+                    1000,
+            }}
+            out:disappear
+        >
             <p
-                class="text-4xl text-center sm:text-3xl xs:text-2xl font-share text-stroke"
-                in:fade|global={{
-                    duration: CROSSFADE_DURATION,
-                    delay: GLOBAL_DELAY + 1000,
-                }}
-                out:disappear
+                class="text-2xl italic text-center pointer-events-auto xs:text-base hover-text-transition"
             >
-                LEVEL NAME:
+                THANK YOU FOR PARTICIPATING! ❤
             </p>
-            <h1
-                class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
-                bind:this={target}
+            <p
+                class="p-4 text-center xs:p-2 menu-panel max-w-[450px] sm:max-w-[350px] flex flex-col gap-1 flex-center"
             >
-                {letters.slice(0, lettersVisible).join("")}
-            </h1>
-            <span
-                class="flex flex-col gap-1 pointer-events-auto flex-center"
-                in:fade|global={{
-                    duration: CROSSFADE_DURATION,
-                    delay:
-                        CHARACTER_DURATION +
-                        GLOBAL_DELAY +
-                        TOTAL_ENDING_INPUTS * CHARACTER_DELAY +
-                        1000,
-                }}
-                out:disappear
-            >
-                <p
-                    class="text-2xl italic text-center pointer-events-auto xs:text-base hover-text-transition"
-                >
-                    THANK YOU FOR PARTICIPATING! ❤
-                </p>
-                <p
-                    class="p-4 text-center xs:p-2 menu-panel max-w-[450px] sm:max-w-[350px] flex flex-col gap-1 flex-center"
-                >
-                    <span class="text-base xs:text-sm">
-                        This website took a long time to make. If you enjoyed
-                        it, we'd really appreciate if you left a small donation.
-                        Thank you :)
-                    </span>
-                    <KofiButton />
-                </p>
-            </span>
+                <span class="text-base xs:text-sm">
+                    This website took a long time to make. If you enjoyed it,
+                    we'd really appreciate if you left a small donation. Thank
+                    you :)
+                </span>
+                <KofiButton />
+            </p>
         </span>
+    </span>
 
-        <div class="content-center justify-center row-start-2 ending-grid">
-            {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
-                <div class="relative flex w-auto h-full flex-center">
-                    <div
-                        in:fadeOut|global={{ duration: CROSSFADE_DURATION }}
-                        class="opacity-0 pointer-events-none character-input-input backdrop-blur-md"
-                    />
-                    <span
-                        class="absolute z-20 flex w-full h-full text-center opacity-0 pointer-events-none font-pusab text-stroke flex-center character-input"
-                        in:moveToTitle|global={{
-                            duration: CHARACTER_DURATION,
-                            delay: GLOBAL_DELAY + i * CHARACTER_DELAY,
-                            offcenter: i / TOTAL_ENDING_INPUTS,
-                        }}
-                        out:disappear
-                    >
-                        {letters[i]}
-                    </span>
-                </div>
-            {/each}
-        </div>
+    <div class="content-center justify-center row-start-2 ending-grid">
+        {#each Array(TOTAL_ENDING_INPUTS) as _, i (i)}
+            <div class="relative flex w-auto h-full flex-center">
+                <div
+                    in:fadeOut|global={{ duration: CROSSFADE_DURATION }}
+                    class="opacity-0 pointer-events-none character-input-input backdrop-blur-md"
+                />
+                <span
+                    class="absolute z-20 flex w-full h-full text-center opacity-0 pointer-events-none font-pusab text-stroke flex-center character-input"
+                    in:moveToTitle|global={{
+                        duration: CHARACTER_DURATION,
+                        delay: GLOBAL_DELAY + i * CHARACTER_DELAY,
+                        offcenter: i / TOTAL_ENDING_INPUTS,
+                    }}
+                    out:disappear
+                >
+                    {letters[i]}
+                </span>
+            </div>
+        {/each}
     </div>
-{/if}
+</div>

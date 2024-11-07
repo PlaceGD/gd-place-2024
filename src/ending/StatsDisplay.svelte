@@ -4,6 +4,8 @@
     import * as wasm from "wasm-lib";
     import { onDestroy } from "svelte";
     import { db } from "../firebase/firebase";
+    import { customFadeOut } from "./animations";
+    import { disappear } from "../utils/transitions";
 
     let userCount = 0;
     let unsubUserCountUnsub = db
@@ -33,8 +35,6 @@
 
     let interval: NodeJS.Timeout;
     let timeout: NodeJS.Timeout;
-
-    let statText: HTMLDivElement | null = null;
 
     interval = setInterval(() => {
         timeout = setTimeout(() => {
@@ -122,9 +122,10 @@
         <div
             class="absolute z-30 flex justify-center w-full h-full text-3xl text-white bg-transparent pointer-events-none xs:text-xl flex-center"
             use:fltoatInOutTest
-            bind:this={statText}
         >
-            {STAT_NAMES[currentStat]}:
+            <span out:fade|global={{ duration: 500 }}>
+                {STAT_NAMES[currentStat]}:
+            </span>
         </div>
     {/key}
 {/if}

@@ -88,6 +88,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     color: Vec4,
     key: K,
     end_trans01: f32,
+    is_countdown: bool,
 ) {
     if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
         return;
@@ -127,7 +128,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     }
 
     billy.apply_transform(obj.transform());
-    if !state.no_rotating_objects && is_rotating_obj(obj.id) {
+    if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
         let rand = key.random_num(10);
         let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
 
@@ -266,6 +267,7 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
     level: &Level<K>,
     mut color_override: impl FnMut(K, &GDObject, bool) -> Option<Vec4>,
     end_trans01: f32,
+    is_countdown: bool,
 ) {
     //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
     let mut ending_stars = Vec::new();
@@ -332,6 +334,7 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                                                 color,
                                                 *key,
                                                 end_trans01,
+                                                is_countdown,
                                             );
                                         }
                                     }

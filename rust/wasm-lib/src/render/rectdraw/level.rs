@@ -25,6 +25,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
             state.preview_object.into_obj(),
             [255; 20],
             Some(preview_chunk),
+            state.now,
         );
     }
 

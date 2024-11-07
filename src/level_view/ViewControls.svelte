@@ -69,6 +69,8 @@
         ExclusiveMenus,
         viewingLevelAfterEvent,
         setNameSeconds,
+        DEFAULT_SETTINGS,
+        getServerNow,
     } from "../stores";
     import {
         getTransformedPlaceOffset,
@@ -112,6 +114,7 @@
     import { isGuideActive, walmart } from "../guide/guide";
     import LevelWidget from "../widgets/LevelWidget.svelte";
     import { set } from "firebase/database";
+    import { toast } from "@zerodevx/svelte-toast";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -647,6 +650,8 @@
 
         placedNameScale = Math.pow(2.0, state.get_zoom() / 30.0);
 
+        state.set_now(getServerNow());
+
         loop = requestAnimationFrame(loopFn);
     };
 
@@ -655,7 +660,6 @@
     onDestroy(() => cancelAnimationFrame(loop));
 
     $: {
-        console.log($editorSettings);
         state.set_show_collidable($editorSettings.showCollidable);
         state.set_hide_triggers($editorSettings.hideTriggers);
         state.set_no_rotating_objects($editorSettings.noRotatingObjects);
@@ -691,15 +695,21 @@
         state.set_ending_fully_done($eventEndTime + $setNameSeconds * 1000);
     }
     $: {
-        if ($eventStatus == "name set") {
+        if ($eventStatus == "name set" || $eventStatus == "fully done") {
             dragging = null;
             panzooming = null;
-            state.set_preview_visibility(false);
-            stopSound("preview song");
-            stopSound("song");
             resetPreviewColor(state, 1);
             $selectedObject = null;
             state.deselect_object();
+            Howler.stop();
+            isGuideActive.set(false);
+            toast.pop();
+            toast.pop({ target: "announcement" });
+            editorSettings.set({
+                ...DEFAULT_SETTINGS,
+                quality: $editorSettings.quality,
+            });
+            state.set_preview_visibility(false);
         }
     }
 </script>

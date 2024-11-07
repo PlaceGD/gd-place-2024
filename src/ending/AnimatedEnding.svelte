@@ -23,7 +23,7 @@
     } from "svelte/easing";
 
     import "./ending_styles.css";
-    import { CROSSFADE_DURATION, resetStoresForEnding } from "./ending";
+    import { CROSSFADE_DURATION } from "./ending";
     import { clamp } from "shared-lib/util";
     import KofiButton from "../components/KofiButton.svelte";
     import { disappear } from "../utils/transitions";
@@ -38,8 +38,6 @@
     let unsub: Unsubscribe | null;
 
     onMount(async () => {
-        resetStoresForEnding();
-
         unsub = db.ref("/levelName/inputs").on("value", v => {
             Object.entries(v?.val() ?? {}).forEach(([key, value]) => {
                 let index = parseInt(key);

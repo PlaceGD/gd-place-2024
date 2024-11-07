@@ -124,3 +124,12 @@ export const getCharacterCooldown = httpsCallable<{}, number>(
     functions,
     "getCharacterCooldown"
 );
+const getServerTime = httpsCallable<{}, number>(functions, "getServerTime");
+
+export const getExactServerTime = async () => {
+    const startTime = Date.now();
+    const serverTime = (await getServerTime()).data;
+    const endTime = Date.now();
+    const roundTripTime = endTime - startTime;
+    return serverTime - roundTripTime / 2;
+};

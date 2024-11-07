@@ -5,7 +5,6 @@ use rust_shared::{
     gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
     map,
     sprite::SpriteInfo,
-    util::now,
 };
 use std::{
     f32::consts::PI,

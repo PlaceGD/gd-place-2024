@@ -4,10 +4,7 @@ use std::{
 };
 
 use indexmap::IndexMap;
-use rust_shared::{
-    gd::{layer::Z_LAYERS, level::CHUNK_SIZE_UNITS, object::GDObject},
-    util::now,
-};
+use rust_shared::gd::{layer::Z_LAYERS, level::CHUNK_SIZE_UNITS, object::GDObject};
 use wasm_bindgen::prelude::*;
 
 use crate::{render::rectdraw::OBJECT_MAIN_OVER_DETAIL, utilgen::OBJECT_INFO};
@@ -56,10 +53,10 @@ pub struct LevelChunk<K> {
     pub last_time_visible: f64,
 }
 impl<K: Default> LevelChunk<K> {
-    pub fn new() -> Self {
+    pub fn new(now: f64) -> Self {
         Self {
             layers: Default::default(),
-            last_time_visible: now(),
+            last_time_visible: now,
         }
     }
 }
@@ -100,11 +97,20 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
     // pub fn test() -> &'static [bool] {
     //     todo!()
     // }
-    pub fn add_object(&mut self, obj: GDObject, key: K, chunk_override: Option<ChunkCoord>) {
+    pub fn add_object(
+        &mut self,
+        obj: GDObject,
+        key: K,
+        chunk_override: Option<ChunkCoord>,
+        now: f64,
+    ) {
         let chunk = chunk_override.unwrap_or(ChunkCoord::get_from_pos(obj.x, obj.y));
         let sheet_idx = OBJECT_INFO[obj.id as usize].sheet as usize;
 
-        let chunk = self.chunks.entry(chunk).or_insert_with(LevelChunk::new);
+        let chunk = self
+            .chunks
+            .entry(chunk)
+            .or_insert_with(|| LevelChunk::new(now));
         let [blending_batch, normal_batch] =
             &mut chunk.layers[obj.z_layer as usize].sheet_batches[sheet_idx];
 

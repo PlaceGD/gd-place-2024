@@ -30,6 +30,8 @@ export {
     getGradientCooldown,
 } from "./cooldown";
 
+export { getServerTime } from "./status_scheduler";
+
 export const smartDatabase = () => convertDatabase<DatabaseSchema>(database());
 
 initializeApp();

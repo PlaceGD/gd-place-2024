@@ -31,11 +31,7 @@
     import { readable } from "svelte/store";
     import Loading from "../components/Loading.svelte";
     import { clamp, scheduleFor } from "shared-lib/util";
-    import {
-        CROSSFADE_DURATION,
-        LEVEL_NAME_DELAY,
-        resetStoresForEnding,
-    } from "./ending";
+    import { CROSSFADE_DURATION, LEVEL_NAME_DELAY } from "./ending";
     import "./ending_styles.css";
     import { disappear } from "../utils/transitions";
     import { playSound } from "../utils/audio";
@@ -59,8 +55,6 @@
     let unsub: Unsubscribe | null;
 
     onMount(async () => {
-        resetStoresForEnding();
-
         playSound({
             url: enterLevelNameSoundUrl,
             volume: 2.0,

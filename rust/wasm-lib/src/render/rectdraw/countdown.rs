@@ -7,7 +7,7 @@ use rust_shared::{
     countdown::{CountdownDigitSets, DigitObjects, DIGIT_SETS, TEST_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
-    util::{now, random},
+    util::random,
 };
 
 use crate::{
@@ -209,7 +209,7 @@ impl Countdown {
             obj.iy /= info.builtin_scale_x;
             obj.jx /= info.builtin_scale_y;
             obj.jy /= info.builtin_scale_y;
-            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }));
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), state.now);
             idx += 1;
         };
 
@@ -340,7 +340,7 @@ impl StatsDisplay {
             obj.iy /= info.builtin_scale_x;
             obj.jx /= info.builtin_scale_y;
             obj.jy /= info.builtin_scale_y;
-            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }));
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), state.now);
             idx += 1;
         };
         let spacing = 30.0 * 7.5;

@@ -15,7 +15,7 @@ use rust_shared::{
         object::{GDColor, GDObject},
     },
     map,
-    util::{now, point_in_triangle, Rect},
+    util::{point_in_triangle, Rect},
 };
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
@@ -347,7 +347,7 @@ impl State {
         if let Ok(key) = key.into_bytes().try_into() {
             // let key: DbKey = key;
 
-            self.level.add_object(obj.into_obj(), key, None);
+            self.level.add_object(obj.into_obj(), key, None, self.now);
         }
         Ok(())
     }
@@ -385,9 +385,9 @@ impl State {
             // check if it is in the hashmap already
             //if not, set it to subscribe
             match self.level.chunks.get_mut(&v) {
-                Some(chunk) => chunk.last_time_visible = now(),
+                Some(chunk) => chunk.last_time_visible = self.now,
                 None => {
-                    self.level.chunks.insert(v, LevelChunk::new());
+                    self.level.chunks.insert(v, LevelChunk::new(self.now));
                     out.push(v);
                 }
             }
@@ -397,10 +397,9 @@ impl State {
     }
     pub fn get_chunks_to_unsub(&mut self) -> Vec<ChunkCoord> {
         let mut out = vec![];
-        let now = now();
 
         self.level.chunks.retain(|coord, chunk| {
-            if now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
+            if self.now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
                 out.push(*coord);
                 false
             } else {
@@ -524,6 +523,10 @@ impl State {
     }
     pub fn set_hide_ground(&mut self, to: bool) {
         self.hide_ground = to;
+    }
+
+    pub fn set_now(&mut self, to: f64) {
+        self.now = to;
     }
 
     pub fn set_event_start(&mut self, to: f64) {
@@ -715,8 +718,6 @@ impl State {
     }
 
     pub fn render(&mut self, delta: f32) {
-        self.now = now();
-
         fn ease_in_out_quart(x: f32) -> f32 {
             if x < 0.5 {
                 8.0 * x * x * x * x

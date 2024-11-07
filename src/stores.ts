@@ -20,8 +20,9 @@ import {
 } from "shared-lib/nexusgen";
 import { isMobile } from "./utils/document";
 import { LEVEL_NAME_DELAY } from "./ending/ending";
+import { getExactServerTime } from "./firebase/cloud_functions";
 
-const STORAGE_VERSION = 3;
+const STORAGE_VERSION = 4;
 
 if (typeof window != "undefined") {
     if (
@@ -484,11 +485,30 @@ export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
 
 // MARK: Event Times
 
+// import { browser }
+
+let serverNow = 0;
+if (typeof window !== "undefined") {
+    getExactServerTime().then(v => {
+        let serverStart = v;
+        let localStart = Date.now();
+
+        let diff = localStart - serverStart;
+
+        const draw = (time: number) => {
+            serverNow = Date.now() - diff;
+            requestAnimationFrame(draw);
+        };
+        requestAnimationFrame(draw);
+    });
+}
+export const getServerNow = () => serverNow;
+
 export const nowStore = writable(0);
 setTimeout(
     () => {
         setInterval(() => {
-            nowStore.set(Date.now());
+            nowStore.set(serverNow);
         }, 1000);
     },
     1500 - (Date.now() % 1000)

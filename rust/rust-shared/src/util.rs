@@ -161,10 +161,6 @@ impl Rect<f32> {
     }
 }
 
-pub fn now() -> f64 {
-    js_sys::Date::now()
-}
-
 pub fn random() -> f64 {
     js_sys::Math::random()
 }

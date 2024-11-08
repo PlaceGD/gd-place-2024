@@ -33,6 +33,9 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
                 return Number(time) + data.op.secs * 1000;
             });
             break;
+        case "name_duration":
+            db.ref("metaVariables/setNameSeconds").set(data.op.duration);
+            break;
         case "change_mod_status":
             let userID1 = (
                 await db.ref(`userName/${data.op.user.toLowerCase()}/uid`).get()

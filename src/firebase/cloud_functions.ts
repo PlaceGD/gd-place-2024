@@ -3,6 +3,7 @@ import {
     httpsCallable as fHttpsCallable,
     type HttpsCallable,
     type FunctionsErrorCode,
+    connectFunctionsEmulator,
 } from "firebase/functions";
 import { type FirebaseError as FFirebaseError } from "firebase/app";
 import type {
@@ -69,6 +70,11 @@ const httpsCallable = <Req, Res = unknown>(
 };
 
 const functions = getFunctions();
+
+if (typeof window !== "undefined" && __DEBUG) {
+    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+}
+
 export const placeObject = httpsCallable<PlaceReq, PlaceRes>(
     functions,
     "placeObject"

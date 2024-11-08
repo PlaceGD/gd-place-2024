@@ -44,10 +44,10 @@ body {
 }
 
 .bulleted-list {
-    @apply flex flex-col gap-2 mb-2 list-disc alternating-bg;
+    @apply alternating-bg mb-2 flex list-disc flex-col gap-2;
 
     & > li {
-        @apply p-2 ml-6 rounded-lg xs:ml-4;
+        @apply ml-6 rounded-lg p-2 xs:ml-4;
     }
 }
 
@@ -86,15 +86,15 @@ body {
 
 @layer components {
     .menu-panel {
-        @apply relative shadow-lg rounded-xl bg-menu-gray/80 shadow-black/40 backdrop-blur-md;
+        @apply relative rounded-xl bg-menu-gray/80 shadow-lg shadow-black/40 backdrop-blur-md;
     }
 
     .modal-panel {
-        @apply w-full h-full p-6 overflow-hidden xs:p-4;
+        @apply h-full w-full overflow-hidden p-6 xs:p-4;
     }
 
     .sliding-selector {
-        @apply absolute w-full h-full overflow-hidden rounded-lg bg-white/20;
+        @apply absolute h-full w-full overflow-hidden rounded-lg bg-white/20;
     }
 
     .flex-center {
@@ -106,7 +106,7 @@ body {
     }
 
     .white-button {
-        @apply bg-white/5 outline outline-2 -outline-offset-2 outline-white/20 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:cursor-not-allowed disabled:opacity-30;
+        @apply bg-white/5 outline outline-2 -outline-offset-2 outline-white/20 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-white/20 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:cursor-not-allowed disabled:opacity-30;
     }
 
     .li-alternating {
@@ -172,7 +172,7 @@ body {
     }
 
     .hover-text-transition {
-        @apply transition duration-500 text-white/50 hover:text-white;
+        @apply text-white/50 transition duration-500 hover:text-white;
     }
 
     .pulsing-outline {

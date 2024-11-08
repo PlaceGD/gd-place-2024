@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getDatabase } from "firebase/database";
+import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import Toast from "../utils/toast";
 import { getAuth } from "firebase/auth";
 import { convertDatabase } from "@smart-firebase/client";
@@ -19,5 +19,10 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// const analytics = getAnalytics(app);
-export const db = convertDatabase<DatabaseSchema>(getDatabase(app));
+
+const db_ = getDatabase(app);
+if (typeof window !== "undefined" && __DEBUG) {
+    connectDatabaseEmulator(db_, "127.0.0.1", 9000);
+}
+
+export const db = convertDatabase<DatabaseSchema>(db_);

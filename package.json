@@ -4,11 +4,12 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite --host",
+        "dev": "npm run functions:build && firebase emulators:start --import=./test/database --export-on-exit && vite --host",
         "build": "vite build",
         "deploy": "npm run wasm:build-prod && npm run shared:build && npm run build && firebase deploy",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
+        "functions:build": "cd ./functions && npm run build && cd ..",
         "wasm:build": "cd rust/wasm-lib && wasm-pack build --no-opt --reference-types --weak-refs --target web",
         "wasm:build-prod": "cd rust/wasm-lib && wasm-pack build --profiling --reference-types --weak-refs --target web",
         "shared:build": "cd shared-lib && npm run build && cd ..",

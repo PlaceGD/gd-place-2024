@@ -340,7 +340,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
                     //&& !prev2.contains(&set)
                     && !sets.contains(&set)
                     && !names.contains(&get_creator_name(set))
-                    && get_release_day(set) >= day
+                    && get_release_day(set) > day
             });
 
             if possible_sets.is_empty() {

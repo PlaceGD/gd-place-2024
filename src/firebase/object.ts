@@ -14,7 +14,7 @@ export const addObject = (
 
     let s = encodeString(v, 126);
 
-    placeObject({ object: s, timestamp: Date.now() })
+    placeObject({ object: s })
         .then(v => {
             cb(v.data.key, v.data.cooldown);
         })

@@ -28,6 +28,7 @@ export {
     getDeleteCooldown,
     getReportCooldown,
     getGradientCooldown,
+    getCharacterCooldown,
 } from "./cooldown";
 
 export { getServerTime } from "./status_scheduler";

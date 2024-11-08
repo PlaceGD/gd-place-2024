@@ -30,7 +30,7 @@
     import { toast } from "@zerodevx/svelte-toast";
     import { readable } from "svelte/store";
     import Loading from "../components/Loading.svelte";
-    import { clamp, scheduleFor } from "shared-lib/util";
+    import { clamp } from "shared-lib/util";
     import { CROSSFADE_DURATION, LEVEL_NAME_DELAY } from "./ending";
     import "./ending_styles.css";
     import { disappear } from "../utils/transitions";
@@ -53,7 +53,7 @@
     let letters: string[] = Array(TOTAL_ENDING_INPUTS).fill(" ");
 
     let unsub: Unsubscribe | null;
-
+    console.log("ENER LEVEL NAME");
     onMount(async () => {
         playSound({
             url: enterLevelNameSoundUrl,

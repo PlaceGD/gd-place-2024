@@ -131,5 +131,5 @@ export const getExactServerTime = async () => {
     const serverTime = (await getServerTime()).data;
     const endTime = Date.now();
     const roundTripTime = endTime - startTime;
-    return serverTime - roundTripTime / 2;
+    return serverTime + roundTripTime / 2; // time when it returns, not when it was sent
 };

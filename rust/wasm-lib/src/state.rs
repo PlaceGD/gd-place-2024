@@ -137,7 +137,7 @@ impl State {
             render,
             countdown: Countdown::new(),
             stats_display: StatsDisplay::new(),
-            now: 0.0,
+            now: js_sys::Date::now(), // default to client now before server now is gotten
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,

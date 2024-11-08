@@ -893,7 +893,7 @@
         <LevelWidget {state} x={-55} y={40} scale={0.15}>
             <ClosableWindow
                 name="playerStartHelp"
-                open={$eventStatus == "during"}
+                open={$eventStatus == "during" || $eventStatus == "before"}
             >
                 <Image src={player_start_help} />
             </ClosableWindow>
@@ -901,7 +901,7 @@
         <LevelWidget {state} x={-90} y={200} scale={0.2}>
             <ClosableWindow
                 name="playerGoalHelp"
-                open={$eventStatus == "during"}
+                open={$eventStatus == "during" || $eventStatus == "before"}
             >
                 <Image src={player_goal_help} />
             </ClosableWindow>

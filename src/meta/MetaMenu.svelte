@@ -2,7 +2,12 @@
     import { onMount } from "svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import { ExclusiveMenus, loginData, openMenu } from "../stores";
+    import {
+        ExclusiveMenus,
+        getServerNow,
+        loginData,
+        openMenu,
+    } from "../stores";
     import Button from "../components/Button.svelte";
     import { menuHeight } from "../utils/transitions";
     import DarkInput from "../components/DarkInput.svelte";
@@ -213,7 +218,7 @@
                 on:click={() =>
                     meta({
                         type: "event_end",
-                        to: Date.now() + 15000,
+                        to: getServerNow() + 15000,
                     })}
             >
                 Run End Sequence

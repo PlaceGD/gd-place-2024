@@ -12,25 +12,25 @@ export const setMeta = onCallAuth<MetaReq>(async request => {
 
     switch (data.op.type) {
         case "place_timer":
-            db.ref("metaVariables/placeCooldown").set(data.op.to);
+            db.ref("metaVariables/placeCooldown").set(Number(data.op.to));
             break;
         case "delete_timer":
-            db.ref("metaVariables/deleteCooldown").set(data.op.to);
+            db.ref("metaVariables/deleteCooldown").set(Number(data.op.to));
             break;
         case "event_start":
-            db.ref("metaVariables/eventStartTime").set(data.op.to);
+            db.ref("metaVariables/eventStartTime").set(Number(data.op.to));
             break;
         case "event_end":
-            db.ref("metaVariables/eventEndTime").set(data.op.to);
+            db.ref("metaVariables/eventEndTime").set(Number(data.op.to));
             break;
         case "postpone_start":
             db.ref("metaVariables/eventStartTime").transaction((time: any) => {
-                return parseInt(time) + data.op.secs * 1000;
+                return Number(time) + data.op.secs * 1000;
             });
             break;
         case "postpone_end":
             db.ref("metaVariables/eventEndTime").transaction((time: any) => {
-                return parseInt(time) + data.op.secs * 1000;
+                return Number(time) + data.op.secs * 1000;
             });
             break;
         case "change_mod_status":

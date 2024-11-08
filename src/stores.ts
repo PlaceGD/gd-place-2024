@@ -1,4 +1,10 @@
-import { derived, writable, type Readable, type Writable } from "svelte/store";
+import {
+    derived,
+    writable,
+    type Readable,
+    type Unsubscriber,
+    type Writable,
+} from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
 import { ZLayer, GDColor, State } from "wasm-lib";
 import type { UserData } from "./firebase/auth";
@@ -514,6 +520,46 @@ setTimeout(
     1500 - (Date.now() % 1000)
 );
 
+export const scheduleFor = (
+    f: () => void,
+    timeUnix: number | Writable<number> | Readable<number>,
+    { runIfNegative, delay }: { runIfNegative?: boolean; delay?: number } = {
+        runIfNegative: false,
+        delay: 0,
+    }
+) => {
+    let timeout: NodeJS.Timeout;
+    let time: number;
+    let unsub: Unsubscriber;
+
+    const s = () => {
+        if (isNaN(time) || time == Infinity || time > 2147483647) {
+            return;
+        }
+
+        if (time >= 0 || runIfNegative) {
+            timeout = setTimeout(
+                () => {
+                    unsub?.();
+                    f();
+                },
+                time + (delay ?? 0)
+            );
+        }
+    };
+
+    if (typeof timeUnix === "number") {
+        time = timeUnix - serverNow;
+        s();
+    } else {
+        unsub = timeUnix.subscribe(t => {
+            clearTimeout(timeout);
+            time = t - serverNow;
+            s();
+        });
+    }
+};
+
 export const eventStartTime = writable(Number.POSITIVE_INFINITY);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 export const setNameSeconds = writable(0);
@@ -521,7 +567,7 @@ db.ref("metaVariables/eventStartTime").on("value", v => {
     eventStartTime.set(v.val());
 });
 db.ref("metaVariables/eventEndTime").on("value", v => {
-    eventEndTime.set(v.val());
+    eventEndTime.set(Number(v.val()));
 });
 db.ref("metaVariables/setNameSeconds").on("value", v => {
     setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);

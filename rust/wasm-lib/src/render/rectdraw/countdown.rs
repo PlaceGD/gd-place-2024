@@ -51,6 +51,7 @@ impl Countdown {
         }
     }
     pub fn update_state(&mut self, event_start: f64, now: f64) {
+        //console_log!("{event_start} {now}");
         let event_elapsed = now / 1000.0 - event_start / 1000.0;
         let time_until = -event_elapsed;
 

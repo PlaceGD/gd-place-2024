@@ -223,9 +223,10 @@ parse_countdown_files! {
     "digi"              ("Digitalight"):        [3 => weights(3,   3,   3,   3  ) pretty], // 72
     "chunlv1"           ("chunlv1"):            [3 => weights(3,   3,   3,   6  ) pretty], // 73
     "stormfly"          ("Stormfly"):           [0 => weights(1,   2,   2,   3  ) classic], // 74
+    "verti"             ("verticallity"):       [3 => weights(4,   3,   5,   7  ) pretty], // 75
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 74, 73]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 71, 75]);
 
 #[binrw]
 #[brw(little)]
@@ -271,11 +272,11 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         }
     };
 
-    set_day_end(7, ["desticy", "taman", "kips", "audieo"]); // change to goose
-    set_day_end(6, ["culuc", "knots", "nasgubb", "grax"]);
-    set_day_end(5, ["krmal", "partition", "galva", "terron"]); // change to rafer?
+    set_day_end(7, ["serp", "desticy", "kips", "audieo"]); // change to goose
+    set_day_end(6, ["culuc", "knots", "nasgubb", "echonox"]);
+    set_day_end(5, ["krmal", "partition", "galva", "rafer"]); // change to rafer?
     set_day_end(4, ["yunhaseu", "dorami", "juniper", "smiffy"]);
-    set_day_end(3, ["bli", "loco", "spu7nix", "spu7nix"]); // change to voxicat, xender
+    set_day_end(3, ["bli", "loco", "spu7nix", "verti"]); // change to voxicat, xender
     set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
     set_day_end(1, ["evw", "robtop", "viprin", "rafer"]); // change to knobbelboy?
 

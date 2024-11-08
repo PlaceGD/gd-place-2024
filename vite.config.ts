@@ -34,6 +34,10 @@ export default defineConfig(({ mode }) => ({
                 "/shared-lib",
             ],
         },
+        watch: {
+            ignored: ["**/firebase/**", "**/emulator_data/**"],
+        },
+        hmr: false,
     },
     optimizeDeps: {
         esbuildOptions: {
@@ -109,7 +113,7 @@ export default defineConfig(({ mode }) => ({
                   },
               })
             : null,
-        FullReload(["src/**/*"]),
+        FullReload(["**/*"], { always: false, root: "./src/", log: true }),
     ],
     build: {
         rollupOptions: {

@@ -75,6 +75,7 @@
 
     const loopSound = () => {
         if ($eventStatus !== "fully done") {
+            console.log("hdfhuyfghe");
             playSound({
                 url: endingAmbientUrl,
                 endCb: () => {
@@ -85,7 +86,14 @@
             });
         }
     };
-    scheduleFor(loopSound, eventEndTime, { runIfNegative: true, delay: 36000 });
+    let scheduled = false;
+    $: if ($eventStatus !== "loading" && !scheduled) {
+        scheduleFor(loopSound, eventEndTime, {
+            runIfNegative: true,
+            delay: 36000,
+        });
+        scheduled = true;
+    }
 
     // for (let i = 0; i < 11; i++) {
     //     scheduleFor(() => {}, eventEndTime, { delay: -i * 1000 });

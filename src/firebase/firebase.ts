@@ -21,7 +21,7 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 const db_ = getDatabase(app);
-if (typeof window !== "undefined" && __DEBUG) {
+if (typeof window !== "undefined" && __USE_DB === "local") {
     connectDatabaseEmulator(db_, "127.0.0.1", 9000);
 }
 

@@ -71,7 +71,7 @@ const httpsCallable = <Req, Res = unknown>(
 
 const functions = getFunctions();
 
-if (typeof window !== "undefined" && __DEBUG) {
+if (typeof window !== "undefined" && __USE_DB === "local") {
     connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }
 

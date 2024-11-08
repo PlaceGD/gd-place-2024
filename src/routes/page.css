@@ -106,7 +106,7 @@ body {
     }
 
     .white-button {
-        @apply bg-white/5 outline outline-2 -outline-offset-2 outline-white/20 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:cursor-not-allowed disabled:opacity-30;
+        @apply bg-white/5 outline outline-2 -outline-offset-2 outline-white/20 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-white/20 enabled:hover:bg-white/15 enabled:active:bg-white/25 disabled:cursor-not-allowed disabled:opacity-30;
     }
 
     .li-alternating {

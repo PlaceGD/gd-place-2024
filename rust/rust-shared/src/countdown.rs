@@ -272,6 +272,12 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         }
     };
 
+    // let mut set_release_day = |day: usize, sets: &[&str]| {
+    //     for set in sets {
+    //         release_days.insert(get_set_by_creator(set), day);
+    //     }
+    // };
+
     set_day_end(7, ["serp", "desticy", "kips", "audieo"]); // change to goose
     set_day_end(6, ["culuc", "knots", "nasgubb", "echonox"]);
     set_day_end(5, ["krmal", "partition", "galva", "rafer"]); // change to rafer?

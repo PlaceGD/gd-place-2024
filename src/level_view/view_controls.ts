@@ -14,6 +14,7 @@ import {
     ground2Color,
     lastRunColorTrigger,
     loginData,
+    savePosition,
 } from "../stores";
 import debounce from "lodash.debounce";
 import { tweened } from "svelte/motion";
@@ -153,8 +154,9 @@ export const moveCamera = (state: wasm.State, x: number, y: number) => {
         }
         return v;
     });
-
-    savePos(state);
+    if (savePosition.value) {
+        savePos(state);
+    }
     handleSub(state);
 };
 

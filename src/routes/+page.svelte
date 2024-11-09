@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Editor from "../Editor.svelte";
-    import { alertHasDarkReader } from "../utils/document";
+    import { alertHasDarkReader, alertIsLandscape } from "../utils/document";
     import DataPopup from "../DataPopup.svelte";
 
     import {
@@ -33,6 +33,7 @@
     );
 
     onMount(() => {
+        alertIsLandscape();
         alertHasDarkReader();
 
         initWasm();
@@ -83,12 +84,7 @@
         document.body.classList.remove("active-tabbing");
     }}
     on:orientationchange={() => {
-        if (
-            window.matchMedia("(orientation: landscape)").matches &&
-            window.innerHeight <= 600
-        ) {
-            Toast.showInfoToast("This website works better in portrait mode!");
-        }
+        alertIsLandscape();
     }}
 />
 

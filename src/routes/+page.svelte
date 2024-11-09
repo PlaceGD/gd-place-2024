@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Editor from "../Editor.svelte";
-    import { alertHasDarkReader } from "../utils/document";
+    import { alertHasDarkReader, alertIsLandscape } from "../utils/document";
     import DataPopup from "../DataPopup.svelte";
 
     import {
@@ -11,7 +11,11 @@
         spritesheetProgress,
     } from "../load_wasm";
     import ToastContainers from "../components/ToastContainers.svelte";
-    import { eventStatus, rawSpritesheetData } from "../stores";
+    import {
+        canPlaceEditDelete,
+        eventStatus,
+        rawSpritesheetData,
+    } from "../stores";
     // import JetpackAnim from "./JetpackAnim.svelte";
     import jetpackAnimText from "./assets/jetpack_anim.svg?raw";
     import ColoredName from "../components/ColoredName.svelte";
@@ -24,6 +28,8 @@
     import Guide from "../guide/Guide.svelte";
     import { beginGuide } from "../guide/guide";
     import { DEBUG } from "../utils/debug";
+    import Toast from "../utils/toast";
+    import { signOut } from "../firebase/auth";
 
     let openTrans = tweened(
         0,
@@ -32,6 +38,7 @@
     );
 
     onMount(() => {
+        alertIsLandscape();
         alertHasDarkReader();
 
         initWasm();
@@ -80,6 +87,18 @@
     }}
     on:pointerup={() => {
         document.body.classList.remove("active-tabbing");
+    }}
+    on:orientationchange={() => {
+        alertIsLandscape();
+    }}
+    on:storage={e => {
+        if (
+            e.key === "authState" &&
+            e.newValue !== "-1" &&
+            $canPlaceEditDelete
+        ) {
+            signOut();
+        }
     }}
 />
 

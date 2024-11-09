@@ -224,9 +224,11 @@ parse_countdown_files! {
     "chunlv1"           ("chunlv1"):            [3 => weights(3,   3,   3,   6  ) pretty], // 73
     "stormfly"          ("Stormfly"):           [0 => weights(1,   2,   2,   3  ) classic], // 74
     "verti"             ("verticallity"):       [3 => weights(4,   3,   5,   7  ) pretty], // 75
+    "goose"             ("Goose"):              [0 => weights(6,   6,   6,   2  ) pretty classic], // 76
+    "voxicat"           ("Voxicat"):            [3 => weights(4,   4,   4,   4  ) famous pretty], // 77
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 71, 75]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 76, 77]);
 
 #[binrw]
 #[brw(little)]
@@ -272,13 +274,19 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         }
     };
 
-    set_day_end(7, ["serp", "desticy", "kips", "audieo"]); // change to goose
-    set_day_end(6, ["culuc", "knots", "nasgubb", "echonox"]);
-    set_day_end(5, ["krmal", "partition", "galva", "rafer"]); // change to rafer?
+    // let mut set_release_day = |day: usize, sets: &[&str]| {
+    //     for set in sets {
+    //         release_days.insert(get_set_by_creator(set), day);
+    //     }
+    // };
+
+    set_day_end(7, ["serp", "desticy", "kips", "audieo"]);
+    set_day_end(6, ["goose", "culuc", "knots", "nasgubb"]);
+    set_day_end(5, ["krmal", "partition", "galva", "rafer"]);
     set_day_end(4, ["yunhaseu", "dorami", "juniper", "smiffy"]);
-    set_day_end(3, ["bli", "loco", "spu7nix", "verti"]); // change to voxicat, xender
+    set_day_end(3, ["bli", "voxicat", "loco", "echonox"]); // change to xender?
     set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
-    set_day_end(1, ["evw", "robtop", "viprin", "rafer"]); // change to knobbelboy?
+    set_day_end(1, ["evw", "robtop", "viprin", "viprin"]); // change to knobbelboy
 
     let get_release_day = |index| release_days.get(&index).copied().unwrap_or(9);
 
@@ -312,6 +320,8 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
         let day = i * set_switch_minutes / (60 * 24);
 
         let mut config = [DigitSetLabels::random(); 4];
+
+        println!("{}", rng.gen::<f64>());
 
         let sillytime = rng.gen::<f64>() < 0.1;
 

@@ -65,6 +65,8 @@ const persistLocalWritable = <T>(v: T, key: string): PersistentStore<T> =>
 
 // MARK: User Stuff
 
+export const savePosition = { value: true };
+
 export const bannedUsers = writable<Record<string, boolean>>({});
 
 export const analytics = persistLocalWritable<boolean | null>(
@@ -493,6 +495,12 @@ export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
 
 // import { browser }
 
+let debugOffset = 0;
+
+export const setDebugTimeOffset = (offset: number) => {
+    debugOffset = offset * 1000;
+};
+
 let serverNow = 0;
 if (typeof window !== "undefined") {
     getExactServerTime().then(v => {
@@ -502,7 +510,7 @@ if (typeof window !== "undefined") {
         let diff = localStart - serverStart;
 
         const draw = (time: number) => {
-            serverNow = Date.now() - diff;
+            serverNow = Date.now() - (diff + debugOffset);
             requestAnimationFrame(draw);
         };
         requestAnimationFrame(draw);

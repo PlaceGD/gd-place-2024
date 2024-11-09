@@ -7,6 +7,8 @@
         getServerNow,
         loginData,
         openMenu,
+        savePosition,
+        setDebugTimeOffset,
     } from "../stores";
     import Button from "../components/Button.svelte";
     import { menuHeight } from "../utils/transitions";
@@ -27,6 +29,7 @@
         nameDuration: 0,
         postponeStart: 0,
         postponeEnd: 0,
+        timeOffset: 0,
         modChangeUsername: "",
         unbanUsername: "",
         usernameOrID: "",
@@ -214,6 +217,20 @@
                 </WhiteButton>
             </div>
 
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Time offset</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.timeOffset}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() => setDebugTimeOffset(inputValues.timeOffset)}
+                >
+                    Set
+                </WhiteButton>
+            </div>
+
             <WhiteButton
                 on:click={() =>
                     meta({
@@ -222,6 +239,12 @@
                     })}
             >
                 Run End Sequence
+            </WhiteButton>
+
+            <WhiteButton
+                on:click={() => (savePosition.value = !savePosition.value)}
+            >
+                Toggle save pos
             </WhiteButton>
 
             <div class="w-full min-h-[1px] bg-white/50" />

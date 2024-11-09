@@ -51,6 +51,13 @@ export const initUserData = (
 let userDataUnsub: Unsubscribe | null = null;
 
 onAuthStateChanged(auth, async user => {
+    if (typeof window !== "undefined") {
+        localStorage.setItem(
+            "authState",
+            user === null ? "-1" : Math.random().toString()
+        );
+    }
+
     if (user != null) {
         let userDataValue: UserData = {
             user: user,

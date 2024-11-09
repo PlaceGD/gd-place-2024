@@ -701,7 +701,8 @@
             resetPreviewColor(state, 1);
             $selectedObject = null;
             state.deselect_object();
-            // Howler.stop();
+            stopSound("preview song");
+            stopSound("song");
             isGuideActive.set(false);
             toast.pop();
             toast.pop({ target: "announcement" });

@@ -76,6 +76,15 @@ export const alertHasDarkReader = () => {
     }
 };
 
+export const alertIsLandscape = () => {
+    if (
+        window.matchMedia("(orientation: landscape)").matches &&
+        window.innerHeight <= 600
+    ) {
+        Toast.showInfoToast("This website works better in portrait mode!");
+    }
+};
+
 export const isMobile = (): boolean => {
     if (typeof window != "undefined") {
         return false;

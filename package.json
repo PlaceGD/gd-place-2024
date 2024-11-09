@@ -11,7 +11,7 @@
         "emulators:start": "firebase emulators:start --import ./emulator_data/ --export-on-exit",
         "functions:build": "cd ./functions && npm run vite:build && cd ..",
         "wasm:build": "cd rust/wasm-lib && wasm-pack build --no-opt --reference-types --weak-refs --target web",
-        "wasm:build-prod": "cd rust/wasm-lib && wasm-pack build --profiling --reference-types --weak-refs --target web",
+        "wasm:build-prod": "cd rust/wasm-lib && wasm-pack build --release --reference-types --weak-refs --target web",
         "shared:build": "cd shared-lib && npm run build && cd ..",
         "nexus:gen": "cd rust/the-nexus && cargo test --release generate_shid -- --nocapture && cd ../..",
         "nexus:gen_no_sheet": "cd rust/the-nexus && cargo test --release generate_shimabid_no_sheet -- --nocapture && cd ../..",

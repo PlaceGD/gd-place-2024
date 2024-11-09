@@ -15,7 +15,7 @@ export class LogGroup {
     }
 
     private addNewLog(message: string, level: Level) {
-        this.logs = [...this.logs, { message, level }];
+        this.logs.push({ message, level });
     }
 
     info(...messages: { toString: () => string }[]) {
@@ -41,5 +41,6 @@ export class LogGroup {
                 .map(log => `[${log.level}]: ${log.message}`)
                 .join("\n")}`,
         });
+        this.logs = [];
     }
 }

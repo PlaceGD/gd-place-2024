@@ -10,6 +10,7 @@
     import { handleSub } from "./view_controls";
     import { isMobile } from "../utils/document";
     import { toast } from "@zerodevx/svelte-toast";
+    import { showFpsWarning } from "../utils/misc";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -52,7 +53,9 @@
 
     let fpsSum = 0;
     let fpsCount = 0;
-    let showedFpsWarning = false;
+    let qualityStep = ["low", "medium", "high"].indexOf(
+        $editorSettings.quality
+    ); // 3 = high, 2 = med, 1 = low + warning, 0 = finished
 
     const draw = (time: number) => {
         if (state != null) {
@@ -64,27 +67,23 @@
                 fpsCount += 1;
                 if (fpsCount > 60) {
                     let avg = fpsSum / fpsCount;
-                    if (avg < 20.0 && !showedFpsWarning) {
-                        let helpLink = {
-                            chrome: "https://help.glorify.com/en/articles/3730301-turn-hardware-acceleration-on-in-google-chrome",
-                            firefox:
-                                "https://support.mozilla.org/en-US/kb/performance-settings",
-                        };
-                        let link =
-                            "https://kb.bigmarker.com/knowledge/enable-disable-hardware-acceleration-in-browser";
 
-                        let browser = navigator.userAgent.toLowerCase();
-                        if (browser.includes("chrome")) {
-                            link = helpLink.chrome;
-                        } else if (browser.includes("firefox")) {
-                            link = helpLink.firefox;
+                    if (avg < 20.0 && qualityStep > 0) {
+                        qualityStep--;
+
+                        switch (qualityStep) {
+                            case 2:
+                                $editorSettings.quality = "medium";
+                                break;
+                            case 1:
+                                $editorSettings.quality = "low";
+                                showFpsWarning();
+                                break;
+                            default:
+                                break;
                         }
-
-                        Toast.showInfoToast(
-                            `Low FPS detected. Make sure you have <a href="${link}" target="_blank" rel="norefer" class="underline">GPU acceleration enabled in your browser</a>.`
-                        );
-                        showedFpsWarning = true;
                     }
+
                     fpsSum = 0;
                     fpsCount = 0;
                 }

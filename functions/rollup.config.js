@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 import terser from "@rollup/plugin-terser";
@@ -15,6 +16,11 @@ if (missingVars.length > 0) {
     throw new Error(
         `Missing required environment variables: ${missingVars.join(", ")}`
     );
+}
+
+// check if the symlink is broken
+if (!fs.existsSync("./shared-lib")) {
+    throw new Error(`shared-lib symlink is broken, aborting build`);
 }
 
 export default [

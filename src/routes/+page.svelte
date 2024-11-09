@@ -24,6 +24,7 @@
     import Guide from "../guide/Guide.svelte";
     import { beginGuide } from "../guide/guide";
     import { DEBUG } from "../utils/debug";
+    import Toast from "../utils/toast";
 
     let openTrans = tweened(
         0,
@@ -80,6 +81,14 @@
     }}
     on:pointerup={() => {
         document.body.classList.remove("active-tabbing");
+    }}
+    on:orientationchange={() => {
+        if (
+            window.matchMedia("(orientation: landscape)").matches &&
+            window.innerHeight <= 600
+        ) {
+            Toast.showInfoToast("This website works better in portrait mode!");
+        }
     }}
 />
 

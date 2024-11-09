@@ -5,7 +5,10 @@ import {
     type FunctionsErrorCode,
     connectFunctionsEmulator,
 } from "firebase/functions";
-import { type FirebaseError as FFirebaseError } from "firebase/app";
+import {
+    initializeApp,
+    type FirebaseError as FFirebaseError,
+} from "firebase/app";
 import type {
     ReportUserReq,
     DeleteReq,
@@ -24,9 +27,7 @@ import type {
     ReportUserRes,
     LevelNameRes,
 } from "shared-lib/cloud_functions";
-import { GDColor, GDObjectOpt } from "wasm-lib";
-import { isValidObject, objects } from "shared-lib/gd";
-import { encodeString } from "shared-lib/base_util";
+import { app, cfapp } from "./firebase";
 
 interface TypedPromise<ResolveType, RejectType> extends Promise<ResolveType> {
     catch<TResult = never>(
@@ -69,9 +70,9 @@ const httpsCallable = <Req, Res = unknown>(
     return fHttpsCallable(...args) as TypedHttpsCallable<Req, Res>;
 };
 
-const functions = getFunctions();
+const functions = getFunctions(cfapp);
 
-if (typeof window !== "undefined" && __USE_DB === "local") {
+if (typeof window !== "undefined" && __RT_DB_ENV === "local") {
     connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }
 

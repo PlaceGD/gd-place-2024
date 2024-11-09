@@ -11,7 +11,11 @@
         spritesheetProgress,
     } from "../load_wasm";
     import ToastContainers from "../components/ToastContainers.svelte";
-    import { eventStatus, rawSpritesheetData } from "../stores";
+    import {
+        canPlaceEditDelete,
+        eventStatus,
+        rawSpritesheetData,
+    } from "../stores";
     // import JetpackAnim from "./JetpackAnim.svelte";
     import jetpackAnimText from "./assets/jetpack_anim.svg?raw";
     import ColoredName from "../components/ColoredName.svelte";
@@ -25,6 +29,7 @@
     import { beginGuide } from "../guide/guide";
     import { DEBUG } from "../utils/debug";
     import Toast from "../utils/toast";
+    import { signOut } from "../firebase/auth";
 
     let openTrans = tweened(
         0,
@@ -85,6 +90,15 @@
     }}
     on:orientationchange={() => {
         alertIsLandscape();
+    }}
+    on:storage={e => {
+        if (
+            e.key === "authState" &&
+            e.newValue !== "-1" &&
+            $canPlaceEditDelete
+        ) {
+            signOut();
+        }
     }}
 />
 

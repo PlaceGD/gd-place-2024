@@ -129,6 +129,8 @@
 
                     if (e.details.code === 300 || e.details.code === 301) {
                         Toast.showErrorToast("Username is taken!");
+                    } else if (e.details.code === 100) {
+                        Toast.showErrorToast("Invalid username!");
                     } else {
                         Toast.showErrorToast(
                             `Failed to create user. (${e.details.code})`

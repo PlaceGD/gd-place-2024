@@ -174,7 +174,7 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
         const now = Date.now();
 
         if (now < eventStartTime.val() || now > eventEndTime.val()) {
-            Error.code(209, "permission-denied");
+            throw Error.code(209, "permission-denied");
         }
 
         await checkedTransaction(

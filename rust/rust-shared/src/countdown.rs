@@ -169,7 +169,7 @@ parse_countdown_files! {
     "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 18
     "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  ) classic], // 19
     "mels"              ("MelX0exe"):           [2 => weights(2,   4,   4,   2  ) silly,  // 20
-                                                 3 => weights(3,   3,   2,   4  ) pretty], // 21
+                                                 3 => weights(4,   3,   2,   4  ) pretty], // 21
     "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  ) silly famous], // 22
     "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 23
     "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  ) pretty famous], // 24
@@ -226,9 +226,11 @@ parse_countdown_files! {
     "verti"             ("verticallity"):       [3 => weights(4,   3,   5,   7  ) pretty], // 75
     "goose"             ("Goose"):              [0 => weights(6,   6,   6,   2  ) pretty classic], // 76
     "voxicat"           ("Voxicat"):            [3 => weights(4,   4,   4,   4  ) famous pretty], // 77
+    "knobbel"           ("Knobbelboy"):         [0 => weights(4,   4,   4,   3  ) famous classic silly], // 78
+    "immaxx"            ("ImMaxx1"):            [3 => weights(2,   3,   3,   3  ) pretty], // 79
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 76, 77]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 79, 78]);
 
 #[binrw]
 #[brw(little)]
@@ -286,7 +288,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     set_day_end(4, ["yunhaseu", "dorami", "juniper", "smiffy"]);
     set_day_end(3, ["bli", "voxicat", "loco", "echonox"]); // change to xender?
     set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
-    set_day_end(1, ["evw", "robtop", "viprin", "viprin"]); // change to knobbelboy
+    set_day_end(1, ["knobbel", "robtop", "viprin", "evw"]);
 
     let get_release_day = |index| release_days.get(&index).copied().unwrap_or(9);
 

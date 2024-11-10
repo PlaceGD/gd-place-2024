@@ -199,7 +199,7 @@ export const onKofiDonation = onRequest(
                     ],
                     Subject: `GD Place Donation! (#${jsonData.message_id.split("-")[1]})`,
                     HTMLPart: `
-<img src="https://gd-place-2023.web.app/images/logo_donation.png" alt="Happy GD Place logo" style="width: 100px; height: 100px"/>
+<img src="https://place.gd/images/logo_donation.png" alt="Happy GD Place logo" style="width: 100px; height: 100px"/>
 <h1>Thank you for donating to GD Place!</h1>
 <p><strong>You should now be able to change the colors of your username in the settings menu!</strong></p>
 <p>If the website asks you for a code, use this:</p>

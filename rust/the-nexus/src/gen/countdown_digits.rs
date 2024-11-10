@@ -151,6 +151,12 @@ fn replace_obj_id(mut o: HashMap<u16, String>) -> HashMap<u16, String> {
     let new_id = match o.get(&1).unwrap().as_ref() {
         "955" => "211",
 
+        "150" => "3635",
+        "133" => "3633",
+        "460" => "3631",
+        "494" => "3632",
+        "50" => "3621",
+
         a => a,
     };
     o.insert(1, String::from(new_id));

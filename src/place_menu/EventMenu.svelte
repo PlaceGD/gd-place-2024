@@ -135,7 +135,7 @@
                         <div
                             class="italic text-center text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs tabular-nums"
                         >
-                            Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
+                            Next design change: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}
 

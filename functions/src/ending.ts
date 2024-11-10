@@ -44,7 +44,7 @@ export const setLevelNameLetter = onCallAuth<
         now < eventEndTime.val() ||
         now > eventEndTime.val() + setNameSeconds.val() * 1000
     ) {
-        Error.code(211, "permission-denied");
+        throw Error.code(211, "permission-denied");
     }
 
     await checkedTransaction(

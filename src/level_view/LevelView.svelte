@@ -10,7 +10,7 @@
     import { handleSub } from "./view_controls";
     import { isMobile } from "../utils/document";
     import { toast } from "@zerodevx/svelte-toast";
-    import { showFpsWarning } from "../utils/misc";
+    import { showGpuAccelWarning } from "../utils/misc";
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
@@ -38,8 +38,23 @@
                 $rawSpritesheetData!.height
             );
         } catch (e: unknown) {
-            console.error(e, "(Failed in `wasm.create_view`)");
-            Toast.showErrorToast(WASM_ERROR);
+            if (e instanceof wasm.StateError) {
+                console.error(e.display(), "(Failed in `wasm.create_view`)");
+
+                if (e.kind === 0) {
+                    showGpuAccelWarning(
+                        "An error occurred during loading. This error may be due to an outdated browser or operating system."
+                    );
+                } else {
+                    Toast.showErrorToast(WASM_ERROR);
+                    Toast.showInfoToast(
+                        "This error may be due to an outdated browser or operating system."
+                    );
+                }
+            } else {
+                console.error(e, "(Failed in `wasm.create_view`)");
+                Toast.showErrorToast(WASM_ERROR);
+            }
         }
     };
 
@@ -77,7 +92,7 @@
                                 break;
                             case 1:
                                 $editorSettings.quality = "low";
-                                showFpsWarning();
+                                showGpuAccelWarning("Low FPS detected.");
                                 break;
                             default:
                                 break;

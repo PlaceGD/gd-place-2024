@@ -18,7 +18,10 @@ export default class Toast {
     };
     static showWarningToast = (...message: string[]) => {
         console.warn(...message);
-        _toast.push(message.join(" "), { classes: ["warning"] });
+        _toast.push(message.join(" "), {
+            classes: ["warning"],
+            duration: 7000,
+        });
     };
     static showSuccessToast = (...message: string[]) => {
         console.log(...message);

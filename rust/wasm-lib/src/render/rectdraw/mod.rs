@@ -62,6 +62,7 @@ const fn is_rotating_obj(id: u16) -> bool {
             | 186
             | 187
             | 188
+            | 679
             | 85
             | 86
             | 87
@@ -74,6 +75,8 @@ const fn is_rotating_obj(id: u16) -> bool {
             | 1752
             | 1831
             | 1832
+            | 999
+            | 1000
             | 1833
             | 1834
     )
@@ -131,7 +134,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
         let rand = key.random_num(10);
         let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
 
-        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 4.0);
+        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
     }
 
     billy.scale(vec2(scaleup, scaleup));

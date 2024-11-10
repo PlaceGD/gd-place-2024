@@ -227,7 +227,7 @@ parse_countdown_files! {
     "goose"             ("Goose"):              [0 => weights(6,   6,   6,   2  ) pretty classic], // 76
     "voxicat"           ("Voxicat"):            [3 => weights(4,   4,   4,   4  ) famous pretty], // 77
     "knobbel"           ("Knobbelboy"):         [0 => weights(4,   4,   4,   3  ) famous classic silly], // 78
-    "immaxx"            ("ImMaxx1"):            [3 => weights(2,   3,   3,   3  ) pretty], // 79
+    "immaxx"            ("ImMaxX1"):            [3 => weights(2,   3,   3,   3  ) pretty], // 79
 }
 
 pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 79, 78]);

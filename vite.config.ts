@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => ({
             ],
         },
         watch: {
-            ignored: ["**/firebase/**", "**/emulator_data/**"],
+            ignored: ["**/emulator_data/**"],
         },
         hmr: false,
     },

@@ -70,39 +70,47 @@
 
     const signInWith = (method: LoginMethod) => {
         isInProgress = true;
-        handleSignIn(method).then(async isOK => {
-            if (isOK) {
-                if ($loginData.currentUserData != null) {
-                    let maybeData = await db
-                        .ref(
-                            `userDetails/${$loginData.currentUserData.user.uid}`
-                        )
-                        .get();
+        handleSignIn(method)
+            .then(async isOK => {
+                if (isOK) {
+                    if ($loginData.currentUserData != null) {
+                        let maybeData = await db
+                            .ref(
+                                `userDetails/${$loginData.currentUserData.user.uid}`
+                            )
+                            .get();
 
-                    let maybePlaceData = maybeData.val();
+                        let maybePlaceData = maybeData.val();
 
-                    if (maybePlaceData != null) {
-                        $loginData.currentUserData.userDetails = maybePlaceData;
-                        $openMenu = null;
+                        if (maybePlaceData != null) {
+                            $loginData.currentUserData.userDetails =
+                                maybePlaceData;
+                            $openMenu = null;
+                        } else {
+                            previousPage = currentPage;
+                            currentPage = Page.CREATE_USER;
+                        }
+
+                        isInProgress = false;
                     } else {
-                        previousPage = currentPage;
-                        currentPage = Page.CREATE_USER;
+                        isInProgress = false;
+                        console.error(
+                            "login OK (isOk == true) but `currentUserData` still null"
+                        );
+                        Toast.showErrorToast(
+                            "There was an issue signing in. Please try again."
+                        );
                     }
-
-                    isInProgress = false;
                 } else {
                     isInProgress = false;
-                    console.error(
-                        "login OK (isOk == true) but `currentUserData` still null"
-                    );
-                    Toast.showErrorToast(
-                        "There was an issue signing in. Please try again."
-                    );
                 }
-            } else {
-                isInProgress = false;
-            }
-        });
+            })
+            .catch(e => {
+                console.error("handleSignIn error", e);
+                Toast.showErrorToast(
+                    "There was an issue signing in. Please try again."
+                );
+            });
     };
 
     const initNewUser = () => {

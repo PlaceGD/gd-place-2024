@@ -1,4 +1,5 @@
 {
+    "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/master/schema/firebase-config.json",
     "database": {
         "rules": "firebase-database-rules.json"
     },

@@ -4,7 +4,7 @@ import {
     Database,
     getDatabase,
 } from "firebase/database";
-import { getAuth } from "firebase/auth";
+import { getAuth, type Auth } from "firebase/auth";
 import { convertDatabase } from "@smart-firebase/client";
 import { type DatabaseSchema } from "shared-lib/database";
 
@@ -34,6 +34,8 @@ all auth is from gd-place-2023 project
 
 // the app used by the cloud functions
 export let cfapp: FirebaseApp;
+export let auth: Auth;
+
 let db_: Database;
 if (__CLOUD_FUNCTIONS_ENV === "dev") {
     // use dev cloud functions and database
@@ -49,16 +51,15 @@ if (__CLOUD_FUNCTIONS_ENV === "dev") {
 
     cfapp = initializeApp(firebaseConfig, "gd-place-2023-dev");
     db_ = getDatabase(cfapp);
+    auth = getAuth(cfapp);
 } else if (__CLOUD_FUNCTIONS_ENV === "prod") {
     // use prod cloud functions and database
     cfapp = app;
     db_ = getDatabase(app);
+    auth = getAuth(app);
 } else {
     throw new Error("__CLOUD_FUNCTIONS_ENV not set");
 }
-
-// use prod auth for everything
-export const auth = getAuth(app);
 
 if (typeof window !== "undefined" && __RT_DB_ENV === "local") {
     connectDatabaseEmulator(db_, "127.0.0.1", 9000);

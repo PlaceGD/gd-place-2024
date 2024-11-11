@@ -88,8 +88,14 @@
     on:pointerup={() => {
         document.body.classList.remove("active-tabbing");
     }}
-    on:orientationchange={() => {
-        alertIsLandscape();
+    on:orientationchange={e => {
+        const orientation = window.screen.orientation.type;
+        if (
+            orientation === "landscape-primary" ||
+            orientation === "landscape-secondary"
+        ) {
+            alertIsLandscape(true);
+        }
     }}
     on:storage={e => {
         if (

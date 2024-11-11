@@ -3,6 +3,7 @@
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
     import {
+        addDebugTimeOffset,
         ExclusiveMenus,
         getServerNow,
         loginData,
@@ -38,7 +39,13 @@
     };
 
     const meta = (data: MetaReq["op"]) => {
+        const confirmationString = "GOOGY GOGY GOOF KEY";
+        const userConfirmation = prompt(
+            `Type "${confirmationString}" to confirm:`
+        );
+
         if (
+            userConfirmation === confirmationString &&
             confirm(
                 `You are about to update "${data.type.replace("_", " ")}"! Are you sure?`
             ) &&
@@ -228,6 +235,12 @@
                     on:click={() => setDebugTimeOffset(inputValues.timeOffset)}
                 >
                     Set
+                </WhiteButton>
+
+                <WhiteButton
+                    on:click={() => addDebugTimeOffset(inputValues.timeOffset)}
+                >
+                    +
                 </WhiteButton>
             </div>
 

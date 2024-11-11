@@ -204,7 +204,7 @@ parse_countdown_files! {
     "tech"              ("Technical"):          [0 => weights(2,   2,   2,   2  ) silly famous], // 53
     "connot"            ("connot"):             [3 => weights(4,   2,   3,   3  ) silly], // 54
     "rustam"            ("Rustam"):             [0 => weights(3,   3,   3,   3  ) classic], // 55
-    "robtop"            ("RobTopGames"):        [0 => weights(6,   6,   6,   6  ) famous classic silly], // 56
+    "robtop"            ("RobTopGames"):        [0 => weights(8,   8,   8,   8  ) famous classic silly], // 56
     "desticy"           ("DesTicY"):            [0 => weights(5,   2,   4,   4  ) classic pretty], // 57
     "xeno"              ("xenoteric"):          [3 => weights(4,   3,   2,   5  ) pretty], // 58
     "logi"              ("logiking"):           [0 => weights(4,   3,   3,   3  ) pretty], // 59
@@ -228,9 +228,10 @@ parse_countdown_files! {
     "voxicat"           ("Voxicat"):            [3 => weights(4,   4,   4,   4  ) famous pretty], // 77
     "knobbel"           ("Knobbelboy"):         [0 => weights(4,   4,   4,   3  ) famous classic silly], // 78
     "immaxx"            ("ImMaxX1"):            [3 => weights(2,   3,   3,   3  ) pretty], // 79
+    "dangerkat"         ("DangerKat"):          [3 => weights(3,   3,   3,   5  ) pretty], // 80
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 79, 78]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 79, 80]);
 
 #[binrw]
 #[brw(little)]
@@ -264,6 +265,11 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     let mut switches = vec![None; n];
 
     switches[0] = Some([1, 50, 0, 7]); // final sets
+    switches[1] = Some([1, 56, 69, 66]);
+    switches[2] = Some([1, 78, 60, 46]);
+    switches[3] = Some([1, 77, 24, 68]);
+    switches[4] = Some([1, 76, 0, 4]);
+    switches[5] = Some([1, 42, 59, 75]);
 
     let set_switch_minutes = 20;
     let mut release_days = HashMap::new();

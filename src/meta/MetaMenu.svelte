@@ -3,6 +3,7 @@
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
     import {
+        addDebugTimeOffset,
         ExclusiveMenus,
         getServerNow,
         loginData,
@@ -38,7 +39,13 @@
     };
 
     const meta = (data: MetaReq["op"]) => {
+        const confirmationString = "GOOGY GOGY GOOF KEY";
+        const userConfirmation = prompt(
+            `Type "${confirmationString}" to confirm:`
+        );
+
         if (
+            userConfirmation === confirmationString &&
             confirm(
                 `You are about to update "${data.type.replace("_", " ")}"! Are you sure?`
             ) &&
@@ -219,21 +226,6 @@
                     </WhiteButton>
                 </div>
 
-                <div class="flex w-full gap-2 flex-center">
-                    <h1 class="w-32 font-pusab text-stroke">Time offset</h1>
-                    <DarkInput
-                        maxLength={1000}
-                        bind:value={inputValues.timeOffset}
-                        hardValidInput={/^-?\d*$/}
-                    ></DarkInput>
-                    <WhiteButton
-                        on:click={() =>
-                            setDebugTimeOffset(inputValues.timeOffset)}
-                    >
-                        Set
-                    </WhiteButton>
-                </div>
-
                 <WhiteButton
                     on:click={() =>
                         meta({
@@ -244,6 +236,26 @@
                     Run End Sequence
                 </WhiteButton>
             {/if}
+
+            <div class="flex w-full gap-2 flex-center">
+                <h1 class="w-32 font-pusab text-stroke">Time offset</h1>
+                <DarkInput
+                    maxLength={1000}
+                    bind:value={inputValues.timeOffset}
+                    hardValidInput={/^-?\d*$/}
+                ></DarkInput>
+                <WhiteButton
+                    on:click={() => setDebugTimeOffset(inputValues.timeOffset)}
+                >
+                    Set
+                </WhiteButton>
+
+                <WhiteButton
+                    on:click={() => addDebugTimeOffset(inputValues.timeOffset)}
+                >
+                    +
+                </WhiteButton>
+            </div>
 
             <WhiteButton
                 on:click={() => (savePosition.value = !savePosition.value)}

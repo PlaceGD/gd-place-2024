@@ -51,7 +51,7 @@ export const notNaNAnd = (n: string, c: (n: number) => boolean) => {
     return !isNaN(s) && c(s);
 };
 
-export const showFpsWarning = () => {
+export const showGpuAccelWarning = (reason: string) => {
     const helpLink = {
         chrome: "https://help.glorify.com/en/articles/3730301-turn-hardware-acceleration-on-in-google-chrome",
         firefox: "https://support.mozilla.org/en-US/kb/performance-settings",
@@ -66,7 +66,7 @@ export const showFpsWarning = () => {
         link = helpLink.firefox;
     }
 
-    Toast.showInfoToast(
-        `Low FPS detected. Make sure you have <a href="${link}" target="_blank" rel="norefer" class="underline">GPU acceleration enabled in your browser</a>.`
+    Toast.showWarningToast(
+        `${reason} Make sure you have <a href="${link}" target="_blank" rel="norefer" class="underline">GPU acceleration enabled in your browser</a>.`
     );
 };

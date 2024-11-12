@@ -501,6 +501,10 @@ export const setDebugTimeOffset = (offset: number) => {
     debugOffset = offset * 1000;
 };
 
+export const addDebugTimeOffset = (offset: number) => {
+    debugOffset += offset * 1000;
+};
+
 let serverNow = 0;
 if (typeof window !== "undefined") {
     getExactServerTime().then(v => {

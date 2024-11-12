@@ -824,7 +824,6 @@
             const isTouch = e.pointerType == "touch";
 
             if (e.button == 0 && !isTouch) {
-                // console.log("sex");
                 startDrag(
                     e.clientX * window.devicePixelRatio,
                     e.clientY * window.devicePixelRatio

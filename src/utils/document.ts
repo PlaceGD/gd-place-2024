@@ -75,13 +75,16 @@ export const alertHasDarkReader = () => {
         );
     }
 };
-
-export const alertIsLandscape = () => {
+let hasAdvisedPortrait = false;
+export const alertIsLandscape = (ignoreWindow: boolean = false) => {
+    if (hasAdvisedPortrait) return;
     if (
-        window.matchMedia("(orientation: landscape)").matches &&
-        window.innerHeight <= 600
+        ignoreWindow ||
+        (window.matchMedia("(orientation: landscape)").matches &&
+            window.innerHeight <= 600)
     ) {
         Toast.showInfoToast("This website works better in portrait mode!");
+        hasAdvisedPortrait = true;
     }
 };
 

@@ -1,9 +1,0 @@
-{
-    "name": "wasm-lib",
-    "collaborators": ["@DexterHill0", "@FlowVix"],
-    "version": "0.1.0",
-    "files": ["wasm_lib_bg.wasm", "wasm_lib.js", "wasm_lib.d.ts"],
-    "module": "wasm_lib.js",
-    "types": "wasm_lib.d.ts",
-    "sideEffects": ["./snippets/*"]
-}

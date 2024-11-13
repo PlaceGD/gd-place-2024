@@ -183,8 +183,8 @@ impl Countdown {
                 if self.bg_state[i] != new_bg_state[i] {
                     let (state, bg) = match i {
                         0 => (&mut self.days_marker, &COUNTDOWN_DIGITS.1),
-                        1 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
-                        2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
+                        1 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2[0]),
+                        2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3[0]),
                         _ => unreachable!(),
                     };
                     let delay = index_delay(i * 2);

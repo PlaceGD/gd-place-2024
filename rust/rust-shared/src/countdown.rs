@@ -13,6 +13,7 @@ use crate::{
 pub const DIGIT_WIDTH: f32 = 30.0 * 10.0;
 pub const DIGIT_HEIGHT: f32 = 30.0 * 15.0;
 
+#[derive(Clone)]
 pub struct LevelParseResult {
     pub objects: Vec<HashMap<u16, String>>,
     pub colors: HashMap<u16, GDColor>,
@@ -164,7 +165,7 @@ parse_countdown_files! {
     "jenkins"           ("Jenkins"):            [3 => weights(4,   4,   4,   1  ) pretty], // 13
     "kingtony"          ("KINGTONY"):           [3 => weights(2,   2,   3,   3  )], // 14
     "domi"              ("Dominus"):            [3 => weights(2,   4,   4,   1  ) pretty], // 15
-    "jonathangd"        ("JonathanGD"):         [3 => weights(3,   4,   4,   1  ) classic famous], // 16
+    "jonathangd"        ("JonathanGD"):         [3 => weights(2,   2,   2,   1  ) classic famous], // 16
     "exyl"              ("Exyl"):               [3 => weights(2,   2,   2,   2  )], // 17
     "jeyzor"            ("Jeyzor"):             [3 => weights(2,   1,   2,   4  ) classic], // 18
     "vermillion"        ("Vermillion"):         [3 => weights(3,   3,   3,   3  ) classic], // 19
@@ -172,10 +173,10 @@ parse_countdown_files! {
                                                  3 => weights(4,   3,   2,   4  ) pretty], // 21
     "evw"               ("EricVanWilderman"):   [0 => weights(3,   3,   3,   3  ) silly famous], // 22
     "serp"              ("Serponge"):           [3 => weights(3,   4,   5,   2  ) famous classic], // 23
-    "bli"               ("bli"):                [3 => weights(5,   5,   5,   3  ) pretty famous], // 24
+    "bli"               ("bli"):                [3 => weights(6,   6,   6,   3  ) pretty famous], // 24
     "grax"              ("Grax"):               [3 => weights(3,   5,   4,   2  ) pretty], // 25
     "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  ) famous classic], // 26
-    "davjt"             ("DavJT"):              [3 => weights(3,   3,   4,   1  ) famous], // 27
+    "davjt"             ("DavJT"):              [3 => weights(32,   2,   3,   1  ) famous], // 27
     "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  ) pretty], // 28
     "doggie"            ("Doggie"):             [0 => weights(2,   3,   4,   3  ) silly famous], // 29
     "pocke"             ("Pocke"):              [3 => weights(4,   2,   2,   1  ) silly], // 30
@@ -201,7 +202,7 @@ parse_countdown_files! {
     "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
     "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
-    "tech"              ("Technical"):          [0 => weights(2,   2,   2,   2  ) silly famous], // 53
+    "tech"              ("Technical"):          [0 => weights(1,   1,   1,   1  ) silly famous], // 53
     "connot"            ("connot"):             [3 => weights(4,   2,   3,   3  ) silly], // 54
     "rustam"            ("Rustam"):             [0 => weights(3,   3,   3,   3  ) classic], // 55
     "robtop"            ("RobTopGames"):        [0 => weights(8,   8,   8,   8  ) famous classic silly], // 56
@@ -222,16 +223,19 @@ parse_countdown_files! {
     "devon"             ("Thedevon"):           [0 => weights(4,   2,   2,   5  ) classic], // 71
     "digi"              ("Digitalight"):        [3 => weights(3,   3,   3,   3  ) pretty], // 72
     "chunlv1"           ("chunlv1"):            [3 => weights(3,   3,   3,   6  ) pretty], // 73
-    "stormfly"          ("Stormfly"):           [0 => weights(1,   2,   2,   3  ) classic], // 74
+    "stormfly"          ("Stormfly"):           [0 => weights(1,   1,   1,   1  ) classic], // 74
     "verti"             ("verticallity"):       [3 => weights(4,   3,   5,   7  ) pretty], // 75
     "goose"             ("Goose"):              [0 => weights(6,   6,   6,   2  ) pretty classic], // 76
-    "voxicat"           ("Voxicat"):            [3 => weights(4,   4,   4,   4  ) famous pretty], // 77
+    "voxicat"           ("Voxicat"):            [3 => weights(5,   5,   5,   5  ) famous pretty], // 77
     "knobbel"           ("Knobbelboy"):         [0 => weights(4,   4,   4,   3  ) famous classic silly], // 78
     "immaxx"            ("ImMaxX1"):            [3 => weights(2,   3,   3,   3  ) pretty], // 79
     "dangerkat"         ("DangerKat"):          [3 => weights(3,   3,   3,   5  ) pretty], // 80
+    "perox8"            ("Perox8"):             [3 => weights(1,   2,   2,   3  ) pretty], // 81
+    "immaxx2"           ("ImMaxX"):             [3 => weights(3,   3,   3,   4  ) pretty silly], // 82
+    "zoink"             ("Zoink"):              [0 => weights(0,   0,   3,   4  ) silly], // 83
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 79, 80]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 82, 83]);
 
 #[binrw]
 #[brw(little)]
@@ -251,8 +255,8 @@ pub struct DigitSet(pub [DigitObjects; 10]);
 pub struct CountdownDigitSets(
     pub [DigitSet; DIGIT_SETS],
     pub DigitObjects,
-    pub DigitObjects,
-    pub DigitObjects,
+    pub [DigitObjects; 5],
+    pub [DigitObjects; 5],
 ); // days marker, hours colon, minutes colon
    // should probably be a struct maybe now
 
@@ -293,8 +297,8 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     set_day_end(5, ["krmal", "partition", "galva", "rafer"]);
     set_day_end(4, ["yunhaseu", "dorami", "juniper", "smiffy"]);
     set_day_end(3, ["bli", "voxicat", "loco", "echonox"]); // change to xender?
-    set_day_end(2, ["srguillester", "npesta", "doggie", "aeonair"]);
-    set_day_end(1, ["knobbel", "robtop", "viprin", "evw"]);
+    set_day_end(2, ["srguillester", "doggie", "aeonair", "zoink"]);
+    set_day_end(1, ["knobbel", "robtop", "evw", "npesta"]);
 
     let get_release_day = |index| release_days.get(&index).copied().unwrap_or(9);
 

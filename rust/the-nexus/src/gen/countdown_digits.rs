@@ -101,39 +101,44 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
         }
     }
 
-    let bg = parse_gmd_file(include_str!(
-        "../../../rust-shared/src/countdowndigits/bg.gmd"
-    ));
+    let bg = [
+        include_str!("../../../rust-shared/src/countdowndigits/bg0.gmd"),
+        include_str!("../../../rust-shared/src/countdowndigits/bg1.gmd"),
+        include_str!("../../../rust-shared/src/countdowndigits/bg2.gmd"),
+        include_str!("../../../rust-shared/src/countdowndigits/bg3.gmd"),
+        include_str!("../../../rust-shared/src/countdowndigits/bg4.gmd"),
+    ]
+    .map(|s| parse_gmd_file(s));
 
     let bg_x = -7.0 * 30.0;
     let bg_y = -5.0 * 30.0;
 
     let days_marker = DigitObjects {
-        objs: bg
+        objs: bg[0]
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("1"))
-            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg[0]))
             .collect(),
     };
 
-    let hours_colon = DigitObjects {
-        objs: bg
+    let hours_colon = bg.clone().map(|bg_file| DigitObjects {
+        objs: bg_file
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("2"))
-            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg_file))
             .collect(),
-    };
+    });
 
-    let minutes_colon = DigitObjects {
-        objs: bg
+    let minutes_colon = bg.map(|bg_file| DigitObjects {
+        objs: bg_file
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("3"))
-            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg_file))
             .collect(),
-    };
+    });
 
     let mut writer = Cursor::new(Vec::new());
     CountdownDigitSets(

@@ -24,7 +24,7 @@ import { Reader } from "./utils/reader";
 import { Level, LogGroup } from "./utils/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
-import { smartDatabase } from "src";
+import { smartDatabase } from "./exports";
 import {
     checkedTransaction,
     getCheckedUserDetails,

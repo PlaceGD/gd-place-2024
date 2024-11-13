@@ -4,7 +4,7 @@ import {
     Database,
     getDatabase,
 } from "firebase/database";
-import { getAuth, type Auth } from "firebase/auth";
+import { connectAuthEmulator, getAuth, type Auth } from "firebase/auth";
 import { convertDatabase } from "@smart-firebase/client";
 import { type DatabaseSchema } from "shared-lib/database";
 
@@ -63,6 +63,7 @@ if (__CLOUD_FUNCTIONS_ENV === "dev") {
 
 if (typeof window !== "undefined" && __RT_DB_ENV === "local") {
     connectDatabaseEmulator(db_, "127.0.0.1", 9000);
+    connectAuthEmulator(auth, "http://127.0.0.1:8000");
 }
 
 export const db = convertDatabase<DatabaseSchema>(db_);

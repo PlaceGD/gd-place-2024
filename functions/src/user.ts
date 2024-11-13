@@ -1,5 +1,6 @@
 import { HttpsError, onCall, Request } from "firebase-functions/v2/https";
 import { onMessagePublished } from "firebase-functions/v2/pubsub";
+import { getAuth } from "firebase-admin/auth";
 import { REPORT_COOLDOWN_SECONDS, VALID_USERNAME } from "shared-lib/user";
 import type {
     InitWithUsernameReq,
@@ -13,7 +14,7 @@ import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
 import { DEV_UIDS } from "shared-lib/cloud_functions";
-import { smartDatabase } from "src";
+import { auth, mailjetClient, smartDatabase } from "./exports";
 import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 import { FILTERS } from "./utils/username_filter";
 import Error from "./utils/errors";
@@ -61,6 +62,8 @@ import Error from "./utils/errors";
 //         );
 //     }
 // };
+
+const GD_PLACE_CONTACT_LIST_ID = "10488916";
 
 // #region initUserWithUsername
 export const initUserWithUsername = onCallAuthLogger<
@@ -132,6 +135,34 @@ export const initUserWithUsername = onCallAuthLogger<
             return count + 1;
         }),
     ]);
+
+    try {
+        const authData = await auth.getUser(request.auth.uid);
+
+        if (authData.email != null) {
+            const contactRequest = mailjetClient
+                .post(
+                    `contactslist/${GD_PLACE_CONTACT_LIST_ID}/managecontact`,
+                    { version: "v3" }
+                )
+                .request({
+                    Action: "addforce",
+                    Email: authData.email,
+                    Properties: {
+                        firstName: data.username,
+                    },
+                });
+
+            contactRequest.catch(() => {
+                logger.error(
+                    `Failed to add user to contact list: ${usernameLower}).`
+                );
+            });
+        }
+    } catch {
+        logger.error(`Failed to add user to contact list: ${usernameLower}).`);
+        return user;
+    }
 
     return user;
 });

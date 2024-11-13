@@ -196,7 +196,7 @@
         handleSub(state);
     }
 
-    setInterval(() => {
+    let interval = setInterval(() => {
         if ($timeLeft < 0) {
             handleSub(state);
         }
@@ -657,7 +657,10 @@
 
     let loop = requestAnimationFrame(loopFn);
 
-    onDestroy(() => cancelAnimationFrame(loop));
+    onDestroy(() => {
+        clearInterval(interval);
+        cancelAnimationFrame(loop);
+    });
 
     $: {
         state.set_show_collidable($editorSettings.showCollidable);

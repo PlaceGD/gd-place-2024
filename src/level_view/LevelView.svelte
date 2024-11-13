@@ -59,7 +59,7 @@
     };
 
     $: {
-        if (canvas != null && offscreenCanvas == null) {
+        if (canvas != null) {
             setView();
         }
     }
@@ -115,47 +115,59 @@
     };
     requestAnimationFrame(draw);
 
+    const resize = () => {
+        if (canvas == null || offscreenCanvas == null) {
+            Toast.showErrorToast(
+                "There was an error creating the canvas. Please report this!"
+            );
+            return;
+        }
+
+        let [w, h] = [canvasWidth, canvasHeight];
+        if (w % 2 != 0) {
+            w += 1;
+        }
+        if (h % 2 != 0) {
+            h += 1;
+        }
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
+        const scale = window.devicePixelRatio;
+        const dprWidth = Math.floor(w * scale);
+        const dprHeight = Math.floor(h * scale);
+
+        // high = window.dpr
+        // low = 1
+
+        // high = 1
+        // med = 1/window.dpr / 2
+        // low = 1/window.dpr
+
+        const quality = {
+            high: 1,
+            medium: 0.6,
+            low: 0.35,
+        }[$editorSettings.quality ?? (isMobile() ? "medium" : "high")];
+
+        // state.resize(w, h);
+        state!.resize(dprWidth, dprHeight);
+        state!.set_quality(quality);
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+        // canvas.width = dprWidth * quality;
+        // canvas.height = dprHeight * quality;
+        // canvas.width = w;
+        // canvas.height = h;
+        offscreenCanvas.width = dprWidth * quality;
+        offscreenCanvas.height = dprHeight * quality;
+
+        // handleSub(state!);
+    };
+
     $: {
-        if (state != null && offscreenCanvas != null && canvas != null) {
-            let [w, h] = [canvasWidth, canvasHeight];
-            if (w % 2 != 0) {
-                w += 1;
-            }
-            if (h % 2 != 0) {
-                h += 1;
-            }
-
-            // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
-            const scale = window.devicePixelRatio;
-            const dprWidth = Math.floor(w * scale);
-            const dprHeight = Math.floor(h * scale);
-
-            // high = window.dpr
-            // low = 1
-
-            // high = 1
-            // med = 1/window.dpr / 2
-            // low = 1/window.dpr
-
-            const quality = {
-                high: 1,
-                medium: 0.6,
-                low: 0.35,
-            }[$editorSettings.quality ?? (isMobile() ? "medium" : "high")];
-
-            // state.resize(w, h);
-            state.resize(dprWidth, dprHeight);
-            state.set_quality(quality);
-            canvas.style.width = `${w}px`;
-            canvas.style.height = `${h}px`;
-            // canvas.width = dprWidth;
-            // canvas.height = dprHeight;
-            // canvas.width = w;
-            // canvas.height = h;
-            offscreenCanvas.width = dprWidth * quality;
-            offscreenCanvas.height = dprHeight * quality;
-
-            handleSub(state);
+        canvasWidth || canvasHeight;
+        if (state != null) {
+            resize();
         }
     }
 </script>

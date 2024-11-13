@@ -76,24 +76,6 @@ export default defineConfig(({ mode }) => ({
     plugins: [
         sveltekit(),
         topLevelAwait(),
-        // preload image assets (only works on `vite build`)
-        // UnpluginInjectPreload({
-        //     files: [
-        //         {
-        //             outputMatch: /ui\/.*\.(png|svg|otf|mp3)/,
-        //             attributes: {
-        //                 rel: "preload",
-        //             },
-        //         },
-        //         {
-        //             outputMatch: /.*\.(png|svg|otf|mp3)/,
-        //             attributes: {
-        //                 rel: "preload",
-        //             },
-        //         },
-        //     ],
-        //     injectTo: "head-prepend",
-        // }),
         mode !== "development"
             ? ViteImageOptimizer({
                   exclude: ["spritesheet.png"],

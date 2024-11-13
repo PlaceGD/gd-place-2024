@@ -45,12 +45,13 @@
             });
         });
 
-        setTimeout(() => {
+        let timeout = setTimeout(() => {
             let interval = setInterval(() => {
                 lettersVisible += 1;
 
                 if (lettersVisible > letters.length) {
                     clearInterval(interval);
+                    clearTimeout(timeout);
                 }
             }, CHARACTER_DELAY);
         }, 3700);

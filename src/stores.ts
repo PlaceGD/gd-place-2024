@@ -142,6 +142,8 @@ export const selectedObject = writable<{
     namePlaced: string | null;
     zLayer: ZLayer;
     zOrder: number;
+    posX: number;
+    posY: number;
 } | null>(null);
 
 export const editorData = persistLocalWritable(

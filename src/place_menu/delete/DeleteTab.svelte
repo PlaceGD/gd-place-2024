@@ -73,8 +73,8 @@
             await reportUser({
                 username: name,
                 // turnstileResp: token,
-                x: cameraPos[0],
-                y: cameraPos[1],
+                x: $selectedObject!.posX,
+                y: $selectedObject!.posX,
             }).then(v => {
                 cooldown.start(v.data.cooldown);
             });

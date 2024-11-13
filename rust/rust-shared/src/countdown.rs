@@ -176,7 +176,7 @@ parse_countdown_files! {
     "bli"               ("bli"):                [3 => weights(6,   6,   6,   3  ) pretty famous], // 24
     "grax"              ("Grax"):               [3 => weights(3,   5,   4,   2  ) pretty], // 25
     "krmal"             ("KrmaL"):              [3 => weights(4,   4,   4,   2  ) famous classic], // 26
-    "davjt"             ("DavJT"):              [3 => weights(32,   2,   3,   1  ) famous], // 27
+    "davjt"             ("DavJT"):              [3 => weights(2,   2,   3,   1  ) famous], // 27
     "audieo"            ("AudieoVisual"):       [3 => weights(2,   2,   4,   5  ) pretty], // 28
     "doggie"            ("Doggie"):             [0 => weights(2,   3,   4,   3  ) silly famous], // 29
     "pocke"             ("Pocke"):              [3 => weights(4,   2,   2,   1  ) silly], // 30
@@ -198,7 +198,7 @@ parse_countdown_files! {
     "npesta"            ("npesta"):             [0 => weights(3,   3,   3,   3  ) famous silly], // 46
     "partition"         ("Partition"):          [0 => weights(3,   4,   2,   3  ) famous pretty], // 47
     "vrymer"            ("vrymer"):             [3 => weights(3,   1,   1,   3  ) silly pretty], // 48
-    "meeloz"            ("meeloz"):             [3 => weights(1,   2,   3,   3  )], // 49
+    "meeloz"            ("meeloz"):             [3 => weights(1,   2,   3,   4  ) silly], // 49
     "flow2"             ("Flow"):               [3 => weights(2,   3,   3,   2  ) pretty], // 50
     "glittershroom"     ("Glittershroom"):      [0 => weights(4,   3,   3,   4  ) classic], // 51
     "loco"              ("xloco"):              [3 => weights(5,   5,   4,   3  ) pretty], // 52
@@ -233,9 +233,10 @@ parse_countdown_files! {
     "perox8"            ("Perox8"):             [3 => weights(1,   2,   2,   3  ) pretty], // 81
     "immaxx2"           ("ImMaxX"):             [3 => weights(3,   3,   3,   4  ) pretty silly], // 82
     "zoink"             ("Zoink"):              [0 => weights(0,   0,   3,   4  ) silly], // 83
+    "sakura"            ("Sakura"):             [3 => weights(4,   3,   3,   2  ) pretty], // 84
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 82, 83]);
+pub const TEST_SETS: Option<[usize; 4]> = None; //Some([0, 68, 82, 84]);
 
 #[binrw]
 #[brw(little)]

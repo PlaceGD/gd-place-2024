@@ -298,6 +298,8 @@
             namePlaced: null,
             zLayer: selected.obj.z_layer,
             zOrder: selected.obj.z_order,
+            posX: selected.obj.x,
+            posY: selected.obj.y,
         };
         getPlacedUsername(selected.key(), v => {
             if ($selectedObject != null) {

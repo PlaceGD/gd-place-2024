@@ -1,6 +1,6 @@
 import { LevelNameReq, LevelNameRes } from "shared-lib/cloud_functions";
 import { onCallAuth } from "./utils/on_call";
-import { smartDatabase } from "src";
+import { smartDatabase } from "./exports";
 import {
     checkedTransaction,
     getCheckedUserDetails,

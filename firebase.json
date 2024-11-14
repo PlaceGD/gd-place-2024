@@ -23,6 +23,9 @@
         "database": {
             "port": 9000
         },
+        "auth": {
+            "port": 8000
+        },
         "ui": {
             "enabled": true
         },

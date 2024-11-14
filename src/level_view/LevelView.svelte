@@ -59,7 +59,7 @@
     };
 
     $: {
-        if (canvas != null) {
+        if (canvas != null && offscreenCanvas == null) {
             setView();
         }
     }

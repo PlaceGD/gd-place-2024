@@ -10,17 +10,9 @@ import {
 import { onCallAuthLogger } from "./utils/on_call";
 import { GradientReq, GradientRes, KofiReq } from "shared-lib/cloud_functions";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
-import { smartDatabase } from "src";
+import { smartDatabase, mailjetClient } from "./exports";
 import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 import Error from "./utils/errors";
-
-let mailjetClient: Mailjet;
-onInit(() => {
-    mailjetClient = new Mailjet({
-        apiKey: process.env["MAILJET_API_KEY"]!,
-        apiSecret: process.env["MAILJET_API_SECRET"]!,
-    });
-});
 
 export type KofiDonation = {
     verification_token: string;

@@ -1,8 +1,5 @@
 import { initializeApp } from "firebase-admin/app";
-import { convertDatabase } from "@smart-firebase/admin";
-import { DatabaseSchema } from "shared-lib/database";
-import pkg from "firebase-admin";
-const { database } = pkg;
+import { getAuth } from "firebase-admin/auth";
 
 export { deleteObject, placeObject } from "./object";
 export {
@@ -32,7 +29,3 @@ export {
 } from "./cooldown";
 
 export { getServerTime } from "./status_scheduler";
-
-export const smartDatabase = () => convertDatabase<DatabaseSchema>(database());
-
-initializeApp();

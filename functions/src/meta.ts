@@ -1,7 +1,7 @@
 import { DEV_UIDS, MetaReq } from "shared-lib/cloud_functions";
 import Error from "./utils/errors";
 import { onCallAuth } from "./utils/on_call";
-import { smartDatabase } from "src";
+import { smartDatabase } from "./exports";
 
 export const setMeta = onCallAuth<MetaReq>(async request => {
     if (!DEV_UIDS.includes(request.auth.uid)) {

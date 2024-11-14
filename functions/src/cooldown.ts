@@ -1,4 +1,4 @@
-import { smartDatabase } from "src";
+import { smartDatabase } from "./exports";
 import { onCallAuth } from "./utils/on_call";
 import {
     GRADIENT_COOLDOWN_SECONDS,

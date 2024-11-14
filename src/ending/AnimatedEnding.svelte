@@ -27,6 +27,8 @@
     import { clamp } from "shared-lib/util";
     import KofiButton from "../components/KofiButton.svelte";
     import { disappear } from "../utils/transitions";
+    import { setClipboard } from "../utils/clipboard";
+    import Toast from "../utils/toast";
     // import { typewriter } from "../utils/transitions";
 
     const GLOBAL_DELAY = 1000;
@@ -118,11 +120,22 @@
         >
             LEVEL NAME:
         </p>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <h1
-            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
+            class="pointer-events-auto cursor-pointer text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-text min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
             bind:this={target}
         >
-            {letters.slice(0, lettersVisible).join("")}
+            <button
+                class="text-center hover:underline decoration-dashed font-pusab text-stroke"
+                aria-label="Copy level name"
+                on:click={() => {
+                    setClipboard(letters.join(""));
+                    Toast.showInfoToast("Copied level name!");
+                }}
+            >
+                {letters.slice(0, lettersVisible).join("")}
+            </button>
         </h1>
         <span
             class="flex flex-col gap-1 pointer-events-auto flex-center"

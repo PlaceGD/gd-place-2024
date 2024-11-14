@@ -66,15 +66,15 @@
 
     const report = async (name: string) => {
         try {
-            const cameraPos = getCameraPos(state);
-
             // const token = await getNewTurnstileToken();
+
+            console.log($selectedObject!.posX, $selectedObject!.posY);
 
             await reportUser({
                 username: name,
                 // turnstileResp: token,
                 x: $selectedObject!.posX,
-                y: $selectedObject!.posX,
+                y: $selectedObject!.posY,
             }).then(v => {
                 cooldown.start(v.data.cooldown);
             });

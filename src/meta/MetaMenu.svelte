@@ -105,7 +105,7 @@
         <div class="w-full min-h-[1px] bg-white/50" />
         <div class="flex flex-col gap-2 flex-center">
             <!-- svelte-ignore missing-declaration -->
-            {#if __RT_DB_ENV === "local"}
+            {#if __CLOUD_FUNCTIONS_ENV === "dev"}
                 <div class="flex w-full gap-2 flex-center">
                     <h1 class="w-32 font-pusab text-stroke">Place</h1>
                     <DarkInput

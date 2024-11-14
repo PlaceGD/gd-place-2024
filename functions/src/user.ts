@@ -205,11 +205,11 @@ export const reportUser = onCallAuthLogger<
         throw Error.code(100, "invalid-argument");
     }
 
-    if (data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
+    if (isNaN(data.x) || data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
         logger.debug("User reported at X", data.x);
         throw Error.code(101, "invalid-argument");
     }
-    if (data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
+    if (isNaN(data.y) || data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
         logger.debug("User reported at Y", data.y);
         throw Error.code(101, "invalid-argument");
     }

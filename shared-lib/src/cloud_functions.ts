@@ -168,11 +168,16 @@ export type ReportUserReq = {
 };
 export type ReportUserRes = { cooldown: number };
 
-export type ReportedUserOperationReq = {
-    operation: "ignore" | "ban";
-    reason: string;
-    reportedUserUid: string;
-};
+export type ReportedUserOperationReq =
+    | {
+          operation: "ban";
+          reason: string;
+          userUid: string;
+      }
+    | {
+          operation: "ignore";
+          reportKeys: string[];
+      };
 export type BanReq = {
     reason: string;
     username: string;

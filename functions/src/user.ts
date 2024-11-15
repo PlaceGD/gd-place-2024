@@ -186,11 +186,11 @@ export const reportUser = onCallAuthLogger<
 
     const now = Date.now();
 
-    const userDetails = await getCheckedUserDetails(db, request.auth.uid);
+    const samaritanDetails = await getCheckedUserDetails(db, request.auth.uid);
 
-    const [_, userToReport] = await Promise.all([
+    const [_, badUser] = await Promise.all([
         checkedTransaction(
-            userDetails.ref.child("lastReportTimestamp"),
+            samaritanDetails.ref.child("lastReportTimestamp"),
             lastReport =>
                 now >= (lastReport ?? 0) + REPORT_COOLDOWN_SECONDS * 1000,
             () => Error.code(204, "permission-denied"),
@@ -202,49 +202,62 @@ export const reportUser = onCallAuthLogger<
             .then(v => v.val()),
     ]);
 
-    if (userToReport == undefined) {
+    if (badUser == undefined) {
         throw Error.code(100, "invalid-argument");
     }
 
     if (isNaN(data.x) || data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
-        logger.debug("User reported at X", data.x);
+        logger.debug("User stinkily reported at X", data.x);
         throw Error.code(101, "invalid-argument");
     }
     if (isNaN(data.y) || data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
-        logger.debug("User reported at Y", data.y);
+        logger.debug("User stinkily reported at Y", data.y);
         throw Error.code(101, "invalid-argument");
     }
 
     // const reported = db.ref("reportedUsers");
 
-    await checkedTransaction(
-        db.ref("reportedUsers").child(userToReport.uid),
-        () => true,
-        () => 0,
-        reportData => {
-            if (reportData == undefined) {
-                return {
-                    username: data.username,
-                    timestamp: Date.now(),
-                    count: 1,
-                    avg_x: data.x,
-                    avg_y: data.y,
-                };
-            } else {
-                return {
-                    username: data.username,
-                    timestamp: Date.now(),
-                    count: reportData.count + 1,
-                    avg_x:
-                        (reportData.avg_x * reportData.count + data.x) /
-                        (reportData.count + 1),
-                    avg_y:
-                        (reportData.avg_y * reportData.count + data.y) /
-                        (reportData.count + 1),
-                };
-            }
-        }
-    );
+    await db.ref(`reports`).push({
+        badUserID: badUser.uid,
+        badUsername: data.username,
+
+        samaritanUsername: samaritanDetails.val.username,
+        samaritanID: request.auth.uid,
+
+        x: data.x,
+        y: data.y,
+
+        timestamp: Date.now(),
+    });
+
+    // await checkedTransaction(
+    //     db.ref("reportedUsers").child(badUser.uid),
+    //     () => true,
+    //     () => 0,
+    //     reportData => {
+    //         if (reportData == undefined) {
+    //             return {
+    //                 username: data.username,
+    //                 timestamp: Date.now(),
+    //                 count: 1,
+    //                 avg_x: data.x,
+    //                 avg_y: data.y,
+    //             };
+    //         } else {
+    //             return {
+    //                 username: data.username,
+    //                 timestamp: Date.now(),
+    //                 count: reportData.count + 1,
+    //                 avg_x:
+    //                     (reportData.avg_x * reportData.count + data.x) /
+    //                     (reportData.count + 1),
+    //                 avg_y:
+    //                     (reportData.avg_y * reportData.count + data.y) /
+    //                     (reportData.count + 1),
+    //             };
+    //         }
+    //     }
+    // );
 
     logger.info(`Reported user ${data.username}`);
 
@@ -292,7 +305,8 @@ const banUserInner = async (
         db.ref("userCount").transaction(count => {
             return count - 1;
         }),
-        db.ref(`reportedUsers/${userToBanUid}`).remove(),
+        // db.ref(`reports`).
+        // db.ref(`reportedUsers/${userToBanUid}`).remove(),
     ]);
 };
 
@@ -302,7 +316,7 @@ export const clearReports = onMessagePublished("clearOldReports", _ => {
     const now = Date.now();
     const db = smartDatabase();
 
-    db.ref("reportedUsers")
+    db.ref("reports")
         .orderByChild("timestamp")
         .endAt(now - 15 * 60 * 1000)
         .get()
@@ -335,12 +349,14 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
             await banUserInner(
                 db,
                 request.auth.uid,
-                data.reportedUserUid,
+                data.userUid,
                 data.reason,
                 modData.username
             );
         } else if (data.operation == "ignore") {
-            await db.ref(`reportedUsers/${data.reportedUserUid}`).remove();
+            await Promise.all(
+                data.reportKeys.map(k => db.ref(`reports/${k}`).remove())
+            );
         } else {
             throw Error.code(500, "aborted");
         }

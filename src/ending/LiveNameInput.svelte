@@ -53,7 +53,6 @@
     let letters: string[] = Array(TOTAL_ENDING_INPUTS).fill(" ");
 
     let unsub: Unsubscribe | null;
-    console.log("ENER LEVEL NAME");
     onMount(async () => {
         playSound({
             url: enterLevelNameSoundUrl,

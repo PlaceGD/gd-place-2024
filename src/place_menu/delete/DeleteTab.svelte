@@ -69,8 +69,6 @@
         try {
             // const token = await getNewTurnstileToken();
 
-            console.log($selectedObject!.posX, $selectedObject!.posY);
-
             await reportUser({
                 username: name,
                 // turnstileResp: token,
@@ -221,7 +219,7 @@
                         </OnceButton>
                     {/if}
                     {#if $selectedObject?.signupDate}
-                        <div class="text-xs opacity-70 text-center">
+                        <div class="text-xs text-center opacity-70">
                             User signed up
 
                             {#if $nowStore - $selectedObject.signupDate < 60000}

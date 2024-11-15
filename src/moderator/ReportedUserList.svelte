@@ -22,19 +22,33 @@
     import DeclineButton from "../components/Buttons/DeclineButton.svelte";
     import { menuHeight } from "../utils/transitions";
     import { fly } from "svelte/transition";
+    import ScreenModal from "../components/ScreenModal.svelte";
+    import type { ReportedUserOperationReq } from "shared-lib/cloud_functions";
+    import MapPinExclamation from "../icons/MapPinExclamation.svelte";
 
     export let state: wasm.State;
 
     $: isOpen = $openMenu == ExclusiveMenus.Moderator;
 
+    let viewingReporters: string | null = null;
+
+    // by user
     let reportedUsers: Record<
         string,
         {
-            timestamp: number;
             username: string;
-            avg_x: number; // used to get average report position
-            avg_y: number;
-            count: number;
+            list: Record<
+                string,
+                {
+                    samaritanUsername: string;
+                    samaritanID: string;
+
+                    x: number;
+                    y: number;
+
+                    timestamp: number;
+                }
+            >;
         }
     > = {};
     // const sortReported = () => {
@@ -44,29 +58,43 @@
     // };
 
     onMount(() => {
-        db.ref("reportedUsers").on("child_removed", data => {
-            delete reportedUsers[data.key ?? ""];
+        db.ref("reports").on("child_removed", data => {
+            if (data.key == null) {
+                return;
+            }
+
+            let val = data.val();
+            delete reportedUsers[val.badUserID].list[data.key];
+            if (Object.keys(reportedUsers[val.badUserID].list).length == 0) {
+                delete reportedUsers[val.badUserID];
+            }
             reportedUsers = reportedUsers;
         });
 
-        db.ref("reportedUsers")
+        db.ref("reports")
             .orderByChild("timestamp")
             // .startAfter(Date.now() - 15 * 60 * 1000)
             .on("child_added", data => {
                 if (data.key != undefined) {
-                    reportedUsers[data.key] = data.val();
+                    let val = data.val();
+
+                    let uid = val.badUserID;
+                    if (reportedUsers[uid] == undefined) {
+                        reportedUsers[uid] = {
+                            username: val.badUsername,
+                            list: {},
+                        };
+                    }
+
+                    reportedUsers[uid].list[data.key] = {
+                        samaritanUsername: val.samaritanUsername,
+                        samaritanID: val.samaritanID,
+                        x: val.x,
+                        y: val.y,
+                        timestamp: val.timestamp,
+                    };
                     reportedUsers = reportedUsers;
                     $newReports = true;
-                }
-            });
-
-        db.ref("reportedUsers")
-            .orderByChild("timestamp")
-            // .startAfter(Date.now() - 15 * 60 * 1000)
-            .on("child_changed", data => {
-                if (data.key != undefined) {
-                    reportedUsers[data.key] = data.val();
-                    reportedUsers = reportedUsers;
                 }
             });
 
@@ -88,20 +116,13 @@
 
     let currentIdx = -1;
 
-    const userOp = async (
-        op: "ignore" | "ban",
-        userId: string,
-        reason: string,
-        idx: number
-    ) => {
+    const userOp = async (op: ReportedUserOperationReq, idx: number) => {
         try {
             currentIdx = idx;
 
-            await reportedUserOperation({
-                reason,
-                operation: op,
-                reportedUserUid: userId,
-            });
+            await reportedUserOperation(op);
+
+            currentIdx = -1;
         } catch (e: any) {
             console.error("Failed to perform operation", e.details.message);
             Toast.showErrorToast(
@@ -110,7 +131,92 @@
             currentIdx = -1;
         }
     };
+
+    let reportListPosIdx = 0;
+
+    const banUser = (uid: string, idx: number) => {
+        const reason = prompt(
+            "Reason for banning (inappropriate username / alt account / etc):"
+        );
+
+        if (reason != null) {
+            userOp(
+                {
+                    operation: "ban",
+                    userUid: uid,
+                    reason,
+                },
+                idx
+            );
+        }
+    };
 </script>
+
+<ScreenModal
+    hasCloseButton={true}
+    isOpen={viewingReporters != null}
+    on:close={() => {
+        viewingReporters = null;
+    }}
+    size="max-w-[500px] h-[600px] max-h-[650px]"
+>
+    {#if reportedUsers != null && viewingReporters != null && reportedUsers[viewingReporters] != null}
+        <div
+            class="flex flex-col w-full h-full gap-4 p-4 overflow-hidden xs:p-2 xs:gap-2"
+        >
+            <h1
+                class="text-2xl text-center sm:text-xl xs:text-lg font-pusab text-stroke"
+            >
+                Reports for {reportedUsers[viewingReporters].username}
+            </h1>
+            <FadedScroll update={viewingReporters}>
+                <ul
+                    class="flex flex-col w-full gap-2 px-4 overflow-y-auto rounded-lg xs:px-2"
+                >
+                    {#each Object.entries(reportedUsers[viewingReporters].list) as [key, data], idx}
+                        <li
+                            class="relative flex flex-col gap-2 p-2 rounded-md flex-center even:bg-white/5 odd:bg-black/15"
+                        >
+                            {data.samaritanUsername}
+                            <div class="flex w-full h-10 gap-2 xs:h-9">
+                                <DeclineButton
+                                    class="w-full"
+                                    on:click={() => {
+                                        userOp(
+                                            {
+                                                operation: "ignore",
+                                                reportKeys: [key],
+                                            },
+                                            idx
+                                        );
+                                    }}
+                                    disabled={currentIdx == idx}
+                                >
+                                    <span class="text-sm">Ignore</span>
+                                </DeclineButton>
+                                <AcceptButton
+                                    class="w-full"
+                                    on:click={() => {
+                                        banUser(data.samaritanID, idx);
+                                    }}
+                                    disabled={currentIdx === idx}
+                                >
+                                    <span class="text-sm">Ban</span>
+                                </AcceptButton>
+                            </div>
+                            {#if currentIdx == idx}
+                                <Loading class="rounded-lg" />
+                            {/if}
+                        </li>
+                    {/each}
+                </ul>
+            </FadedScroll>
+        </div>
+    {/if}
+    <!-- {#each  as }
+    
+{/each} -->
+</ScreenModal>
 
 {#if isOpen}
     <fieldset
@@ -132,31 +238,47 @@
                 <ul
                     class="flex flex-col w-full gap-2 px-4 overflow-y-auto rounded-lg xs:px-2"
                 >
-                    {#each Object.entries(reportedUsers) as [uid, user], idx}
+                    {#each Object.entries(reportedUsers) as [uid, { username, list }], idx}
+                        {@const keys = Object.keys(list)}
                         <li
                             class="relative flex-col w-full gap-2 p-2 rounded-lg flex-center even:bg-white/5 odd:bg-black/15"
                         >
-                            <div class="relative flex w-full flex-center">
+                            <div
+                                class="relative grid grid-cols-[min-content_1fr_min-content] gap-4 xs:gap-2 w-full justify-items-center items-center"
+                            >
+                                <button
+                                    class="text-sm text-center text-white xs:text-sm"
+                                    on:click={() => {
+                                        viewingReporters = uid;
+                                    }}
+                                >
+                                    View Reporters
+                                </button>
+
                                 <span class="text-base xs:text-sm">
-                                    {user.username} (x{user.count})
+                                    {username} (x{keys.length})
                                 </span>
 
-                                <div
-                                    class="absolute right-0 w-8 h-8 xs:w-7 xs:h-7"
-                                >
+                                <div class="w-8 h-8 xs:w-7 xs:h-7">
                                     <button
-                                        title="View average report location"
+                                        title="Cycle through report locations"
                                         class="w-full h-full"
                                         on:click={() => {
-                                            moveCamera(
-                                                state,
-                                                user.avg_x,
-                                                user.avg_y
-                                            );
+                                            reportListPosIdx =
+                                                (reportListPosIdx + 1) %
+                                                keys.length;
+                                            let v =
+                                                list[keys[reportListPosIdx]];
+                                            moveCamera(state, v.x, v.y);
+                                            // moveCamera(
+                                            //     state,
+                                            //     list.avg_x,
+                                            //     list.avg_y
+                                            // );
                                         }}
                                     >
-                                        <Back
-                                            class="rotate-180 stroke-[1.5] w-full h-full"
+                                        <MapPinExclamation
+                                            class="stroke-[1] w-full h-full"
                                         />
                                     </button>
                                 </div>
@@ -165,7 +287,13 @@
                                 <DeclineButton
                                     class="w-full"
                                     on:click={() => {
-                                        userOp("ignore", uid, "", idx);
+                                        userOp(
+                                            {
+                                                operation: "ignore",
+                                                reportKeys: keys,
+                                            },
+                                            idx
+                                        );
                                     }}
                                     disabled={currentIdx == idx}
                                 >
@@ -174,13 +302,7 @@
                                 <AcceptButton
                                     class="w-full"
                                     on:click={() => {
-                                        const reason = prompt(
-                                            "Reason for banning (inappropriate username / alt account / etc):"
-                                        );
-
-                                        if (reason != null) {
-                                            userOp("ban", uid, reason, idx);
-                                        }
+                                        banUser(uid, idx);
                                     }}
                                     disabled={currentIdx == idx}
                                 >

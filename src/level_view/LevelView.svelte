@@ -92,14 +92,14 @@
                             switch (qualityStep) {
                                 case 1:
                                     $editorSettings.quality = "medium";
-                                    console.log("Quality set to medium.");
+                                    console.info("Quality set to medium.");
                                     numTestFrames = 240;
                                     fpsSum = 0;
                                     fpsCount = 0;
                                     break;
                                 case 0:
                                     $editorSettings.quality = "low";
-                                    console.log("Quality set to low.");
+                                    console.info("Quality set to low.");
                                     showGpuAccelWarning("Low FPS detected.");
                                     break;
                                 default:

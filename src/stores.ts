@@ -28,7 +28,7 @@ import { isMobile } from "./utils/document";
 import { LEVEL_NAME_DELAY } from "./ending/ending";
 import { getExactServerTime } from "./firebase/cloud_functions";
 
-const STORAGE_VERSION = 4;
+const STORAGE_VERSION = 5;
 
 if (typeof window != "undefined") {
     if (
@@ -631,7 +631,7 @@ export const eventStatus: Readable<EventStatus> = derived(
         return "loading";
     }
 );
-eventStatus.subscribe(v => console.log("Status: ", v));
+// eventStatus.subscribe(v => console.log("Status: ", v));
 
 export const eventElapsedContinuous = tweened(0, {
     duration: 1000,

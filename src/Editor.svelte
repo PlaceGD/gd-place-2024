@@ -75,7 +75,6 @@
 
     const loopSound = () => {
         if ($eventStatus !== "fully done") {
-            console.log("hdfhuyfghe");
             playSound({
                 url: endingAmbientUrl,
                 endCb: () => {

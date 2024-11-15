@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { useIsOverflowing } from "../utils/document";
 
     export let reachedBottom = false;
@@ -41,6 +41,7 @@
     $: {
         update;
         overflowElem(elem);
+        onScrollElem();
     }
 
     onDestroy(() => {
@@ -64,7 +65,7 @@
             transparent 100%
         )`
             : "transparent"
-    }
+    };
     touch-action: none;`}
     use:overflowElem
 >

@@ -16,12 +16,10 @@
             ".read": "auth != null && root.child('userDetails').child(auth.uid).child('moderator').val() == true",
             ".write": false
         },
-        "reportedUsers": {
+        "reports": {
             ".read": "auth != null && root.child('userDetails').child(auth.uid).child('moderator').val() == true",
             ".write": false,
-            ".indexOn": [
-                "timestamp"
-            ]
+            ".indexOn": ["timestamp"]
         },
         "userCount": {
             ".read": true,

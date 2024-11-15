@@ -39,6 +39,8 @@ static/versions/*.ver
 
 .firebase/*
 
+functions/shared-lib
+
 # rust/wasm-lib/src/countdown_digits
 # rust/wasm-lib/src/utilgen.rs
 # shared-lib/src/gd

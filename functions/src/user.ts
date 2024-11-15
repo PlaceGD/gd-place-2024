@@ -121,6 +121,7 @@ export const initUserWithUsername = onCallAuthLogger<
         lastCharacterTimestamp: 0,
         moderator: false,
         hasDonated: false,
+        signupdate: Date.now(),
     };
 
     logger.info("User created sucessfully");

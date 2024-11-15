@@ -12,6 +12,7 @@ export type UserDetails = {
     lastCharacterTimestamp: number;
     moderator: boolean;
     hasDonated: boolean;
+    signupdate: number;
 };
 
 export type UsernameData = { uid: string; displayColor: string };

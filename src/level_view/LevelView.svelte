@@ -68,6 +68,7 @@
 
     let fpsSum = 0;
     let fpsCount = 0;
+    let numTestFrames = 60;
     let qualityStep = ["low", "medium", "high"].indexOf(
         $editorSettings.quality
     ); // 3 = high, 2 = med, 1 = low + warning, 0 = finished
@@ -75,36 +76,41 @@
     const draw = (time: number) => {
         if (state != null) {
             try {
-                stats.begin();
+                if (document.visibilityState === "visible") {
+                    stats.begin();
 
-                state.render((time - prevTime) / 1000);
-                fpsSum += 1000 / (time - prevTime);
-                fpsCount += 1;
-                if (fpsCount > 60) {
-                    let avg = fpsSum / fpsCount;
+                    state.render((time - prevTime) / 1000);
+                    fpsSum += 1000 / (time - prevTime);
+                    numTestFrames -= 1;
+                    fpsCount += 1;
+                    if (numTestFrames <= 0) {
+                        let avg = fpsSum / fpsCount;
 
-                    if (avg < 20.0 && qualityStep > 0) {
-                        qualityStep--;
+                        if (avg < 20.0 && qualityStep > 0) {
+                            qualityStep--;
 
-                        switch (qualityStep) {
-                            case 2:
-                                $editorSettings.quality = "medium";
-                                break;
-                            case 1:
-                                $editorSettings.quality = "low";
-                                showGpuAccelWarning("Low FPS detected.");
-                                break;
-                            default:
-                                break;
+                            switch (qualityStep) {
+                                case 1:
+                                    $editorSettings.quality = "medium";
+                                    console.log("Quality set to medium.");
+                                    numTestFrames = 240;
+                                    fpsSum = 0;
+                                    fpsCount = 0;
+                                    break;
+                                case 0:
+                                    $editorSettings.quality = "low";
+                                    console.log("Quality set to low.");
+                                    showGpuAccelWarning("Low FPS detected.");
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
+                    stats.end();
 
-                    fpsSum = 0;
-                    fpsCount = 0;
+                    prevTime = time;
                 }
-                stats.end();
-
-                prevTime = time;
             } catch (e: unknown) {
                 console.error(e, "(Failed in `state.render`)");
                 Toast.showErrorToast(WASM_ERROR);
@@ -165,6 +171,7 @@
     };
 
     $: {
+        $editorSettings.quality;
         canvasWidth || canvasHeight;
         if (state != null) {
             resize();

@@ -10,7 +10,7 @@ import Toast from "./toast";
 import type { PathType, SmartDatabase } from "@smart-firebase/client";
 import type { UserDetails } from "shared-lib/database";
 import { timerDisplay } from "shared-lib/util";
-import { nowStore, type LoginData } from "../stores";
+import { getServerNow, nowStore, type LoginData } from "../stores";
 import type { TypedHttpsCallable } from "../firebase/cloud_functions";
 
 export class Cooldown {
@@ -62,12 +62,12 @@ export class Cooldown {
     public async updateCooldown() {
         const cooldown = (await this.cooldownGetter()).data;
 
-        this.future.set(Date.now() + cooldown);
+        this.future.set(getServerNow() + cooldown);
     }
 
     public start(cooldown: number) {
         if (this.isStarted) return;
 
-        this.future.set(Date.now() + cooldown);
+        this.future.set(getServerNow() + cooldown);
     }
 }

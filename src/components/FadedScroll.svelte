@@ -65,8 +65,7 @@
             transparent 100%
         )`
             : "transparent"
-    };
-    touch-action: none;`}
+    };`}
     use:overflowElem
 >
     <slot />

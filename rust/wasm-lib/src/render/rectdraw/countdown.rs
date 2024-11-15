@@ -186,6 +186,46 @@ impl Countdown {
 
             let new_bg_state = [show_days, show_hours, show_minutes];
 
+            let new_colon_state = if switch_id == 0 {
+                [0, 0]
+            } else {
+                [
+                    ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) & 7) as usize,
+                    ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) & 7) as usize,
+                ]
+            };
+
+            for i in 0..2 {
+                if self.bg_state[i + 1] != new_bg_state[i + 1]
+                    || self.colon_state[i] != new_colon_state[i]
+                {
+                    let (state, prev_colon, colon) = match i {
+                        0 => (
+                            &mut self.hours_colon,
+                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 8],
+                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
+                        ),
+                        1 => (
+                            &mut self.minutes_colon,
+                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 8],
+                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
+                        ),
+                        _ => unreachable!(),
+                    };
+                    let delay = index_delay(i * 2 + 2);
+                    state.clear();
+
+                    if self.bg_state[i + 1] {
+                        state.extend(dissapear(prev_colon, delay));
+                    }
+                    if new_bg_state[i + 1] {
+                        state.extend(appear(colon, delay));
+                    }
+
+                    self.colon_state[i] = new_colon_state[i];
+                }
+            }
+
             for i in 0..3 {
                 if self.bg_state[i] != new_bg_state[i] {
                     let (state, bg) = match i {
@@ -202,35 +242,6 @@ impl Countdown {
                     };
 
                     self.bg_state[i] = new_bg_state[i];
-                }
-            }
-
-            let new_colon_state = [
-                ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) & 7) as usize,
-                ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) & 7) as usize,
-            ];
-
-            for i in 0..2 {
-                if self.colon_state[i] != new_colon_state[i] {
-                    let (state, prev_colon, colon) = match i {
-                        0 => (
-                            &mut self.hours_colon,
-                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 8],
-                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
-                        ),
-                        1 => (
-                            &mut self.minutes_colon,
-                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 8],
-                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
-                        ),
-                        _ => unreachable!(),
-                    };
-                    let delay = index_delay(i * 2 + 2);
-                    state.clear();
-                    state.extend(dissapear(prev_colon, delay));
-                    state.extend(appear(colon, delay));
-
-                    self.colon_state[i] = new_colon_state[i];
                 }
             }
         }

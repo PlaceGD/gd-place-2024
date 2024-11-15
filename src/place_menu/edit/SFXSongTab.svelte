@@ -45,9 +45,12 @@
             ],
             exclusiveChannel: `preview ${tabType}`,
             speed: semitonesToFactor($menuSpeed),
-            endCb: () => {
-                songPlaying.set(false);
-            },
+            endCb:
+                tabType == "song"
+                    ? () => {
+                          songPlaying.set(false);
+                      }
+                    : () => {},
             loadCb: () => {
                 if (tabType == "song") {
                     songPlaying.set(true);

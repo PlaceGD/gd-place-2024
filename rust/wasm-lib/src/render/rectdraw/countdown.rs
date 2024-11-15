@@ -210,8 +210,6 @@ impl Countdown {
                 ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) & 7) as usize,
             ];
 
-            console_log!("{new_colon_state:?}");
-
             for i in 0..2 {
                 if self.colon_state[i] != new_colon_state[i] {
                     let (state, prev_colon, colon) = match i {

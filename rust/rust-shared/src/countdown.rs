@@ -258,8 +258,8 @@ pub struct CountdownDigitSets(
     pub DigitObjects,
     pub DigitObjects,
     pub DigitObjects,
-    pub [DigitObjects; 8],
-    pub [DigitObjects; 8],
+    pub [DigitObjects; 6],
+    pub [DigitObjects; 6],
 ); // days marker, hours colon, minutes colon
    // should probably be a struct maybe now
 

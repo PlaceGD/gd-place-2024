@@ -190,8 +190,8 @@ impl Countdown {
                 [0, 0]
             } else {
                 [
-                    ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) & 7) as usize,
-                    ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) & 7) as usize,
+                    ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
+                    ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
                 ]
             };
 
@@ -202,12 +202,12 @@ impl Countdown {
                     let (state, prev_colon, colon) = match i {
                         0 => (
                             &mut self.hours_colon,
-                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 8],
+                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
                             &COUNTDOWN_DIGITS.4[new_colon_state[0]],
                         ),
                         1 => (
                             &mut self.minutes_colon,
-                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 8],
+                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
                             &COUNTDOWN_DIGITS.5[new_colon_state[1]],
                         ),
                         _ => unreachable!(),

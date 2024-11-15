@@ -138,7 +138,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
 
     let mut colons_missing_objects = HashSet::new();
 
-    let hours_colon = [4, 5, 6, 7, 8, 9, 10, 11].map(|group| DigitObjects {
+    let hours_colon = [4, 6, 7, 8, 10, 11].map(|group| DigitObjects {
         objs: bg
             .objects
             .iter()
@@ -147,7 +147,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             .collect(),
     });
 
-    let minutes_colon = [12, 13, 14, 15, 16, 17, 18, 19].map(|group| DigitObjects {
+    let minutes_colon = [12, 14, 15, 16, 18, 19].map(|group| DigitObjects {
         objs: bg
             .objects
             .iter()

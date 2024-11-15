@@ -115,6 +115,7 @@
     import LevelWidget from "../widgets/LevelWidget.svelte";
     import { set } from "firebase/database";
     import { toast } from "@zerodevx/svelte-toast";
+    import { getSignupTimestamp } from "../firebase/moderation";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -296,6 +297,7 @@
             mainColor: selected.obj.main_color,
             detailColor: selected.obj.detail_color,
             namePlaced: null,
+            signupDate: null,
             zLayer: selected.obj.z_layer,
             zOrder: selected.obj.z_order,
             posX: selected.obj.x,
@@ -304,6 +306,14 @@
         getPlacedUsername(selected.key(), v => {
             if ($selectedObject != null) {
                 $selectedObject.namePlaced = v;
+
+                if ($loginData?.currentUserData?.userDetails?.moderator) {
+                    getSignupTimestamp(v.toLowerCase(), d => {
+                        if (d != undefined && $selectedObject != null) {
+                            $selectedObject.signupDate = d;
+                        }
+                    });
+                }
             }
         });
     };

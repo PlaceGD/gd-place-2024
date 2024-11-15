@@ -101,49 +101,76 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
         }
     }
 
-    let bg = [
-        include_str!("../../../rust-shared/src/countdowndigits/bg0.gmd"),
-        include_str!("../../../rust-shared/src/countdowndigits/bg1.gmd"),
-        include_str!("../../../rust-shared/src/countdowndigits/bg2.gmd"),
-        include_str!("../../../rust-shared/src/countdowndigits/bg3.gmd"),
-        include_str!("../../../rust-shared/src/countdowndigits/bg4.gmd"),
-    ]
-    .map(|s| parse_gmd_file(s));
+    let bg = parse_gmd_file(include_str!(
+        "../../../rust-shared/src/countdowndigits/bgnew.gmd"
+    ));
 
     let bg_x = -7.0 * 30.0;
     let bg_y = -5.0 * 30.0;
 
     let days_marker = DigitObjects {
-        objs: bg[0]
+        objs: bg
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("1"))
-            .map(|o| to_gdobject(o, bg_x, bg_y, &bg[0]))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
             .collect(),
     };
 
-    let hours_colon = bg.clone().map(|bg_file| DigitObjects {
-        objs: bg_file
+    let hours_colon_deco = DigitObjects {
+        objs: bg
+            .clone()
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("2"))
-            .map(|o| to_gdobject(o, bg_x, bg_y, &bg_file))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
             .collect(),
-    });
+    };
 
-    let minutes_colon = bg.map(|bg_file| DigitObjects {
-        objs: bg_file
+    let minutes_colon_deco = DigitObjects {
+        objs: bg
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("3"))
-            .map(|o| to_gdobject(o, bg_x, bg_y, &bg_file))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
+            .collect(),
+    };
+
+    let mut colons_missing_objects = HashSet::new();
+
+    let hours_colon = [4, 5, 6, 7, 8, 9, 10, 11].map(|group| DigitObjects {
+        objs: bg
+            .objects
+            .iter()
+            .filter(|o| o.get(&57) == Some(&group.to_string()))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
             .collect(),
     });
+
+    let minutes_colon = [12, 13, 14, 15, 16, 17, 18, 19].map(|group| DigitObjects {
+        objs: bg
+            .objects
+            .iter()
+            .filter(|o| o.get(&57) == Some(&group.to_string()))
+            .map(|o| {
+                if !all_avaliable_ids.contains(&o[&1].parse::<u16>().unwrap()) {
+                    colons_missing_objects.insert(o[&1].parse::<u16>().unwrap());
+                }
+                to_gdobject(o, bg_x, bg_y, &bg)
+            })
+            .collect(),
+    });
+
+    for id in colons_missing_objects {
+        println!("missing colon object {}", id);
+    }
 
     let mut writer = Cursor::new(Vec::new());
     CountdownDigitSets(
         sets.map(|v| DigitSet(v)),
         days_marker,
+        hours_colon_deco,
+        minutes_colon_deco,
         hours_colon,
         minutes_colon,
     )

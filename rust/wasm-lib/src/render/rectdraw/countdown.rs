@@ -32,7 +32,10 @@ pub struct Countdown {
     pub days_marker: Vec<TransitioningObject>,
     pub hours_marker: Vec<TransitioningObject>,
     pub minutes_marker: Vec<TransitioningObject>,
+    pub hours_colon: Vec<TransitioningObject>,
+    pub minutes_colon: Vec<TransitioningObject>,
     pub bg_state: [bool; 3],
+    pub colon_state: [usize; 2],
 }
 
 impl Countdown {
@@ -47,7 +50,11 @@ impl Countdown {
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
             minutes_marker: Vec::new(),
+
+            hours_colon: Vec::new(),
+            minutes_colon: Vec::new(),
             bg_state: [false; 3],
+            colon_state: [1000; 2],
         }
     }
     pub fn update_state(&mut self, event_start: f64, now: f64) {
@@ -183,8 +190,8 @@ impl Countdown {
                 if self.bg_state[i] != new_bg_state[i] {
                     let (state, bg) = match i {
                         0 => (&mut self.days_marker, &COUNTDOWN_DIGITS.1),
-                        1 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2[0]),
-                        2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3[0]),
+                        1 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
+                        2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
                         _ => unreachable!(),
                     };
                     let delay = index_delay(i * 2);
@@ -195,6 +202,37 @@ impl Countdown {
                     };
 
                     self.bg_state[i] = new_bg_state[i];
+                }
+            }
+
+            let new_colon_state = [
+                ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) & 7) as usize,
+                ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) & 7) as usize,
+            ];
+
+            console_log!("{new_colon_state:?}");
+
+            for i in 0..2 {
+                if self.colon_state[i] != new_colon_state[i] {
+                    let (state, prev_colon, colon) = match i {
+                        0 => (
+                            &mut self.hours_colon,
+                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 8],
+                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
+                        ),
+                        1 => (
+                            &mut self.minutes_colon,
+                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 8],
+                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
+                        ),
+                        _ => unreachable!(),
+                    };
+                    let delay = index_delay(i * 2 + 2);
+                    state.clear();
+                    state.extend(dissapear(prev_colon, delay));
+                    state.extend(appear(colon, delay));
+
+                    self.colon_state[i] = new_colon_state[i];
                 }
             }
         }
@@ -220,6 +258,8 @@ impl Countdown {
             .iter()
             .chain(self.hours_marker.iter())
             .chain(self.minutes_marker.iter())
+            .chain(self.hours_colon.iter())
+            .chain(self.minutes_colon.iter())
             .for_each(|o| {
                 o.get(state.now).inspect(|o| {
                     add_object(o.offset(offset - vec2(450.0, 450.0 + 30.0 * 14.0)));

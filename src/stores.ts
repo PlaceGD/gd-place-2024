@@ -140,6 +140,7 @@ export const selectedObject = writable<{
     mainColor: GDColor;
     detailColor: GDColor;
     namePlaced: string | null;
+    signupDate: number | null;
     zLayer: ZLayer;
     zOrder: number;
     posX: number;

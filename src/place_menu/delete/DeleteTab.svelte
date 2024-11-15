@@ -7,6 +7,7 @@
         menuMinimized,
         menuSelectedObject,
         menuTabGroup,
+        nowStore,
         selectedObject,
         TabGroup,
     } from "../../stores";
@@ -218,6 +219,35 @@
                                 <span class="text-base md:text-sm">Ban</span>
                             </DeclineButton>
                         </OnceButton>
+                    {/if}
+                    {#if $selectedObject?.signupDate}
+                        <div class="text-xs opacity-70 text-center">
+                            User signed up
+
+                            {#if $nowStore - $selectedObject.signupDate < 60000}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        1000
+                                )} seconds
+                            {:else if $nowStore - $selectedObject.signupDate < 3600000}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        60000
+                                )} minutes
+                            {:else if $nowStore - $selectedObject.signupDate < 86400000}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        3600000
+                                )} hours
+                            {:else}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        86400000
+                                )} days
+                            {/if}
+
+                            ago
+                        </div>
                     {/if}
                 {:else}
                     <p

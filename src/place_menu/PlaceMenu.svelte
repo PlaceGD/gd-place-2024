@@ -237,7 +237,7 @@
                 class="flex flex-col items-center minimize menu-panel justify-evenly focus:outline focus:outline-1 focus:outline-offset-1"
             >
                 <button
-                    class="absolute flex w-full p-3 md:p-2 xs:p-1 flex-center"
+                    class="absolute flex w-full h-full p-3 md:p-2 xs:p-1 flex-center"
                     on:click={() => {
                         $menuMinimized = !$menuMinimized;
                     }}
@@ -245,7 +245,7 @@
                 >
                     <Minimize
                         class={cx({
-                            "cursor-pointer": true,
+                            "cursor-pointer w-full h-full": true,
                             "rotate-180": $menuMinimized,
                         })}
                     ></Minimize>

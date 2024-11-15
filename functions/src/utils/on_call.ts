@@ -16,7 +16,7 @@ const ON_CALL_OPTIONS = {
     minInstances: 5,
     memory: "2GiB",
     cpu: 2,
-    concurrency: 2000,
+    concurrency: 900,
     region: ["us-central1", "europe-central2", "asia-southeast1"],
 } satisfies CallableOptions;
 

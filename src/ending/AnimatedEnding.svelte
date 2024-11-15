@@ -123,7 +123,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <h1
-            class="pointer-events-auto cursor-pointer text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-text min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
+            class="pointer-events-auto cursor-pointer text-7xl md:text-5xl sm:text-3xl xs:text-xl min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
             bind:this={target}
         >
             <button

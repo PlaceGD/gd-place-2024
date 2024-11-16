@@ -61,9 +61,8 @@ impl<K: Default> LevelChunk<K> {
     }
 }
 
-pub trait ObjKey {
+pub trait ObjKey: PartialEq {
     fn random_num(&self, i: u8) -> f32;
-    fn is(&self, other: &[u8; 20]) -> bool;
 }
 
 impl ObjKey for [u8; 20] {
@@ -80,22 +79,12 @@ impl ObjKey for [u8; 20] {
 
         (hash % 1000000u64) as f32 / 1000000.0
     }
-
-    #[inline]
-    fn is(&self, other: &[u8; 20]) -> bool {
-        self == other
-    }
 }
 
 impl ObjKey for usize {
     #[inline]
     fn random_num(&self, i: u8) -> f32 {
         0.0 // xd
-    }
-
-    #[inline]
-    fn is(&self, other: &[u8; 20]) -> bool {
-        false
     }
 }
 

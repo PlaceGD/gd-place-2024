@@ -273,24 +273,11 @@
         }
     };
 
-    const isSelectable = (id: number) => {
-        if ($editorSettings.selectDangerous) {
-            return wasm.State.is_hazard(id);
-        }
-        if ($editorSettings.showCollidable) {
-            return wasm.State.has_hitbox(id);
-        }
-
-        return true;
-    };
-
     let selectDepth = 0;
     const trySelectAt = (mx: number, my: number, hit: wasm.HitObjectInfo[]) => {
         if ($eventStatus != "during") {
             return;
         }
-
-        hit = hit.filter(i => isSelectable(i.obj.id));
 
         if (hit.length == 0) {
             $selectedObject = null;
@@ -695,6 +682,7 @@
         state.set_hide_grid($editorSettings.hideGrid);
         state.set_hide_ground($editorSettings.hideGround);
         state.set_hide_outline($editorSettings.hideOutline);
+        state.set_select_hazards($editorSettings.selectDangerous);
     }
 
     $: {

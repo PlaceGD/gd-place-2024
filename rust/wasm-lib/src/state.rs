@@ -13,6 +13,7 @@ use rust_shared::{
             LEVEL_WIDTH_UNITS,
         },
         object::{GDColor, GDObject},
+        HitboxType, ObjectCategory,
     },
     map,
     util::{point_in_triangle, Rect},
@@ -75,6 +76,7 @@ pub struct State {
     pub(crate) hide_grid: bool,
     pub(crate) hide_ground: bool,
     pub(crate) hide_outline: bool,
+    pub(crate) select_hazards: bool,
 
     /// unix time, negative before event starts
     //pub(crate) event_elapsed: f64,
@@ -132,6 +134,7 @@ impl State {
             hide_grid: false,
             hide_ground: false,
             hide_outline: false,
+            select_hazards: false,
             event_start: f64::INFINITY,
             event_end: f64::INFINITY,
             ending_fully_done: f64::INFINITY,
@@ -436,6 +439,20 @@ impl State {
                 let cy = chunk.y + j;
                 self.level
                     .foreach_obj_in_chunk(ChunkCoord { x: cx, y: cy }, |key, obj| {
+                        let info = OBJECT_INFO[obj.id as usize];
+
+                        if self.show_collidable && info.hitbox_type == HitboxType::NoHitbox {
+                            return;
+                        }
+                        if self.hide_grid && info.category == ObjectCategory::Triggers {
+                            return;
+                        }
+                        if self.select_hazards
+                            && ![HitboxType::Hazard, HitboxType::Solid].contains(&info.hitbox_type)
+                        {
+                            return;
+                        }
+
                         let rect = obj.padded_rect(pad);
 
                         let t = obj.transform();
@@ -460,20 +477,6 @@ impl State {
             }
         }
         clickable
-    }
-
-    pub fn has_hitbox(obj_id: u16) -> bool {
-        !matches!(
-            OBJECT_INFO[obj_id as usize].hitbox_type,
-            rust_shared::gd::HitboxType::NoHitbox
-        )
-    }
-
-    pub fn is_hazard(obj_id: u16) -> bool {
-        matches!(
-            OBJECT_INFO[obj_id as usize].hitbox_type,
-            rust_shared::gd::HitboxType::Hazard | rust_shared::gd::HitboxType::Solid
-        )
     }
 
     // pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {
@@ -538,6 +541,9 @@ impl State {
     }
     pub fn set_hide_ground(&mut self, to: bool) {
         self.hide_ground = to;
+    }
+    pub fn set_select_hazards(&mut self, to: bool) {
+        self.select_hazards = to;
     }
 
     pub fn set_now(&mut self, to: f64) {

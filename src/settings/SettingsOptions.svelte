@@ -243,7 +243,7 @@
         class="z-50 mr-4 text-sm font-bold text-right text-white opacity-40 xs:opacity-60 xs:text-xs"
         in:fade={{ duration: 500 }}
     >
-        {#each [$editorSettings.showCollidable ? "showing only collidable objects" : null, $editorSettings.hideTriggers ? "hiding triggers" : null, $editorSettings.noRotatingObjects ? "no rotating objects" : null].filter(v => v != null) as t}
+        {#each [$editorSettings.showCollidable ? "showing only collidable objects" : null, $editorSettings.selectDangerous ? "only selecting dangerous objects" : null, $editorSettings.hideTriggers ? "hiding triggers" : null, $editorSettings.noRotatingObjects ? "no rotating objects" : null].filter(v => v != null) as t}
             <span>⚙️ {t}</span><br />
         {/each}
     </span>

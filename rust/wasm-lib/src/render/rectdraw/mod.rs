@@ -88,6 +88,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     sprite: SpriteInfo,
     obj: &GDObject,
     color: Vec4,
+    color_overridden: bool,
     key: K,
     end_trans01: f32,
     is_countdown: bool,
@@ -149,23 +150,18 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
-    tint_color *= if !state.show_collidable {
+    tint_color *= if !state.show_collidable || color_overridden {
         if info.category == ObjectCategory::Triggers {
             vec4(1.0, 1.0, 1.0, 1.0)
         } else {
             color
         }
     } else {
-        let highlight = if state.selected_object.map(|k| key.is(&k)) == Some(true) {
-            (state.time * 10.0).sin() * 0.5 + 0.5
-        } else {
-            0.0
-        };
         match info.hitbox_type {
             HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
-            HitboxType::Solid => vec4(highlight, 0.0, 1.0 - highlight * 0.3, 0.7),
-            HitboxType::Hazard => vec4(1.0, 0.0, 0.0, 0.7 + highlight * 0.3),
-            HitboxType::Special => vec4(highlight, 1.0 - highlight * 0.3, 0.0, 0.2),
+            HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
+            HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
+            HitboxType::Special => vec4(0.0, 100.0, 0.0, 0.5),
         }
     };
 
@@ -319,11 +315,21 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                                     if let Some(sprite) = sprites[obj.id as usize] {
                                         // console_log!("-> {:?} {}", draw, batch_idx);
                                         if color.blending == (batch_idx == 0) {
-                                            let color = color_override(*key, obj, bottom_texture)
-                                                .unwrap_or(Vec4::from_array(
-                                                    [color.r, color.g, color.b, color.opacity]
-                                                        .map(|v| v as f32 / 255.0),
-                                                ));
+                                            let (color, overriden) =
+                                                color_override(*key, obj, bottom_texture)
+                                                    .map(|v| (v, true))
+                                                    .unwrap_or((
+                                                        Vec4::from_array(
+                                                            [
+                                                                color.r,
+                                                                color.g,
+                                                                color.b,
+                                                                color.opacity,
+                                                            ]
+                                                            .map(|v| v as f32 / 255.0),
+                                                        ),
+                                                        false,
+                                                    ));
                                             // let color = if state.selected_object == Some(*key) {
                                             //     selected_color(detail)
                                             // } else {
@@ -339,6 +345,7 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                                                 sprite,
                                                 obj,
                                                 color,
+                                                overriden,
                                                 *key,
                                                 end_trans01,
                                                 is_countdown,

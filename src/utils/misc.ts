@@ -70,3 +70,7 @@ export const showGpuAccelWarning = (reason: string) => {
         `${reason} Make sure you have <a href="${link}" target="_blank" rel="norefer" class="underline">GPU acceleration enabled in your browser</a>.`
     );
 };
+
+export const randIntInclusive = (min: number, max: number): number => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};

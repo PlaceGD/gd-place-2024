@@ -292,7 +292,6 @@
 
         hit = hit.filter(i => isSelectable(i.obj.id));
 
-        console.log(hit.length);
         if (hit.length == 0) {
             $selectedObject = null;
             state.deselect_object();

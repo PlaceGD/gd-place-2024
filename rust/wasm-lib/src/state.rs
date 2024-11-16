@@ -32,6 +32,7 @@ use crate::{
         },
         state::RenderState,
     },
+    utilgen::OBJECT_INFO,
     RustError,
 };
 
@@ -459,6 +460,20 @@ impl State {
             }
         }
         clickable
+    }
+
+    pub fn has_hitbox(obj_id: u16) -> bool {
+        !matches!(
+            OBJECT_INFO[obj_id as usize].hitbox_type,
+            rust_shared::gd::HitboxType::NoHitbox
+        )
+    }
+
+    pub fn is_hazard(obj_id: u16) -> bool {
+        matches!(
+            OBJECT_INFO[obj_id as usize].hitbox_type,
+            rust_shared::gd::HitboxType::Hazard | rust_shared::gd::HitboxType::Solid
+        )
     }
 
     // pub fn try_select_at(&mut self, x: f32, y: f32) -> Option<SelectedObjectInfo> {

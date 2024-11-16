@@ -33,6 +33,10 @@
             bind: "showCollidable",
         },
         {
+            name: "Select Dangerous Objects",
+            bind: "selectDangerous",
+        },
+        {
             name: "Hide Triggers",
             // description: "Hide triggers in the editor",
             bind: "hideTriggers",

@@ -158,6 +158,7 @@ export const editorData = persistLocalWritable(
 
 export const DEFAULT_SETTINGS = {
     showCollidable: false,
+    selectDangerous: false,
     hideTriggers: false,
     noRotatingObjects: false,
     hideGrid: false,
@@ -169,6 +170,7 @@ export const DEFAULT_SETTINGS = {
 } as const;
 export const editorSettings = persistLocalWritable<{
     showCollidable: boolean;
+    selectDangerous: boolean;
     hideTriggers: boolean;
     noRotatingObjects: boolean;
     hideGrid: boolean;

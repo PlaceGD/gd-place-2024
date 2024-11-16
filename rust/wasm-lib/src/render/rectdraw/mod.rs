@@ -156,11 +156,16 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
             color
         }
     } else {
+        let highlight = if state.selected_object.map(|k| key.is(&k)) == Some(true) {
+            (state.time * 10.0).sin() * 0.5 + 0.5
+        } else {
+            0.0
+        };
         match info.hitbox_type {
             HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
-            HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
-            HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
-            HitboxType::Special => vec4(0.0, 100.0, 0.0, 0.5),
+            HitboxType::Solid => vec4(highlight, 0.0, 1.0 - highlight * 0.3, 0.7),
+            HitboxType::Hazard => vec4(1.0, 0.0, 0.0, 0.7 + highlight * 0.3),
+            HitboxType::Special => vec4(highlight, 1.0 - highlight * 0.3, 0.0, 0.2),
         }
     };
 

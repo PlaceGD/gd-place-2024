@@ -273,12 +273,26 @@
         }
     };
 
+    const isSelectable = (id: number) => {
+        if ($editorSettings.selectDangerous) {
+            return wasm.State.is_hazard(id);
+        }
+        if ($editorSettings.showCollidable) {
+            return wasm.State.has_hitbox(id);
+        }
+
+        return true;
+    };
+
     let selectDepth = 0;
     const trySelectAt = (mx: number, my: number, hit: wasm.HitObjectInfo[]) => {
         if ($eventStatus != "during") {
             return;
         }
 
+        hit = hit.filter(i => isSelectable(i.obj.id));
+
+        console.log(hit.length);
         if (hit.length == 0) {
             $selectedObject = null;
             state.deselect_object();
@@ -287,8 +301,9 @@
         if (selectDepth >= hit.length) {
             selectDepth = 0;
         }
+
+        let selected = hit[selectDepth];
         selectDepth += 1;
-        let selected = hit[selectDepth - 1];
 
         state.set_selected_object(selected.key());
 

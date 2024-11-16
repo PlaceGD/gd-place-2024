@@ -5,8 +5,6 @@ import { toast } from "@zerodevx/svelte-toast";
 import { DEFAULT_SETTINGS, editorSettings } from "../stores";
 import * as wasm from "wasm-lib";
 
-export const LEVEL_NAME_DELAY = 26;
-
 export const DEBUG_ENDING_VISIBILITY = writable(false);
 
 export const CROSSFADE_DURATION = 2000;

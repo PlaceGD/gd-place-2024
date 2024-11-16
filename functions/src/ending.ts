@@ -12,6 +12,7 @@ import {
     VALID_LEVEL_NAME,
     TOTAL_ENDING_INPUTS,
     CHARACTER_COOLDOWN_SECONDS,
+    LEVEL_NAME_DELAY,
 } from "shared-lib/ending";
 
 export const setLevelNameLetter = onCallAuth<
@@ -42,7 +43,10 @@ export const setLevelNameLetter = onCallAuth<
 
     if (
         now < eventEndTime.val() ||
-        now > eventEndTime.val() + setNameSeconds.val() * 1000
+        now >
+            eventEndTime.val() +
+                (LEVEL_NAME_DELAY + 2) * 1000 +
+                setNameSeconds.val() * 1000
     ) {
         throw Error.code(211, "permission-denied");
     }

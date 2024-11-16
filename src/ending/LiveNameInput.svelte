@@ -4,6 +4,7 @@
     import Input from "../components/Input.svelte";
     import {
         CHARACTER_COOLDOWN_SECONDS,
+        LEVEL_NAME_DELAY,
         TOTAL_ENDING_INPUTS,
         VALID_LEVEL_NAME,
     } from "shared-lib/ending";
@@ -31,12 +32,13 @@
     import { readable } from "svelte/store";
     import Loading from "../components/Loading.svelte";
     import { clamp } from "shared-lib/util";
-    import { CROSSFADE_DURATION, LEVEL_NAME_DELAY } from "./ending";
+    import { CROSSFADE_DURATION } from "./ending";
     import "./ending_styles.css";
     import { disappear } from "../utils/transitions";
     import { playSound } from "../utils/audio";
     import heartBeatUrl from "../assets/heartbeat.mp3?url";
     import { Howler } from "howler";
+    import Toast from "../utils/toast";
 
     const VIGNETTE_DELAY = LEVEL_NAME_DELAY + 3;
 
@@ -163,6 +165,8 @@
                             on:keydown={async e => {
                                 e.preventDefault();
 
+                                const prevLetter = letters[i];
+
                                 if (!$characterCooldownFinished) return;
                                 let key = null;
                                 if (e.key === "Backspace") {
@@ -181,11 +185,19 @@
                                     setLevelNameLetter({
                                         index: i,
                                         letter: key,
-                                    }).then(c => {
-                                        characterCooldown.start(
-                                            c.data.cooldown
-                                        );
-                                    });
+                                    })
+                                        .then(c => {
+                                            characterCooldown.start(
+                                                c.data.cooldown
+                                            );
+                                        })
+                                        .catch(() => {
+                                            letters[i] = prevLetter;
+                                            inputsDisabled = false;
+                                            Toast.showErrorToast(
+                                                "Failed to set letter!"
+                                            );
+                                        });
                                 }
                             }}
                             disabled={!$characterCooldownFinished ||

@@ -28,7 +28,6 @@
     import EndCountdown from "./level_view/EndCountdown.svelte";
     import Guide from "./guide/Guide.svelte";
     import { playSound } from "./utils/audio";
-    import { LEVEL_NAME_DELAY } from "./ending/ending";
 
     import SharedEnding from "./ending/SharedEnding.svelte";
     import ViewLevelButton from "./ending/ViewLevelButton.svelte";
@@ -38,6 +37,7 @@
     import bigTickUrl from "./assets/big_tick.mp3?url";
     import tickUrl from "./assets/tick.mp3?url";
     import { derived } from "svelte/store";
+    import { LEVEL_NAME_DELAY } from "shared-lib/ending";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink

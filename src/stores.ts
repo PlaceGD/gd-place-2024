@@ -25,8 +25,8 @@ import {
     GROUND_TRIGGER,
 } from "shared-lib/nexusgen";
 import { isMobile } from "./utils/document";
-import { LEVEL_NAME_DELAY } from "./ending/ending";
 import { getExactServerTime } from "./firebase/cloud_functions";
+import { LEVEL_NAME_DELAY } from "shared-lib/ending";
 
 const STORAGE_VERSION = 5;
 

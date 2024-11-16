@@ -173,6 +173,7 @@ export type ReportedUserOperationReq =
           operation: "ban";
           reason: string;
           userUid: string;
+          reportKeys: string[];
       }
     | {
           operation: "ignore";

@@ -2,7 +2,6 @@ import fs from "node:fs";
 import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 import terser from "@rollup/plugin-terser";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
 import "dotenv/config";
 
 const REQUIRED_ENV_VARS = [
@@ -18,29 +17,35 @@ if (missingVars.length > 0) {
     );
 }
 
-// check if the symlink is broken
-if (!fs.existsSync("./shared-lib")) {
-    throw new Error(`shared-lib symlink is broken, aborting build`);
-}
+// await new Promise(res => {
+//     fs.stat("./shared-lib", (_, stat) => {
+//         if (!stat.isDirectory()) {
+//             throw new Error(`shared-lib symlink is broken, aborting build`);
+//         } else {
+//             res();
+//         }
+//     });
+// });
 
-export default [
-    {
-        input: "./src/index.ts",
-        cache: false,
-        output: {
-            dir: "dist",
-            format: "es",
-            preserveModules: true,
-            preserveModulesRoot: "src",
-        },
-        plugins: [
-            typescript({
-                tsconfig: "./tsconfig.json",
-                moduleResolution: "node",
-            }),
-            // nodeResolve(),
-            json({ compact: true, preferConst: true }),
-            terser(),
-        ],
+/** @type {import('rollup').RollupOptions} */
+const options = {
+    input: "./src/index.ts",
+    cache: false,
+    output: {
+        dir: "dist",
+        format: "es",
+        preserveModules: true,
+        preserveModulesRoot: "src",
     },
-];
+    plugins: [
+        typescript({
+            tsconfig: "./tsconfig.json",
+            moduleResolution: "node",
+        }),
+        // nodeResolve(),
+        json({ compact: true, preferConst: true }),
+        terser(),
+    ],
+};
+
+export default [options];

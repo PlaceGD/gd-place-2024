@@ -206,6 +206,14 @@ export const reportUser = onCallAuthLogger<
         throw Error.code(100, "invalid-argument");
     }
 
+    // check if user already banned
+    try {
+        await getCheckedUserDetails(db, badUser.uid);
+    } catch {
+        // user already banned
+        return { cooldown: REPORT_COOLDOWN_SECONDS * 1000 };
+    }
+
     if (isNaN(data.x) || data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
         logger.debug("User stinkily reported at X", data.x);
         throw Error.code(101, "invalid-argument");
@@ -353,12 +361,14 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
                 data.reason,
                 modData.username
             );
-        } else if (data.operation == "ignore") {
+        } else if (data.operation !== "ignore") {
+            throw Error.code(500, "aborted");
+        }
+
+        if (data.operation === "ban" || data.operation === "ignore") {
             await Promise.all(
                 data.reportKeys.map(k => db.ref(`reports/${k}`).remove())
             );
-        } else {
-            throw Error.code(500, "aborted");
         }
     }
 );

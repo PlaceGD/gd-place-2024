@@ -143,6 +143,18 @@ export const onKofiDonation = onRequest(
 
         const db = smartDatabase();
 
+        // dont do anything if the event ended
+        if (
+            Date.now() >
+            (await db.ref("metaVariables/eventEndTime").get()).val()
+        ) {
+            logger.error("Event has ended");
+            logger.finish();
+
+            response.status(200).send();
+            return;
+        }
+
         // try first by checking the username of the kofi donator against our database
         const kofiDonatorUsername = (jsonData.from_name ?? "-").toLowerCase();
         const kofiDonatorMaybeAccountData = (

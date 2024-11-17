@@ -173,7 +173,12 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
 
         const now = Date.now();
 
-        if (now < eventStartTime.val() || now > eventEndTime.val()) {
+        const endingBuffer = 30 * 1000;
+
+        if (
+            now < eventStartTime.val() ||
+            now > eventEndTime.val() - endingBuffer
+        ) {
             throw Error.code(208, "permission-denied");
         }
 

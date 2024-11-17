@@ -41,7 +41,7 @@
         }, 1000);
         currentStat++;
         currentStat = currentStat % STAT_NAMES.length;
-    }, 8000);
+    }, 11300);
 
     onDestroy(() => {
         // if (statText != null) {

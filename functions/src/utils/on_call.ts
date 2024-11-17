@@ -13,13 +13,7 @@ type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 type AuthedCallableRequest<T> = WithRequired<CallableRequest<T>, "auth">;
 
 const ON_CALL_OPTIONS = //{};
-    {
-        minInstances: 3,
-        memory: "1GiB",
-        cpu: 2,
-        concurrency: 900,
-        region: ["us-central1", "europe-central2", "asia-southeast1"],
-    } satisfies CallableOptions;
+    {} satisfies CallableOptions;
 
 // TOOD: set multiple regions, memory, min instances?
 export const onCallAuth = <T, Return = Promise<void>>(

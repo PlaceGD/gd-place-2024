@@ -539,11 +539,12 @@ setTimeout(
 
 export const scheduleFor = (
     f: () => void,
-    timeUnix: number | Writable<number> | Readable<number>,
+    timeUnix: number | Readable<number>,
     { runIfNegative, delay }: { runIfNegative?: boolean; delay?: number } = {
         runIfNegative: false,
         delay: 0,
-    }
+    },
+    mesag: string = ""
 ) => {
     let timeout: NodeJS.Timeout;
     let time: number;

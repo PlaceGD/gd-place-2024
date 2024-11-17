@@ -23,6 +23,8 @@ export const addObject = (
                 Toast.showInfoToast(
                     "There are too many objects in this chunk! Try deleting a few!"
                 );
+            } else if (e.details.code === 212) {
+                Toast.showWarningToast("You can't place objects at this time!");
             } else {
                 console.error("Failed to place object", e.details.message);
                 Toast.showErrorToast(

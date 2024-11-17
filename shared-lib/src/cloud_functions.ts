@@ -92,6 +92,10 @@ export const FIREBASE_ERRORS = {
         code: 211,
         message: "Cannot change letter at current time",
     },
+    [212]: {
+        code: 212,
+        message: "Event end nearing",
+    },
     // 300 - already exists
     [300]: {
         code: 300,

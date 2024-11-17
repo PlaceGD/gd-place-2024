@@ -21,9 +21,9 @@
             delay: 0,
             start: 0.5,
         }}
-        style={$timeLeft < 600000
+        style={$timeLeft < 600
             ? "color: #ff0000"
-            : $timeLeft < 3600000
+            : $timeLeft < 3600
               ? "color: #ffff00"
               : ""}
     >

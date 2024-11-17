@@ -566,12 +566,12 @@ export const scheduleFor = (
     };
 
     if (typeof timeUnix === "number") {
-        time = timeUnix - serverNow;
+        time = timeUnix - getServerNow();
         s();
     } else {
         unsub = timeUnix.subscribe(t => {
             clearTimeout(timeout);
-            time = t - serverNow;
+            time = t - getServerNow();
             s();
         });
     }

@@ -98,13 +98,18 @@
     //     scheduleFor(() => {}, eventEndTime, { delay: -i * 1000 });
     // }
 
-    scheduleFor(() => {
-        playSound({
-            url: endingSequenceAmbientUrl,
-            volume: 2.0,
-            exclusiveChannel: "ending-sequence",
-        });
-    }, eventEndTime);
+    let endSoundScheduled = false;
+    $: if ($nowStore >= 0 && !endSoundScheduled) {
+        scheduleFor(() => {
+            console.log("PLAYING SOUND");
+            playSound({
+                url: endingSequenceAmbientUrl,
+                volume: 2.0,
+                exclusiveChannel: "ending-sequence",
+            });
+        }, eventEndTime);
+        endSoundScheduled = true;
+    }
 </script>
 
 <!-- <button

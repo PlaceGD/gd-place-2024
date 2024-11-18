@@ -138,6 +138,16 @@ impl GDObjectOpt {
     // }
 }
 
+impl GDObjectOpt {
+    pub fn from_bytes_inner(bytes: [u8; mem::size_of::<GDObjectOpt>()]) -> Self {
+        // SAFETY:
+        // the bytes of the object are always validated on the server side
+        // the server can never hold an invalid object, therefore the client can never
+        // deserialise an invalid object
+        unsafe { mem::transmute(bytes) }
+    }
+}
+
 #[wasm_bindgen]
 impl GDObjectOpt {
     #[allow(clippy::too_many_arguments)]

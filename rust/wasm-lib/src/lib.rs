@@ -12,11 +12,11 @@ use render::state::{RenderState, StateError};
 use wasm_bindgen::prelude::*;
 
 use state::State;
-use web_sys::OffscreenCanvas;
+use web_sys::HtmlCanvasElement;
 
 #[wasm_bindgen]
 pub async fn create_view(
-    canvas: OffscreenCanvas,
+    canvas: HtmlCanvasElement,
     spritesheet_data: &[u8],
     spritesheet_width: u32,
     spritesheet_height: u32,

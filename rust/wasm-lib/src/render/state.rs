@@ -217,8 +217,8 @@ impl RenderState {
                     label: None,
                     required_features: wgpu::Features::empty(),
                     required_limits: wgpu::Limits {
-                        max_texture_dimension_1d: 4096,
-                        max_texture_dimension_2d: 4096,
+                        max_texture_dimension_1d: 16000,
+                        max_texture_dimension_2d: 16000,
                         ..wgpu::Limits::downlevel_webgl2_defaults()
                     },
                 },
@@ -406,7 +406,7 @@ impl RenderState {
     }
 
     pub async fn new_canvas(
-        canvas: web_sys::OffscreenCanvas,
+        canvas: web_sys::HtmlCanvasElement,
         spritesheet_data: &[u8],
         spritesheet_width: u32,
         spritesheet_height: u32,
@@ -419,7 +419,7 @@ impl RenderState {
         });
 
         let surface = instance
-            .create_surface(wgpu::SurfaceTarget::OffscreenCanvas(canvas))
+            .create_surface(wgpu::SurfaceTarget::Canvas(canvas))
             .map_err(|e| {
                 let s = e.to_string();
                 if s.contains("canvas.getContext() returned null;") {
@@ -448,8 +448,8 @@ impl RenderState {
 
     pub fn resize(&mut self, width: u32, height: u32, quality: f32) {
         if width > 0 && height > 0 {
-            let width = (width.min(4095) as f32 * quality).round() as u32;
-            let height = (height.min(4095) as f32 * quality).round() as u32;
+            // let width = (width as f32 * quality).round() as u32;
+            // let height = (height as f32 * quality).round() as u32;
             self.surface_config.width = width;
             self.surface_config.height = height;
             self.surface.configure(&self.device, &self.surface_config);

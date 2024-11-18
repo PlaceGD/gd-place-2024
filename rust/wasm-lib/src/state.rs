@@ -18,6 +18,7 @@ use rust_shared::{
     map,
     util::{point_in_triangle, Rect},
 };
+use serde_json::Value;
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -285,9 +286,7 @@ impl State {
     }
 
     pub fn get_zoom_scale(&self) -> f32 {
-        let size_zoom = (self.width as f32 / 1600.0).max(self.height as f32 / 900.0);
-
-        2.0f32.powf(self.zoom / 12.0) * size_zoom
+        2.0f32.powf(self.zoom / 12.0)
     }
     pub fn get_camera_pos(&self) -> Vec<f32> {
         vec![self.camera_pos.x, self.camera_pos.y]
@@ -341,6 +340,26 @@ impl State {
         let p = self.view_transform().transform_point2(vec2(x, y));
 
         vec![p.x, p.y]
+    }
+
+    pub fn eboba(&mut self) {
+        console_log!("started adding");
+        let mut s = include_str!("../glog.txt")
+            .split(",")
+            .filter(|v| !v.is_empty());
+        while let Some(key) = s.next() {
+            let obj = GDObjectOpt::from_bytes_inner(
+                s.by_ref()
+                    .take(size_of::<GDObjectOpt>())
+                    .map(|v| v.parse::<u8>().unwrap())
+                    .collect::<Vec<_>>()
+                    .try_into()
+                    .unwrap(),
+            );
+            self.add_object(key.into(), obj).unwrap();
+        }
+
+        console_log!("finishes adding");
     }
 
     pub fn add_object(&mut self, key: String, obj: GDObjectOpt) -> Result<(), RustError> {
@@ -694,7 +713,7 @@ impl State {
                                 r: 0.0,
                                 g: 0.0,
                                 b: 0.0,
-                                a: 1.0,
+                                a: 0.0,
                             }),
                             store: wgpu::StoreOp::Store,
                         },

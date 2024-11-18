@@ -1,30 +1,28 @@
 <script lang="ts">
     import * as wasm from "wasm-lib";
 
-    import { onMount } from "svelte";
     import Toast, { WASM_ERROR } from "../utils/toast";
-    import { DEBUG, stats } from "../utils/debug";
-    import { spritesheetProgress } from "../load_wasm";
     // import Widget from "../widgets/Widget.svelte";
-    import { editorSettings, rawSpritesheetData } from "../stores";
-    import { handleSub } from "./view_controls";
-    import { isMobile } from "../utils/document";
-    import { toast } from "@zerodevx/svelte-toast";
+    import {
+        bgColor,
+        editorSettings,
+        ground1Color,
+        ground2Color,
+        rawSpritesheetData,
+    } from "../stores";
     import { showGpuAccelWarning } from "../utils/misc";
+    import { handleSub } from "./view_controls";
+
     // import { loadState, runCallbacks } from "../state";
 
     export let state: wasm.State | null;
 
-    export let canvas: HTMLCanvasElement;
-    export let canvasWidth: number;
-    export let canvasHeight: number;
+    export let canvas: HTMLCanvasElement = document.createElement("canvas");
 
-    let offscreenCanvas: OffscreenCanvas | null = null;
+    let links = [];
 
     const setView = async () => {
-        offscreenCanvas = canvas?.transferControlToOffscreen();
-
-        if (canvas == null || offscreenCanvas == null) {
+        if (canvas == null) {
             Toast.showErrorToast(
                 "There was an error creating the canvas. Please report this!"
             );
@@ -32,7 +30,7 @@
 
         try {
             state = await wasm.create_view(
-                offscreenCanvas,
+                canvas,
                 $rawSpritesheetData!.data,
                 $rawSpritesheetData!.width,
                 $rawSpritesheetData!.height
@@ -56,13 +54,68 @@
                 Toast.showErrorToast(WASM_ERROR);
             }
         }
+
+        // downloadWithProgress()
+
+        if (state != null) {
+            state.set_zoom(12);
+
+            state.set_bg_color($bgColor.r, $bgColor.g, $bgColor.b);
+
+            state.set_ground1_color(
+                $ground1Color.r,
+                $ground1Color.g,
+                $ground1Color.b
+            );
+
+            state.set_ground2_color(
+                $ground2Color.r,
+                $ground2Color.g,
+                $ground2Color.b
+            );
+            state.set_hide_grid(true);
+            state.set_hide_ground(true);
+            resize();
+            state.eboba();
+
+            for (let i = 0; i <= 12; i++) {
+                for (let j = 0; j <= 12; j++) {
+                    state.set_camera_pos(2000 * i, 2000 * j);
+
+                    await new Promise((res: (v: void) => void) => {
+                        state!.render(7);
+                        console.log(i, j);
+
+                        canvas.toBlob(blob => {
+                            if (blob == null) {
+                                console.log("guh");
+                                return;
+                            }
+
+                            let image = URL.createObjectURL(blob);
+                            // Create a link
+                            let aDownloadLink = document.createElement("a");
+                            // Add the name of the file to the link
+                            aDownloadLink.download = `${i},${j}.png`;
+                            // Attach the data to the link
+                            aDownloadLink.href = image;
+                            // Get the code to click the download link
+                            // aDownloadLink.click();
+                            aDownloadLink.click();
+                            URL.revokeObjectURL(image);
+                            res();
+                        }, "image/png");
+                    });
+                }
+            }
+
+            // for (let i of links) {
+            //     i.click();
+            // }
+        }
     };
 
-    $: {
-        if (canvas != null && offscreenCanvas == null) {
-            setView();
-        }
-    }
+    setView();
 
     let prevTime = 0;
 
@@ -73,43 +126,34 @@
         $editorSettings.quality
     ); // 3 = high, 2 = med, 1 = low + warning, 0 = finished
 
-    const draw = (time: number) => {
+    const draw = (i: number, j: number) => {
         if (state != null) {
             try {
                 if (document.visibilityState === "visible") {
-                    stats.begin();
+                    state.render(7);
+                    console.log("agagaga");
 
-                    state.render((time - prevTime) / 1000);
-                    fpsSum += 1000 / (time - prevTime);
-                    numTestFrames -= 1;
-                    fpsCount += 1;
-                    if (numTestFrames <= 0) {
-                        let avg = fpsSum / fpsCount;
-
-                        if (avg < 20.0 && qualityStep > 0) {
-                            qualityStep--;
-
-                            switch (qualityStep) {
-                                case 1:
-                                    $editorSettings.quality = "medium";
-                                    console.info("Quality set to medium.");
-                                    numTestFrames = 240;
-                                    fpsSum = 0;
-                                    fpsCount = 0;
-                                    break;
-                                case 0:
-                                    $editorSettings.quality = "low";
-                                    console.info("Quality set to low.");
-                                    showGpuAccelWarning("Low FPS detected.");
-                                    break;
-                                default:
-                                    break;
-                            }
+                    // setTimeout(() => {
+                    console.log("gaga");
+                    canvas.toBlob(blob => {
+                        console.log(canvas.width, canvas.height);
+                        if (blob == null) {
+                            console.log("guh");
+                            return;
                         }
-                    }
-                    stats.end();
 
-                    prevTime = time;
+                        let image = URL.createObjectURL(blob);
+                        // Create a link
+                        let aDownloadLink = document.createElement("a");
+                        // Add the name of the file to the link
+                        aDownloadLink.download = `${i},${j}.png`;
+                        // Attach the data to the link
+                        aDownloadLink.href = image;
+                        // Get the code to click the download link
+                        // aDownloadLink.click();
+                        links.push(aDownloadLink);
+                    }, "image/png");
+                    // }, 50);
                 }
             } catch (e: unknown) {
                 console.error(e, "(Failed in `state.render`)");
@@ -117,30 +161,25 @@
                 return;
             }
         }
-        requestAnimationFrame(draw);
+        // requestAnimationFrame(draw);
     };
-    requestAnimationFrame(draw);
+    // requestAnimationFrame(draw);
 
     const resize = () => {
-        if (canvas == null || offscreenCanvas == null) {
+        if (canvas == null) {
             Toast.showErrorToast(
                 "There was an error creating the canvas. Please report this!"
             );
             return;
         }
 
-        let [w, h] = [canvasWidth, canvasHeight];
+        let [w, h] = [4000, 4000];
         if (w % 2 != 0) {
             w += 1;
         }
         if (h % 2 != 0) {
             h += 1;
         }
-
-        // https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#correcting_resolution_in_a_canvas
-        const scale = window.devicePixelRatio;
-        const dprWidth = Math.floor(w * scale);
-        const dprHeight = Math.floor(h * scale);
 
         // high = window.dpr
         // low = 1
@@ -149,14 +188,10 @@
         // med = 1/window.dpr / 2
         // low = 1/window.dpr
 
-        const quality = {
-            high: 1,
-            medium: 0.6,
-            low: 0.35,
-        }[$editorSettings.quality ?? (isMobile() ? "medium" : "high")];
+        const quality = 1;
 
         // state.resize(w, h);
-        state!.resize(dprWidth, dprHeight);
+        state!.resize(w, h);
         state!.set_quality(quality);
         canvas.style.width = `${w}px`;
         canvas.style.height = `${h}px`;
@@ -164,27 +199,11 @@
         // canvas.height = dprHeight * quality;
         // canvas.width = w;
         // canvas.height = h;
-        offscreenCanvas.width = dprWidth * quality;
-        offscreenCanvas.height = dprHeight * quality;
 
         // handleSub(state!);
     };
-
-    $: {
-        $editorSettings.quality;
-        canvasWidth || canvasHeight;
-        if (state != null) {
-            resize();
-        }
-    }
 </script>
 
-<div
-    class="absolute w-full h-full"
-    bind:offsetHeight={canvasHeight}
-    bind:offsetWidth={canvasWidth}
-    aria-label="Level Canvas"
-    id="level-canvas"
->
+<!-- <div class="absolute w-full h-full" aria-label="Level Canvas" id="level-canvas">
     <canvas bind:this={canvas} />
-</div>
+</div> -->

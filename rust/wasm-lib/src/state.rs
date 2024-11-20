@@ -28,7 +28,7 @@ use crate::{
         data::Globals,
         rectdraw::{
             billy::{Billy, BlendMode},
-            countdown::{Countdown, StatsDisplay},
+            countdown::{AllDesignsDisplay, Countdown, StatsDisplay},
             level::draw as level_draw,
         },
         state::RenderState,
@@ -44,6 +44,12 @@ pub struct EndingAnimInfo {
     pub initial_bg_color: (u8, u8, u8),
     pub initial_ground1_color: (u8, u8, u8),
     pub initial_ground2_color: (u8, u8, u8),
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Page {
+    Main,
+    Designs,
 }
 
 #[wasm_bindgen]
@@ -88,6 +94,8 @@ pub struct State {
     pub(crate) countdown: Countdown,
     pub(crate) stats_display: StatsDisplay,
 
+    pub(crate) all_designs: Option<AllDesignsDisplay>,
+
     pub(crate) now: f64,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
@@ -96,10 +104,12 @@ pub struct State {
     pub(crate) ending_anim_info: Option<EndingAnimInfo>,
     pub(crate) ending_transition_override: Option<f32>,
     pub(crate) ending_transition_speed: f32,
+
+    pub(crate) page: Page,
 }
 
 impl State {
-    pub fn new(render: RenderState) -> Self {
+    pub fn new(render: RenderState, page: Page) -> Self {
         Self {
             time: 0.0,
             width: 10,
@@ -141,10 +151,15 @@ impl State {
             render,
             countdown: Countdown::new(),
             stats_display: StatsDisplay::new(),
+            all_designs: match page {
+                Page::Designs => Some(AllDesignsDisplay::new()),
+                _ => None,
+            },
             now: js_sys::Date::now(), // default to client now before server now is gotten
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
+            page,
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -574,6 +589,20 @@ impl State {
         self.ending_transition_speed = -(1.0 / duration);
     }
 
+    pub fn get_design_position(&self, set: usize) -> Vec<f32> {
+        let pos = self.all_designs.as_ref().unwrap().get_position(set);
+        vec![pos.x, pos.y]
+    }
+
+    pub fn get_design_creator(&self, set: usize) -> String {
+        rust_shared::countdown::get_creator_name(self.all_designs.as_ref().unwrap().get_set(set))
+            .to_string()
+    }
+
+    pub fn increment_design_display(&mut self, set: usize) {
+        self.all_designs.as_mut().unwrap().increment(set, self.now);
+    }
+
     fn render_inner(&mut self, delta: f32, end_trans01: f32) -> Result<(), wgpu::SurfaceError> {
         let output = self.render.surface.get_current_texture()?;
         let output_view = output
@@ -672,6 +701,10 @@ impl State {
                 billy.set_transform(old_t);
                 self.stats_display.draw(self, &mut billy);
                 billy.set_transform(new_t);
+            }
+
+            if let Some(all_designs) = &self.all_designs {
+                all_designs.draw(self, &mut billy);
             }
 
             let instance_buffer =

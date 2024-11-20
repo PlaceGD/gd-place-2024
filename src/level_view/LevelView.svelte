@@ -6,7 +6,7 @@
     import { DEBUG, stats } from "../utils/debug";
     import { spritesheetProgress } from "../load_wasm";
     // import Widget from "../widgets/Widget.svelte";
-    import { editorSettings, rawSpritesheetData } from "../stores";
+    import { editorSettings, PAGE, rawSpritesheetData } from "../stores";
     import { handleSub } from "./view_controls";
     import { isMobile } from "../utils/document";
     import { toast } from "@zerodevx/svelte-toast";
@@ -35,7 +35,8 @@
                 offscreenCanvas,
                 $rawSpritesheetData!.data,
                 $rawSpritesheetData!.width,
-                $rawSpritesheetData!.height
+                $rawSpritesheetData!.height,
+                PAGE
             );
         } catch (e: unknown) {
             if (e instanceof wasm.StateError) {

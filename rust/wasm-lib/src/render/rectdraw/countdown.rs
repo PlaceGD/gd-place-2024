@@ -413,6 +413,175 @@ impl StatsDisplay {
     }
 }
 
+pub struct AllDesignsDisplay {
+    pub digits: [CountdownDigit; DIGIT_SETS],
+    pub state: [u8; DIGIT_SETS],
+
+    pub sets: ([usize; 24], [usize; 24], [usize; 24], [usize; 13]),
+}
+
+impl AllDesignsDisplay {
+    pub fn new() -> Self {
+        let pretty_sets = (0..DIGIT_SETS)
+            .into_iter()
+            .filter(|i| {
+                rust_shared::countdown::get_set_labels(*i).pretty
+                    && !rust_shared::countdown::get_set_labels(*i).silly
+            })
+            .collect::<Vec<_>>();
+
+        let mut pretty1 = pretty_sets[0..24].to_vec();
+        let mut pretty2 = pretty_sets[24..38].to_vec();
+
+        console_log!("{:?}", pretty_sets.len());
+
+        let mut silly_sets = (0..DIGIT_SETS)
+            .into_iter()
+            .filter(|i| {
+                rust_shared::countdown::get_set_labels(*i).silly
+                    && !rust_shared::countdown::get_set_labels(*i).pretty
+            })
+            .collect::<Vec<_>>();
+
+        let mut remaining = (0..DIGIT_SETS).into_iter().filter(|i| {
+            !(rust_shared::countdown::get_set_labels(*i).pretty
+                && !rust_shared::countdown::get_set_labels(*i).silly)
+                && !(rust_shared::countdown::get_set_labels(*i).silly
+                    && !rust_shared::countdown::get_set_labels(*i).pretty)
+        });
+
+        // add to pretty2 and silly_sets until they are length 24
+        for i in 0..24 {
+            if pretty2.len() < 24 {
+                pretty2.push(remaining.next().unwrap());
+            }
+            if silly_sets.len() < 24 {
+                silly_sets.push(remaining.next().unwrap());
+            }
+        }
+
+        let mut last_group = remaining.collect::<Vec<_>>();
+
+        // sort them such that famous sets are first, then by average weight
+        let predicate = |i: &usize| {
+            let labels = rust_shared::countdown::get_set_labels(*i);
+            let weight = rust_shared::countdown::get_set_weights(*i)
+                .iter()
+                .sum::<f64>()
+                / 4.0;
+            let famous = labels.famous;
+            (if famous {
+                -weight * 100.0 - 100000.0
+            } else {
+                -weight * 100.0
+            }) as i32
+        };
+        pretty1.sort_by_key(predicate);
+        pretty2.sort_by_key(predicate);
+        silly_sets.sort_by_key(predicate);
+        last_group.sort_by_key(predicate);
+
+        console_log!(
+            "{} {} {} {}",
+            pretty1.len(),
+            pretty2.len(),
+            silly_sets.len(),
+            last_group.len(),
+        );
+
+        // convert to arrays
+        let group1: [usize; 24] = pretty1.try_into().unwrap();
+        let group2: [usize; 24] = pretty2.try_into().unwrap();
+        let group3: [usize; 24] = silly_sets.try_into().unwrap();
+        let group4: [usize; 13] = last_group.try_into().unwrap();
+
+        let mut out = Self {
+            digits: array::from_fn(|_| CountdownDigit::new()),
+            state: [0; DIGIT_SETS],
+            sets: (group1, group2, group3, group4),
+        };
+
+        for i in 0..DIGIT_SETS {
+            out.digits[i] = CountdownDigit::from_set(out.get_set(i), 0, 0.0);
+        }
+
+        out
+    }
+
+    pub fn get_set(&self, set: usize) -> usize {
+        match set {
+            0..=23 => self.sets.0[set],
+            24..=47 => self.sets.1[set - 24],
+            48..=71 => self.sets.2[set - 48],
+            72..=84 => self.sets.3[set - 72],
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn get_position(&self, set: usize) -> Vec2 {
+        let (group, i) = match set {
+            0..=23 => (0, set),
+            24..=47 => (1, set - 24),
+            48..=71 => (2, set - 48),
+            72..=84 => (3, set - 72),
+            _ => unreachable!(),
+        };
+
+        let offsets = [
+            vec2(450.0, 30.0 * 16.0 * 5.0),
+            vec2(450.0, 30.0 * 16.0 * 11.0),
+            vec2(450.0 + 30.0 * 9.0 * 8.0, 30.0 * 16.0 * 5.0),
+            vec2(450.0 + 30.0 * 9.0 * 8.0, 30.0 * 16.0 * 11.0),
+        ];
+
+        offsets[group]
+            + vec2(
+                30.0 * 10.0 * ((i % 6) as f32),
+                -30.0 * 16.0 * ((i / 6) as f32),
+            )
+    }
+
+    pub fn increment(&mut self, index: usize, now: f64) {
+        let new_val = (self.state[index] + 1) % 10;
+        self.digits[index].transition_between(
+            Some(self.state[index]),
+            Some(new_val),
+            self.get_set(index),
+            self.get_set(index),
+            0.0,
+            now,
+        );
+        self.state[index] = new_val;
+    }
+
+    pub fn draw(&self, state: &State, billy: &mut Billy) {
+        let mut level = Level::default();
+        let mut idx = 0usize;
+
+        let mut add_object = |mut obj: GDObject| {
+            let info = OBJECT_INFO[obj.id as usize];
+            obj.ix /= info.builtin_scale_x;
+            obj.iy /= info.builtin_scale_x;
+            obj.jx /= info.builtin_scale_y;
+            obj.jy /= info.builtin_scale_y;
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), state.now);
+            idx += 1;
+        };
+
+        for (i, digit) in self.digits.iter().enumerate() {
+            let offset = self.get_position(i);
+
+            for obj in &digit.objects {
+                obj.get(state.now).inspect(|o| {
+                    add_object(o.offset(offset));
+                });
+            }
+        }
+
+        draw_level(state, billy, &level, |_, _, _| None, 0.0, true);
+    }
+}
+
 fn index_delay(i: usize) -> f32 {
     (8 - i) as f32 * 0.07
 }

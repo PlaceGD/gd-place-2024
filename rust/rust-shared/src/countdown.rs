@@ -27,11 +27,11 @@ pub struct DigitSetPtr {
 }
 
 #[derive(Clone, Copy)]
-struct DigitSetLabels {
-    silly: bool,
-    pretty: bool,
-    classic: bool,
-    famous: bool,
+pub struct DigitSetLabels {
+    pub silly: bool,
+    pub pretty: bool,
+    pub classic: bool,
+    pub famous: bool,
 }
 
 impl DigitSetLabels {
@@ -127,7 +127,7 @@ macro_rules! parse_countdown_files {
             WEIGHTS[index]
         }
 
-        fn get_set_labels(index: usize) -> DigitSetLabels {
+        pub fn get_set_labels(index: usize) -> DigitSetLabels {
             const LABELS: [DigitSetLabels; DIGIT_SETS] = [$(
                 $(
                     DigitSetLabels {
@@ -231,7 +231,7 @@ parse_countdown_files! {
     "immaxx"            ("ImMaxX1"):            [3 => weights(2,   3,   3,   3  ) pretty], // 79
     "dangerkat"         ("DangerKat"):          [3 => weights(3,   3,   3,   5  ) pretty], // 80
     "perox8"            ("Perox8"):             [3 => weights(1,   2,   2,   3  ) pretty], // 81
-    "immaxx2"           ("ImMaxX"):             [3 => weights(3,   3,   3,   4  ) pretty silly], // 82
+    "immaxx2"           ("ImMaxX1"):             [3 => weights(3,   3,   3,   4  ) pretty silly], // 82
     "zoink"             ("Zoink"):              [0 => weights(0,   0,   3,   4  ) silly], // 83
     "sakura"            ("Sakura"):             [3 => weights(4,   3,   3,   2  ) pretty], // 84
 }
@@ -446,4 +446,15 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     }
 
     switches
+}
+
+#[test]
+fn num_individual_creators() {
+    let mut creators = HashMap::new();
+
+    for i in 0..DIGIT_SETS {
+        creators.insert(get_creator_name(i).to_ascii_lowercase(), i);
+    }
+
+    println!("{:?}", creators.len());
 }

@@ -4,7 +4,7 @@ use rust_shared::{console_log, gd::layer::Z_LAYERS, map};
 use crate::{
     level::ChunkCoord,
     object::GDObjectExt,
-    state::{get_end_trans01, State, DRAW_LEVEL},
+    state::{get_end_trans01, Page, State, DRAW_LEVEL},
     utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
 };
 
@@ -44,7 +44,7 @@ pub fn draw(state: &mut State, billy: &mut Billy) {
         vec4(1.0, c, c, 1.0)
     };
     let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
-    if DRAW_LEVEL {
+    if DRAW_LEVEL && state.page == Page::Main {
         draw_level(
             state,
             billy,

@@ -15,6 +15,7 @@
         eventStatus,
         nowStore,
         openMenu,
+        PAGE,
         scheduleFor,
         timeLeft,
         viewingLevelAfterEvent,
@@ -190,7 +191,7 @@
     {/if}
     {#if state != null && $eventStatus != "loading"}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        {#if $eventStatus == "before" || $eventStatus == "during"}
+        {#if PAGE == "main" && ($eventStatus == "before" || $eventStatus == "during")}
             <div
                 style:display={$eventStatus == "during" && $canPlaceEditDelete
                     ? "contents"

@@ -14,6 +14,7 @@ import {
     ground2Color,
     lastRunColorTrigger,
     loginData,
+    PAGE,
     savePosition,
 } from "../stores";
 import debounce from "lodash.debounce";
@@ -44,6 +45,7 @@ export const zoomCentral = (to: number, canvas: HTMLCanvasElement) => {
 };
 
 export const handleSub = (state: wasm.State) => {
+    if (PAGE !== "main") return;
     let gibohabid = state.get_chunks_to_sub();
     for (let chunk of gibohabid) {
         subChunk(

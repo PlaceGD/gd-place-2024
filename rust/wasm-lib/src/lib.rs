@@ -11,7 +11,7 @@ mod utilgen;
 use render::state::{RenderState, StateError};
 use wasm_bindgen::prelude::*;
 
-use state::State;
+use state::{Page, State};
 use web_sys::OffscreenCanvas;
 
 #[wasm_bindgen]
@@ -20,7 +20,12 @@ pub async fn create_view(
     spritesheet_data: &[u8],
     spritesheet_width: u32,
     spritesheet_height: u32,
+    page: &str,
 ) -> Result<State, StateError> {
+    let page = match page {
+        "designs" => Page::Designs,
+        _ => Page::Main,
+    };
     Ok(State::new(
         RenderState::new_canvas(
             canvas,
@@ -29,6 +34,7 @@ pub async fn create_view(
             spritesheet_height,
         )
         .await?,
+        page,
     ))
 
     // StateWrapper::new(desen::new_app_canvas(canvas, |app| {

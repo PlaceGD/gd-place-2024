@@ -71,6 +71,7 @@
         setNameSeconds,
         DEFAULT_SETTINGS,
         getServerNow,
+        PAGE,
     } from "../stores";
     import {
         getTransformedPlaceOffset,
@@ -872,61 +873,80 @@
     }} -->
 
     <div class="absolute w-full h-full overflow-visible pointer-events-none">
-        {#if editWidgetVisible}
-            <LevelWidget
-                {state}
-                x={previewObjectPos[0]}
-                y={previewObjectPos[1]}
-                scale={editWidgetScale}
-                scaleWithZoom={false}
-            >
-                {#if $menuOpenWidget == WidgetType.Rotate}
-                    <Rotate bind:state />
-                {:else if $menuOpenWidget == WidgetType.Scale}
-                    <Scale bind:state />
-                {:else if $menuOpenWidget == WidgetType.Warp}
-                    <Warp bind:state widgetScale={editWidgetScale} />
-                {/if}
+        {#if PAGE == "main"}
+            {#if editWidgetVisible}
+                <LevelWidget
+                    {state}
+                    x={previewObjectPos[0]}
+                    y={previewObjectPos[1]}
+                    scale={editWidgetScale}
+                    scaleWithZoom={false}
+                >
+                    {#if $menuOpenWidget == WidgetType.Rotate}
+                        <Rotate bind:state />
+                    {:else if $menuOpenWidget == WidgetType.Scale}
+                        <Scale bind:state />
+                    {:else if $menuOpenWidget == WidgetType.Warp}
+                        <Warp bind:state widgetScale={editWidgetScale} />
+                    {/if}
+                </LevelWidget>
+            {/if}
+            {#if $editorSettings.showDeleteText}
+                <DeleteTexts {state} />
+            {/if}
+
+            <TriggerRuns {state} />
+
+            {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
+                <LevelWidget
+                    {state}
+                    x={$placedByHover.x}
+                    y={$placedByHover.y + 15}
+                    scaleWithZoom={false}
+                    scale={placedNameScale}
+                >
+                    <PlacedByText username={$placedByHover.username} />
+                </LevelWidget>
+            {/if}
+
+            <LevelWidget {state} x={-55} y={40} scale={0.15}>
+                <ClosableWindow
+                    name="playerStartHelp"
+                    open={$eventStatus == "during" || $eventStatus == "before"}
+                >
+                    <Image src={player_start_help} />
+                </ClosableWindow>
+            </LevelWidget>
+            <LevelWidget {state} x={-90} y={200} scale={0.2}>
+                <ClosableWindow
+                    name="playerGoalHelp"
+                    open={$eventStatus == "during" || $eventStatus == "before"}
+                >
+                    <Image src={player_goal_help} />
+                </ClosableWindow>
+            </LevelWidget>
+
+            <LevelWidget {state} x={END_POS_X} y={END_POS_Y - 1} scale={0.12}>
+                <Image src={player_goal} />
             </LevelWidget>
         {/if}
-        {#if $editorSettings.showDeleteText}
-            <DeleteTexts {state} />
+
+        {#if PAGE == "designs"}
+            <!-- loop through i from 0 to 84 -->
+            {#each Array.from({ length: 85 }, (_, i) => i) as i}
+                {@const [x, y] = state.get_design_position(i)}
+                {@const name = state.get_design_creator(i)}
+
+                <LevelWidget {state} {x} y={y - 7.0 * 30.0} scale={1.0}>
+                    <button
+                        class="text-white text-4xl cursor-pointer pointer-events-auto"
+                        on:click={() => {
+                            state.increment_design_display(i);
+                        }}>{name}</button
+                    >
+                </LevelWidget>
+            {/each}
         {/if}
-
-        <TriggerRuns {state} />
-
-        {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
-            <LevelWidget
-                {state}
-                x={$placedByHover.x}
-                y={$placedByHover.y + 15}
-                scaleWithZoom={false}
-                scale={placedNameScale}
-            >
-                <PlacedByText username={$placedByHover.username} />
-            </LevelWidget>
-        {/if}
-
-        <LevelWidget {state} x={-55} y={40} scale={0.15}>
-            <ClosableWindow
-                name="playerStartHelp"
-                open={$eventStatus == "during" || $eventStatus == "before"}
-            >
-                <Image src={player_start_help} />
-            </ClosableWindow>
-        </LevelWidget>
-        <LevelWidget {state} x={-90} y={200} scale={0.2}>
-            <ClosableWindow
-                name="playerGoalHelp"
-                open={$eventStatus == "during" || $eventStatus == "before"}
-            >
-                <Image src={player_goal_help} />
-            </ClosableWindow>
-        </LevelWidget>
-
-        <LevelWidget {state} x={END_POS_X} y={END_POS_Y - 1} scale={0.12}>
-            <Image src={player_goal} />
-        </LevelWidget>
 
         <!-- <LevelWidget {state} x={60} y={60}>
         <button class="p-4 bg-red">Gaga</button>

@@ -65,6 +65,8 @@ const persistLocalWritable = <T>(v: T, key: string): PersistentStore<T> =>
 
 // MARK: User Stuff
 
+export let PAGE: "main" | "designs" = "designs";
+
 export const savePosition = { value: true };
 
 export const bannedUsers = writable<Record<string, boolean>>({});
@@ -581,15 +583,18 @@ export const scheduleFor = (
 export const eventStartTime = writable(Number.POSITIVE_INFINITY);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 export const setNameSeconds = writable(0);
-db.ref("metaVariables/eventStartTime").on("value", v => {
-    eventStartTime.set(v.val());
-});
-db.ref("metaVariables/eventEndTime").on("value", v => {
-    eventEndTime.set(Number(v.val()));
-});
-db.ref("metaVariables/setNameSeconds").on("value", v => {
-    setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);
-});
+
+if (PAGE === "main") {
+    db.ref("metaVariables/eventStartTime").on("value", v => {
+        eventStartTime.set(v.val());
+    });
+    db.ref("metaVariables/eventEndTime").on("value", v => {
+        eventEndTime.set(Number(v.val()));
+    });
+    db.ref("metaVariables/setNameSeconds").on("value", v => {
+        setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);
+    });
+}
 
 export const eventElapsed = derived(
     [eventStartTime, nowStore],
@@ -606,34 +611,37 @@ export type EventStatus =
     | "during"
     | "name set"
     | "fully done";
-export const eventStatus: Readable<EventStatus> = derived(
-    [nowStore, eventStartTime, eventEndTime, setNameSeconds],
-    ([now, start, end, name]): EventStatus => {
-        if (
-            now == 0 ||
-            start == Number.POSITIVE_INFINITY ||
-            end == Number.POSITIVE_INFINITY ||
-            name == 0
-        ) {
-            return "loading";
-        }
+export const eventStatus: Readable<EventStatus> =
+    PAGE === "main"
+        ? derived(
+              [nowStore, eventStartTime, eventEndTime, setNameSeconds],
+              ([now, start, end, name]): EventStatus => {
+                  if (
+                      now == 0 ||
+                      start == Number.POSITIVE_INFINITY ||
+                      end == Number.POSITIVE_INFINITY ||
+                      name == 0
+                  ) {
+                      return "loading";
+                  }
 
-        if (now < start) {
-            return "before";
-        }
-        if (now < end) {
-            return "during";
-        }
-        if (now < end + name * 1000) {
-            return "name set";
-        }
-        if (now >= end + name * 1000) {
-            return "fully done";
-        }
+                  if (now < start) {
+                      return "before";
+                  }
+                  if (now < end) {
+                      return "during";
+                  }
+                  if (now < end + name * 1000) {
+                      return "name set";
+                  }
+                  if (now >= end + name * 1000) {
+                      return "fully done";
+                  }
 
-        return "loading";
-    }
-);
+                  return "loading";
+              }
+          )
+        : writable("during");
 // eventStatus.subscribe(v => console.log("Status: ", v));
 
 export const eventElapsedContinuous = tweened(0, {

@@ -100,18 +100,18 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     // if length(pos) < 10.0 {
     //     return vec4<f32>(0.0, 1.0, 0.0, 1.0);
     // }
-    var anim_val = 0.0;
-    if globals.time < 0.0 {
+    // var anim_val = 0.0;
+    // if globals.time < 0.0 {
         
-        let end_trans01 = -globals.time;
-        let end_anim_time = end_trans01 * 10.0;
-        let dist_from_center = length(pos - globals.camera_pos);
-        let delay = dist_from_center * 0.001;
-        let explosion_d =
-            ease_out_expo(min(max(((end_anim_time - delay) / 3.0),0.0),1.0));
+    //     let end_trans01 = -globals.time;
+    //     let end_anim_time = end_trans01 * 10.0;
+    //     let dist_from_center = length(pos - globals.camera_pos);
+    //     let delay = dist_from_center * 0.001;
+    //     let explosion_d =
+    //         ease_out_expo(min(max(((end_anim_time - delay) / 3.0),0.0),1.0));
 
-        anim_val += explosion_d;
-    }
+    //     anim_val += explosion_d;
+    // }
 
     if is_within_rect(pos, vec2(0.0), LEVEL_SIZE_VEC, 2.0 / globals.zoom_scale) {
         if draw_grid(pos, LEVEL_SIZE_VEC, 4.0 / globals.zoom_scale / globals.quality) {
@@ -121,11 +121,11 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 
     if is_within_rect(pos, vec2(0.0), LEVEL_SIZE_VEC, 0.5 / globals.zoom_scale) {
         if draw_grid(pos, vec2(30.0, 30.0), 1.0 / globals.zoom_scale / globals.quality) {
-            return vec4<f32>(0.0, 0.0, 0.0, fade + anim_val);
+            return vec4<f32>(0.0, 0.0, 0.0, fade);
         }
     }
 
 
 
-    return vec4<f32>(0.0, 0.0, 0.0, anim_val);
+    return vec4<f32>(0.0, 0.0, 0.0, 0.0);
 }

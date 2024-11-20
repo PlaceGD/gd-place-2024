@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import betatestdb from "./assets/betatestdb.json";
 import * as wasm from "wasm-lib";
 import { addObjString } from "./level_view/view_controls";
 
@@ -18,19 +17,23 @@ type HistoryObject =
           username: string;
       };
 
-const HISTORY: HistoryObject[] = Object.values(betatestdb.history).sort(
-    (a, b) => a.time - b.time
-);
+// dynamically import the json file
+let HISTORY: HistoryObject[];
 
 let obj_data_map: Map<string, string> = new Map();
+let timelapsetime: number;
 
-HISTORY.forEach(h => {
-    if ("object" in h) obj_data_map.set(h.objKey, h.object);
-});
+// import(/* @vite-ignore */ "./assets/db2.json").then((betatestdb: any) => {
+//     HISTORY = Object.values(betatestdb.default.history).sort(
+//         (a: any, b: any) => a.time - b.time
+//     ) as any;
+//     HISTORY.forEach(h => {
+//         if ("object" in h) obj_data_map.set(h.objKey, h.object);
+//     });
+//     timelapsetime = HISTORY[0].time;
+// });
 
 let prevTime = 0;
-
-let timelapsetime = HISTORY[0].time;
 
 let historyIndex = 0;
 

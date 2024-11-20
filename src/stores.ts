@@ -582,15 +582,15 @@ export const scheduleFor = (
 export const eventStartTime = writable(Number.POSITIVE_INFINITY);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 export const setNameSeconds = writable(0);
-db.ref("metaVariables/eventStartTime").on("value", v => {
-    eventStartTime.set(v.val());
-});
-db.ref("metaVariables/eventEndTime").on("value", v => {
-    eventEndTime.set(Number(v.val()));
-});
-db.ref("metaVariables/setNameSeconds").on("value", v => {
-    setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);
-});
+// db.ref("metaVariables/eventStartTime").on("value", v => {
+//     eventStartTime.set(v.val());
+// });
+// db.ref("metaVariables/eventEndTime").on("value", v => {
+//     eventEndTime.set(Number(v.val()));
+// });
+// db.ref("metaVariables/setNameSeconds").on("value", v => {
+//     setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);
+// });
 
 export const eventElapsed = derived(
     [eventStartTime, nowStore],

@@ -7,7 +7,7 @@ use rust_shared::{
     countdown::{CountdownDigitSets, DigitObjects, DIGIT_SETS, TEST_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
-    util::{now, random},
+    util::random,
 };
 
 use crate::{
@@ -32,7 +32,10 @@ pub struct Countdown {
     pub days_marker: Vec<TransitioningObject>,
     pub hours_marker: Vec<TransitioningObject>,
     pub minutes_marker: Vec<TransitioningObject>,
+    pub hours_colon: Vec<TransitioningObject>,
+    pub minutes_colon: Vec<TransitioningObject>,
     pub bg_state: [bool; 3],
+    pub colon_state: [usize; 2],
 }
 
 impl Countdown {
@@ -47,10 +50,15 @@ impl Countdown {
             days_marker: Vec::new(),
             hours_marker: Vec::new(),
             minutes_marker: Vec::new(),
+
+            hours_colon: Vec::new(),
+            minutes_colon: Vec::new(),
             bg_state: [false; 3],
+            colon_state: [1000; 2],
         }
     }
     pub fn update_state(&mut self, event_start: f64, now: f64) {
+        //console_log!("{event_start} {now}");
         let event_elapsed = now / 1000.0 - event_start / 1000.0;
         let time_until = -event_elapsed;
 
@@ -178,6 +186,46 @@ impl Countdown {
 
             let new_bg_state = [show_days, show_hours, show_minutes];
 
+            let new_colon_state = if switch_id == 0 {
+                [0, 0]
+            } else {
+                [
+                    ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
+                    ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
+                ]
+            };
+
+            for i in 0..2 {
+                if self.bg_state[i + 1] != new_bg_state[i + 1]
+                    || self.colon_state[i] != new_colon_state[i]
+                {
+                    let (state, prev_colon, colon) = match i {
+                        0 => (
+                            &mut self.hours_colon,
+                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
+                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
+                        ),
+                        1 => (
+                            &mut self.minutes_colon,
+                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
+                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
+                        ),
+                        _ => unreachable!(),
+                    };
+                    let delay = index_delay(i * 2 + 2);
+                    state.clear();
+
+                    if self.bg_state[i + 1] {
+                        state.extend(dissapear(prev_colon, delay));
+                    }
+                    if new_bg_state[i + 1] {
+                        state.extend(appear(colon, delay));
+                    }
+
+                    self.colon_state[i] = new_colon_state[i];
+                }
+            }
+
             for i in 0..3 {
                 if self.bg_state[i] != new_bg_state[i] {
                     let (state, bg) = match i {
@@ -209,7 +257,7 @@ impl Countdown {
             obj.iy /= info.builtin_scale_x;
             obj.jx /= info.builtin_scale_y;
             obj.jy /= info.builtin_scale_y;
-            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }));
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), state.now);
             idx += 1;
         };
 
@@ -219,6 +267,8 @@ impl Countdown {
             .iter()
             .chain(self.hours_marker.iter())
             .chain(self.minutes_marker.iter())
+            .chain(self.hours_colon.iter())
+            .chain(self.minutes_colon.iter())
             .for_each(|o| {
                 o.get(state.now).inspect(|o| {
                     add_object(o.offset(offset - vec2(450.0, 450.0 + 30.0 * 14.0)));
@@ -248,7 +298,7 @@ impl Countdown {
             // billy.translate(vec2(30.0 * 7.0, 0.0));
         }
 
-        draw_level(state, billy, &level, |_, _, _| None, 0.0);
+        draw_level(state, billy, &level, |_, _, _| None, 0.0, true);
 
         // self.days_marker.iter().for_each(|o| {
         //     o.get().inspect(|o| draw_obj(o, billy));
@@ -340,7 +390,7 @@ impl StatsDisplay {
             obj.iy /= info.builtin_scale_x;
             obj.jx /= info.builtin_scale_y;
             obj.jy /= info.builtin_scale_y;
-            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }));
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), state.now);
             idx += 1;
         };
         let spacing = 30.0 * 7.5;
@@ -359,7 +409,7 @@ impl StatsDisplay {
             offset += vec2(spacing, 0.0);
         }
 
-        draw_level(state, billy, &level, |_, _, _| None, 0.0);
+        draw_level(state, billy, &level, |_, _, _| None, 0.0, true);
     }
 }
 

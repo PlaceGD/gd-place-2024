@@ -25,6 +25,7 @@
                     hidden = true;
                     localStorage.setItem(name, "true");
                 }}
+                tabindex="-1"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +43,7 @@
                 </svg>
             </button>
         </div>
-        <div class="p-6 xs:p-3 pointer-events-none">
+        <div class="p-6 pointer-events-none xs:p-3">
             <slot />
         </div>
     </div>

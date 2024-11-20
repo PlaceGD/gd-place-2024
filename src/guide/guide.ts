@@ -23,6 +23,7 @@ import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
 import { EditTab } from "../place_menu/edit/edit_tab";
 import { toast } from "@zerodevx/svelte-toast";
 import GuidePopup from "./GuidePopup.svelte";
+import { randIntInclusive } from "../utils/misc";
 
 export const walmart = writable({
     hasDeleteSelection: false,
@@ -100,8 +101,8 @@ export const GUIDE_STEPS: GuideAction[] = [
         new EditorGuide(
             `Click where you want your object to be placed in the level.`,
             {
-                x: 0,
-                y: 0,
+                x: randIntInclusive(0, LEVEL_WIDTH_UNITS),
+                y: randIntInclusive(0, LEVEL_HEIGHT_UNITS),
                 zoom: 12,
             },
             EditorGuidePosition.Top

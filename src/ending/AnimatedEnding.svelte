@@ -11,8 +11,8 @@
     import { onDestroy, onMount } from "svelte";
     import { db } from "../firebase/firebase";
     import type { Unsubscribe } from "firebase/database";
-    import { SyncedCooldown } from "../utils/cooldown";
-    import { loginData } from "../stores";
+    import { Cooldown } from "../utils/cooldown";
+    import { loginData, viewingLevelAfterEvent } from "../stores";
     import {
         cubicInOut,
         expoIn,
@@ -27,6 +27,8 @@
     import { clamp } from "shared-lib/util";
     import KofiButton from "../components/KofiButton.svelte";
     import { disappear } from "../utils/transitions";
+    import { setClipboard } from "../utils/clipboard";
+    import Toast from "../utils/toast";
     // import { typewriter } from "../utils/transitions";
 
     const GLOBAL_DELAY = 1000;
@@ -45,15 +47,16 @@
             });
         });
 
-        setTimeout(() => {
+        let timeout = setTimeout(() => {
             let interval = setInterval(() => {
                 lettersVisible += 1;
 
                 if (lettersVisible > letters.length) {
                     clearInterval(interval);
+                    clearTimeout(timeout);
                 }
             }, CHARACTER_DELAY);
-        }, 4000);
+        }, 3700);
     });
 
     onDestroy(() => {
@@ -93,8 +96,8 @@
             easing: expoIn,
             css: (t: number) => {
                 return `
-                    opacity: ${Math.pow(1 - t, 2)};
-                    transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.bottom - nodePos.bottom + nodePos.height / 2) * t}px);
+                    opacity: ${1 - t};
+                    transform: translate(${(screenCenter - nodeX) * 0.8 * t}px, ${(targetPos.top - nodePos.bottom + nodePos.height / 2) * t}px);
                 `;
             },
         };
@@ -117,11 +120,22 @@
         >
             LEVEL NAME:
         </p>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <h1
-            class="text-center font-pusab text-stroke text-7xl md:text-5xl sm:text-3xl xs:text-xl enter-level-name-texttext-center min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
+            class="pointer-events-auto cursor-pointer text-7xl md:text-5xl sm:text-3xl xs:text-xl min-h-[72px] md:min-h-[48px] sm:min-h-[40px] xs:min-h-[36px]"
             bind:this={target}
         >
-            {letters.slice(0, lettersVisible).join("")}
+            <button
+                class="text-center hover:underline decoration-dashed font-pusab text-stroke"
+                aria-label="Copy level name"
+                on:click={() => {
+                    setClipboard(letters.join(""));
+                    Toast.showInfoToast("Copied level name!");
+                }}
+            >
+                {letters.slice(0, lettersVisible).join("")}
+            </button>
         </h1>
         <span
             class="flex flex-col gap-1 pointer-events-auto flex-center"

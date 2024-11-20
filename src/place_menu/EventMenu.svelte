@@ -76,12 +76,14 @@
             <div
                 class="grid overflow-hidden grid-cols-[min-content_1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
             >
-                <div class="h-full pl-40 md:pl-4 w-max loading_icon sm:hidden">
+                <div
+                    class="h-full pl-24 md:pl-4 w-max md:w-36 sm:w-36 xs:w-36 loading_icon sm:hidden"
+                >
                     <Image src={loadingAnimSvgUrl} class="h-full" />
                 </div>
 
                 <h1
-                    class="flex flex-wrap gap-2 pr-4 text-3xl text-left text-white md:text-2xl flex-center xs:text-xl"
+                    class="flex flex-wrap gap-2 pr-4 text-3xl text-left text-white sm:pr-0 md:text-2xl flex-center xs:text-xl"
                 >
                     <span class="text-6xl md:text-5xl xs:text-4xl">
                         {$userCount}
@@ -133,7 +135,7 @@
                         <div
                             class="italic text-center text-white opacity-50 text-md md:text-sm sm:text-xs xs:text-xs tabular-nums"
                         >
-                            Next design switch: {switch_hours}:{switch_minutes}:{switch_seconds}
+                            Next design change: {switch_hours}:{switch_minutes}:{switch_seconds}
                         </div>
                     {/if}
 

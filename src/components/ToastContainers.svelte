@@ -62,6 +62,7 @@
     }
 
     :global(._toastContainer) {
+        padding: 8px;
         --toastColor: white;
         --toastBorderRadius: 0.5rem;
         --toastPadding: 8px;

@@ -8,7 +8,12 @@ import {
     isValidObject,
 } from "shared-lib/gd";
 import { ChunkID } from "shared-lib/database";
-import { PlaceReq, DeleteReq, PlaceRes } from "shared-lib/cloud_functions";
+import {
+    PlaceReq,
+    DeleteReq,
+    PlaceRes,
+    DeleteRes,
+} from "shared-lib/cloud_functions";
 import {
     CHUNK_SIZE_UNITS,
     END_RADIUS,
@@ -19,7 +24,7 @@ import { Reader } from "./utils/reader";
 import { Level, LogGroup } from "./utils/logger";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
-import { smartDatabase } from "src";
+import { smartDatabase } from "./exports";
 import {
     checkedTransaction,
     getCheckedUserDetails,
@@ -168,8 +173,17 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
 
         const now = Date.now();
 
-        if (now < eventStartTime.val() || now > eventEndTime.val()) {
-            Error.code(209, "permission-denied");
+        const endingBuffer = 30 * 1000;
+
+        if (now < eventStartTime.val()) {
+            throw Error.code(208, "permission-denied");
+        }
+        if (now > eventEndTime.val()) {
+            throw Error.code(208, "permission-denied");
+        }
+
+        if (now > eventEndTime.val() - endingBuffer) {
+            throw Error.code(212, "permission-denied");
         }
 
         await checkedTransaction(
@@ -212,12 +226,12 @@ export const placeObject = onCallAuthLogger<PlaceReq, Promise<PlaceRes>>(
             db.ref(`totalObjectsPlaced`).transaction(v => (v ?? 0) + 1),
         ]);
 
-        return objRef.key ?? "";
+        return { key: objRef.key ?? "", cooldown: placeCooldown.val() * 1000 };
     }
 );
 
 // #region deleteObject
-export const deleteObject = onCallAuthLogger<DeleteReq>(
+export const deleteObject = onCallAuthLogger<DeleteReq, Promise<DeleteRes>>(
     "deleteObject",
     async (request, logger) => {
         const db = smartDatabase();
@@ -278,5 +292,7 @@ export const deleteObject = onCallAuthLogger<DeleteReq>(
                 .transaction(v => (v ?? 1) - 1),
             db.ref(`totalObjectsDeleted`).transaction(v => (v ?? 0) + 1),
         ]);
+
+        return { cooldown: deleteCooldown.val() * 1000 };
     }
 );

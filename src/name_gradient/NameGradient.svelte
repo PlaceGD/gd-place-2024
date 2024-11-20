@@ -1,6 +1,6 @@
 <script lang="ts">
     import { default as cx } from "classnames";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import ToastContainers from "../components/ToastContainers.svelte";
     import OnceButton from "../components/Buttons/OnceButton.svelte";
     import Loading from "../components/Loading.svelte";
@@ -14,6 +14,7 @@
     import Check from "../icons/Check.svelte";
     import {
         changeNameGradient,
+        getGradientCooldown,
         submitKofiTxId,
     } from "../firebase/cloud_functions";
     import Toast from "../utils/toast";
@@ -29,7 +30,7 @@
     import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
     import ScreenModal from "../components/ScreenModal.svelte";
     import DarkInput from "../components/DarkInput.svelte";
-    import { SyncedCooldown } from "../utils/cooldown";
+    import { Cooldown } from "../utils/cooldown";
     import type { Readable } from "svelte/store";
     import type { UserData } from "../firebase/auth";
     import WhiteButton from "../components/Buttons/WhiteButton.svelte";
@@ -109,39 +110,20 @@
         resetSubmitButton();
     };
 
-    let gradientCooldown: SyncedCooldown | null = null;
-    let gradientCooldownDisplay: Readable<string> | null = null;
-    let gradientCooldownFinished: Readable<boolean> | null = null;
+    const gradientCooldown = new Cooldown(
+        getGradientCooldown,
+        loginData,
+        "lastGradientTimestamp"
+    );
+    let {
+        display: gradientCooldownDisplay,
+        finished: gradientCooldownFinished,
+        remaining: gradientCooldownRemaining,
+    } = gradientCooldown;
 
-    const onUserData = (data: UserData | null) => {
-        if (gradientCooldown != null) {
-            gradientCooldown.unsub();
-        }
-        if (data != null) {
-            gradientCooldown = SyncedCooldown.new(
-                `userDetails/${data?.user?.uid ?? ""}/lastGradientTimestamp`,
-                GRADIENT_COOLDOWN_SECONDS
-            );
-
-            gradientCooldownDisplay = gradientCooldown.display;
-            gradientCooldownFinished = gradientCooldown.finished;
-        } else {
-            gradientCooldown = null;
-            gradientCooldownDisplay = null;
-            gradientCooldownFinished = null;
-        }
-    };
-
-    $: {
-        onUserData($loginData.currentUserData);
-    }
-    // const gradientCooldown = SyncedCooldown.new(
-    //     `userDetails/${$loginData.currentUserData?.user?.uid ?? ""}/epochNextGradient`
-    // );
-    // let {
-    //     display: gradientCooldownDisplay,
-    //     finished: gradientCooldownFinished,
-    // } = gradientCooldown;
+    onDestroy(() => {
+        gradientCooldown.cleanup();
+    });
 
     const onUpdateGradient = async () => {
         isInProgress = true;
@@ -149,6 +131,8 @@
         try {
             await changeNameGradient({
                 grad: nameGradientString,
+            }).then(v => {
+                gradientCooldown.start(v.data.cooldown);
             });
 
             $currentNameGradient.positions = nameGradientStops as any;

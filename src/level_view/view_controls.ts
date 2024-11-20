@@ -14,6 +14,7 @@ import {
     ground2Color,
     lastRunColorTrigger,
     loginData,
+    savePosition,
 } from "../stores";
 import debounce from "lodash.debounce";
 import { tweened } from "svelte/motion";
@@ -29,8 +30,8 @@ export const zoomTween = tweened(0, {
 });
 zoomGoal.subscribe(v => zoomTween.set(v));
 zoomGoal.subscribe(v => {
-    if (v < -8 || v > 100) {
-        zoomGoal.set(clamp(v, -8, 100));
+    if (v < -4 || v > 36) {
+        zoomGoal.set(clamp(v, -16, 36));
     }
 });
 export const [mouseX, mouseY] = [writable(0), writable(0)];
@@ -122,8 +123,9 @@ export const moveCamera = (state: wasm.State, x: number, y: number) => {
         }
         return v;
     });
-
-    savePos(state);
+    if (savePosition.value) {
+        savePos(state);
+    }
     handleSub(state);
 };
 

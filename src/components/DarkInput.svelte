@@ -30,7 +30,7 @@
     on:blur
     bind:value
     {...$$restProps}
-    class="p-2 text-center rounded-lg outline-none text-stroke xs:p-1 bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 {$$restProps[
+    class="p-2 text-center rounded-lg text-stroke xs:p-1 bg-black/40 outline-2 outline outline-white/20 -outline-offset-2 focus:outline-2 focus:outline focus:outline-white/40 focus:-outline-offset-2 {$$restProps[
         'class'
     ]}"
 />

@@ -85,7 +85,7 @@ export const rotateVec = (
 };
 
 export const timerDisplay = (time?: number) => {
-    if (time == null || time < 0) {
+    if (time == null || time < 0 || !isFinite(time)) {
         return "--:--";
     }
 
@@ -95,43 +95,3 @@ export const timerDisplay = (time?: number) => {
 };
 
 export const semitonesToFactor = (s: number) => Math.pow(2, s / 12);
-
-export const scheduleFor = (
-    f: () => void,
-    timeUnix: number | Writable<number>,
-    { runIfNegative, delay }: { runIfNegative?: boolean; delay?: number } = {
-        runIfNegative: false,
-        delay: 0,
-    }
-) => {
-    let timeout: NodeJS.Timeout;
-    let time: number;
-    let unsub: Unsubscriber;
-
-    const s = () => {
-        if (isNaN(time) || time == Infinity || time > 2147483647) {
-            return;
-        }
-
-        if (time >= 0 || runIfNegative) {
-            timeout = setTimeout(
-                () => {
-                    unsub?.();
-                    f();
-                },
-                time + (delay ?? 0)
-            );
-        }
-    };
-
-    if (typeof timeUnix === "number") {
-        time = timeUnix - Date.now();
-        s();
-    } else {
-        unsub = timeUnix.subscribe(t => {
-            clearTimeout(timeout);
-            time = t - Date.now();
-            s();
-        });
-    }
-};

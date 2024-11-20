@@ -70,39 +70,47 @@
 
     const signInWith = (method: LoginMethod) => {
         isInProgress = true;
-        handleSignIn(method).then(async isOK => {
-            if (isOK) {
-                if ($loginData.currentUserData != null) {
-                    let maybeData = await db
-                        .ref(
-                            `userDetails/${$loginData.currentUserData.user.uid}`
-                        )
-                        .get();
+        handleSignIn(method)
+            .then(async isOK => {
+                if (isOK) {
+                    if ($loginData.currentUserData != null) {
+                        let maybeData = await db
+                            .ref(
+                                `userDetails/${$loginData.currentUserData.user.uid}`
+                            )
+                            .get();
 
-                    let maybePlaceData = maybeData.val();
+                        let maybePlaceData = maybeData.val();
 
-                    if (maybePlaceData != null) {
-                        $loginData.currentUserData.userDetails = maybePlaceData;
-                        $openMenu = null;
+                        if (maybePlaceData != null) {
+                            $loginData.currentUserData.userDetails =
+                                maybePlaceData;
+                            $openMenu = null;
+                        } else {
+                            previousPage = currentPage;
+                            currentPage = Page.CREATE_USER;
+                        }
+
+                        isInProgress = false;
                     } else {
-                        previousPage = currentPage;
-                        currentPage = Page.CREATE_USER;
+                        isInProgress = false;
+                        console.error(
+                            "login OK (isOk == true) but `currentUserData` still null"
+                        );
+                        Toast.showErrorToast(
+                            "There was an issue signing in. Please try again."
+                        );
                     }
-
-                    isInProgress = false;
                 } else {
                     isInProgress = false;
-                    console.error(
-                        "login OK (isOk == true) but `currentUserData` still null"
-                    );
-                    Toast.showErrorToast(
-                        "There was an issue signing in. Please try again."
-                    );
                 }
-            } else {
-                isInProgress = false;
-            }
-        });
+            })
+            .catch(e => {
+                console.error("handleSignIn error", e);
+                Toast.showErrorToast(
+                    "There was an issue signing in. Please try again."
+                );
+            });
     };
 
     const initNewUser = () => {
@@ -129,6 +137,8 @@
 
                     if (e.details.code === 300 || e.details.code === 301) {
                         Toast.showErrorToast("Username is taken!");
+                    } else if (e.details.code === 100) {
+                        Toast.showErrorToast("Invalid username!");
                     } else {
                         Toast.showErrorToast(
                             `Failed to create user. (${e.details.code})`
@@ -252,9 +262,9 @@
                 <ul class="bulleted-list">
                     <li>Only use one account per person.</li>
                     <li>Do not create inappropriate imagery (or usernames).</li>
-                    <li>Do not exercise hate speech (please)</li>
+                    <li>Do not exercise hate speech (please).</li>
                     <li>
-                        Only report people who are breaking the rules
+                        Only report people who are breaking the rules.
                         <!-- <i style="font-size: small; opacity: 0.5;">
                             (unless you and another user are both reporting each
                             other for breaking this rule, in which case one of

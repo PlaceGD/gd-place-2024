@@ -1,7 +1,15 @@
-import { objects } from "shared-lib/gd";
-import { rotateVec } from "shared-lib/util";
+import { objects, type ObjectCategory } from "shared-lib/gd";
+import { remEuclid, rotateVec } from "shared-lib/util";
 import { type GDObjectOpt, convert_opt_transform } from "wasm-lib";
 import { extractFilenames } from "../../utils/misc";
+import {
+    menuBuildTab,
+    menuEditTab,
+    menuTabGroup,
+    TabGroup,
+} from "../../stores";
+import { get } from "svelte/store";
+import { CATEGORY_ICONS } from "../../gd/object";
 
 export const EDIT_TAB_ICONS = extractFilenames<string>(
     import.meta.glob("../assets/edit_tab/*.svg", {
@@ -449,3 +457,100 @@ export const TRANSFORM_BUTTONS: TransformButton[] = [
         angle: 0,
     },
 ];
+
+const moveBuildTab = (dir: "left" | "right") => {
+    const objectCategories = Object.keys(CATEGORY_ICONS) as ObjectCategory[];
+
+    const currentBlockTab = objectCategories.indexOf(get(menuBuildTab));
+
+    if (currentBlockTab === -1) return;
+
+    menuBuildTab.set(
+        objectCategories[
+            remEuclid(
+                currentBlockTab + (dir === "left" ? -1 : 1),
+                objectCategories.length
+            )
+        ]
+    );
+};
+
+const moveEditTab = (dir: "left" | "right") => {
+    const editTabs = Object.values(EditTab);
+    const currentEditTab = editTabs.indexOf(get(menuEditTab));
+
+    if (currentEditTab === -1) return;
+
+    menuEditTab.set(
+        editTabs[
+            remEuclid(
+                currentEditTab + (dir === "left" ? -1 : 1),
+                editTabs.length
+            )
+        ]
+    );
+};
+
+export const MISC_KEYBINDS = {
+    build_tab: {
+        cb: () => {
+            menuTabGroup.set(TabGroup.Build);
+        },
+        shortcut: {
+            key: "1",
+            shift: false,
+            alt: false,
+        },
+    },
+    edit_tab: {
+        cb: () => {
+            menuTabGroup.set(TabGroup.Edit);
+        },
+        shortcut: {
+            key: "2",
+            shift: false,
+            alt: false,
+        },
+    },
+    delete_tab: {
+        cb: () => {
+            menuTabGroup.set(TabGroup.Delete);
+        },
+        shortcut: {
+            key: "3",
+            shift: false,
+            alt: false,
+        },
+    },
+
+    build_tab_left: {
+        cb: () => {
+            const tabGroup = get(menuTabGroup);
+            if (tabGroup == TabGroup.Build) {
+                moveBuildTab("left");
+            } else if (tabGroup == TabGroup.Edit) {
+                moveEditTab("left");
+            }
+        },
+        shortcut: {
+            key: "ArrowLeft",
+            shift: false,
+            alt: false,
+        },
+    },
+    build_tab_right: {
+        cb: () => {
+            const tabGroup = get(menuTabGroup);
+            if (tabGroup == TabGroup.Build) {
+                moveBuildTab("right");
+            } else if (tabGroup == TabGroup.Edit) {
+                moveEditTab("right");
+            }
+        },
+        shortcut: {
+            key: "ArrowRight",
+            shift: false,
+            alt: false,
+        },
+    },
+};

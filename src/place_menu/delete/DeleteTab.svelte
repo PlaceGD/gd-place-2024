@@ -5,23 +5,31 @@
         bannedUsers,
         loginData,
         menuMinimized,
+        menuSelectedObject,
+        menuTabGroup,
+        nowStore,
         selectedObject,
+        TabGroup,
     } from "../../stores";
 
     import OnceButton from "../../components/Buttons/OnceButton.svelte";
     import Toast from "../../utils/toast";
     import Image from "../../components/Image.svelte";
-    import { banUser, reportUser } from "../../firebase/cloud_functions";
+    import {
+        banUser,
+        getReportCooldown,
+        reportUser,
+    } from "../../firebase/cloud_functions";
     import ColoredName from "../../components/ColoredName.svelte";
     import Loading from "../../components/Loading.svelte";
     import { setClipboard } from "../../utils/clipboard";
-    import { SyncedCooldown } from "../../utils/cooldown";
+    import { Cooldown } from "../../utils/cooldown";
     import { getCameraPos } from "../../level_view/view_controls";
     import { getNewTurnstileToken } from "../../utils/turnstile";
     import ObjectButtonImage from "../objects/ObjectButtonImage.svelte";
     import checker from "../assets/checker.png?url";
     import FadedScroll from "../../components/FadedScroll.svelte";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { db } from "../../firebase/firebase";
     import {
         SFX_TRIGGER,
@@ -39,11 +47,16 @@
 
     export let state: wasm.State;
 
-    const cooldown = SyncedCooldown.new(
-        `userDetails/${$loginData.currentUserData!.user.uid}/lastReportTimestamp`,
-        REPORT_COOLDOWN_SECONDS
+    const cooldown = new Cooldown(
+        getReportCooldown,
+        loginData,
+        "lastReportTimestamp"
     );
     let { display: cooldownDisplay, finished: cooldownFinished } = cooldown;
+
+    onDestroy(() => {
+        cooldown.cleanup();
+    });
 
     $: isYourself =
         $loginData.currentUserData?.userDetails?.username ==
@@ -54,15 +67,15 @@
 
     const report = async (name: string) => {
         try {
-            const cameraPos = getCameraPos(state);
-
             // const token = await getNewTurnstileToken();
 
             await reportUser({
                 username: name,
                 // turnstileResp: token,
-                x: cameraPos[0],
-                y: cameraPos[1],
+                x: $selectedObject!.posX,
+                y: $selectedObject!.posY,
+            }).then(v => {
+                cooldown.start(v.data.cooldown);
             });
         } catch (e: any) {
             console.error("Failed to report user", e.details.message);
@@ -205,6 +218,35 @@
                             </DeclineButton>
                         </OnceButton>
                     {/if}
+                    {#if $selectedObject?.signupDate}
+                        <div class="text-xs text-center opacity-70">
+                            User signed up
+
+                            {#if $nowStore - $selectedObject.signupDate < 60000}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        1000
+                                )} seconds
+                            {:else if $nowStore - $selectedObject.signupDate < 3600000}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        60000
+                                )} minutes
+                            {:else if $nowStore - $selectedObject.signupDate < 86400000}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        3600000
+                                )} hours
+                            {:else}
+                                {Math.floor(
+                                    ($nowStore - $selectedObject.signupDate) /
+                                        86400000
+                                )} days
+                            {/if}
+
+                            ago
+                        </div>
+                    {/if}
                 {:else}
                     <p
                         class="text-sm text-center sm:text-xs hover-text-transition"
@@ -231,7 +273,15 @@
         ></span>
 
         <ul class="object-info-grid">
-            <li class="object-info-item type sm:gap-1">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <li
+                class="object-info-item type sm:gap-1"
+                on:click={() => {
+                    $menuSelectedObject = $selectedObject.id ?? 1;
+                    $menuTabGroup = TabGroup.Build;
+                }}
+            >
                 <h1 class="text-xl md:text-base font-pusab text-stroke">
                     Type:
                 </h1>

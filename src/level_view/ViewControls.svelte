@@ -69,8 +69,12 @@
         ExclusiveMenus,
         viewingLevelAfterEvent,
         setNameSeconds,
+        DEFAULT_SETTINGS,
+        getServerNow,
     } from "../stores";
     import {
+        getTransformedPlaceOffset,
+        MISC_KEYBINDS,
         MOVE_KEYBINDS,
         TRANSFORM_KEYBINDS,
         WidgetType,
@@ -111,6 +115,8 @@
     import LevelWidget from "../widgets/LevelWidget.svelte";
     import { set } from "firebase/database";
     import { skipForward, togglePause } from "../timelapse";
+    import { toast } from "@zerodevx/svelte-toast";
+    import { getSignupTimestamp } from "../firebase/moderation";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
@@ -195,7 +201,7 @@
         handleSub(state);
     }
 
-    setInterval(() => {
+    let interval = setInterval(() => {
         if ($timeLeft < 0) {
             handleSub(state);
         }
@@ -211,14 +217,10 @@
 
         let obj = state.get_preview_object();
 
-        obj.x =
-            Math.floor(mx / 30) * 30 +
-            15 +
-            objects[$menuSelectedObject].placeOffsetX;
-        obj.y =
-            Math.floor(my / 30) * 30 +
-            15 +
-            objects[$menuSelectedObject].placeOffsetY;
+        let [gagaX, gagaY] = getTransformedPlaceOffset(obj);
+
+        obj.x = Math.floor(mx / 30) * 30 + 15 - gagaX;
+        obj.y = Math.floor(my / 30) * 30 + 15 - gagaY;
 
         // obj.x_scale_exp = 0;
         // obj.x_angle = 0;
@@ -260,9 +262,11 @@
                 endCb: () => {
                     songPlaying.set(false);
                 },
+                loadCb: () => {
+                    songPlaying.set(true);
+                    songPlayingIsPreview.set(true);
+                },
             });
-            songPlaying.set(true);
-            songPlayingIsPreview.set(true);
         } else {
             stopSound("preview song");
             if ($songPlayingIsPreview) songPlaying.set(false);
@@ -287,8 +291,9 @@
         if (selectDepth >= hit.length) {
             selectDepth = 0;
         }
+
+        let selected = hit[selectDepth];
         selectDepth += 1;
-        let selected = hit[selectDepth - 1];
 
         state.set_selected_object(selected.key());
 
@@ -297,12 +302,23 @@
             mainColor: selected.obj.main_color,
             detailColor: selected.obj.detail_color,
             namePlaced: null,
+            signupDate: null,
             zLayer: selected.obj.z_layer,
             zOrder: selected.obj.z_order,
+            posX: selected.obj.x,
+            posY: selected.obj.y,
         };
         getPlacedUsername(selected.key(), v => {
             if ($selectedObject != null) {
                 $selectedObject.namePlaced = v;
+
+                if ($loginData?.currentUserData?.userDetails?.moderator) {
+                    getSignupTimestamp(v.toLowerCase(), d => {
+                        if (d != undefined && $selectedObject != null) {
+                            $selectedObject.signupDate = d;
+                        }
+                    });
+                }
             }
         });
     };
@@ -373,9 +389,15 @@
                         volume: 1.0 / Math.sqrt(audio_hits_count),
                         speed: semitonesToFactor(i.obj.main_color.g - 12),
                         exclusiveChannel: "song", // because honestly 2 songs should never play on top of eachother
+                        endCb: () => {
+                            songPlaying.set(false);
+                        },
+                        loadCb: () => {
+                            songPlaying.set(true);
+                            songPlayingIsPreview.set(false);
+                        },
                     });
-                    songPlaying.set(true);
-                    songPlayingIsPreview.set(false);
+
                     audio_hit_idx += 1;
                     triggersRun = true;
                     addTriggerRun(i.obj.x, i.obj.y);
@@ -387,16 +409,22 @@
     };
 
     onMount(() => {
-        let data = new URLSearchParams(window.location.search);
+        if ($eventStatus != "fully done") {
+            let data = new URLSearchParams(window.location.search);
 
-        if (data.get("x")) {
-            $editorData.x = parseFloat(data.get("x")!);
-        }
-        if (data.get("y")) {
-            $editorData.y = parseFloat(data.get("y")!);
-        }
-        if (data.get("zoom")) {
-            $editorData.zoom = parseFloat(data.get("zoom")!);
+            if (data.get("x")) {
+                $editorData.x = parseFloat(data.get("x")!);
+            }
+            if (data.get("y")) {
+                $editorData.y = parseFloat(data.get("y")!);
+            }
+            if (data.get("zoom")) {
+                $editorData.zoom = parseFloat(data.get("zoom")!);
+            }
+        } else {
+            $editorData.x = LEVEL_WIDTH_UNITS / 2;
+            $editorData.y = LEVEL_HEIGHT_UNITS / 2;
+            $editorData.zoom = -2;
         }
 
         $zoomGoal = $editorData.zoom;
@@ -639,19 +667,26 @@
 
         placedNameScale = Math.pow(2.0, state.get_zoom() / 30.0);
 
+        state.set_now(getServerNow());
+
         loop = requestAnimationFrame(loopFn);
     };
 
     let loop = requestAnimationFrame(loopFn);
 
-    onDestroy(() => cancelAnimationFrame(loop));
+    onDestroy(() => {
+        clearInterval(interval);
+        cancelAnimationFrame(loop);
+    });
 
     $: {
         state.set_show_collidable($editorSettings.showCollidable);
         state.set_hide_triggers($editorSettings.hideTriggers);
+        state.set_no_rotating_objects($editorSettings.noRotatingObjects);
         state.set_hide_grid($editorSettings.hideGrid);
         state.set_hide_ground($editorSettings.hideGround);
         state.set_hide_outline($editorSettings.hideOutline);
+        state.set_select_hazards($editorSettings.selectDangerous);
     }
 
     $: {
@@ -681,15 +716,22 @@
         state.set_ending_fully_done($eventEndTime + $setNameSeconds * 1000);
     }
     $: {
-        if ($eventStatus == "name set") {
+        if ($eventStatus == "name set" || $eventStatus == "fully done") {
             dragging = null;
             panzooming = null;
-            state.set_preview_visibility(false);
-            stopSound("preview song");
-            stopSound("song");
             resetPreviewColor(state, 1);
             $selectedObject = null;
             state.deselect_object();
+            stopSound("preview song");
+            stopSound("song");
+            isGuideActive.set(false);
+            toast.pop();
+            toast.pop({ target: "announcement" });
+            editorSettings.set({
+                ...DEFAULT_SETTINGS,
+                quality: $editorSettings.quality,
+            });
+            state.set_preview_visibility(false);
         }
     }
 
@@ -730,6 +772,7 @@
         handleMouseUp(isTouch);
     }}
     on:touchend={e => {
+        isFocused = false;
         panzooming = null;
     }}
     on:pointermove={e => {
@@ -828,6 +871,8 @@
         on:focus={() => (isFocused = true)}
         on:blur={() => (isFocused = false)}
         on:touchstart={e => {
+            isFocused = true;
+
             setMousePos(e.touches[0]);
             const touches = makeTouchList(e.touches);
             startPanzoom(touches);
@@ -837,7 +882,6 @@
             const isTouch = e.pointerType == "touch";
 
             if (e.button == 0 && !isTouch) {
-                // console.log("sex");
                 startDrag(
                     e.clientX * window.devicePixelRatio,
                     e.clientY * window.devicePixelRatio
@@ -886,13 +930,13 @@
                 {/if}
             </LevelWidget>
         {/if}
-        {#if $editorSettings.showDeleteTextI}
+        {#if $editorSettings.showDeleteText}
             <DeleteTexts {state} />
         {/if}
 
         <TriggerRuns {state} /> -->
 
-        <!-- {#if $placedByHover != null && $editorSettings.showPlacedTextI}
+        {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
             <LevelWidget
                 {state}
                 x={$placedByHover.x}
@@ -907,7 +951,7 @@
         <LevelWidget {state} x={-55} y={40} scale={0.15}>
             <ClosableWindow
                 name="playerStartHelp"
-                open={$eventStatus == "during"}
+                open={$eventStatus == "during" || $eventStatus == "before"}
             >
                 <Image src={player_start_help} />
             </ClosableWindow>
@@ -915,7 +959,7 @@
         <LevelWidget {state} x={-90} y={200} scale={0.2}>
             <ClosableWindow
                 name="playerGoalHelp"
-                open={$eventStatus == "during"}
+                open={$eventStatus == "during" || $eventStatus == "before"}
             >
                 <Image src={player_goal_help} />
             </ClosableWindow>

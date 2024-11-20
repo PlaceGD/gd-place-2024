@@ -14,6 +14,8 @@ interface KofiWidget {
     getHTML: () => string;
 }
 
+declare const __CLOUD_FUNCTIONS_ENV: "dev" | "live" | "prod";
+declare const __RT_DB_ENV: "local" | "live";
 declare const __DEBUG: boolean;
 declare const __TURNSTILE_LOGIN_SITE_KEY: string;
 // declare const __TURNSTILE_GENERAL_KEY: string;

@@ -11,6 +11,7 @@ type SoundPlayOptions = {
     speed?: number;
     exclusiveChannel?: string;
     endCb?: () => void;
+    loadCb?: () => void;
 };
 export const playSound = (options: SoundPlayOptions) => {
     if (typeof window === "undefined") return;
@@ -42,6 +43,10 @@ export const playSound = (options: SoundPlayOptions) => {
 
         if (options.exclusiveChannel != undefined) {
             channels[options.exclusiveChannel] = [howl, id];
+        }
+
+        if (options.loadCb != undefined) {
+            options.loadCb();
         }
     });
 

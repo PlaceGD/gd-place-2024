@@ -1,65 +1,73 @@
-import { derived, get, writable, type Writable } from "svelte/store";
+import {
+    derived,
+    get,
+    writable,
+    type Unsubscriber,
+    type Writable,
+} from "svelte/store";
 import { db } from "../firebase/firebase";
 import Toast from "./toast";
 import type { PathType, SmartDatabase } from "@smart-firebase/client";
-import type { DatabaseSchema } from "shared-lib/database";
+import type { UserDetails } from "shared-lib/database";
 import { timerDisplay } from "shared-lib/util";
+import { getServerNow, nowStore, type LoginData } from "../stores";
+import type { TypedHttpsCallable } from "../firebase/cloud_functions";
 
-export class SyncedCooldown {
-    private lastTimestamp: number = 0;
-    readonly unsub: () => void;
+export class Cooldown {
+    private future: Writable<number> = writable(Number.NEGATIVE_INFINITY);
+    private isStarted = false;
 
-    remaining: Writable<number> = writable(0);
-    finished = derived(this.remaining, v => v <= 0);
-    display = derived(this.remaining, v => timerDisplay(v));
+    private unsubCooldown: Unsubscriber | null = null;
+    private loginDataUnsub: Unsubscriber | null = null;
 
-    private constructor(
-        path: string,
-        currentCooldown: Writable<number> | number
+    constructor(
+        private cooldownGetter: TypedHttpsCallable<never, number>,
+        userDetails: Writable<LoginData>,
+        userDetailsKey: keyof UserDetails
     ) {
-        let interval: NodeJS.Timeout | null = null;
+        this.loginDataUnsub = userDetails.subscribe(d => {
+            if (d.currentUserData != null) {
+                this.loginDataUnsub?.();
+                this.unsubCooldown?.();
 
-        let cooldownValue: number;
-        let cooldownUsub = null;
-        if (typeof currentCooldown === "number") {
-            cooldownValue = currentCooldown;
-        } else {
-            cooldownUsub = currentCooldown.subscribe(
-                cooldown => (cooldownValue = cooldown)
-            );
-        }
+                this.unsubCooldown = db
+                    .ref(
+                        `/userDetails/${d.currentUserData.user.uid}/${userDetailsKey}`
+                    )
+                    .on("value", async () => {
+                        if (this.isStarted) return;
 
-        let onValue = db.ref(path).on("value", v => {
-            this.lastTimestamp = v.val() as number;
-
-            if (interval != null) {
-                clearInterval(interval);
+                        this.updateCooldown();
+                    });
             }
-            const setRemaining = () => {
-                let remaining =
-                    this.lastTimestamp + cooldownValue * 1000 - Date.now();
-                this.remaining.set(remaining / 1000);
-            };
-            setRemaining();
-            interval = setInterval(() => {
-                setRemaining();
-            }, 1000);
         });
-        this.unsub = () => {
-            onValue();
-
-            cooldownUsub?.();
-
-            if (interval != null) {
-                clearInterval(interval);
-            }
-        };
     }
 
-    static new<P extends string>(
-        path: number extends PathType<P, DatabaseSchema> ? P : never,
-        currentCooldown: Writable<number> | number
-    ) {
-        return new this(path, currentCooldown);
+    remaining = derived(
+        [this.future, nowStore],
+        ([f, now]) => (f - now) / 1000
+    );
+    finished = derived(this.remaining, v => {
+        const f = v <= 0;
+        this.isStarted = !f;
+        return f;
+    });
+    display = derived(this.remaining, v => timerDisplay(v));
+
+    public cleanup() {
+        this.loginDataUnsub?.();
+        this.unsubCooldown?.();
+    }
+
+    public async updateCooldown() {
+        const cooldown = (await this.cooldownGetter()).data;
+
+        this.future.set(getServerNow() + cooldown);
+    }
+
+    public start(cooldown: number) {
+        if (this.isStarted) return;
+
+        this.future.set(getServerNow() + cooldown);
     }
 }

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Editor from "../Editor.svelte";
-    import { alertHasDarkReader } from "../utils/document";
+    import { alertHasDarkReader, alertIsLandscape } from "../utils/document";
     import DataPopup from "../DataPopup.svelte";
 
     import {
@@ -11,7 +11,11 @@
         spritesheetProgress,
     } from "../load_wasm";
     import ToastContainers from "../components/ToastContainers.svelte";
-    import { rawSpritesheetData } from "../stores";
+    import {
+        canPlaceEditDelete,
+        eventStatus,
+        rawSpritesheetData,
+    } from "../stores";
     // import JetpackAnim from "./JetpackAnim.svelte";
     import jetpackAnimText from "./assets/jetpack_anim.svg?raw";
     import ColoredName from "../components/ColoredName.svelte";
@@ -24,6 +28,8 @@
     import Guide from "../guide/Guide.svelte";
     import { beginGuide } from "../guide/guide";
     import { DEBUG } from "../utils/debug";
+    import Toast from "../utils/toast";
+    import { signOut } from "../firebase/auth";
 
     let openTrans = tweened(
         0,
@@ -32,6 +38,7 @@
     );
 
     onMount(() => {
+        alertIsLandscape();
         alertHasDarkReader();
 
         initWasm();
@@ -47,7 +54,7 @@
         $spritesheetProgress.arrayBuffer != null &&
         $rawSpritesheetData != null;
 
-    $: if (loaded) {
+    $: if (loaded && $eventStatus !== "loading") {
         setTimeout(() => {
             $openTrans = 1;
         }, 500);
@@ -72,6 +79,31 @@
     on:keyup={e => {
         if (e.ctrlKey && e.shiftKey && e.key === "F") {
             $DEBUG = !$DEBUG;
+        }
+
+        if (e.key === "Tab") {
+            document.body.classList.add("active-tabbing");
+        }
+    }}
+    on:pointerup={() => {
+        document.body.classList.remove("active-tabbing");
+    }}
+    on:orientationchange={e => {
+        const orientation = window.screen.orientation.type;
+        if (
+            orientation === "landscape-primary" ||
+            orientation === "landscape-secondary"
+        ) {
+            alertIsLandscape(true);
+        }
+    }}
+    on:storage={e => {
+        if (
+            e.key === "authState" &&
+            e.newValue !== "-1" &&
+            $canPlaceEditDelete
+        ) {
+            signOut();
         }
     }}
 />
@@ -149,7 +181,7 @@
                     opacity: ${map($openTrans, 0, 0.3, 1, 0)};
                 `}
             >
-                Created by Flow, Spu7Nix, DreamingInsanity ❤
+                Created by Flow, Spu7Nix, DreamingInsanity&nbsp;❤
             </div>
         </div>
     {/if}
@@ -161,7 +193,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        height: 100vh;
+        height: 100svh;
         width: 100vw;
         background-color: #00368a;
         background-image: var(--bg);

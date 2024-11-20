@@ -3,8 +3,12 @@ import {
     httpsCallable as fHttpsCallable,
     type HttpsCallable,
     type FunctionsErrorCode,
+    connectFunctionsEmulator,
 } from "firebase/functions";
-import { type FirebaseError as FFirebaseError } from "firebase/app";
+import {
+    initializeApp,
+    type FirebaseError as FFirebaseError,
+} from "firebase/app";
 import type {
     ReportUserReq,
     DeleteReq,
@@ -18,10 +22,12 @@ import type {
     MetaReq,
     PlaceRes,
     LevelNameReq,
+    DeleteRes,
+    GradientRes,
+    ReportUserRes,
+    LevelNameRes,
 } from "shared-lib/cloud_functions";
-import { GDColor, GDObjectOpt } from "wasm-lib";
-import { isValidObject, objects } from "shared-lib/gd";
-import { encodeString } from "shared-lib/base_util";
+import { app, cfapp } from "./firebase";
 
 interface TypedPromise<ResolveType, RejectType> extends Promise<ResolveType> {
     catch<TResult = never>(
@@ -53,7 +59,7 @@ type _TypedHttpsCallable<FHttpCallable extends HttpsCallable<any, any>> = (
     ? TypedPromise<Res, FunctionsError>
     : never;
 
-type TypedHttpsCallable<
+export type TypedHttpsCallable<
     RequestData,
     ResponseData = unknown,
 > = _TypedHttpsCallable<HttpsCallable<RequestData, ResponseData>>;
@@ -64,13 +70,24 @@ const httpsCallable = <Req, Res = unknown>(
     return fHttpsCallable(...args) as TypedHttpsCallable<Req, Res>;
 };
 
-const functions = getFunctions();
+const functions = getFunctions(cfapp);
+
+if (typeof window !== "undefined" && __RT_DB_ENV === "local") {
+    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+}
+
 export const placeObject = httpsCallable<PlaceReq, PlaceRes>(
     functions,
     "placeObject"
 );
-export const deleteObject = httpsCallable<DeleteReq>(functions, "deleteObject");
-export const reportUser = httpsCallable<ReportUserReq>(functions, "reportUser");
+export const deleteObject = httpsCallable<DeleteReq, DeleteRes>(
+    functions,
+    "deleteObject"
+);
+export const reportUser = httpsCallable<ReportUserReq, ReportUserRes>(
+    functions,
+    "reportUser"
+);
 export const banUser = httpsCallable<BanReq>(functions, "banUser");
 export const reportedUserOperation = httpsCallable<ReportedUserOperationReq>(
     functions,
@@ -84,12 +101,42 @@ export const submitKofiTxId = httpsCallable<KofiReq>(
     functions,
     "submitKofiTxId"
 );
-export const changeNameGradient = httpsCallable<GradientReq>(
+export const changeNameGradient = httpsCallable<GradientReq, GradientRes>(
     functions,
     "changeNameGradient"
 );
 export const setMeta = httpsCallable<MetaReq>(functions, "setMeta");
-export const setLevelNameLetter = httpsCallable<LevelNameReq>(
+export const setLevelNameLetter = httpsCallable<LevelNameReq, LevelNameRes>(
     functions,
     "setLevelNameLetter"
 );
+
+export const getPlaceCooldown = httpsCallable<{}, number>(
+    functions,
+    "getPlaceCooldown"
+);
+export const getDeleteCooldown = httpsCallable<{}, number>(
+    functions,
+    "getDeleteCooldown"
+);
+export const getReportCooldown = httpsCallable<{}, number>(
+    functions,
+    "getReportCooldown"
+);
+export const getGradientCooldown = httpsCallable<{}, number>(
+    functions,
+    "getGradientCooldown"
+);
+export const getCharacterCooldown = httpsCallable<{}, number>(
+    functions,
+    "getCharacterCooldown"
+);
+const getServerTime = httpsCallable<{}, number>(functions, "getServerTime");
+
+export const getExactServerTime = async () => {
+    const startTime = Date.now();
+    const serverTime = (await getServerTime()).data;
+    const endTime = Date.now();
+    const roundTripTime = endTime - startTime;
+    return serverTime + roundTripTime / 2; // time when it returns, not when it was sent
+};

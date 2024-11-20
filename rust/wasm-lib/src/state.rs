@@ -13,9 +13,10 @@ use rust_shared::{
             LEVEL_WIDTH_UNITS,
         },
         object::{GDColor, GDObject},
+        HitboxType, ObjectCategory,
     },
     map,
-    util::{now, point_in_triangle, Rect},
+    util::{point_in_triangle, Rect},
 };
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
@@ -32,6 +33,7 @@ use crate::{
         },
         state::RenderState,
     },
+    utilgen::OBJECT_INFO,
     RustError,
 };
 
@@ -70,9 +72,11 @@ pub struct State {
     // select_depth: u32,
     pub(crate) show_collidable: bool,
     pub(crate) hide_triggers: bool,
+    pub(crate) no_rotating_objects: bool,
     pub(crate) hide_grid: bool,
     pub(crate) hide_ground: bool,
     pub(crate) hide_outline: bool,
+    pub(crate) select_hazards: bool,
 
     /// unix time, negative before event starts
     //pub(crate) event_elapsed: f64,
@@ -126,16 +130,18 @@ impl State {
             selected_object: None,
             show_collidable: false,
             hide_triggers: false,
+            no_rotating_objects: false,
             hide_grid: false,
             hide_ground: false,
             hide_outline: false,
+            select_hazards: false,
             event_start: f64::INFINITY,
             event_end: f64::INFINITY,
             ending_fully_done: f64::INFINITY,
             render,
             countdown: Countdown::new(),
             stats_display: StatsDisplay::new(),
-            now: 0.0,
+            now: js_sys::Date::now(), // default to client now before server now is gotten
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
@@ -143,6 +149,7 @@ impl State {
     }
     pub fn view_transform(&self) -> Affine2 {
         let scale = self.get_zoom_scale();
+        // let size_scale = (self.)
 
         Affine2::from_scale(vec2(scale, scale)) * Affine2::from_translation(-self.camera_pos)
 
@@ -278,7 +285,9 @@ impl State {
     }
 
     pub fn get_zoom_scale(&self) -> f32 {
-        2.0f32.powf(self.zoom / 12.0)
+        let size_zoom = (self.width as f32 / 1600.0).max(self.height as f32 / 900.0);
+
+        2.0f32.powf(self.zoom / 12.0) * size_zoom
     }
     pub fn get_camera_pos(&self) -> Vec<f32> {
         vec![self.camera_pos.x, self.camera_pos.y]
@@ -318,7 +327,7 @@ impl State {
         self.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.zoom = v.clamp(-8.0, 100.0);
+        self.zoom = v.clamp(-16.0, 36.0);
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
@@ -342,7 +351,7 @@ impl State {
         if let Ok(key) = key.into_bytes().try_into() {
             // let key: DbKey = key;
 
-            self.level.add_object(obj.into_obj(), key, None);
+            self.level.add_object(obj.into_obj(), key, None, self.now);
         }
         Ok(())
     }
@@ -380,9 +389,9 @@ impl State {
             // check if it is in the hashmap already
             //if not, set it to subscribe
             match self.level.chunks.get_mut(&v) {
-                Some(chunk) => chunk.last_time_visible = now(),
+                Some(chunk) => chunk.last_time_visible = self.now,
                 None => {
-                    self.level.chunks.insert(v, LevelChunk::new());
+                    self.level.chunks.insert(v, LevelChunk::new(self.now));
                     out.push(v);
                 }
             }
@@ -392,10 +401,9 @@ impl State {
     }
     pub fn get_chunks_to_unsub(&mut self) -> Vec<ChunkCoord> {
         let mut out = vec![];
-        let now = now();
 
         self.level.chunks.retain(|coord, chunk| {
-            if now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
+            if self.now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
                 out.push(*coord);
                 false
             } else {
@@ -431,6 +439,20 @@ impl State {
                 let cy = chunk.y + j;
                 self.level
                     .foreach_obj_in_chunk(ChunkCoord { x: cx, y: cy }, |key, obj| {
+                        let info = OBJECT_INFO[obj.id as usize];
+
+                        if self.show_collidable && info.hitbox_type == HitboxType::NoHitbox {
+                            return;
+                        }
+                        if self.hide_grid && info.category == ObjectCategory::Triggers {
+                            return;
+                        }
+                        if self.select_hazards
+                            && ![HitboxType::Hazard, HitboxType::Solid].contains(&info.hitbox_type)
+                        {
+                            return;
+                        }
+
                         let rect = obj.padded_rect(pad);
 
                         let t = obj.transform();
@@ -508,6 +530,9 @@ impl State {
     pub fn set_hide_triggers(&mut self, to: bool) {
         self.hide_triggers = to;
     }
+    pub fn set_no_rotating_objects(&mut self, to: bool) {
+        self.no_rotating_objects = to;
+    }
     pub fn set_hide_grid(&mut self, to: bool) {
         self.hide_grid = to;
     }
@@ -516,6 +541,13 @@ impl State {
     }
     pub fn set_hide_ground(&mut self, to: bool) {
         self.hide_ground = to;
+    }
+    pub fn set_select_hazards(&mut self, to: bool) {
+        self.select_hazards = to;
+    }
+
+    pub fn set_now(&mut self, to: f64) {
+        self.now = to;
     }
 
     pub fn set_event_start(&mut self, to: f64) {
@@ -707,8 +739,6 @@ impl State {
     }
 
     pub fn render(&mut self, delta: f32) {
-        self.now = now();
-
         fn ease_in_out_quart(x: f32) -> f32 {
             if x < 0.5 {
                 8.0 * x * x * x * x

@@ -32,5 +32,5 @@
     on:visible={onImageVisible}
     skeleton
     class="object-contain w-full h-full"
-    style={`transform: scale(${scale})`}
+    style={`transform: scale(${scale}); ${objects[id]?.sheet == "PixelSheet01" ? "image-rendering: pixelated;" : ""}`}
 />

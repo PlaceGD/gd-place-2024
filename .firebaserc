@@ -1,5 +1,23 @@
 {
-  "projects": {
-    "default": "gd-place-2023"
-  }
+    "projects": {
+        "prod": "gd-place-2023",
+        "dev": "gd-place-2023-dev"
+    },
+    "targets": {
+        "gd-place-2023": {
+            "hosting": {
+                "prod": [
+                    "gd-place-2023-prod"
+                ]
+            }
+        },
+        "gd-place-2023-dev": {
+            "hosting": {
+                "dev": [
+                    "gd-place-2023-dev"
+                ]
+            }
+        }
+    },
+    "etags": {}
 }

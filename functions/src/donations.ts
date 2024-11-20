@@ -8,19 +8,11 @@ import {
     VALID_KOFI_TRANSACTION_ID,
 } from "shared-lib/kofi";
 import { onCallAuthLogger } from "./utils/on_call";
-import { GradientReq, KofiReq } from "shared-lib/cloud_functions";
+import { GradientReq, GradientRes, KofiReq } from "shared-lib/cloud_functions";
 import { GRADIENT_COOLDOWN_SECONDS } from "shared-lib/user";
-import { smartDatabase } from "src";
+import { smartDatabase, mailjetClient } from "./exports";
 import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 import Error from "./utils/errors";
-
-let mailjetClient: Mailjet;
-onInit(() => {
-    mailjetClient = new Mailjet({
-        apiKey: process.env["MAILJET_API_KEY"]!,
-        apiSecret: process.env["MAILJET_API_SECRET"]!,
-    });
-});
 
 export type KofiDonation = {
     verification_token: string;
@@ -151,6 +143,18 @@ export const onKofiDonation = onRequest(
 
         const db = smartDatabase();
 
+        // dont do anything if the event ended
+        if (
+            Date.now() >
+            (await db.ref("metaVariables/eventEndTime").get()).val()
+        ) {
+            logger.error("Event has ended");
+            logger.finish();
+
+            response.status(200).send();
+            return;
+        }
+
         // try first by checking the username of the kofi donator against our database
         const kofiDonatorUsername = (jsonData.from_name ?? "-").toLowerCase();
         const kofiDonatorMaybeAccountData = (
@@ -199,7 +203,7 @@ export const onKofiDonation = onRequest(
                     ],
                     Subject: `GD Place Donation! (#${jsonData.message_id.split("-")[1]})`,
                     HTMLPart: `
-<img src="https://gd-place-2023.web.app/images/logo_donation.png" alt="Happy GD Place logo" style="width: 100px; height: 100px"/>
+<img src="https://place.gd/images/logo_donation.png" alt="Happy GD Place logo" style="width: 100px; height: 100px"/>
 <h1>Thank you for donating to GD Place!</h1>
 <p><strong>You should now be able to change the colors of your username in the settings menu!</strong></p>
 <p>If the website asks you for a code, use this:</p>
@@ -266,69 +270,68 @@ const VALID_GRADIENT = new RegExp(
 );
 
 // #region changeNameGradient
-export const changeNameGradient = onCallAuthLogger<GradientReq>(
-    "changeNameGradient",
-    async (request, logger) => {
-        const db = smartDatabase();
-        const data = request.data;
+export const changeNameGradient = onCallAuthLogger<
+    GradientReq,
+    Promise<GradientRes>
+>("changeNameGradient", async (request, logger) => {
+    const db = smartDatabase();
+    const data = request.data;
 
-        // await validateTurnstile(
-        //     process.env["TURNSTILE_LOGIN_PRIV_KEY"],
-        //     data.turnstileResp,
-        //     request.rawRequest,
-        //     logger
-        // );
-        let now = Date.now();
+    // await validateTurnstile(
+    //     process.env["TURNSTILE_LOGIN_PRIV_KEY"],
+    //     data.turnstileResp,
+    //     request.rawRequest,
+    //     logger
+    // );
+    let now = Date.now();
 
-        const userDetails = await getCheckedUserDetails(db, request.auth.uid);
+    const userDetails = await getCheckedUserDetails(db, request.auth.uid);
 
-        // const timeNextGradient = userDetails.val.epochNextGradient;
-        // if (Date.now() < timeNextGradient) {
-        //     throw Error.code(205, "permission-denied");
-        // }
+    // const timeNextGradient = userDetails.val.epochNextGradient;
+    // if (Date.now() < timeNextGradient) {
+    //     throw Error.code(205, "permission-denied");
+    // }
 
-        if (!userDetails.val.hasDonated) {
-            throw Error.code(207, "permission-denied");
-        }
-
-        // remove the associated donation info once the user has updated their gradient
-        // for safety
-        const txIdRef = db.ref(`/claimedDonations/${request.auth.uid}`);
-        const txId = (await txIdRef.get()).val();
-        if (txId != null) {
-            await txIdRef.remove();
-            await db.ref(`/activeDonations/${txId}`).remove();
-        }
-
-        const grad = data.grad;
-
-        if (!VALID_GRADIENT.test(grad)) {
-            throw Error.code(105, "invalid-argument");
-        }
-
-        await checkedTransaction(
-            userDetails.ref.child("lastGradientTimestamp"),
-            lastGradient =>
-                now >= lastGradient + GRADIENT_COOLDOWN_SECONDS * 1000,
-            () => Error.code(205, "permission-denied"),
-            () => now // + REPORT_COOLDOWN_SECONDS * 1000
-        );
-
-        await db
-            .ref(
-                `userName/${userDetails.val.username.toLowerCase()}/displayColor`
-            )
-            .set(grad);
-
-        // nextGradient += GRADIENT_COOLDOWN_SECONDS * 1000;
-
-        // await Promise.all([
-        //     // userDetails.ref.child("epochNextGradient").set(nextGradient),
-        //     db
-        //         .ref(
-        //             `userName/${userDetails.val.username.toLowerCase()}/displayColor`
-        //         )
-        //         .set(grad),
-        // ]);
+    if (!userDetails.val.hasDonated) {
+        throw Error.code(207, "permission-denied");
     }
-);
+
+    // remove the associated donation info once the user has updated their gradient
+    // for safety
+    const txIdRef = db.ref(`/claimedDonations/${request.auth.uid}`);
+    const txId = (await txIdRef.get()).val();
+    if (txId != null) {
+        await txIdRef.remove();
+        await db.ref(`/activeDonations/${txId}`).remove();
+    }
+
+    const grad = data.grad;
+
+    if (!VALID_GRADIENT.test(grad)) {
+        throw Error.code(105, "invalid-argument");
+    }
+
+    await checkedTransaction(
+        userDetails.ref.child("lastGradientTimestamp"),
+        lastGradient => now >= lastGradient + GRADIENT_COOLDOWN_SECONDS * 1000,
+        () => Error.code(205, "permission-denied"),
+        () => now // + REPORT_COOLDOWN_SECONDS * 1000
+    );
+
+    await db
+        .ref(`userName/${userDetails.val.username.toLowerCase()}/displayColor`)
+        .set(grad);
+
+    return { cooldown: GRADIENT_COOLDOWN_SECONDS * 1000 };
+
+    // nextGradient += GRADIENT_COOLDOWN_SECONDS * 1000;
+
+    // await Promise.all([
+    //     // userDetails.ref.child("epochNextGradient").set(nextGradient),
+    //     db
+    //         .ref(
+    //             `userName/${userDetails.val.username.toLowerCase()}/displayColor`
+    //         )
+    //         .set(grad),
+    // ]);
+});

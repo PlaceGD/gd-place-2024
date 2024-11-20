@@ -18,6 +18,8 @@ const TURNSTILE_LOGIN_SITE_KEY = "'0x4AAAAAAAkCQrZbhWcKuz_T'";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
     define: {
+        __CLOUD_FUNCTIONS_ENV: `"${process.env["CLOUD_FUNCTIONS_ENV"]}"`,
+        __RT_DB_ENV: `"${process.env["RT_DB_ENV"]}"`,
         __DEBUG: mode == "development",
         // __HAS_OPT_WASM: existsSync("wasm-lib/pkg/wasm_lib_bg.wasm-opt.wasm"),
         __TURNSTILE_LOGIN_SITE_KEY: TURNSTILE_LOGIN_SITE_KEY,
@@ -34,6 +36,10 @@ export default defineConfig(({ mode }) => ({
                 "/shared-lib",
             ],
         },
+        watch: {
+            ignored: ["**/emulator_data/**"],
+        },
+        hmr: false,
     },
     optimizeDeps: {
         esbuildOptions: {
@@ -70,24 +76,6 @@ export default defineConfig(({ mode }) => ({
     plugins: [
         sveltekit(),
         topLevelAwait(),
-        // preload image assets (only works on `vite build`)
-        // UnpluginInjectPreload({
-        //     files: [
-        //         {
-        //             outputMatch: /ui\/.*\.(png|svg|otf|mp3)/,
-        //             attributes: {
-        //                 rel: "preload",
-        //             },
-        //         },
-        //         {
-        //             outputMatch: /.*\.(png|svg|otf|mp3)/,
-        //             attributes: {
-        //                 rel: "preload",
-        //             },
-        //         },
-        //     ],
-        //     injectTo: "head-prepend",
-        // }),
         mode !== "development"
             ? ViteImageOptimizer({
                   exclude: ["spritesheet.png"],
@@ -109,7 +97,7 @@ export default defineConfig(({ mode }) => ({
                   },
               })
             : null,
-        FullReload(["src/**/*"]),
+        FullReload(["**/*"], { always: false, root: "./src/", log: true }),
     ],
     build: {
         rollupOptions: {

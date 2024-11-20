@@ -92,6 +92,10 @@ export const FIREBASE_ERRORS = {
         code: 211,
         message: "Cannot change letter at current time",
     },
+    [212]: {
+        code: 212,
+        message: "Event end nearing",
+    },
     // 300 - already exists
     [300]: {
         code: 300,
@@ -148,26 +152,37 @@ export const DEV_UIDS: string[] = [
     "LtbULkrh8sRas6y52oieUlApCLo1",
 ];
 
-export type PlaceReq = { object: string; timestamp: number };
-export type PlaceRes = string;
+export type PlaceReq = { object: string };
+export type PlaceRes = { key: string; cooldown: number };
 
 export type DeleteReq = { chunkId: ChunkID; objId: string };
+export type DeleteRes = { cooldown: number };
+
 export type InitWithUsernameReq = {
     username: string;
     uid: string;
     turnstileResp: string;
 };
+
 export type ReportUserReq = {
     username: string;
     // turnstileResp: string;
     x: number;
     y: number;
 };
-export type ReportedUserOperationReq = {
-    operation: "ignore" | "ban";
-    reason: string;
-    reportedUserUid: string;
-};
+export type ReportUserRes = { cooldown: number };
+
+export type ReportedUserOperationReq =
+    | {
+          operation: "ban";
+          reason: string;
+          userUid: string;
+          reportKeys: string[];
+      }
+    | {
+          operation: "ignore";
+          reportKeys: string[];
+      };
 export type BanReq = {
     reason: string;
     username: string;
@@ -175,9 +190,11 @@ export type BanReq = {
 export type KofiReq = {
     txId: KofiTxId;
 };
+
 export type GradientReq = {
     grad: string;
 };
+export type GradientRes = { cooldown: number };
 
 export type MetaOperation =
     | {
@@ -240,4 +257,7 @@ export type MetaReq = {
 export type LevelNameReq = {
     letter: string;
     index: number;
+};
+export type LevelNameRes = {
+    cooldown: number;
 };

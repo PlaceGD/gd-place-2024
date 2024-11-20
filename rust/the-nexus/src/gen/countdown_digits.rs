@@ -102,7 +102,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     }
 
     let bg = parse_gmd_file(include_str!(
-        "../../../rust-shared/src/countdowndigits/bg.gmd"
+        "../../../rust-shared/src/countdowndigits/bgnew.gmd"
     ));
 
     let bg_x = -7.0 * 30.0;
@@ -117,8 +117,9 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             .collect(),
     };
 
-    let hours_colon = DigitObjects {
+    let hours_colon_deco = DigitObjects {
         objs: bg
+            .clone()
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("2"))
@@ -126,7 +127,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             .collect(),
     };
 
-    let minutes_colon = DigitObjects {
+    let minutes_colon_deco = DigitObjects {
         objs: bg
             .objects
             .iter()
@@ -135,10 +136,41 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             .collect(),
     };
 
+    let mut colons_missing_objects = HashSet::new();
+
+    let hours_colon = [4, 6, 7, 8, 10, 11].map(|group| DigitObjects {
+        objs: bg
+            .objects
+            .iter()
+            .filter(|o| o.get(&57) == Some(&group.to_string()))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
+            .collect(),
+    });
+
+    let minutes_colon = [12, 14, 15, 16, 18, 19].map(|group| DigitObjects {
+        objs: bg
+            .objects
+            .iter()
+            .filter(|o| o.get(&57) == Some(&group.to_string()))
+            .map(|o| {
+                if !all_avaliable_ids.contains(&o[&1].parse::<u16>().unwrap()) {
+                    colons_missing_objects.insert(o[&1].parse::<u16>().unwrap());
+                }
+                to_gdobject(o, bg_x, bg_y, &bg)
+            })
+            .collect(),
+    });
+
+    for id in colons_missing_objects {
+        println!("missing colon object {}", id);
+    }
+
     let mut writer = Cursor::new(Vec::new());
     CountdownDigitSets(
         sets.map(|v| DigitSet(v)),
         days_marker,
+        hours_colon_deco,
+        minutes_colon_deco,
         hours_colon,
         minutes_colon,
     )
@@ -150,6 +182,12 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
 fn replace_obj_id(mut o: HashMap<u16, String>) -> HashMap<u16, String> {
     let new_id = match o.get(&1).unwrap().as_ref() {
         "955" => "211",
+
+        "150" => "3635",
+        "133" => "3633",
+        "460" => "3631",
+        "494" => "3632",
+        "50" => "3621",
 
         a => a,
     };

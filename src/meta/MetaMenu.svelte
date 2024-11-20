@@ -2,7 +2,15 @@
     import { onMount } from "svelte";
     import FadedScroll from "../components/FadedScroll.svelte";
     import ToggleSwitch from "../components/ToggleSwitch.svelte";
-    import { ExclusiveMenus, loginData, openMenu } from "../stores";
+    import {
+        addDebugTimeOffset,
+        ExclusiveMenus,
+        getServerNow,
+        loginData,
+        openMenu,
+        savePosition,
+        setDebugTimeOffset,
+    } from "../stores";
     import Button from "../components/Button.svelte";
     import { menuHeight } from "../utils/transitions";
     import DarkInput from "../components/DarkInput.svelte";
@@ -22,6 +30,7 @@
         nameDuration: 0,
         postponeStart: 0,
         postponeEnd: 0,
+        timeOffset: 0,
         modChangeUsername: "",
         unbanUsername: "",
         usernameOrID: "",
@@ -30,7 +39,13 @@
     };
 
     const meta = (data: MetaReq["op"]) => {
+        const confirmationString = "GOOGY GOGY GOOF KEY";
+        const userConfirmation = prompt(
+            `Type "${confirmationString}" to confirm:`
+        );
+
         if (
+            userConfirmation === confirmationString &&
             confirm(
                 `You are about to update "${data.type.replace("_", " ")}"! Are you sure?`
             ) &&
@@ -67,7 +82,7 @@
                     bind:value={inputValues.announcementText}
                 ></DarkInput>
             </div>
-            <div class="flex flex-row w-full">
+            <div class="flex flex-row w-full gap-1">
                 <WhiteButton
                     class="w-full"
                     on:click={() => {
@@ -89,134 +104,163 @@
         </div>
         <div class="w-full min-h-[1px] bg-white/50" />
         <div class="flex flex-col gap-2 flex-center">
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Place</h1>
-                <DarkInput
-                    maxLength={1000}
-                    bind:value={inputValues.placeTimer}
-                    hardValidInput={/^-?\d*$/}
-                ></DarkInput>
-                <WhiteButton
-                    on:click={() =>
-                        meta({
-                            type: "place_timer",
-                            to: inputValues.placeTimer,
-                        })}
-                >
-                    Set
-                </WhiteButton>
-            </div>
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Delete</h1>
-                <DarkInput
-                    maxLength={1000}
-                    bind:value={inputValues.deleteTimer}
-                    hardValidInput={/^-?\d*$/}
-                ></DarkInput>
-                <WhiteButton
-                    on:click={() =>
-                        meta({
-                            type: "delete_timer",
-                            to: inputValues.deleteTimer,
-                        })}
-                >
-                    Set
-                </WhiteButton>
-            </div>
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Event Start</h1>
-                <DarkInput
-                    maxLength={1000}
-                    bind:value={inputValues.eventStart}
-                    hardValidInput={/^-?\d*$/}
-                ></DarkInput>
-                <WhiteButton
-                    on:click={() =>
-                        meta({
-                            type: "event_start",
-                            to: inputValues.eventStart,
-                        })}
-                >
-                    Set
-                </WhiteButton>
-            </div>
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Event End</h1>
-                <DarkInput
-                    maxLength={1000}
-                    bind:value={inputValues.eventEnd}
-                    hardValidInput={/^-?\d*$/}
-                ></DarkInput>
+            <!-- svelte-ignore missing-declaration -->
+            {#if __CLOUD_FUNCTIONS_ENV === "dev"}
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Place</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.placeTimer}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "place_timer",
+                                to: inputValues.placeTimer,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Delete</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.deleteTimer}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "delete_timer",
+                                to: inputValues.deleteTimer,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Event Start</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.eventStart}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "event_start",
+                                to: inputValues.eventStart,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Event End</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.eventEnd}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "event_end",
+                                to: inputValues.eventEnd,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Name Duration</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.nameDuration}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "name_duration",
+                                duration: inputValues.nameDuration,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Postpone start</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.postponeStart}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "postpone_start",
+                                secs: inputValues.postponeStart,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+                <div class="flex w-full gap-2 flex-center">
+                    <h1 class="w-32 font-pusab text-stroke">Postpone end</h1>
+                    <DarkInput
+                        maxLength={1000}
+                        bind:value={inputValues.postponeEnd}
+                        hardValidInput={/^-?\d*$/}
+                    ></DarkInput>
+                    <WhiteButton
+                        on:click={() =>
+                            meta({
+                                type: "postpone_end",
+                                secs: inputValues.postponeEnd,
+                            })}
+                    >
+                        Set
+                    </WhiteButton>
+                </div>
+
                 <WhiteButton
                     on:click={() =>
                         meta({
                             type: "event_end",
-                            to: inputValues.eventEnd,
+                            to: getServerNow() + 15000,
                         })}
                 >
-                    Set
+                    Run End Sequence
                 </WhiteButton>
-            </div>
+            {/if}
+
             <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Name Duration</h1>
+                <h1 class="w-32 font-pusab text-stroke">Time offset</h1>
                 <DarkInput
                     maxLength={1000}
-                    bind:value={inputValues.nameDuration}
+                    bind:value={inputValues.timeOffset}
                     hardValidInput={/^-?\d*$/}
                 ></DarkInput>
                 <WhiteButton
-                    on:click={() =>
-                        meta({
-                            type: "name_duration",
-                            duration: inputValues.nameDuration,
-                        })}
+                    on:click={() => setDebugTimeOffset(inputValues.timeOffset)}
                 >
                     Set
                 </WhiteButton>
-            </div>
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Postpone start</h1>
-                <DarkInput
-                    maxLength={1000}
-                    bind:value={inputValues.postponeStart}
-                    hardValidInput={/^-?\d*$/}
-                ></DarkInput>
+
                 <WhiteButton
-                    on:click={() =>
-                        meta({
-                            type: "postpone_start",
-                            secs: inputValues.postponeStart,
-                        })}
+                    on:click={() => addDebugTimeOffset(inputValues.timeOffset)}
                 >
-                    Set
-                </WhiteButton>
-            </div>
-            <div class="flex w-full gap-2 flex-center">
-                <h1 class="w-32 font-pusab text-stroke">Postpone end</h1>
-                <DarkInput
-                    maxLength={1000}
-                    bind:value={inputValues.postponeEnd}
-                    hardValidInput={/^-?\d*$/}
-                ></DarkInput>
-                <WhiteButton
-                    on:click={() =>
-                        meta({
-                            type: "postpone_end",
-                            secs: inputValues.postponeEnd,
-                        })}
-                >
-                    Set
+                    +
                 </WhiteButton>
             </div>
 
             <WhiteButton
-                on:click={() =>
-                    meta({
-                        type: "event_end",
-                        to: Date.now() + 15000,
-                    })}
+                on:click={() => (savePosition.value = !savePosition.value)}
             >
-                Run End Sequence
+                Toggle save pos
             </WhiteButton>
 
             <div class="w-full min-h-[1px] bg-white/50" />

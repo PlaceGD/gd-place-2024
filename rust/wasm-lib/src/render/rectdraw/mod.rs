@@ -5,7 +5,6 @@ use rust_shared::{
     gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
     map,
     sprite::SpriteInfo,
-    util::now,
 };
 use std::{
     f32::consts::PI,
@@ -49,14 +48,50 @@ fn ease_out_expo(x: f32) -> f32 {
 
 use glam::Vec3Swizzles;
 
+const fn is_rotating_obj(id: u16) -> bool {
+    matches!(
+        id,
+        1705 | 1706
+            | 1707
+            | 1708
+            | 1709
+            | 1710
+            | 1734
+            | 1735
+            | 1736
+            | 186
+            | 187
+            | 188
+            | 679
+            | 85
+            | 86
+            | 87
+            | 137
+            | 138
+            | 394
+            | 395
+            | 1058
+            | 1059
+            | 1752
+            | 1831
+            | 1832
+            | 999
+            | 1000
+            | 1833
+            | 1834
+    )
+}
+
 pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
     sprite: SpriteInfo,
     obj: &GDObject,
     color: Vec4,
+    color_overridden: bool,
     key: K,
     end_trans01: f32,
+    is_countdown: bool,
 ) {
     if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
         return;
@@ -96,6 +131,12 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     }
 
     billy.apply_transform(obj.transform());
+    if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
+        let rand = key.random_num(10);
+        let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
+
+        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
+    }
 
     billy.scale(vec2(scaleup, scaleup));
     billy.rotate(angle_offset);
@@ -109,7 +150,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
-    tint_color *= if !state.show_collidable {
+    tint_color *= if !state.show_collidable || color_overridden {
         if info.category == ObjectCategory::Triggers {
             vec4(1.0, 1.0, 1.0, 1.0)
         } else {
@@ -229,6 +270,7 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
     level: &Level<K>,
     mut color_override: impl FnMut(K, &GDObject, bool) -> Option<Vec4>,
     end_trans01: f32,
+    is_countdown: bool,
 ) {
     //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
     let mut ending_stars = Vec::new();
@@ -273,11 +315,21 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                                     if let Some(sprite) = sprites[obj.id as usize] {
                                         // console_log!("-> {:?} {}", draw, batch_idx);
                                         if color.blending == (batch_idx == 0) {
-                                            let color = color_override(*key, obj, bottom_texture)
-                                                .unwrap_or(Vec4::from_array(
-                                                    [color.r, color.g, color.b, color.opacity]
-                                                        .map(|v| v as f32 / 255.0),
-                                                ));
+                                            let (color, overriden) =
+                                                color_override(*key, obj, bottom_texture)
+                                                    .map(|v| (v, true))
+                                                    .unwrap_or((
+                                                        Vec4::from_array(
+                                                            [
+                                                                color.r,
+                                                                color.g,
+                                                                color.b,
+                                                                color.opacity,
+                                                            ]
+                                                            .map(|v| v as f32 / 255.0),
+                                                        ),
+                                                        false,
+                                                    ));
                                             // let color = if state.selected_object == Some(*key) {
                                             //     selected_color(detail)
                                             // } else {
@@ -293,8 +345,10 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                                                 sprite,
                                                 obj,
                                                 color,
+                                                overriden,
                                                 *key,
                                                 end_trans01,
+                                                is_countdown,
                                             );
                                         }
                                     }
@@ -393,7 +447,26 @@ pub fn draw_ending_sparkle<K: ObjKey + Default + Hash + Eq + Copy>(
     //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
 
-    billy.apply_transform(obj.transform());
+    // billy.apply_transform({
+    //     glam::Affine2::from_mat2_translation(
+    //         glam::mat2(vec2(1.0, 0.0), vec2(0.0, 1.0)),
+    //         vec2(obj.x, obj.y),
+    //     )
+    // });
+    billy.apply_transform({
+        let this = &obj;
+        let scale_x = OBJECT_INFO[choice].builtin_scale_x / 4.0;
+        let scale_y = OBJECT_INFO[choice].builtin_scale_y / 4.0;
+
+        glam::Affine2::from_mat2_translation(
+            glam::mat2(
+                vec2(this.ix * scale_x, this.iy * scale_x),
+                vec2(this.jx * scale_y, this.jy * scale_y),
+            ),
+            vec2(this.x, this.y),
+        )
+    });
+    //billy.translate(vec2(obj.x, obj.y));
     let reveal = ((end_anim_time - delay) / 3.5).clamp(0.0, 1.0);
     billy.scale(vec2(
         reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),

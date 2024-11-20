@@ -75,7 +75,7 @@
     } from "svelte/transition";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
     import { timerDisplay } from "shared-lib/util";
-    import { SyncedCooldown } from "../utils/cooldown";
+    import { Cooldown } from "../utils/cooldown";
     import { db } from "../firebase/firebase";
     import { onDestroy, onMount } from "svelte";
     import RadialCooldown from "../components/RadialCooldown.svelte";
@@ -84,10 +84,7 @@
     import SFXSongTab from "./edit/SFXSongTab.svelte";
     import { playSound, stopSound, transferSoundChannel } from "../utils/audio";
     import { GUIDE_ELEM_IDS, walmart } from "../guide/guide";
-    import {
-        currentDeleteCooldown,
-        currentPlaceCooldown,
-    } from "../firebase/cooldowns";
+    import { deleteCooldown, placeCooldown } from "../firebase/cooldowns";
     import Loading from "../components/Loading.svelte";
     import PlaceDeleteButton from "./PlaceDeleteButton.svelte";
 
@@ -240,7 +237,7 @@
                 class="flex flex-col items-center minimize menu-panel justify-evenly focus:outline focus:outline-1 focus:outline-offset-1"
             >
                 <button
-                    class="absolute flex w-full p-3 md:p-2 xs:p-1 flex-center"
+                    class="absolute flex w-full h-full p-3 md:p-2 xs:p-1 flex-center"
                     on:click={() => {
                         $menuMinimized = !$menuMinimized;
                     }}
@@ -248,7 +245,7 @@
                 >
                     <Minimize
                         class={cx({
-                            "cursor-pointer": true,
+                            "cursor-pointer w-full h-full": true,
                             "rotate-180": $menuMinimized,
                         })}
                     ></Minimize>
@@ -323,13 +320,13 @@
                         data-minimised={+$menuMinimized}
                     >
                         <RadialCooldown
-                            max={$currentPlaceCooldown}
+                            max={$placeCooldown}
                             remaining={placeCooldownRemaining}
                         >
                             <Build class="w-full h-full stroke-[1.5]" />
                         </RadialCooldown>
                         <RadialCooldown
-                            max={$currentDeleteCooldown}
+                            max={$deleteCooldown}
                             remaining={deleteCooldownRemaining}
                         >
                             <Delete class="w-full h-full stroke-[1.5]" />
@@ -353,7 +350,7 @@
                                 aria-label="Build Tab"
                             >
                                 <RadialCooldown
-                                    max={$currentPlaceCooldown}
+                                    max={$placeCooldown}
                                     remaining={placeCooldownRemaining}
                                 >
                                     <Build
@@ -400,7 +397,7 @@
                                 data-guide={GUIDE_ELEM_IDS.placeMenuDeleteButton}
                             >
                                 <RadialCooldown
-                                    max={$currentDeleteCooldown}
+                                    max={$deleteCooldown}
                                     remaining={deleteCooldownRemaining}
                                 >
                                     <Delete

@@ -1,4 +1,8 @@
 {
+    "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/master/schema/firebase-config.json",
+    "database": {
+        "rules": "firebase-database-rules.json"
+    },
     "functions": [
         {
             "source": "functions",
@@ -12,16 +16,47 @@
             "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"]
         }
     ],
-    "hosting": {
-        "public": "build",
-        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "cleanUrls": true,
-        "trailingSlash": true,
-        "rewrites": [
-            {
-                "regex": "\\/.+",
-                "destination": "/index.html"
-            }
-        ]
-    }
+    "emulators": {
+        "functions": {
+            "port": 5001
+        },
+        "database": {
+            "port": 9000
+        },
+        "auth": {
+            "port": 8000
+        },
+        "ui": {
+            "enabled": true
+        },
+        "singleProjectMode": true
+    },
+    "hosting": [
+        {
+            "target": "dev",
+            "public": "build",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+            "cleanUrls": true,
+            "trailingSlash": true,
+            "rewrites": [
+                {
+                    "regex": "\\/.+",
+                    "destination": "/index.html"
+                }
+            ]
+        },
+        {
+            "target": "prod",
+            "public": "build",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+            "cleanUrls": true,
+            "trailingSlash": true,
+            "rewrites": [
+                {
+                    "regex": "\\/.+",
+                    "destination": "/index.html"
+                }
+            ]
+        }
+    ]
 }

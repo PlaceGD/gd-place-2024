@@ -3,6 +3,7 @@ import {
     readable,
     writable,
     type Readable,
+    type Unsubscriber,
     type Writable,
 } from "svelte/store";
 import { EditTab, WidgetType } from "./place_menu/edit/edit_tab";
@@ -25,9 +26,10 @@ import {
     GROUND_TRIGGER,
 } from "shared-lib/nexusgen";
 import { isMobile } from "./utils/document";
-import { LEVEL_NAME_DELAY } from "./ending/ending";
+import { getExactServerTime } from "./firebase/cloud_functions";
+import { LEVEL_NAME_DELAY } from "shared-lib/ending";
 
-const STORAGE_VERSION = 2;
+const STORAGE_VERSION = 5;
 
 if (typeof window != "undefined") {
     if (
@@ -64,6 +66,8 @@ const persistLocalWritable = <T>(v: T, key: string): PersistentStore<T> =>
 
 // MARK: User Stuff
 
+export const savePosition = { value: true };
+
 export const bannedUsers = writable<Record<string, boolean>>({});
 
 export const analytics = persistLocalWritable<boolean | null>(
@@ -72,9 +76,10 @@ export const analytics = persistLocalWritable<boolean | null>(
 );
 export const newReports = persistLocalWritable(false, "newReports");
 
-export const loginData = writable<{
+export type LoginData = {
     currentUserData: UserData | null;
-}>({
+};
+export const loginData = writable<LoginData>({
     currentUserData: null,
 });
 
@@ -136,8 +141,11 @@ export const selectedObject = writable<{
     mainColor: GDColor;
     detailColor: GDColor;
     namePlaced: string | null;
+    signupDate: number | null;
     zLayer: ZLayer;
     zOrder: number;
+    posX: number;
+    posY: number;
 } | null>(null);
 
 export const editorData = persistLocalWritable(
@@ -149,28 +157,31 @@ export const editorData = persistLocalWritable(
     "editorData"
 );
 
+export const DEFAULT_SETTINGS = {
+    showCollidable: false,
+    selectDangerous: false,
+    hideTriggers: false,
+    noRotatingObjects: false,
+    hideGrid: false,
+    hideGround: false,
+    hideOutline: false,
+    showDeleteText: true,
+    showPlacedText: true,
+    quality: isMobile() ? "low" : "high",
+} as const;
 export const editorSettings = persistLocalWritable<{
     showCollidable: boolean;
+    selectDangerous: boolean;
     hideTriggers: boolean;
+    noRotatingObjects: boolean;
     hideGrid: boolean;
     hideGround: boolean;
     hideOutline: boolean;
-    showDeleteTextI: boolean;
-    showPlacedTextI: boolean;
+    showDeleteText: boolean;
+    showPlacedText: boolean;
     quality: "low" | "medium" | "high";
-}>(
-    {
-        showCollidable: false,
-        hideTriggers: false,
-        hideGrid: false,
-        hideGround: false,
-        hideOutline: false,
-        showDeleteTextI: true,
-        showPlacedTextI: true,
-        quality: isMobile() ? "low" : "high",
-    },
-    "editorSettings"
-);
+}>(DEFAULT_SETTINGS, "editorSettings");
+
 export const canPlacePreview = writable(true);
 export const canPlaceEditDelete = derived(
     [loginData],
@@ -488,15 +499,85 @@ export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
 
 // MARK: Event Times
 
+// import { browser }
+
+let debugOffset = 0;
+
+export const setDebugTimeOffset = (offset: number) => {
+    debugOffset = offset * 1000;
+};
+
+export const addDebugTimeOffset = (offset: number) => {
+    debugOffset += offset * 1000;
+};
+
+let serverNow = 0;
+if (typeof window !== "undefined") {
+    getExactServerTime().then(v => {
+        let serverStart = v;
+        let localStart = Date.now();
+
+        let diff = localStart - serverStart;
+
+        const draw = (time: number) => {
+            serverNow = Date.now() - (diff + debugOffset);
+            requestAnimationFrame(draw);
+        };
+        requestAnimationFrame(draw);
+    });
+}
+export const getServerNow = () => serverNow;
+
 export const nowStore = writable(0);
 setTimeout(
     () => {
         setInterval(() => {
-            nowStore.set(Date.now());
+            nowStore.set(serverNow);
         }, 1000);
     },
-    1000 - (Date.now() % 1000)
+    1500 - (Date.now() % 1000)
 );
+
+export const scheduleFor = (
+    f: () => void,
+    timeUnix: number | Readable<number>,
+    { runIfNegative, delay }: { runIfNegative?: boolean; delay?: number } = {
+        runIfNegative: false,
+        delay: 0,
+    },
+    mesag: string = ""
+) => {
+    let timeout: NodeJS.Timeout;
+    let time: number;
+    let unsub: Unsubscriber;
+
+    const s = () => {
+        if (isNaN(time) || time == Infinity || time > 2147483647) {
+            return;
+        }
+
+        if (time >= 0 || runIfNegative) {
+            timeout = setTimeout(
+                () => {
+                    unsub?.();
+                    f();
+                },
+                time + (delay ?? 0)
+            );
+        }
+    };
+
+    if (typeof timeUnix === "number") {
+        time = timeUnix - getServerNow();
+        s();
+    } else {
+        unsub = timeUnix.subscribe(t => {
+            clearTimeout(timeout);
+            time = t - getServerNow();
+            s();
+        });
+    }
+};
 
 export const eventStartTime = writable(Number.POSITIVE_INFINITY);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
@@ -505,7 +586,7 @@ db.ref("metaVariables/eventStartTime").on("value", v => {
     eventStartTime.set(v.val());
 });
 db.ref("metaVariables/eventEndTime").on("value", v => {
-    eventEndTime.set(v.val());
+    eventEndTime.set(Number(v.val()));
 });
 db.ref("metaVariables/setNameSeconds").on("value", v => {
     setNameSeconds.set(v.val() + LEVEL_NAME_DELAY);

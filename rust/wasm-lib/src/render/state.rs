@@ -1,6 +1,7 @@
 use std::{sync::Arc, time::Instant};
 
 use glam::{uvec2, vec2, vec4, UVec2};
+use wasm_bindgen::prelude::wasm_bindgen;
 use wgpu::{util::DeviceExt, Buffer};
 
 use crate::render::{data::Globals, pipeline_grid, pipeline_rect};
@@ -9,6 +10,28 @@ use super::{
     texture::Texture,
     util::{create_buffer_bind_group, create_pipeline},
 };
+
+#[wasm_bindgen]
+pub struct StateError {
+    inner: StateErrorInner,
+    pub kind: usize, // 0 is WebGL2Error, 1 is Other
+}
+
+enum StateErrorInner {
+    WebGL2Error,
+    Other(String),
+}
+
+#[wasm_bindgen]
+impl StateError {
+    #[wasm_bindgen]
+    pub fn display(&self) -> String {
+        match &self.inner {
+            StateErrorInner::WebGL2Error => "".to_string(),
+            StateErrorInner::Other(s) => s.clone(),
+        }
+    }
+}
 
 pub struct RenderState {
     pub surface: wgpu::Surface<'static>,
@@ -387,7 +410,7 @@ impl RenderState {
         spritesheet_data: &[u8],
         spritesheet_width: u32,
         spritesheet_height: u32,
-    ) -> Self {
+    ) -> Result<Self, StateError> {
         let size = uvec2(canvas.width(), canvas.height());
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -397,9 +420,22 @@ impl RenderState {
 
         let surface = instance
             .create_surface(wgpu::SurfaceTarget::OffscreenCanvas(canvas))
-            .unwrap();
+            .map_err(|e| {
+                let s = e.to_string();
+                if s.contains("canvas.getContext() returned null;") {
+                    return StateError {
+                        kind: 0,
+                        inner: StateErrorInner::WebGL2Error,
+                    };
+                } else {
+                    return StateError {
+                        kind: 1,
+                        inner: StateErrorInner::Other(s),
+                    };
+                }
+            })?;
 
-        Self::new(
+        Ok(Self::new(
             surface,
             size,
             instance,
@@ -407,7 +443,7 @@ impl RenderState {
             spritesheet_width,
             spritesheet_height,
         )
-        .await
+        .await)
     }
 
     pub fn resize(&mut self, width: u32, height: u32, quality: f32) {

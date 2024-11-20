@@ -1,11 +1,11 @@
 import { writable } from "svelte/store";
 import { db } from "./firebase";
 
-export let currentPlaceCooldown = writable<number>(0);
-export let currentDeleteCooldown = writable<number>(0);
-let currentPlaceListener = db
+export const placeCooldown = writable<number>(0);
+export const deleteCooldown = writable<number>(0);
+let placeCooldownListener = db
     .ref("metaVariables/placeCooldown")
-    .on("value", v => currentPlaceCooldown.set(v.val()));
-let currentDeleteListener = db
+    .on("value", v => placeCooldown.set(v.val()));
+let deleteCooldownListener = db
     .ref("metaVariables/deleteCooldown")
-    .on("value", v => currentDeleteCooldown.set(v.val()));
+    .on("value", v => deleteCooldown.set(v.val()));

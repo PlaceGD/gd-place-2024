@@ -11,14 +11,11 @@
     import SettingsOptions from "./settings/SettingsOptions.svelte";
     import {
         canPlaceEditDelete,
-        eventElapsedContinuous,
         eventEndTime,
-        eventStartTime,
         eventStatus,
-        ExclusiveMenus,
-        loginData,
         nowStore,
         openMenu,
+        scheduleFor,
         timeLeft,
         viewingLevelAfterEvent,
     } from "./stores";
@@ -30,10 +27,8 @@
     import SongStopButton from "./level_view/SongStopButton.svelte";
     import EndCountdown from "./level_view/EndCountdown.svelte";
     import Guide from "./guide/Guide.svelte";
-    import EndingNameInput from "./ending/LiveNameInput.svelte";
     import { playSound } from "./utils/audio";
-    import { DEBUG_ENDING_VISIBILITY, LEVEL_NAME_DELAY } from "./ending/ending";
-    import { scheduleFor } from "shared-lib/util";
+
     import SharedEnding from "./ending/SharedEnding.svelte";
     import ViewLevelButton from "./ending/ViewLevelButton.svelte";
     import { onMount } from "svelte";
@@ -42,6 +37,8 @@
     import bigTickUrl from "./assets/big_tick.mp3?url";
     import tickUrl from "./assets/tick.mp3?url";
     import { runtTimelapse } from "./timelapse";
+    import { derived } from "svelte/store";
+    import { LEVEL_NAME_DELAY } from "shared-lib/ending";
 
     // const dick = (v: wasm.Gliberal) => {
     //     v.doink
@@ -67,44 +64,56 @@
         ($eventStatus == "name set" || $eventStatus == "fully done") &&
         $nowStore >= $eventEndTime + LEVEL_NAME_DELAY * 1000;
 
-    $: if ($timeLeft > -1.0 && $timeLeft <= 11.0) {
+    //$: console.log($nowStore, $eventEndTime + LEVEL_NAME_DELAY * 1000);
+
+    $: if ($timeLeft > 0.0 && $timeLeft <= 10.0) {
         playSound({
-            url: $timeLeft < 0.0 ? bigTickUrl : tickUrl,
+            url: $timeLeft < 1.0 ? bigTickUrl : tickUrl,
             volume: 1.0,
             exclusiveChannel: `tick${Math.round($timeLeft)}`,
         });
     }
 
-    onMount(() => {
-        const loopSound = () => {
+    const loopSound = () => {
+        if ($eventStatus !== "fully done") {
             playSound({
                 url: endingAmbientUrl,
                 endCb: () => {
-                    if ($eventStatus !== "fully done") {
-                        // change this to check if the enter level name thing is still running :3
-                        loopSound();
-                    }
+                    loopSound();
                 },
                 volume: 0.5,
                 exclusiveChannel: "ending-ambient",
             });
-        };
+        }
+    };
+    let scheduled = false;
+    $: if ($eventStatus !== "loading" && !scheduled) {
+        scheduleFor(loopSound, eventEndTime, {
+            runIfNegative: true,
+            delay: 36000,
+        });
+        scheduled = true;
+    }
 
-        // for (let i = 0; i < 11; i++) {
-        //     scheduleFor(() => {}, eventEndTime, { delay: -i * 1000 });
-        // }
+    // for (let i = 0; i < 11; i++) {
+    //     scheduleFor(() => {}, eventEndTime, { delay: -i * 1000 });
+    // }
 
+    let endSoundScheduled = false;
+    $: if ($nowStore >= 0 && !endSoundScheduled) {
         scheduleFor(
-            () =>
+            () => {
                 playSound({
                     url: endingSequenceAmbientUrl,
                     volume: 2.0,
-                    endCb: loopSound,
                     exclusiveChannel: "ending-sequence",
-                }),
-            eventEndTime
+                });
+            },
+            eventEndTime,
+            {}
         );
-    });
+        endSoundScheduled = true;
+    }
 </script>
 
 <!-- <button
@@ -140,7 +149,10 @@
                 {/if}
             </div>
             <Login />
-            <NameGradient />
+
+            {#if $canPlaceEditDelete}
+                <NameGradient />
+            {/if}
 
             {#if state != null}
                 <ReportedUserList bind:state />

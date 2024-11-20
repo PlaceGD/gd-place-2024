@@ -1,18 +1,20 @@
 import { HttpsError, onCall, Request } from "firebase-functions/v2/https";
 import { onMessagePublished } from "firebase-functions/v2/pubsub";
+import { getAuth } from "firebase-admin/auth";
 import { REPORT_COOLDOWN_SECONDS, VALID_USERNAME } from "shared-lib/user";
 import type {
     InitWithUsernameReq,
     ReportUserReq,
     ReportedUserOperationReq,
     BanReq,
+    ReportUserRes,
 } from "shared-lib/cloud_functions";
 import { Level, LogGroup } from "./utils/logger";
 import { LEVEL_HEIGHT_UNITS, LEVEL_WIDTH_UNITS } from "shared-lib/nexusgen";
 import { onCallAuth, onCallAuthLogger } from "./utils/on_call";
 import { UserDetails } from "shared-lib/database";
 import { DEV_UIDS } from "shared-lib/cloud_functions";
-import { smartDatabase } from "src";
+import { auth, mailjetClient, smartDatabase } from "./exports";
 import { checkedTransaction, getCheckedUserDetails } from "./utils/utils";
 import { FILTERS } from "./utils/username_filter";
 import Error from "./utils/errors";
@@ -60,6 +62,8 @@ import Error from "./utils/errors";
 //         );
 //     }
 // };
+
+const GD_PLACE_CONTACT_LIST_ID = "10488916";
 
 // #region initUserWithUsername
 export const initUserWithUsername = onCallAuthLogger<
@@ -117,6 +121,7 @@ export const initUserWithUsername = onCallAuthLogger<
         lastCharacterTimestamp: 0,
         moderator: false,
         hasDonated: false,
+        signupdate: Date.now(),
     };
 
     logger.info("User created sucessfully");
@@ -132,89 +137,140 @@ export const initUserWithUsername = onCallAuthLogger<
         }),
     ]);
 
+    try {
+        const authData = await auth.getUser(request.auth.uid);
+
+        if (authData.email != null) {
+            const contactRequest = mailjetClient
+                .post(
+                    `contactslist/${GD_PLACE_CONTACT_LIST_ID}/managecontact`,
+                    { version: "v3" }
+                )
+                .request({
+                    Action: "addforce",
+                    Email: authData.email,
+                    Properties: {
+                        firstName: data.username,
+                    },
+                });
+
+            contactRequest.catch(() => {
+                logger.error(
+                    `Failed to add user to contact list: ${usernameLower}).`
+                );
+            });
+        }
+    } catch {
+        logger.error(`Failed to add user to contact list: ${usernameLower}).`);
+        return user;
+    }
+
     return user;
 });
 
 // #region reportUser
-export const reportUser = onCallAuthLogger<ReportUserReq>(
-    "reportUser",
-    async (request, logger) => {
-        const data = request.data;
+export const reportUser = onCallAuthLogger<
+    ReportUserReq,
+    Promise<ReportUserRes>
+>("reportUser", async (request, logger) => {
+    const data = request.data;
 
-        // await validateTurnstile(
-        //     process.env["TURNSTILE_GENERAL_PRIV_KEY"],
-        //     data.turnstileResp,
-        //     request.rawRequest,
-        //     logger
-        // );
+    // await validateTurnstile(
+    //     process.env["TURNSTILE_GENERAL_PRIV_KEY"],
+    //     data.turnstileResp,
+    //     request.rawRequest,
+    //     logger
+    // );
 
-        const db = smartDatabase();
+    const db = smartDatabase();
 
-        const now = Date.now();
+    const now = Date.now();
 
-        const userDetails = await getCheckedUserDetails(db, request.auth.uid);
+    const samaritanDetails = await getCheckedUserDetails(db, request.auth.uid);
 
-        const [_, userToReport] = await Promise.all([
-            checkedTransaction(
-                userDetails.ref.child("lastReportTimestamp"),
-                lastReport =>
-                    now >= (lastReport ?? 0) + REPORT_COOLDOWN_SECONDS * 1000,
-                () => Error.code(204, "permission-denied"),
-                () => now // + REPORT_COOLDOWN_SECONDS * 1000
-            ),
-            db
-                .ref(`userName/${data.username.toLowerCase()}`)
-                .get()
-                .then(v => v.val()),
-        ]);
+    const [_, badUser] = await Promise.all([
+        checkedTransaction(
+            samaritanDetails.ref.child("lastReportTimestamp"),
+            lastReport =>
+                now >= (lastReport ?? 0) + REPORT_COOLDOWN_SECONDS * 1000,
+            () => Error.code(204, "permission-denied"),
+            () => now // + REPORT_COOLDOWN_SECONDS * 1000
+        ),
+        db
+            .ref(`userName/${data.username.toLowerCase()}`)
+            .get()
+            .then(v => v.val()),
+    ]);
 
-        if (userToReport == undefined) {
-            throw Error.code(100, "invalid-argument");
-        }
-
-        if (data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
-            logger.debug("User reported at X", data.x);
-            throw Error.code(101, "invalid-argument");
-        }
-        if (data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
-            logger.debug("User reported at Y", data.y);
-            throw Error.code(101, "invalid-argument");
-        }
-
-        // const reported = db.ref("reportedUsers");
-
-        await checkedTransaction(
-            db.ref("reportedUsers").child(userToReport.uid),
-            () => true,
-            () => 0,
-            reportData => {
-                if (reportData == undefined) {
-                    return {
-                        username: data.username,
-                        timestamp: Date.now(),
-                        count: 1,
-                        avg_x: data.x,
-                        avg_y: data.y,
-                    };
-                } else {
-                    return {
-                        username: data.username,
-                        timestamp: Date.now(),
-                        count: reportData.count + 1,
-                        avg_x:
-                            (reportData.avg_x * reportData.count + data.x) /
-                            (reportData.count + 1),
-                        avg_y:
-                            (reportData.avg_y * reportData.count + data.y) /
-                            (reportData.count + 1),
-                    };
-                }
-            }
-        );
-
-        logger.info(`Reported user ${data.username}`);
+    if (badUser == undefined) {
+        throw Error.code(100, "invalid-argument");
     }
-);
+
+    // check if user already banned
+    try {
+        await getCheckedUserDetails(db, badUser.uid);
+    } catch {
+        // user already banned
+        return { cooldown: REPORT_COOLDOWN_SECONDS * 1000 };
+    }
+
+    if (isNaN(data.x) || data.x < 0 || data.x > LEVEL_WIDTH_UNITS) {
+        logger.debug("User stinkily reported at X", data.x);
+        throw Error.code(101, "invalid-argument");
+    }
+    if (isNaN(data.y) || data.y < 0 || data.y > LEVEL_HEIGHT_UNITS) {
+        logger.debug("User stinkily reported at Y", data.y);
+        throw Error.code(101, "invalid-argument");
+    }
+
+    // const reported = db.ref("reportedUsers");
+
+    await db.ref(`reports`).push({
+        badUserID: badUser.uid,
+        badUsername: data.username,
+
+        samaritanUsername: samaritanDetails.val.username,
+        samaritanID: request.auth.uid,
+
+        x: data.x,
+        y: data.y,
+
+        timestamp: Date.now(),
+    });
+
+    // await checkedTransaction(
+    //     db.ref("reportedUsers").child(badUser.uid),
+    //     () => true,
+    //     () => 0,
+    //     reportData => {
+    //         if (reportData == undefined) {
+    //             return {
+    //                 username: data.username,
+    //                 timestamp: Date.now(),
+    //                 count: 1,
+    //                 avg_x: data.x,
+    //                 avg_y: data.y,
+    //             };
+    //         } else {
+    //             return {
+    //                 username: data.username,
+    //                 timestamp: Date.now(),
+    //                 count: reportData.count + 1,
+    //                 avg_x:
+    //                     (reportData.avg_x * reportData.count + data.x) /
+    //                     (reportData.count + 1),
+    //                 avg_y:
+    //                     (reportData.avg_y * reportData.count + data.y) /
+    //                     (reportData.count + 1),
+    //             };
+    //         }
+    //     }
+    // );
+
+    logger.info(`Reported user ${data.username}`);
+
+    return { cooldown: REPORT_COOLDOWN_SECONDS * 1000 };
+});
 
 // #region banUserInner
 const banUserInner = async (
@@ -257,7 +313,8 @@ const banUserInner = async (
         db.ref("userCount").transaction(count => {
             return count - 1;
         }),
-        db.ref(`reportedUsers/${userToBanUid}`).remove(),
+        // db.ref(`reports`).
+        // db.ref(`reportedUsers/${userToBanUid}`).remove(),
     ]);
 };
 
@@ -267,7 +324,7 @@ export const clearReports = onMessagePublished("clearOldReports", _ => {
     const now = Date.now();
     const db = smartDatabase();
 
-    db.ref("reportedUsers")
+    db.ref("reports")
         .orderByChild("timestamp")
         .endAt(now - 15 * 60 * 1000)
         .get()
@@ -300,14 +357,18 @@ export const reportedUserOperation = onCallAuth<ReportedUserOperationReq>(
             await banUserInner(
                 db,
                 request.auth.uid,
-                data.reportedUserUid,
+                data.userUid,
                 data.reason,
                 modData.username
             );
-        } else if (data.operation == "ignore") {
-            await db.ref(`reportedUsers/${data.reportedUserUid}`).remove();
-        } else {
+        } else if (data.operation !== "ignore") {
             throw Error.code(500, "aborted");
+        }
+
+        if (data.operation === "ban" || data.operation === "ignore") {
+            await Promise.all(
+                data.reportKeys.map(k => db.ref(`reports/${k}`).remove())
+            );
         }
     }
 );

@@ -4,10 +4,6 @@ version = "0.1.0"
 authors = ["@DexterHill0", "@FlowVix"]
 edition = "2021"
 
-[profile.release]
-lto = true
-opt-level = 3
-codegen-units = 1
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -44,7 +40,6 @@ indexmap = { workspace = true }
 # desen = { git = "https://github.com/FlowVix/desen.git", features = [
 #     "html-canvas",
 # ] }
-
 
 #desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
 

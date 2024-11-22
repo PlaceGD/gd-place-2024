@@ -18,10 +18,8 @@ type HistoryObject =
       };
 
 // dynamically import the json file
-let HISTORY: HistoryObject[];
 
-let obj_data_map: Map<string, string> = new Map();
-let timelapsetime: number;
+let timelapsetime: number = 825379786;
 
 // import(/* @vite-ignore */ "./assets/db2.json").then((betatestdb: any) => {
 //     HISTORY = Object.values(betatestdb.default.history).sort(
@@ -38,7 +36,7 @@ let prevTime = 0;
 let historyIndex = 0;
 
 let paused = true;
-let TIMELAPSE_SPEED = 200;
+let TIMELAPSE_SPEED = 2000;
 export const togglePause = () => {
     paused = !paused;
 };
@@ -51,37 +49,7 @@ export const runtTimelapse = (time: number, state: wasm.State | null) => {
     if (!state) return;
     let delta = time - prevTime;
 
-    if (HISTORY[historyIndex - 1]?.time > timelapsetime) {
-        while (
-            historyIndex > 0 &&
-            HISTORY[historyIndex - 1]?.time > timelapsetime
-        ) {
-            historyIndex--;
-            const h = HISTORY[historyIndex];
-            if ("object" in h) {
-                // DELETE OBJECT
-                state.delete_object(h.objKey);
-            } else {
-                // PLACE OBJECT
-                addObjString(state, h.objKey, obj_data_map.get(h.objKey)!);
-            }
-        }
-    } else {
-        while (
-            historyIndex < HISTORY.length &&
-            HISTORY[historyIndex].time < timelapsetime
-        ) {
-            const h = HISTORY[historyIndex];
-            if ("object" in h) {
-                // PLACE OBJECT
-                addObjString(state, h.objKey, h.object);
-            } else {
-                // DELETE OBJECT
-                state.delete_object(h.objKey);
-            }
-            historyIndex++;
-        }
-    }
+    historyIndex = state.run_history(historyIndex, timelapsetime);
 
     if (!paused) {
         timelapsetime += delta * TIMELAPSE_SPEED;

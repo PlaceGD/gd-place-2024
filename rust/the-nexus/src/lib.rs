@@ -7,6 +7,7 @@ use std::{
 use gen::{
     colors::get_available_colors,
     countdown_digits::make_get_countdown_digits_fn,
+    history::make_get_history_fn,
     objects::{make_get_object_info_fn, make_get_object_main_over_detail},
     sprites::make_get_song_icon_sprite_fn,
 };
@@ -105,6 +106,8 @@ fn generate_shide(sheet: bool) {
         make_get_countdown_digits_fn(),
     )
     .unwrap();
+
+    fs::write("../wasm-lib/src/history", make_get_history_fn()).unwrap();
 
     fs::write(
         "../../shared-lib/src/gd/objects.json",
@@ -419,5 +422,13 @@ mod dbconvert {
     pub(crate) fn encode_string(data: &[u8], base: u32) -> String {
         let utf8 = encode(data, base);
         String::from_utf8(utf8).unwrap()
+    }
+
+    pub fn decode(data: &[u8], base: u32) -> Vec<u8> {
+        baseconvert(data, base, 256)
+    }
+
+    pub fn decode_string(data: &str, base: u32) -> Vec<u8> {
+        decode(data.as_bytes(), base)
     }
 }

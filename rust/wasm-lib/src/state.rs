@@ -1,5 +1,7 @@
 use core::f64;
+use std::{io::Cursor, sync::LazyLock};
 
+use binrw::BinRead;
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 
 pub const DRAW_LEVEL: bool = true;
@@ -15,11 +17,18 @@ use rust_shared::{
         object::{GDColor, GDObject},
         HitboxType, ObjectCategory,
     },
+    history::{History, HistoryItem},
     map,
     util::{point_in_triangle, Rect},
 };
 use wasm_bindgen::prelude::*;
 use wgpu::util::DeviceExt;
+
+pub static HISTORY: LazyLock<History> = LazyLock::new(|| {
+    let bytes = include_bytes!("history");
+
+    History::read(&mut Cursor::new(bytes)).unwrap()
+});
 
 use crate::{
     level::{ChunkCoord, DbKey, Level, LevelChunk},
@@ -327,7 +336,7 @@ impl State {
         self.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.zoom = v.clamp(-16.0, 36.0);
+        self.zoom = v.clamp(-64.0, 36.0);
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
@@ -519,6 +528,35 @@ impl State {
                 .get_obj_by_key(k)
                 .map(|o| ChunkCoord::get_from_pos(o.x, o.y))
         })
+    }
+
+    pub fn run_history(&mut self, index: usize, timelapse_time: u32) -> usize {
+        let mut history_index = index;
+        if history_index > 0 && HISTORY.actions[history_index - 1].time() > timelapse_time as u32 {
+            while history_index > 0
+                && HISTORY.actions[history_index - 1].time() < timelapse_time as u32
+            {
+                history_index -= 1;
+                todo!()
+            }
+        } else {
+            while history_index < HISTORY.actions.len()
+                && HISTORY.actions[history_index].time() < timelapse_time as u32
+            {
+                let HistoryItem { obj, objkey, .. } = HISTORY.actions[history_index];
+                if obj == [0; 26] {
+                    self.level.remove_object(objkey);
+                } else {
+                    let obj = GDObjectOpt::from_bytes(obj.as_slice().into()).unwrap();
+                    self.level
+                        .add_object(obj.into_obj(), objkey, None, self.now);
+                }
+
+                history_index += 1;
+            }
+        }
+
+        history_index
     }
     // pub fn get_text_draws(&self) -> Vec<TextDraw> {
     //     self.bundle.state.text_draws.clone()

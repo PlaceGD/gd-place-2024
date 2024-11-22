@@ -1,5 +1,4 @@
 use image::{DynamicImage, GenericImageView};
-use wasm_bindgen::prelude::*;
 
 pub fn is_fully_transparent(img: &DynamicImage) -> bool {
     for x in 0..img.width() {
@@ -60,16 +59,7 @@ macro_rules! map {
 }
 
 use glam::Vec2;
-
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-}
-#[doc(hidden)]
-pub fn __log(s: &str) {
-    log(s)
-}
+use rand::Rng;
 
 #[macro_export]
 macro_rules! console_log {
@@ -162,7 +152,8 @@ impl Rect<f32> {
 }
 
 pub fn random() -> f64 {
-    js_sys::Math::random()
+    let mut rng = rand::thread_rng();
+    rng.gen()
 }
 
 fn sign(p1: Vec2, p2: Vec2, p3: Vec2) -> f32 {

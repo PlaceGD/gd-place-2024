@@ -5,35 +5,38 @@ authors = ["@DexterHill0", "@FlowVix"]
 edition = "2021"
 
 
-[lib]
-crate-type = ["cdylib", "rlib"]
+# [lib]
+# crate-type = ["cdylib", "rlib"]
 
-[features]
-default = ["console_error_panic_hook"]
+# [features]
+# default = ["console_error_panic_hook"]
 
 [dependencies]
-web-sys = { version = "0.3.69", features = [
-    "Document",
-    "Element",
-    "HtmlCanvasElement",
-    "Window",
-    "OffscreenCanvas",
-] }
-wgpu = { version = "0.20.1", features = ["webgl"] }
+# web-sys = { version = "0.3.69", features = [
+#     "Document",
+#     "Element",
+#     "HtmlCanvasElement",
+#     "Window",
+#     "OffscreenCanvas",
+# ] }
+wgpu = { version = "0.20.1" }
+
+winit = "0.30.5"
+futures = "0.3"
 
 env_logger = "0.11.3"
 log = "0.4.22"
 
 glam = { workspace = true, features = ["bytemuck"] }
-console_error_panic_hook = { version = "0.1.7", optional = true }
+# console_error_panic_hook = { version = "0.1.7", optional = true }
 
 
-wasm-bindgen = { workspace = true }
-wasm-bindgen-futures = { workspace = true }
+# wasm-bindgen = { workspace = true }
+# wasm-bindgen-futures = { workspace = true }
 bytemuck = { workspace = true, features = ["derive"] }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
-js-sys = { workspace = true }
+# js-sys = { workspace = true }
 image = { workspace = true }
 binrw = { workspace = true }
 indexmap = { workspace = true }
@@ -61,5 +64,5 @@ specta = "1.0.5"
 [build-dependencies]
 uuid = { workspace = true }
 
-[build]
-target = "wasm32-unknown-unknown"
+# [build]
+# target = "wasm32-unknown-unknown"

@@ -4,19 +4,18 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-wasm-bindgen = { workspace = true }
-wasm-bindgen-futures = { workspace = true }
+# wasm-bindgen = { workspace = true }
+# wasm-bindgen-futures = { workspace = true }
 glam = { workspace = true, features = ["bytemuck"] }
 bytemuck = { workspace = true, features = ["derive"] }
 image = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
-js-sys = { workspace = true }
+# js-sys = { workspace = true }
 indexmap = { workspace = true }
 binrw = { workspace = true }
 slab = { workspace = true }
 
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 rand = "0.8.5"
 
 

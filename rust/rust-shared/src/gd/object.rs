@@ -1,7 +1,5 @@
 use crate::gd::layer::ZLayer;
 use binrw::{BinRead, BinResult, BinWrite};
-use wasm_bindgen::prelude::*;
-
 #[binrw::parser(reader, endian)]
 fn bool_parse() -> BinResult<bool> {
     let r: u8 = <_>::read_options(reader, endian, ())?;
@@ -15,7 +13,6 @@ fn bool_write(map: &bool) -> BinResult<()> {
 
 // IF THIS IS EVER CHANGED MAKE SURE TO CHANGE THE TYPESCRIPT TYPE IN SHAREDLIB
 #[derive(Debug, Clone, Copy, Default, BinRead, BinWrite, PartialEq)]
-#[wasm_bindgen]
 #[repr(C, packed)]
 #[brw(little)]
 pub struct GDColor {
@@ -29,10 +26,8 @@ pub struct GDColor {
     pub blending: bool,
 }
 
-#[wasm_bindgen]
 impl GDColor {
     #[allow(clippy::too_many_arguments)]
-    #[wasm_bindgen(constructor)]
     pub fn new(r: u8, g: u8, b: u8, opacity: u8, blending: bool) -> Self {
         Self {
             r,
@@ -42,7 +37,7 @@ impl GDColor {
             blending,
         }
     }
-    #[wasm_bindgen]
+
     pub fn white() -> Self {
         Self {
             r: 255,
@@ -55,7 +50,6 @@ impl GDColor {
 }
 
 #[derive(Debug, Clone, Copy, Default, BinRead, BinWrite)]
-#[wasm_bindgen(js_name = "GDObjectUnopt")]
 #[brw(little)]
 
 pub struct GDObject {

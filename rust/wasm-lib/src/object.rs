@@ -1,5 +1,4 @@
 use std::{mem, ptr};
-use wasm_bindgen::prelude::*;
 
 use glam::{mat2, vec2, Affine2, Vec2};
 // use bytemuck::{bytes_of, Pod, Zeroable};
@@ -69,7 +68,7 @@ impl GDObjectExt for GDObject {
 // IF THIS IS EVER CHANGED MAKE SURE TO CHANGE THE TYPESCRIPT TYPE IN SHAREDLIB
 #[derive(Debug, Clone, Copy)]
 #[repr(C, packed)]
-#[wasm_bindgen]
+
 pub struct GDObjectOpt {
     pub id: u16,
     pub x: f32,
@@ -138,10 +137,8 @@ impl GDObjectOpt {
     // }
 }
 
-#[wasm_bindgen]
 impl GDObjectOpt {
     #[allow(clippy::too_many_arguments)]
-    #[wasm_bindgen(constructor)]
     pub fn new(
         id: u16,
         x: f32,
@@ -169,55 +166,53 @@ impl GDObjectOpt {
             y_angle,
         }
     }
-    pub fn bytes(&self) -> js_sys::Uint8Array {
-        // SAFETY:
-        // this is just getting the raw bytes of the struct. it will always be the correct size
-        // and endianess
-        let bytes: [u8; mem::size_of::<GDObjectOpt>()] =
-            unsafe { mem::transmute(ptr::read(self as *const _)) };
+    // pub fn bytes(&self) -> js_sys::Uint8Array {
+    //     // SAFETY:
+    //     // this is just getting the raw bytes of the struct. it will always be the correct size
+    //     // and endianess
+    //     let bytes: [u8; mem::size_of::<GDObjectOpt>()] =
+    //         unsafe { mem::transmute(ptr::read(self as *const _)) };
 
-        let array = js_sys::Uint8Array::new_with_length(bytes.len() as u32);
-        array.copy_from(&bytes);
+    //     let array = js_sys::Uint8Array::new_with_length(bytes.len() as u32);
+    //     array.copy_from(&bytes);
 
-        array
-    }
+    //     array
+    // }
 
-    pub fn from_bytes(bytes: js_sys::Uint8Array) -> Result<GDObjectOpt, RustError> {
-        let bytes: [u8; mem::size_of::<GDObjectOpt>()] = bytes
-            .to_vec()
-            .try_into()
-            .map_err(|_| RustError::from(ErrorType::ObjectDeserialization))?;
+    // pub fn from_bytes(bytes: js_sys::Uint8Array) -> Result<GDObjectOpt, RustError> {
+    //     let bytes: [u8; mem::size_of::<GDObjectOpt>()] = bytes
+    //         .to_vec()
+    //         .try_into()
+    //         .map_err(|_| RustError::from(ErrorType::ObjectDeserialization))?;
 
-        // SAFETY:
-        // the bytes of the object are always validated on the server side
-        // the server can never hold an invalid object, therefore the client can never
-        // deserialise an invalid object
-        Ok(unsafe { mem::transmute(bytes) })
-    }
+    //     // SAFETY:
+    //     // the bytes of the object are always validated on the server side
+    //     // the server can never hold an invalid object, therefore the client can never
+    //     // deserialise an invalid object
+    //     Ok(unsafe { mem::transmute(bytes) })
+    // }
 
-    pub fn debug(&self) -> String {
-        format!("{:#?}", self)
-    }
-    pub fn lmao_clone(&self) -> Self {
-        self.clone()
-    }
+    // pub fn debug(&self) -> String {
+    //     format!("{:#?}", self)
+    // }
+    // pub fn lmao_clone(&self) -> Self {
+    //     self.clone()
+    // }
 
     pub fn get_chunk_coord(&self) -> ChunkCoord {
         ChunkCoord::get_from_pos(self.x, self.y)
     }
 
-    #[wasm_bindgen]
     pub fn translate(&mut self, x: f32, y: f32) {
         self.x += x;
         self.y += y;
     }
-    #[wasm_bindgen]
+
     pub fn scale(&mut self, exp: i8) {
         self.x_scale_exp += exp;
         self.y_scale_exp += exp;
     }
 
-    #[wasm_bindgen]
     pub fn rotate(&mut self, angle_5: i8) {
         self.x_angle += angle_5;
         self.y_angle += angle_5;
@@ -244,7 +239,6 @@ pub fn convert_opt_transform(
     ]
 }
 
-#[wasm_bindgen(js_name = "convert_opt_transform")]
 pub fn wasm_convert_opt_transform(
     x_scale_exp: i8,
     x_angle: i8,

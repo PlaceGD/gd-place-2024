@@ -5,13 +5,11 @@ use std::{
 
 use indexmap::IndexMap;
 use rust_shared::gd::{layer::Z_LAYERS, level::CHUNK_SIZE_UNITS, object::GDObject};
-use wasm_bindgen::prelude::*;
 
 use crate::{render::rectdraw::OBJECT_MAIN_OVER_DETAIL, utilgen::OBJECT_INFO};
 
 pub type DbKey = [u8; 20];
 
-#[wasm_bindgen]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct ChunkCoord {
     pub x: i32,
@@ -258,7 +256,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
 //     pub objects: BTreeMap<i8, IndexMap<DbKey, GDObject>>,
 // }
 
-// #[wasm_bindgen]
+//
 // #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 // pub struct ChunkCoord {
 //     pub x: i32,

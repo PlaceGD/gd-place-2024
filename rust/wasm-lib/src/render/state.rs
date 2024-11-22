@@ -1,8 +1,8 @@
-use std::{sync::Arc, time::Instant};
+use std::{error::Error, fmt::Display, sync::Arc, time::Instant};
 
 use glam::{uvec2, vec2, vec4, UVec2};
-use wasm_bindgen::prelude::wasm_bindgen;
-use wgpu::{util::DeviceExt, Buffer};
+use image::{ImageError, ImageResult};
+use wgpu::{util::DeviceExt, Buffer, CreateSurfaceError, WindowHandle};
 
 use crate::render::{data::Globals, pipeline_grid, pipeline_rect};
 
@@ -11,27 +11,22 @@ use super::{
     util::{create_buffer_bind_group, create_pipeline},
 };
 
-#[wasm_bindgen]
-pub struct StateError {
-    inner: StateErrorInner,
-    pub kind: usize, // 0 is WebGL2Error, 1 is Other
+#[derive(Debug)]
+pub enum StateError {
+    ImageError(ImageError),
+    CreateSurfaceError(CreateSurfaceError),
 }
 
-enum StateErrorInner {
-    WebGL2Error,
-    Other(String),
-}
-
-#[wasm_bindgen]
-impl StateError {
-    #[wasm_bindgen]
-    pub fn display(&self) -> String {
-        match &self.inner {
-            StateErrorInner::WebGL2Error => "".to_string(),
-            StateErrorInner::Other(s) => s.clone(),
+impl Display for StateError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            StateError::ImageError(e) => write!(f, "{e}"),
+            StateError::CreateSurfaceError(e) => write!(f, "{e}"),
         }
     }
 }
+
+impl Error for StateError {}
 
 pub struct RenderState {
     pub surface: wgpu::Surface<'static>,
@@ -59,14 +54,14 @@ pub struct RenderState {
 fn create_textures_bind_group(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
-    spritesheet_data: &[u8],
-    spritesheet_width: u32,
-    spritesheet_height: u32,
-) -> (wgpu::BindGroupLayout, wgpu::BindGroup) {
-    use image::GenericImageView;
-
-    let bg = image::load_from_memory(include_bytes!("../../assets/background.png")).unwrap();
-    let ground = image::load_from_memory(include_bytes!("../../assets/ground.png")).unwrap();
+) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup), StateError> {
+    let spritesheet =
+        image::load_from_memory(include_bytes!("../../../../src/assets/spritesheet.png"))
+            .map_err(StateError::ImageError)?;
+    let bg = image::load_from_memory(include_bytes!("../../assets/background.png"))
+        .map_err(StateError::ImageError)?;
+    let ground = image::load_from_memory(include_bytes!("../../assets/ground.png"))
+        .map_err(StateError::ImageError)?;
     // let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
 
     // let list = [
@@ -150,20 +145,8 @@ fn create_textures_bind_group(
     let textures = vec![
         Texture::from_image(device, queue, &bg, wgpu::FilterMode::Linear),
         Texture::from_image(device, queue, &ground, wgpu::FilterMode::Linear),
-        Texture::from_raw(
-            device,
-            queue,
-            wgpu::FilterMode::Linear,
-            (spritesheet_width, spritesheet_height),
-            spritesheet_data,
-        ),
-        Texture::from_raw(
-            device,
-            queue,
-            wgpu::FilterMode::Nearest,
-            (spritesheet_width, spritesheet_height),
-            spritesheet_data,
-        ),
+        Texture::from_image(device, queue, &spritesheet, wgpu::FilterMode::Linear),
+        Texture::from_image(device, queue, &spritesheet, wgpu::FilterMode::Nearest),
     ];
 
     let mut entries = vec![];
@@ -189,7 +172,7 @@ fn create_textures_bind_group(
         })
     };
 
-    (textures_bind_group_layout, textures_bind_group)
+    Ok((textures_bind_group_layout, textures_bind_group))
 }
 
 pub const SAMPLE_COUNT: u32 = 4;
@@ -198,10 +181,7 @@ impl RenderState {
         surface: wgpu::Surface<'static>,
         size: UVec2,
         instance: wgpu::Instance,
-        spritesheet_data: &[u8],
-        spritesheet_width: u32,
-        spritesheet_height: u32,
-    ) -> Self {
+    ) -> Result<Self, StateError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptionsBase {
                 power_preference: wgpu::PowerPreference::HighPerformance,
@@ -256,13 +236,8 @@ impl RenderState {
                 wgpu::BufferBindingType::Uniform,
             );
 
-        let (textures_bind_group_layout, textures_bind_group) = create_textures_bind_group(
-            &device,
-            &queue,
-            spritesheet_data,
-            spritesheet_width,
-            spritesheet_height,
-        );
+        let (textures_bind_group_layout, textures_bind_group) =
+            create_textures_bind_group(&device, &queue)?;
 
         let multisampled_frame_descriptor = wgpu::TextureDescriptor {
             label: Some("Multisampled frame descriptor"),
@@ -387,7 +362,7 @@ impl RenderState {
         //     usage: wgpu::BufferUsages::VERTEX,
         // });
 
-        Self {
+        Ok(Self {
             surface,
             device,
             queue,
@@ -402,16 +377,11 @@ impl RenderState {
             pipeline_grid,
             rect_vertex_buffer,
             rect_index_buffer,
-        }
+        })
     }
 
-    pub async fn new_canvas(
-        canvas: web_sys::OffscreenCanvas,
-        spritesheet_data: &[u8],
-        spritesheet_width: u32,
-        spritesheet_height: u32,
-    ) -> Result<Self, StateError> {
-        let size = uvec2(canvas.width(), canvas.height());
+    pub async fn new_canvas(window: impl WindowHandle + 'static) -> Result<Self, StateError> {
+        // let size = uvec2(window.window_handle()/, window.height());
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::GL,
@@ -419,31 +389,15 @@ impl RenderState {
         });
 
         let surface = instance
-            .create_surface(wgpu::SurfaceTarget::OffscreenCanvas(canvas))
-            .map_err(|e| {
-                let s = e.to_string();
-                if s.contains("canvas.getContext() returned null;") {
-                    return StateError {
-                        kind: 0,
-                        inner: StateErrorInner::WebGL2Error,
-                    };
-                } else {
-                    return StateError {
-                        kind: 1,
-                        inner: StateErrorInner::Other(s),
-                    };
-                }
-            })?;
+            .create_surface(wgpu::SurfaceTarget::Window(Box::new(window)))
+            .map_err(StateError::CreateSurfaceError)?;
 
-        Ok(Self::new(
+        Self::new(
             surface,
-            size,
+            uvec2(1, 1), // TODO: first time size?
             instance,
-            spritesheet_data,
-            spritesheet_width,
-            spritesheet_height,
         )
-        .await)
+        .await
     }
 
     pub fn resize(&mut self, width: u32, height: u32, quality: f32) {

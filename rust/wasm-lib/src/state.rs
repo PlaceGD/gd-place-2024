@@ -18,7 +18,7 @@ use rust_shared::{
     map,
     util::{point_in_triangle, Rect},
 };
-use wasm_bindgen::prelude::*;
+
 use wgpu::util::DeviceExt;
 
 use crate::{
@@ -46,7 +46,6 @@ pub struct EndingAnimInfo {
     pub initial_ground2_color: (u8, u8, u8),
 }
 
-#[wasm_bindgen]
 pub struct State {
     pub(crate) render: RenderState,
 
@@ -141,7 +140,7 @@ impl State {
             render,
             countdown: Countdown::new(),
             stats_display: StatsDisplay::new(),
-            now: js_sys::Date::now(), // default to client now before server now is gotten
+            now: 0.0, // TODO: get now
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
@@ -271,7 +270,6 @@ impl State {
     }
 }
 
-#[wasm_bindgen]
 impl State {
     pub fn resize(&mut self, width: u32, height: u32) {
         self.render.resize(width, height, self.quality);
@@ -860,7 +858,7 @@ impl State {
 
 const UNLOAD_CHUNK_TIME: f64 = 1.0;
 
-// #[wasm_bindgen]
+//
 // pub struct SelectedObjectInfo {
 //     key: String,
 //     pub id: u16,
@@ -870,20 +868,19 @@ const UNLOAD_CHUNK_TIME: f64 = 1.0;
 //     pub z_order: i8,
 // }
 
-// #[wasm_bindgen]
+//
 // impl SelectedObjectInfo {
 //     pub fn key(&self) -> String {
 //         self.key.clone()
 //     }
 // }
 
-#[wasm_bindgen]
 #[derive(Debug, Clone, Copy)]
 pub struct HitObjectInfo {
     pub(crate) key: DbKey,
     pub obj: GDObject,
 }
-#[wasm_bindgen]
+
 impl HitObjectInfo {
     pub fn key(&self) -> String {
         String::from_utf8(self.key.into()).unwrap()

@@ -6,11 +6,9 @@ use slab::Slab;
 use crate::util::now;
 
 use super::{layer::Z_LAYERS, object::GDObject};
-use wasm_bindgen::prelude::*;
 
 pub type DbKey = [u8; 20];
 
-#[wasm_bindgen]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ChunkCoord {
     pub x: i32,

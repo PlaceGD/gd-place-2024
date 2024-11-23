@@ -93,9 +93,9 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     end_trans01: f32,
     is_countdown: bool,
 ) {
-    if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
-        return;
-    }
+    // if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
+    //     return;
+    // }
 
     //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
 
@@ -108,35 +108,35 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     let mut scaleup = 1.0;
     let mut angle_offset = 0.0;
 
-    if end_trans01 > 0.0 {
-        let (delay, explosion_d, angular_velocity, pos) =
-            obj_end_anim(obj, state, end_trans01, key);
-        //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
+    // if end_trans01 > 0.0 {
+    //     let (delay, explosion_d, angular_velocity, pos) =
+    //         obj_end_anim(obj, state, end_trans01, key);
+    //     //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
 
-        //console_log!("{}", z_scaleup);
+    //     //console_log!("{}", z_scaleup);
 
-        billy.translate(pos - vec2(obj.x, obj.y));
-        scaleup *= 1.0 - explosion_d;
-        // if scaleup <= 0.0 {
-        //     return;
-        // }
-        //billy.scale(vec2(z_scaleup, z_scaleup));
+    //     billy.translate(pos - vec2(obj.x, obj.y));
+    //     scaleup *= 1.0 - explosion_d;
+    //     // if scaleup <= 0.0 {
+    //     //     return;
+    //     // }
+    //     //billy.scale(vec2(z_scaleup, z_scaleup));
 
-        angle_offset += angular_velocity * PI * 0.1 * (end_trans01 * 10.0 - delay).max(0.0)
-            + angular_velocity * explosion_d;
+    //     angle_offset += angular_velocity * PI * 0.1 * (end_trans01 * 10.0 - delay).max(0.0)
+    //         + angular_velocity * explosion_d;
 
-        // let fadeout_d =
-        //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
-        // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
-    }
+    //     // let fadeout_d =
+    //     //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
+    //     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
+    // }
 
     billy.apply_transform(obj.transform());
-    if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
-        let rand = key.random_num(10);
-        let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
+    // if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
+    //     let rand = key.random_num(10);
+    //     let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
 
-        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
-    }
+    //     billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
+    // }
 
     billy.scale(vec2(scaleup, scaleup));
     billy.rotate(angle_offset);
@@ -150,20 +150,22 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
-    tint_color *= if !state.show_collidable || color_overridden {
-        if info.category == ObjectCategory::Triggers {
-            vec4(1.0, 1.0, 1.0, 1.0)
-        } else {
-            color
-        }
-    } else {
-        match info.hitbox_type {
-            HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
-            HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
-            HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
-            HitboxType::Special => vec4(0.0, 100.0, 0.0, 0.5),
-        }
-    };
+    tint_color *= color;
+
+    // tint_color *= if !state.show_collidable || color_overridden {
+    //     if info.category == ObjectCategory::Triggers {
+    //         vec4(1.0, 1.0, 1.0, 1.0)
+    //     } else {
+    //         color
+    //     }
+    // } else {
+    //     match info.hitbox_type {
+    //         HitboxType::NoHitbox => vec4(0.0, 0.0, 0.0, 0.0),
+    //         HitboxType::Solid => vec4(0.0, 0.0, 100.0, 0.5),
+    //         HitboxType::Hazard => vec4(100.0, 0.0, 0.0, 0.5),
+    //         HitboxType::Special => vec4(0.0, 100.0, 0.0, 0.5),
+    //     }
+    // };
 
     billy.centered_textured_rect(
         vec2(sprite.offset.0, -sprite.offset.1),
@@ -174,47 +176,47 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
         uv_size,
     );
 
-    if special_ids::COLOR_TRIGGERS.contains(&obj.id) {
-        billy.centered_solid_rect(
-            -vec2(0.0, 42.0),
-            vec2(128.0, 128.0),
-            vec4(0.0, 0.0, 0.0, 1.0),
-        );
-        if !state.show_collidable {
-            billy.centered_solid_rect(-vec2(0.0, 42.0), vec2(112.0, 112.0), color);
-        }
-    }
-    if special_ids::SFX_TRIGGER == obj.id {
-        let sfx_id = obj.main_color.r;
+    // if special_ids::COLOR_TRIGGERS.contains(&obj.id) {
+    //     billy.centered_solid_rect(
+    //         -vec2(0.0, 42.0),
+    //         vec2(128.0, 128.0),
+    //         vec4(0.0, 0.0, 0.0, 1.0),
+    //     );
+    //     if !state.show_collidable {
+    //         billy.centered_solid_rect(-vec2(0.0, 42.0), vec2(112.0, 112.0), color);
+    //     }
+    // }
+    // if special_ids::SFX_TRIGGER == obj.id {
+    //     let sfx_id = obj.main_color.r;
 
-        if let Some(sprite) = SFX_ICON_SPRITES.get(sfx_id as usize) {
-            let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
-            let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
-            billy.centered_textured_rect(
-                -vec2(0.0, 42.0),
-                uv_size * 128.0 / uv_size.max_element(),
-                Vec4::ONE,
-                2,
-                uv_pos,
-                uv_size,
-            )
-        }
-    } else if special_ids::SONG_TRIGGER == obj.id {
-        let song_id = obj.main_color.r;
+    //     if let Some(sprite) = SFX_ICON_SPRITES.get(sfx_id as usize) {
+    //         let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
+    //         let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+    //         billy.centered_textured_rect(
+    //             -vec2(0.0, 42.0),
+    //             uv_size * 128.0 / uv_size.max_element(),
+    //             Vec4::ONE,
+    //             2,
+    //             uv_pos,
+    //             uv_size,
+    //         )
+    //     }
+    // } else if special_ids::SONG_TRIGGER == obj.id {
+    //     let song_id = obj.main_color.r;
 
-        if let Some(sprite) = SONG_ICON_SPRITES.get(song_id as usize) {
-            let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
-            let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
-            billy.centered_textured_rect(
-                -vec2(0.0, 42.0),
-                uv_size * 128.0 / uv_size.max_element(),
-                Vec4::ONE,
-                2,
-                uv_pos,
-                uv_size,
-            )
-        }
-    }
+    //     if let Some(sprite) = SONG_ICON_SPRITES.get(song_id as usize) {
+    //         let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
+    //         let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+    //         billy.centered_textured_rect(
+    //             -vec2(0.0, 42.0),
+    //             uv_size * 128.0 / uv_size.max_element(),
+    //             Vec4::ONE,
+    //             2,
+    //             uv_pos,
+    //             uv_size,
+    //         )
+    //     }
+    // }
 
     billy.set_transform(old_t);
 }
@@ -273,18 +275,19 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
     is_countdown: bool,
 ) {
     //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
-    let mut ending_stars = Vec::new();
+    // let mut ending_stars = Vec::new();
 
     for layer in 0..(Z_LAYERS.len() + 1) {
         for sheet_batch_idx in 0..5 {
             for batch_idx in 0..2 {
-                if end_trans01 < 1.0 {
-                    billy.set_blend_mode(if state.show_collidable {
-                        BlendMode::Normal
-                    } else {
-                        [BlendMode::Additive, BlendMode::Normal][batch_idx]
-                    });
-                }
+                billy.set_blend_mode([BlendMode::Additive, BlendMode::Normal][batch_idx]);
+                // if end_trans01 < 1.0 {
+                //     // billy.set_blend_mode(if state.show_collidable {
+                //     //     BlendMode::Normal
+                //     // } else {
+                //     //     [BlendMode::Additive, BlendMode::Normal][batch_idx]
+                //     // });
+                // }
                 for (_, chunk) in &level.chunks {
                     let sheet_batch = &chunk.layers[layer].sheet_batches[sheet_batch_idx];
                     let batch = &sheet_batch[batch_idx];
@@ -292,68 +295,75 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                     // console_log!("bend {}", i);
                     for (_, m) in batch {
                         for (key, (obj, draw)) in m {
-                            if end_trans01 > 0.0 {
-                                ending_stars.push((*key, *obj));
-                            }
-                            if end_trans01 < 1.0 {
-                                for &bottom_texture in match draw {
-                                    crate::level::ObjectDraw::Both => &[false, true] as &[bool],
-                                    crate::level::ObjectDraw::TopTexture => &[false],
-                                    crate::level::ObjectDraw::BottomTexture => &[true],
-                                } {
-                                    let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
-                                    let bottom_texture = if main_over_detail {
-                                        !bottom_texture
-                                    } else {
-                                        bottom_texture
-                                    };
-                                    let (sprites, color) = if bottom_texture {
-                                        (&DETAIL_SPRITES, obj.detail_color)
-                                    } else {
-                                        (&MAIN_SPRITES, obj.main_color)
-                                    };
-                                    if let Some(sprite) = sprites[obj.id as usize] {
-                                        // console_log!("-> {:?} {}", draw, batch_idx);
-                                        if color.blending == (batch_idx == 0) {
-                                            let (color, overriden) =
-                                                color_override(*key, obj, bottom_texture)
-                                                    .map(|v| (v, true))
-                                                    .unwrap_or((
-                                                        Vec4::from_array(
-                                                            [
-                                                                color.r,
-                                                                color.g,
-                                                                color.b,
-                                                                color.opacity,
-                                                            ]
-                                                            .map(|v| v as f32 / 255.0),
-                                                        ),
-                                                        false,
-                                                    ));
-                                            // let color = if state.selected_object == Some(*key) {
-                                            //     selected_color(detail)
-                                            // } else {
-                                            //     Vec4::from_array(
-                                            //         [color.r, color.g, color.b, color.opacity]
-                                            //             .map(|v| v as f32 / 255.0),
-                                            //     )
-                                            // };
+                            // if end_trans01 > 0.0 {
+                            //     ending_stars.push((*key, *obj));
+                            // }
+                            // if end_trans01 < 1.0 {
+                            for &bottom_texture in match draw {
+                                crate::level::ObjectDraw::Both => &[false, true] as &[bool],
+                                crate::level::ObjectDraw::TopTexture => &[false],
+                                crate::level::ObjectDraw::BottomTexture => &[true],
+                            } {
+                                let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
+                                let bottom_texture = if main_over_detail {
+                                    !bottom_texture
+                                } else {
+                                    bottom_texture
+                                };
+                                let (sprites, color) = if bottom_texture {
+                                    (&DETAIL_SPRITES, obj.detail_color)
+                                } else {
+                                    (&MAIN_SPRITES, obj.main_color)
+                                };
+                                if let Some(sprite) = sprites[obj.id as usize] {
+                                    // console_log!("-> {:?} {}", draw, batch_idx);
+                                    if color.blending == (batch_idx == 0) {
+                                        let (color, overriden) = (
+                                            Vec4::new(
+                                                color.r as f32 / 255.0,
+                                                color.g as f32 / 255.0,
+                                                color.b as f32 / 255.0,
+                                                color.opacity as f32 / 255.0,
+                                            ),
+                                            // Vec4::from_array(
+                                            //     [color.r, color.g, color.b, color.opacity]
+                                            //         .map(|v| v as f32 / 255.0),
+                                            // ),
+                                            false,
+                                        );
+                                        // color_override(*key, obj, bottom_texture)
+                                        //     .map(|v| (v, true))
+                                        //     .unwrap_or((
+                                        //         Vec4::from_array(
+                                        //             [color.r, color.g, color.b, color.opacity]
+                                        //                 .map(|v| v as f32 / 255.0),
+                                        //         ),
+                                        //         false,
+                                        //     ));
+                                        // let color = if state.selected_object == Some(*key) {
+                                        //     selected_color(detail)
+                                        // } else {
+                                        //     Vec4::from_array(
+                                        //         [color.r, color.g, color.b, color.opacity]
+                                        //             .map(|v| v as f32 / 255.0),
+                                        //     )
+                                        // };
 
-                                            draw_level_obj_sprite(
-                                                state,
-                                                billy,
-                                                sprite,
-                                                obj,
-                                                color,
-                                                overriden,
-                                                *key,
-                                                end_trans01,
-                                                is_countdown,
-                                            );
-                                        }
+                                        draw_level_obj_sprite(
+                                            state,
+                                            billy,
+                                            sprite,
+                                            obj,
+                                            color,
+                                            overriden,
+                                            *key,
+                                            end_trans01,
+                                            is_countdown,
+                                        );
                                     }
                                 }
                             }
+                            // }
                         }
                     }
                 }
@@ -361,13 +371,13 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
         }
     }
 
-    if end_trans01 > 0.0 {
-        billy.set_blend_mode(BlendMode::Additive);
+    // if end_trans01 > 0.0 {
+    //     billy.set_blend_mode(BlendMode::Additive);
 
-        for (key, obj) in ending_stars {
-            draw_ending_sparkle(state, billy, obj, key, end_trans01);
-        }
-    }
+    //     for (key, obj) in ending_stars {
+    //         draw_ending_sparkle(state, billy, obj, key, end_trans01);
+    //     }
+    // }
 }
 
 fn ease_out_cubic(x: f32) -> f32 {

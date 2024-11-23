@@ -3,6 +3,7 @@ use std::{error::Error, fmt::Display, sync::Arc, time::Instant};
 use glam::{uvec2, vec2, vec4, UVec2};
 use image::{ImageError, ImageResult};
 use wgpu::{util::DeviceExt, Buffer, CreateSurfaceError, WindowHandle};
+use winit::dpi::PhysicalSize;
 
 use crate::render::{data::Globals, pipeline_grid, pipeline_rect};
 
@@ -60,8 +61,8 @@ fn create_textures_bind_group(
             .map_err(StateError::ImageError)?;
     let bg = image::load_from_memory(include_bytes!("../../assets/background.png"))
         .map_err(StateError::ImageError)?;
-    let ground = image::load_from_memory(include_bytes!("../../assets/ground.png"))
-        .map_err(StateError::ImageError)?;
+    // let ground = image::load_from_memory(include_bytes!("../../assets/ground.png"))
+    //     .map_err(StateError::ImageError)?;
     // let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
 
     // let list = [
@@ -74,6 +75,24 @@ fn create_textures_bind_group(
     let textures_bind_group_layout =
         device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
             entries: &[
+                // wgpu::BindGroupLayoutEntry {
+                //     binding: 2,
+                //     visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                //     ty: wgpu::BindingType::Texture {
+                //         multisampled: false,
+                //         view_dimension: wgpu::TextureViewDimension::D2,
+                //         sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                //     },
+                //     count: None,
+                // },
+                // wgpu::BindGroupLayoutEntry {
+                //     binding: 3,
+                //     visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
+                //     ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                //     count: None,
+                // },
+
+                // spritesheet nearest neighbour + linear
                 wgpu::BindGroupLayoutEntry {
                     binding: 0,
                     visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
@@ -106,6 +125,7 @@ fn create_textures_bind_group(
                     ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
                     count: None,
                 },
+                // background
                 wgpu::BindGroupLayoutEntry {
                     binding: 4,
                     visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
@@ -122,31 +142,15 @@ fn create_textures_bind_group(
                     ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
                     count: None,
                 },
-                wgpu::BindGroupLayoutEntry {
-                    binding: 6,
-                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                    ty: wgpu::BindingType::Texture {
-                        multisampled: false,
-                        view_dimension: wgpu::TextureViewDimension::D2,
-                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                    },
-                    count: None,
-                },
-                wgpu::BindGroupLayoutEntry {
-                    binding: 7,
-                    visibility: wgpu::ShaderStages::VERTEX_FRAGMENT,
-                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                    count: None,
-                },
             ],
             label: None,
         });
 
     let textures = vec![
-        Texture::from_image(device, queue, &bg, wgpu::FilterMode::Linear),
-        Texture::from_image(device, queue, &ground, wgpu::FilterMode::Linear),
+        // Texture::from_image(device, queue, &ground, wgpu::FilterMode::Linear),
         Texture::from_image(device, queue, &spritesheet, wgpu::FilterMode::Linear),
         Texture::from_image(device, queue, &spritesheet, wgpu::FilterMode::Nearest),
+        Texture::from_image(device, queue, &bg, wgpu::FilterMode::Linear),
     ];
 
     let mut entries = vec![];
@@ -184,7 +188,7 @@ impl RenderState {
     ) -> Result<Self, StateError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptionsBase {
-                power_preference: wgpu::PowerPreference::HighPerformance,
+                power_preference: wgpu::PowerPreference::None,
                 force_fallback_adapter: false,
                 compatible_surface: Some(&surface),
             })
@@ -196,11 +200,7 @@ impl RenderState {
                 &wgpu::DeviceDescriptor {
                     label: None,
                     required_features: wgpu::Features::empty(),
-                    required_limits: wgpu::Limits {
-                        max_texture_dimension_1d: 4096,
-                        max_texture_dimension_2d: 4096,
-                        ..wgpu::Limits::downlevel_webgl2_defaults()
-                    },
+                    required_limits: wgpu::Limits::default(),
                 },
                 None,
             )
@@ -215,6 +215,7 @@ impl RenderState {
             .copied()
             .find(|f| !f.is_srgb())
             .unwrap_or(surface_caps.formats[0]);
+
         let surface_config = wgpu::SurfaceConfiguration {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             format: surface_format,
@@ -380,11 +381,14 @@ impl RenderState {
         })
     }
 
-    pub async fn new_canvas(window: impl WindowHandle + 'static) -> Result<Self, StateError> {
+    pub async fn new_canvas(
+        window: impl WindowHandle + 'static,
+        size: PhysicalSize<u32>,
+    ) -> Result<Self, StateError> {
         // let size = uvec2(window.window_handle()/, window.height());
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::GL,
+            backends: wgpu::Backends::all(),
             ..Default::default()
         });
 
@@ -394,7 +398,7 @@ impl RenderState {
 
         Self::new(
             surface,
-            uvec2(1, 1), // TODO: first time size?
+            uvec2(size.width, size.height), // TODO: first time size?
             instance,
         )
         .await

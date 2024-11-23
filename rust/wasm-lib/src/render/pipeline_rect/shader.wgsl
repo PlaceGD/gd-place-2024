@@ -65,9 +65,9 @@ fn vs_main(
         case 1u: {
             out.uv /= vec2<f32>(textureDimensions(t_1));
         }
-        case 2u: {
-            out.uv /= vec2<f32>(textureDimensions(t_2));
-        }
+        // case 2u: {
+        //     out.uv /= vec2<f32>(textureDimensions(t_2));
+        // }
         case 3u: {
             out.uv /= vec2<f32>(textureDimensions(t_3));
         }
@@ -86,14 +86,16 @@ fn vs_main(
 
 @group(0) @binding(0) var<uniform> globals: Globals;
 
-@group(1) @binding(0) var t_1: texture_2d<f32>;
-@group(1) @binding(1) var s_1: sampler;
-@group(1) @binding(2) var t_2: texture_2d<f32>;
-@group(1) @binding(3) var s_2: sampler;
-@group(1) @binding(4) var t_3: texture_2d<f32>;
-@group(1) @binding(5) var s_3: sampler;
-@group(1) @binding(6) var t_4: texture_2d<f32>;
-@group(1) @binding(7) var s_4: sampler;
+@group(1) @binding(0) var t_3: texture_2d<f32>;
+@group(1) @binding(1) var s_3: sampler;
+@group(1) @binding(2) var t_4: texture_2d<f32>;
+@group(1) @binding(3) var s_4: sampler;
+
+@group(1) @binding(4) var t_1: texture_2d<f32>;
+@group(1) @binding(5) var s_1: sampler;
+
+// @group(1) @binding(4) var t_2: texture_2d<f32>;
+// @group(1) @binding(5) var s_2: sampler;
 // @group(1) @binding(8) var t_5: texture_2d<f32>;
 // @group(1) @binding(9) var s_5: sampler;
 
@@ -124,10 +126,14 @@ fn fs_color(in: VertexOutput) -> vec4<f32> {
             return in.color;
         }
         case 1u: {
+            // return vec4(0.0, 0.0, 0.0, 0.0, );
+            // return in.color;
             return textureSampleLevel(t_1, s_1, in.uv, 0.0) * in.color;
         }
         case 2u: {
-            return textureSampleLevel(t_2, s_2, in.uv, 0.0) * in.color;
+            // return vec4(0.0, 0.0, 0.0, 0.0, );
+             return in.color;
+            // return textureSampleLevel(t_2, s_2, in.uv, 0.0) * in.color;
         }
         case 3u: {
             return textureSampleLevel(t_3, s_3, in.uv, 0.0) * in.color;

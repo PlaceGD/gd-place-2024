@@ -39,7 +39,7 @@ pub struct Countdown {
 }
 
 impl Countdown {
-    const OFFSET: Vec2 = vec2(450.0, 390.0 + 30.0 * 14.0);
+    const OFFSET: Vec2 = vec2(0.0, 0.0);
 
     pub fn new() -> Self {
         Self {

@@ -9,6 +9,7 @@ mod util;
 mod utilgen;
 
 use std::sync::Arc;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use render::state::{RenderState, StateError};
 
@@ -17,7 +18,7 @@ use state::State;
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-use winit::window::{Window, WindowId};
+use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 
 // pub async fn create_view(
 //     canvas: OffscreenCanvas,
@@ -43,36 +44,64 @@ use winit::window::{Window, WindowId};
 struct App {
     window: Option<Arc<Window>>,
     state: Option<State>,
+
+    // delta: f64,
+    prev_time: u128,
 }
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = Arc::new(
-            event_loop
-                .create_window(Window::default_attributes())
-                .unwrap(),
-        );
+        let window_attributes = WindowAttributes::default()
+            .with_resizable(true)
+            // .with_enabled_buttons(WindowButtons::empty())
+            .with_title("GD Place Countdown Clock")
+            .with_transparent(true);
+        // .with_decorations(false);
+
+        let window = Arc::new(event_loop.create_window(window_attributes).unwrap());
+        let size = window.outer_size();
 
         self.window = Some(Arc::clone(&window));
 
-        let canvas = futures::executor::block_on(RenderState::new_canvas(Arc::clone(&window)))
-            .expect("TODO: handle me");
+        let canvas =
+            futures::executor::block_on(RenderState::new_canvas(Arc::clone(&window), size))
+                .expect("TODO: handle me");
 
-        self.state = Some(State::new(canvas));
+        let mut state = State::new(canvas, size);
+
+        state.set_event_start(1732996643000.0);
+        state.set_now(0.0);
+        // state.set_quality(1.0);
+        self.state = Some(state);
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::CloseRequested => {
-                // println!("The close button was pressed; stopping");
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
                 if let Some(state) = &mut self.state {
-                    state.render(0.0)
+                    // self.delta += 1 / 60;
+
+                    let start = SystemTime::now();
+                    let now = start
+                        .duration_since(UNIX_EPOCH)
+                        .expect("Time went backwards")
+                        .as_millis();
+
+                    state.set_now(now as f64);
+                    state.render((now - self.prev_time) as f32);
+
+                    self.prev_time = now;
                 }
 
                 self.window.as_ref().unwrap().request_redraw();
+            }
+            WindowEvent::Resized(size) => {
+                if let Some(state) = &mut self.state {
+                    state.resize(size.width, size.height);
+                }
             }
             _ => (),
         }
@@ -89,6 +118,8 @@ fn main() -> Result<(), StateError> {
     let mut app = App {
         window: None,
         state: None,
+        // delta: 0.0,
+        prev_time: 0,
     };
     event_loop.run_app(&mut app).unwrap();
 

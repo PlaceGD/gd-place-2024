@@ -39,7 +39,7 @@ pub struct Countdown {
 }
 
 impl Countdown {
-    const OFFSET: Vec2 = vec2(0.0, 0.0);
+    const OFFSET: Vec2 = vec2(-850.0, 0.0);
 
     pub fn new() -> Self {
         Self {
@@ -59,8 +59,9 @@ impl Countdown {
     }
     pub fn update_state(&mut self, event_start: f64, now: f64) {
         //console_log!("{event_start} {now}");
-        let event_elapsed = now / 1000.0 - event_start / 1000.0;
-        let time_until = -event_elapsed;
+        // let event_elapsed = now / 1000.0 - event_start / 1000.0;
+        // let time_until = -event_elapsed;
+        let time_until = now / 1000.0;
 
         if time_until.is_nan() || time_until.is_infinite() {
             return;
@@ -73,39 +74,38 @@ impl Countdown {
         let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
         //console_log!("{}", switch_id % SET_SWITCHES.len());
 
-        let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
-            ([None; 8], false, false, false)
-        } else {
-            let days = (time_until / 86400.0).floor();
-            let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
-            let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
-            let seconds =
-                (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
+        let days = (time_until / 86400.0).floor();
+        let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
+        let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
+        let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
 
-            let show_days = days != 0.0;
-            let show_hours = true; //show_days || hours != 0.0;
-            let show_minutes = true; //show_hours || minutes != 0.0;
+        let show_days = false; //days != 0.0;
+        let show_hours = true; //show_days || hours != 0.0;
+        let show_minutes = true; //show_hours || minutes != 0.0;
 
-            fn digits(num: u8, display: bool) -> (Option<u8>, Option<u8>) {
-                if !display {
-                    (None, None)
-                } else {
-                    (Some(num / 10), Some(num % 10))
-                }
+        fn digits(num: u8, display: bool) -> (Option<u8>, Option<u8>) {
+            if !display {
+                (None, None)
+            } else {
+                (Some(num / 10), Some(num % 10))
             }
+        }
 
-            let (dayd1, dayd2) = digits(days as u8, show_days);
-            let (hourd1, hourd2) = digits(hours as u8, show_hours);
-            let (mind1, mind2) = digits(minutes as u8, show_minutes);
-            let (secd1, secd2) = digits(seconds as u8, true);
+        let (dayd1, dayd2) = digits(days as u8, show_days);
+        let (hourd1, hourd2) = digits(hours as u8, show_hours);
+        let (mind1, mind2) = digits(minutes as u8, show_minutes);
+        let (secd1, secd2) = digits(seconds as u8, true);
 
-            (
-                [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2],
-                show_days,
-                show_hours,
-                show_minutes,
-            )
-        };
+        let (state, show_days, show_hours, show_minutes) = (
+            [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2],
+            show_days,
+            show_hours,
+            show_minutes,
+        );
+        // let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
+        //     ([None; 8], false, false, false)
+        // } else {
+        // };
 
         for i in 0..8 {
             let delay = index_delay(i);
@@ -263,32 +263,35 @@ impl Countdown {
 
         let mut offset = Self::OFFSET;
 
-        self.days_marker
-            .iter()
-            .chain(self.hours_marker.iter())
-            .chain(self.minutes_marker.iter())
-            .chain(self.hours_colon.iter())
-            .chain(self.minutes_colon.iter())
-            .for_each(|o| {
-                o.get(state.now).inspect(|o| {
-                    add_object(o.offset(offset - vec2(450.0, 450.0 + 30.0 * 14.0)));
-                    // level.add_object(*o, idx);
-                    // idx += 1;
-                });
-            });
+        // self.days_marker
+        //     .iter()
+        //     .chain(self.hours_marker.iter())
+        //     .chain(self.minutes_marker.iter())
+        //     .chain(self.hours_colon.iter())
+        //     .chain(self.minutes_colon.iter())
+        //     .for_each(|o| {
+        //         o.get(state.now).inspect(|o| {
+        //             add_object(o.offset(offset - vec2(0.0, 30.0 * 14.0)));
+        //             // level.add_object(*o, idx);
+        //             // idx += 1;
+        //         });
+        //     });
 
         for (i, digit) in self.digits.iter().enumerate() {
+            // dbg!(&offset);
+
             if i == 2 {
-                offset += vec2(-30.0 * 14.0, -30.0 * 14.0); // line break
+                offset += vec2(0.0, 0.0); // line break
             } else if i != 0 && i % 2 == 0 {
                 offset += vec2(30.0 * 3.0, 0.0); // colons
             }
             // digit.draw(billy);
 
-            for obj in &digit.objects {
+            for (i, obj) in digit.objects.iter().enumerate() {
                 obj.get(state.now).inspect(|o| {
                     // level.add_object(o.offset(offset), idx);
                     // idx += 1;
+
                     add_object(o.offset(offset));
                 });
             }

@@ -2,8 +2,6 @@ use std::collections::{BTreeMap, HashMap};
 
 use indexmap::IndexMap;
 
-use wasm_bindgen::prelude::*;
-
 use crate::util::Rect;
 
 use super::{

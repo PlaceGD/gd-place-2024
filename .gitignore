@@ -41,6 +41,8 @@ static/versions/*.ver
 
 functions/shared-lib
 
+db.json
+
 # rust/wasm-lib/src/countdown_digits
 # rust/wasm-lib/src/utilgen.rs
 # shared-lib/src/gd

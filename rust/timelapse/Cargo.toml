@@ -1,0 +1,22 @@
+[package]
+name = "timelapse"
+version = "0.1.0"
+authors = ["@DexterHill0", "@FlowVix"]
+edition = "2021"
+
+
+[dependencies]
+winit = { workspace = true }
+image = { workspace = true }
+pollster = "0.4.0"
+draw-lib = { path = "../draw-lib" }
+rust-shared = { path = "../rust-shared" }
+
+serde = { workspace = true }
+glam = { workspace = true }
+serde_json = { workspace = true }
+num-bigint = { workspace = true }
+
+num = "0.4.3"
+parking_lot = "0.12.3"
+owo-colors = "4.1.0"

@@ -81,100 +81,100 @@ fn generate_shide(sheet: bool) {
     use itertools::Itertools;
     use std::fs;
     eprintln!("GLABOBOBOB");
-    if !PathBuf::from("../../src/assets").exists() {
-        std::fs::create_dir("../../src/assets").unwrap();
+    if !PathBuf::from("../timelapse/assets").exists() {
+        std::fs::create_dir("../timelapse/assets").unwrap();
     }
-    if !PathBuf::from("../../shared-lib/src/gd").exists() {
-        std::fs::create_dir("../../shared-lib/src/gd").unwrap();
-    }
+    // if !PathBuf::from("../../shared-lib/src/gd").exists() {
+    //     std::fs::create_dir("../../shared-lib/src/gd").unwrap();
+    // }
 
     if sheet {
         let (mut img, data) = make_spritesheet();
         color_bleed(&mut img);
 
-        img.save("../../src/assets/spritesheet.png").unwrap();
-        fs::write(
-            "../../shared-lib/src/gd/spritesheet.json",
-            serde_json::to_string(&json!(data)).unwrap(),
-        )
-        .unwrap();
-        fs::write("../wasm-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
+        img.save("../timelapse/assets/spritesheet.png").unwrap();
+        // fs::write(
+        //     "../../shared-lib/src/gd/spritesheet.json",
+        //     serde_json::to_string(&json!(data)).unwrap(),
+        // )
+        // .unwrap();
+        fs::write("../draw-lib/src/utilgen.rs", make_wasm_lib_utilgen(&data)).unwrap();
     }
     fs::write(
-        "../wasm-lib/src/countdown_digits",
+        "../draw-lib/src/countdown_digits",
         make_get_countdown_digits_fn(),
     )
     .unwrap();
 
-    fs::write(
-        "../../shared-lib/src/gd/objects.json",
-        serde_json::to_string(&json!(AVAILABLE_OBJECTS
-            .iter()
-            .copied()
-            .collect::<HashMap<_, _>>()))
-        .unwrap(),
-    )
-    .unwrap();
-    fs::write(
-        "../../shared-lib/src/gd/object_order.json",
-        serde_json::to_string(&json!(AVAILABLE_OBJECTS.iter().map(|v| v.0).collect_vec())).unwrap(),
-    )
-    .unwrap();
-    fs::write(
-        "../../shared-lib/src/gd/colors.json",
-        serde_json::to_string(&get_available_colors()).unwrap(),
-    )
-    .unwrap();
-    fs::write(
-        "../../shared-lib/src/nexusgen.ts",
-        format!(
-            "
-export const BG_TRIGGER: number = {};
-export const GROUND_TRIGGER: number = {};
-export const GROUND_2_TRIGGER: number = {};
-export const ARROW_TRIGGER: number = {};
-export const SFX_TRIGGER: number = {};
-export const SONG_TRIGGER: number = {};
+    // fs::write(
+    //     "../../shared-lib/src/gd/objects.json",
+    //     serde_json::to_string(&json!(AVAILABLE_OBJECTS
+    //         .iter()
+    //         .copied()
+    //         .collect::<HashMap<_, _>>()))
+    //     .unwrap(),
+    // )
+    // .unwrap();
+    //     fs::write(
+    //         "../../shared-lib/src/gd/object_order.json",
+    //         serde_json::to_string(&json!(AVAILABLE_OBJECTS.iter().map(|v| v.0).collect_vec())).unwrap(),
+    //     )
+    //     .unwrap();
+    //     fs::write(
+    //         "../../shared-lib/src/gd/colors.json",
+    //         serde_json::to_string(&get_available_colors()).unwrap(),
+    //     )
+    //     .unwrap();
+    //     fs::write(
+    //         "../../shared-lib/src/nexusgen.ts",
+    //         format!(
+    //             "
+    // export const BG_TRIGGER: number = {};
+    // export const GROUND_TRIGGER: number = {};
+    // export const GROUND_2_TRIGGER: number = {};
+    // export const ARROW_TRIGGER: number = {};
+    // export const SFX_TRIGGER: number = {};
+    // export const SONG_TRIGGER: number = {};
 
-export const TRIGGERS: number[] = {:?};
-export const COLOR_TRIGGERS: number[] = {:?};
+    // export const TRIGGERS: number[] = {:?};
+    // export const COLOR_TRIGGERS: number[] = {:?};
 
-export const SFX_TRIGGER_SOUNDS: string[] = {:?};
-export const SONG_TRIGGER_SONGS: string[] = {:?};
+    // export const SFX_TRIGGER_SOUNDS: string[] = {:?};
+    // export const SONG_TRIGGER_SONGS: string[] = {:?};
 
-export const CHUNK_SIZE_BLOCKS = {};
-export const CHUNK_SIZE_UNITS = CHUNK_SIZE_BLOCKS * 30;
+    // export const CHUNK_SIZE_BLOCKS = {};
+    // export const CHUNK_SIZE_UNITS = CHUNK_SIZE_BLOCKS * 30;
 
-export const LEVEL_WIDTH_BLOCKS = {};
-export const LEVEL_HEIGHT_BLOCKS = {};
-export const LEVEL_WIDTH_UNITS = {};
-export const LEVEL_HEIGHT_UNITS = {};
+    // export const LEVEL_WIDTH_BLOCKS = {};
+    // export const LEVEL_HEIGHT_BLOCKS = {};
+    // export const LEVEL_WIDTH_UNITS = {};
+    // export const LEVEL_HEIGHT_UNITS = {};
 
-export const END_POS_X = {};
-export const END_POS_Y = {};
-export const END_RADIUS = {};
-    ",
-            special_ids::BG_TRIGGER,
-            special_ids::GROUND_TRIGGER,
-            special_ids::GROUND_2_TRIGGER,
-            special_ids::ARROW_TRIGGER,
-            special_ids::SFX_TRIGGER,
-            special_ids::SONG_TRIGGER,
-            special_ids::TRIGGERS,
-            special_ids::COLOR_TRIGGERS,
-            SFX_TRIGGER_SOUNDS,
-            SONG_TRIGGER_SONGS,
-            CHUNK_SIZE_BLOCKS,
-            LEVEL_WIDTH_BLOCKS,
-            LEVEL_HEIGHT_BLOCKS,
-            LEVEL_WIDTH_UNITS,
-            LEVEL_HEIGHT_UNITS,
-            END_POS_X,
-            END_POS_Y,
-            END_RADIUS,
-        ),
-    )
-    .unwrap();
+    // export const END_POS_X = {};
+    // export const END_POS_Y = {};
+    // export const END_RADIUS = {};
+    //     ",
+    //             special_ids::BG_TRIGGER,
+    //             special_ids::GROUND_TRIGGER,
+    //             special_ids::GROUND_2_TRIGGER,
+    //             special_ids::ARROW_TRIGGER,
+    //             special_ids::SFX_TRIGGER,
+    //             special_ids::SONG_TRIGGER,
+    //             special_ids::TRIGGERS,
+    //             special_ids::COLOR_TRIGGERS,
+    //             SFX_TRIGGER_SOUNDS,
+    //             SONG_TRIGGER_SONGS,
+    //             CHUNK_SIZE_BLOCKS,
+    //             LEVEL_WIDTH_BLOCKS,
+    //             LEVEL_HEIGHT_BLOCKS,
+    //             LEVEL_WIDTH_UNITS,
+    //             LEVEL_HEIGHT_UNITS,
+    //             END_POS_X,
+    //             END_POS_Y,
+    //             END_RADIUS,
+    //         ),
+    //     )
+    //     .unwrap();
 }
 
 fn make_get_set_switches_fn() -> String {

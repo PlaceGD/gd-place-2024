@@ -3,7 +3,6 @@ use std::sync::LazyLock;
 use std::{collections::HashMap, hash::Hash};
 
 use binrw::binrw;
-use js_sys::Math::random;
 
 use crate::{
     console_log,

@@ -2,14 +2,12 @@ use std::str::FromStr;
 
 // use serde::{Deserialize, Serialize};
 use binrw::{BinRead, BinWrite};
-use wasm_bindgen::prelude::*;
 
 // use crate::ErrorType;
 
 macro_rules! z_layers {
     ($($name:ident,)*) => {
         #[derive(Debug, Clone, Copy, PartialEq, Eq, BinRead, BinWrite)]
-        #[wasm_bindgen]
         #[brw(little, repr = u8)]
         pub enum ZLayer {
             $(
@@ -18,7 +16,6 @@ macro_rules! z_layers {
         }
         pub const Z_LAYERS: &[ZLayer] = &[$(ZLayer::$name,)*];
 
-        #[wasm_bindgen]
         pub fn z_layer_name(v: ZLayer) -> String {
             match v {
                 $(

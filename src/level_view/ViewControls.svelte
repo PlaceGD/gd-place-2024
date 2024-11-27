@@ -748,15 +748,16 @@
             $zoomTween = $zoomTween + zoomVel * delta;
             let z = state.get_zoom_scale();
             let cameraVel = [
-                (($mouseX - w / 2) / w) * z * 0.1,
-                (($mouseY - h / 2) / h) * z * 0.1,
+                (($mouseX - w / 2) * 15.0) / w / z,
+                (($mouseY - h / 2) * 15.0) / h / z,
             ];
             const camPos = state.get_camera_pos();
-            // moveCamera(
-            //     state,
-            //     camPos[0] + cameraVel[0],
-            //     camPos[1] - cameraVel[1]
-            // );
+
+            moveCamera(
+                state,
+                camPos[0] + cameraVel[0],
+                camPos[1] - cameraVel[1]
+            );
         }
         requestAnimationFrame(cinematicLoop);
     };

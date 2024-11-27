@@ -1,12 +1,12 @@
 use texture_packer::TexturePackerConfig;
 
 pub const PACKER_CONFIG: TexturePackerConfig = TexturePackerConfig {
-    max_width: 4096,
-    max_height: 4096,
+    max_width: 4096 * 2,
+    max_height: 4096 * 2,
     allow_rotation: false,
     border_padding: 0,
     texture_padding: 2,
-    texture_extrusion: 2,
+    texture_extrusion: 8,
     trim: true,
     texture_outlines: false,
     force_max_dimensions: false,

@@ -9,6 +9,7 @@ use rust_shared::{
 use std::{
     f32::consts::PI,
     hash::{DefaultHasher, Hash, Hasher},
+    vec,
 };
 
 use crate::{
@@ -131,12 +132,19 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     }
 
     billy.apply_transform(obj.transform());
-    if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
-        let rand = key.random_num(10);
-        let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
+    // if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
+    //     let rand = key.random_num(10);
+    //     let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
 
-        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
-    }
+    //     billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
+    // }
+
+    // get scale of transform
+    let transform_scale = billy.get_transform().matrix2.determinant().abs().sqrt();
+    // if transform_scale < 0.5 {
+    //     let fix = transform_scale + ((0.5 - transform_scale) * 2.0).powi(2) * 0.02;
+    //     scaleup *= fix / transform_scale;
+    // }
 
     billy.scale(vec2(scaleup, scaleup));
     billy.rotate(angle_offset);
@@ -147,8 +155,15 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
         3
     };
 
-    let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
-    let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+    let margin = if transform_scale < 0.2 {
+        let fix = ((0.2 - transform_scale) * 5.0).powi(2);
+        vec2(fix, fix) * 8.0
+    } else {
+        vec2(0.0, 0.0)
+    };
+
+    let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2() - margin;
+    let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2() + margin * 2.0;
 
     tint_color *= if !state.show_collidable || color_overridden {
         if info.category == ObjectCategory::Triggers {
@@ -285,7 +300,11 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                         [BlendMode::Additive, BlendMode::Normal][batch_idx]
                     });
                 }
-                for (_, chunk) in &level.chunks {
+
+                for coord in state.get_viewable_chunks() {
+                    let Some(chunk) = &level.chunks.get(&coord) else {
+                        continue;
+                    };
                     let sheet_batch = &chunk.layers[layer].sheet_batches[sheet_batch_idx];
                     let batch = &sheet_batch[batch_idx];
 

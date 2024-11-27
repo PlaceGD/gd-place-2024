@@ -160,7 +160,7 @@ fn create_textures_bind_group(
         Texture::from_raw(
             device,
             queue,
-            wgpu::FilterMode::Nearest,
+            wgpu::FilterMode::Linear,
             (spritesheet_width, spritesheet_height),
             spritesheet_data,
         ),
@@ -217,8 +217,8 @@ impl RenderState {
                     label: None,
                     required_features: wgpu::Features::empty(),
                     required_limits: wgpu::Limits {
-                        max_texture_dimension_1d: 4096,
-                        max_texture_dimension_2d: 4096,
+                        max_texture_dimension_1d: 4096 * 2,
+                        max_texture_dimension_2d: 4096 * 2,
                         ..wgpu::Limits::downlevel_webgl2_defaults()
                     },
                 },

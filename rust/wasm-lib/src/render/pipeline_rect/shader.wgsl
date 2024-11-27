@@ -53,7 +53,7 @@ fn vs_main(
 ) -> VertexOutput {
     var out: VertexOutput;
 
-    let pos = mat2x2<f32>(instance.t_x, instance.t_y) * vertex.pos + instance.pos;
+    var pos = mat2x2<f32>(instance.t_x, instance.t_y) * vertex.pos + instance.pos;
 
     out.pos = vec4<f32>(pos / globals.screen_size * 2.0 * globals.quality, 0.0, 1.0);
     out.uv = (vec2(vertex.pos.x, 1.0 - vertex.pos.y) * instance.uv_size + instance.uv_pos);
@@ -124,16 +124,16 @@ fn fs_color(in: VertexOutput) -> vec4<f32> {
             return in.color;
         }
         case 1u: {
-            return textureSampleLevel(t_1, s_1, in.uv, 0.0) * in.color;
+            return textureSample(t_1, s_1, in.uv) * in.color;
         }
         case 2u: {
-            return textureSampleLevel(t_2, s_2, in.uv, 0.0) * in.color;
+            return textureSampleLevel(t_2, s_2, in.uv, 1.0) * in.color;
         }
         case 3u: {
-            return textureSampleLevel(t_3, s_3, in.uv, 0.0) * in.color;
+            return textureSample(t_3, s_3, in.uv) * in.color;
         }
         case 4u: {
-            return textureSampleLevel(t_4, s_4, in.uv, 0.0) * in.color;
+            return textureSample(t_4, s_4, in.uv) * in.color;
         }
         // case 5u: {
         //     return textureSampleLevel(t_5, s_5, in.uv, 0.0) * in.color;

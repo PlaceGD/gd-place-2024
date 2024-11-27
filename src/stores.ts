@@ -417,18 +417,18 @@ export const lastRunColorTrigger = writable<{
 export const currentUserColor: Writable<string> = writable("white");
 
 let currentColorUnsub = () => {};
-loginData.subscribe(v => {
-    currentColorUnsub();
-    if (v.currentUserData != null && v.currentUserData.userDetails != null) {
-        currentColorUnsub = db
-            .ref(
-                `userName/${v.currentUserData.userDetails.username.toLowerCase()}/displayColor`
-            )
-            .on("value", v => {
-                currentUserColor.set(v.val() ?? "white");
-            });
-    }
-});
+// loginData.subscribe(v => {
+//     currentColorUnsub();
+//     // if (v.currentUserData != null && v.currentUserData.userDetails != null) {
+//     //     currentColorUnsub = db
+//     //         .ref(
+//     //             `userName/${v.currentUserData.userDetails.username.toLowerCase()}/displayColor`
+//     //         )
+//     //         .on("value", v => {
+//     //             currentUserColor.set(v.val() ?? "white");
+//     //         });
+//     // }
+// });
 
 // MARK: DOM editor indicator stuff
 
@@ -623,9 +623,9 @@ export const userCount = writable(0);
 
 export const viewingLevelAfterEvent = writable(false);
 
-db.ref("userCount").on("value", v => {
-    userCount.set(v.val());
-});
+// db.ref("userCount").on("value", v => {
+//     userCount.set(v.val());
+// });
 
 export const songPlaying = writable(false);
 export let songPlayingIsPreview = writable(false);

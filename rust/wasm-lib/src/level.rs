@@ -205,6 +205,21 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
         }
         None
     }
+
+    pub fn remove_objects(&mut self, keys: HashSet<K>) {
+        for c in self.chunks.values_mut() {
+            for layer_idx in 0..(c.layers.len() - 1) {
+                for [blending_sheet, normal_sheet] in c.layers[layer_idx].sheet_batches.iter_mut() {
+                    for order_map in blending_sheet.values_mut() {
+                        order_map.retain(|k, _| !keys.contains(k));
+                    }
+                    for order_map in normal_sheet.values_mut() {
+                        order_map.retain(|k, _| !keys.contains(k));
+                    }
+                }
+            }
+        }
+    }
     // pub fn modify_object<F: FnOnce(&mut GDObject)>(&mut self, key: K, cb: F) {
     //     if let Some(mut o) = self.remove_object(key) {
     //         cb(&mut o);

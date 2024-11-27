@@ -50,62 +50,62 @@ export const initUserData = (
 
 let userDataUnsub: Unsubscribe | null = null;
 
-onAuthStateChanged(auth, async user => {
-    if (typeof window !== "undefined") {
-        localStorage.setItem(
-            "authState",
-            user === null ? "-1" : Math.random().toString()
-        );
-    }
+// onAuthStateChanged(auth, async user => {
+//     if (typeof window !== "undefined") {
+//         localStorage.setItem(
+//             "authState",
+//             user === null ? "-1" : Math.random().toString()
+//         );
+//     }
 
-    if (user != null) {
-        let userDataValue: UserData = {
-            user: user,
-            userDetails: null,
-        };
+//     if (user != null) {
+//         let userDataValue: UserData = {
+//             user: user,
+//             userDetails: null,
+//         };
 
-        loginData.update(data => {
-            data.currentUserData = userDataValue;
-            return data;
-        });
+//         loginData.update(data => {
+//             data.currentUserData = userDataValue;
+//             return data;
+//         });
 
-        if (userDataUnsub != null) {
-            userDataUnsub();
-        }
+//         if (userDataUnsub != null) {
+//             userDataUnsub();
+//         }
 
-        userDataUnsub = db
-            .ref(`userDetails/${user.uid}`)
-            .on("value", snapshot => {
-                const placeData = snapshot.val();
+//         userDataUnsub = db
+//             .ref(`userDetails/${user.uid}`)
+//             .on("value", snapshot => {
+//                 const placeData = snapshot.val();
 
-                loginData.update(data => {
-                    if (data.currentUserData != null) {
-                        data.currentUserData.userDetails = placeData ?? null;
-                    } else {
-                        console.error(
-                            "User data set before user was created! (`onAuthStateChanged`)"
-                        );
-                        Toast.showErrorToast(
-                            "There was an issue signing in. Please try again."
-                        );
-                    }
-                    return data;
-                });
+//                 loginData.update(data => {
+//                     if (data.currentUserData != null) {
+//                         data.currentUserData.userDetails = placeData ?? null;
+//                     } else {
+//                         console.error(
+//                             "User data set before user was created! (`onAuthStateChanged`)"
+//                         );
+//                         Toast.showErrorToast(
+//                             "There was an issue signing in. Please try again."
+//                         );
+//                     }
+//                     return data;
+//                 });
 
-                if (placeData != null) {
-                    setPersistence(auth, browserLocalPersistence);
-                }
-            });
-    } else {
-        setPersistence(auth, inMemoryPersistence);
+//                 if (placeData != null) {
+//                     setPersistence(auth, browserLocalPersistence);
+//                 }
+//             });
+//     } else {
+//         setPersistence(auth, inMemoryPersistence);
 
-        if (userDataUnsub != null) {
-            userDataUnsub();
-        }
+//         if (userDataUnsub != null) {
+//             userDataUnsub();
+//         }
 
-        loginData.update(data => {
-            data.currentUserData = null;
-            return data;
-        });
-    }
-});
+//         loginData.update(data => {
+//             data.currentUserData = null;
+//             return data;
+//         });
+//     }
+// });

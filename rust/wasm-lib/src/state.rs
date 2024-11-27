@@ -1,5 +1,5 @@
 use core::f64;
-use std::{io::Cursor, sync::LazyLock};
+use std::{collections::HashSet, io::Cursor, sync::LazyLock};
 
 use binrw::BinRead;
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
@@ -259,7 +259,7 @@ impl State {
 
         gongy
     }
-    fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
+    pub fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
         let mut view_rect = self.get_camera_world_rect().expanded(1.5);
 
         let mut out = vec![];
@@ -532,6 +532,7 @@ impl State {
 
     pub fn run_history(&mut self, index: usize, timelapse_time: u32) -> usize {
         let mut history_index = index;
+        let mut removed_objs = HashSet::default();
         if history_index > 0 && HISTORY.actions[history_index - 1].time() > timelapse_time as u32 {
             while history_index > 0
                 && HISTORY.actions[history_index - 1].time() < timelapse_time as u32
@@ -545,16 +546,25 @@ impl State {
             {
                 let HistoryItem { obj, objkey, .. } = HISTORY.actions[history_index];
                 if obj == [0; 26] {
-                    self.level.remove_object(objkey);
+                    removed_objs.insert(objkey);
                 } else {
-                    let obj = GDObjectOpt::from_bytes(obj.as_slice().into()).unwrap();
-                    self.level
-                        .add_object(obj.into_obj(), objkey, None, self.now);
+                    let nobj = GDObjectOpt::from_bytes(obj.as_slice().into())
+                        .unwrap()
+                        .into_obj();
+                    if !((nobj.ix.powi(2) + nobj.iy.powi(2)).sqrt() > 3.0
+                        || (nobj.jx.powi(2) + nobj.jy.powi(2)).sqrt() > 3.0)
+                    {
+                        self.level.add_object(nobj, objkey, None, self.now);
+                    }
                 }
 
                 history_index += 1;
             }
         }
+
+        self.level.remove_objects(removed_objs);
+
+        //console_log!("{}", history_index - index);
 
         history_index
     }

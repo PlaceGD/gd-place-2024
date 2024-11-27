@@ -66,4 +66,4 @@ if (typeof window !== "undefined" && __RT_DB_ENV === "local") {
     connectAuthEmulator(auth, "http://127.0.0.1:8000");
 }
 
-export const db = convertDatabase<DatabaseSchema>(db_);
+export const db = null; //convertDatabase<DatabaseSchema>(db_);

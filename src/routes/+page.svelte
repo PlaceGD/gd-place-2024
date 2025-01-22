@@ -34,7 +34,7 @@
     let openTrans = tweened(
         0,
         // "bgColor",
-        { duration: 500, easing: cubicIn }
+        { duration: 0, easing: cubicIn }
     );
 
     onMount(() => {
@@ -57,7 +57,7 @@
     $: if (loaded && $eventStatus !== "loading") {
         setTimeout(() => {
             $openTrans = 1;
-        }, 500);
+        }, 0);
     }
 
     $: progress =

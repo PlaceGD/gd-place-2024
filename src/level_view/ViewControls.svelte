@@ -71,6 +71,7 @@
         setNameSeconds,
         DEFAULT_SETTINGS,
         getServerNow,
+        addDebugTimeOffset,
     } from "../stores";
     import {
         getTransformedPlaceOffset,
@@ -818,45 +819,76 @@
     }}
     on:keydown={e => {
         console.log(e.code);
-        e.preventDefault();
 
         if (e.code == "Space") {
+            e.preventDefault();
             togglePause();
             return;
         }
 
         if (e.shiftKey && e.code == "ArrowLeft") {
+            e.preventDefault();
             skipForward(-300);
             return;
         }
 
         if (e.shiftKey && e.code == "ArrowRight") {
+            e.preventDefault();
             skipForward(300);
             return;
         }
 
         if (e.code == "ArrowUp") {
+            e.preventDefault();
             zoomVel += 0.00000045;
             return;
         }
 
         if (e.code == "ArrowDown") {
+            e.preventDefault();
             zoomVel -= 0.00000045;
             return;
         }
 
         if (e.code == "ArrowLeft") {
+            e.preventDefault();
             skipForward(-3000);
             return;
         }
 
         if (e.code == "ArrowRight") {
+            e.preventDefault();
             skipForward(3000);
             return;
         }
 
         if (e.key == "c") {
+            e.preventDefault();
             cinematic = !cinematic;
+            return;
+        }
+
+        if (e.key == "g") {
+            e.preventDefault();
+            addDebugTimeOffset(-1200);
+            return;
+        }
+
+        if (e.key == "h") {
+            e.preventDefault();
+            addDebugTimeOffset(1200);
+            return;
+        }
+
+        if (e.key == "f") {
+            e.preventDefault();
+            addDebugTimeOffset(-3600 * 10);
+            return;
+        }
+
+        if (e.key == "j") {
+            e.preventDefault();
+            addDebugTimeOffset(3600 * 10);
             return;
         }
     }}
@@ -947,7 +979,7 @@
             >
                 <PlacedByText username={$placedByHover.username} />
             </LevelWidget>
-        {/if} -->
+        {/if}
 
         <LevelWidget {state} x={-55} y={40} scale={0.15}>
             <ClosableWindow

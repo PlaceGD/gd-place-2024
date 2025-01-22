@@ -12,6 +12,7 @@
     import {
         canPlaceEditDelete,
         eventEndTime,
+        eventStartTime,
         eventStatus,
         nowStore,
         openMenu,
@@ -123,59 +124,34 @@
 > -->
 
 <div class="absolute w-full h-full">
-    <!-- {#if state != null && $eventStatus != "loading"}
-        <Guide {state} />
-
+    {#if state != null && $eventStatus != "loading"}
         <div
             class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
         >
             <div
                 class="flex flex-row-reverse justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
             >
-                {#if $eventStatus == "fully done" && !$viewingLevelAfterEvent}
-                    <ViewLevelButton bind:state />
-                {/if}
-
                 {#if $eventStatus == "during" || $eventStatus == "before"}
                     <SettingsButton />
                 {/if}
-
-                {#if state != null && $eventStatus == "during"}
-                    <ModButton />
-                {/if}
-                <MetaButton />
                 {#if $eventStatus == "during" || $eventStatus == "before"}
                     <LoginButton />
                 {/if}
             </div>
             <Login />
 
-            {#if $canPlaceEditDelete}
+            <!-- {#if $canPlaceEditDelete}
                 <NameGradient />
             {/if}
 
             {#if state != null}
                 <ReportedUserList bind:state />
             {/if}
+
+            <MetaMenu /> -->
             <SettingsOptions />
-            <MetaMenu />
         </div>
-        {#if $eventStatus == "during" || $eventStatus == "before"}
-            <div
-                class="absolute top-0 right-0 flex flex-row items-start w-full h-full gap-4 pointer-events-none xs:flex-col sm:gap-2"
-            >
-                <div
-                    class="flex flex-col justify-end gap-4 p-2 xs:gap-2 pointer-events-all"
-                    data-guide="zoom"
-                >
-                    <ZoomButton zoom="in" {canvas} />
-                    <ZoomButton zoom="out" {canvas} />
-                    <SongStopButton />
-                </div>
-                <EndCountdown />
-            </div>
-        {/if}
-    {/if} -->
+    {/if}
     {#if wasmLoaded}
         <!-- {#if showEnding && state != null && !$viewingLevelAfterEvent}
             <SharedEnding bind:state />
@@ -191,6 +167,15 @@
     {/if}
     {#if state != null && $eventStatus != "loading"}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
+        {#if $nowStore >= $eventStartTime}
+            <div style:display={"contents"}>
+                <PlaceMenu bind:state />
+            </div>
+        {/if}
+        {#if $nowStore < $eventStartTime}
+            <EventMenu kind="pre-event" bind:state />
+        {/if}
+
         <!-- {#if $eventStatus == "before" || $eventStatus == "during"}
             <div
                 style:display={$eventStatus == "during" && $canPlaceEditDelete

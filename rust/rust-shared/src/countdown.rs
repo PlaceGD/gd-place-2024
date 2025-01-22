@@ -271,7 +271,7 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     use rand::prelude::*;
     let mut switches = vec![None; n];
 
-    switches[0] = Some([1, 50, 0, 7]); // final sets
+    switches[0] = Some([1, 4, 56, 8]); // final sets
     switches[1] = Some([1, 56, 69, 66]);
     switches[2] = Some([1, 78, 60, 46]);
     switches[3] = Some([1, 77, 24, 68]);

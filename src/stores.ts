@@ -167,7 +167,7 @@ export const DEFAULT_SETTINGS = {
     hideOutline: false,
     showDeleteText: true,
     showPlacedText: true,
-    quality: isMobile() ? "low" : "high",
+    quality: "high",
 } as const;
 export const editorSettings = persistLocalWritable<{
     showCollidable: boolean;
@@ -183,10 +183,7 @@ export const editorSettings = persistLocalWritable<{
 }>(DEFAULT_SETTINGS, "editorSettings");
 
 export const canPlacePreview = writable(true);
-export const canPlaceEditDelete = derived(
-    [loginData],
-    ([l]) => l.currentUserData?.userDetails != null
-);
+export const canPlaceEditDelete = writable(true);
 
 // MARK: Menu Stuff
 
@@ -213,9 +210,9 @@ export const lastClosedAnnouncement = persistLocalWritable<number>(
 
 // MARK: Color Stuff
 
-export const DEFAULT_BG_COLOR = { r: 4, g: 24, b: 46 };
+export const DEFAULT_BG_COLOR = { r: 4 * 1.5, g: 24 * 1.5, b: 46 * 1.5 }; //{ r: 4, g: 24, b: 46 };
 export const DEFAULT_GROUND_1_COLOR = { r: 5, g: 40, b: 77 };
-export const DEFAULT_GROUND_2_COLOR = { r: 0, g: 82, b: 165 };
+export const DEFAULT_GROUND_2_COLOR = { r: 0, g: 120, b: 255 };
 
 export const bgColor = tweened(
     structuredClone(DEFAULT_BG_COLOR),
@@ -513,18 +510,11 @@ export const addDebugTimeOffset = (offset: number) => {
 
 let serverNow = 0;
 if (typeof window !== "undefined") {
-    getExactServerTime().then(v => {
-        let serverStart = v;
-        let localStart = Date.now();
-
-        let diff = localStart - serverStart;
-
-        const draw = (time: number) => {
-            serverNow = Date.now() - (diff + debugOffset);
-            requestAnimationFrame(draw);
-        };
+    const draw = (time: number) => {
+        serverNow = Date.now() - debugOffset;
         requestAnimationFrame(draw);
-    });
+    };
+    requestAnimationFrame(draw);
 }
 export const getServerNow = () => serverNow;
 
@@ -579,7 +569,7 @@ export const scheduleFor = (
     }
 };
 
-export const eventStartTime = writable(Number.POSITIVE_INFINITY);
+export const eventStartTime = writable(Date.now() + 39000);
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 export const setNameSeconds = writable(0);
 // db.ref("metaVariables/eventStartTime").on("value", v => {
@@ -619,7 +609,11 @@ eventElapsed.subscribe(v => eventElapsedContinuous.set(v));
 
 export const countdownCreatorNames = writable<string[]>(["", "", "", ""]);
 
-export const userCount = writable(0);
+export const userCount = writable(19524);
+
+for (let i = 0; i < 482; i++) {
+    setTimeout(() => userCount.update(a => a + 1), Math.random() * 40 * 1000);
+}
 
 export const viewingLevelAfterEvent = writable(false);
 

@@ -70,7 +70,9 @@
     import {
         blur,
         fade,
+        fly,
         scale,
+        slide,
         type TransitionConfig,
     } from "svelte/transition";
     import { COLOR_TRIGGERS } from "shared-lib/nexusgen";
@@ -87,6 +89,7 @@
     import { deleteCooldown, placeCooldown } from "../firebase/cooldowns";
     import Loading from "../components/Loading.svelte";
     import PlaceDeleteButton from "./PlaceDeleteButton.svelte";
+    import { expoOut } from "svelte/easing";
 
     export let state: wasm.State;
 
@@ -220,7 +223,7 @@
 
 <div
     class="absolute flex flex-col justify-end w-full pointer-events-none place-menu"
-    data-minimised={+$menuMinimized}
+    transition:fly={{ duration: 1000, y: 1000, easing: expoOut }}
 >
     <div
         class={cx({

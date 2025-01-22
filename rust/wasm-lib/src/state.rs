@@ -116,7 +116,7 @@ impl State {
             quality: 1.0,
             camera_pos: vec2(0.0, 0.0),
             zoom: 0.0,
-            bg_color: (40, 125, 255),
+            bg_color: (0, 0, 0), //(40, 125, 255),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),
 

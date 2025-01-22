@@ -22,8 +22,8 @@ pub struct Billy {
 impl Billy {
     pub fn new() -> Self {
         Self {
-            rects: vec![],
-            calls: vec![],
+            rects: Vec::with_capacity(1 << 19),
+            calls: Vec::with_capacity(16),
             blend_mode: BlendMode::Additive,
             transform: Affine2::IDENTITY,
         }

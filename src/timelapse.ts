@@ -19,7 +19,7 @@ type HistoryObject =
 
 // dynamically import the json file
 
-let timelapsetime: number = 825379786;
+let timelapsetime: number = 825379786; //  + 3600000 * 7.1
 
 // import(/* @vite-ignore */ "./assets/db2.json").then((betatestdb: any) => {
 //     HISTORY = Object.values(betatestdb.default.history).sort(
@@ -36,7 +36,7 @@ let prevTime = 0;
 let historyIndex = 0;
 
 let paused = true;
-let TIMELAPSE_SPEED = 3600;
+let TIMELAPSE_SPEED = 1000;
 export const togglePause = () => {
     paused = !paused;
 };

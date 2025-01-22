@@ -19,6 +19,8 @@
 
     import * as wasm from "wasm-lib";
     import { moveCamera } from "../level_view/view_controls";
+    import { scale } from "svelte/transition";
+    import { expoIn, expoOut, quadInOut, quadOut } from "svelte/easing";
 
     export let state: wasm.State;
 
@@ -71,10 +73,20 @@
 >
     {#if kind === "pre-event"}
         <div
-            class="pointer-events-auto flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[90rem]"
+            class="pointer-events-auto flex flex-col items-center menu-panel justify-evenly w-full h-[200px] max-w-[50rem]"
+            in:scale|global={{
+                duration: 750,
+                opacity: 0,
+                easing: expoOut,
+            }}
+            out:scale|global={{
+                duration: 500,
+                opacity: 0,
+                easing: expoIn,
+            }}
         >
             <div
-                class="grid overflow-hidden grid-cols-[min-content_1fr_min-content] sm:grid-rows-[1fr_min-content] sm:grid-cols-none justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
+                class="grid overflow-hidden grid-cols-[100px_1fr] justify-evenly items-center w-full h-full p-4 xs:p-2 gap-8 sm:gap-4"
             >
                 <div
                     class="h-full pl-24 md:pl-4 w-max md:w-36 sm:w-36 xs:w-36 loading_icon sm:hidden"
@@ -88,7 +100,7 @@
                     <span class="text-6xl md:text-5xl xs:text-4xl">
                         {$userCount}
                     </span>
-                    <span class="text-center">creators have signed up</span>
+                    <span class="text-center">creators joined</span>
                 </h1>
 
                 <!-- <button
@@ -103,7 +115,7 @@
                         /> Sign up now!
                     </button> -->
 
-                <button
+                <!-- <button
                     class="flex flex-col items-center justify-around h-full gap-1 p-2 text-center sm:flex-row menu-panel w-96 md:w-80 sm:w-full justify-self-end"
                     style={`
                         opacity: ${creator_names ? 1 : 0};
@@ -144,7 +156,7 @@
                     >
                         (colons made by GD Colon)
                     </div>
-                </button>
+                </button> -->
             </div>
         </div>
     {:else if kind === "login-to-place"}

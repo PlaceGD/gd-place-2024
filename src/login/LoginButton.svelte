@@ -53,7 +53,7 @@
             ></Image>
         </button>
 
-        {#if $loginData.currentUserData?.userDetails == null && !$hasLoggedInBefore}
+        <!-- {#if $loginData.currentUserData?.userDetails == null && !$hasLoggedInBefore}
             <div
                 class="absolute bottom-0 z-20 flex flex-col left-1/2 flex-center opacity-70 hover-anim"
             >
@@ -69,7 +69,7 @@
                     Sign&nbsp;up now!
                 </h1>
             </div>
-        {/if}
+        {/if} -->
     </div>
 </div>
 

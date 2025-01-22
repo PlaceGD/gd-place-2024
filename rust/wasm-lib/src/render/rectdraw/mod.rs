@@ -13,7 +13,7 @@ use std::{
 };
 
 use crate::{
-    level::{DbKey, Level, ObjKey},
+    level::{ChunkCoord, DbKey, Level, ObjKey},
     object::GDObjectExt,
     state::State,
     utilgen::{
@@ -106,31 +106,6 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
 
     let mut tint_color = vec4(1.0, 1.0, 1.0, 1.0);
 
-    let mut scaleup = 1.0;
-    let mut angle_offset = 0.0;
-
-    if end_trans01 > 0.0 {
-        let (delay, explosion_d, angular_velocity, pos) =
-            obj_end_anim(obj, state, end_trans01, key);
-        //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
-
-        //console_log!("{}", z_scaleup);
-
-        billy.translate(pos - vec2(obj.x, obj.y));
-        scaleup *= 1.0 - explosion_d;
-        // if scaleup <= 0.0 {
-        //     return;
-        // }
-        //billy.scale(vec2(z_scaleup, z_scaleup));
-
-        angle_offset += angular_velocity * PI * 0.1 * (end_trans01 * 10.0 - delay).max(0.0)
-            + angular_velocity * explosion_d;
-
-        // let fadeout_d =
-        //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
-        // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
-    }
-
     billy.apply_transform(obj.transform());
     // if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
     //     let rand = key.random_num(10);
@@ -145,9 +120,6 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     //     let fix = transform_scale + ((0.5 - transform_scale) * 2.0).powi(2) * 0.02;
     //     scaleup *= fix / transform_scale;
     // }
-
-    billy.scale(vec2(scaleup, scaleup));
-    billy.rotate(angle_offset);
 
     let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
         2
@@ -198,8 +170,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
         if !state.show_collidable {
             billy.centered_solid_rect(-vec2(0.0, 42.0), vec2(112.0, 112.0), color);
         }
-    }
-    if special_ids::SFX_TRIGGER == obj.id {
+    } else if special_ids::SFX_TRIGGER == obj.id {
         let sfx_id = obj.main_color.r;
 
         if let Some(sprite) = SFX_ICON_SPRITES.get(sfx_id as usize) {
@@ -288,20 +259,20 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
     is_countdown: bool,
 ) {
     //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
-    let mut ending_stars = Vec::new();
-
     for layer in 0..(Z_LAYERS.len() + 1) {
         for sheet_batch_idx in 0..5 {
             for batch_idx in 0..2 {
-                if end_trans01 < 1.0 {
-                    billy.set_blend_mode(if state.show_collidable {
-                        BlendMode::Normal
-                    } else {
-                        [BlendMode::Additive, BlendMode::Normal][batch_idx]
-                    });
-                }
+                billy.set_blend_mode(if state.show_collidable {
+                    BlendMode::Normal
+                } else {
+                    [BlendMode::Additive, BlendMode::Normal][batch_idx]
+                });
 
-                for coord in state.get_viewable_chunks() {
+                for coord in if is_countdown {
+                    vec![ChunkCoord { x: 0, y: 0 }]
+                } else {
+                    state.get_viewable_chunks()
+                } {
                     let Some(chunk) = &level.chunks.get(&coord) else {
                         continue;
                     };
@@ -311,65 +282,55 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                     // console_log!("bend {}", i);
                     for (_, m) in batch {
                         for (key, (obj, draw)) in m {
-                            if end_trans01 > 0.0 {
-                                ending_stars.push((*key, *obj));
-                            }
-                            if end_trans01 < 1.0 {
-                                for &bottom_texture in match draw {
-                                    crate::level::ObjectDraw::Both => &[false, true] as &[bool],
-                                    crate::level::ObjectDraw::TopTexture => &[false],
-                                    crate::level::ObjectDraw::BottomTexture => &[true],
-                                } {
-                                    let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
-                                    let bottom_texture = if main_over_detail {
-                                        !bottom_texture
-                                    } else {
-                                        bottom_texture
-                                    };
-                                    let (sprites, color) = if bottom_texture {
-                                        (&DETAIL_SPRITES, obj.detail_color)
-                                    } else {
-                                        (&MAIN_SPRITES, obj.main_color)
-                                    };
-                                    if let Some(sprite) = sprites[obj.id as usize] {
-                                        // console_log!("-> {:?} {}", draw, batch_idx);
-                                        if color.blending == (batch_idx == 0) {
-                                            let (color, overriden) =
-                                                color_override(*key, obj, bottom_texture)
-                                                    .map(|v| (v, true))
-                                                    .unwrap_or((
-                                                        Vec4::from_array(
-                                                            [
-                                                                color.r,
-                                                                color.g,
-                                                                color.b,
-                                                                color.opacity,
-                                                            ]
+                            for &bottom_texture in match draw {
+                                crate::level::ObjectDraw::Both => &[false, true] as &[bool],
+                                crate::level::ObjectDraw::TopTexture => &[false],
+                                crate::level::ObjectDraw::BottomTexture => &[true],
+                            } {
+                                let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
+                                let bottom_texture = if main_over_detail {
+                                    !bottom_texture
+                                } else {
+                                    bottom_texture
+                                };
+                                let (sprites, color) = if bottom_texture {
+                                    (&DETAIL_SPRITES, obj.detail_color)
+                                } else {
+                                    (&MAIN_SPRITES, obj.main_color)
+                                };
+                                if let Some(sprite) = sprites[obj.id as usize] {
+                                    // console_log!("-> {:?} {}", draw, batch_idx);
+                                    if color.blending == (batch_idx == 0) {
+                                        let (color, overriden) =
+                                            color_override(*key, obj, bottom_texture)
+                                                .map(|v| (v, true))
+                                                .unwrap_or((
+                                                    Vec4::from_array(
+                                                        [color.r, color.g, color.b, color.opacity]
                                                             .map(|v| v as f32 / 255.0),
-                                                        ),
-                                                        false,
-                                                    ));
-                                            // let color = if state.selected_object == Some(*key) {
-                                            //     selected_color(detail)
-                                            // } else {
-                                            //     Vec4::from_array(
-                                            //         [color.r, color.g, color.b, color.opacity]
-                                            //             .map(|v| v as f32 / 255.0),
-                                            //     )
-                                            // };
+                                                    ),
+                                                    false,
+                                                ));
+                                        // let color = if state.selected_object == Some(*key) {
+                                        //     selected_color(detail)
+                                        // } else {
+                                        //     Vec4::from_array(
+                                        //         [color.r, color.g, color.b, color.opacity]
+                                        //             .map(|v| v as f32 / 255.0),
+                                        //     )
+                                        // };
 
-                                            draw_level_obj_sprite(
-                                                state,
-                                                billy,
-                                                sprite,
-                                                obj,
-                                                color,
-                                                overriden,
-                                                *key,
-                                                end_trans01,
-                                                is_countdown,
-                                            );
-                                        }
+                                        draw_level_obj_sprite(
+                                            state,
+                                            billy,
+                                            sprite,
+                                            obj,
+                                            color,
+                                            overriden,
+                                            *key,
+                                            end_trans01,
+                                            is_countdown,
+                                        );
                                     }
                                 }
                             }
@@ -377,14 +338,6 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                     }
                 }
             }
-        }
-    }
-
-    if end_trans01 > 0.0 {
-        billy.set_blend_mode(BlendMode::Additive);
-
-        for (key, obj) in ending_stars {
-            draw_ending_sparkle(state, billy, obj, key, end_trans01);
         }
     }
 }

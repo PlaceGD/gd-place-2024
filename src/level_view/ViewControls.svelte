@@ -891,6 +891,17 @@
             addDebugTimeOffset(3600 * 10);
             return;
         }
+        if (e.key == ",") {
+            e.preventDefault();
+            addDebugTimeOffset(-60);
+            return;
+        }
+
+        if (e.key == ".") {
+            e.preventDefault();
+            addDebugTimeOffset(60);
+            return;
+        }
     }}
 />
 

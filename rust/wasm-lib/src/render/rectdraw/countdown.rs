@@ -76,7 +76,7 @@ impl Countdown {
         let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
             ([None; 8], false, false, false)
         } else {
-            let days = (time_until / 86400.0).floor();
+            let days = 0.0; //(time_until / 86400.0).floor();
             let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
             let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
             let seconds =

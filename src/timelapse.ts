@@ -36,7 +36,7 @@ let prevTime = 0;
 let historyIndex = 0;
 
 let paused = true;
-let TIMELAPSE_SPEED = 300;
+let TIMELAPSE_SPEED = 50;
 export const togglePause = () => {
     paused = !paused;
 };

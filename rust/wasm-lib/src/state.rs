@@ -1,5 +1,5 @@
 use core::f64;
-use std::{collections::HashSet, io::Cursor, sync::LazyLock};
+use std::{collections::{HashMap, HashSet}, io::Cursor, sync::LazyLock};
 
 use binrw::BinRead;
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
@@ -105,10 +105,22 @@ pub struct State {
     pub(crate) ending_anim_info: Option<EndingAnimInfo>,
     pub(crate) ending_transition_override: Option<f32>,
     pub(crate) ending_transition_speed: f32,
+
+    
+    history_objects: HashMap<[u8; 20], [u8; 26]>,
 }
 
 impl State {
     pub fn new(render: RenderState) -> Self {
+        console_log!("{}", HISTORY.actions[0].time());
+        let mut history_objects = HashMap::default();
+        for HistoryItem { obj, objkey, .. } in HISTORY.actions.iter() {
+            if *obj == [0u8; 26] {
+                continue;
+            }
+            
+            history_objects.insert(*objkey, *obj);
+        }
         Self {
             time: 0.0,
             width: 10,
@@ -154,6 +166,7 @@ impl State {
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
+            history_objects
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -302,13 +315,14 @@ impl State {
         vec![self.camera_pos.x, self.camera_pos.y]
     }
     pub fn set_camera_pos(&mut self, x: f32, y: f32) {
-        self.camera_pos = vec2(x, y).clamp(
-            vec2(-90.0, -60.0),
-            vec2(
-                LEVEL_WIDTH_UNITS as f32 + 60.0,
-                LEVEL_HEIGHT_UNITS as f32 + 60.0,
-            ),
-        );
+        self.camera_pos = vec2(x, y);
+        // .clamp(
+        //     vec2(-90.0, -60.0),
+        //     vec2(
+        //         LEVEL_WIDTH_UNITS as f32 + 60.0,
+        //         LEVEL_HEIGHT_UNITS as f32 + 60.0,
+        //     ),
+        // );
     }
     pub fn set_bg_color(&mut self, r: u8, g: u8, b: u8) {
         self.bg_color = (r, g, b);
@@ -535,10 +549,22 @@ impl State {
         let mut removed_objs = HashSet::default();
         if history_index > 0 && HISTORY.actions[history_index - 1].time() > timelapse_time as u32 {
             while history_index > 0
-                && HISTORY.actions[history_index - 1].time() < timelapse_time as u32
+                && HISTORY.actions[history_index - 1].time() > timelapse_time as u32
             {
                 history_index -= 1;
-                todo!()
+                
+                let HistoryItem { obj, objkey, .. } = HISTORY.actions[history_index];
+                if obj == [0; 26] {
+                    let nobj = GDObjectOpt::from_bytes(self.history_objects[&objkey].as_ref().into()).unwrap().into_obj();
+                     if !((nobj.ix.powi(2) + nobj.iy.powi(2)).sqrt() > 3.0
+                        || (nobj.jx.powi(2) + nobj.jy.powi(2)).sqrt() > 3.0)
+                    {
+                        self.level.add_object(nobj, objkey, None, self.now);
+                    }
+                } else {
+                    removed_objs.insert(objkey);
+                }
+                
             }
         } else {
             while history_index < HISTORY.actions.len()

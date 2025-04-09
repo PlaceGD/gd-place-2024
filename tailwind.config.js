@@ -25,6 +25,7 @@ export default {
             pusab: "Pusab",
             saira: "Saira",
             share: "Share Tech Mono",
+            digital: "Digital",
             // exo: "Exo",
         },
     },

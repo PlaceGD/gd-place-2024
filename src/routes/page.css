@@ -6,6 +6,18 @@
     src: url("/Pusab.otf");
 }
 
+@font-face {
+    font-family: "Digital";
+    src: url("/digital-7 (mono).ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Digital";
+    src: url("/digital-7 (mono italic).ttf");
+    font-style: italic;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

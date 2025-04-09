@@ -828,13 +828,13 @@
 
         if (e.shiftKey && e.code == "ArrowLeft") {
             e.preventDefault();
-            skipForward(-300);
+            skipForward(-100);
             return;
         }
 
         if (e.shiftKey && e.code == "ArrowRight") {
             e.preventDefault();
-            skipForward(300);
+            skipForward(100);
             return;
         }
 
@@ -852,13 +852,13 @@
 
         if (e.code == "ArrowLeft") {
             e.preventDefault();
-            skipForward(-3000);
+            skipForward(-1000);
             return;
         }
 
         if (e.code == "ArrowRight") {
             e.preventDefault();
-            skipForward(3000);
+            skipForward(1000);
             return;
         }
 

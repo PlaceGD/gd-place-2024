@@ -18,7 +18,7 @@ type HistoryObject =
       };
 
 // Use a writable store for timelapsetime
-export const timelapsetime = writable(825379786 + 60000 * 44);
+export const timelapsetime = writable(825379786 + 1000 * 60 * 60 * 2.6); // 1731697200074
 
 let prevTime = 0;
 let historyIndex = 0;
@@ -40,7 +40,12 @@ export const runtTimelapse = (time: number, state: wasm.State | null) => {
     historyIndex = state.run_history(historyIndex, get(timelapsetime));
 
     if (!paused) {
-        timelapsetime.update(current => current + delta * TIMELAPSE_SPEED);
+        timelapsetime.update(current => {
+            let newtime = current + delta * TIMELAPSE_SPEED;
+            let date = new Date(newtime + 1730871820288);
+            console.log(date.toUTCString());
+            return newtime;
+        });
     }
 
     prevTime = time;

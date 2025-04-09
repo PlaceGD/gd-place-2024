@@ -569,7 +569,7 @@ export const scheduleFor = (
     }
 };
 
-export const eventStartTime = writable(Date.now() + 39000);
+export const eventStartTime = writable(Date.now());
 export const eventEndTime = writable(Number.POSITIVE_INFINITY);
 export const setNameSeconds = writable(0);
 // db.ref("metaVariables/eventStartTime").on("value", v => {

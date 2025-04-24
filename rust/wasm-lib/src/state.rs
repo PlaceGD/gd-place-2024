@@ -327,7 +327,7 @@ impl State {
         self.zoom
     }
     pub fn set_zoom(&mut self, v: f32) {
-        self.zoom = v.clamp(-16.0, 36.0);
+        self.zoom = v.clamp(-64.0, 36.0);
     }
 
     pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {

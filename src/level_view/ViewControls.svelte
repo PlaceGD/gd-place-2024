@@ -71,6 +71,7 @@
         setNameSeconds,
         DEFAULT_SETTINGS,
         getServerNow,
+        addDebugTimeOffset,
     } from "../stores";
     import {
         getTransformedPlaceOffset,
@@ -114,12 +115,16 @@
     import { isGuideActive, walmart } from "../guide/guide";
     import LevelWidget from "../widgets/LevelWidget.svelte";
     import { set } from "firebase/database";
+    
     import { toast } from "@zerodevx/svelte-toast";
     import { getSignupTimestamp } from "../firebase/moderation";
 
     export let state: wasm.State;
     export let canvas: HTMLCanvasElement;
     export let isFocused: boolean = false;
+
+    let cinematic = false;
+    let zoomVel = 0;
 
     const GESTURE_TARGET_ID: string = "gesture-target";
     const isGestureTarget = <T,>(
@@ -730,6 +735,35 @@
             state.set_preview_visibility(false);
         }
     }
+
+    let prevTime = 0;
+    const cinematicLoop = (time: number) => {
+        const delta = time - prevTime;
+        if (cinematic) {
+            //set zoom center to screen center
+            const w = canvas.offsetWidth * window.devicePixelRatio;
+            const h = canvas.offsetHeight * window.devicePixelRatio;
+            $zoomCenterX = w / 2;
+            $zoomCenterY = h / 2;
+
+            $zoomTween = $zoomTween + zoomVel * delta;
+            let z = state.get_zoom_scale();
+            let cameraVel = [
+                (($mouseX - w / 2) * 15.0) / w / z,
+                (($mouseY - h / 2) * 15.0) / h / z,
+            ];
+            const camPos = state.get_camera_pos();
+
+            moveCamera(
+                state,
+                camPos[0] + cameraVel[0],
+                camPos[1] - cameraVel[1]
+            );
+        }
+        requestAnimationFrame(cinematicLoop);
+    };
+
+    requestAnimationFrame(cinematicLoop);
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
@@ -744,6 +778,10 @@
         panzooming = null;
     }}
     on:pointermove={e => {
+        if (cinematic) {
+            setMousePos(e);
+            return;
+        }
         if (dragging == null && !isGestureTarget(e)) {
             return;
         }
@@ -780,42 +818,61 @@
         handleSub(state);
     }}
     on:keydown={e => {
-        if (
-            document.activeElement instanceof HTMLInputElement &&
-            document.activeElement.type == "text"
-        ) {
+        console.log(e.code);
+
+        if (e.code == "ArrowUp") {
+            e.preventDefault();
+            zoomVel += 0.00000045;
             return;
         }
 
-        if (e.ctrlKey || e.metaKey) {
-            if (e.key === "+" || e.key === "=") {
-                e.preventDefault();
-                zoomCentral($zoomGoal + 4, canvas);
-            } else if (e.key === "-" || e.key === "_") {
-                e.preventDefault();
-                zoomCentral($zoomGoal - 4, canvas);
-            } else {
-                return;
-            }
-
+        if (e.code == "ArrowDown") {
+            e.preventDefault();
+            zoomVel -= 0.00000045;
             return;
         }
 
-        for (let v of [
-            ...Object.values(TRANSFORM_KEYBINDS),
-            ...Object.values(MISC_KEYBINDS),
-            ...Object.values(MOVE_KEYBINDS).flatMap(v => Object.values(v)),
-        ]) {
-            if (
-                e.key.toLowerCase() == v.shortcut.key.toLowerCase() &&
-                e.shiftKey == v.shortcut.shift &&
-                e.altKey == v.shortcut.alt
-            ) {
-                e.preventDefault();
-                let obj = state.get_preview_object();
-                v.cb(obj);
-                setCheckedPreviewObject(state, obj);
-            }
+        
+
+        if (e.key == "c") {
+            e.preventDefault();
+            cinematic = !cinematic;
+            return;
+        }
+
+        if (e.key == "g") {
+            e.preventDefault();
+            addDebugTimeOffset(-1200);
+            return;
+        }
+
+        if (e.key == "h") {
+            e.preventDefault();
+            addDebugTimeOffset(1200);
+            return;
+        }
+
+        if (e.key == "f") {
+            e.preventDefault();
+            addDebugTimeOffset(-3600 * 10);
+            return;
+        }
+
+        if (e.key == "j") {
+            e.preventDefault();
+            addDebugTimeOffset(3600 * 10);
+            return;
+        }
+        if (e.key == ",") {
+            e.preventDefault();
+            addDebugTimeOffset(-60);
+            return;
+        }
+
+        if (e.key == ".") {
+            e.preventDefault();
+            addDebugTimeOffset(60);
+            return;
         }
     }}
 />
@@ -895,7 +952,7 @@
 
         <TriggerRuns {state} />
 
-        {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
+        <!-- {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
             <LevelWidget
                 {state}
                 x={$placedByHover.x}
@@ -905,7 +962,7 @@
             >
                 <PlacedByText username={$placedByHover.username} />
             </LevelWidget>
-        {/if}
+        {/if} -->
 
         <LevelWidget {state} x={-55} y={40} scale={0.15}>
             <ClosableWindow

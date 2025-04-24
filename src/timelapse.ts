@@ -23,7 +23,7 @@ export const timelapsetime = writable(825379786 + 1000 * 60 * 60 * 2.6); // 1731
 let prevTime = 0;
 let historyIndex = 0;
 let paused = true;
-let TIMELAPSE_SPEED = 50;
+let TIMELAPSE_SPEED = 25;
 
 export const togglePause = () => {
     paused = !paused;

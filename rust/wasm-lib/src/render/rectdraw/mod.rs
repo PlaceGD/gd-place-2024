@@ -104,7 +104,7 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
 
     let old_t = billy.get_transform();
 
-    let mut tint_color = vec4(1.0, 1.0, 1.0, 1.0);
+    let mut tint_color = vec4(1.0, 1.0, 1.0, 1.0); // if obj.id == 4076 { 1.0 } else { 0.7}
 
     billy.apply_transform(obj.transform());
     // if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {

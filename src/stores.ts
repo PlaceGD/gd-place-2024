@@ -210,7 +210,7 @@ export const lastClosedAnnouncement = persistLocalWritable<number>(
 
 // MARK: Color Stuff
 
-export const DEFAULT_BG_COLOR = { r: 4 * 1.5, g: 24 * 1.5, b: 46 * 1.5 };
+export const DEFAULT_BG_COLOR = { r: 4 * 0, g: 24 * 0, b: 46 * 0 };
 export const DEFAULT_GROUND_1_COLOR = { r: 5, g: 40, b: 77 };
 export const DEFAULT_GROUND_2_COLOR = { r: 0, g: 120, b: 255 };
 

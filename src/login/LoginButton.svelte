@@ -22,14 +22,14 @@
 </script>
 
 <div class="gap-4 xs:gap-2 flex-center">
-    {#if $loginData.currentUserData != null && $loginData.currentUserData.userDetails != null}
-        <h1 class="z-30 text-3xl text-white font-pusab sm:text-2xl xs:text-xl">
-            <ColoredName
-                username={$loginData.currentUserData.userDetails.username}
-                colorOverride={$currentUserColor}
-            />
-        </h1>
-    {/if}
+    
+    <h1 class="z-30 text-3xl text-white font-pusab sm:text-2xl xs:text-xl">
+        <ColoredName
+            username={"Spu7Nix"}
+            colorOverride={"linear-gradient(158deg, #1ED7B5 0%, #64E2B0 33%, #AAEEAC 67%, #F0F9A7 100%)"}
+        />
+    </h1>
+    
     <div class="relative flex flex-col">
         <button
             class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12 shrink-0"
@@ -46,9 +46,7 @@
             }}
         >
             <Image
-                src={$loginData.currentUserData?.userDetails != null
-                    ? profileOutUrl
-                    : profileInUrl}
+                src={profileOutUrl}
                 class="object-contain aspect-square"
             ></Image>
         </button>

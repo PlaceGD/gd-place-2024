@@ -35,6 +35,7 @@ pub fn make_get_history_fn() -> Vec<u8> {
                     .try_into()
                     .unwrap(),
                 time: item["time"].as_u64().unwrap() as u32,
+                username: encode_username(item["username"].as_str().unwrap()),
             })
         } else {
             actions.push(HistoryItem {
@@ -46,6 +47,7 @@ pub fn make_get_history_fn() -> Vec<u8> {
                     .try_into()
                     .unwrap(),
                 time: item["time"].as_u64().unwrap() as u32,
+                username: encode_username(item["username"].as_str().unwrap()),
             })
         }
     }
@@ -55,4 +57,12 @@ pub fn make_get_history_fn() -> Vec<u8> {
     let mut writer = Cursor::new(Vec::new());
     History { actions: actions }.write(&mut writer).unwrap();
     writer.into_inner()
+}
+
+fn encode_username(username: &str) -> [u8; 20] {
+    let mut bytes = [0; 20];
+    let encoded = username.as_bytes();
+    let len = encoded.len().min(20);
+    bytes[..len].copy_from_slice(&encoded[..len]);
+    bytes
 }

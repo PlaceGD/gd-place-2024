@@ -107,12 +107,12 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
     let mut tint_color = vec4(1.0, 1.0, 1.0, 1.0); // if obj.id == 4076 { 1.0 } else { 0.7}
 
     billy.apply_transform(obj.transform());
-    // if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
-    //     let rand = key.random_num(10);
-    //     let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
+    if !state.no_rotating_objects && is_rotating_obj(obj.id) && !is_countdown {
+        let rand = key.random_num(10);
+        let negative = if (rand - 0.5) < 0.0 { -1.0 } else { 1.0 };
 
-    //     billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
-    // }
+        billy.rotate(state.time * (rand / 2.0 + 0.5) * negative * 3.0);
+    }
 
     // get scale of transform
     let transform_scale = billy.get_transform().matrix2.determinant().abs().sqrt();

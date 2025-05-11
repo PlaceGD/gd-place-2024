@@ -18,6 +18,7 @@ pub struct HistoryItem {
     pub obj: [u8; 26],
     pub objkey: [u8; 20],
     pub time: u32,
+    pub username: [u8; 20],
 }
 
 impl HistoryItem {

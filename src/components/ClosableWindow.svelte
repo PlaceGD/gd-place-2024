@@ -9,10 +9,7 @@
 {#if !hidden}
     <div
         class="relative flex flex-col overflow-hidden border-4 shadow-lg shrink-0 bg-menu-gray/30 rounded-xl backdrop-blur-md border-white/80"
-        transition:blur={{
-            duration: 150,
-            delay: 0,
-        }}
+        
         style={`transform: scale(${open ? 1 : 0.8}); opacity: ${open ? 1 : 0}; pointer-events: none; transition: transform 300ms, opacity 300ms;`}
     >
         <div

@@ -13,12 +13,12 @@ export const getUsernameColor = async (username: string): Promise<string> => {
         return userColorCache[username];
     }
 
-    let color =
-        (
-            await db
-                .ref(`userName/${username?.toLowerCase()}/displayColor`)
-                .get()
-        ).val() ?? "white";
+    let color = "white";
+        // (
+        //     await db
+        //         .ref(`userName/${username?.toLowerCase()}/displayColor`)
+        //         .get()
+        // ).val() ?? "white";
 
     userColorCache[username] = color;
 

@@ -973,12 +973,12 @@
                     <Warp bind:state widgetScale={editWidgetScale} />
                 {/if}
             </LevelWidget>
-        {/if}
+        {/if} -->
         {#if $editorSettings.showDeleteText}
             <DeleteTexts {state} />
         {/if}
 
-        <TriggerRuns {state} /> -->
+        <TriggerRuns {state} />
 
         {#if $placedByHover != null && $editorSettings.showPlacedText && $menuOpenWidget == WidgetType.None}
             <LevelWidget

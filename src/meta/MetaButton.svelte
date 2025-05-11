@@ -9,8 +9,8 @@
         : DEV_UIDS.includes($loginData.currentUserData?.user.uid ?? "");
 </script>
 
-{#if $loginData.currentUserData}
-    {#if canShow}
+
+    
         <div class="relative gap-2 flex-center">
             <button
                 class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12 shrink-0"
@@ -28,5 +28,5 @@
                 />
             </button>
         </div>
-    {/if}
-{/if}
+    
+

@@ -6,7 +6,7 @@
     import reportButtonUrl from "./assets/report_button.png?url";
 </script>
 
-{#if $loginData.currentUserData && $loginData.currentUserData.userDetails && $loginData.currentUserData.userDetails.moderator}
+
     <div class="relative gap-2 flex-center">
         <button
             class="top-0 right-0 z-30 w-16 aspect-square sm:w-14 xs:w-12 shrink-0"
@@ -27,4 +27,4 @@
             />
         {/if}
     </div>
-{/if}
+

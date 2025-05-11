@@ -210,7 +210,7 @@ export const lastClosedAnnouncement = persistLocalWritable<number>(
 
 // MARK: Color Stuff
 
-export const DEFAULT_BG_COLOR = { r: 4 * 0, g: 24 * 0, b: 46 * 0 };
+export const DEFAULT_BG_COLOR = { r: 4 , g: 24, b: 46 };
 export const DEFAULT_GROUND_1_COLOR = { r: 5, g: 40, b: 77 };
 export const DEFAULT_GROUND_2_COLOR = { r: 0, g: 120, b: 255 };
 
@@ -498,7 +498,7 @@ export const rawSpritesheetData = writable<RawSpritesheetData | null>(null);
 
 // import { browser }
 
-let debugOffset = 0;
+let debugOffset = 0;//1000 * 60 * 60 * 25 + 20000;
 
 export const setDebugTimeOffset = (offset: number) => {
     debugOffset = offset * 1000;

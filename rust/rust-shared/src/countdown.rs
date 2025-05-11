@@ -236,7 +236,7 @@ parse_countdown_files! {
     "sakura"            ("Sakura"):             [3 => weights(4,   3,   3,   2  ) pretty], // 84
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = Some([0, 4, 56, 8]);
+pub const TEST_SETS: Option<[usize; 4]> = Some([0, 76, 23, 40]);
 
 #[binrw]
 #[brw(little)]

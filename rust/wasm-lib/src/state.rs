@@ -292,6 +292,31 @@ impl State {
         out
     }
 }
+#[wasm_bindgen]
+pub struct TimelapseResult {
+    pub new_index: usize,
+    deletions: Vec<ObjectDeleteInfo>,
+}
+#[wasm_bindgen]
+impl TimelapseResult {
+    pub fn get_deletions(&self) -> Vec<ObjectDeleteInfo> {
+        self.deletions.clone()
+    }
+}
+#[wasm_bindgen]
+#[derive(Clone)]
+pub struct ObjectDeleteInfo {
+    pub x: f32,
+    pub y: f32,
+    username: String,
+}
+
+#[wasm_bindgen]
+impl ObjectDeleteInfo {
+    pub fn get_username(&self) -> String {
+        self.username.clone()
+    }
+}
 
 #[wasm_bindgen]
 impl State {
@@ -544,9 +569,10 @@ impl State {
         })
     }
 
-    pub fn run_history(&mut self, index: usize, timelapse_time: u32) -> usize {
+    pub fn run_history(&mut self, index: usize, timelapse_time: u32) -> TimelapseResult {
         let mut history_index = index;
         let mut removed_objs = HashSet::default();
+        let mut deletions = vec![];
         if history_index > 0 && HISTORY.actions[history_index - 1].time() > timelapse_time as u32 {
             while history_index > 0
                 && HISTORY.actions[history_index - 1].time() > timelapse_time as u32
@@ -554,8 +580,9 @@ impl State {
                 history_index -= 1;
                 
                 let HistoryItem { obj, objkey, .. } = HISTORY.actions[history_index];
+                let nobj = GDObjectOpt::from_bytes(self.history_objects[&objkey].as_ref().into()).unwrap().into_obj();
                 if obj == [0; 26] {
-                    let nobj = GDObjectOpt::from_bytes(self.history_objects[&objkey].as_ref().into()).unwrap().into_obj();
+                    
                      if !((nobj.ix.powi(2) + nobj.iy.powi(2)).sqrt() > 3.0
                         || (nobj.jx.powi(2) + nobj.jy.powi(2)).sqrt() > 3.0)
                     {
@@ -563,6 +590,22 @@ impl State {
                     }
                 } else {
                     removed_objs.insert(objkey);
+
+                    if deletions.len() < 100 {
+                        let username = HISTORY.actions[history_index].username;
+                        // collect all elements until 0x00
+                        let mut username = username.to_vec();
+                        username.retain(|&x| x != 0x00);
+                        // convert to string
+                        let username = String::from_utf8(username).unwrap();
+
+
+                        deletions.push(ObjectDeleteInfo {
+                            x: nobj.x,
+                            y: nobj.y,
+                            username,
+                        });
+                    }
                 }
                 
             }
@@ -573,6 +616,22 @@ impl State {
                 let HistoryItem { obj, objkey, .. } = HISTORY.actions[history_index];
                 if obj == [0; 26] {
                     removed_objs.insert(objkey);
+                        if deletions.len() < 100 {
+
+                        let username = HISTORY.actions[history_index].username;
+                        // collect all elements until 0x00
+                        let mut username = username.to_vec();
+                        username.retain(|&x| x != 0x00);
+                        // convert to string
+                        let username = String::from_utf8(username).unwrap();
+                        let nobj = GDObjectOpt::from_bytes(self.history_objects[&objkey].as_ref().into()).unwrap().into_obj();
+
+                        deletions.push(ObjectDeleteInfo {
+                            x: nobj.x,
+                            y: nobj.y,
+                            username,
+                        });
+                    }
                 } else {
                     let nobj = GDObjectOpt::from_bytes(obj.as_slice().into())
                         .unwrap()
@@ -592,7 +651,10 @@ impl State {
 
         //console_log!("{}", history_index - index);
 
-        history_index
+        TimelapseResult {
+            new_index: history_index,
+            deletions,
+        }
     }
     // pub fn get_text_draws(&self) -> Vec<TextDraw> {
     //     self.bundle.state.text_draws.clone()

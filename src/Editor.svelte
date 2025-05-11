@@ -139,7 +139,7 @@
         clock = `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
     }
 
-    const DISPLAY: string = "noen";
+    const DISPLAY: string = "time";
 </script>
 
 <!-- <button
@@ -197,7 +197,7 @@
         </div>
     {/if}
     {#if state != null && $eventStatus != "loading"}
-        <!-- <div
+        <div
             class="absolute top-0 right-0 flex flex-col items-end w-full h-full gap-4 pointer-events-none sm:gap-2"
         >
             <div
@@ -206,6 +206,8 @@
                 {#if $eventStatus == "during" || $eventStatus == "before"}
                     <SettingsButton />
                 {/if}
+                <ModButton />
+                <MetaButton />
                 {#if $eventStatus == "during" || $eventStatus == "before"}
                     <LoginButton />
                 {/if}
@@ -214,7 +216,7 @@
 
             
             <SettingsOptions />
-        </div> -->
+        </div>
     {/if}
     {#if wasmLoaded}
         <!-- {#if showEnding && state != null && !$viewingLevelAfterEvent}
@@ -231,14 +233,14 @@
     {/if}
     {#if state != null && $eventStatus != "loading"}
         <ViewControls bind:state bind:canvas bind:isFocused={editorFocused} />
-        <!-- {#if $nowStore >= $eventStartTime}
+        {#if $nowStore >= $eventStartTime}
             <div style:display={"contents"}>
                 <PlaceMenu bind:state />
             </div>
         {/if}
         {#if $nowStore < $eventStartTime}
             <EventMenu kind="pre-event" bind:state />
-        {/if} -->
+        {/if}
 
         <!-- {#if $eventStatus == "before" || $eventStatus == "during"}
             <div

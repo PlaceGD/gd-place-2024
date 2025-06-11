@@ -69,8 +69,8 @@ impl ApplicationHandler for App {
 
         let mut state = State::new(canvas, size);
 
-        state.set_event_start(1732996643000.0);
-        state.set_now(0.0);
+        // state.set_event_start(1732996643000.0);
+        // state.set_now(0.0);
         // state.set_quality(1.0);
         self.state = Some(state);
     }

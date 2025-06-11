@@ -263,19 +263,21 @@ impl Countdown {
 
         let mut offset = Self::OFFSET;
 
-        // self.days_marker
-        //     .iter()
-        //     .chain(self.hours_marker.iter())
-        //     .chain(self.minutes_marker.iter())
-        //     .chain(self.hours_colon.iter())
-        //     .chain(self.minutes_colon.iter())
-        //     .for_each(|o| {
-        //         o.get(state.now).inspect(|o| {
-        //             add_object(o.offset(offset - vec2(0.0, 30.0 * 14.0)));
-        //             // level.add_object(*o, idx);
-        //             // idx += 1;
-        //         });
-        //     });
+        // #region COLON DISPLAY
+        self.days_marker
+            .iter()
+            // .chain(self.hours_marker.iter())
+            // .chain(self.minutes_marker.iter())
+            .chain(self.hours_colon.iter())
+            .chain(self.minutes_colon.iter())
+            .for_each(|o| {
+                o.get(state.now).inspect(|o| {
+                    add_object(o.offset(offset - vec2(0.0, 30.0 * 14.0)));
+                    // level.add_object(*o, idx);
+                    // idx += 1;
+                });
+            });
+        // #endregion
 
         for (i, digit) in self.digits.iter().enumerate() {
             // dbg!(&offset);

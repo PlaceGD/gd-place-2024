@@ -102,11 +102,11 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     }
 
     let bg = parse_gmd_file(include_str!(
-        "../../../rust-shared/src/countdowndigits/bgnew.gmd"
+        "../../../rust-shared/src/countdowndigits/bgnew_colons_0.gmd"
     ));
 
-    let bg_x = -7.0 * 30.0;
-    let bg_y = -5.0 * 30.0;
+    let bg_x = 0.0 * 30.0;
+    let bg_y = 0.0 * 30.0;
 
     let days_marker = DigitObjects {
         objs: bg

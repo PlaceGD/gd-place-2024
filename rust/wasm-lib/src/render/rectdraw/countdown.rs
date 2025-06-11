@@ -25,7 +25,7 @@ pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
 });
 
 pub struct Countdown {
-    pub digits: [CountdownDigit; 8],
+    pub digits: [CountdownDigit; 6],
     pub state: [Option<u8>; 8],
     pub sets: [usize; 4],
 
@@ -39,7 +39,7 @@ pub struct Countdown {
 }
 
 impl Countdown {
-    const OFFSET: Vec2 = vec2(-850.0, 0.0);
+    const OFFSET: Vec2 = vec2(-0.0, 0.0);
 
     pub fn new() -> Self {
         Self {
@@ -79,7 +79,7 @@ impl Countdown {
         let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
         let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
 
-        let show_days = false; //days != 0.0;
+        // let show_days = false; //days != 0.0;
         let show_hours = true; //show_days || hours != 0.0;
         let show_minutes = true; //show_hours || minutes != 0.0;
 
@@ -91,14 +91,13 @@ impl Countdown {
             }
         }
 
-        let (dayd1, dayd2) = digits(days as u8, show_days);
+        // let (dayd1, dayd2) = digits(days as u8, show_days);
         let (hourd1, hourd2) = digits(hours as u8, show_hours);
         let (mind1, mind2) = digits(minutes as u8, show_minutes);
         let (secd1, secd2) = digits(seconds as u8, true);
 
-        let (state, show_days, show_hours, show_minutes) = (
-            [dayd1, dayd2, hourd1, hourd2, mind1, mind2, secd1, secd2],
-            show_days,
+        let (state, show_hours, show_minutes) = (
+            [hourd1, hourd2, mind1, mind2, secd1, secd2],
             show_hours,
             show_minutes,
         );
@@ -107,7 +106,7 @@ impl Countdown {
         // } else {
         // };
 
-        for i in 0..8 {
+        for i in 0..self.digits.len() {
             let delay = index_delay(i);
             if sets != self.sets {
                 self.digits[i].transition_between(
@@ -162,7 +161,7 @@ impl Countdown {
                         )
                         .offset(0.2)
                     })
-                    .collect()
+                    .collect::<Vec<_>>()
             };
 
             let dissapear = |a: &DigitObjects, delay: f32| {
@@ -181,68 +180,75 @@ impl Countdown {
                             now,
                         )
                     })
-                    .collect()
+                    .collect::<Vec<_>>()
             };
 
-            let new_bg_state = [show_days, show_hours, show_minutes];
+            let new_bg_state = [show_hours, show_minutes];
 
-            let new_colon_state = if switch_id == 0 {
-                [0, 0]
-            } else {
-                [
-                    ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
-                    ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
-                ]
-            };
+            // TODO: use actual rand?
+            let new_colon_state = [
+                ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
+                ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
+            ];
+
+            // if switch_id == 0 {
+            //     [0, 0]
+            // } else {
+            //     [
+            //         ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
+            //         ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
+            //     ]
+            // };
 
             for i in 0..2 {
-                if self.bg_state[i + 1] != new_bg_state[i + 1]
-                    || self.colon_state[i] != new_colon_state[i]
-                {
-                    let (state, prev_colon, colon) = match i {
-                        0 => (
-                            &mut self.hours_colon,
-                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
-                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
-                        ),
-                        1 => (
-                            &mut self.minutes_colon,
-                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
-                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
-                        ),
-                        _ => unreachable!(),
-                    };
-                    let delay = index_delay(i * 2 + 2);
-                    state.clear();
+                // if self.bg_state[i + 1] != new_bg_state[i + 1]
+                //     || self.colon_state[i] != new_colon_state[i]
+                // {
+                // }
+                // dbg!(i);
+                let (state, prev_colon, colon) = match i {
+                    0 => (
+                        &mut self.hours_colon,
+                        &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
+                        &COUNTDOWN_DIGITS.4[new_colon_state[0]],
+                    ),
+                    1 => (
+                        &mut self.minutes_colon,
+                        &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
+                        &COUNTDOWN_DIGITS.5[new_colon_state[1]],
+                    ),
+                    _ => unreachable!(),
+                };
 
-                    if self.bg_state[i + 1] {
-                        state.extend(dissapear(prev_colon, delay));
-                    }
-                    if new_bg_state[i + 1] {
-                        state.extend(appear(colon, delay));
-                    }
+                let delay = index_delay(i * 2 + 2);
+                state.clear();
 
-                    self.colon_state[i] = new_colon_state[i];
+                if self.bg_state[i] {
+                    state.extend(dissapear(prev_colon, delay));
                 }
+                if new_bg_state[i] {
+                    state.extend(appear(colon, delay));
+                }
+
+                self.colon_state[i] = new_colon_state[i];
             }
 
-            for i in 0..3 {
-                if self.bg_state[i] != new_bg_state[i] {
-                    let (state, bg) = match i {
-                        0 => (&mut self.days_marker, &COUNTDOWN_DIGITS.1),
-                        1 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
-                        2 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
-                        _ => unreachable!(),
-                    };
-                    let delay = index_delay(i * 2);
-                    *state = if new_bg_state[i] {
-                        appear(&bg, delay)
-                    } else {
-                        dissapear(&bg, delay)
-                    };
+            for i in 0..2 {
+                let (state, bg) = match i {
+                    0 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
+                    1 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
+                    _ => unreachable!(),
+                };
+                let delay = index_delay(i * 2);
+                *state = if new_bg_state[i] {
+                    appear(&bg, delay)
+                } else {
+                    dissapear(&bg, delay)
+                };
 
-                    self.bg_state[i] = new_bg_state[i];
-                }
+                self.bg_state[i] = new_bg_state[i];
+                // if self.bg_state[i] != new_bg_state[i] {
+                // }
             }
         }
     }
@@ -263,31 +269,57 @@ impl Countdown {
 
         let mut offset = Self::OFFSET;
 
-        // #region COLON DISPLAY
-        self.days_marker
+        // TODO: setting: disable colons
+        self.hours_marker
             .iter()
-            // .chain(self.hours_marker.iter())
-            // .chain(self.minutes_marker.iter())
+            .chain(self.minutes_marker.iter())
             .chain(self.hours_colon.iter())
             .chain(self.minutes_colon.iter())
             .for_each(|o| {
                 o.get(state.now).inspect(|o| {
-                    add_object(o.offset(offset - vec2(0.0, 30.0 * 14.0)));
+                    // TODO: setting: digit + colon positions
+                    add_object(o.offset(offset));
                     // level.add_object(*o, idx);
                     // idx += 1;
                 });
             });
-        // #endregion
 
+        // TODO: setting: digit + colon positions
+        const BLOCK: f32 = 30.0;
+        const DIGIT_WIDTH: f32 = 6.0 * BLOCK; // 180
+        const COLON_WIDTH: f32 = 3.0 * BLOCK; // 120
+
+        // For digit index 0..5
         for (i, digit) in self.digits.iter().enumerate() {
-            // dbg!(&offset);
+            offset = Self::OFFSET;
 
-            if i == 2 {
-                offset += vec2(0.0, 0.0); // line break
-            } else if i != 0 && i % 2 == 0 {
-                offset += vec2(30.0 * 3.0, 0.0); // colons
+            match i {
+                0 => {
+                    offset -= vec2(
+                        (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH,
+                        0.0,
+                    );
+                }
+                1 => {
+                    offset -= vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0);
+                }
+                2 => {
+                    offset -= vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0);
+                }
+                3 => {
+                    offset += vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0);
+                }
+                4 => {
+                    offset += vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0);
+                }
+                5 => {
+                    offset += vec2(
+                        (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH,
+                        0.0,
+                    );
+                }
+                _ => {}
             }
-            // digit.draw(billy);
 
             for (i, obj) in digit.objects.iter().enumerate() {
                 obj.get(state.now).inspect(|o| {
@@ -298,10 +330,54 @@ impl Countdown {
                 });
             }
 
-            offset += vec2(30.0 * 7.0, 0.0);
-
             // billy.translate(vec2(30.0 * 7.0, 0.0));
         }
+        // const BLOCK: f32 = 30.0;
+        // const DIGIT_WIDTH: f32 = 6.0 * BLOCK; // 180
+        // const COLON_WIDTH: f32 = 3.0 * BLOCK; // 120
+
+        // // Total width of one digit plus intra-pair gap
+        // const DIGIT_PLUS_GAP: f32 = DIGIT_WIDTH + BLOCK;
+
+        // // Width of a pair: 2 digits + 1 block between
+        // const PAIR_WIDTH: f32 = DIGIT_WIDTH * 2.0 + BLOCK;
+
+        // // Total pair spacing offset (includes 1 colon and 1 extra block)
+        // const EXTRA_PAIR_SPACING: f32 = COLON_WIDTH + BLOCK;
+
+        // // For digit index 0..5
+        // for (i, digit) in self.digits.iter().enumerate() {
+        //     let mut offset = Self::OFFSET;
+
+        //     let pair_index = i / 2;
+        //     let in_pair_offset = if i % 2 == 0 {
+        //         -DIGIT_PLUS_GAP / 2.0 // left digit in pair
+        //     } else {
+        //         DIGIT_PLUS_GAP / 2.0 // right digit in pair
+        //     };
+
+        //     // Compute total horizontal pair shift from center pair (pair 1 is [2,3])
+        //     let pair_offset_from_center = match pair_index {
+        //         0 => -PAIR_WIDTH - EXTRA_PAIR_SPACING,
+        //         1 => 0.0,
+        //         2 => PAIR_WIDTH + EXTRA_PAIR_SPACING,
+        //         _ => 0.0,
+        //     };
+
+        //     let total_x = pair_offset_from_center + in_pair_offset;
+        //     offset += vec2(total_x, 0.0);
+
+        //     for (i, obj) in digit.objects.iter().enumerate() {
+        //         obj.get(state.now).inspect(|o| {
+        //             // level.add_object(o.offset(offset), idx);
+        //             // idx += 1;
+
+        //             add_object(o.offset(offset));
+        //         });
+        //     }
+
+        //     // billy.translate(vec2(30.0 * 7.0, 0.0));
+        // }
 
         draw_level(state, billy, &level, |_, _, _| None, 0.0, true);
 

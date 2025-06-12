@@ -1,5 +1,6 @@
 use core::f64;
 
+use chrono::{DateTime, Local};
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
 
 pub const DRAW_LEVEL: bool = true;
@@ -88,7 +89,7 @@ pub struct State {
     pub(crate) countdown: Countdown,
     pub(crate) stats_display: StatsDisplay,
 
-    pub(crate) now: f64,
+    pub(crate) now: DateTime<Local>,
     // // (text, x, y, lifetime)
     // delete_texts: Vec<(String, f32, f32, f32)>,
 
@@ -141,7 +142,7 @@ impl State {
             render,
             countdown: Countdown::new(),
             stats_display: StatsDisplay::new(),
-            now: 0.0, // TODO: get now
+            now: Local::now(), // TODO: get now
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
@@ -379,39 +380,39 @@ impl State {
         None
     }
 
-    pub fn get_chunks_to_sub(&mut self) -> Vec<ChunkCoord> {
-        let visible = self.get_viewable_chunks();
+    // pub fn get_chunks_to_sub(&mut self) -> Vec<ChunkCoord> {
+    //     let visible = self.get_viewable_chunks();
 
-        let mut out = vec![];
+    //     let mut out = vec![];
 
-        for v in visible {
-            // check if it is in the hashmap already
-            //if not, set it to subscribe
-            match self.level.chunks.get_mut(&v) {
-                Some(chunk) => chunk.last_time_visible = self.now,
-                None => {
-                    self.level.chunks.insert(v, LevelChunk::new(self.now));
-                    out.push(v);
-                }
-            }
-        }
+    //     for v in visible {
+    //         // check if it is in the hashmap already
+    //         //if not, set it to subscribe
+    //         match self.level.chunks.get_mut(&v) {
+    //             Some(chunk) => chunk.last_time_visible = self.now,
+    //             None => {
+    //                 self.level.chunks.insert(v, LevelChunk::new(self.now));
+    //                 out.push(v);
+    //             }
+    //         }
+    //     }
 
-        out
-    }
-    pub fn get_chunks_to_unsub(&mut self) -> Vec<ChunkCoord> {
-        let mut out = vec![];
+    //     out
+    // }
+    // pub fn get_chunks_to_unsub(&mut self) -> Vec<ChunkCoord> {
+    //     let mut out = vec![];
 
-        self.level.chunks.retain(|coord, chunk| {
-            if self.now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
-                out.push(*coord);
-                false
-            } else {
-                true
-            }
-        });
+    //     self.level.chunks.retain(|coord, chunk| {
+    //         if self.now - chunk.last_time_visible > UNLOAD_CHUNK_TIME * 1000.0 {
+    //             out.push(*coord);
+    //             false
+    //         } else {
+    //             true
+    //         }
+    //     });
 
-        out
-    }
+    //     out
+    // }
 
     pub fn set_preview_visibility(&mut self, to: bool) {
         self.show_preview = to;
@@ -545,7 +546,7 @@ impl State {
         self.select_hazards = to;
     }
 
-    pub fn set_now(&mut self, to: f64) {
+    pub fn set_now(&mut self, to: DateTime<Local>) {
         self.now = to;
     }
 
@@ -560,13 +561,13 @@ impl State {
         self.ending_fully_done = to;
     }
 
-    pub fn set_stats(&mut self, num: u32) {
-        self.stats_display.set_to(Some(num), self.now);
-    }
+    // pub fn set_stats(&mut self, num: u32) {
+    //     self.stats_display.set_to(Some(num), self.now);
+    // }
 
-    pub fn hide_stats(&mut self) {
-        self.stats_display.set_to(None, self.now);
-    }
+    // pub fn hide_stats(&mut self) {
+    //     self.stats_display.set_to(None, self.now);
+    // }
 
     pub fn transition_to_ending_spectate(&mut self, duration: f32) {
         self.ending_transition_override = Some(1.0);

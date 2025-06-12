@@ -3,6 +3,7 @@ use std::{
     hash::Hash,
 };
 
+use chrono::{DateTime, Local};
 use indexmap::IndexMap;
 use rust_shared::gd::{layer::Z_LAYERS, level::CHUNK_SIZE_UNITS, object::GDObject};
 
@@ -100,7 +101,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
         obj: GDObject,
         key: K,
         chunk_override: Option<ChunkCoord>,
-        now: f64,
+        now: DateTime<Local>,
     ) {
         let chunk = chunk_override.unwrap_or(ChunkCoord::get_from_pos(obj.x, obj.y));
         let sheet_idx = OBJECT_INFO[obj.id as usize].sheet as usize;
@@ -108,7 +109,7 @@ impl<K: Default + Hash + Eq + Copy> Level<K> {
         let chunk = self
             .chunks
             .entry(chunk)
-            .or_insert_with(|| LevelChunk::new(now));
+            .or_insert_with(|| LevelChunk::new(now.timestamp_millis() as f64));
         let [blending_batch, normal_batch] =
             &mut chunk.layers[obj.z_layer as usize].sheet_batches[sheet_idx];
 

@@ -46,6 +46,7 @@ indexmap = { workspace = true }
 
 #desen = { path = "../../Rust/drawtest/desen", features = ["html-canvas"] }
 
+chrono = "0.4.41"
 
 # base64 = "0.21.5"
 # base-encode = "0.3.1"

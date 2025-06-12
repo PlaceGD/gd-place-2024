@@ -11,6 +11,7 @@ mod utilgen;
 use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+use chrono::{DateTime, Local};
 use render::state::{RenderState, StateError};
 
 use state::State;
@@ -46,7 +47,7 @@ struct App {
     state: Option<State>,
 
     // delta: f64,
-    prev_time: u128,
+    prev_time: i64,
 }
 
 impl ApplicationHandler for App {
@@ -84,13 +85,18 @@ impl ApplicationHandler for App {
                 if let Some(state) = &mut self.state {
                     // self.delta += 1 / 60;
 
-                    let start = SystemTime::now();
-                    let now = start
-                        .duration_since(UNIX_EPOCH)
-                        .expect("Time went backwards")
-                        .as_millis();
+                    let local_now: DateTime<Local> = Local::now();
+                    let now = local_now.timestamp_millis();
 
-                    state.set_now(now as f64);
+                    // dbg!(local.to_string());
+
+                    // let start = SystemTime::now();
+                    // let now = start
+                    //     .duration_since(UNIX_EPOCH)
+                    //     .expect("Time went backwards")
+                    //     .as_millis();
+
+                    state.set_now(local_now);
                     state.render((now - self.prev_time) as f32);
 
                     self.prev_time = now;

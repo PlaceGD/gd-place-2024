@@ -384,142 +384,142 @@ fn ease_out_cubic(x: f32) -> f32 {
     1.0 - (1.0 - x).powf(3.0)
 }
 
-pub fn draw_ending_sparkle<K: ObjKey + Default + Hash + Eq + Copy>(
-    state: &State,
-    billy: &mut Billy,
-    obj: GDObject,
-    key: K,
-    end_trans01: f32,
-) {
-    if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
-        return;
-    }
+// pub fn draw_ending_sparkle<K: ObjKey + Default + Hash + Eq + Copy>(
+//     state: &State,
+//     billy: &mut Billy,
+//     obj: GDObject,
+//     key: K,
+//     end_trans01: f32,
+// ) {
+//     if state.hide_triggers && special_ids::TRIGGERS.contains(&obj.id) {
+//         return;
+//     }
 
-    //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
+//     //let end_anim_time = ((state.now - state.event_end) / 1000.0) as f32;
 
-    let info = OBJECT_INFO[obj.id as usize];
+//     let info = OBJECT_INFO[obj.id as usize];
 
-    let old_t = billy.get_transform();
+//     let old_t = billy.get_transform();
 
-    let mut angle_offset = 0.0;
+//     let mut angle_offset = 0.0;
 
-    let (delay, explosion_d, angular_velocity, pos) = obj_end_anim(&obj, state, end_trans01, key);
-    let end_anim_time = end_trans01 * 10.0;
-    //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
+//     let (delay, explosion_d, angular_velocity, pos) = obj_end_anim(&obj, state, end_trans01, key);
+//     let end_anim_time = end_trans01 * 10.0;
+//     //let new_z = (random_offset.z * 0.374 + 0.2) * explosion_d + 1.0;
 
-    if explosion_d <= 0.0 {
-        return;
-    }
+//     if explosion_d <= 0.0 {
+//         return;
+//     }
 
-    let sprites = [3827, 3825, 3828, 1886, 1886, 1765, 3969];
-    let choice = sprites[(key.random_num(11) * sprites.len() as f32) as usize];
+//     let sprites = [3827, 3825, 3828, 1886, 1886, 1765, 3969];
+//     let choice = sprites[(key.random_num(11) * sprites.len() as f32) as usize];
 
-    let spritescale: f32 = match choice {
-        3827 => 0.5,
-        3825 => 1.0,
-        3828 => 0.5,
-        1886 => 3.0,
-        3969 => 0.2,
-        1766 => 0.5,
-        1765 => 0.3,
-        _ => 1.0,
-    };
+//     let spritescale: f32 = match choice {
+//         3827 => 0.5,
+//         3825 => 1.0,
+//         3828 => 0.5,
+//         1886 => 3.0,
+//         3969 => 0.2,
+//         1766 => 0.5,
+//         1765 => 0.3,
+//         _ => 1.0,
+//     };
 
-    let trans_spritescale: f32 = match choice {
-        3827 => 0.5,
-        3825 => 0.5,
-        3828 => 0.5,
-        1886 => 0.2,
-        _ => 1.0,
-    };
+//     let trans_spritescale: f32 = match choice {
+//         3827 => 0.5,
+//         3825 => 0.5,
+//         3828 => 0.5,
+//         1886 => 0.2,
+//         _ => 1.0,
+//     };
 
-    let lifetime = 3.0 + key.random_num(12) * 7.0;
-    let fall_length = 30.0 + key.random_num(13) * 120.0;
-    let fall_anim = ((state.now / 1000.0) % lifetime as f64) as f32 / lifetime;
-    let fall_anim_strafe = key.random_num(14) * 0.6 - 0.3;
-    let fall_anim_pos = vec2(
-        fall_anim * fall_anim_strafe * fall_length,
-        -fall_anim * fall_length,
-    );
+//     let lifetime = 3.0 + key.random_num(12) * 7.0;
+//     let fall_length = 30.0 + key.random_num(13) * 120.0;
+//     let fall_anim = ((state.now / 1000.0) % lifetime as f64) as f32 / lifetime;
+//     let fall_anim_strafe = key.random_num(14) * 0.6 - 0.3;
+//     let fall_anim_pos = vec2(
+//         fall_anim * fall_anim_strafe * fall_length,
+//         -fall_anim * fall_length,
+//     );
 
-    let fall_anim_opacity = (-((fall_anim - 0.5).powf(2.0)) + 0.25) * 4.0;
+//     let fall_anim_opacity = (-((fall_anim - 0.5).powf(2.0)) + 0.25) * 4.0;
 
-    let fall_anim_start_d =
-        ((end_anim_time - delay - key.random_num(14) * 2.0) / 5.0).clamp(0.0, 1.0);
+//     let fall_anim_start_d =
+//         ((end_anim_time - delay - key.random_num(14) * 2.0) / 5.0).clamp(0.0, 1.0);
 
-    billy.translate(pos + fall_anim_pos * fall_anim_start_d - vec2(obj.x, obj.y));
-    //billy.scale(vec2(z_scaleup, z_scaleup));
+//     billy.translate(pos + fall_anim_pos * fall_anim_start_d - vec2(obj.x, obj.y));
+//     //billy.scale(vec2(z_scaleup, z_scaleup));
 
-    angle_offset += angular_velocity * PI * 0.1 * (end_anim_time - delay).max(0.0)
-        + angular_velocity * explosion_d;
+//     angle_offset += angular_velocity * PI * 0.1 * (end_anim_time - delay).max(0.0)
+//         + angular_velocity * explosion_d;
 
-    // let fadeout_d =
-    //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
-    // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
+//     // let fadeout_d =
+//     //     1.0 - ((end_anim_time - 3.0 - dist_from_center * 0.001) / 10.0).clamp(0.0, 1.0);
+//     // tint_color.w = tint_color.w * 0.2 + fadeout_d * 0.8;
 
-    // billy.apply_transform({
-    //     glam::Affine2::from_mat2_translation(
-    //         glam::mat2(vec2(1.0, 0.0), vec2(0.0, 1.0)),
-    //         vec2(obj.x, obj.y),
-    //     )
-    // });
-    billy.apply_transform({
-        let this = &obj;
-        let scale_x = OBJECT_INFO[choice].builtin_scale_x / 4.0;
-        let scale_y = OBJECT_INFO[choice].builtin_scale_y / 4.0;
+//     // billy.apply_transform({
+//     //     glam::Affine2::from_mat2_translation(
+//     //         glam::mat2(vec2(1.0, 0.0), vec2(0.0, 1.0)),
+//     //         vec2(obj.x, obj.y),
+//     //     )
+//     // });
+//     billy.apply_transform({
+//         let this = &obj;
+//         let scale_x = OBJECT_INFO[choice].builtin_scale_x / 4.0;
+//         let scale_y = OBJECT_INFO[choice].builtin_scale_y / 4.0;
 
-        glam::Affine2::from_mat2_translation(
-            glam::mat2(
-                vec2(this.ix * scale_x, this.iy * scale_x),
-                vec2(this.jx * scale_y, this.jy * scale_y),
-            ),
-            vec2(this.x, this.y),
-        )
-    });
-    //billy.translate(vec2(obj.x, obj.y));
-    let reveal = ((end_anim_time - delay) / 3.5).clamp(0.0, 1.0);
-    billy.scale(vec2(
-        reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
-        reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
-    ));
-    billy.rotate(angle_offset);
+//         glam::Affine2::from_mat2_translation(
+//             glam::mat2(
+//                 vec2(this.ix * scale_x, this.iy * scale_x),
+//                 vec2(this.jx * scale_y, this.jy * scale_y),
+//             ),
+//             vec2(this.x, this.y),
+//         )
+//     });
+//     //billy.translate(vec2(obj.x, obj.y));
+//     let reveal = ((end_anim_time - delay) / 3.5).clamp(0.0, 1.0);
+//     billy.scale(vec2(
+//         reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
+//         reveal * 3.0 * spritescale.powf(reveal) * trans_spritescale.powf(1.0 - reveal),
+//     ));
+//     billy.rotate(angle_offset);
 
-    let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
-        2
-    } else {
-        3
-    };
+//     let tex_idx = if info.builtin_scale_x == 1.0 && info.builtin_scale_y == 1.0 {
+//         2
+//     } else {
+//         3
+//     };
 
-    let mut color = Vec4::from_array(
-        [
-            obj.main_color.r,
-            obj.main_color.g,
-            obj.main_color.b,
-            obj.main_color.opacity,
-        ]
-        .map(|v| v as f32 / 255.0),
-    );
+//     let mut color = Vec4::from_array(
+//         [
+//             obj.main_color.r,
+//             obj.main_color.g,
+//             obj.main_color.b,
+//             obj.main_color.opacity,
+//         ]
+//         .map(|v| v as f32 / 255.0),
+//     );
 
-    color.w *= ((0.6f32).powf(reveal)
-        * key.random_num(10).powf(2.0 * reveal)
-        * fall_anim_opacity.powf(fall_anim_start_d)
-        / spritescale.powf(reveal)
-        / trans_spritescale.powf(1.0 - reveal))
-    .clamp(0.0, 1.0);
+//     color.w *= ((0.6f32).powf(reveal)
+//         * key.random_num(10).powf(2.0 * reveal)
+//         * fall_anim_opacity.powf(fall_anim_start_d)
+//         / spritescale.powf(reveal)
+//         / trans_spritescale.powf(1.0 - reveal))
+//     .clamp(0.0, 1.0);
 
-    let sprite = MAIN_SPRITES[choice].unwrap();
+//     let sprite = MAIN_SPRITES[choice].unwrap();
 
-    let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
-    let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
+//     let uv_pos = uvec2(sprite.pos.0, sprite.pos.1).as_vec2();
+//     let uv_size = uvec2(sprite.size.0, sprite.size.1).as_vec2();
 
-    billy.centered_textured_rect(
-        vec2(sprite.offset.0, -sprite.offset.1),
-        uv_size,
-        color,
-        tex_idx,
-        uv_pos,
-        uv_size,
-    );
+//     billy.centered_textured_rect(
+//         vec2(sprite.offset.0, -sprite.offset.1),
+//         uv_size,
+//         color,
+//         tex_idx,
+//         uv_pos,
+//         uv_size,
+//     );
 
-    billy.set_transform(old_t);
-}
+//     billy.set_transform(old_t);
+// }

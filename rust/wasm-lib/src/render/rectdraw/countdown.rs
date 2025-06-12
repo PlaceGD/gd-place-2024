@@ -1,6 +1,7 @@
 use std::{array, io::Cursor, sync::LazyLock, time::Instant};
 
 use binrw::BinRead;
+use chrono::{DateTime, Local, Timelike};
 use glam::{vec2, vec4, Affine2, Vec2};
 use rust_shared::{
     console_log,
@@ -57,11 +58,11 @@ impl Countdown {
             colon_state: [1000; 2],
         }
     }
-    pub fn update_state(&mut self, event_start: f64, now: f64) {
+    pub fn update_state(&mut self, event_start: f64, now: DateTime<Local>) {
         //console_log!("{event_start} {now}");
         // let event_elapsed = now / 1000.0 - event_start / 1000.0;
         // let time_until = -event_elapsed;
-        let time_until = now / 1000.0;
+        let time_until = now.timestamp_millis() as f64 / 1000.0;
 
         if time_until.is_nan() || time_until.is_infinite() {
             return;
@@ -74,10 +75,14 @@ impl Countdown {
         let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
         //console_log!("{}", switch_id % SET_SWITCHES.len());
 
-        let days = (time_until / 86400.0).floor();
-        let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
-        let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
-        let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
+        // let days = (time_until / 86400.0).floor();
+        // let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
+        // let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
+        // let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
+
+        let hours = now.hour();
+        let minutes = now.minute();
+        let seconds = now.second();
 
         // let show_days = false; //days != 0.0;
         let show_hours = true; //show_days || hours != 0.0;
@@ -286,8 +291,8 @@ impl Countdown {
 
         // TODO: setting: digit + colon positions
         const BLOCK: f32 = 30.0;
-        const DIGIT_WIDTH: f32 = 6.0 * BLOCK; // 180
-        const COLON_WIDTH: f32 = 3.0 * BLOCK; // 120
+        const DIGIT_WIDTH: f32 = 6.0 * BLOCK;
+        const COLON_WIDTH: f32 = 4.0 * BLOCK;
 
         // For digit index 0..5
         for (i, digit) in self.digits.iter().enumerate() {
@@ -432,7 +437,7 @@ impl StatsDisplay {
         }
     }
 
-    pub fn set_to(&mut self, num: Option<u32>, now: f64) {
+    pub fn set_to(&mut self, num: Option<u32>, now: DateTime<Local>) {
         let num_digits: [Option<u8>; STATS_NUM_DIGITS] = if let Some(num) = num {
             array::from_fn(|i| {
                 let div = 10u32.pow(STATS_NUM_DIGITS as u32 - i as u32 - 1);
@@ -519,7 +524,7 @@ impl CountdownDigit {
             objects: Vec::new(),
         }
     }
-    fn from_set(set: usize, digit: u8, now: f64) -> Self {
+    fn from_set(set: usize, digit: u8, now: DateTime<Local>) -> Self {
         let mut empty = Self::new();
         empty.set_to(set, digit, 0.5, now);
         empty
@@ -535,7 +540,7 @@ impl CountdownDigit {
         &COUNTDOWN_DIGITS.0[set].0[(digit as usize) % 10].objs
     }
 
-    fn set_to(&mut self, set: usize, digit: u8, duration: f64, now: f64) {
+    fn set_to(&mut self, set: usize, digit: u8, duration: f64, now: DateTime<Local>) {
         self.objects = Self::get_set(set, digit)
             .iter()
             .map(|o| {
@@ -561,7 +566,7 @@ impl CountdownDigit {
         set1: usize,
         set2: usize,
         delay: f32,
-        now: f64,
+        now: DateTime<Local>,
     ) {
         self.objects.clear(); // so it dont reallocate :)
 
@@ -897,8 +902,8 @@ struct TransitioningObject {
 }
 
 impl TransitioningObject {
-    fn get(&self, now: f64) -> Option<GDObject> {
-        let time = now / 1000.0;
+    fn get(&self, now: DateTime<Local>) -> Option<GDObject> {
+        let time = now.timestamp_millis() as f64 / 1000.0;
         let d = (time - self.start_time) / self.duration;
 
         fn lerp_color(c1: GDColor, c2: GDColor, d: f64) -> GDColor {
@@ -1001,9 +1006,9 @@ impl TransitioningObject {
         duration: f64,
         y_delay: bool,
         mut delay: f32,
-        now: f64,
+        now: DateTime<Local>,
     ) -> TransitioningObject {
-        let time = now / 1000.0;
+        let time = now.timestamp_millis() as f64 / 1000.0;
         if y_delay {
             delay += typ.output_obj().y / 300.0 * 0.25
         }

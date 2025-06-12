@@ -95,7 +95,7 @@ fn ease_out_expo(t: f32) -> f32 {
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     let fade = 1.0; // TODO: hardcoded?
 
-    let pos = ((in.pos.xy - globals.screen_size / 2.0) * vec2(1.0, -1.0) + globals.camera_pos * globals.zoom_scale) / globals.zoom_scale;
+    let pos = (((in.pos.xy - globals.screen_size / 2.0) * vec2(1.0, -1.0) + globals.camera_pos * globals.zoom_scale) / globals.zoom_scale) + vec2(15.0, 0.0);
 
     // if is_within_rect(pos, vec2(0.0), LEVEL_SIZE_VEC, 2.0 / globals.zoom_scale) {
     // if draw_grid(pos, LEVEL_SIZE_VEC, 4.0 / globals.zoom_scale) {

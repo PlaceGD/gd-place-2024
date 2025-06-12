@@ -43,7 +43,7 @@ use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 // }
 
 // TODO: setting: change fps
-const TARGET_FPS: f64 = 60.0;
+const TARGET_FPS: f64 = 30.0;
 
 struct App {
     window: Option<Arc<Window>>,

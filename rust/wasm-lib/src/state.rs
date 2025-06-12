@@ -105,9 +105,12 @@ impl State {
             time: 0.0,
             width: size.width,
             height: size.height,
+            // TODO: setting: quality?
             quality: 1.0,
             camera_pos: vec2(0.0, 0.0),
-            zoom: -16.0,
+            // TODO: setting: zoom
+            zoom: -20.0,
+            // TODO: setting: bg color
             bg_color: (4, 24, 46),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),
@@ -131,7 +134,9 @@ impl State {
             selected_object: None,
             show_collidable: false,
             hide_triggers: false,
+            // TODO: setting: rotating objs
             no_rotating_objects: false,
+            // TODO: setting: hide grid
             hide_grid: false,
             hide_ground: false,
             hide_outline: false,

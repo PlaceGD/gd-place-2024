@@ -1,8 +1,10 @@
+use core::time;
 use std::{array, io::Cursor, sync::LazyLock, time::Instant};
 
 use binrw::BinRead;
 use chrono::{DateTime, Local, Timelike};
 use glam::{vec2, vec4, Affine2, Vec2};
+use rand::{rngs::ThreadRng, Rng};
 use rust_shared::{
     console_log,
     countdown::{CountdownDigitSets, DigitObjects, DIGIT_SETS, TEST_SETS},
@@ -30,13 +32,16 @@ pub struct Countdown {
     pub state: [Option<u8>; 8],
     pub sets: [usize; 4],
 
-    pub days_marker: Vec<TransitioningObject>,
     pub hours_marker: Vec<TransitioningObject>,
     pub minutes_marker: Vec<TransitioningObject>,
     pub hours_colon: Vec<TransitioningObject>,
     pub minutes_colon: Vec<TransitioningObject>,
-    pub bg_state: [bool; 3],
+    pub bg_state: [bool; 2],
     pub colon_state: [usize; 2],
+
+    pub prev_switch_id: usize,
+
+    pub rng: ThreadRng,
 }
 
 impl Countdown {
@@ -48,31 +53,69 @@ impl Countdown {
             state: [None; 8],
             sets: [28, 3, 12, 43],
 
-            days_marker: Vec::new(),
-            hours_marker: Vec::new(),
-            minutes_marker: Vec::new(),
+            hours_marker: COUNTDOWN_DIGITS
+                .2
+                .objs
+                .iter()
+                .map(|obj| {
+                    TransitioningObject::new(AnimType::Static(*obj), 0.0, false, 0.0, Local::now())
+                        .offset(0.2)
+                })
+                .collect::<Vec<_>>(),
+            minutes_marker: COUNTDOWN_DIGITS
+                .3
+                .objs
+                .iter()
+                .map(|obj| {
+                    TransitioningObject::new(AnimType::Static(*obj), 0.0, false, 0.0, Local::now())
+                        .offset(0.2)
+                })
+                .collect::<Vec<_>>(),
 
             hours_colon: Vec::new(),
             minutes_colon: Vec::new(),
-            bg_state: [false; 3],
+            bg_state: [true; 2],
             colon_state: [1000; 2],
+
+            prev_switch_id: 0,
+
+            rng: rand::rng(),
         }
     }
-    pub fn update_state(&mut self, event_start: f64, now: DateTime<Local>) {
+    pub fn update_state(&mut self, event_start: f64, datetime: DateTime<Local>) {
         //console_log!("{event_start} {now}");
         // let event_elapsed = now / 1000.0 - event_start / 1000.0;
         // let time_until = -event_elapsed;
-        let time_until = now.timestamp_millis() as f64 / 1000.0;
+        let now = datetime.timestamp_millis() as f64;
 
-        if time_until.is_nan() || time_until.is_infinite() {
-            return;
-        }
+        // TODO: setting: switch time
+        let switch_id = (((now / 1000.0) + 0.0).max(0.0) / 13.0).floor() as usize;
 
-        // if u change this also change it in the wasm :3
-        let switch_id = ((time_until + 600.0).max(0.0) / 1200.0).floor() as usize;
-        //console_log!("{time_until}");
+        let total_colons = COUNTDOWN_DIGITS.4.len();
 
-        let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
+        let mut has_new_sets = false;
+
+        let (sets, new_colon_state) = if switch_id != self.prev_switch_id {
+            self.prev_switch_id = switch_id;
+            has_new_sets = true;
+
+            (
+                [
+                    self.rng.random_range(0..DIGIT_SETS),
+                    self.rng.random_range(0..DIGIT_SETS),
+                    self.rng.random_range(0..DIGIT_SETS),
+                    self.rng.random_range(0..DIGIT_SETS),
+                ],
+                [
+                    self.rng.random_range(0..total_colons),
+                    self.rng.random_range(0..total_colons),
+                ],
+            )
+        } else {
+            (self.sets, self.colon_state)
+        };
+
+        // let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
         //console_log!("{}", switch_id % SET_SWITCHES.len());
 
         // let days = (time_until / 86400.0).floor();
@@ -80,9 +123,9 @@ impl Countdown {
         // let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
         // let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
 
-        let hours = now.hour();
-        let minutes = now.minute();
-        let seconds = now.second();
+        let hours = datetime.hour();
+        let minutes = datetime.minute();
+        let seconds = datetime.second();
 
         // let show_days = false; //days != 0.0;
         let show_hours = true; //show_days || hours != 0.0;
@@ -101,11 +144,7 @@ impl Countdown {
         let (mind1, mind2) = digits(minutes as u8, show_minutes);
         let (secd1, secd2) = digits(seconds as u8, true);
 
-        let (state, show_hours, show_minutes) = (
-            [hourd1, hourd2, mind1, mind2, secd1, secd2],
-            show_hours,
-            show_minutes,
-        );
+        let state = [hourd1, hourd2, mind1, mind2, secd1, secd2];
         // let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
         //     ([None; 8], false, false, false)
         // } else {
@@ -113,6 +152,7 @@ impl Countdown {
 
         for i in 0..self.digits.len() {
             let delay = index_delay(i);
+
             if sets != self.sets {
                 self.digits[i].transition_between(
                     self.state[i],
@@ -120,7 +160,7 @@ impl Countdown {
                     self.sets[i / 2],
                     sets[i / 2],
                     delay,
-                    now,
+                    datetime,
                 );
                 self.state[i] = state[i];
             } else if self.state[i] != state[i] {
@@ -138,7 +178,7 @@ impl Countdown {
                     self.sets[i / 2],
                     self.sets[i / 2],
                     delay,
-                    now,
+                    datetime,
                 );
                 self.state[i] = state[i];
                 //self.sets[i / 2] = new_set;
@@ -162,7 +202,7 @@ impl Countdown {
                             0.8,
                             false,
                             delay,
-                            now,
+                            datetime,
                         )
                         .offset(0.2)
                     })
@@ -182,19 +222,13 @@ impl Countdown {
                             0.8,
                             false,
                             delay,
-                            now,
+                            datetime,
                         )
                     })
                     .collect::<Vec<_>>()
             };
 
-            let new_bg_state = [show_hours, show_minutes];
-
-            // TODO: use actual rand?
-            let new_colon_state = [
-                ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
-                ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
-            ];
+            // let new_bg_state = [show_hours, show_minutes];
 
             // if switch_id == 0 {
             //     [0, 0]
@@ -205,56 +239,56 @@ impl Countdown {
             //     ]
             // };
 
-            for i in 0..2 {
-                // if self.bg_state[i + 1] != new_bg_state[i + 1]
-                //     || self.colon_state[i] != new_colon_state[i]
-                // {
-                // }
-                // dbg!(i);
-                let (state, prev_colon, colon) = match i {
-                    0 => (
-                        &mut self.hours_colon,
-                        &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
-                        &COUNTDOWN_DIGITS.4[new_colon_state[0]],
-                    ),
-                    1 => (
-                        &mut self.minutes_colon,
-                        &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
-                        &COUNTDOWN_DIGITS.5[new_colon_state[1]],
-                    ),
-                    _ => unreachable!(),
-                };
+            if has_new_sets {
+                for i in 0..2 {
+                    let (state, prev_colon, colon) = match i {
+                        0 => (
+                            &mut self.hours_colon,
+                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
+                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
+                        ),
+                        1 => (
+                            &mut self.minutes_colon,
+                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
+                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
+                        ),
+                        _ => unreachable!(),
+                    };
 
-                let delay = index_delay(i * 2 + 2);
-                state.clear();
+                    let delay = index_delay(i * 2 + 2);
+                    state.clear();
 
-                if self.bg_state[i] {
                     state.extend(dissapear(prev_colon, delay));
-                }
-                if new_bg_state[i] {
                     state.extend(appear(colon, delay));
+
+                    self.colon_state[i] = new_colon_state[i];
                 }
-
-                self.colon_state[i] = new_colon_state[i];
             }
 
-            for i in 0..2 {
-                let (state, bg) = match i {
-                    0 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
-                    1 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
-                    _ => unreachable!(),
-                };
-                let delay = index_delay(i * 2);
-                *state = if new_bg_state[i] {
-                    appear(&bg, delay)
-                } else {
-                    dissapear(&bg, delay)
-                };
+            // self.hours_marker = appear(&COUNTDOWN_DIGITS.2, 1.0);
+            // self.minutes_marker = appear(&COUNTDOWN_DIGITS.3, 1.0);
 
-                self.bg_state[i] = new_bg_state[i];
-                // if self.bg_state[i] != new_bg_state[i] {
-                // }
-            }
+            // for i in 0..2 {
+            //     let (state, bg) = match i {
+            //         0 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
+            //         1 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
+            //         _ => unreachable!(),
+            //     };
+
+            //     let delay = index_delay(i * 2);
+
+            //     *state = if new_bg_state[i] {
+            //         appear(&bg, delay)
+            //     } else {
+            //         dissapear(&bg, delay)
+            //     };
+
+            //     dbg!(self.bg_state, new_bg_state);
+
+            //     // self.bg_state[i] = new_bg_state[i];
+            //     // if self.bg_state[i] != new_bg_state[i] {
+            //     // }
+            // }
         }
     }
 
@@ -500,7 +534,7 @@ impl StatsDisplay {
 }
 
 fn index_delay(i: usize) -> f32 {
-    (8 - i) as f32 * 0.07
+    (6 - i) as f32 * 0.07
 }
 
 fn get_alpha(o: GDObject) -> f32 {
@@ -905,6 +939,8 @@ impl TransitioningObject {
     fn get(&self, now: DateTime<Local>) -> Option<GDObject> {
         let time = now.timestamp_millis() as f64 / 1000.0;
         let d = (time - self.start_time) / self.duration;
+
+        // dbg!(now.timestamp_millis());
 
         fn lerp_color(c1: GDColor, c2: GDColor, d: f64) -> GDColor {
             GDColor {

@@ -9,7 +9,7 @@ mod util;
 mod utilgen;
 
 use std::sync::Arc;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, Local};
 use render::state::{RenderState, StateError};
@@ -42,12 +42,17 @@ use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 //     // }))
 // }
 
+// TODO: setting: change fps
+const TARGET_FPS: f64 = 60.0;
+
 struct App {
     window: Option<Arc<Window>>,
     state: Option<State>,
 
-    // delta: f64,
-    prev_time: i64,
+    last_frame_instant: Instant,
+    next_frame_time: Instant,
+
+    frame_duration: Duration,
 }
 
 impl ApplicationHandler for App {
@@ -68,12 +73,24 @@ impl ApplicationHandler for App {
             futures::executor::block_on(RenderState::new_canvas(Arc::clone(&window), size))
                 .expect("TODO: handle me");
 
-        let mut state = State::new(canvas, size);
+        let state = State::new(canvas, size);
 
-        // state.set_event_start(1732996643000.0);
-        // state.set_now(0.0);
-        // state.set_quality(1.0);
         self.state = Some(state);
+
+        let now = Instant::now();
+        self.last_frame_instant = now;
+        self.next_frame_time = now + self.frame_duration;
+        event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
+    }
+
+    fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: winit::event::StartCause) {
+        if Instant::now() >= self.next_frame_time {
+            if let Some(window) = &self.window {
+                window.request_redraw();
+            }
+        }
+
+        event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
@@ -83,26 +100,20 @@ impl ApplicationHandler for App {
             }
             WindowEvent::RedrawRequested => {
                 if let Some(state) = &mut self.state {
-                    // self.delta += 1 / 60;
+                    let now_instant = Instant::now();
+                    let delta_time = now_instant
+                        .duration_since(self.last_frame_instant)
+                        .as_secs_f32();
 
                     let local_now: DateTime<Local> = Local::now();
-                    let now = local_now.timestamp_millis();
-
-                    // dbg!(local.to_string());
-
-                    // let start = SystemTime::now();
-                    // let now = start
-                    //     .duration_since(UNIX_EPOCH)
-                    //     .expect("Time went backwards")
-                    //     .as_millis();
-
                     state.set_now(local_now);
-                    state.render((now - self.prev_time) as f32);
+                    state.render(delta_time);
 
-                    self.prev_time = now;
+                    self.last_frame_instant = now_instant;
+                    self.next_frame_time = now_instant + self.frame_duration;
+
+                    event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
                 }
-
-                self.window.as_ref().unwrap().request_redraw();
             }
             WindowEvent::Resized(size) => {
                 if let Some(state) = &mut self.state {
@@ -117,15 +128,14 @@ impl ApplicationHandler for App {
 fn main() -> Result<(), StateError> {
     let event_loop = EventLoop::new().unwrap();
 
-    event_loop.set_control_flow(ControlFlow::Poll);
-
-    event_loop.set_control_flow(ControlFlow::Wait);
-
+    let now = Instant::now();
     let mut app = App {
         window: None,
         state: None,
-        // delta: 0.0,
-        prev_time: 0,
+        last_frame_instant: now,
+        next_frame_time: now,
+
+        frame_duration: Duration::from_secs_f64(1.0 / TARGET_FPS),
     };
     event_loop.run_app(&mut app).unwrap();
 

@@ -107,7 +107,7 @@ impl State {
             height: size.height,
             quality: 1.0,
             camera_pos: vec2(0.0, 0.0),
-            zoom: -6.0,
+            zoom: -16.0,
             bg_color: (4, 24, 46),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),

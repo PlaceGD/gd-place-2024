@@ -117,6 +117,7 @@ pub struct BackgroundColor {
 pub struct Background {
     pub color: BackgroundColor,
     pub image: String,
+    pub fit: String,
 }
 
 impl Default for Background {
@@ -124,6 +125,7 @@ impl Default for Background {
         Self {
             color: BackgroundColor { r: 4, g: 24, b: 46 },
             image: "./background.png".into(),
+            fit: "tile".into(),
         }
     }
 }
@@ -149,6 +151,13 @@ impl Config {
             "center" | "top-left" | "top-right" | "bottom-left" | "bottom-right" => (),
             value => return Err(AppError::ConfigValidationError {
                 reason: format!("unknown value `{value}` in `clock.postion`! must be one of `center, top-left, top-right, bottom-left, bottom-right`") 
+            })
+        }
+
+        match &self.background.fit[..] {
+            "fill" | "cover" | "contain" | "tile" | "none" => (),
+            value => return Err(AppError::ConfigValidationError {
+                reason: format!("unknown value `{value}` in `background.tilin`! must be one of `fill, cover, contain, tile, none`") 
             })
         }
 

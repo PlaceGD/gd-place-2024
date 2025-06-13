@@ -634,33 +634,121 @@ impl State {
             let mut billy = Billy::new();
 
             // background
-            {
-                let old_t = billy.get_transform();
-                billy.translate(-self.camera_pos / 3.0 / 2.0);
+            // {
+            //     let old_t = billy.get_transform();
+            //     // billy.translate(-self.camera_pos / 3.0 / 2.0);
 
-                let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
+            //     let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
 
-                let offset = (self.camera_pos / 10.0 / scale).floor() * scale;
+            //     let offset = (self.camera_pos / 1.0 / scale).floor() * scale;
 
-                for i in -2i32..=2 {
-                    for j in -2i32..=2 {
-                        billy.centered_textured_rect(
-                            offset + scale * vec2(i as f32, j as f32),
-                            vec2(scale, scale),
-                            vec4(
-                                self.bg_color.0 as f32 / 255.0,
-                                self.bg_color.1 as f32 / 255.0,
-                                self.bg_color.2 as f32 / 255.0,
-                                1.0,
-                            ),
-                            0,
-                            vec2(0.0, 0.0),
-                            vec2(1024.0, 1024.0),
-                        );
+            //     for i in 0..1 {
+            //         //-2i32..=2
+            //         for j in 0..1 {
+            //             //-2i32..=2
+            // billy.centered_textured_rect(
+            //     offset + scale * vec2(i as f32, j as f32),
+            //     vec2(scale, scale),
+            //     vec4(
+            //         self.bg_color.0 as f32 / 255.0,
+            //         self.bg_color.1 as f32 / 255.0,
+            //         self.bg_color.2 as f32 / 255.0,
+            //         1.0,
+            //     ),
+            //     0,
+            //     vec2(0.0, 0.0),
+            //     vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
+            // );
+            //         }
+            //     }
+            //     billy.set_transform(old_t);
+            // };
+
+            let bg_tint = vec4(
+                self.bg_color.0 as f32 / 255.0,
+                self.bg_color.1 as f32 / 255.0,
+                self.bg_color.2 as f32 / 255.0,
+                1.0,
+            );
+            let bg_uv = vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32);
+
+            match &self.config.background.fit[..] {
+                "fill" => {
+                    billy.centered_textured_rect(
+                        vec2(0.0, 0.0),
+                        vec2(self.width as f32, self.height as f32),
+                        bg_tint,
+                        0,
+                        vec2(0.0, 0.0),
+                        bg_uv,
+                    );
+                }
+                fit @ ("contain" | "cover") => {
+                    let img_width = self.render.bg_size.0 as f32;
+                    let img_height = self.render.bg_size.1 as f32;
+                    let win_width = self.width as f32;
+                    let win_height = self.height as f32;
+
+                    let img_aspect = img_width / img_height;
+                    let win_aspect = win_width / win_height;
+
+                    let scale_axis = if fit == "cover" {
+                        img_aspect < win_aspect
+                    } else {
+                        img_aspect > win_aspect
+                    };
+
+                    let (bg_width, bg_height) = if scale_axis {
+                        let scale = win_width / img_width;
+                        (win_width, img_height * scale)
+                    } else {
+                        let scale = win_height / img_height;
+                        (img_width * scale, win_height)
+                    };
+
+                    billy.centered_textured_rect(
+                        vec2(0.0, 0.0),
+                        vec2(bg_width, bg_height),
+                        bg_tint,
+                        0,
+                        vec2(0.0, 0.0),
+                        bg_uv,
+                    )
+                }
+                "tile" => {
+                    let tile_count_x =
+                        (self.width as f32 / self.render.bg_size.0 as f32).ceil() as i32;
+                    let tile_count_y =
+                        (self.height as f32 / self.render.bg_size.1 as f32).ceil() as i32;
+
+                    dbg!((-tile_count_x / 2), (tile_count_x / 2));
+
+                    for x in (-tile_count_x / 2)..=(tile_count_x / 2) {
+                        for y in (-tile_count_y / 2)..=(tile_count_y / 2) {
+                            billy.centered_textured_rect(
+                                vec2(
+                                    (self.render.bg_size.0 as i32 * x) as f32,
+                                    (self.render.bg_size.1 as i32 * y) as f32,
+                                ),
+                                vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
+                                bg_tint,
+                                0,
+                                vec2(0.0, 0.0),
+                                bg_uv,
+                            )
+                        }
                     }
                 }
-                billy.set_transform(old_t);
-            };
+                "none" => billy.centered_textured_rect(
+                    vec2(0.0, 0.0),
+                    vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
+                    bg_tint,
+                    0,
+                    vec2(0.0, 0.0),
+                    bg_uv,
+                ),
+                _ => (),
+            }
 
             billy.set_blend_mode(BlendMode::Normal);
             //if self.event_elapsed < 0.0 {

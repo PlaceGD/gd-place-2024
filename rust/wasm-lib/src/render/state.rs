@@ -1,7 +1,7 @@
 use std::{error::Error, fmt::Display, fs, io, sync::Arc, time::Instant};
 
 use glam::{uvec2, vec2, vec4, UVec2};
-use image::{ImageError, ImageResult};
+use image::{GenericImageView, ImageError, ImageResult};
 use wgpu::{util::DeviceExt, Buffer, CreateSurfaceError, WindowHandle};
 use winit::dpi::PhysicalSize;
 
@@ -21,6 +21,8 @@ pub struct RenderState {
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
     pub surface_config: wgpu::SurfaceConfiguration,
+
+    pub bg_size: (u32, u32),
 
     pub globals_buffer: wgpu::Buffer,
     pub globals_bind_group: wgpu::BindGroup,
@@ -43,7 +45,7 @@ fn create_textures_bind_group(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     config: &Config,
-) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup), AppError> {
+) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup, (u32, u32)), AppError> {
     // TODO: speed up this?
     let spritesheet =
         image::load_from_memory(include_bytes!("../../../../src/assets/spritesheet.png"))
@@ -168,7 +170,11 @@ fn create_textures_bind_group(
         })
     };
 
-    Ok((textures_bind_group_layout, textures_bind_group))
+    Ok((
+        textures_bind_group_layout,
+        textures_bind_group,
+        bg.dimensions(),
+    ))
 }
 
 pub const SAMPLE_COUNT: u32 = 4;
@@ -230,7 +236,7 @@ impl RenderState {
                 wgpu::BufferBindingType::Uniform,
             );
 
-        let (textures_bind_group_layout, textures_bind_group) =
+        let (textures_bind_group_layout, textures_bind_group, bg_size) =
             create_textures_bind_group(&device, &queue, config)?;
 
         let multisampled_frame_descriptor = wgpu::TextureDescriptor {
@@ -360,6 +366,9 @@ impl RenderState {
             surface,
             device,
             queue,
+
+            bg_size,
+
             surface_config,
             globals_buffer,
             globals_bind_group,

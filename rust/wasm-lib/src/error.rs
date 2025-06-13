@@ -12,6 +12,7 @@ pub enum AppError {
     SurfaceError(wgpu::SurfaceError),
     NoAdapter,
     RequestDeviceError(wgpu::RequestDeviceError),
+    ConfigValidationError { reason: String },
 }
 
 impl Error for AppError {}
@@ -29,6 +30,9 @@ impl Display for AppError {
             AppError::SurfaceError(e) => write!(f, "surface error: {e}"),
             AppError::NoAdapter => write!(f, "failed to find compatible adapter"),
             AppError::RequestDeviceError(e) => write!(f, "failed to find request device: {e}"),
+            AppError::ConfigValidationError { reason } => {
+                write!(f, "failed to validate config: {reason}")
+            }
         }
     }
 }

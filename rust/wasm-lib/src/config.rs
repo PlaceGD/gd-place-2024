@@ -144,13 +144,130 @@ impl Config {
         Ok(config)
     }
 
+    fn validate_config(&self) -> Result<(), AppError> {
+        match &self.clock.position[..] {
+            "center" | "top-left" | "top-right" | "bottom-left" | "bottom-right" => (),
+            value => return Err(AppError::ConfigValidationError {
+                reason: format!("unknown value `{value}` in `clock.postion`! must be one of `center, top-left, top-right, bottom-left, bottom-right`") 
+            })
+        }
+
+        match self.grid.opacity {
+            0.0..=100.0 => (),
+            value => {
+                return Err(AppError::ConfigValidationError {
+                    reason: format!(
+                        "`{value}` outside range for `grid.opacity`! must be between 0.0 and 100.0"
+                    ),
+                })
+            }
+        }
+
+        let is_valid_colon = |c: &usize| (0..5).contains(c);
+        let is_valid_digit = |d: &usize| (0..DIGIT_SETS).contains(d);
+
+        let invalid_colons = self.sets.colon_sets.iter().any(|c| !is_valid_colon(&c));
+
+        if invalid_colons {
+            let joined = self
+                .sets
+                .colon_sets
+                .iter()
+                .filter(|c| !is_valid_colon(c))
+                .map(|n| n.to_string())
+                .collect::<Vec<_>>()
+                .join(", ");
+
+            return Err(AppError::ConfigValidationError {
+                reason: format!(
+                    "invalid colon sets `{}` found in `sets.colon_sets`! must be between 0 and 4",
+                    joined
+                ),
+            });
+        }
+
+        let invalid_digits = self.sets.digit_sets.iter().any(|d| !is_valid_digit(d));
+
+        if invalid_digits {
+            let joined = self
+                .sets
+                .digit_sets
+                .iter()
+                .filter(|d| !is_valid_digit(d))
+                .map(|n| n.to_string())
+                .collect::<Vec<_>>()
+                .join(", ");
+
+            return Err(AppError::ConfigValidationError {
+                reason: format!(
+                    "invalid digit sets `{}` found in `sets.digit_sets`! must be between 0 and {}",
+                    joined,
+                    DIGIT_SETS - 1
+                ),
+            });
+        }
+
+        if let Some(sets) = &self.sets.sets {
+            if !is_valid_digit(&sets.hours) {
+                return Err(AppError::ConfigValidationError {
+                    reason: format!(
+                        "invalid hour digit `{}` found in `sets.sets`! must be between 0 and {}",
+                        sets.hours,
+                        DIGIT_SETS - 1
+                    ),
+                });
+            }
+            if !is_valid_digit(&sets.minutes) {
+                return Err(AppError::ConfigValidationError {
+                    reason: format!(
+                        "invalid minute digit `{}` found in `sets.sets`! must be between 0 and {}",
+                        sets.minutes,
+                        DIGIT_SETS - 1
+                    ),
+                });
+            }
+            if !is_valid_digit(&sets.seconds) {
+                return Err(AppError::ConfigValidationError {
+                    reason: format!(
+                        "invalid second digit `{}` found in `sets.sets`! must be between 0 and {}",
+                        sets.seconds,
+                        DIGIT_SETS - 1
+                    ),
+                });
+            }
+
+            if !is_valid_colon(&sets.colonh) {
+                return Err(AppError::ConfigValidationError {
+                    reason: format!(
+                        "invalid hour colon `{}` found in `sets.sets`! must be between 0 and 4",
+                        sets.colonh,
+                    ),
+                });
+            }
+            if !is_valid_colon(&sets.colonm) {
+                return Err(AppError::ConfigValidationError {
+                    reason: format!(
+                        "invalid minute colon `{}` found in `sets.sets`! must be between 0 and 4",
+                        sets.colonh,
+                    ),
+                });
+            }
+        }
+
+        Ok(())
+    }
+
     pub fn from_file_or_default() -> Result<Self, AppError> {
         let path: PathBuf = "./config.toml".into();
 
-        if let Ok(config_str) = fs::read_to_string(&path) {
-            Ok(toml::from_str(&config_str).map_err(AppError::ConfigReadFailed)?)
+        let config = if let Ok(config_str) = fs::read_to_string(&path) {
+            toml::from_str(&config_str).map_err(AppError::ConfigReadFailed)?
         } else {
-            Self::get_and_write_default(&path)
-        }
+            Self::get_and_write_default(&path)?
+        };
+
+        config.validate_config()?;
+
+        Ok(config)
     }
 }

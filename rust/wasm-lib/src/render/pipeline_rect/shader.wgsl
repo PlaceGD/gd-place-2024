@@ -129,7 +129,10 @@ fn fs_color(in: VertexOutput) -> vec4<f32> {
         case 1u: {
             // return vec4(0.0, 0.0, 0.0, 0.0, );
             // return in.color;
-            return textureSampleLevel(t_1, s_1, in.uv, 0.0) * in.color;
+            let tex_col = textureSampleLevel(t_1, s_1, in.uv, 0.0);
+            let final_col = mix(tex_col.rgb, in.color.rgb, in.color.a);
+
+            return vec4(final_col, tex_col.a);
         }
         case 2u: {
             // return vec4(0.0, 0.0, 0.0, 0.0, );

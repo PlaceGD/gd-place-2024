@@ -107,15 +107,17 @@ impl Default for Sets {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-pub struct BackgroundColor {
+pub struct Color {
     pub r: u8,
     pub g: u8,
     pub b: u8,
+    pub a: u8,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Background {
-    pub color: BackgroundColor,
+    pub color: Color,
+    pub image_tint: Color,
     pub image: String,
     pub fit: String,
 }
@@ -123,7 +125,18 @@ pub struct Background {
 impl Default for Background {
     fn default() -> Self {
         Self {
-            color: BackgroundColor { r: 4, g: 24, b: 46 },
+            color: Color {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 255,
+            },
+            image_tint: Color {
+                r: 4,
+                g: 24,
+                b: 46,
+                a: 100,
+            },
             image: "./background.png".into(),
             fit: "tile".into(),
         }

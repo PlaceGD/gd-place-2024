@@ -113,9 +113,9 @@ impl State {
             camera_pos: vec2(0.0, 0.0),
             zoom: config.general.zoom,
             bg_color: (
-                config.background.color.r,
-                config.background.color.g,
-                config.background.color.b,
+                config.background.image_tint.r,
+                config.background.image_tint.g,
+                config.background.image_tint.b,
             ),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),
@@ -664,11 +664,13 @@ impl State {
             //     billy.set_transform(old_t);
             // };
 
+            billy.set_blend_mode(BlendMode::Normal);
+
             let bg_tint = vec4(
                 self.bg_color.0 as f32 / 255.0,
                 self.bg_color.1 as f32 / 255.0,
                 self.bg_color.2 as f32 / 255.0,
-                1.0,
+                self.config.background.image_tint.a as f32 / 255.0,
             );
             let bg_uv = vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32);
 
@@ -721,8 +723,6 @@ impl State {
                     let tile_count_y =
                         (self.height as f32 / self.render.bg_size.1 as f32).ceil() as i32;
 
-                    dbg!((-tile_count_x / 2), (tile_count_x / 2));
-
                     for x in (-tile_count_x / 2)..=(tile_count_x / 2) {
                         for y in (-tile_count_y / 2)..=(tile_count_y / 2) {
                             billy.centered_textured_rect(
@@ -750,7 +750,6 @@ impl State {
                 _ => (),
             }
 
-            billy.set_blend_mode(BlendMode::Normal);
             //if self.event_elapsed < 0.0 {
             let old_t = billy.get_transform();
 
@@ -793,10 +792,10 @@ impl State {
                         resolve_target: Some(&output_view),
                         ops: wgpu::Operations {
                             load: wgpu::LoadOp::Clear(wgpu::Color {
-                                r: 0.0,
-                                g: 0.0,
-                                b: 0.0,
-                                a: 0.0,
+                                r: self.config.background.color.r as f64 / 255.0,
+                                g: self.config.background.color.g as f64 / 255.0,
+                                b: self.config.background.color.b as f64 / 255.0,
+                                a: self.config.background.color.a as f64 / 255.0,
                             }),
                             store: wgpu::StoreOp::Store,
                         },

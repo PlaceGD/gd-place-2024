@@ -4,7 +4,10 @@ use std::{array, io::Cursor, sync::LazyLock, time::Instant};
 use binrw::BinRead;
 use chrono::{DateTime, Local, Timelike};
 use glam::{vec2, vec4, Affine2, Vec2};
-use rand::{rngs::ThreadRng, Rng};
+use rand::{
+    rngs::{StdRng, ThreadRng},
+    Rng, SeedableRng,
+};
 use rust_shared::{
     console_log,
     countdown::{CountdownDigitSets, DigitObjects, DIGIT_SETS, TEST_SETS},
@@ -14,6 +17,7 @@ use rust_shared::{
 };
 
 use crate::{
+    config::Config,
     level::{ChunkCoord, Level},
     state::State,
     utilgen::{OBJECT_INFO, SET_SWITCHES},
@@ -30,7 +34,7 @@ pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
 pub struct Countdown {
     pub digits: [CountdownDigit; 6],
     pub state: [Option<u8>; 8],
-    pub sets: [usize; 4],
+    pub sets: [usize; 3],
 
     pub hours_marker: Vec<TransitioningObject>,
     pub minutes_marker: Vec<TransitioningObject>,
@@ -41,17 +45,17 @@ pub struct Countdown {
 
     pub prev_switch_id: usize,
 
-    pub rng: ThreadRng,
+    pub rng: StdRng,
 }
 
 impl Countdown {
     const OFFSET: Vec2 = vec2(-0.0, 0.0);
 
-    pub fn new() -> Self {
+    pub fn new(config: &Config) -> Self {
         Self {
             digits: array::from_fn(|_| CountdownDigit::new()),
             state: [None; 8],
-            sets: [28, 3, 12, 43],
+            sets: [28, 12, 43],
 
             hours_marker: COUNTDOWN_DIGITS
                 .2
@@ -79,40 +83,65 @@ impl Countdown {
 
             prev_switch_id: 0,
 
-            rng: rand::rng(),
+            rng: StdRng::seed_from_u64(config.general.rng_seed.unwrap_or_else(|| rand::random())),
         }
     }
-    pub fn update_state(&mut self, event_start: f64, datetime: DateTime<Local>) {
+    pub fn update_state(&mut self, event_start: f64, datetime: DateTime<Local>, config: &Config) {
         //console_log!("{event_start} {now}");
         // let event_elapsed = now / 1000.0 - event_start / 1000.0;
         // let time_until = -event_elapsed;
         let now = datetime.timestamp_millis() as f64;
 
-        // TODO: setting: switch time
-        let switch_id = (((now / 1000.0) + 0.0).max(0.0) / 13.0).floor() as usize;
-
-        let total_colons = COUNTDOWN_DIGITS.4.len();
+        let switch_id = (((now / 1000.0) + 0.0).max(0.0)
+            / config.sets.digit_change_frequency as f64)
+            .floor() as usize;
 
         let mut has_new_sets = false;
 
-        let (sets, new_colon_state) = if switch_id != self.prev_switch_id {
-            self.prev_switch_id = switch_id;
-            has_new_sets = true;
+        let (sets, new_colon_state) = if let Some(digits) = &config.sets.sets {
+            if self.prev_switch_id == 0 {
+                self.prev_switch_id = 9999;
+                has_new_sets = true;
 
-            (
-                [
-                    self.rng.random_range(0..DIGIT_SETS),
-                    self.rng.random_range(0..DIGIT_SETS),
-                    self.rng.random_range(0..DIGIT_SETS),
-                    self.rng.random_range(0..DIGIT_SETS),
-                ],
-                [
-                    self.rng.random_range(0..total_colons),
-                    self.rng.random_range(0..total_colons),
-                ],
-            )
+                (
+                    [digits.hours, digits.minutes, digits.seconds],
+                    if config.sets.show_colons {
+                        [digits.colonh, digits.colonm]
+                    } else {
+                        [0, 0]
+                    },
+                )
+            } else {
+                (self.sets, self.colon_state)
+            }
         } else {
-            (self.sets, self.colon_state)
+            if switch_id != self.prev_switch_id {
+                self.prev_switch_id = switch_id;
+                has_new_sets = true;
+
+                (
+                    [
+                        config.sets.digit_sets
+                            [self.rng.random_range(0..config.sets.digit_sets.len())],
+                        config.sets.digit_sets
+                            [self.rng.random_range(0..config.sets.digit_sets.len())],
+                        config.sets.digit_sets
+                            [self.rng.random_range(0..config.sets.digit_sets.len())],
+                    ],
+                    if config.sets.show_colons {
+                        [
+                            config.sets.colon_sets
+                                [self.rng.random_range(0..config.sets.colon_sets.len())],
+                            config.sets.colon_sets
+                                [self.rng.random_range(0..config.sets.colon_sets.len())],
+                        ]
+                    } else {
+                        [0, 0]
+                    },
+                )
+            } else {
+                (self.sets, self.colon_state)
+            }
         };
 
         // let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
@@ -239,7 +268,7 @@ impl Countdown {
             //     ]
             // };
 
-            if has_new_sets {
+            if has_new_sets && config.sets.show_colons {
                 for i in 0..2 {
                     let (state, prev_colon, colon) = match i {
                         0 => (
@@ -296,19 +325,61 @@ impl Countdown {
         let mut level = Level::default();
         let mut idx = 0usize;
 
+        let now = state.now;
         let mut add_object = |mut obj: GDObject| {
             let info = OBJECT_INFO[obj.id as usize];
             obj.ix /= info.builtin_scale_x;
             obj.iy /= info.builtin_scale_x;
             obj.jx /= info.builtin_scale_y;
             obj.jy /= info.builtin_scale_y;
-            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), state.now);
+            level.add_object(obj, idx, Some(ChunkCoord { x: 0, y: 0 }), now);
             idx += 1;
         };
 
-        let mut offset = Self::OFFSET;
+        const BLOCK: f32 = 30.0;
+        const DIGIT_WIDTH: f32 = 6.0 * BLOCK;
+        const COLON_WIDTH: f32 = 4.0 * BLOCK;
 
-        // TODO: setting: disable colons
+        // let position_offset_screen =
+        //     (vec2(state.width as f32, state.height as f32) * 0.5) / state.get_zoom_scale();
+
+        // let position_offset_world_vec =
+        //     state.get_world_pos(position_offset_screen.x, position_offset_screen.y);
+
+        // let mut position_offset_world =
+        //     vec2(position_offset_world_vec[0], position_offset_world_vec[1]);
+
+        // let position = &state.config.clock.position; // a String, one of "center", "top-left", "top-right", "bottom-left", "bottom-right" (defaults to "center")
+
+        // let leftmost_digit = (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH;
+
+        // match &position[..] {
+        //     "top-left" => {
+        //         // let half_screen_width = (state.width as f32) / 2.0;
+        //         // // let to_left = (half_screen_width - leftmost_digit).floor();
+
+        //         // position_offset = vec2(0.0, 0.0);
+        //         position_offset_world -= vec2(leftmost_digit, 0.0);
+        //     }
+        //     "top-right" => {
+        //         position_offset_world = vec2(0.0, 0.0);
+        //     }
+        //     "bottom-left" => {
+        //         position_offset_world = vec2(0.0, 0.0);
+        //     }
+        //     "bottom-right" => {
+        //         position_offset_world = vec2(0.0, 0.0);
+        //     }
+        //     // center
+        //     _ => {
+        //         position_offset_world = vec2(0.0, 0.0);
+        //     }
+        // }
+
+        let position_offset_world = vec2(0.0, 0.0);
+
+        // state.set_camera_pos(-position_offset.x, 0.0);
+
         self.hours_marker
             .iter()
             .chain(self.minutes_marker.iter())
@@ -316,46 +387,44 @@ impl Countdown {
             .chain(self.minutes_colon.iter())
             .for_each(|o| {
                 o.get(state.now).inspect(|o| {
-                    // TODO: setting: digit + colon positions
-                    add_object(o.offset(offset));
+                    add_object(o.offset(vec2(0.0, 0.0)));
                     // level.add_object(*o, idx);
                     // idx += 1;
                 });
             });
 
-        // TODO: setting: digit + colon positions
-        const BLOCK: f32 = 30.0;
-        const DIGIT_WIDTH: f32 = 6.0 * BLOCK;
-        const COLON_WIDTH: f32 = 4.0 * BLOCK;
-
         // For digit index 0..5
         for (i, digit) in self.digits.iter().enumerate() {
-            offset = Self::OFFSET;
+            let mut offset = vec2(0.0, 0.0);
 
             match i {
                 0 => {
                     offset -= vec2(
                         (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH,
                         0.0,
-                    );
+                    ) + position_offset_world;
                 }
                 1 => {
-                    offset -= vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0);
+                    offset -= vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0)
+                        + position_offset_world;
                 }
                 2 => {
-                    offset -= vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0);
+                    offset -=
+                        vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0) + position_offset_world;
                 }
                 3 => {
-                    offset += vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0);
+                    offset +=
+                        vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0) - position_offset_world;
                 }
                 4 => {
-                    offset += vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0);
+                    offset += vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0)
+                        - position_offset_world;
                 }
                 5 => {
                     offset += vec2(
                         (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH,
                         0.0,
-                    );
+                    ) - position_offset_world;
                 }
                 _ => {}
             }

@@ -1,11 +1,14 @@
-use std::{error::Error, fmt::Display, sync::Arc, time::Instant};
+use std::{error::Error, fmt::Display, fs, io, sync::Arc, time::Instant};
 
 use glam::{uvec2, vec2, vec4, UVec2};
 use image::{ImageError, ImageResult};
 use wgpu::{util::DeviceExt, Buffer, CreateSurfaceError, WindowHandle};
 use winit::dpi::PhysicalSize;
 
-use crate::render::{data::Globals, pipeline_grid, pipeline_rect};
+use crate::{
+    config::Config,
+    render::{data::Globals, pipeline_grid, pipeline_rect},
+};
 
 use super::{
     texture::Texture,
@@ -15,6 +18,7 @@ use super::{
 #[derive(Debug)]
 pub enum StateError {
     ImageError(ImageError),
+    ImageReadError(io::Error),
     CreateSurfaceError(CreateSurfaceError),
 }
 
@@ -22,6 +26,7 @@ impl Display for StateError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             StateError::ImageError(e) => write!(f, "{e}"),
+            StateError::ImageReadError(e) => write!(f, "failed to read image: {e}"),
             StateError::CreateSurfaceError(e) => write!(f, "{e}"),
         }
     }
@@ -55,12 +60,17 @@ pub struct RenderState {
 fn create_textures_bind_group(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
+    config: &Config,
 ) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup), StateError> {
+    // TODO: speed up this?
     let spritesheet =
         image::load_from_memory(include_bytes!("../../../../src/assets/spritesheet.png"))
             .map_err(StateError::ImageError)?;
-    let bg = image::load_from_memory(include_bytes!("../../assets/background.png"))
-        .map_err(StateError::ImageError)?;
+
+    // TODO: better errors?
+    let bg_data = fs::read(&config.background.image).map_err(StateError::ImageReadError)?;
+    let bg = image::load_from_memory(&bg_data).map_err(StateError::ImageError)?;
+
     // let ground = image::load_from_memory(include_bytes!("../../assets/ground.png"))
     //     .map_err(StateError::ImageError)?;
     // let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
@@ -185,6 +195,7 @@ impl RenderState {
         surface: wgpu::Surface<'static>,
         size: UVec2,
         instance: wgpu::Instance,
+        config: &Config,
     ) -> Result<Self, StateError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptionsBase {
@@ -238,7 +249,7 @@ impl RenderState {
             );
 
         let (textures_bind_group_layout, textures_bind_group) =
-            create_textures_bind_group(&device, &queue)?;
+            create_textures_bind_group(&device, &queue, config)?;
 
         let multisampled_frame_descriptor = wgpu::TextureDescriptor {
             label: Some("Multisampled frame descriptor"),
@@ -384,6 +395,7 @@ impl RenderState {
     pub async fn new_canvas(
         window: impl WindowHandle + 'static,
         size: PhysicalSize<u32>,
+        config: &Config,
     ) -> Result<Self, StateError> {
         // let size = uvec2(window.window_handle()/, window.height());
 
@@ -400,6 +412,7 @@ impl RenderState {
             surface,
             uvec2(size.width, size.height), // TODO: first time size?
             instance,
+            config,
         )
         .await
     }

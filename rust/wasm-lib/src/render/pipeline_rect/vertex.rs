@@ -1,3 +1,5 @@
+use std::mem::offset_of;
+
 use glam::Vec2;
 
 #[repr(C)]
@@ -20,6 +22,11 @@ impl Vertex {
                     shader_location: 0,
                     format: wgpu::VertexFormat::Float32x2,
                 },
+                // wgpu::VertexAttribute {
+                //     offset: const { offset_of!(Vertex, opacity) } as wgpu::BufferAddress,
+                //     shader_location: 8,
+                //     format: wgpu::VertexFormat::Float32,
+                // },
                 // wgpu::VertexAttribute {
                 //     offset: const { offset_of!(Vertex, color) } as wgpu::BufferAddress,
                 //     shader_location: 1,

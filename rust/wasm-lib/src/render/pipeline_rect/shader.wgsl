@@ -16,7 +16,7 @@ fn is_within_rect(
 struct Globals {
     screen_size: vec2<f32>,
     quality: f32,
-    _unused: f32,
+    grid_opacity: f32,
     camera_pos: vec2<f32>,
     zoom_scale: f32,
     time: f32,
@@ -28,6 +28,7 @@ struct Globals {
 struct VertexInput {
     @location(0) pos: vec2<f32>,
 };
+
 struct InstanceInput {
     @location(1) pos: vec2<f32>,
     @location(2) t_x: vec2<f32>,

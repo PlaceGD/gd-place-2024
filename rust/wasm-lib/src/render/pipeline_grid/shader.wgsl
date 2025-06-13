@@ -19,7 +19,7 @@ fn is_within_rect(
 struct Globals {
     screen_size: vec2<f32>,
     quality: f32,
-    _unused: f32,
+    grid_opacity: f32,
     camera_pos: vec2<f32>,
     zoom_scale: f32,
     time: f32,
@@ -34,6 +34,7 @@ struct VertexInput {
 
 struct VertexOutput {
     @builtin(position) pos: vec4<f32>,
+    @location(0) opacity: f32,
 };
 
 @vertex
@@ -42,6 +43,7 @@ fn vs_main(
 ) -> VertexOutput {
     var out: VertexOutput;
     out.pos = vec4((vertex.pos * 2.0 - 1.0), 0.0, 1.0);
+    out.opacity = globals.grid_opacity;
 
     return out;
 }
@@ -93,7 +95,7 @@ fn ease_out_expo(t: f32) -> f32 {
 
 @fragment
 fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
-    let fade = 1.0; // TODO: hardcoded?
+    let fade = in.opacity; // TODO: hardcoded?
 
     let pos = (((in.pos.xy - globals.screen_size / 2.0) * vec2(1.0, -1.0) + globals.camera_pos * globals.zoom_scale) / globals.zoom_scale) + vec2(15.0, 0.0);
 

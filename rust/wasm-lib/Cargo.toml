@@ -24,8 +24,8 @@ wgpu = { version = "0.20.1" }
 winit = "0.30.5"
 futures = "0.3"
 
-env_logger = "0.11.3"
-log = "0.4.22"
+# env_logger = "0.11.3"
+# log = "0.4.22"
 
 glam = { workspace = true, features = ["bytemuck"] }
 # console_error_panic_hook = { version = "0.1.7", optional = true }
@@ -35,7 +35,7 @@ glam = { workspace = true, features = ["bytemuck"] }
 # wasm-bindgen-futures = { workspace = true }
 bytemuck = { workspace = true, features = ["derive"] }
 serde = { workspace = true, features = ["derive"] }
-serde_json = { workspace = true }
+# serde_json = { workspace = true }
 # js-sys = { workspace = true }
 image = { workspace = true }
 binrw = { workspace = true }
@@ -48,6 +48,7 @@ indexmap = { workspace = true }
 
 chrono = "0.4.41"
 rand = "0.9.1"
+toml = "0.8.23"
 
 # base64 = "0.21.5"
 # base-encode = "0.3.1"
@@ -61,7 +62,7 @@ rust-shared = { path = "../rust-shared" }
 
 # colored = "2.0.4"
 
-specta = "1.0.5"
+# specta = "1.0.5"
 
 [build-dependencies]
 uuid = { workspace = true }

@@ -1,0 +1,23 @@
+[general]
+zoom = -6
+fps-cap = 30
+# rng-seed =
+rotating-objects = false
+
+# 30 units is 1 block
+[clock]
+position = "center"                                    # top-left, top-right, bottom-left, bottom-right, center
+padding = { top = 0, left = 0, bottom = 0, right = 0 } # in units
+
+[grid]
+opacity = 100
+
+[sets]
+show-colons = true
+colon-sets = [1, 2, 3, 4, 5, 6]
+digit-sets = [1, 2, 3, 4]
+# digits = { hours = 2, minutes = 45, seconds = 81 } # overrides `digit-sets`
+digit-change-frequency = 1200 # in seconds
+
+[background]
+color = { r = 4, g = 24, b = 46 }

@@ -24,6 +24,7 @@ use wgpu::util::DeviceExt;
 use winit::dpi::PhysicalSize;
 
 use crate::{
+    config::Config,
     level::{ChunkCoord, DbKey, Level, LevelChunk},
     object::{GDObjectExt, GDObjectOpt},
     render::{
@@ -50,6 +51,8 @@ pub struct EndingAnimInfo {
 
 pub struct State {
     pub(crate) render: RenderState,
+
+    pub(crate) config: Config,
 
     pub(crate) time: f32,
 
@@ -100,18 +103,19 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(render: RenderState, size: PhysicalSize<u32>) -> Self {
+    pub fn new(render: RenderState, size: PhysicalSize<u32>, config: Config) -> Self {
         Self {
             time: 0.0,
             width: size.width,
             height: size.height,
-            // TODO: setting: quality?
             quality: 1.0,
             camera_pos: vec2(0.0, 0.0),
-            // TODO: setting: zoom
-            zoom: -20.0,
-            // TODO: setting: bg color
-            bg_color: (4, 24, 46),
+            zoom: config.general.zoom,
+            bg_color: (
+                config.background.color.r,
+                config.background.color.g,
+                config.background.color.b,
+            ),
             ground1_color: (40, 125, 255),
             ground2_color: (127, 178, 255),
 
@@ -134,10 +138,8 @@ impl State {
             selected_object: None,
             show_collidable: false,
             hide_triggers: false,
-            // TODO: setting: rotating objs
-            no_rotating_objects: false,
-            // TODO: setting: hide grid
-            hide_grid: false,
+            no_rotating_objects: true,
+            hide_grid: config.grid.opacity == 0.0,
             hide_ground: false,
             hide_outline: false,
             select_hazards: false,
@@ -145,12 +147,13 @@ impl State {
             event_end: f64::INFINITY,
             ending_fully_done: f64::INFINITY,
             render,
-            countdown: Countdown::new(),
+            countdown: Countdown::new(&config),
             stats_display: StatsDisplay::new(),
-            now: Local::now(), // TODO: get now
+            now: Local::now(),
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
+            config,
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -609,7 +612,7 @@ impl State {
                     self.render.surface_config.height as f32,
                 ],
                 quality: self.quality,
-                _unused: 0.0,
+                grid_opacity: self.config.grid.opacity,
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
@@ -659,7 +662,8 @@ impl State {
 
             billy.apply_transform(self.view_transform());
 
-            self.countdown.update_state(self.event_start, self.now);
+            self.countdown
+                .update_state(self.event_start, self.now, &self.config);
             self.countdown.draw(self, &mut billy);
 
             billy.set_transform(old_t);
@@ -711,6 +715,8 @@ impl State {
             render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
             render_pass.set_bind_group(1, &self.render.textures_bind_group, &[]);
             // render_pass.set_bind_group(2, &self.render.onion_nearest_bind_group, &[]);
+
+            // dbg!(&billy.rects);
 
             render_pass.set_vertex_buffer(0, self.render.rect_vertex_buffer.slice(..));
             render_pass.set_vertex_buffer(1, instance_buffer.slice(..));

@@ -5,6 +5,7 @@ mod object;
 mod render;
 mod state;
 // mod text;
+mod config;
 mod util;
 mod utilgen;
 
@@ -20,6 +21,8 @@ use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
+
+use crate::config::Config;
 
 // pub async fn create_view(
 //     canvas: OffscreenCanvas,
@@ -42,12 +45,10 @@ use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 //     // }))
 // }
 
-// TODO: setting: change fps
-const TARGET_FPS: f64 = 30.0;
-
 struct App {
     window: Option<Arc<Window>>,
     state: Option<State>,
+    config: Option<Config>,
 
     last_frame_instant: Instant,
     next_frame_time: Instant,
@@ -69,11 +70,16 @@ impl ApplicationHandler for App {
 
         self.window = Some(Arc::clone(&window));
 
-        let canvas =
-            futures::executor::block_on(RenderState::new_canvas(Arc::clone(&window), size))
-                .expect("TODO: handle me");
+        let config = self.config.take().unwrap();
 
-        let state = State::new(canvas, size);
+        let canvas = futures::executor::block_on(RenderState::new_canvas(
+            Arc::clone(&window),
+            size,
+            &config,
+        ))
+        .expect("TODO: handle me");
+
+        let state = State::new(canvas, size, config);
 
         self.state = Some(state);
 
@@ -126,6 +132,8 @@ impl ApplicationHandler for App {
 }
 
 fn main() -> Result<(), StateError> {
+    let config = Config::from_file_or_default();
+
     let event_loop = EventLoop::new().unwrap();
 
     let now = Instant::now();
@@ -135,7 +143,8 @@ fn main() -> Result<(), StateError> {
         last_frame_instant: now,
         next_frame_time: now,
 
-        frame_duration: Duration::from_secs_f64(1.0 / TARGET_FPS),
+        frame_duration: Duration::from_secs_f64(1.0 / config.general.fps_cap as f64),
+        config: Some(config),
     };
     event_loop.run_app(&mut app).unwrap();
 

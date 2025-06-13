@@ -6,14 +6,17 @@ mod render;
 mod state;
 // mod text;
 mod config;
+mod error;
 mod util;
 mod utilgen;
 
+use std::backtrace::Backtrace;
 use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use std::{fs, panic};
 
 use chrono::{DateTime, Local};
-use render::state::{RenderState, StateError};
+use render::state::RenderState;
 
 use state::State;
 
@@ -23,6 +26,7 @@ use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 
 use crate::config::Config;
+use crate::error::AppError;
 
 // pub async fn create_view(
 //     canvas: OffscreenCanvas,
@@ -70,14 +74,14 @@ impl ApplicationHandler for App {
 
         self.window = Some(Arc::clone(&window));
 
-        let config = self.config.take().unwrap();
+        let config = self.config.take().ok_or(AppError::ConfigTaken).unwrap();
 
         let canvas = futures::executor::block_on(RenderState::new_canvas(
             Arc::clone(&window),
             size,
             &config,
         ))
-        .expect("TODO: handle me");
+        .unwrap();
 
         let state = State::new(canvas, size, config);
 
@@ -89,7 +93,7 @@ impl ApplicationHandler for App {
         event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
     }
 
-    fn new_events(&mut self, event_loop: &ActiveEventLoop, cause: winit::event::StartCause) {
+    fn new_events(&mut self, event_loop: &ActiveEventLoop, _: winit::event::StartCause) {
         if Instant::now() >= self.next_frame_time {
             if let Some(window) = &self.window {
                 window.request_redraw();
@@ -99,7 +103,7 @@ impl ApplicationHandler for App {
         event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+    fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
@@ -113,7 +117,7 @@ impl ApplicationHandler for App {
 
                     let local_now: DateTime<Local> = Local::now();
                     state.set_now(local_now);
-                    state.render(delta_time);
+                    state.render(delta_time).unwrap();
 
                     self.last_frame_instant = now_instant;
                     self.next_frame_time = now_instant + self.frame_duration;
@@ -131,10 +135,10 @@ impl ApplicationHandler for App {
     }
 }
 
-fn main() -> Result<(), StateError> {
-    let config = Config::from_file_or_default();
+fn start_app() -> Result<(), AppError> {
+    let config = Config::from_file_or_default()?;
 
-    let event_loop = EventLoop::new().unwrap();
+    let event_loop = EventLoop::new().map_err(AppError::EventLoopError)?;
 
     let now = Instant::now();
     let mut app = App {
@@ -146,7 +150,46 @@ fn main() -> Result<(), StateError> {
         frame_duration: Duration::from_secs_f64(1.0 / config.general.fps_cap as f64),
         config: Some(config),
     };
-    event_loop.run_app(&mut app).unwrap();
+
+    event_loop
+        .run_app(&mut app)
+        .map_err(AppError::EventLoopError)?;
+
+    Ok(())
+}
+
+fn write_error_log(message: String, bt: Option<Backtrace>) {
+    eprintln!("ERROR:\n{message}");
+
+    let bt_string = bt.map_or_else(|| String::new(), |bt| format!("\n{bt}"));
+
+    let _ = fs::write(
+        "./error.log",
+        format!("App failed to run!\n{message}{bt_string}"),
+    );
+}
+
+fn main() -> Result<(), AppError> {
+    panic::set_hook(Box::new(|info| {
+        let message = if let Some(string) = info.payload().downcast_ref::<String>() {
+            string.to_owned()
+        } else if let Some(string) = info.payload().downcast_ref::<&'static str>() {
+            string.to_string()
+        } else {
+            format!("{:?}", info.payload())
+        };
+
+        let bt = Backtrace::force_capture();
+
+        write_error_log(message, Some(bt));
+    }));
+
+    match start_app() {
+        Ok(..) => (),
+        Err(e) => {
+            write_error_log(format!("{e}"), None);
+        }
+    };
 
     Ok(())
 }

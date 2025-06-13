@@ -6,6 +6,8 @@ use std::{
 use rust_shared::countdown::DIGIT_SETS;
 use serde::{Deserialize, Serialize};
 
+use crate::{error::AppError, App};
+
 #[derive(Serialize, Deserialize, Default, Clone)]
 pub struct Config {
     pub general: General,
@@ -127,40 +129,26 @@ impl Default for Background {
 }
 
 const CONFIG_DETAILS: &'static str = "
-# There is an extra optional option under `general`:
-# rng-seed = ... # seed for the random sets
-#
-# There is an extra optional option under `sets`: 
-# digits = { hours = 2, minutes = 45, seconds = 81, colonh = 2, colonm = 3 } # overrides `digit-sets`
-#
-# Digit mappings:
-# 1 = evw blah blah
-#
+
 ";
 
 impl Config {
-    fn get_and_write_default(path: &Path) -> Self {
+    fn get_and_write_default(path: &Path) -> Result<Self, AppError> {
         let config = Self::default();
 
         let config_str = toml::to_string(&config).unwrap();
 
         let _ = fs::write(path, format!("{config_str}\n{CONFIG_DETAILS}"))
-            .inspect_err(|e| println!("failed to write config: {e}"));
+            .map_err(AppError::ConfigWriteFailed)?;
 
-        config
+        Ok(config)
     }
 
-    pub fn from_file_or_default() -> Self {
+    pub fn from_file_or_default() -> Result<Self, AppError> {
         let path: PathBuf = "./config.toml".into();
 
         if let Ok(config_str) = fs::read_to_string(&path) {
-            if let Ok(config) =
-                toml::from_str(&config_str).inspect_err(|e| println!("failed to read config: {e}"))
-            {
-                config
-            } else {
-                Self::get_and_write_default(&path)
-            }
+            Ok(toml::from_str(&config_str).map_err(AppError::ConfigReadFailed)?)
         } else {
             Self::get_and_write_default(&path)
         }

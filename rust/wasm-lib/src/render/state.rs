@@ -7,6 +7,7 @@ use winit::dpi::PhysicalSize;
 
 use crate::{
     config::Config,
+    error::AppError,
     render::{data::Globals, pipeline_grid, pipeline_rect},
 };
 
@@ -14,25 +15,6 @@ use super::{
     texture::Texture,
     util::{create_buffer_bind_group, create_pipeline},
 };
-
-#[derive(Debug)]
-pub enum StateError {
-    ImageError(ImageError),
-    ImageReadError(io::Error),
-    CreateSurfaceError(CreateSurfaceError),
-}
-
-impl Display for StateError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            StateError::ImageError(e) => write!(f, "{e}"),
-            StateError::ImageReadError(e) => write!(f, "failed to read image: {e}"),
-            StateError::CreateSurfaceError(e) => write!(f, "{e}"),
-        }
-    }
-}
-
-impl Error for StateError {}
 
 pub struct RenderState {
     pub surface: wgpu::Surface<'static>,
@@ -61,18 +43,18 @@ fn create_textures_bind_group(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     config: &Config,
-) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup), StateError> {
+) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup), AppError> {
     // TODO: speed up this?
     let spritesheet =
         image::load_from_memory(include_bytes!("../../../../src/assets/spritesheet.png"))
-            .map_err(StateError::ImageError)?;
+            .map_err(AppError::ImageLoadError)?;
 
     // TODO: better errors?
-    let bg_data = fs::read(&config.background.image).map_err(StateError::ImageReadError)?;
-    let bg = image::load_from_memory(&bg_data).map_err(StateError::ImageError)?;
+    let bg_data = fs::read(&config.background.image).map_err(AppError::ImageReadError)?;
+    let bg = image::load_from_memory(&bg_data).map_err(AppError::ImageLoadError)?;
 
     // let ground = image::load_from_memory(include_bytes!("../../assets/ground.png"))
-    //     .map_err(StateError::ImageError)?;
+    //     .map_err(AppError::ImageError)?;
     // let spritesheet = image::load_from_memory(spritesheet_data).unwrap();
 
     // let list = [
@@ -196,7 +178,7 @@ impl RenderState {
         size: UVec2,
         instance: wgpu::Instance,
         config: &Config,
-    ) -> Result<Self, StateError> {
+    ) -> Result<Self, AppError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptionsBase {
                 power_preference: wgpu::PowerPreference::None,
@@ -204,7 +186,7 @@ impl RenderState {
                 compatible_surface: Some(&surface),
             })
             .await
-            .unwrap();
+            .ok_or(AppError::NoAdapter)?;
 
         let (device, queue) = adapter
             .request_device(
@@ -216,7 +198,7 @@ impl RenderState {
                 None,
             )
             .await
-            .unwrap();
+            .map_err(AppError::RequestDeviceError)?;
 
         let surface_caps = surface.get_capabilities(&adapter);
 
@@ -396,7 +378,7 @@ impl RenderState {
         window: impl WindowHandle + 'static,
         size: PhysicalSize<u32>,
         config: &Config,
-    ) -> Result<Self, StateError> {
+    ) -> Result<Self, AppError> {
         // let size = uvec2(window.window_handle()/, window.height());
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -406,7 +388,7 @@ impl RenderState {
 
         let surface = instance
             .create_surface(wgpu::SurfaceTarget::Window(Box::new(window)))
-            .map_err(StateError::CreateSurfaceError)?;
+            .map_err(AppError::CreateSurfaceError)?;
 
         Self::new(
             surface,

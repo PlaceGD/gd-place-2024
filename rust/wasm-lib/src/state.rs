@@ -25,6 +25,7 @@ use winit::dpi::PhysicalSize;
 
 use crate::{
     config::Config,
+    error::AppError,
     level::{ChunkCoord, DbKey, Level, LevelChunk},
     object::{GDObjectExt, GDObjectOpt},
     render::{
@@ -37,7 +38,7 @@ use crate::{
         state::RenderState,
     },
     utilgen::OBJECT_INFO,
-    RustError,
+    App, RustError,
 };
 
 #[derive(Clone, Copy)]
@@ -582,8 +583,13 @@ impl State {
         self.ending_transition_speed = -(1.0 / duration);
     }
 
-    fn render_inner(&mut self, delta: f32) -> Result<(), wgpu::SurfaceError> {
-        let output = self.render.surface.get_current_texture()?;
+    fn render_inner(&mut self, delta: f32) -> Result<(), AppError> {
+        let output = self
+            .render
+            .surface
+            .get_current_texture()
+            .map_err(AppError::SurfaceError)?;
+
         let output_view = output
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
@@ -748,7 +754,7 @@ impl State {
         Ok(())
     }
 
-    pub fn render(&mut self, delta: f32) {
+    pub fn render(&mut self, delta: f32) -> Result<(), AppError> {
         // fn ease_in_out_quart(x: f32) -> f32 {
         //     if x < 0.5 {
         //         8.0 * x * x * x * x
@@ -841,7 +847,7 @@ impl State {
         //     self.ending_anim_info = None;
         // }
 
-        self.render_inner(delta).unwrap();
+        self.render_inner(delta)
 
         // (
         //     self.camera_pos,

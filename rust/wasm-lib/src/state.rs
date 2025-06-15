@@ -633,38 +633,37 @@ impl State {
 
             let mut billy = Billy::new();
 
+            billy.set_blend_mode(BlendMode::Normal);
             // background
             // {
             //     let old_t = billy.get_transform();
-            //     // billy.translate(-self.camera_pos / 3.0 / 2.0);
+            //     billy.translate(-self.camera_pos / 3.0 / 2.0);
 
             //     let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
 
-            //     let offset = (self.camera_pos / 1.0 / scale).floor() * scale;
+            //     let offset = (self.camera_pos / 10.0 / scale).floor() * scale;
 
-            //     for i in 0..1 {
+            //     for i in -2i32..=2 {
             //         //-2i32..=2
-            //         for j in 0..1 {
+            //         for j in -2i32..=2 {
             //             //-2i32..=2
-            // billy.centered_textured_rect(
-            //     offset + scale * vec2(i as f32, j as f32),
-            //     vec2(scale, scale),
-            //     vec4(
-            //         self.bg_color.0 as f32 / 255.0,
-            //         self.bg_color.1 as f32 / 255.0,
-            //         self.bg_color.2 as f32 / 255.0,
-            //         1.0,
-            //     ),
-            //     0,
-            //     vec2(0.0, 0.0),
-            //     vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
-            // );
+            //             billy.centered_textured_rect(
+            //                 offset + scale * vec2(i as f32, j as f32),
+            //                 vec2(scale, scale),
+            //                 vec4(
+            //                     self.bg_color.0 as f32 / 255.0,
+            //                     self.bg_color.1 as f32 / 255.0,
+            //                     self.bg_color.2 as f32 / 255.0,
+            //                     0.2,
+            //                 ),
+            //                 0,
+            //                 vec2(0.0, 0.0),
+            //                 vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
+            //             );
             //         }
             //     }
             //     billy.set_transform(old_t);
             // };
-
-            billy.set_blend_mode(BlendMode::Normal);
 
             let bg_tint = vec4(
                 self.bg_color.0 as f32 / 255.0,
@@ -718,19 +717,35 @@ impl State {
                     )
                 }
                 "tile" => {
+                    let old_t = billy.get_transform();
+                    billy.translate(-self.camera_pos / 3.0 / 2.0);
+
+                    let scale = f32::max(
+                        self.width as f32 / self.render.bg_size.0 as f32,
+                        self.height as f32 / self.render.bg_size.1 as f32,
+                    ) / 600.0
+                        * 1.5
+                        * 1.25
+                        * 400.0;
+
+                    let scale = scale.min(2.0).max(1.0);
+
                     let tile_count_x =
-                        (self.width as f32 / self.render.bg_size.0 as f32).ceil() as i32;
+                        (self.width as f32 / (self.render.bg_size.0 as f32 * scale)).ceil() as i32;
                     let tile_count_y =
-                        (self.height as f32 / self.render.bg_size.1 as f32).ceil() as i32;
+                        (self.height as f32 / (self.render.bg_size.1 as f32 * scale)).ceil() as i32;
 
                     for x in (-tile_count_x / 2)..=(tile_count_x / 2) {
                         for y in (-tile_count_y / 2)..=(tile_count_y / 2) {
                             billy.centered_textured_rect(
                                 vec2(
-                                    (self.render.bg_size.0 as i32 * x) as f32,
-                                    (self.render.bg_size.1 as i32 * y) as f32,
+                                    (self.render.bg_size.0 as f32) * x as f32 * scale as f32,
+                                    (self.render.bg_size.1 as f32) * y as f32 * scale as f32,
                                 ),
-                                vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
+                                vec2(
+                                    self.render.bg_size.0 as f32 * scale,
+                                    self.render.bg_size.1 as f32 * scale,
+                                ),
                                 bg_tint,
                                 0,
                                 vec2(0.0, 0.0),
@@ -738,6 +753,8 @@ impl State {
                             )
                         }
                     }
+
+                    billy.set_transform(old_t);
                 }
                 "none" => billy.centered_textured_rect(
                     vec2(0.0, 0.0),

@@ -11,6 +11,8 @@ mod util;
 mod utilgen;
 
 use std::backtrace::Backtrace;
+use std::fs::OpenOptions;
+use std::io::Write;
 use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use std::{fs, panic};
@@ -163,13 +165,21 @@ fn write_error_log(message: String, bt: Option<Backtrace>) {
 
     let bt_string = bt.map_or_else(|| String::new(), |bt| format!("\n{bt}"));
 
-    let _ = fs::write(
-        "./error.log",
-        format!("App failed to run!\n{message}{bt_string}"),
-    );
+    match OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open("./error.log")
+    {
+        Ok(mut file) => {
+            let _ = write!(file, "[ERROR]:\n{message}{bt_string}\n\n");
+        }
+        Err(..) => {}
+    }
 }
 
 fn main() -> Result<(), AppError> {
+    let _ = OpenOptions::new().truncate(true).open("./error.log");
+
     panic::set_hook(Box::new(|info| {
         let message = if let Some(string) = info.payload().downcast_ref::<String>() {
             string.to_owned()

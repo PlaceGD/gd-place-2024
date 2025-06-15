@@ -6,11 +6,12 @@ use chrono::{DateTime, Local, Timelike};
 use glam::{vec2, vec4, Affine2, Vec2};
 use rand::{
     rngs::{StdRng, ThreadRng},
+    seq::SliceRandom,
     Rng, SeedableRng,
 };
 use rust_shared::{
     console_log,
-    countdown::{CountdownDigitSets, DigitObjects, DIGIT_SETS, TEST_SETS},
+    countdown::{CountdownDigitSets, DigitObjects, COLON_COUNT, DIGIT_SETS, TEST_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
     util::random,
@@ -36,12 +37,17 @@ pub struct Countdown {
     pub state: [Option<u8>; 8],
     pub sets: [usize; 3],
 
+    pub colon_indicies: Vec<usize>,
+    pub digit_indicies: Vec<usize>,
+
     pub hours_marker: Vec<TransitioningObject>,
     pub minutes_marker: Vec<TransitioningObject>,
     pub hours_colon: Vec<TransitioningObject>,
     pub minutes_colon: Vec<TransitioningObject>,
     pub bg_state: [bool; 2],
     pub colon_state: [usize; 2],
+
+    pub first_draw: bool,
 
     pub prev_switch_id: usize,
 
@@ -57,12 +63,15 @@ impl Countdown {
             state: [None; 8],
             sets: [28, 12, 43],
 
+            colon_indicies: (0..COLON_COUNT).collect(),
+            digit_indicies: (0..DIGIT_SETS).collect(),
+
             hours_marker: COUNTDOWN_DIGITS
                 .2
                 .objs
                 .iter()
                 .map(|obj| {
-                    TransitioningObject::new(AnimType::Static(*obj), 0.0, false, 0.0, Local::now())
+                    TransitioningObject::new(AnimType::Static(*obj), 0.8, true, 0.0, Local::now())
                         .offset(0.2)
                 })
                 .collect::<Vec<_>>(),
@@ -71,7 +80,7 @@ impl Countdown {
                 .objs
                 .iter()
                 .map(|obj| {
-                    TransitioningObject::new(AnimType::Static(*obj), 0.0, false, 0.0, Local::now())
+                    TransitioningObject::new(AnimType::Static(*obj), 0.8, true, 0.0, Local::now())
                         .offset(0.2)
                 })
                 .collect::<Vec<_>>(),
@@ -79,9 +88,11 @@ impl Countdown {
             hours_colon: Vec::new(),
             minutes_colon: Vec::new(),
             bg_state: [true; 2],
-            colon_state: [1000; 2],
+            colon_state: [0; 2],
 
             prev_switch_id: 0,
+
+            first_draw: true,
 
             rng: StdRng::seed_from_u64(config.general.rng_seed.unwrap_or_else(|| rand::random())),
         }
@@ -99,8 +110,7 @@ impl Countdown {
         let mut has_new_sets = false;
 
         let (sets, new_colon_state) = if let Some(digits) = &config.sets.sets {
-            if self.prev_switch_id == 0 {
-                self.prev_switch_id = 9999;
+            if self.first_draw {
                 has_new_sets = true;
 
                 (
@@ -119,22 +129,17 @@ impl Countdown {
                 self.prev_switch_id = switch_id;
                 has_new_sets = true;
 
+                self.colon_indicies.shuffle(&mut self.rng);
+                self.digit_indicies.shuffle(&mut self.rng);
+
                 (
                     [
-                        config.sets.digit_sets
-                            [self.rng.random_range(0..config.sets.digit_sets.len())],
-                        config.sets.digit_sets
-                            [self.rng.random_range(0..config.sets.digit_sets.len())],
-                        config.sets.digit_sets
-                            [self.rng.random_range(0..config.sets.digit_sets.len())],
+                        self.digit_indicies[0],
+                        self.digit_indicies[1],
+                        self.digit_indicies[2],
                     ],
                     if config.sets.show_colons {
-                        [
-                            config.sets.colon_sets
-                                [self.rng.random_range(0..config.sets.colon_sets.len())],
-                            config.sets.colon_sets
-                                [self.rng.random_range(0..config.sets.colon_sets.len())],
-                        ]
+                        [self.colon_indicies[0], self.colon_indicies[1]]
                     } else {
                         [0, 0]
                     },
@@ -156,22 +161,14 @@ impl Countdown {
         let minutes = datetime.minute();
         let seconds = datetime.second();
 
-        // let show_days = false; //days != 0.0;
-        let show_hours = true; //show_days || hours != 0.0;
-        let show_minutes = true; //show_hours || minutes != 0.0;
-
-        fn digits(num: u8, display: bool) -> (Option<u8>, Option<u8>) {
-            if !display {
-                (None, None)
-            } else {
-                (Some(num / 10), Some(num % 10))
-            }
+        fn digits(num: u8) -> (Option<u8>, Option<u8>) {
+            (Some(num / 10), Some(num % 10))
         }
 
         // let (dayd1, dayd2) = digits(days as u8, show_days);
-        let (hourd1, hourd2) = digits(hours as u8, show_hours);
-        let (mind1, mind2) = digits(minutes as u8, show_minutes);
-        let (secd1, secd2) = digits(seconds as u8, true);
+        let (hourd1, hourd2) = digits(hours as u8);
+        let (mind1, mind2) = digits(minutes as u8);
+        let (secd1, secd2) = digits(seconds as u8);
 
         let state = [hourd1, hourd2, mind1, mind2, secd1, secd2];
         // let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
@@ -287,12 +284,16 @@ impl Countdown {
                     let delay = index_delay(i * 2 + 2);
                     state.clear();
 
-                    state.extend(dissapear(prev_colon, delay));
+                    if !self.first_draw {
+                        state.extend(dissapear(prev_colon, delay));
+                    }
                     state.extend(appear(colon, delay));
 
                     self.colon_state[i] = new_colon_state[i];
                 }
             }
+
+            self.first_draw = false;
 
             // self.hours_marker = appear(&COUNTDOWN_DIGITS.2, 1.0);
             // self.minutes_marker = appear(&COUNTDOWN_DIGITS.3, 1.0);

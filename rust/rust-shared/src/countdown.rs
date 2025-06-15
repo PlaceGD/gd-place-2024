@@ -258,10 +258,12 @@ pub struct CountdownDigitSets(
     pub DigitObjects,
     pub DigitObjects,
     pub DigitObjects,
-    pub [DigitObjects; 6],
-    pub [DigitObjects; 6],
+    pub [DigitObjects; COLON_COUNT],
+    pub [DigitObjects; COLON_COUNT],
 ); // days marker, hours colon, minutes colon
    // should probably be a struct maybe now
+
+pub const COLON_COUNT: usize = 6;
 
 const WEIGHT_POWER: f64 = 0.8;
 

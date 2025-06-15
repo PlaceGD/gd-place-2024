@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use rust_shared::countdown::DIGIT_SETS;
+use rust_shared::countdown::{COLON_COUNT, DIGIT_SETS};
 use serde::{Deserialize, Serialize};
 
 use crate::{error::AppError, App};
@@ -97,7 +97,7 @@ pub struct Sets {
 impl Default for Sets {
     fn default() -> Self {
         Self {
-            colon_sets: vec![0, 1, 2, 3, 4],
+            colon_sets: (0..COLON_COUNT).collect(),
             digit_sets: (0..DIGIT_SETS).collect(),
             sets: None,
             show_colons: true,
@@ -185,7 +185,7 @@ impl Config {
             }
         }
 
-        let is_valid_colon = |c: &usize| (0..5).contains(c);
+        let is_valid_colon = |c: &usize| (0..COLON_COUNT).contains(c);
         let is_valid_digit = |d: &usize| (0..DIGIT_SETS).contains(d);
 
         let invalid_colons = self.sets.colon_sets.iter().any(|c| !is_valid_colon(&c));

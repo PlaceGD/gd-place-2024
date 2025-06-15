@@ -29,6 +29,7 @@ use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 
 use crate::config::Config;
 use crate::error::AppError;
+use crate::state::PendingState;
 
 // pub async fn create_view(
 //     canvas: OffscreenCanvas,
@@ -53,7 +54,7 @@ use crate::error::AppError;
 
 struct App {
     window: Option<Arc<Window>>,
-    state: Option<State>,
+    state: PendingState,
     config: Option<Config>,
 
     last_frame_instant: Instant,
@@ -67,6 +68,7 @@ impl ApplicationHandler for App {
         let window_attributes = WindowAttributes::default()
             .with_resizable(true)
             // .with_enabled_buttons(WindowButtons::empty())
+            .with_visible(false)
             .with_title("GD Place Countdown Clock")
             .with_transparent(true);
         // .with_decorations(false);
@@ -78,16 +80,7 @@ impl ApplicationHandler for App {
 
         let config = self.config.take().ok_or(AppError::ConfigTaken).unwrap();
 
-        let canvas = futures::executor::block_on(RenderState::new_canvas(
-            Arc::clone(&window),
-            size,
-            &config,
-        ))
-        .unwrap();
-
-        let state = State::new(canvas, size, config);
-
-        self.state = Some(state);
+        self.state.init_state(window, size, config).unwrap();
 
         let now = Instant::now();
         self.last_frame_instant = now;
@@ -111,7 +104,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                if let Some(state) = &mut self.state {
+                if let Some(state) = self.state.ready() {
                     let now_instant = Instant::now();
                     let delta_time = now_instant
                         .duration_since(self.last_frame_instant)
@@ -128,7 +121,7 @@ impl ApplicationHandler for App {
                 }
             }
             WindowEvent::Resized(size) => {
-                if let Some(state) = &mut self.state {
+                if let Some(state) = self.state.ready() {
                     state.resize(size.width, size.height);
                 }
             }
@@ -145,7 +138,7 @@ fn start_app() -> Result<(), AppError> {
     let now = Instant::now();
     let mut app = App {
         window: None,
-        state: None,
+        state: PendingState::new(),
         last_frame_instant: now,
         next_frame_time: now,
 

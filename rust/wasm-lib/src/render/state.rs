@@ -16,6 +16,18 @@ use super::{
     util::{create_buffer_bind_group, create_pipeline},
 };
 
+pub struct PartialRenderState {
+    surface: wgpu::Surface<'static>,
+    device: wgpu::Device,
+    queue: wgpu::Queue,
+    surface_config: wgpu::SurfaceConfiguration,
+
+    multisampled_frame_descriptor: wgpu::TextureDescriptor<'static>,
+
+    rect_vertex_buffer: Buffer,
+    rect_index_buffer: Buffer,
+}
+
 pub struct RenderState {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
@@ -179,12 +191,11 @@ fn create_textures_bind_group(
 
 pub const SAMPLE_COUNT: u32 = 4;
 impl RenderState {
-    pub async fn new(
+    pub async fn new_partial(
         surface: wgpu::Surface<'static>,
         size: UVec2,
         instance: wgpu::Instance,
-        config: &Config,
-    ) -> Result<Self, AppError> {
+    ) -> Result<PartialRenderState, AppError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptionsBase {
                 power_preference: wgpu::PowerPreference::None,
@@ -227,18 +238,6 @@ impl RenderState {
         };
         surface.configure(&device, &surface_config);
 
-        let (globals_buffer, globals_bind_group_layout, globals_bind_group) =
-            create_buffer_bind_group(
-                &device,
-                std::mem::size_of::<Globals>() as u64,
-                wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-                wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,
-                wgpu::BufferBindingType::Uniform,
-            );
-
-        let (textures_bind_group_layout, textures_bind_group, bg_size) =
-            create_textures_bind_group(&device, &queue, config)?;
-
         let multisampled_frame_descriptor = wgpu::TextureDescriptor {
             label: Some("Multisampled frame descriptor"),
             size: wgpu::Extent3d {
@@ -253,6 +252,119 @@ impl RenderState {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             view_formats: &[],
         };
+
+        let rect_vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: None,
+            contents: bytemuck::cast_slice(&[
+                pipeline_rect::vertex::Vertex::new(vec2(0.0, 0.0)),
+                pipeline_rect::vertex::Vertex::new(vec2(1.0, 0.0)),
+                pipeline_rect::vertex::Vertex::new(vec2(1.0, 1.0)),
+                pipeline_rect::vertex::Vertex::new(vec2(0.0, 1.0)),
+            ]),
+            usage: wgpu::BufferUsages::VERTEX,
+        });
+        let rect_index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("index_buffer"),
+            contents: bytemuck::cast_slice::<u32, _>(&[0, 1, 2, 2, 3, 0]),
+            usage: wgpu::BufferUsages::INDEX,
+        });
+
+        // let screen_vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        //     label: None,
+        //     contents: bytemuck::cast_slice(&[
+        //         pipeline_rect::vertex::Vertex::new(vec2(0.0, 0.0)),
+        //         pipeline_rect::vertex::Vertex::new(vec2(1.0, 0.0)),
+        //         pipeline_rect::vertex::Vertex::new(vec2(1.0, 1.0)),
+        //         pipeline_rect::vertex::Vertex::new(vec2(0.0, 1.0)),
+        //     ]),
+        //     usage: wgpu::BufferUsages::VERTEX,
+        // });
+
+        Ok(PartialRenderState {
+            surface,
+            device,
+            queue,
+
+            surface_config,
+            // textures_bind_group,
+            multisampled_frame_descriptor,
+            // pipeline_rect,
+            // pipeline_rect_additive_sq_alpha,
+            // pipeline_grid,
+            rect_vertex_buffer,
+            rect_index_buffer,
+        })
+    }
+
+    pub async fn new_canvas_partial(
+        window: impl WindowHandle + 'static,
+        size: PhysicalSize<u32>,
+    ) -> Result<PartialRenderState, AppError> {
+        // let size = uvec2(window.window_handle()/, window.height());
+
+        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::all(),
+            ..Default::default()
+        });
+
+        let surface = instance
+            .create_surface(wgpu::SurfaceTarget::Window(Box::new(window)))
+            .map_err(AppError::CreateSurfaceError)?;
+
+        Self::new_partial(surface, uvec2(size.width, size.height), instance).await
+    }
+
+    pub fn resize(&mut self, width: u32, height: u32, quality: f32) {
+        if width > 0 && height > 0 {
+            let width = (width.min(4095) as f32 * quality).round() as u32;
+            let height = (height.min(4095) as f32 * quality).round() as u32;
+            self.surface_config.width = width;
+            self.surface_config.height = height;
+            self.surface.configure(&self.device, &self.surface_config);
+
+            self.multisampled_frame_descriptor = wgpu::TextureDescriptor {
+                label: Some("Multisampled frame descriptor"),
+                size: wgpu::Extent3d {
+                    width: self.surface_config.width,
+                    height: self.surface_config.height,
+                    depth_or_array_layers: 1,
+                },
+                mip_level_count: 1,
+                sample_count: SAMPLE_COUNT,
+                dimension: wgpu::TextureDimension::D2,
+                format: self.surface_config.format,
+                usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+                view_formats: &[],
+            };
+        }
+    }
+}
+
+impl PartialRenderState {
+    pub fn upgrade(self, config: &Config) -> Result<RenderState, AppError> {
+        let Self {
+            surface,
+            device,
+            queue,
+            surface_config,
+            multisampled_frame_descriptor,
+
+            rect_vertex_buffer,
+            rect_index_buffer,
+        } = self;
+
+        let (textures_bind_group_layout, textures_bind_group, bg_size) =
+            create_textures_bind_group(&device, &queue, config)?;
+
+        let (globals_buffer, globals_bind_group_layout, globals_bind_group) =
+            create_buffer_bind_group(
+                &device,
+                std::mem::size_of::<Globals>() as u64,
+                wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+                wgpu::ShaderStages::VERTEX | wgpu::ShaderStages::FRAGMENT,
+                wgpu::BufferBindingType::Uniform,
+            );
+
         let pipeline_rect = create_pipeline(
             &device,
             &device.create_shader_module(wgpu::ShaderModuleDescriptor {
@@ -335,34 +447,7 @@ impl RenderState {
             "fs_main",
         );
 
-        let rect_vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: None,
-            contents: bytemuck::cast_slice(&[
-                pipeline_rect::vertex::Vertex::new(vec2(0.0, 0.0)),
-                pipeline_rect::vertex::Vertex::new(vec2(1.0, 0.0)),
-                pipeline_rect::vertex::Vertex::new(vec2(1.0, 1.0)),
-                pipeline_rect::vertex::Vertex::new(vec2(0.0, 1.0)),
-            ]),
-            usage: wgpu::BufferUsages::VERTEX,
-        });
-        let rect_index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("index_buffer"),
-            contents: bytemuck::cast_slice::<u32, _>(&[0, 1, 2, 2, 3, 0]),
-            usage: wgpu::BufferUsages::INDEX,
-        });
-
-        // let screen_vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-        //     label: None,
-        //     contents: bytemuck::cast_slice(&[
-        //         pipeline_rect::vertex::Vertex::new(vec2(0.0, 0.0)),
-        //         pipeline_rect::vertex::Vertex::new(vec2(1.0, 0.0)),
-        //         pipeline_rect::vertex::Vertex::new(vec2(1.0, 1.0)),
-        //         pipeline_rect::vertex::Vertex::new(vec2(0.0, 1.0)),
-        //     ]),
-        //     usage: wgpu::BufferUsages::VERTEX,
-        // });
-
-        Ok(Self {
+        Ok(RenderState {
             surface,
             device,
             queue,
@@ -372,64 +457,57 @@ impl RenderState {
             surface_config,
             globals_buffer,
             globals_bind_group,
-            textures_bind_group,
 
             multisampled_frame_descriptor,
+            rect_vertex_buffer,
+            rect_index_buffer,
+
             pipeline_rect,
             pipeline_rect_additive_sq_alpha,
             pipeline_grid,
-            rect_vertex_buffer,
-            rect_index_buffer,
+            textures_bind_group,
         })
     }
 
-    pub async fn new_canvas(
-        window: impl WindowHandle + 'static,
-        size: PhysicalSize<u32>,
-        config: &Config,
-    ) -> Result<Self, AppError> {
-        // let size = uvec2(window.window_handle()/, window.height());
+    pub fn clear_screen(&mut self, config: &Config) {
+        let frame = self
+            .surface
+            .get_current_texture()
+            .expect("Failed to acquire next surface texture");
 
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
-            ..Default::default()
-        });
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
 
-        let surface = instance
-            .create_surface(wgpu::SurfaceTarget::Window(Box::new(window)))
-            .map_err(AppError::CreateSurfaceError)?;
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("Clear Encoder"),
+            });
 
-        Self::new(
-            surface,
-            uvec2(size.width, size.height), // TODO: first time size?
-            instance,
-            config,
-        )
-        .await
-    }
-
-    pub fn resize(&mut self, width: u32, height: u32, quality: f32) {
-        if width > 0 && height > 0 {
-            let width = (width.min(4095) as f32 * quality).round() as u32;
-            let height = (height.min(4095) as f32 * quality).round() as u32;
-            self.surface_config.width = width;
-            self.surface_config.height = height;
-            self.surface.configure(&self.device, &self.surface_config);
-
-            self.multisampled_frame_descriptor = wgpu::TextureDescriptor {
-                label: Some("Multisampled frame descriptor"),
-                size: wgpu::Extent3d {
-                    width: self.surface_config.width,
-                    height: self.surface_config.height,
-                    depth_or_array_layers: 1,
-                },
-                mip_level_count: 1,
-                sample_count: SAMPLE_COUNT,
-                dimension: wgpu::TextureDimension::D2,
-                format: self.surface_config.format,
-                usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-                view_formats: &[],
-            };
+        {
+            let _render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("Clear Pass"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color {
+                            r: config.background.color.r as f64 / 255.0,
+                            g: config.background.color.g as f64 / 255.0,
+                            b: config.background.color.b as f64 / 255.0,
+                            a: config.background.color.a as f64 / 255.0,
+                        }),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
+            });
         }
+
+        self.queue.submit(Some(encoder.finish()));
+        frame.present();
     }
 }

@@ -1,4 +1,5 @@
 use core::f64;
+use std::sync::Arc;
 
 use chrono::{DateTime, Local};
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
@@ -21,7 +22,7 @@ use rust_shared::{
 };
 
 use wgpu::util::DeviceExt;
-use winit::dpi::PhysicalSize;
+use winit::{dpi::PhysicalSize, window::Window};
 
 use crate::{
     config::Config,
@@ -48,6 +49,39 @@ pub struct EndingAnimInfo {
     pub initial_bg_color: (u8, u8, u8),
     pub initial_ground1_color: (u8, u8, u8),
     pub initial_ground2_color: (u8, u8, u8),
+}
+
+pub struct PendingState(Option<State>);
+
+impl PendingState {
+    pub fn new() -> Self {
+        Self(None)
+    }
+
+    pub fn init_state(
+        &mut self,
+        window: Arc<Window>,
+        size: PhysicalSize<u32>,
+        config: Config,
+    ) -> Result<(), AppError> {
+        let mut partial_render_state =
+            futures::executor::block_on(RenderState::new_canvas_partial(Arc::clone(&window), size))
+                .unwrap();
+
+        partial_render_state.clear_screen(&config);
+
+        window.set_visible(true);
+
+        let render_state = partial_render_state.upgrade(&config).unwrap();
+
+        self.0 = Some(State::new(render_state, size, config));
+
+        Ok(())
+    }
+
+    pub fn ready(&mut self) -> Option<&mut State> {
+        self.0.as_mut()
+    }
 }
 
 pub struct State {

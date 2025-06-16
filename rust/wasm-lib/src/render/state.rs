@@ -1,7 +1,7 @@
 use std::{error::Error, fmt::Display, fs, io, sync::Arc, time::Instant};
 
 use glam::{uvec2, vec2, vec4, UVec2};
-use image::{GenericImageView, ImageError, ImageResult};
+use image::{DynamicImage, GenericImageView, ImageError, ImageResult};
 use wgpu::{util::DeviceExt, Buffer, CreateSurfaceError, WindowHandle};
 use winit::dpi::PhysicalSize;
 
@@ -58,14 +58,30 @@ fn create_textures_bind_group(
     queue: &wgpu::Queue,
     config: &Config,
 ) -> Result<(wgpu::BindGroupLayout, wgpu::BindGroup, (u32, u32)), AppError> {
-    // TODO: speed up this?
+    let mut textures = vec![];
+
     let spritesheet =
         image::load_from_memory(include_bytes!("../../../../src/assets/spritesheet.png"))
             .map_err(AppError::ImageLoadError)?;
 
-    // TODO: better errors?
-    let bg_data = fs::read(&config.background.image).map_err(AppError::ImageReadError)?;
-    let bg = image::load_from_memory(&bg_data).map_err(AppError::ImageLoadError)?;
+    let bg_dimensions;
+    let bg;
+    if config.background.fit != "hidden" {
+        let bg_data = fs::read(&config.background.image).map_err(AppError::ImageReadError)?;
+        bg = image::load_from_memory(&bg_data).map_err(AppError::ImageLoadError)?;
+
+        bg_dimensions = bg.dimensions();
+
+        // textures.push(Texture::from_image(
+        //     device,
+        //     queue,
+        //     &bg,
+        //     wgpu::FilterMode::Linear,
+        // ));
+    } else {
+        bg = DynamicImage::new(1, 1, image::ColorType::Rgb8);
+        bg_dimensions = (1, 1);
+    }
 
     // let ground = image::load_from_memory(include_bytes!("../../assets/ground.png"))
     //     .map_err(AppError::ImageError)?;
@@ -152,12 +168,12 @@ fn create_textures_bind_group(
             label: None,
         });
 
-    let textures = vec![
+    textures.extend([
         // Texture::from_image(device, queue, &ground, wgpu::FilterMode::Linear),
         Texture::from_image(device, queue, &spritesheet, wgpu::FilterMode::Linear),
         Texture::from_image(device, queue, &spritesheet, wgpu::FilterMode::Nearest),
         Texture::from_image(device, queue, &bg, wgpu::FilterMode::Linear),
-    ];
+    ]);
 
     let mut entries = vec![];
 
@@ -185,7 +201,7 @@ fn create_textures_bind_group(
     Ok((
         textures_bind_group_layout,
         textures_bind_group,
-        bg.dimensions(),
+        bg_dimensions,
     ))
 }
 
@@ -231,7 +247,11 @@ impl RenderState {
             width: size.x,
             height: size.y,
             present_mode: surface_caps.present_modes[0],
-            alpha_mode: surface_caps.alpha_modes[0],
+            alpha_mode: *surface_caps
+                .alpha_modes
+                .iter()
+                .find(|mode| **mode == wgpu::CompositeAlphaMode::PreMultiplied)
+                .unwrap_or(&surface_caps.alpha_modes[0]),
             view_formats: vec![],
             desired_maximum_frame_latency: 2,
         };
@@ -302,7 +322,16 @@ impl RenderState {
         // let size = uvec2(window.window_handle()/, window.height());
 
         let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::all(),
+            backends: {
+                #[cfg(target_os = "windows")]
+                {
+                    wgpu::Backends::DX12
+                }
+                #[cfg(not(target_os = "windows"))]
+                {
+                    wgpu::Backends::all()
+                }
+            },
             backend_options: wgpu::BackendOptions {
                 dx12: wgpu::Dx12BackendOptions {
                     presentation_system: wgpu::wgt::Dx12PresentationSystem::Dcomp,

@@ -59,13 +59,13 @@ pub fn create_pipeline(
         layout: Some(&pipeline_layout),
         vertex: wgpu::VertexState {
             module: shader,
-            entry_point: vertex_entry_point,
+            entry_point: Some(vertex_entry_point),
             buffers: vertex_buffer_layouts,
             compilation_options: Default::default(),
         },
         fragment: Some(wgpu::FragmentState {
             module: shader,
-            entry_point: fragment_entry_point,
+            entry_point: Some(fragment_entry_point),
             targets: fragment_targets,
             compilation_options: Default::default(),
         }),
@@ -85,5 +85,6 @@ pub fn create_pipeline(
             alpha_to_coverage_enabled: false,
         },
         multiview: None,
+        cache: None,
     })
 }

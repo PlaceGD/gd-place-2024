@@ -19,7 +19,9 @@ edition = "2021"
 #     "Window",
 #     "OffscreenCanvas",
 # ] }
-wgpu = { version = "0.20.1" }
+# wgpu = { version = "0.20.1" }
+# [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+wgpu = { git = "https://github.com/n1ght-hunter/wgpu.git", branch = "dev/windows-os-transparent" }
 
 winit = "0.30.5"
 futures = "0.3"
@@ -68,4 +70,4 @@ rust-shared = { path = "../rust-shared" }
 uuid = { workspace = true }
 
 # [build]
-# target = "wasm32-unknown-unknown"
+# target = "x86_64-pc-windows-msvc"

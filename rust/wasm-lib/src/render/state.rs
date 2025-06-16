@@ -203,17 +203,16 @@ impl RenderState {
                 compatible_surface: Some(&surface),
             })
             .await
-            .ok_or(AppError::NoAdapter)?;
+            .map_err(AppError::NoAdapter)?;
 
         let (device, queue) = adapter
-            .request_device(
-                &wgpu::DeviceDescriptor {
-                    label: None,
-                    required_features: wgpu::Features::empty(),
-                    required_limits: wgpu::Limits::default(),
-                },
-                None,
-            )
+            .request_device(&wgpu::DeviceDescriptor {
+                label: None,
+                required_features: wgpu::Features::empty(),
+                required_limits: wgpu::Limits::default(),
+                memory_hints: wgpu::MemoryHints::MemoryUsage,
+                trace: wgpu::Trace::Off,
+            })
             .await
             .map_err(AppError::RequestDeviceError)?;
 
@@ -302,8 +301,15 @@ impl RenderState {
     ) -> Result<PartialRenderState, AppError> {
         // let size = uvec2(window.window_handle()/, window.height());
 
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+        let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
+            backend_options: wgpu::BackendOptions {
+                dx12: wgpu::Dx12BackendOptions {
+                    presentation_system: wgpu::wgt::Dx12PresentationSystem::Dcomp,
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
             ..Default::default()
         });
 
@@ -500,6 +506,7 @@ impl PartialRenderState {
                         }),
                         store: wgpu::StoreOp::Store,
                     },
+                    depth_slice: None,
                 })],
                 depth_stencil_attachment: None,
                 timestamp_writes: None,

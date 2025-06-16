@@ -168,9 +168,9 @@ impl Config {
         }
 
         match &self.background.fit[..] {
-            "fill" | "cover" | "contain" | "tile" | "none" => (),
+            "fill" | "cover" | "contain" | "tile" | "hidden" | "none" => (),
             value => return Err(AppError::ConfigValidationError {
-                reason: format!("unknown value `{value}` in `background.fit`! must be one of `fill, cover, contain, tile, none`") 
+                reason: format!("unknown value `{value}` in `background.fit`! must be one of `fill, cover, contain, tile, hidden, none`") 
             })
         }
 

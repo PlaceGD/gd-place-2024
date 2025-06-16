@@ -10,7 +10,7 @@ pub enum AppError {
     ImageReadError(std::io::Error),
     CreateSurfaceError(wgpu::CreateSurfaceError),
     SurfaceError(wgpu::SurfaceError),
-    NoAdapter,
+    NoAdapter(wgpu::RequestAdapterError),
     RequestDeviceError(wgpu::RequestDeviceError),
     ConfigValidationError { reason: String },
 }
@@ -28,7 +28,7 @@ impl Display for AppError {
             AppError::ImageReadError(e) => write!(f, "failed to read image: {e}"),
             AppError::CreateSurfaceError(e) => write!(f, "failed to create surface: {e}"),
             AppError::SurfaceError(e) => write!(f, "surface error: {e}"),
-            AppError::NoAdapter => write!(f, "failed to find compatible adapter"),
+            AppError::NoAdapter(e) => write!(f, "failed to find compatible adapter: {e}"),
             AppError::RequestDeviceError(e) => write!(f, "failed to find request device: {e}"),
             AppError::ConfigValidationError { reason } => {
                 write!(f, "failed to validate config: {reason}")

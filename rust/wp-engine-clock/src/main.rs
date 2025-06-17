@@ -25,6 +25,7 @@ use state::State;
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
+use winit::monitor::Fullscreen;
 use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
 
 use crate::config::Config;
@@ -87,7 +88,7 @@ impl ApplicationHandler for App {
                 .with_enabled_buttons(WindowButtons::empty())
                 .with_resizable(false)
                 .with_decorations(false)
-                .with_fullscreen(true);
+                .with_fullscreen(Some(Fullscreen::Borderless(None)));
         }
 
         let window = Arc::new(event_loop.create_window(window_attributes).unwrap());
@@ -177,6 +178,7 @@ fn write_error_log(message: String, bt: Option<Backtrace>) {
     let bt_string = bt.map_or_else(|| String::new(), |bt| format!("\n{bt}"));
 
     match OpenOptions::new()
+        .create(true)
         .write(true)
         .append(true)
         .open("./error.log")
@@ -184,7 +186,9 @@ fn write_error_log(message: String, bt: Option<Backtrace>) {
         Ok(mut file) => {
             let _ = write!(file, "[ERROR]:\n{message}{bt_string}\n\n");
         }
-        Err(..) => {}
+        Err(e) => {
+            eprintln!("{e}");
+        }
     }
 }
 

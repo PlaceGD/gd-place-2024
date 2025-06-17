@@ -126,9 +126,9 @@ impl Default for Background {
     fn default() -> Self {
         Self {
             color: Color {
-                r: 0,
-                g: 0,
-                b: 0,
+                r: 2,
+                g: 12,
+                b: 24,
                 a: 255,
             },
             image_tint: Color {
@@ -144,7 +144,10 @@ impl Default for Background {
 }
 
 const CONFIG_DETAILS: &'static str = "
-
+#
+# Read about the config options below:
+# https://github.com/PlaceGD/gd-place-2024/tree/wp-engine
+#
 ";
 
 impl Config {
@@ -153,7 +156,7 @@ impl Config {
 
         let config_str = toml::to_string(&config).unwrap();
 
-        let _ = fs::write(path, format!("{config_str}\n{CONFIG_DETAILS}"))
+        let _ = fs::write(path, format!("{CONFIG_DETAILS}\n{config_str}"))
             .map_err(AppError::ConfigWriteFailed)?;
 
         Ok(config)

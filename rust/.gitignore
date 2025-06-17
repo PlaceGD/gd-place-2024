@@ -3,3 +3,4 @@
 Cargo.lock
 bin/
 pkg/
+wasm-lib/config.toml

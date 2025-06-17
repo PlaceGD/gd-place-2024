@@ -1,5 +1,5 @@
 [workspace]
-members = ["rust-shared", "the-nexus", "wasm-lib"]
+members = ["rust-shared", "the-nexus", "wp-engine-clock"]
 resolver = "2"
 
 [profile.prod]

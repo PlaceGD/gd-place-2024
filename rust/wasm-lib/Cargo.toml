@@ -22,8 +22,8 @@ edition = "2021"
 # wgpu = { version = "0.20.1" }
 # [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 wgpu = { git = "https://github.com/n1ght-hunter/wgpu.git", branch = "dev/windows-os-transparent" }
+winit = { git = "https://github.com/rust-windowing/winit.git" }
 
-winit = "0.30.5"
 futures = "0.3"
 
 # env_logger = "0.11.3"

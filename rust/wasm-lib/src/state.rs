@@ -60,7 +60,7 @@ impl PendingState {
 
     pub fn init_state(
         &mut self,
-        window: Arc<Window>,
+        window: Arc<Box<dyn Window + 'static>>,
         size: PhysicalSize<u32>,
         config: Config,
     ) -> Result<(), AppError> {

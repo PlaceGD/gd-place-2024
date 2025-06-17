@@ -53,7 +53,7 @@ use crate::state::PendingState;
 // }
 
 struct App {
-    window: Option<Arc<Window>>,
+    window: Option<Arc<Box<dyn Window + 'static>>>,
     state: PendingState,
     config: Option<Config>,
 
@@ -64,17 +64,35 @@ struct App {
 }
 
 impl ApplicationHandler for App {
-    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window_attributes = WindowAttributes::default()
+    fn can_create_surfaces(&mut self, event_loop: &dyn ActiveEventLoop) {
+        let mut window_attributes = WindowAttributes::default()
             .with_resizable(true)
-            // .with_enabled_buttons(WindowButtons::empty())
             .with_visible(false)
             .with_title("GD Place Countdown Clock")
             .with_transparent(true);
-        // .with_decorations(false);
+
+        #[cfg(target_os = "windows")]
+        {
+            // enable transparency support with DirectComposition, which is what the fork of
+            // WGPU enables in DX12
+            window_attributes = window_attributes.with_platform_attributes(Box::new(
+                winit::platform::windows::WindowAttributesWindows::default()
+                    .with_no_redirection_bitmap(true),
+            ));
+        }
+
+        #[cfg(not(debug_assertions))]
+        {
+            window_attributes = window_attributes
+                .with_enabled_buttons(WindowButtons::empty())
+                .with_resizable(false)
+                .with_decorations(false)
+                .with_fullscreen(true);
+        }
 
         let window = Arc::new(event_loop.create_window(window_attributes).unwrap());
-        let size = window.outer_size();
+
+        let size = window.surface_size();
 
         self.window = Some(Arc::clone(&window));
 
@@ -88,7 +106,7 @@ impl ApplicationHandler for App {
         event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
     }
 
-    fn new_events(&mut self, event_loop: &ActiveEventLoop, _: winit::event::StartCause) {
+    fn new_events(&mut self, event_loop: &dyn ActiveEventLoop, _: winit::event::StartCause) {
         if Instant::now() >= self.next_frame_time {
             if let Some(window) = &self.window {
                 window.request_redraw();
@@ -98,7 +116,7 @@ impl ApplicationHandler for App {
         event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, _: WindowId, event: WindowEvent) {
+    fn window_event(&mut self, event_loop: &dyn ActiveEventLoop, _: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::CloseRequested => {
                 event_loop.exit();
@@ -120,7 +138,7 @@ impl ApplicationHandler for App {
                     event_loop.set_control_flow(ControlFlow::WaitUntil(self.next_frame_time));
                 }
             }
-            WindowEvent::Resized(size) => {
+            WindowEvent::SurfaceResized(size) => {
                 if let Some(state) = self.state.ready() {
                     state.resize(size.width, size.height);
                 }

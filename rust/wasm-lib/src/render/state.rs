@@ -17,10 +17,10 @@ use super::{
 };
 
 pub struct PartialRenderState {
-    surface: wgpu::Surface<'static>,
-    device: wgpu::Device,
+    pub surface: wgpu::Surface<'static>,
+    pub device: wgpu::Device,
     queue: wgpu::Queue,
-    surface_config: wgpu::SurfaceConfiguration,
+    pub surface_config: wgpu::SurfaceConfiguration,
 
     multisampled_frame_descriptor: wgpu::TextureDescriptor<'static>,
 

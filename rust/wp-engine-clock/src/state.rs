@@ -656,7 +656,7 @@ impl State {
                     self.render.surface_config.height as f32,
                 ],
                 quality: self.quality,
-                grid_opacity: self.config.grid.opacity,
+                grid_opacity: self.config.grid.opacity / 255.0,
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
                 // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),

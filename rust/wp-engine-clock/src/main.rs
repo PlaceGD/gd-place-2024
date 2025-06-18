@@ -50,9 +50,10 @@ use wgpu::{
 
 use windows::Win32::UI::WindowsAndMessaging::{
     CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetMessageW,
-    GetSystemMetrics, PeekMessageW, PostQuitMessage, RegisterClassW, SetParent, ShowWindow,
-    TranslateMessage, CW_USEDEFAULT, MSG, PM_REMOVE, SW_SHOW, WM_CLOSE, WM_DESTROY, WM_QUIT,
-    WM_SIZE, WNDCLASSW, WS_CHILD, WS_EX_NOREDIRECTIONBITMAP, WS_OVERLAPPEDWINDOW, WS_VISIBLE,
+    GetSystemMetrics, GetWindowLongPtrW, PeekMessageW, PostQuitMessage, RegisterClassW, SetParent,
+    SetWindowLongPtrW, ShowWindow, TranslateMessage, CW_USEDEFAULT, GWLP_USERDATA, MSG, PM_REMOVE,
+    SW_SHOW, WM_CLOSE, WM_DESTROY, WM_QUIT, WM_SIZE, WNDCLASSW, WS_CHILD,
+    WS_EX_NOREDIRECTIONBITMAP, WS_OVERLAPPEDWINDOW, WS_VISIBLE,
 };
 use windows::Win32::UI::WindowsAndMessaging::{
     SM_CXSCREEN, SM_CXVIRTUALSCREEN, SM_CYSCREEN, SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN,
@@ -110,8 +111,14 @@ fn init_logging() {
     .unwrap();
 }
 
-thread_local! {
-    static STATE: OnceCell<RefCell<PendingState>> = OnceCell::new();
+unsafe fn get_state(hwnd: HWND) -> Option<&'static RefCell<PendingState>> {
+    let ptr = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *const RefCell<PendingState>;
+
+    if ptr.is_null() {
+        None
+    } else {
+        Some(&*ptr)
+    }
 }
 
 unsafe extern "system" fn window_proc(
@@ -127,6 +134,16 @@ unsafe extern "system" fn window_proc(
                 LRESULT(0)
             }
             WM_DESTROY => {
+                let state = GetWindowLongPtrW(hwnd, GWLP_USERDATA) as *mut RefCell<PendingState>;
+
+                if !state.is_null() {
+                    if let Some(state) = (&*state).borrow_mut().ready() {
+                        state.render.instance.poll_all(true);
+                    }
+
+                    drop(Box::from_raw(state));
+                }
+
                 PostQuitMessage(0);
                 LRESULT(0)
             }
@@ -134,13 +151,11 @@ unsafe extern "system" fn window_proc(
                 let width = LOWORD(lparam.0 as u32) as u32;
                 let height = HIWORD(lparam.0 as u32) as u32;
 
-                STATE.with(|cell| {
-                    if let Some(pending_state) = cell.get() {
-                        if let Some(state) = pending_state.borrow_mut().ready() {
-                            state.resize(width, height);
-                        }
+                if let Some(pending_state) = get_state(hwnd) {
+                    if let Some(state) = pending_state.borrow_mut().ready() {
+                        state.resize(width, height);
                     }
-                });
+                }
 
                 LRESULT(0)
             }
@@ -249,37 +264,21 @@ unsafe fn start_app() -> Result<(), AppError> {
     let target_frame_time = 1.0 / config.general.fps_cap as f32;
 
     let mut state = PendingState::new();
-
     state.init_state(window, (800, 600), config)?;
 
-    STATE.with(|cell| {
-        let _ = cell.set(RefCell::new(state));
-    });
+    let boxed_state = Box::new(RefCell::new(state));
+    SetWindowLongPtrW(hwnd, GWLP_USERDATA, Box::into_raw(boxed_state) as isize);
 
-    run_event_loop(hwnd, target_frame_time, |delta_time| {
-        STATE.with(|cell| {
-            if let Some(pending_state) = cell.get() {
-                if let Some(state) = pending_state.borrow_mut().ready() {
-                    let local_now: DateTime<Local> = Local::now();
-                    state.set_now(local_now);
-
-                    state.render(delta_time).unwrap();
-                }
-            }
-        });
-
-        Ok(())
-    })?;
-
-    STATE.with(|cell| {
-        if let Some(pending_state) = cell.get() {
-            if let Some(state) = pending_state.borrow_mut().ready() {
-                state.render.instance.poll_all(true);
+    run_event_loop(hwnd, target_frame_time, move |delta_time| {
+        if let Some(cell) = unsafe { get_state(hwnd) } {
+            if let Some(state) = cell.borrow_mut().ready() {
+                let local_now: DateTime<Local> = Local::now();
+                state.set_now(local_now);
+                state.render(delta_time)?;
             }
         }
-    });
-
-    drop(STATE);
+        Ok(())
+    })?;
 
     Ok(())
 }

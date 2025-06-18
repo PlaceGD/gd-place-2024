@@ -1,13 +1,12 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![deny(unused_must_use)]
 
+mod config;
+mod error;
 mod level;
 mod object;
 mod render;
 mod state;
-// mod text;
-mod config;
-mod error;
 mod util;
 mod utilgen;
 
@@ -28,7 +27,6 @@ use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 use windows::Win32::Graphics::Gdi::{GetStockObject, BLACK_BRUSH, HBRUSH};
 use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 use windows::Win32::System::Performance::{QueryPerformanceCounter, QueryPerformanceFrequency};
-// use winit::raw_window_handle::{HasWindowHandle, RawWindowHandle, WindowHandle};
 
 use wgpu::rwh::{
     DisplayHandle, HandleError, HasDisplayHandle, HasWindowHandle, RawDisplayHandle,
@@ -161,7 +159,6 @@ fn run_event_loop(
         QueryPerformanceCounter(&mut last).map_err(AppError::WindowsError)?;
 
         'main_loop: loop {
-            // Process messages
             while PeekMessageW(&mut msg, None, 0, 0, PM_REMOVE).into() {
                 if msg.message == WM_QUIT {
                     break 'main_loop Ok(());
@@ -171,16 +168,13 @@ fn run_event_loop(
                 DispatchMessageW(&msg);
             }
 
-            // Timing
             let mut now = 0i64;
             QueryPerformanceCounter(&mut now).map_err(AppError::WindowsError)?;
             let delta = (now - last) as f64 / frequency as f64;
             last = now;
 
-            // Render frame
             render(delta as f32)?;
 
-            // Optional: sleep to cap framerate
             let sleep_duration = (target_frame_time - delta as f32).max(0.0);
             if sleep_duration > 0.0 {
                 std::thread::sleep(Duration::from_secs_f32(sleep_duration));
@@ -208,7 +202,7 @@ unsafe fn start_app() -> Result<(), AppError> {
     RegisterClassW(&wc);
 
     let hwnd = CreateWindowExW(
-        WS_EX_NOREDIRECTIONBITMAP, // No special style
+        WS_EX_NOREDIRECTIONBITMAP,
         PCWSTR(class_name.as_ptr()),
         PCWSTR(to_wstr("GD Place Countdown Clock").as_ptr()),
         WS_VISIBLE

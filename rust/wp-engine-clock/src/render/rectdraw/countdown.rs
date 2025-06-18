@@ -3,10 +3,7 @@ use std::{array, io::Cursor, sync::LazyLock};
 use binrw::BinRead;
 use chrono::{DateTime, Local, Timelike};
 use glam::{vec2, Affine2, Vec2};
-use rand::{
-    rngs::StdRng,
-    seq::SliceRandom, SeedableRng,
-};
+use rand::{rngs::StdRng, seq::SliceRandom, SeedableRng};
 use rust_shared::{
     countdown::{CountdownDigitSets, DigitObjects, COLON_COUNT, DIGIT_SETS},
     gd::object::{GDColor, GDObject},
@@ -95,9 +92,6 @@ impl Countdown {
         }
     }
     pub fn update_state(&mut self, event_start: f64, datetime: DateTime<Local>, config: &Config) {
-        //console_log!("{event_start} {now}");
-        // let event_elapsed = now / 1000.0 - event_start / 1000.0;
-        // let time_until = -event_elapsed;
         let now = datetime.timestamp_millis() as f64;
 
         let switch_id = (((now / 1000.0) + 0.0).max(0.0)
@@ -146,14 +140,6 @@ impl Countdown {
             }
         };
 
-        // let sets = TEST_SETS.unwrap_or(SET_SWITCHES[switch_id % SET_SWITCHES.len()]);
-        //console_log!("{}", switch_id % SET_SWITCHES.len());
-
-        // let days = (time_until / 86400.0).floor();
-        // let hours = ((time_until - (days * 86400.0)) / 3600.0).floor();
-        // let minutes = ((time_until - (days * 86400.0) - (hours * 3600.0)) / 60.0).floor();
-        // let seconds = (time_until - (days * 86400.0) - (hours * 3600.0) - (minutes * 60.0)).floor();
-
         let hours = datetime.hour();
         let minutes = datetime.minute();
         let seconds = datetime.second();
@@ -162,16 +148,11 @@ impl Countdown {
             (Some(num / 10), Some(num % 10))
         }
 
-        // let (dayd1, dayd2) = digits(days as u8, show_days);
         let (hourd1, hourd2) = digits(hours as u8);
         let (mind1, mind2) = digits(minutes as u8);
         let (secd1, secd2) = digits(seconds as u8);
 
         let state = [hourd1, hourd2, mind1, mind2, secd1, secd2];
-        // let (state, show_days, show_hours, show_minutes) = if time_until < 0.0 {
-        //     ([None; 8], false, false, false)
-        // } else {
-        // };
 
         for i in 0..self.digits.len() {
             let delay = index_delay(i);
@@ -187,14 +168,6 @@ impl Countdown {
                 );
                 self.state[i] = state[i];
             } else if self.state[i] != state[i] {
-                // let num_sets = COUNTDOWN_DIGITS.0.len();
-                // let new_set = if random() < 0.2 {
-                //     (random() * num_sets as f64) as usize
-                // } else {
-                //     self.sets[i]
-                // };
-                //let new_set = 0;
-
                 self.digits[i].transition_between(
                     self.state[i],
                     state[i],
@@ -204,7 +177,6 @@ impl Countdown {
                     datetime,
                 );
                 self.state[i] = state[i];
-                //self.sets[i / 2] = new_set;
             }
         }
 
@@ -251,17 +223,6 @@ impl Countdown {
                     .collect::<Vec<_>>()
             };
 
-            // let new_bg_state = [show_hours, show_minutes];
-
-            // if switch_id == 0 {
-            //     [0, 0]
-            // } else {
-            //     [
-            //         ((switch_id.wrapping_mul(1103515245).wrapping_add(12345) >> 16) % 6) as usize,
-            //         ((switch_id.wrapping_mul(1664525).wrapping_add(1013904223) >> 16) % 6) as usize,
-            //     ]
-            // };
-
             if has_new_sets && config.sets.show_colons {
                 for i in 0..2 {
                     let (state, prev_colon, colon) = match i {
@@ -291,31 +252,6 @@ impl Countdown {
             }
 
             self.first_draw = false;
-
-            // self.hours_marker = appear(&COUNTDOWN_DIGITS.2, 1.0);
-            // self.minutes_marker = appear(&COUNTDOWN_DIGITS.3, 1.0);
-
-            // for i in 0..2 {
-            //     let (state, bg) = match i {
-            //         0 => (&mut self.hours_marker, &COUNTDOWN_DIGITS.2),
-            //         1 => (&mut self.minutes_marker, &COUNTDOWN_DIGITS.3),
-            //         _ => unreachable!(),
-            //     };
-
-            //     let delay = index_delay(i * 2);
-
-            //     *state = if new_bg_state[i] {
-            //         appear(&bg, delay)
-            //     } else {
-            //         dissapear(&bg, delay)
-            //     };
-
-            //     dbg!(self.bg_state, new_bg_state);
-
-            //     // self.bg_state[i] = new_bg_state[i];
-            //     // if self.bg_state[i] != new_bg_state[i] {
-            //     // }
-            // }
         }
     }
 
@@ -376,8 +312,6 @@ impl Countdown {
 
         let position_offset_world = vec2(0.0, 0.0);
 
-        // state.set_camera_pos(-position_offset.x, 0.0);
-
         self.hours_marker
             .iter()
             .chain(self.minutes_marker.iter())
@@ -386,8 +320,6 @@ impl Countdown {
             .for_each(|o| {
                 o.get(state.now).inspect(|o| {
                     add_object(o.offset(vec2(0.0, 0.0)));
-                    // level.add_object(*o, idx);
-                    // idx += 1;
                 });
             });
 
@@ -438,78 +370,8 @@ impl Countdown {
 
             // billy.translate(vec2(30.0 * 7.0, 0.0));
         }
-        // const BLOCK: f32 = 30.0;
-        // const DIGIT_WIDTH: f32 = 6.0 * BLOCK; // 180
-        // const COLON_WIDTH: f32 = 3.0 * BLOCK; // 120
-
-        // // Total width of one digit plus intra-pair gap
-        // const DIGIT_PLUS_GAP: f32 = DIGIT_WIDTH + BLOCK;
-
-        // // Width of a pair: 2 digits + 1 block between
-        // const PAIR_WIDTH: f32 = DIGIT_WIDTH * 2.0 + BLOCK;
-
-        // // Total pair spacing offset (includes 1 colon and 1 extra block)
-        // const EXTRA_PAIR_SPACING: f32 = COLON_WIDTH + BLOCK;
-
-        // // For digit index 0..5
-        // for (i, digit) in self.digits.iter().enumerate() {
-        //     let mut offset = Self::OFFSET;
-
-        //     let pair_index = i / 2;
-        //     let in_pair_offset = if i % 2 == 0 {
-        //         -DIGIT_PLUS_GAP / 2.0 // left digit in pair
-        //     } else {
-        //         DIGIT_PLUS_GAP / 2.0 // right digit in pair
-        //     };
-
-        //     // Compute total horizontal pair shift from center pair (pair 1 is [2,3])
-        //     let pair_offset_from_center = match pair_index {
-        //         0 => -PAIR_WIDTH - EXTRA_PAIR_SPACING,
-        //         1 => 0.0,
-        //         2 => PAIR_WIDTH + EXTRA_PAIR_SPACING,
-        //         _ => 0.0,
-        //     };
-
-        //     let total_x = pair_offset_from_center + in_pair_offset;
-        //     offset += vec2(total_x, 0.0);
-
-        //     for (i, obj) in digit.objects.iter().enumerate() {
-        //         obj.get(state.now).inspect(|o| {
-        //             // level.add_object(o.offset(offset), idx);
-        //             // idx += 1;
-
-        //             add_object(o.offset(offset));
-        //         });
-        //     }
-
-        //     // billy.translate(vec2(30.0 * 7.0, 0.0));
-        // }
 
         draw_level(state, billy, &level, |_, _, _| None, 0.0, true);
-
-        // self.days_marker.iter().for_each(|o| {
-        //     o.get().inspect(|o| draw_obj(o, billy));
-        // });
-
-        // self.hours_marker.iter().for_each(|o| {
-        //     o.get().inspect(|o| draw_obj(o, billy));
-        // });
-
-        // self.minutes_marker.iter().for_each(|o| {
-        //     o.get().inspect(|o| draw_obj(o, billy));
-        // });
-
-        // billy.translate(Self::OFFSET);
-
-        // for (i, digit) in self.digits.iter().enumerate() {
-        //     if i == 2 {
-        //         billy.translate(vec2(-30.0 * 14.0, -30.0 * 14.0)); // line break
-        //     } else if i != 0 && i % 2 == 0 {
-        //         billy.translate(vec2(30.0 * 3.0, 0.0)); // colons
-        //     }
-        //     digit.draw(billy);
-        //     billy.translate(vec2(30.0 * 7.0, 0.0));
-        // }
     }
 }
 

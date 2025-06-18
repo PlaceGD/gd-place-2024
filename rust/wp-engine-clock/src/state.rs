@@ -640,10 +640,6 @@ impl State {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
 
-        // if let Some(d) = &mut self.ending_transition_override {
-        //     *d = (*d + self.ending_transition_speed * delta).clamp(0.0, 1.0);
-        // }
-
         self.render.queue.write_buffer(
             &self.render.globals_buffer,
             0,
@@ -656,10 +652,7 @@ impl State {
                 grid_opacity: self.config.grid.opacity / 255.0,
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
-                // level_size: vec2(LEVEL_WIDTH_UNITS as f32, LEVEL_HEIGHT_UNITS as f32).to_array(),
                 time: self.time,
-                // end_anim_time,
-                // padding: [0.0; 2],
             }]),
         );
 
@@ -669,37 +662,8 @@ impl State {
             let mut billy = Billy::new();
 
             billy.set_blend_mode(BlendMode::Normal);
+
             // background
-            // {
-            //     let old_t = billy.get_transform();
-            //     billy.translate(-self.camera_pos / 3.0 / 2.0);
-
-            //     let scale = self.width.min(self.height) as f32 / 600.0 * 1.5 * 1.25 * 600.0;
-
-            //     let offset = (self.camera_pos / 10.0 / scale).floor() * scale;
-
-            //     for i in -2i32..=2 {
-            //         //-2i32..=2
-            //         for j in -2i32..=2 {
-            //             //-2i32..=2
-            //             billy.centered_textured_rect(
-            //                 offset + scale * vec2(i as f32, j as f32),
-            //                 vec2(scale, scale),
-            //                 vec4(
-            //                     self.bg_color.0 as f32 / 255.0,
-            //                     self.bg_color.1 as f32 / 255.0,
-            //                     self.bg_color.2 as f32 / 255.0,
-            //                     0.2,
-            //                 ),
-            //                 0,
-            //                 vec2(0.0, 0.0),
-            //                 vec2(self.render.bg_size.0 as f32, self.render.bg_size.1 as f32),
-            //             );
-            //         }
-            //     }
-            //     billy.set_transform(old_t);
-            // };
-
             let bg_tint = vec4(
                 self.bg_color.0 as f32 / 255.0,
                 self.bg_color.1 as f32 / 255.0,
@@ -803,7 +767,6 @@ impl State {
                 _ => (),
             }
 
-            //if self.event_elapsed < 0.0 {
             let old_t = billy.get_transform();
 
             billy.apply_transform(self.view_transform());
@@ -813,20 +776,10 @@ impl State {
             self.countdown.draw(self, &mut billy);
 
             billy.set_transform(old_t);
-            //}
-
-            // level_draw(self, &mut billy);
 
             // these lines just commit the previous call
             billy.set_blend_mode(BlendMode::Additive);
             billy.set_blend_mode(BlendMode::Normal);
-
-            // if self.now > self.event_end {
-            //     let new_t = billy.get_transform();
-            //     billy.set_transform(old_t);
-            //     self.stats_display.draw(self, &mut billy);
-            //     billy.set_transform(new_t);
-            // }
 
             let instance_buffer =
                 self.render
@@ -861,9 +814,6 @@ impl State {
 
             render_pass.set_bind_group(0, &self.render.globals_bind_group, &[]);
             render_pass.set_bind_group(1, &self.render.textures_bind_group, &[]);
-            // render_pass.set_bind_group(2, &self.render.onion_nearest_bind_group, &[]);
-
-            // dbg!(&billy.rects);
 
             render_pass.set_vertex_buffer(0, self.render.rect_vertex_buffer.slice(..));
             render_pass.set_vertex_buffer(1, instance_buffer.slice(..));
@@ -873,7 +823,7 @@ impl State {
             );
 
             let mut last_instance = 0;
-            //console_log!("CALLS {}", billy.calls.len());
+
             for (i, call) in billy.calls.iter().enumerate() {
                 render_pass.set_pipeline(match call.blend_mode {
                     BlendMode::Normal => &self.render.pipeline_rect,
@@ -897,113 +847,7 @@ impl State {
     }
 
     pub fn render(&mut self, delta: f32) -> Result<(), AppError> {
-        // fn ease_in_out_quart(x: f32) -> f32 {
-        //     if x < 0.5 {
-        //         8.0 * x * x * x * x
-        //     } else {
-        //         1.0 - (-2.0 * x + 2.0).powf(4.0) / 2.0
-        //     }
-        // }
-
-        // fn ease_out_sine(x: f32) -> f32 {
-        //     f32::sin(x * std::f32::consts::PI / 2.0)
-        // }
-
-        // let end_anim_time = ((self.now - self.event_end) / 1000.0) as f32;
-
-        // if end_anim_time > 0.0 && self.now < self.ending_fully_done {
-        //     // console_log!("funny");
-        //     if self.ending_anim_info.is_none() {
-        //         self.ending_anim_info = Some(EndingAnimInfo {
-        //             initial_zoom: self.zoom,
-        //             initial_camera_pos: self.camera_pos,
-        //             initial_bg_color: self.bg_color,
-        //             initial_ground1_color: self.ground1_color,
-        //             initial_ground2_color: self.ground2_color,
-        //         });
-        //     }
-
-        //     let EndingAnimInfo {
-        //         initial_zoom,
-        //         initial_camera_pos,
-        //         initial_bg_color,
-        //         initial_ground1_color,
-        //         initial_ground2_color,
-        //     } = self.ending_anim_info.unwrap();
-
-        //     let zoomout_d = ease_out_sine((end_anim_time / 30.0).clamp(0.0, 1.0));
-        //     self.zoom = map!(zoomout_d, 0.0, 1.0, initial_zoom, -2.0);
-        //     // console_log!("zoom: {}; {}; {}", old_zoom, self.zoom, zoomout_d);
-
-        //     let margin = vec2(40.0, 40.0) * 30.0;
-        //     let cam_move_d = ease_in_out_quart((end_anim_time / 10.0).clamp(0.0, 1.0));
-        //     let lerped_x = if initial_camera_pos.x < margin.x {
-        //         map!(cam_move_d, 0.0, 1.0, initial_camera_pos.x, margin.x)
-        //     } else if initial_camera_pos.x > LEVEL_WIDTH_UNITS as f32 - margin.x {
-        //         map!(
-        //             cam_move_d,
-        //             0.0,
-        //             1.0,
-        //             initial_camera_pos.x,
-        //             LEVEL_WIDTH_UNITS as f32 - margin.x
-        //         )
-        //     } else {
-        //         initial_camera_pos.x
-        //     };
-
-        //     let lerped_y = if initial_camera_pos.y < margin.y {
-        //         map!(cam_move_d, 0.0, 1.0, initial_camera_pos.y, margin.y)
-        //     } else if initial_camera_pos.y > LEVEL_HEIGHT_UNITS as f32 - margin.y {
-        //         map!(
-        //             cam_move_d,
-        //             0.0,
-        //             1.0,
-        //             initial_camera_pos.y,
-        //             LEVEL_HEIGHT_UNITS as f32 - margin.y
-        //         )
-        //     } else {
-        //         initial_camera_pos.y
-        //     };
-        //     self.camera_pos = vec2(lerped_x, lerped_y);
-
-        //     // let color_d = 1.0 - (end_anim_time - 3.0 / 7.0).clamp(0.0, 1.0);
-
-        //     // // self.bg_color = (
-        //     // //     (initial_bg_color.0 as f32 * color_d) as u8,
-        //     // //     (initial_bg_color.1 as f32 * color_d) as u8,
-        //     // //     (initial_bg_color.2 as f32 * color_d) as u8,
-        //     // // );
-
-        //     // self.ground1_color = (
-        //     //     (initial_ground1_color.0 as f32 * color_d) as u8,
-        //     //     (initial_ground1_color.1 as f32 * color_d) as u8,
-        //     //     (initial_ground1_color.2 as f32 * color_d) as u8,
-        //     // );
-
-        //     // self.ground2_color = (
-        //     //     (initial_ground2_color.0 as f32 * color_d) as u8,
-        //     //     (initial_ground2_color.1 as f32 * color_d) as u8,
-        //     //     (initial_ground2_color.2 as f32 * color_d) as u8,
-        //     // );
-        // } else {
-        //     self.ending_anim_info = None;
-        // }
-
         self.render_inner(delta)
-
-        // (
-        //     self.camera_pos,
-        //     self.zoom,
-        //     self.bg_color,
-        //     self.ground1_color,
-        //     self.ground2_color,
-        // ) = (
-        //     old_camera_pos,
-        //     old_zoom,
-        //     old_bg_color,
-        //     old_ground1_color,
-        //     old_ground2_color,
-        // );
     }
 
     pub fn get_countdown_creator_names(&self) -> Vec<String> {

@@ -1,3 +1,4 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![deny(unused_must_use)]
 
 mod level;
@@ -12,6 +13,7 @@ mod utilgen;
 
 use std::backtrace::Backtrace;
 use std::fs::OpenOptions;
+use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::sync::Arc;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
@@ -20,6 +22,7 @@ use std::{fs, panic};
 use chrono::{DateTime, Local};
 use render::state::RenderState;
 
+use simplelog::{CombinedLogger, LevelFilter, WriteLogger};
 use state::State;
 
 use winit::application::ApplicationHandler;
@@ -67,9 +70,10 @@ struct App {
 impl ApplicationHandler for App {
     fn can_create_surfaces(&mut self, event_loop: &dyn ActiveEventLoop) {
         let mut window_attributes = WindowAttributes::default()
-            .with_resizable(true)
-            .with_visible(false)
+            // .with_resizable(true)
+            // .with_visible(false)
             .with_title("GD Place Countdown Clock")
+            // .with_decorations(false)
             .with_transparent(true);
 
         #[cfg(target_os = "windows")]
@@ -149,6 +153,15 @@ impl ApplicationHandler for App {
     }
 }
 
+fn init_logging() {
+    CombinedLogger::init(vec![WriteLogger::new(
+        LevelFilter::Debug,
+        simplelog::Config::default(),
+        File::create("log.log").unwrap(),
+    )])
+    .unwrap();
+}
+
 fn start_app() -> Result<(), AppError> {
     let config = Config::from_file_or_default()?;
 
@@ -172,28 +185,28 @@ fn start_app() -> Result<(), AppError> {
     Ok(())
 }
 
-fn write_error_log(message: String, bt: Option<Backtrace>) {
-    eprintln!("ERROR:\n{message}");
+// fn write_error_log(message: String, bt: Option<Backtrace>) {
+//     eprintln!("ERROR:\n{message}");
 
-    let bt_string = bt.map_or_else(|| String::new(), |bt| format!("\n{bt}"));
+//     let bt_string = bt.map_or_else(|| String::new(), |bt| format!("\n{bt}"));
 
-    match OpenOptions::new()
-        .create(true)
-        .write(true)
-        .append(true)
-        .open("./error.log")
-    {
-        Ok(mut file) => {
-            let _ = write!(file, "[ERROR]:\n{message}{bt_string}\n\n");
-        }
-        Err(e) => {
-            eprintln!("{e}");
-        }
-    }
-}
+//     match OpenOptions::new()
+//         .create(true)
+//         .write(true)
+//         .append(true)
+//         .open("./error.log")
+//     {
+//         Ok(mut file) => {
+//             let _ = write!(file, "[ERROR]:\n{message}{bt_string}\n\n");
+//         }
+//         Err(e) => {
+//             eprintln!("{e}");
+//         }
+//     }
+// }
 
 fn main() -> Result<(), AppError> {
-    let _ = OpenOptions::new().truncate(true).open("./error.log");
+    // let _ = OpenOptions::new().truncate(true).open("./error.log");
 
     panic::set_hook(Box::new(|info| {
         let message = if let Some(string) = info.payload().downcast_ref::<String>() {
@@ -206,13 +219,18 @@ fn main() -> Result<(), AppError> {
 
         let bt = Backtrace::force_capture();
 
-        write_error_log(message, Some(bt));
+        log::error!("fatal error occured: {message}\n[backtrace]:\n{bt}");
     }));
+
+    init_logging();
+
+    log::info!("Starting app");
 
     match start_app() {
         Ok(..) => (),
         Err(e) => {
-            write_error_log(format!("{e}"), None);
+            log::error!("failed to start app: {e}");
+            // write_error_log(format!("{e}"), None);
         }
     };
 

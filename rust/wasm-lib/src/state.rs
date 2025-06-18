@@ -1,5 +1,9 @@
 use core::f64;
-use std::{collections::{HashMap, HashSet}, io::Cursor, sync::LazyLock};
+use std::{
+    collections::{HashMap, HashSet},
+    io::Cursor,
+    sync::LazyLock,
+};
 
 use binrw::BinRead;
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
@@ -105,8 +109,8 @@ pub struct State {
     pub(crate) ending_anim_info: Option<EndingAnimInfo>,
     pub(crate) ending_transition_override: Option<f32>,
     pub(crate) ending_transition_speed: f32,
+    pub(crate) smiley_flip: bool,
 
-    
     history_objects: HashMap<[u8; 20], [u8; 26]>,
 }
 
@@ -118,7 +122,7 @@ impl State {
             if *obj == [0u8; 26] {
                 continue;
             }
-            
+
             history_objects.insert(*objkey, *obj);
         }
         Self {
@@ -166,7 +170,8 @@ impl State {
             ending_anim_info: None,
             ending_transition_override: None,
             ending_transition_speed: 0.0,
-            history_objects
+            history_objects,
+            smiley_flip: false,
         }
     }
     pub fn view_transform(&self) -> Affine2 {
@@ -272,6 +277,7 @@ impl State {
 
         gongy
     }
+
     pub fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
         let mut view_rect = self.get_camera_world_rect().expanded(1.5);
 
@@ -324,6 +330,19 @@ impl State {
         //     ),
         // );
     }
+
+    pub fn flip_smiley(&mut self) {
+        self.smiley_flip = !self.smiley_flip;
+    }
+
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height
+    }
+
     pub fn set_bg_color(&mut self, r: u8, g: u8, b: u8) {
         self.bg_color = (r, g, b);
     }
@@ -552,11 +571,14 @@ impl State {
                 && HISTORY.actions[history_index - 1].time() > timelapse_time as u32
             {
                 history_index -= 1;
-                
+
                 let HistoryItem { obj, objkey, .. } = HISTORY.actions[history_index];
                 if obj == [0; 26] {
-                    let nobj = GDObjectOpt::from_bytes(self.history_objects[&objkey].as_ref().into()).unwrap().into_obj();
-                     if !((nobj.ix.powi(2) + nobj.iy.powi(2)).sqrt() > 3.0
+                    let nobj =
+                        GDObjectOpt::from_bytes(self.history_objects[&objkey].as_ref().into())
+                            .unwrap()
+                            .into_obj();
+                    if !((nobj.ix.powi(2) + nobj.iy.powi(2)).sqrt() > 3.0
                         || (nobj.jx.powi(2) + nobj.jy.powi(2)).sqrt() > 3.0)
                     {
                         self.level.add_object(nobj, objkey, None, self.now);
@@ -564,7 +586,6 @@ impl State {
                 } else {
                     removed_objs.insert(objkey);
                 }
-                
             }
         } else {
             while history_index < HISTORY.actions.len()

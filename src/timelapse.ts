@@ -18,12 +18,12 @@ type HistoryObject =
       };
 
 // Use a writable store for timelapsetime
-export const timelapsetime = writable(825379786 + 1000 * 60 * 60 * 2.6); // 1731697200074
+export const timelapsetime = writable(825379786 + 1000 * 60 * 60 * 51); //
 
 let prevTime = 0;
 let historyIndex = 0;
 let paused = true;
-let TIMELAPSE_SPEED = 25;
+let TIMELAPSE_SPEED = 500;
 
 export const togglePause = () => {
     paused = !paused;

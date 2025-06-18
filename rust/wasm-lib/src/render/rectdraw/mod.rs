@@ -287,6 +287,17 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
                                 crate::level::ObjectDraw::TopTexture => &[false],
                                 crate::level::ObjectDraw::BottomTexture => &[true],
                             } {
+                                let id = if state.smiley_flip {
+                                    match obj.id {
+                                        1604 => 1605,
+                                        1605 => 1604,
+                                        _ => obj.id,
+                                    }
+                                } else {
+                                    obj.id
+                                };
+
+                                let obj = &GDObject { id, ..*obj };
                                 let main_over_detail = OBJECT_MAIN_OVER_DETAIL[obj.id as usize];
                                 let bottom_texture = if main_over_detail {
                                     !bottom_texture

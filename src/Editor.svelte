@@ -139,7 +139,7 @@
         clock = `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
     }
 
-    const DISPLAY: string = "noen";
+    const DISPLAY: string = "none";
 </script>
 
 <!-- <button

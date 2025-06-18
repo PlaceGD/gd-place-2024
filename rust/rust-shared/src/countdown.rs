@@ -236,7 +236,7 @@ parse_countdown_files! {
     "sakura"            ("Sakura"):             [3 => weights(4,   3,   3,   2  ) pretty], // 84
 }
 
-pub const TEST_SETS: Option<[usize; 4]> = Some([0, 4, 56, 8]);
+pub const TEST_SETS: Option<[usize; 4]> = Some([0, 71, 20, 10]);
 
 #[binrw]
 #[brw(little)]
@@ -302,6 +302,11 @@ pub fn generate_set_switches(n: usize) -> Vec<[usize; 4]> {
     set_day_end(3, ["bli", "voxicat", "loco", "echonox"]); // change to xender?
     set_day_end(2, ["srguillester", "doggie", "aeonair", "zoink"]);
     set_day_end(1, ["knobbel", "robtop", "evw", "npesta"]);
+
+    {
+        let index = 25 * 60 / set_switch_minutes;
+        switches[index] = Some([1, 24, 10, 29]);
+    }
 
     let get_release_day = |index| release_days.get(&index).copied().unwrap_or(9);
 

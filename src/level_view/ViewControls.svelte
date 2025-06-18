@@ -764,6 +764,165 @@
     };
 
     requestAnimationFrame(cinematicLoop);
+
+    const key_positions = [
+        // { x: 12136, y: 12543, zoom: 0.07 },
+        // { x: 12136, y: 12543, zoom: 0.07 },
+        // { x: 771, y: 432, zoom: 1.6970562934875488 },
+        // { x: 612, y: 23548, zoom: 1.7979686260223389 },
+        // { x: 22786, y: 23068, zoom: 1.0090757608413696 },
+        // {
+        //     x: 22514,
+        //     y: 22191,
+        //     zoom: 2.8540971279144287,
+        // },
+        // {
+        //     x: 22073,
+        //     y: 22795,
+        //     zoom: 3.023810625076294,
+        // },
+        // {
+        //     x: 22759,
+        //     y: 23180,
+        //     zoom: 3.203615665435791,
+        // },
+        // {
+        //     x: 22222,
+        //     y: 20395,
+        //     zoom: 1.0690785646438599,
+        // },
+        // { x: 22972, y: 610, zoom: 1.3469544649124146 },
+
+        {
+            x: 1615,
+            y: 17053,
+            zoom: 0.7,
+        },
+        {
+            x: 1615,
+            y: 17053,
+            zoom: 2.5427117347717285,
+        },
+        {
+            x: 22614,
+            y: 17844,
+            zoom: 1.3469544649124146,
+        },
+        {
+            x: 13080,
+            y: 1437,
+            zoom: 2.4000000953674316,
+        },
+        {
+            x: 12365,
+            y: 23517,
+            zoom: 1.511905312538147,
+        },
+    ];
+
+    const transitionTime = 3000;
+
+    let last_key_time = 0;
+    let key_index = 0;
+
+    function scale_to_zoom(s: number): number {
+        let size_zoom = Math.max(
+            state.width() / 1600.0,
+            state.height() / 900.0
+        );
+        // scale = 2.0f32.powf(zoom / 12.0)
+        return Math.log2(s / size_zoom) * 12.0;
+    }
+
+    function get_camera_rect(
+        x: number,
+        y: number,
+        scale: number
+    ): { ax: number; ay: number; bx: number; by: number } {
+        // a: top left corner, b: bottom right corner
+        // scale 1 = 1600x900 units
+
+        return {
+            ax: x - state.width() / 2 / scale,
+            ay: y - state.height() / 2 / scale,
+
+            bx: x + state.width() / 2 / scale,
+            by: y + state.height() / 2 / scale,
+        };
+    }
+
+    function rect_to_cam(
+        ax: number,
+        ay: number,
+        bx: number,
+        by: number
+    ): { x: number; y: number; scale: number } {
+        // a: top left corner, b: bottom right corner
+        // scale 1 = 1600x900 units
+
+        return {
+            x: (ax + bx) / 2,
+            y: (ay + by) / 2,
+            scale: state.width() / Math.abs(bx - ax),
+        };
+    }
+
+    function easeInOutExpo(x: number): number {
+        return x === 0
+            ? 0
+            : x === 1
+              ? 1
+              : x < 0.5
+                ? Math.pow(2, 20 * x - 10) / 2
+                : (2 - Math.pow(2, -20 * x + 10)) / 2;
+    }
+
+    function easeOutExpo(x: number): number {
+        return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+    }
+    function easeInExpo(x: number): number {
+        return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
+    }
+    function easeInOutCubic(x: number): number {
+        return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    }
+
+    const keyLoop = (delta: number) => {
+        const progress = Math.min(
+            (Date.now() - last_key_time) / transitionTime,
+            1
+        );
+        const easedProgress = easeInOutCubic(progress);
+        if (progress < 1) {
+            const a = key_positions[key_index - 1];
+            const b = key_positions[key_index];
+            const a_rect = get_camera_rect(a.x, a.y, a.zoom);
+            const b_rect = get_camera_rect(b.x, b.y, b.zoom);
+
+            const point_a = {
+                x: lerp(a_rect.ax, b_rect.ax, easedProgress),
+                y: lerp(a_rect.ay, b_rect.ay, easedProgress),
+            };
+
+            const point_b = {
+                x: lerp(a_rect.bx, b_rect.bx, easedProgress),
+                y: lerp(a_rect.by, b_rect.by, easedProgress),
+            };
+
+            const cam = rect_to_cam(point_a.x, point_a.y, point_b.x, point_b.y);
+
+            state.set_camera_pos(cam.x, cam.y);
+
+            const jump = 1 - Math.pow(2 * easedProgress - 1, 2);
+            const scale_fac = 1 + jump * 0.7;
+            //console.log(cam.scale);
+            state.set_zoom(scale_to_zoom(cam.scale));
+        }
+
+        requestAnimationFrame(keyLoop);
+    };
+
+    requestAnimationFrame(keyLoop);
 </script>
 
 <!-- `pointer...` for mobile + desktop, `mouse...` for desktop -->
@@ -865,12 +1024,28 @@
         if (e.key == "c") {
             e.preventDefault();
             cinematic = !cinematic;
+            if (!cinematic) {
+                zoomVel = 0;
+            }
             return;
         }
 
         if (e.key == "g") {
             e.preventDefault();
             addDebugTimeOffset(-1200);
+            return;
+        }
+
+        if (e.key == "y") {
+            e.preventDefault();
+            addDebugTimeOffset(-1200);
+            let total_offset = 0;
+            for (let i = 0; i < 100; i++) {
+                total_offset += Math.pow(0.7, i) * 500 + 50;
+                setTimeout(() => {
+                    addDebugTimeOffset(-1200);
+                }, total_offset);
+            }
             return;
         }
 
@@ -900,6 +1075,29 @@
         if (e.key == ".") {
             e.preventDefault();
             addDebugTimeOffset(60);
+            return;
+        }
+
+        if (e.key == "q") {
+            e.preventDefault();
+            // capture
+            console.log({
+                x: $editorData.x,
+                y: $editorData.y,
+                zoom: state.get_zoom_scale(),
+            });
+            return;
+        }
+
+        if (e.key == "k") {
+            e.preventDefault();
+            key_index += 1;
+            last_key_time = Date.now();
+            return;
+        }
+        if (e.key == "s") {
+            e.preventDefault();
+            state.flip_smiley();
             return;
         }
     }}

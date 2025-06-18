@@ -110,12 +110,10 @@ impl Countdown {
         for i in 0..8 {
             let delay = index_delay(i);
             if sets != self.sets {
-                self.digits[i].transition_between(
-                    self.state[i],
-                    state[i],
-                    self.sets[i / 2],
+                self.digits[i].set_to(
                     sets[i / 2],
-                    delay,
+                    state[i],
+                    0.0,
                     now,
                 );
                 self.state[i] = state[i];
@@ -440,7 +438,7 @@ impl CountdownDigit {
     }
     fn from_set(set: usize, digit: u8, now: f64) -> Self {
         let mut empty = Self::new();
-        empty.set_to(set, digit, 0.5, now);
+        empty.set_to(set, Some(digit), 0.5, now);
         empty
     }
 
@@ -454,14 +452,15 @@ impl CountdownDigit {
         &COUNTDOWN_DIGITS.0[set].0[(digit as usize) % 10].objs
     }
 
-    fn set_to(&mut self, set: usize, digit: u8, duration: f64, now: f64) {
-        self.objects = Self::get_set(set, digit)
+    fn set_to(&mut self, set: usize, digit: Option<u8>, duration: f64, now: f64) {
+        self.objects = digit.map(|d| Self::get_set(set, d))
+                .unwrap_or(&[])
             .iter()
             .map(|o| {
                 TransitioningObject::new(
                     AnimType::Appear(*o, vec2(0.0, 0.0)),
                     duration,
-                    true,
+                    false,
                     0.0,
                     now,
                 )

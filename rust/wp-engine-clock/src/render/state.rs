@@ -350,8 +350,8 @@ impl RenderState {
 
     pub fn resize(&mut self, width: u32, height: u32, quality: f32) {
         if width > 0 && height > 0 {
-            let width = (width.min(4095) as f32 * quality).round() as u32;
-            let height = (height.min(4095) as f32 * quality).round() as u32;
+            let width = (width as f32 * quality).round() as u32;
+            let height = (height as f32 * quality).round() as u32;
             self.surface_config.width = width;
             self.surface_config.height = height;
             self.surface.configure(&self.device, &self.surface_config);

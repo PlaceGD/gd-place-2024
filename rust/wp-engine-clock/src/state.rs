@@ -1,13 +1,12 @@
 use core::f64;
-use std::{fs, sync::Arc};
+use std::sync::Arc;
 
 use chrono::{DateTime, Local};
-use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
+use glam::{vec2, vec4, Affine2, Vec2};
 
 pub const DRAW_LEVEL: bool = true;
 
 use rust_shared::{
-    console_log,
     gd::{
         layer::ZLayer,
         level::{
@@ -17,24 +16,22 @@ use rust_shared::{
         object::{GDColor, GDObject},
         HitboxType, ObjectCategory,
     },
-    map,
     util::{point_in_triangle, Rect},
 };
 
 use wgpu::util::DeviceExt;
-use winit::{dpi::PhysicalSize, window::Window};
+use winit::window::Window;
 
 use crate::{
     config::Config,
     error::AppError,
-    level::{ChunkCoord, DbKey, Level, LevelChunk},
+    level::{ChunkCoord, DbKey, Level},
     object::{GDObjectExt, GDObjectOpt},
     render::{
         data::Globals,
         rectdraw::{
             billy::{Billy, BlendMode},
             countdown::{Countdown, StatsDisplay},
-            level::draw as level_draw,
         },
         state::RenderState,
     },
@@ -284,7 +281,7 @@ impl State {
     pub(crate) fn get_camera_world_rect(&self) -> Rect<f32> {
         let (cx, cy) = (self.camera_pos.x, self.camera_pos.y);
         let s = self.get_zoom_scale();
-        let mut gongy = Rect::new(
+        let gongy = Rect::new(
             cx - self.width as f32 / 2.0 / s,
             cy - self.height as f32 / 2.0 / s,
             self.width as f32 / s,
@@ -299,7 +296,7 @@ impl State {
         gongy
     }
     fn get_viewable_chunks(&self) -> Vec<ChunkCoord> {
-        let mut view_rect = self.get_camera_world_rect().expanded(1.5);
+        let view_rect = self.get_camera_world_rect().expanded(1.5);
 
         let mut out = vec![];
 

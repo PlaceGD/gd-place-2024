@@ -1,23 +1,17 @@
 use billy::{Billy, BlendMode};
 use glam::{uvec2, vec2, vec3, vec4, Vec4};
 use rust_shared::{
-    console_log,
-    gd::{layer::Z_LAYERS, object::GDObject, special_ids, HitboxType, ObjectCategory},
-    map,
+    gd::{layer::Z_LAYERS, object::GDObject},
     sprite::SpriteInfo,
 };
-use std::{
-    f32::consts::PI,
-    hash::{DefaultHasher, Hash, Hasher},
-};
+use std::hash::Hash;
 
 use crate::{
-    level::{DbKey, Level, ObjKey},
+    level::{Level, ObjKey},
     object::GDObjectExt,
     state::State,
     utilgen::{
-        DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, OBJECT_MAIN_OVER_DETAIL_IDS, SFX_ICON_SPRITES,
-        SONG_ICON_SPRITES,
+        DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO, OBJECT_MAIN_OVER_DETAIL_IDS,
     },
 };
 
@@ -105,8 +99,8 @@ pub fn draw_level_obj_sprite<K: ObjKey + Default + Hash + Eq + Copy>(
 
     let mut tint_color = vec4(1.0, 1.0, 1.0, 1.0);
 
-    let mut scaleup = 1.0;
-    let mut angle_offset = 0.0;
+    let scaleup = 1.0;
+    let angle_offset = 0.0;
 
     // if end_trans01 > 0.0 {
     //     let (delay, explosion_d, angular_velocity, pos) =
@@ -270,7 +264,7 @@ pub fn draw_level<K: ObjKey + Default + Hash + Eq + Copy>(
     state: &State,
     billy: &mut Billy,
     level: &Level<K>,
-    mut color_override: impl FnMut(K, &GDObject, bool) -> Option<Vec4>,
+    color_override: impl FnMut(K, &GDObject, bool) -> Option<Vec4>,
     end_trans01: f32,
     is_countdown: bool,
 ) {

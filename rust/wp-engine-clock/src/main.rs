@@ -12,52 +12,34 @@ mod util;
 mod utilgen;
 
 use std::backtrace::Backtrace;
-use std::cell::{OnceCell, RefCell};
-use std::fs::{File, OpenOptions};
-use std::io::Write;
+use std::cell::RefCell;
+use std::fs::File;
 use std::num::NonZeroIsize;
+use std::panic;
 use std::sync::Arc;
-use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
-use std::{fs, panic};
+use std::time::Duration;
 
 use chrono::{DateTime, Local};
-use render::state::RenderState;
 
 use simplelog::{CombinedLogger, LevelFilter, WriteLogger};
-use state::State;
 
 use windows::core::PCWSTR;
 use windows::Win32::Foundation::{HWND, LPARAM, LRESULT, WPARAM};
 use windows::Win32::Graphics::Gdi::{GetStockObject, BLACK_BRUSH, HBRUSH};
 use windows::Win32::System::LibraryLoader::GetModuleHandleW;
 use windows::Win32::System::Performance::{QueryPerformanceCounter, QueryPerformanceFrequency};
-use winit::application::ApplicationHandler;
-use winit::dpi::{PhysicalPosition, PhysicalSize};
-use winit::event::WindowEvent;
-use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-use winit::monitor::Fullscreen;
 // use winit::raw_window_handle::{HasWindowHandle, RawWindowHandle, WindowHandle};
 
-use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
-
-use wgpu::{
-    rwh::{
-        DisplayHandle, HandleError, HasDisplayHandle, HasWindowHandle, RawDisplayHandle,
-        RawWindowHandle, Win32WindowHandle, WindowHandle, WindowsDisplayHandle,
-    },
-    WasmNotSendSync,
+use wgpu::rwh::{
+    DisplayHandle, HandleError, HasDisplayHandle, HasWindowHandle, RawDisplayHandle,
+    RawWindowHandle, Win32WindowHandle, WindowHandle, WindowsDisplayHandle,
 };
 
 use windows::Win32::UI::WindowsAndMessaging::{
-    CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetMessageW,
-    GetSystemMetrics, GetWindowLongPtrW, PeekMessageW, PostQuitMessage, RegisterClassW, SetParent,
-    SetWindowLongPtrW, ShowWindow, TranslateMessage, CW_USEDEFAULT, GWLP_USERDATA, MSG, PM_REMOVE,
-    SW_SHOW, WM_CLOSE, WM_DESTROY, WM_QUIT, WM_SIZE, WNDCLASSW, WS_CHILD,
-    WS_EX_NOREDIRECTIONBITMAP, WS_OVERLAPPEDWINDOW, WS_VISIBLE,
-};
-use windows::Win32::UI::WindowsAndMessaging::{
-    SM_CXSCREEN, SM_CXVIRTUALSCREEN, SM_CYSCREEN, SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN,
-    SM_YVIRTUALSCREEN,
+    CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetWindowLongPtrW,
+    PeekMessageW, PostQuitMessage, RegisterClassW, SetWindowLongPtrW, ShowWindow, TranslateMessage,
+    CW_USEDEFAULT, GWLP_USERDATA, MSG, PM_REMOVE, SW_SHOW, WM_CLOSE, WM_DESTROY, WM_QUIT, WM_SIZE,
+    WNDCLASSW, WS_CHILD, WS_EX_NOREDIRECTIONBITMAP, WS_OVERLAPPEDWINDOW, WS_VISIBLE,
 };
 
 use crate::config::Config;
@@ -165,7 +147,6 @@ unsafe extern "system" fn window_proc(
 }
 
 fn run_event_loop(
-    hwnd: HWND,
     target_frame_time: f32,
     mut render: impl FnMut(f32) -> Result<(), AppError>,
 ) -> Result<(), AppError> {
@@ -269,7 +250,7 @@ unsafe fn start_app() -> Result<(), AppError> {
     let boxed_state = Box::new(RefCell::new(state));
     SetWindowLongPtrW(hwnd, GWLP_USERDATA, Box::into_raw(boxed_state) as isize);
 
-    run_event_loop(hwnd, target_frame_time, move |delta_time| {
+    run_event_loop(target_frame_time, move |delta_time| {
         if let Some(cell) = unsafe { get_state(hwnd) } {
             if let Some(state) = cell.borrow_mut().ready() {
                 let local_now: DateTime<Local> = Local::now();

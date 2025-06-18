@@ -1,17 +1,14 @@
-use core::time;
-use std::{array, io::Cursor, sync::LazyLock, time::Instant};
+use std::{array, io::Cursor, sync::LazyLock};
 
 use binrw::BinRead;
 use chrono::{DateTime, Local, Timelike};
-use glam::{vec2, vec4, Affine2, Vec2};
+use glam::{vec2, Affine2, Vec2};
 use rand::{
-    rngs::{StdRng, ThreadRng},
-    seq::SliceRandom,
-    Rng, SeedableRng,
+    rngs::StdRng,
+    seq::SliceRandom, SeedableRng,
 };
 use rust_shared::{
-    console_log,
-    countdown::{CountdownDigitSets, DigitObjects, COLON_COUNT, DIGIT_SETS, TEST_SETS},
+    countdown::{CountdownDigitSets, DigitObjects, COLON_COUNT, DIGIT_SETS},
     gd::object::{GDColor, GDObject},
     lerp,
     util::random,
@@ -21,7 +18,7 @@ use crate::{
     config::Config,
     level::{ChunkCoord, Level},
     state::State,
-    utilgen::{OBJECT_INFO, SET_SWITCHES},
+    utilgen::OBJECT_INFO,
 };
 
 use super::{billy::Billy, draw_level};

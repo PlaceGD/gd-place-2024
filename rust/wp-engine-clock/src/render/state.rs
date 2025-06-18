@@ -1,9 +1,8 @@
-use std::{error::Error, fmt::Display, fs, io, sync::Arc, time::Instant};
+use std::fs;
 
-use glam::{uvec2, vec2, vec4, UVec2};
-use image::{DynamicImage, GenericImageView, ImageError, ImageResult};
-use wgpu::{util::DeviceExt, Buffer, CreateSurfaceError, WindowHandle};
-use winit::dpi::PhysicalSize;
+use glam::{uvec2, vec2, UVec2};
+use image::{DynamicImage, GenericImageView};
+use wgpu::{util::DeviceExt, Buffer, WindowHandle};
 
 use crate::{
     config::Config,

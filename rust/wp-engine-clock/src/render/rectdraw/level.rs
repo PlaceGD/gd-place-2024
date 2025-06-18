@@ -1,17 +1,7 @@
-use glam::{vec2, vec4, Vec4};
-use rust_shared::{console_log, gd::layer::Z_LAYERS, map};
 
-use crate::{
-    level::ChunkCoord,
-    object::GDObjectExt,
-    state::{get_end_trans01, State, DRAW_LEVEL},
-    utilgen::{DETAIL_SPRITES, MAIN_SPRITES, OBJECT_INFO},
-};
+use crate::state::State;
 
-use super::{
-    billy::{Billy, BlendMode},
-    draw_level, draw_level_obj_sprite,
-};
+use super::billy::Billy;
 
 // draw everything after the background and grid here (those rdone separately for REASONS .)
 pub fn draw(state: &mut State, billy: &mut Billy) {

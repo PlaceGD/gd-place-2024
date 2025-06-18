@@ -1,4 +1,3 @@
-use std::{mem, ptr};
 
 use glam::{mat2, vec2, Affine2, Vec2};
 // use bytemuck::{bytes_of, Pod, Zeroable};
@@ -13,7 +12,7 @@ use rust_shared::{
 };
 
 use crate::{
-    level::ChunkCoord, util::get_max_bounding_box, utilgen::OBJECT_INFO, ErrorType, RustError,
+    level::ChunkCoord, util::get_max_bounding_box, utilgen::OBJECT_INFO,
 };
 
 pub type ObjectTupleForm = (

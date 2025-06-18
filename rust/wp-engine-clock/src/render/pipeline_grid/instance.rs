@@ -1,6 +1,4 @@
-use std::mem::offset_of;
 
-use glam::{Affine2, Mat2, Vec2, Vec4};
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq, bytemuck::Zeroable, bytemuck::Pod)]

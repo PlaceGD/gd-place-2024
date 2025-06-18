@@ -885,7 +885,8 @@ impl State {
                 render_pass.draw_indexed(0..6, 0, last_instance..call.until_instance);
                 last_instance = call.until_instance;
 
-                if i == 0 {
+                // 1 because the first rect is the background and we want the grid on top
+                if i == 1 {
                     render_pass.set_pipeline(&self.render.pipeline_grid);
                     render_pass.draw_indexed(0..6, 0, 0..1);
                 }

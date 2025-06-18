@@ -298,6 +298,8 @@ impl RenderState {
         //     usage: wgpu::BufferUsages::VERTEX,
         // });
 
+        log::debug!("[CLOCK] initialised partial state");
+
         Ok(PartialRenderState {
             surface,
             device,
@@ -345,6 +347,8 @@ impl RenderState {
             .create_surface(wgpu::SurfaceTarget::Window(Box::new(window)))
             .map_err(AppError::CreateSurfaceError)?;
 
+        log::debug!("[CLOCK] created surface with size: {size:?}");
+
         Self::new_partial(surface, uvec2(size.width, size.height), instance).await
     }
 
@@ -355,6 +359,8 @@ impl RenderState {
             self.surface_config.width = width;
             self.surface_config.height = height;
             self.surface.configure(&self.device, &self.surface_config);
+
+            log::debug!("[CLOCK] resizing to wdith: {width}, height: {height}");
 
             self.multisampled_frame_descriptor = wgpu::TextureDescriptor {
                 label: Some("Multisampled frame descriptor"),
@@ -389,6 +395,8 @@ impl PartialRenderState {
 
         let (textures_bind_group_layout, textures_bind_group, bg_size) =
             create_textures_bind_group(&device, &queue, config)?;
+
+        log::debug!("[CLOCK] created spritesheet and background textures");
 
         let (globals_buffer, globals_bind_group_layout, globals_bind_group) =
             create_buffer_bind_group(
@@ -480,6 +488,8 @@ impl PartialRenderState {
             "vs_main",
             "fs_main",
         );
+
+        log::debug!("[CLOCK] created pipelines");
 
         Ok(RenderState {
             surface,

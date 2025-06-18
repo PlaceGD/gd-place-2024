@@ -12,7 +12,6 @@ mod util;
 mod utilgen;
 
 use std::backtrace::Backtrace;
-use std::fs::OpenOptions;
 use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::sync::Arc;
@@ -25,11 +24,21 @@ use render::state::RenderState;
 use simplelog::{CombinedLogger, LevelFilter, WriteLogger};
 use state::State;
 
+use windows::Win32::Foundation::HWND;
 use winit::application::ApplicationHandler;
+use winit::dpi::{PhysicalPosition, PhysicalSize};
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::monitor::Fullscreen;
+use winit::raw_window_handle::{HasWindowHandle, RawWindowHandle, WindowHandle};
+
 use winit::window::{Window, WindowAttributes, WindowButtons, WindowId};
+
+use windows::Win32::UI::WindowsAndMessaging::{GetSystemMetrics, SetParent};
+use windows::Win32::UI::WindowsAndMessaging::{
+    SM_CXSCREEN, SM_CXVIRTUALSCREEN, SM_CYSCREEN, SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN,
+    SM_YVIRTUALSCREEN,
+};
 
 use crate::config::Config;
 use crate::error::AppError;
@@ -56,6 +65,23 @@ use crate::state::PendingState;
 //     // }))
 // }
 
+fn get_parent_hwnd_from_args() -> Option<HWND> {
+    let args: Vec<String> = std::env::args().collect();
+    let mut iter = args.iter();
+
+    while let Some(arg) = iter.next() {
+        if arg == "-parentHWND" {
+            if let Some(hwnd_str) = iter.next() {
+                if let Ok(hwnd_val) = hwnd_str.parse::<isize>() {
+                    return Some(HWND(hwnd_val as _));
+                }
+            }
+        }
+    }
+
+    None
+}
+
 struct App {
     window: Option<Arc<Box<dyn Window + 'static>>>,
     state: PendingState,
@@ -69,12 +95,22 @@ struct App {
 
 impl ApplicationHandler for App {
     fn can_create_surfaces(&mut self, event_loop: &dyn ActiveEventLoop) {
+        // let virtual_x = unsafe { GetSystemMetrics(SM_XVIRTUALSCREEN) };
+        // let virtual_y = unsafe { GetSystemMetrics(SM_YVIRTUALSCREEN) };
+        // let virtual_width = unsafe { GetSystemMetrics(SM_CXVIRTUALSCREEN) };
+        // let virtual_height = unsafe { GetSystemMetrics(SM_CYVIRTUALSCREEN) };
+
         let mut window_attributes = WindowAttributes::default()
             // .with_resizable(true)
             // .with_visible(false)
             .with_title("GD Place Countdown Clock")
             // .with_decorations(false)
             .with_transparent(true);
+        // .with_surface_size(PhysicalSize::new(
+        //     virtual_width as u32,
+        //     virtual_height as u32,
+        // ))
+        // .with_position(PhysicalPosition::new(virtual_x, virtual_y));
 
         #[cfg(target_os = "windows")]
         {
@@ -86,16 +122,34 @@ impl ApplicationHandler for App {
             ));
         }
 
-        #[cfg(not(debug_assertions))]
-        {
-            window_attributes = window_attributes
-                .with_enabled_buttons(WindowButtons::empty())
-                .with_resizable(false)
-                .with_decorations(false)
-                .with_fullscreen(Some(Fullscreen::Borderless(None)));
-        }
+        // #[cfg(not(debug_assertions))]
+        // {
+        //     let monitor = window.current_monitor();
+        //     window_attributes =
+        //         window_attributes //.with_enabled_buttons(WindowButtons::empty())
+        //             // .with_resizable(false)
+        //             // .with_decorations(false)
+        //             .with_fullscreen(Some(Fullscreen::Borderless(monitor)));
+        // }
 
         let window = Arc::new(event_loop.create_window(window_attributes).unwrap());
+
+        // #[cfg(not(debug_assertions))]
+        // {
+        //     let monitor = window.current_monitor();
+        //     window.set_fullscreen(Some(Fullscreen::Borderless(None)));
+        // }
+
+        let hwnd = match window.window_handle().unwrap().as_raw() {
+            RawWindowHandle::Win32(handle) => HWND(handle.hwnd.get() as _),
+            _ => unreachable!(),
+        };
+
+        let parent_hwnd = get_parent_hwnd_from_args(); // same function as before
+
+        unsafe {
+            SetParent(hwnd, parent_hwnd).unwrap();
+        }
 
         let size = window.surface_size();
 
@@ -103,7 +157,11 @@ impl ApplicationHandler for App {
 
         let config = self.config.take().ok_or(AppError::ConfigTaken).unwrap();
 
+        log::debug!("[CLOCK] initialising state");
+
         self.state.init_state(window, size, config).unwrap();
+
+        log::debug!("[CLOCK] finished initialising state");
 
         let now = Instant::now();
         self.last_frame_instant = now;
@@ -219,17 +277,17 @@ fn main() -> Result<(), AppError> {
 
         let bt = Backtrace::force_capture();
 
-        log::error!("fatal error occured: {message}\n[backtrace]:\n{bt}");
+        log::error!("[CLOCK] fatal error occured: {message}\n[backtrace]:\n{bt}");
     }));
 
     init_logging();
 
-    log::info!("Starting app");
+    log::info!("[CLOCK] Starting app");
 
     match start_app() {
         Ok(..) => (),
         Err(e) => {
-            log::error!("failed to start app: {e}");
+            log::error!("[CLOCK] failed to start app: {e}");
             // write_error_log(format!("{e}"), None);
         }
     };

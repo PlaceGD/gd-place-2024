@@ -1,5 +1,5 @@
 use core::f64;
-use std::sync::Arc;
+use std::{fs, sync::Arc};
 
 use chrono::{DateTime, Local};
 use glam::{mat2, uvec2, vec2, vec4, Affine2, Vec2, Vec4};
@@ -72,7 +72,11 @@ impl PendingState {
 
         window.set_visible(true);
 
+        log::debug!("[CLOCK] upgrading state");
+
         let render_state = partial_render_state.upgrade(&config).unwrap();
+
+        log::debug!("[CLOCK] finished upgrading state");
 
         self.0 = Some(State::new(render_state, size, config));
 

@@ -6,7 +6,7 @@ use std::{
 use rust_shared::countdown::{COLON_COUNT, DIGIT_SETS};
 use serde::{Deserialize, Serialize};
 
-use crate::{error::AppError, App};
+use crate::error::AppError;
 
 #[derive(Serialize, Deserialize, Default, Clone)]
 pub struct Config {

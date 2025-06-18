@@ -26,9 +26,11 @@ pub struct PartialRenderState {
 
     rect_vertex_buffer: Buffer,
     rect_index_buffer: Buffer,
+    instance: wgpu::Instance,
 }
 
 pub struct RenderState {
+    pub instance: wgpu::Instance,
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
@@ -313,12 +315,13 @@ impl RenderState {
             // pipeline_grid,
             rect_vertex_buffer,
             rect_index_buffer,
+            instance,
         })
     }
 
     pub async fn new_canvas_partial(
         window: impl WindowHandle + 'static,
-        size: PhysicalSize<u32>,
+        size: (u32, u32),
     ) -> Result<PartialRenderState, AppError> {
         // let size = uvec2(window.window_handle()/, window.height());
 
@@ -349,7 +352,7 @@ impl RenderState {
 
         log::debug!("[CLOCK] created surface with size: {size:?}");
 
-        Self::new_partial(surface, uvec2(size.width, size.height), instance).await
+        Self::new_partial(surface, uvec2(size.0, size.1), instance).await
     }
 
     pub fn resize(&mut self, width: u32, height: u32, quality: f32) {
@@ -391,6 +394,7 @@ impl PartialRenderState {
 
             rect_vertex_buffer,
             rect_index_buffer,
+            instance,
         } = self;
 
         let (textures_bind_group_layout, textures_bind_group, bg_size) =
@@ -510,6 +514,7 @@ impl PartialRenderState {
             pipeline_rect_additive_sq_alpha,
             pipeline_grid,
             textures_bind_group,
+            instance,
         })
     }
 

@@ -39,7 +39,7 @@ use crate::{
         state::RenderState,
     },
     utilgen::OBJECT_INFO,
-    App, RustError,
+    CustomWindow, RustError,
 };
 
 #[derive(Clone, Copy)]
@@ -60,8 +60,8 @@ impl PendingState {
 
     pub fn init_state(
         &mut self,
-        window: Arc<Box<dyn Window + 'static>>,
-        size: PhysicalSize<u32>,
+        window: Arc<CustomWindow>,
+        size: (u32, u32),
         config: Config,
     ) -> Result<(), AppError> {
         let mut partial_render_state =
@@ -70,7 +70,7 @@ impl PendingState {
 
         partial_render_state.clear_screen(&config);
 
-        window.set_visible(true);
+        // window.set_visible(true);
 
         log::debug!("[CLOCK] upgrading state");
 
@@ -142,11 +142,11 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(render: RenderState, size: PhysicalSize<u32>, config: Config) -> Self {
+    pub fn new(render: RenderState, size: (u32, u32), config: Config) -> Self {
         Self {
             time: 0.0,
-            width: size.width,
-            height: size.height,
+            width: size.0,
+            height: size.1,
             quality: 1.0,
             camera_pos: vec2(0.0, 0.0),
             zoom: config.general.zoom,

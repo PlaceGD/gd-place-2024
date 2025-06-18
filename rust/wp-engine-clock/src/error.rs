@@ -13,6 +13,7 @@ pub enum AppError {
     NoAdapter(wgpu::RequestAdapterError),
     RequestDeviceError(wgpu::RequestDeviceError),
     ConfigValidationError { reason: String },
+    WindowsError(windows::core::Error),
 }
 
 impl Error for AppError {}
@@ -33,6 +34,7 @@ impl Display for AppError {
             AppError::ConfigValidationError { reason } => {
                 write!(f, "failed to validate config: {reason}")
             }
+            AppError::WindowsError(e) => write!(f, "windows error: {e}"),
         }
     }
 }

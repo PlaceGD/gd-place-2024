@@ -374,17 +374,17 @@ impl State {
         self.zoom = v.clamp(-16.0, 36.0);
     }
 
-    pub fn get_world_pos(&self, x: f32, y: f32) -> Vec<f32> {
+    pub fn get_world_pos(&self, x: f32, y: f32) -> (f32, f32) {
         let inv = self.view_transform().inverse();
 
         let p = inv.transform_point2(vec2(x, y));
 
-        vec![p.x, p.y]
+        (p.x, p.y)
     }
-    pub fn get_screen_pos(&self, x: f32, y: f32) -> Vec<f32> {
+    pub fn get_screen_pos(&self, x: f32, y: f32) -> (f32, f32) {
         let p = self.view_transform().transform_point2(vec2(x, y));
 
-        vec![p.x, p.y]
+        (p.x, p.y)
     }
 
     pub fn add_object(&mut self, key: String, obj: GDObjectOpt) -> Result<(), RustError> {

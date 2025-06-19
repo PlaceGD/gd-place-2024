@@ -12,7 +12,7 @@ use rust_shared::{
 };
 
 use crate::{
-    config::Config,
+    config::{ClockPadding, Config},
     level::{ChunkCoord, Level},
     state::State,
     utilgen::OBJECT_INFO,
@@ -272,45 +272,120 @@ impl Countdown {
 
         const BLOCK: f32 = 30.0;
         const DIGIT_WIDTH: f32 = 6.0 * BLOCK;
+        const DIGIT_HEIGHT: f32 = 10.0 * BLOCK;
         const COLON_WIDTH: f32 = 4.0 * BLOCK;
 
-        // let position_offset_screen =
-        //     (vec2(state.width as f32, state.height as f32) * 0.5) / state.get_zoom_scale();
+        // 6 digits total, 3 one block gaps between them, 2 colons
+        let total_clock_width: f32 = (self.digits.len() as f32 * DIGIT_WIDTH)
+            + (2.0 * COLON_WIDTH)
+            + ((self.digits.len() / 2) as f32 * BLOCK);
 
-        // let position_offset_world_vec =
-        //     state.get_world_pos(position_offset_screen.x, position_offset_screen.y);
+        let total_clock_height = DIGIT_HEIGHT;
 
-        // let mut position_offset_world =
-        //     vec2(position_offset_world_vec[0], position_offset_world_vec[1]);
+        let mut position_offset_world = vec2(0.0, 0.0);
 
-        // let position = &state.config.clock.position; // a String, one of "center", "top-left", "top-right", "bottom-left", "bottom-right" (defaults to "center")
+        let position = &state.config.clock.position; // a String, one of "center", "top-left", "top-right", "bottom-left", "bottom-right" (defaults to "center")
+        let ClockPadding {
+            top: pad_top,
+            left: pad_left,
+            bottom: pad_bottom,
+            right: pad_right,
+        } = state.config.clock.padding;
 
-        // let leftmost_digit = (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH;
+        match &position[..] {
+            "top-left" => {
+                let left_side = -(total_clock_width / 2.0);
+                let top_side = -(total_clock_height / 2.0);
 
-        // match &position[..] {
-        //     "top-left" => {
-        //         // let half_screen_width = (state.width as f32) / 2.0;
-        //         // // let to_left = (half_screen_width - leftmost_digit).floor();
+                let screen_top_left = state.get_screen_pos(left_side, top_side);
 
-        //         // position_offset = vec2(0.0, 0.0);
-        //         position_offset_world -= vec2(leftmost_digit, 0.0);
-        //     }
-        //     "top-right" => {
-        //         position_offset_world = vec2(0.0, 0.0);
-        //     }
-        //     "bottom-left" => {
-        //         position_offset_world = vec2(0.0, 0.0);
-        //     }
-        //     "bottom-right" => {
-        //         position_offset_world = vec2(0.0, 0.0);
-        //     }
-        //     // center
-        //     _ => {
-        //         position_offset_world = vec2(0.0, 0.0);
-        //     }
-        // }
+                let half_screen_width = (state.width as f32) / 2.0;
+                let half_screen_height = (state.height as f32) / 2.0;
 
-        let position_offset_world = vec2(0.0, 0.0);
+                let screen_distance_to_left_side =
+                    (half_screen_width - screen_top_left.0.abs()).max(0.0);
+                let screen_distance_to_top_side =
+                    (half_screen_height - screen_top_left.1.abs()).max(0.0);
+
+                let world_distance_to_top_left =
+                    state.get_world_pos(screen_distance_to_left_side, -screen_distance_to_top_side);
+
+                position_offset_world = vec2(
+                    world_distance_to_top_left.0 - pad_left as f32,
+                    world_distance_to_top_left.1 + pad_top as f32,
+                );
+            }
+            "top-right" => {
+                let right_side = total_clock_width / 2.0;
+                let top_side = -(total_clock_height / 2.0);
+
+                let screen_top_right = state.get_screen_pos(right_side, top_side);
+
+                let half_screen_width = (state.width as f32) / 2.0;
+                let half_screen_height = (state.height as f32) / 2.0;
+
+                let screen_distance_to_right_side =
+                    (half_screen_width - screen_top_right.0.abs()).max(0.0);
+                let screen_distance_to_top_side =
+                    (half_screen_height - screen_top_right.1.abs()).max(0.0);
+
+                let world_distance_to_top_right = state
+                    .get_world_pos(screen_distance_to_right_side, -screen_distance_to_top_side);
+
+                position_offset_world = vec2(
+                    -world_distance_to_top_right.0 + pad_right as f32,
+                    world_distance_to_top_right.1 + pad_top as f32,
+                );
+            }
+            "bottom-left" => {
+                let left_side = -(total_clock_width / 2.0);
+                let bottom_side = total_clock_height / 2.0;
+
+                let screen_bottom_left = state.get_screen_pos(left_side, bottom_side);
+
+                let half_screen_width = (state.width as f32) / 2.0;
+                let half_screen_height = (state.height as f32) / 2.0;
+
+                let screen_distance_to_left_side =
+                    (half_screen_width - screen_bottom_left.0.abs()).max(0.0);
+                let screen_distance_to_bottom_side =
+                    (half_screen_height - screen_bottom_left.1.abs()).max(0.0);
+
+                let world_distance_to_bottom_left = state
+                    .get_world_pos(screen_distance_to_left_side, screen_distance_to_bottom_side);
+
+                position_offset_world = vec2(
+                    world_distance_to_bottom_left.0 - pad_left as f32,
+                    world_distance_to_bottom_left.1 - pad_bottom as f32,
+                );
+            }
+            "bottom-right" => {
+                let right_side = total_clock_width / 2.0;
+                let bottom_side = total_clock_height / 2.0;
+
+                let screen_bottom_right = state.get_screen_pos(right_side, bottom_side);
+
+                let half_screen_width = (state.width as f32) / 2.0;
+                let half_screen_height = (state.height as f32) / 2.0;
+
+                let screen_distance_to_right_side =
+                    (half_screen_width - screen_bottom_right.0.abs()).max(0.0);
+                let screen_distance_to_bottom_side =
+                    (half_screen_height - screen_bottom_right.1.abs()).max(0.0);
+
+                let world_distance_to_bottom_right = state.get_world_pos(
+                    screen_distance_to_right_side,
+                    screen_distance_to_bottom_side,
+                );
+
+                position_offset_world = vec2(
+                    -world_distance_to_bottom_right.0 + pad_right as f32,
+                    world_distance_to_bottom_right.1 - pad_bottom as f32,
+                );
+            }
+            // center
+            _ => {}
+        }
 
         self.hours_marker
             .iter()
@@ -319,7 +394,7 @@ impl Countdown {
             .chain(self.minutes_colon.iter())
             .for_each(|o| {
                 o.get(state.now).inspect(|o| {
-                    add_object(o.offset(vec2(0.0, 0.0)));
+                    add_object(o.offset(position_offset_world * -1.0));
                 });
             });
 

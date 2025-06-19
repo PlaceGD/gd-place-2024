@@ -15,13 +15,12 @@ fn is_within_rect(
 
 struct Globals {
     screen_size: vec2<f32>,
-    quality: f32,
+    time: f32,
     grid_opacity: f32,
     camera_pos: vec2<f32>,
     zoom_scale: f32,
-    time: f32,
-    // end_anim_time: f32,
-    // padding: array<f32, 2>,
+    grid_shift: vec2<f32>,
+    padding: vec2<f32>,
 };
 
 
@@ -56,7 +55,7 @@ fn vs_main(
 
     let pos = mat2x2<f32>(instance.t_x, instance.t_y) * vertex.pos + instance.pos;
 
-    out.pos = vec4<f32>(pos / globals.screen_size * 2.0 * globals.quality, 0.0, 1.0);
+    out.pos = vec4<f32>(pos / globals.screen_size * 2.0, 0.0, 1.0);
     out.uv = (vec2(vertex.pos.x, 1.0 - vertex.pos.y) * instance.uv_size + instance.uv_pos);
     out.uv_size = instance.uv_size;
     out.color = instance.color;

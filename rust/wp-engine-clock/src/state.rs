@@ -2,7 +2,7 @@ use core::f64;
 use std::sync::Arc;
 
 use chrono::{DateTime, Local};
-use glam::{vec2, vec4, Affine2, Vec2};
+use glam::{ivec2, vec2, vec4, Affine2, IVec2, Vec2};
 
 pub const DRAW_LEVEL: bool = true;
 
@@ -613,6 +613,26 @@ impl State {
     //     self.stats_display.set_to(None, self.now);
     // }
 
+    pub fn compute_grid_offset(
+        &self,
+        screen_size: Vec2,
+        zoom_scale: f32,
+        grid_size: Vec2,
+        edge_screen_pos: Vec2,
+    ) -> Vec2 {
+        let world_pos = ((edge_screen_pos - screen_size / 2.0) * vec2(1.0, -1.0)) / zoom_scale;
+
+        let grid_aligned_world = vec2(
+            (world_pos.x / grid_size.x).round() * grid_size.x,
+            (world_pos.y / grid_size.y).round() * grid_size.y,
+        );
+
+        let screen_aligned_pos =
+            (grid_aligned_world * zoom_scale) * vec2(1.0, -1.0) + screen_size / 2.0;
+
+        return edge_screen_pos - screen_aligned_pos;
+    }
+
     pub fn transition_to_ending_spectate(&mut self, duration: f32) {
         self.ending_transition_override = Some(1.0);
         self.ending_transition_speed = -(1.0 / duration);
@@ -640,6 +660,57 @@ impl State {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
 
+        let position = &self.config.clock.position;
+        let grid_shift_world = match &position[..] {
+            align @ ("top-left" | "top-right" | "bottom-left" | "bottom-right") => {
+                let (edge_screen_pos, padding) = match align {
+                    "top-left" => (
+                        vec2(0.0, 0.0),
+                        (
+                            self.config.clock.padding.left,
+                            self.config.clock.padding.top,
+                        ),
+                    ),
+                    "top-right" => (
+                        vec2(self.width as f32, 0.0),
+                        (
+                            self.config.clock.padding.right,
+                            self.config.clock.padding.top,
+                        ),
+                    ),
+                    "bottom-left" => (
+                        vec2(0.0, self.height as f32),
+                        (
+                            self.config.clock.padding.left,
+                            self.config.clock.padding.bottom,
+                        ),
+                    ),
+                    "bottom-right" => (
+                        vec2(self.width as f32, self.height as f32),
+                        (
+                            self.config.clock.padding.right,
+                            self.config.clock.padding.bottom,
+                        ),
+                    ),
+                    _ => unreachable!(),
+                };
+
+                let grid_shift_screen = self.compute_grid_offset(
+                    vec2(self.width as f32, self.height as f32),
+                    self.get_zoom_scale(),
+                    vec2(30.0, 30.0),
+                    edge_screen_pos,
+                );
+
+                let world = self.get_world_pos(grid_shift_screen.x, grid_shift_screen.y);
+
+                (-(world.0 + padding.0 as f32), world.1 + padding.1 as f32)
+            }
+
+            // center
+            _ => (15.0, 0.0),
+        };
+
         self.render.queue.write_buffer(
             &self.render.globals_buffer,
             0,
@@ -648,11 +719,13 @@ impl State {
                     self.render.surface_config.width as f32,
                     self.render.surface_config.height as f32,
                 ],
-                quality: self.quality,
+                time: self.time,
                 grid_opacity: self.config.grid.opacity / 255.0,
                 camera_pos: self.camera_pos.to_array(),
                 zoom_scale: self.get_zoom_scale(),
-                time: self.time,
+                _pad0: 0.0,
+                grid_shift: [grid_shift_world.0, grid_shift_world.1],
+                _pad_end: [0.0; 2],
             }]),
         );
 

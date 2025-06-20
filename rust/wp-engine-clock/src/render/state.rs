@@ -52,6 +52,9 @@ pub struct RenderState {
     pub pipeline_grid: wgpu::RenderPipeline,
     pub rect_vertex_buffer: Buffer,
     pub rect_index_buffer: Buffer,
+    // pub output_view: wgpu::TextureView,
+    pub multisample_view: wgpu::TextureView,
+    // pub output_surface: wgpu::SurfaceTexture,
 }
 
 fn create_textures_bind_group(
@@ -378,6 +381,11 @@ impl RenderState {
                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                 view_formats: &[],
             };
+
+            self.multisample_view = self
+                .device
+                .create_texture(&self.multisampled_frame_descriptor)
+                .create_view(&wgpu::TextureViewDescriptor::default());
         }
     }
 }
@@ -494,6 +502,10 @@ impl PartialRenderState {
 
         log::debug!("[CLOCK] created pipelines");
 
+        let multisample_view = device
+            .create_texture(&multisampled_frame_descriptor)
+            .create_view(&wgpu::TextureViewDescriptor::default());
+
         Ok(RenderState {
             surface,
             device,
@@ -514,6 +526,10 @@ impl PartialRenderState {
             pipeline_grid,
             textures_bind_group,
             instance,
+
+            multisample_view,
+            // output_view,
+            // output_surface: output,
         })
     }
 

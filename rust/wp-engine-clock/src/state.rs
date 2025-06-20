@@ -649,11 +649,11 @@ impl State {
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
 
-        let multisample_view = self
-            .render
-            .device
-            .create_texture(&self.render.multisampled_frame_descriptor)
-            .create_view(&wgpu::TextureViewDescriptor::default());
+        // let multisample_view = self
+        //     .render
+        //     .device
+        //     .create_texture(&self.render.multisampled_frame_descriptor)
+        //     .create_view(&wgpu::TextureViewDescriptor::default());
 
         let mut encoder = self
             .render
@@ -867,7 +867,7 @@ impl State {
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                     label: Some("render_pass"),
                     color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                        view: &multisample_view,
+                        view: &self.render.multisample_view,
                         resolve_target: Some(&output_view),
                         ops: wgpu::Operations {
                             load: wgpu::LoadOp::Clear(wgpu::Color {

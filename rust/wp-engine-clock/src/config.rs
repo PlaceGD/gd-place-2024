@@ -30,7 +30,7 @@ impl Default for General {
     fn default() -> Self {
         Self {
             zoom: -6.0,
-            fps_cap: 30,
+            fps_cap: 60,
             rng_seed: None,
         }
     }

@@ -14,6 +14,7 @@ use std::backtrace::Backtrace;
 use std::cell::RefCell;
 use std::fs::File;
 use std::num::NonZeroIsize;
+use std::os::windows::raw::HANDLE;
 use std::panic;
 use std::sync::Arc;
 use std::time::Duration;
@@ -33,6 +34,9 @@ use wgpu::rwh::{
     RawWindowHandle, Win32WindowHandle, WindowHandle, WindowsDisplayHandle,
 };
 
+use windows::Win32::System::Threading::{
+    CreateWaitableTimerW, SetWaitableTimer, WaitForSingleObject, INFINITE,
+};
 use windows::Win32::UI::WindowsAndMessaging::{
     CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetWindowLongPtrW,
     PeekMessageW, PostQuitMessage, RegisterClassW, SetWindowLongPtrW, ShowWindow, TranslateMessage,
@@ -177,7 +181,12 @@ fn run_event_loop(
 
             let sleep_duration = (target_frame_time - delta as f32).max(0.0);
             if sleep_duration > 0.0 {
-                std::thread::sleep(Duration::from_secs_f32(sleep_duration));
+                let timer =
+                    CreateWaitableTimerW(None, true, None).map_err(AppError::WindowsError)?;
+
+                let due_time = -((Duration::from_secs_f32(sleep_duration).as_nanos() as i64) / 100);
+                SetWaitableTimer(timer, &due_time, 0, None, None, false).unwrap();
+                WaitForSingleObject(timer, INFINITE);
             }
         }
     }

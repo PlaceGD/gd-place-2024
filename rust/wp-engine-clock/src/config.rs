@@ -24,6 +24,7 @@ pub struct General {
     pub fps_cap: usize,
     // pub quality: f32, // 0 to 1
     pub rng_seed: Option<u64>,
+    pub logging: bool,
 }
 
 impl Default for General {
@@ -32,6 +33,7 @@ impl Default for General {
             zoom: -6.0,
             fps_cap: 60,
             rng_seed: None,
+            logging: false,
         }
     }
 }

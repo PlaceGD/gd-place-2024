@@ -192,9 +192,7 @@ fn run_event_loop(
     }
 }
 
-unsafe fn start_app() -> Result<(), AppError> {
-    let config = Config::from_file_or_default()?;
-
+unsafe fn start_app(config: Config) -> Result<(), AppError> {
     let parent_hwnd = get_parent_hwnd_from_args();
 
     let hinstance = GetModuleHandleW(None).map_err(AppError::WindowsError)?;
@@ -282,12 +280,16 @@ fn main() -> Result<(), AppError> {
         log::error!("[CLOCK] fatal error occured: {message}\n[backtrace]:\n{bt}");
     }));
 
-    init_logging();
+    let config = Config::from_file_or_default()?;
+
+    if config.general.logging {
+        init_logging();
+    }
 
     log::info!("[CLOCK] Starting app");
 
     unsafe {
-        match start_app() {
+        match start_app(config) {
             Ok(..) => (),
             Err(e) => {
                 log::error!("[CLOCK] failed to start app: {e}");

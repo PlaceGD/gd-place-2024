@@ -1,14 +1,17 @@
 # GD Place Wallpaper Engine Clock
 
-This is a version of the GD Place 2024 countdown designed to be used as a clock within Wallpaper Engine. You can find the link to the wallpaper [here]().
+This is a version of the GD Place 2024 countdown designed to be used as a clock within Wallpaper Engine. You can find the link to the wallpaper [here](https://steamcommunity.com/sharedfiles/filedetails/?id=3507198007).
 
-If you encounter any issues, please report them. We can't guarantee they will be fixed, as this was mostly just a silly idea, but please report them anyway. If you do make a report, enabled logging inside of the config (at `CONFIG PATH`) and include the output of the log file, available in the same directory as the log file.
+If you encounter any issues, please report them. We can't guarantee they will be fixed, as this was mostly just a silly idea, but please report them anyway. If you do make a report, enable logging inside of the config file (see [config options](#config-options) for the file location) and include the output of the log file (`log.log`), available in the same directory as the config file.
 
 Although it should now be fixed (🤞), I have previously encountered an issue where the wallpaper will take a few tries for it to set (the window will blink open and then close a number of times before if chages the wallpaper). I am not sure what causes this but, if you wait long enough, it will eventually set as the wallpaper.
 
 Unfortunately, this is only available on Windows. Although Wallpaper Engine is Windows only, I did my best to keep it cross platform but the windowing library used (winit) was not compatible with Wallpaper Engine, so it had to be switched out to something Windows-only.
 
 ## Config Options
+
+You can find the config file, called `config.toml`, in the folder `C:\Program Files (x86)\Steam\steamapps\workshop\content\431960\3507198007`. The options of this file are documented below.
+If you make a change to this file the wallpaper will *not* automatically update, so you will need to restart the wallpaper to see the changes.
 
 ### General
 

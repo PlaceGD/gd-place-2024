@@ -72,7 +72,7 @@ Default: N/A
 
 Required: `false`
 
-Description: Adds extra spacing between the clock and screen edges, in [units](#units).
+Description: Adds extra spacing between the clock and screen edges, in [units](#units). Padding only affects the side that the clock is positioned on, I.E. top and left padding only apply when the clock is in the top-left. Padding has no effect on a center-aligned clock.
 
 ### Grid
 
@@ -127,6 +127,16 @@ Default: `true`
 Required: `true`
 
 Description: Determines whether to show the colons separating the clock digits.
+
+#### `show-seconds`
+
+Type: `boolean`
+
+Default: `true`
+
+Required: `true`
+
+Description: Determines whether to show the seconds digits.
 
 #### `digit-change-frequency`
 

@@ -102,7 +102,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     }
 
     let bg = parse_gmd_file(include_str!(
-        "../../../rust-shared/src/countdowndigits/bgnew_colons_0.gmd"
+        "../../../rust-shared/src/countdowndigits/bgnew_colons_1.gmd"
     ));
 
     let bg_x = 0.0 * 30.0;
@@ -117,7 +117,7 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             .collect(),
     };
 
-    let hours_colon_deco = DigitObjects {
+    let hours_glow = DigitObjects {
         objs: bg
             .clone()
             .objects
@@ -127,11 +127,20 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
             .collect(),
     };
 
-    let minutes_colon_deco = DigitObjects {
+    let minutes_glow = DigitObjects {
         objs: bg
             .objects
             .iter()
             .filter(|o| o.get(&57).map(String::as_ref) == Some("3"))
+            .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
+            .collect(),
+    };
+
+    let seconds_glow = DigitObjects {
+        objs: bg
+            .objects
+            .iter()
+            .filter(|o| o.get(&57).map(String::as_ref) == Some("20"))
             .map(|o| to_gdobject(o, bg_x, bg_y, &bg))
             .collect(),
     };
@@ -166,14 +175,15 @@ pub fn make_get_countdown_digits_fn() -> Vec<u8> {
     }
 
     let mut writer = Cursor::new(Vec::new());
-    CountdownDigitSets(
-        sets.map(|v| DigitSet(v)),
-        days_marker,
-        hours_colon_deco,
-        minutes_colon_deco,
-        hours_colon,
-        minutes_colon,
-    )
+    CountdownDigitSets {
+        digits: sets.map(|v| DigitSet(v)),
+        days_marker: days_marker,
+        hours_glow,
+        minutes_glow,
+        seconds_glow,
+        hours_colons: hours_colon,
+        minutes_colons: minutes_colon,
+    }
     .write(&mut writer)
     .unwrap();
     writer.into_inner()

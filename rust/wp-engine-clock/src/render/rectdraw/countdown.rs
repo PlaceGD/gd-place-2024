@@ -27,19 +27,23 @@ pub static COUNTDOWN_DIGITS: LazyLock<CountdownDigitSets> = LazyLock::new(|| {
 });
 
 pub struct Countdown {
-    pub digits: [CountdownDigit; 6],
+    pub digits: Vec<CountdownDigit>,
     pub state: [Option<u8>; 8],
     pub sets: [usize; 3],
 
     pub colon_indicies: Vec<usize>,
     pub digit_indicies: Vec<usize>,
 
-    pub hours_marker: Vec<TransitioningObject>,
-    pub minutes_marker: Vec<TransitioningObject>,
+    pub hours_glow: Vec<TransitioningObject>,
+    pub minutes_glow: Vec<TransitioningObject>,
+    pub seconds_glow: Vec<TransitioningObject>,
+
     pub hours_colon: Vec<TransitioningObject>,
     pub minutes_colon: Vec<TransitioningObject>,
     pub bg_state: [bool; 2],
     pub colon_state: [usize; 2],
+
+    pub colon_count: usize,
 
     pub first_draw: bool,
 
@@ -53,24 +57,24 @@ impl Countdown {
 
     pub fn new(config: &Config) -> Self {
         Self {
-            digits: array::from_fn(|_| CountdownDigit::new()),
+            digits: vec![
+                CountdownDigit::new();
+                {
+                    if config.sets.show_seconds {
+                        6
+                    } else {
+                        4
+                    }
+                }
+            ],
             state: [None; 8],
             sets: [28, 12, 43],
 
             colon_indicies: (0..COLON_COUNT).collect(),
             digit_indicies: (0..DIGIT_SETS).collect(),
 
-            hours_marker: COUNTDOWN_DIGITS
-                .2
-                .objs
-                .iter()
-                .map(|obj| {
-                    TransitioningObject::new(AnimType::Static(*obj), 0.8, true, 0.0, Local::now())
-                        .offset(0.2)
-                })
-                .collect::<Vec<_>>(),
-            minutes_marker: COUNTDOWN_DIGITS
-                .3
+            hours_glow: COUNTDOWN_DIGITS
+                .hours_glow
                 .objs
                 .iter()
                 .map(|obj| {
@@ -79,8 +83,42 @@ impl Countdown {
                 })
                 .collect::<Vec<_>>(),
 
+            minutes_glow: COUNTDOWN_DIGITS
+                .minutes_glow
+                .objs
+                .iter()
+                .map(|obj| {
+                    TransitioningObject::new(AnimType::Static(*obj), 0.8, true, 0.0, Local::now())
+                        .offset(0.2)
+                })
+                .collect::<Vec<_>>(),
+
+            seconds_glow: {
+                if config.sets.show_seconds {
+                    COUNTDOWN_DIGITS
+                        .seconds_glow
+                        .objs
+                        .iter()
+                        .map(|obj| {
+                            TransitioningObject::new(
+                                AnimType::Static(*obj),
+                                0.8,
+                                true,
+                                0.0,
+                                Local::now(),
+                            )
+                            .offset(0.2)
+                        })
+                        .collect::<Vec<_>>()
+                } else {
+                    vec![]
+                }
+            },
+
             hours_colon: Vec::new(),
             minutes_colon: Vec::new(),
+
+            colon_count: if config.sets.show_seconds { 2 } else { 1 },
             bg_state: [true; 2],
             colon_state: [0; 2],
 
@@ -140,21 +178,26 @@ impl Countdown {
             }
         };
 
-        let hours = datetime.hour();
-        let minutes = datetime.minute();
-        let seconds = datetime.second();
-
         fn digits(num: u8) -> (Option<u8>, Option<u8>) {
             (Some(num / 10), Some(num % 10))
         }
 
+        let hours = datetime.hour();
+        let minutes = datetime.minute();
+
         let (hourd1, hourd2) = digits(hours as u8);
         let (mind1, mind2) = digits(minutes as u8);
-        let (secd1, secd2) = digits(seconds as u8);
 
-        let state = [hourd1, hourd2, mind1, mind2, secd1, secd2];
+        let (state, digit_count) = if config.sets.show_seconds {
+            let seconds = datetime.second();
+            let (secd1, secd2) = digits(seconds as u8);
 
-        for i in 0..self.digits.len() {
+            ([hourd1, hourd2, mind1, mind2, secd1, secd2], 6)
+        } else {
+            ([hourd1, hourd2, mind1, mind2, None, None], 4)
+        };
+
+        for i in 0..digit_count {
             let delay = index_delay(i);
 
             if sets != self.sets {
@@ -224,17 +267,17 @@ impl Countdown {
             };
 
             if has_new_sets && config.sets.show_colons {
-                for i in 0..2 {
+                for i in 0..self.colon_count {
                     let (state, prev_colon, colon) = match i {
                         0 => (
                             &mut self.hours_colon,
-                            &COUNTDOWN_DIGITS.4[self.colon_state[0] % 6],
-                            &COUNTDOWN_DIGITS.4[new_colon_state[0]],
+                            &COUNTDOWN_DIGITS.hours_colons[self.colon_state[0] % 6],
+                            &COUNTDOWN_DIGITS.hours_colons[new_colon_state[0]],
                         ),
                         1 => (
                             &mut self.minutes_colon,
-                            &COUNTDOWN_DIGITS.5[self.colon_state[1] % 6],
-                            &COUNTDOWN_DIGITS.5[new_colon_state[1]],
+                            &COUNTDOWN_DIGITS.minutes_colons[self.colon_state[1] % 6],
+                            &COUNTDOWN_DIGITS.minutes_colons[new_colon_state[1]],
                         ),
                         _ => unreachable!(),
                     };
@@ -277,8 +320,10 @@ impl Countdown {
 
         // 6 digits total, 3 one block gaps between them, 2 colons
         let total_clock_width: f32 = (self.digits.len() as f32 * DIGIT_WIDTH)
-            + (2.0 * COLON_WIDTH)
+            + (self.colon_count as f32 * COLON_WIDTH)
             + ((self.digits.len() / 2) as f32 * BLOCK);
+
+        let colon_position = (BLOCK / 2.0) + DIGIT_WIDTH + (COLON_WIDTH / 2.0);
 
         let total_clock_height = DIGIT_HEIGHT;
 
@@ -387,54 +432,84 @@ impl Countdown {
             _ => {}
         }
 
-        self.hours_marker
+        let position_of_digit = |i: usize, total_digits: usize, extra_offset: Vec2| {
+            let mut offset = vec2(0.0, 0.0);
+
+            let distance_from_center =
+                ((i as f32 - ((total_digits as f32 - 1.0) / 2.0)).abs() + 1.0).floor();
+
+            // space the digits one after another
+            offset += vec2(DIGIT_WIDTH * (distance_from_center - 0.5), 0.0);
+
+            // add one block gap between each pair
+            offset += vec2(
+                (BLOCK / 2.0)
+                    + ((distance_from_center / (total_digits / 2) as f32).floor() * BLOCK),
+                0.0,
+            );
+
+            // add larger spacing for colons
+            let mut center_offset = 0.0;
+            if total_digits % 4 == 0 {
+                // if we have an "uneven" center, i.e. the center falls in between 2 digit pairs then we need an extra half-space
+                offset += vec2(COLON_WIDTH / 2.0, 0.0);
+                center_offset = 1.0
+            }
+            offset += vec2(
+                COLON_WIDTH * ((distance_from_center - center_offset) / 2.0).floor(),
+                0.0,
+            );
+
+            // make half the digits move left
+            if i < (total_digits / 2) {
+                offset *= -1.0;
+            }
+
+            offset -= extra_offset;
+
+            offset
+        };
+
+        let digit_len = self.digits.len();
+
+        self.hours_glow
             .iter()
-            .chain(self.minutes_marker.iter())
-            .chain(self.hours_colon.iter())
-            .chain(self.minutes_colon.iter())
-            .for_each(|o| {
+            .chain(self.minutes_glow.iter())
+            .chain(self.seconds_glow.iter())
+            .enumerate()
+            .for_each(|(i, o)| {
                 o.get(state.now).inspect(|o| {
-                    add_object(o.offset(position_offset_world * -1.0));
+                    let offset = position_of_digit(i, digit_len, position_offset_world);
+                    add_object(o.offset(offset));
                 });
             });
 
-        // For digit index 0..5
+        self.hours_colon.iter().for_each(|o| {
+            o.get(state.now).inspect(|o| {
+                let offset = if state.config.sets.show_seconds {
+                    vec2(-colon_position, 0.0)
+                } else {
+                    vec2(0.0, 0.0)
+                };
+
+                add_object(o.offset(offset + (position_offset_world * -1.0)));
+            });
+        });
+
+        if state.config.sets.show_seconds {
+            self.minutes_colon.iter().for_each(|o| {
+                o.get(state.now).inspect(|o| {
+                    add_object(
+                        o.offset(vec2(colon_position, 0.0) + (position_offset_world * -1.0)),
+                    );
+                });
+            });
+        }
+
         for (i, digit) in self.digits.iter().enumerate() {
-            let mut offset = vec2(0.0, 0.0);
+            let offset = position_of_digit(i, digit_len, position_offset_world);
 
-            match i {
-                0 => {
-                    offset -= vec2(
-                        (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH,
-                        0.0,
-                    ) + position_offset_world;
-                }
-                1 => {
-                    offset -= vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0)
-                        + position_offset_world;
-                }
-                2 => {
-                    offset -=
-                        vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0) + position_offset_world;
-                }
-                3 => {
-                    offset +=
-                        vec2((DIGIT_WIDTH * 0.5) + (BLOCK / 2.0), 0.0) - position_offset_world;
-                }
-                4 => {
-                    offset += vec2((DIGIT_WIDTH * 1.5) + (BLOCK / 2.0) + COLON_WIDTH, 0.0)
-                        - position_offset_world;
-                }
-                5 => {
-                    offset += vec2(
-                        (DIGIT_WIDTH * 2.5) + (BLOCK / 2.0) + BLOCK + COLON_WIDTH,
-                        0.0,
-                    ) - position_offset_world;
-                }
-                _ => {}
-            }
-
-            for (i, obj) in digit.objects.iter().enumerate() {
+            for obj in digit.objects.iter() {
                 obj.get(state.now).inspect(|o| {
                     // level.add_object(o.offset(offset), idx);
                     // idx += 1;
@@ -442,8 +517,6 @@ impl Countdown {
                     add_object(o.offset(offset));
                 });
             }
-
-            // billy.translate(vec2(30.0 * 7.0, 0.0));
         }
 
         draw_level(state, billy, &level, |_, _, _| None, 0.0, true);
@@ -552,6 +625,7 @@ fn get_alpha(o: GDObject) -> f32 {
     opacity
 }
 
+#[derive(Clone)]
 struct CountdownDigit {
     objects: Vec<TransitioningObject>,
 }
@@ -575,7 +649,7 @@ impl CountdownDigit {
     // }
 
     fn get_set(set: usize, digit: u8) -> &'static [GDObject] {
-        &COUNTDOWN_DIGITS.0[set].0[(digit as usize) % 10].objs
+        &COUNTDOWN_DIGITS.digits[set].0[(digit as usize) % 10].objs
     }
 
     fn set_to(&mut self, set: usize, digit: u8, duration: f64, now: DateTime<Local>) {
@@ -905,6 +979,7 @@ fn color_close(col1: GDColor, col2: GDColor) -> bool {
         < 0.2 * 0.2
 }
 
+#[derive(Clone)]
 enum AnimType {
     Appear(GDObject, Vec2), // Vec2: offset
     FadeIn(GDObject),
@@ -933,6 +1008,7 @@ impl AnimType {
     }
 }
 
+#[derive(Clone)]
 struct TransitioningObject {
     typ: AnimType,
     start_time: f64,

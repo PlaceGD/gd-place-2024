@@ -253,15 +253,25 @@ pub struct DigitSet(pub [DigitObjects; 10]);
 
 #[binrw]
 #[brw(little)]
-pub struct CountdownDigitSets(
-    pub [DigitSet; DIGIT_SETS],
-    pub DigitObjects,
-    pub DigitObjects,
-    pub DigitObjects,
-    pub [DigitObjects; COLON_COUNT],
-    pub [DigitObjects; COLON_COUNT],
-); // days marker, hours colon, minutes colon
-   // should probably be a struct maybe now
+// pub struct CountdownDigitSets(
+//     pub [DigitSet; DIGIT_SETS],
+//     pub DigitObjects,
+//     pub DigitObjects,
+//     pub DigitObjects,
+//     pub [DigitObjects; COLON_COUNT],
+//     pub [DigitObjects; COLON_COUNT],
+// ); // days marker, hours colon, minutes colon
+// should probably be a struct maybe now
+
+pub struct CountdownDigitSets {
+    pub digits: [DigitSet; DIGIT_SETS],
+    pub days_marker: DigitObjects,
+    pub hours_glow: DigitObjects,
+    pub minutes_glow: DigitObjects,
+    pub seconds_glow: DigitObjects,
+    pub hours_colons: [DigitObjects; COLON_COUNT],
+    pub minutes_colons: [DigitObjects; COLON_COUNT],
+}
 
 pub const COLON_COUNT: usize = 6;
 

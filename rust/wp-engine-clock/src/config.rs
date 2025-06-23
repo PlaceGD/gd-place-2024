@@ -93,6 +93,7 @@ pub struct Sets {
     pub digit_sets: Vec<usize>,
     pub sets: Option<SetsDigits>,
     pub show_colons: bool,
+    pub show_seconds: bool,
     pub digit_change_frequency: usize,
 }
 
@@ -103,6 +104,7 @@ impl Default for Sets {
             digit_sets: (0..DIGIT_SETS).collect(),
             sets: None,
             show_colons: true,
+            show_seconds: true,
             digit_change_frequency: 1200,
         }
     }

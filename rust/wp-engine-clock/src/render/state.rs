@@ -557,10 +557,10 @@ impl PartialRenderState {
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: config.background.color.r as f64 / 255.0,
-                            g: config.background.color.g as f64 / 255.0,
-                            b: config.background.color.b as f64 / 255.0,
-                            a: config.background.color.a as f64 / 255.0,
+                            r: config.background.back_color.r as f64 / 255.0,
+                            g: config.background.back_color.g as f64 / 255.0,
+                            b: config.background.back_color.b as f64 / 255.0,
+                            a: config.background.back_color.a as f64 / 255.0,
                         }),
                         store: wgpu::StoreOp::Store,
                     },

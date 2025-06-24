@@ -871,10 +871,10 @@ impl State {
                         resolve_target: Some(&output_view),
                         ops: wgpu::Operations {
                             load: wgpu::LoadOp::Clear(wgpu::Color {
-                                r: self.config.background.color.r as f64 / 255.0,
-                                g: self.config.background.color.g as f64 / 255.0,
-                                b: self.config.background.color.b as f64 / 255.0,
-                                a: self.config.background.color.a as f64 / 255.0,
+                                r: self.config.background.back_color.r as f64 / 255.0,
+                                g: self.config.background.back_color.g as f64 / 255.0,
+                                b: self.config.background.back_color.b as f64 / 255.0,
+                                a: self.config.background.back_color.a as f64 / 255.0,
                             }),
                             store: wgpu::StoreOp::Store,
                         },

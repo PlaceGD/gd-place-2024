@@ -120,7 +120,7 @@ pub struct Color {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Background {
-    pub color: Color,
+    pub back_color: Color,
     pub image_tint: Color,
     pub image: String,
     pub fit: String,
@@ -129,7 +129,7 @@ pub struct Background {
 impl Default for Background {
     fn default() -> Self {
         Self {
-            color: Color {
+            back_color: Color {
                 r: 2,
                 g: 12,
                 b: 24,

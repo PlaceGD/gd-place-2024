@@ -153,7 +153,7 @@ Description: Time in seconds between each random regeneration of digits and colo
 
 ### Background
 
-#### `color`
+#### `back_color`
 
 Type: `{ r: int, g: int, b: int, a: int }`
 

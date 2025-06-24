@@ -138,23 +138,55 @@ impl Countdown {
 
         let mut has_new_sets = false;
 
-        let (sets, new_colon_state) = if let Some(digits) = &config.sets.sets {
-            if self.first_draw {
-                has_new_sets = true;
+        let (sets, new_colon_state) = if switch_id != self.prev_switch_id {
+            self.prev_switch_id = switch_id;
+            has_new_sets = true;
+
+            if let Some(digits) = &config.sets.sets {
+                let hours = if let Some(hours) = digits.hours {
+                    hours
+                } else {
+                    self.digit_indicies.shuffle(&mut self.rng);
+                    self.digit_indicies[0]
+                };
+
+                let minutes = if let Some(minutes) = digits.minutes {
+                    minutes
+                } else {
+                    self.digit_indicies.shuffle(&mut self.rng);
+                    self.digit_indicies[1]
+                };
+
+                let seconds = if let Some(seconds) = digits.seconds {
+                    seconds
+                } else {
+                    self.digit_indicies.shuffle(&mut self.rng);
+                    self.digit_indicies[2]
+                };
+
+                let colonh = if let Some(colonh) = digits.colonh {
+                    colonh
+                } else {
+                    self.colon_indicies.shuffle(&mut self.rng);
+                    self.colon_indicies[2]
+                };
+
+                let colonm = if let Some(colonm) = digits.colonm {
+                    colonm
+                } else {
+                    self.colon_indicies.shuffle(&mut self.rng);
+                    self.colon_indicies[2]
+                };
 
                 (
-                    [digits.hours, digits.minutes, digits.seconds],
+                    [hours, minutes, seconds],
                     if config.sets.show_colons {
-                        [digits.colonh, digits.colonm]
+                        [colonh, colonm]
                     } else {
                         [0, 0]
                     },
                 )
             } else {
-                (self.sets, self.colon_state)
-            }
-        } else {
-            if switch_id != self.prev_switch_id {
                 self.prev_switch_id = switch_id;
                 has_new_sets = true;
 
@@ -173,10 +205,85 @@ impl Countdown {
                         [0, 0]
                     },
                 )
-            } else {
-                (self.sets, self.colon_state)
             }
+        } else {
+            (self.sets, self.colon_state)
         };
+
+        // let (sets, new_colon_state) = if let Some(digits) = &config.sets.sets {
+        //     if self.first_draw {
+        //         has_new_sets = true;
+
+        //         let hours = if let Some(hours) = digits.hours {
+        //             hours
+        //         } else {
+        //             self.digit_indicies.shuffle(&mut self.rng);
+        //             self.digit_indicies[0]
+        //         };
+
+        //         let minutes = if let Some(minutes) = digits.minutes {
+        //             minutes
+        //         } else {
+        //             self.digit_indicies.shuffle(&mut self.rng);
+        //             self.digit_indicies[1]
+        //         };
+
+        //         let seconds = if let Some(seconds) = digits.seconds {
+        //             seconds
+        //         } else {
+        //             self.digit_indicies.shuffle(&mut self.rng);
+        //             self.digit_indicies[2]
+        //         };
+
+        //         let colonh = if let Some(colonh) = digits.colonh {
+        //             colonh
+        //         } else {
+        //             self.colon_indicies.shuffle(&mut self.rng);
+        //             self.colon_indicies[2]
+        //         };
+
+        //         let colonm = if let Some(colonm) = digits.colonm {
+        //             colonm
+        //         } else {
+        //             self.colon_indicies.shuffle(&mut self.rng);
+        //             self.colon_indicies[2]
+        //         };
+
+        //         (
+        //             [hours, minutes, seconds],
+        //             if config.sets.show_colons {
+        //                 [colonh, colonm]
+        //             } else {
+        //                 [0, 0]
+        //             },
+        //         )
+        //     } else {
+        //         (self.sets, self.colon_state)
+        //     }
+        // } else {
+        //     if switch_id != self.prev_switch_id {
+        //         self.prev_switch_id = switch_id;
+        //         has_new_sets = true;
+
+        //         self.colon_indicies.shuffle(&mut self.rng);
+        //         self.digit_indicies.shuffle(&mut self.rng);
+
+        //         (
+        //             [
+        //                 self.digit_indicies[0],
+        //                 self.digit_indicies[1],
+        //                 self.digit_indicies[2],
+        //             ],
+        //             if config.sets.show_colons {
+        //                 [self.colon_indicies[0], self.colon_indicies[1]]
+        //             } else {
+        //                 [0, 0]
+        //             },
+        //         )
+        //     } else {
+        //         (self.sets, self.colon_state)
+        //     }
+        // };
 
         fn digits(num: u8) -> (Option<u8>, Option<u8>) {
             (Some(num / 10), Some(num % 10))

@@ -119,7 +119,7 @@ Default: N/A
 
 Required: `false`
 
-Description: Overrides `digit-sets` and `colon-sets`. Sets specific styles for each digit and colon. See [digit credits](#digit-credits).
+Description: Overrides `digit-sets` and `colon-sets`. Sets specific styles for each digit and colon. See [digit credits](#digit-credits). Each property of the object is optional and, if left blank, they will be randomised every `digit-change-frequency` period, as a normal digit would be.
 
 #### `show-colons`
 

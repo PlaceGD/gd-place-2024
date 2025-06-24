@@ -79,11 +79,11 @@ impl Default for Grid {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct SetsDigits {
-    pub hours: usize,
-    pub minutes: usize,
-    pub seconds: usize,
-    pub colonh: usize,
-    pub colonm: usize,
+    pub hours: Option<usize>,
+    pub minutes: Option<usize>,
+    pub seconds: Option<usize>,
+    pub colonh: Option<usize>,
+    pub colonm: Option<usize>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -192,17 +192,21 @@ impl Config {
             }
         }
 
-        let is_valid_colon = |c: &usize| (0..COLON_COUNT).contains(c);
-        let is_valid_digit = |d: &usize| (0..DIGIT_SETS).contains(d);
+        let is_valid_colon = |c: Option<usize>| c.map_or(true, |c| (0..COLON_COUNT).contains(&c));
+        let is_valid_digit = |d: Option<usize>| d.map_or(true, |d| (0..DIGIT_SETS).contains(&d));
 
-        let invalid_colons = self.sets.colon_sets.iter().any(|c| !is_valid_colon(&c));
+        let invalid_colons = self
+            .sets
+            .colon_sets
+            .iter()
+            .any(|c| !is_valid_colon(Some(*c)));
 
         if invalid_colons {
             let joined = self
                 .sets
                 .colon_sets
                 .iter()
-                .filter(|c| !is_valid_colon(c))
+                .filter(|c| !is_valid_colon(Some(**c)))
                 .map(|n| n.to_string())
                 .collect::<Vec<_>>()
                 .join(", ");
@@ -215,14 +219,18 @@ impl Config {
             });
         }
 
-        let invalid_digits = self.sets.digit_sets.iter().any(|d| !is_valid_digit(d));
+        let invalid_digits = self
+            .sets
+            .digit_sets
+            .iter()
+            .any(|d| !is_valid_digit(Some(*d)));
 
         if invalid_digits {
             let joined = self
                 .sets
                 .digit_sets
                 .iter()
-                .filter(|d| !is_valid_digit(d))
+                .filter(|d| !is_valid_digit(Some(**d)))
                 .map(|n| n.to_string())
                 .collect::<Vec<_>>()
                 .join(", ");
@@ -237,46 +245,46 @@ impl Config {
         }
 
         if let Some(sets) = &self.sets.sets {
-            if !is_valid_digit(&sets.hours) {
+            if !is_valid_digit(sets.hours) {
                 return Err(AppError::ConfigValidationError {
                     reason: format!(
-                        "invalid hour digit `{}` found in `sets.sets`! must be between 0 and {}",
+                        "invalid hour digit `{:?}` found in `sets.sets`! must be between 0 and {}",
                         sets.hours,
                         DIGIT_SETS - 1
                     ),
                 });
             }
-            if !is_valid_digit(&sets.minutes) {
+            if !is_valid_digit(sets.minutes) {
                 return Err(AppError::ConfigValidationError {
                     reason: format!(
-                        "invalid minute digit `{}` found in `sets.sets`! must be between 0 and {}",
+                        "invalid minute digit `{:?}` found in `sets.sets`! must be between 0 and {}",
                         sets.minutes,
                         DIGIT_SETS - 1
                     ),
                 });
             }
-            if !is_valid_digit(&sets.seconds) {
+            if !is_valid_digit(sets.seconds) {
                 return Err(AppError::ConfigValidationError {
                     reason: format!(
-                        "invalid second digit `{}` found in `sets.sets`! must be between 0 and {}",
+                        "invalid second digit `{:?}` found in `sets.sets`! must be between 0 and {}",
                         sets.seconds,
                         DIGIT_SETS - 1
                     ),
                 });
             }
 
-            if !is_valid_colon(&sets.colonh) {
+            if !is_valid_colon(sets.colonh) {
                 return Err(AppError::ConfigValidationError {
                     reason: format!(
-                        "invalid hour colon `{}` found in `sets.sets`! must be between 0 and 4",
+                        "invalid hour colon `{:?}` found in `sets.sets`! must be between 0 and 4",
                         sets.colonh,
                     ),
                 });
             }
-            if !is_valid_colon(&sets.colonm) {
+            if !is_valid_colon(sets.colonm) {
                 return Err(AppError::ConfigValidationError {
                     reason: format!(
-                        "invalid minute colon `{}` found in `sets.sets`! must be between 0 and 4",
+                        "invalid minute colon `{:?}` found in `sets.sets`! must be between 0 and 4",
                         sets.colonh,
                     ),
                 });

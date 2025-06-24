@@ -6,3 +6,7 @@
 
 - Rename `background.color` to `background.back_color`
 - Allow optional object properties in `sets.sets`
+  
+# 1.1.1
+
+- Remove debug symbols
